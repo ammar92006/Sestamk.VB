@@ -890,6 +890,9 @@ Public Class Reports
     Private status_show_p As Boolean = False
 
     Private Sub ReportsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' التجاوب مع الشاشة: تكبير الفورم لملء الشاشة لو أكبر من المساحة المتاحة
+        LayoutHelper.MaximizeIfTooLarge(Me)
+
         UpdateDateTime()
         Timer1.Interval = 1000
         Timer1.Enabled = True

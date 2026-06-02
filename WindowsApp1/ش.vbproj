@@ -542,6 +542,7 @@
     <Compile Include="Module1.vb" />
     <Compile Include="Session.vb" />
     <Compile Include="SettingsKeys.vb" />
+    <Compile Include="LayoutHelper.vb" />
     <Compile Include="FirstRunSetup.vb" />
     <Compile Include="Settings.Designer.vb">
       <DependentUpon>Settings.vb</DependentUpon>

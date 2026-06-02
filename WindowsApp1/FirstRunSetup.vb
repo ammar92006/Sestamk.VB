@@ -22,6 +22,7 @@ Public Class FirstRunSetup
 
     Public Sub New()
         InitForm()
+        AddHandler Me.Load, Sub() LayoutHelper.FitToWorkingArea(Me)
     End Sub
 
     Private Sub InitForm()

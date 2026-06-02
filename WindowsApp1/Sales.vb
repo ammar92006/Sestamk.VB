@@ -128,6 +128,9 @@ Public Class Sales
     ' [تحسين]: العمليات الثقيلة تعمل بالتوازي في الخلفية
     '══════════════════════════════════════════════════════════════
     Private Async Sub Sales_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' التجاوب مع الشاشة: تكبير الفورم لملء الشاشة لو أكبر من المساحة المتاحة
+        LayoutHelper.MaximizeIfTooLarge(Me)
+
         Me.KeyPreview = True
 
         btn_Invoice_Edit.Visible = False

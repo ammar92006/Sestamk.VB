@@ -77,6 +77,9 @@ Public Class Settings
     ' عند تحميل الفورم - نحمل كل الإعدادات
     '══════════════════════════════════════════════════════════════
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' التجاوب مع الشاشة: ملاءمة حجم الفورم للمساحة المتاحة + توسيطه
+        LayoutHelper.FitToWorkingArea(Me)
+
         ' بناء عناصر التحكم الجديدة
         InitializeCustomControls()
 
