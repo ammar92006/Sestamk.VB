@@ -62,6 +62,15 @@ Public Class Settings
     Private lblDbUser As Label
     Private lblDbPassword As Label
 
+    ' ══ عناصر الإعدادات المتقدمة للاسكنر (TabPage3) ══
+    Private cmbBaudRate As ComboBox
+    Private cmbDataBits As ComboBox
+    Private cmbParity As ComboBox
+    Private cmbStopBits As ComboBox
+    Private txtScanTestResult As TextBox
+    Private lblScanTestHint As Label
+    Private _scannerTesting As Boolean = False
+
     '══════════════════════════════════════════════════════════════
     ' عند تحميل الفورم - نحمل كل الإعدادات
     '══════════════════════════════════════════════════════════════
@@ -69,10 +78,12 @@ Public Class Settings
         ' بناء عناصر التحكم الجديدة
         InitializeCustomControls()
 
-        ' تبويب الباركود
+        ' تبويب الباركود (Scanner)
+        BuildScannerAdvancedControls()
         LoadPorts()
-        Dim savedPort = SettingsManager.GetSetting("Current_port_scanner")
+        Dim savedPort = SettingsManager.GetSetting(SettingsKeys.ScannerPort)
         If Not String.IsNullOrEmpty(savedPort) Then ComboBoxPorts.Text = savedPort
+        LoadScannerSettings()
 
         ' تبويب الاعدادات العامة
         LoadGeneralSettings()
@@ -632,11 +643,80 @@ Public Class Settings
     End Sub
 
     '══════════════════════════════════════════════════════════════
-    ' ➊ تبويب الباركود
+    ' ➊ تبويب الباركود (Scanner) — إعدادات متقدمة + تجربة حيّة
     '══════════════════════════════════════════════════════════════
     Private Sub LoadPorts()
         ComboBoxPorts.Items.Clear()
         ComboBoxPorts.Items.AddRange(SerialPort.GetPortNames())
+    End Sub
+
+    ''' <summary>بناء عناصر الإعدادات المتقدمة للاسكنر (Baud / DataBits / Parity / StopBits + صندوق التجربة)</summary>
+    Private Sub BuildScannerAdvancedControls()
+        Dim pnl As New Panel() With {
+            .Location = New Point(60, 150),
+            .Size = New Size(580, 450),
+            .BackColor = Color.FromArgb(45, 45, 55),
+            .RightToLeft = RightToLeft.Yes
+        }
+        TabPage3.Controls.Add(pnl)
+
+        Dim title As New Label() With {
+            .Text = "⚙️ إعدادات متقدمة", .ForeColor = Color.White,
+            .Font = New Font("Segoe UI", 15, FontStyle.Bold), .AutoSize = True,
+            .Location = New Point(360, 8), .RightToLeft = RightToLeft.Yes
+        }
+        pnl.Controls.Add(title)
+
+        Dim MakeRow = Function(labelText As String, items() As String, yy As Integer) As ComboBox
+                          Dim lb As New Label() With {
+                              .Text = labelText, .ForeColor = Color.White,
+                              .Font = New Font("Segoe UI", 12, FontStyle.Bold), .AutoSize = True,
+                              .Location = New Point(420, yy + 4), .RightToLeft = RightToLeft.Yes
+                          }
+                          Dim cb As New ComboBox() With {
+                              .Location = New Point(110, yy), .Width = 290, .Height = 32,
+                              .Font = New Font("Segoe UI", 12),
+                              .DropDownStyle = ComboBoxStyle.DropDownList,
+                              .RightToLeft = RightToLeft.Yes
+                          }
+                          cb.Items.AddRange(items)
+                          pnl.Controls.Add(lb)
+                          pnl.Controls.Add(cb)
+                          Return cb
+                      End Function
+
+        cmbBaudRate = MakeRow("سرعة النقل (Baud):", New String() {"9600", "19200", "38400", "57600", "115200"}, 55)
+        cmbDataBits = MakeRow("بِتّات البيانات:", New String() {"7", "8"}, 100)
+        cmbParity = MakeRow("التماثل (Parity):", New String() {"None", "Even", "Odd", "Mark", "Space"}, 145)
+        cmbStopBits = MakeRow("بِتّات التوقّف:", New String() {"One", "Two", "OnePointFive"}, 190)
+
+        lblScanTestHint = New Label() With {
+            .Text = "اضغط «اختبار الاتصال» ثم امسح أي باركود — ستظهر النتيجة هنا:",
+            .ForeColor = Color.Gainsboro, .Font = New Font("Segoe UI", 10), .AutoSize = True,
+            .Location = New Point(40, 235), .RightToLeft = RightToLeft.Yes
+        }
+        pnl.Controls.Add(lblScanTestHint)
+
+        txtScanTestResult = New TextBox() With {
+            .Location = New Point(20, 265), .Size = New Size(540, 170),
+            .Multiline = True, .ReadOnly = True, .ScrollBars = ScrollBars.Vertical,
+            .BackColor = Color.FromArgb(28, 28, 36), .ForeColor = Color.LightGreen,
+            .Font = New Font("Consolas", 12, FontStyle.Bold), .RightToLeft = RightToLeft.No
+        }
+        pnl.Controls.Add(txtScanTestResult)
+    End Sub
+
+    ''' <summary>تحميل إعدادات الاسكنر المحفوظة إلى عناصر التحكم</summary>
+    Private Sub LoadScannerSettings()
+        Try
+            cmbBaudRate.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerBaudRate, "9600")
+            cmbDataBits.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerDataBits, "8")
+            cmbParity.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerParity, "None")
+            cmbStopBits.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerStopBits, "One")
+            CheckBoxEnabled.Checked = SettingsManager.GetBoolSetting(SettingsKeys.ScannerEnabled, True)
+        Catch ex As Exception
+            Debug.WriteLine("LoadScannerSettings: " & ex.Message)
+        End Try
     End Sub
 
     Private Sub btnRefreshPorts_Click(sender As Object, e As EventArgs) Handles btnRefreshPorts.Click
@@ -651,24 +731,99 @@ Public Class Settings
             MessageBox.Show("يرجى اختيار المنفذ أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
-        SettingsManager.SaveSetting("Current_port_scanner", portName)
-        MessageBox.Show("✅ تم حفظ إعداد الباركود بنجاح.")
+
+        SettingsManager.SaveSetting(SettingsKeys.ScannerPort, portName)
+        SettingsManager.SaveSetting(SettingsKeys.ScannerBaudRate, cmbBaudRate.Text)
+        SettingsManager.SaveSetting(SettingsKeys.ScannerDataBits, cmbDataBits.Text)
+        SettingsManager.SaveSetting(SettingsKeys.ScannerParity, cmbParity.Text)
+        SettingsManager.SaveSetting(SettingsKeys.ScannerStopBits, cmbStopBits.Text)
+        SettingsManager.SaveSetting(SettingsKeys.ScannerEnabled, CheckBoxEnabled.Checked.ToString().ToLower())
+
+        lblStatus.Text = "✅ تم حفظ إعدادات الاسكنر"
+        lblStatus.ForeColor = Color.LightGreen
     End Sub
 
+    ''' <summary>زر التجربة: تشغيل/إيقاف تجربة حيّة للاسكنر بالإعدادات الحالية</summary>
     Private Sub btnTestConnection_Click(sender As Object, e As EventArgs) Handles btnTestConnection.Click
-        ' اختبار الاتصال بالسيريال
+        If _scannerTesting Then
+            StopScanTest()
+            Return
+        End If
+
+        If String.IsNullOrEmpty(ComboBoxPorts.Text) Then
+            MessageBox.Show("يرجى اختيار المنفذ أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Try
+            ' تحرير المنفذ لو الاسكنر الرئيسي شغّال عليه
+            ScannerModule.StopScanner()
+
+            Dim baud As Integer = CInt(SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerBaudRate, cmbBaudRate.Text))
+            Dim dataBits As Integer = CInt(cmbDataBits.Text)
+            Dim par As Parity = CType([Enum].Parse(GetType(Parity), cmbParity.Text), Parity)
+            Dim sBits As StopBits = CType([Enum].Parse(GetType(StopBits), cmbStopBits.Text), StopBits)
+
+            serial = New SerialPort(ComboBoxPorts.Text, baud, par, dataBits, sBits) With {
+                .Handshake = Handshake.None
+            }
+            serial.Open()
+
+            _scannerTesting = True
+            txtScanTestResult.Clear()
+            txtScanTestResult.AppendText("🟢 التجربة جارية — امسح أي باركود..." & vbCrLf)
+            btnTestConnection.Text = "⏹ إيقاف التجربة"
+            lblStatus.Text = "🟢 جاري تجربة الاسكنر"
+            lblStatus.ForeColor = Color.LightGreen
+        Catch ex As Exception
+            MessageBox.Show("تعذّر فتح المنفذ للتجربة: " & ex.Message, "تنبيه",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
+    End Sub
+
+    ''' <summary>إيقاف تجربة الاسكنر وتحرير المنفذ</summary>
+    Private Sub StopScanTest()
+        Try
+            If serial IsNot Nothing AndAlso serial.IsOpen Then serial.Close()
+            If serial IsNot Nothing Then serial.Dispose()
+        Catch
+        End Try
+        serial = Nothing
+        _scannerTesting = False
+        btnTestConnection.Text = "اختبار الاتصال"
+        lblStatus.Text = "⏹ تم إيقاف التجربة"
+        lblStatus.ForeColor = Color.Gold
     End Sub
 
     Private Sub btnCloseConnection_Click(sender As Object, e As EventArgs) Handles btnCloseConnection.Click
-        Dim portName As String = SettingsManager.GetSetting("Current_port_scanner")
+        If _scannerTesting Then StopScanTest()
+        ' إيقاف الاسكنر الرئيسي + إغلاق المنفذ المحفوظ بهدوء
+        ScannerModule.StopScanner()
+        Dim portName As String = SettingsManager.GetSetting(SettingsKeys.ScannerPort)
         If Not String.IsNullOrEmpty(portName) Then
             SettingsManager.CloseBarcodePort(portName)
         End If
+        lblStatus.Text = "⏹ تم غلق منفذ الباركود"
+        lblStatus.ForeColor = Color.Gold
     End Sub
 
     Private Sub serial_DataReceived(sender As Object, e As SerialDataReceivedEventArgs) Handles serial.DataReceived
-        Dim data As String = serial.ReadExisting()
-        Me.Invoke(Sub() MessageBox.Show("تم قراءة: " & data))
+        Try
+            Dim data As String = serial.ReadExisting().Trim()
+            If String.IsNullOrEmpty(data) Then Return
+            If Me.IsHandleCreated Then
+                Me.BeginInvoke(Sub()
+                                   txtScanTestResult.AppendText("✅ " & DateTime.Now.ToString("HH:mm:ss") & "  →  " & data & vbCrLf)
+                               End Sub)
+            End If
+        Catch ex As Exception
+            Debug.WriteLine("scan test recv: " & ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>إيقاف أي تجربة جارية عند إغلاق الفورم لتحرير المنفذ</summary>
+    Private Sub Settings_FormClosing(sender As Object, e As System.Windows.Forms.FormClosingEventArgs) Handles Me.FormClosing
+        If _scannerTesting Then StopScanTest()
     End Sub
 
     '══════════════════════════════════════════════════════════════

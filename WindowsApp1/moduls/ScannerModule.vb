@@ -10,10 +10,25 @@ Module ScannerModule
         Try
             buffer = ""
 
-            Dim currentport = SettingsManager.GetSetting("Current_port_scanner")
+            ' احترام مفتاح التفعيل: لو الاسكنر معطّل لا نفتح المنفذ
+            If Not SettingsManager.GetBoolSetting(SettingsKeys.ScannerEnabled, True) Then Exit Sub
+
+            Dim currentport = SettingsManager.GetSetting(SettingsKeys.ScannerPort)
+            If String.IsNullOrWhiteSpace(currentport) Then Exit Sub
+
+            ' قراءة الإعدادات المتقدمة (مع قيم افتراضية آمنة)
+            Dim baud As Integer = CInt(Val(SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerBaudRate, "9600")))
+            If baud <= 0 Then baud = 9600
+            Dim dataBits As Integer = CInt(Val(SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerDataBits, "8")))
+            If dataBits < 5 OrElse dataBits > 8 Then dataBits = 8
+
+            Dim par As Parity = Parity.None
+            [Enum].TryParse(SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerParity, "None"), True, par)
+            Dim sBits As StopBits = StopBits.One
+            [Enum].TryParse(SettingsManager.GetSettingOrDefault(SettingsKeys.ScannerStopBits, "One"), True, sBits)
 
             If barcodePort Is Nothing Then
-                barcodePort = New SerialPort(currentport, 9600, Parity.None, 8, StopBits.One)
+                barcodePort = New SerialPort(currentport, baud, par, dataBits, sBits)
                 AddHandler barcodePort.DataReceived, AddressOf barcodePort_DataReceived
                 barcodePort.Open()
             ElseIf Not barcodePort.IsOpen Then
@@ -22,7 +37,8 @@ Module ScannerModule
 
             barcodePort.DiscardInBuffer()
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تشغيل الاسكنر: " & ex.Message)
+            ' بدون رسالة مزعجة — تُسجّل فقط ليكمل البرنامج عمله بهدوء
+            Debug.WriteLine("StartScanner: " & ex.Message)
         End Try
     End Sub
 

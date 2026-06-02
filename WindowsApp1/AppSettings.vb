@@ -64,23 +64,16 @@ Public Module SettingsManager
             cmd.ExecuteNonQuery()
         End Using
     End Sub
+    ''' <summary>إغلاق منفذ الباركود بهدوء (بدون رسائل). يُفضّل استخدام ScannerModule.StopScanner.</summary>
     Public Sub CloseBarcodePort(portName As String)
         Try
-            ' التأكد أن الاسم موجود
             If Not String.IsNullOrWhiteSpace(portName) Then
-                ' إنشاء كائن SerialPort مؤقت بالاسم
                 Using barcodePort As New SerialPort(portName)
-                    ' إذا كان البورت مفتوح بالفعل، يغلقه
-                    If barcodePort.IsOpen Then
-                        barcodePort.Close()
-                        MessageBox.Show("تم غلق منفذ الباركود " & portName, "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    End If
+                    If barcodePort.IsOpen Then barcodePort.Close()
                 End Using
             End If
-        Catch ex As UnauthorizedAccessException
-            MessageBox.Show("البورت مستخدم من برنامج آخر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء غلق منفذ الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Debug.WriteLine("CloseBarcodePort: " & ex.Message)
         End Try
     End Sub
 
