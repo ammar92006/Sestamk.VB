@@ -22,6 +22,8 @@ Public Class Settings
     Private txtShopTax As TextBox
     Private txtFooterText As TextBox
     Private txtDeliveryText As TextBox
+    Private cmbCurrency As ComboBox
+    Private cmbBusinessType As ComboBox
     Private txtLogoPath As TextBox
     Private cmbThermalPrinter As ComboBox
     Private cmbNormalPrinter As ComboBox
@@ -129,7 +131,29 @@ Public Class Settings
         MakeLabel("العنوان:", yOff) : txtShopAddress = MakeTextBox(yOff, 500) : yOff += 45
         MakeLabel("الرقم الضريبي:", yOff) : txtShopTax = MakeTextBox(yOff, 300) : yOff += 45
         MakeLabel("نص التذييل:", yOff) : txtFooterText = MakeTextBox(yOff, 500) : yOff += 45
-        MakeLabel("نص التوصيل:", yOff) : txtDeliveryText = MakeTextBox(yOff, 500) : yOff += 55
+        MakeLabel("نص التوصيل:", yOff) : txtDeliveryText = MakeTextBox(yOff, 500) : yOff += 45
+
+        ' العملة
+        MakeLabel("العملة:", yOff)
+        cmbCurrency = New ComboBox() With {
+            .Location = New Point(TabPage1.Width - 200 - 300 - 15, yOff - 3), .Width = 300,
+            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDown,
+            .RightToLeft = RightToLeft.Yes
+        }
+        cmbCurrency.Items.AddRange(New String() {"ج.م", "ر.س", "د.إ", "د.ك", "د.ع", "$", "€"})
+        TabPage1.Controls.Add(cmbCurrency)
+        yOff += 45
+
+        ' نوع النشاط
+        MakeLabel("نوع النشاط:", yOff)
+        cmbBusinessType = New ComboBox() With {
+            .Location = New Point(TabPage1.Width - 200 - 300 - 15, yOff - 3), .Width = 300,
+            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDown,
+            .RightToLeft = RightToLeft.Yes
+        }
+        cmbBusinessType.Items.AddRange(New String() {"سوبر ماركت", "بقالة", "صيدلية", "مخبز", "ملابس", "إلكترونيات", "أخرى"})
+        TabPage1.Controls.Add(cmbBusinessType)
+        yOff += 55
 
         ' اللوجو
         MakeLabel("مسار اللوجو:", yOff)
@@ -839,6 +863,8 @@ Public Class Settings
             txtShopTax.Text = If(SettingsManager.GetSetting("TaxNumber"), "")
             txtFooterText.Text = If(SettingsManager.GetSetting("FooterText"), "")
             txtDeliveryText.Text = If(SettingsManager.GetSetting("DeliveryText"), "يوجد توصيل للمنازل")
+            cmbCurrency.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
+            cmbBusinessType.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.BusinessType, "سوبر ماركت")
             txtLogoPath.Text = If(SettingsManager.GetSetting("LogoPath"), "")
 
             ' تحميل قائمة الطابعات
@@ -913,6 +939,8 @@ Public Class Settings
             SettingsManager.SaveSetting("TaxNumber", txtShopTax.Text.Trim())
             SettingsManager.SaveSetting("FooterText", txtFooterText.Text.Trim())
             SettingsManager.SaveSetting("DeliveryText", txtDeliveryText.Text.Trim())
+            SettingsManager.SaveSetting(SettingsKeys.Currency, cmbCurrency.Text.Trim())
+            SettingsManager.SaveSetting(SettingsKeys.BusinessType, cmbBusinessType.Text.Trim())
             SettingsManager.SaveSetting("LogoPath", txtLogoPath.Text.Trim())
 
             ' حفظ أسماء الطابعات

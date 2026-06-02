@@ -15,7 +15,13 @@ Namespace My
             ' محاولة اتصال تلقائية صامتة:
             ' 1) تجرّب الإعدادات المحفوظة. 2) تكتشف خوادم SQL المثبتة وتجرّبها.
             ' بدون أي رسالة مزعجة للمستخدم في الحالة الطبيعية.
-            If DBModule.TryAutoConnect() Then Exit Sub
+            If DBModule.TryAutoConnect() Then
+                ' تحميل بيانات المدير المهيّأة لهذا النشاط
+                Settingsall.LoadAdminCredentials()
+                ' معالج أول تشغيل (يظهر مرة واحدة فقط لكل نشاط)
+                ShowFirstRunIfNeeded()
+                Exit Sub
+            End If
 
             ' فشل الاتصال نهائياً → نفتح الإعدادات مباشرة على تبويب قاعدة البيانات
             ' (بدون MessageBox) ليضبطها المستخدم يدوياً إذا رغب.
@@ -31,6 +37,23 @@ Namespace My
                 System.Windows.Forms.Application.Restart()
             End If
             e.Cancel = True
+        End Sub
+
+        ''' <summary>عرض معالج أول تشغيل إذا لم تكتمل التهيئة بعد</summary>
+        Private Sub ShowFirstRunIfNeeded()
+            Try
+                If SettingsManager.GetBoolSetting(SettingsKeys.SetupCompleted, False) Then Exit Sub
+
+                Using wiz As New FirstRunSetup()
+                    wiz.ShowDialog()
+                End Using
+
+                ' إعادة تحميل بيانات المدير بعد التهيئة
+                Settingsall.LoadAdminCredentials()
+            Catch ex As Exception
+                ' لا نعطّل بدء التشغيل لو فشل المعالج لأي سبب
+                Debug.WriteLine("ShowFirstRunIfNeeded: " & ex.Message)
+            End Try
         End Sub
     End Class
 End Namespace

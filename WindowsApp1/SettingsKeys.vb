@@ -7,6 +7,10 @@ Public Module SettingsKeys
     ' ── حالة التهيئة / أول تشغيل ──
     Public Const SetupCompleted As String = "SetupCompleted"
 
+    ' ── حساب المدير (قابل للتهيئة لكل نشاط) ──
+    Public Const AdminUsername As String = "AdminUsername"
+    Public Const AdminPassword As String = "AdminPassword"
+
     ' ── بيانات النشاط / المحل ──
     Public Const ShopName As String = "ShopName"
     Public Const ShopPhone As String = "ShopPhone"
