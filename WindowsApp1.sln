@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ش", "WindowsApp1\ش.vbproj", "{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CashierMarketInstaller", "CashierMarketInstaller\CashierMarketInstaller.vdproj", "{2462C1D7-F7F8-9E20-1D58-CD435E5F20D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2462C1D7-F7F8-9E20-1D58-CD435E5F20D2}.Debug|Any CPU.ActiveCfg = Debug
+		{2462C1D7-F7F8-9E20-1D58-CD435E5F20D2}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7223D5DA-CB29-40E5-8D4D-D72BE00EBEF9}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,23 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+publish/
+*.user
+*.suo
+
+# Visual Studio
+.vs/
+
+# NuGet
+packages/
+*.nupkg
+
+# Installer build output
+Installer/Output/
+*.exe.config
+
+# Misc
+*.log
+UpgradeLog*.htm
