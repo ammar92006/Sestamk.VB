@@ -19,23 +19,30 @@ Public Module DBModule
     ' ══════════════════════════════════════════════════════════
     ' إعدادات الاتصال - يمكن تغييرها من فورم الاعدادات
     ' ══════════════════════════════════════════════════════════
-    Public server As String = "DESKTOP-115NPP2\SQLEXPRESS"
+    Public server As String = "(localdb)\MSSQLLocalDB"
     Public database As String = "Cashier_Market"
     Public username As String = ""
     Public password As String = ""
     Public useWindowsAuth As Boolean = True  ' True = Windows Auth, False = SQL Auth
 
+    ''' <summary>بناء ConnectionString من قيم محددة (يُستخدم للاختبار والاكتشاف التلقائي)</summary>
+    Public Function BuildConnectionString(srv As String, db As String,
+                                          usr As String, pwd As String,
+                                          winAuth As Boolean) As String
+        Dim auth As String = If(winAuth,
+            "Integrated Security=True;",
+            $"User Id={usr};Password={pwd};")
+
+        Return $"Server={srv};Database={db};{auth}" &
+               "MultipleActiveResultSets=True;" &
+               "Pooling=True;Max Pool Size=200;Min Pool Size=5;" &
+               "Connect Timeout=10;"
+    End Function
+
     ''' <summary>بناء ConnectionString مع تفعيل Connection Pooling و Timeout</summary>
     Public ReadOnly Property ConnectionString As String
         Get
-            Dim auth As String = If(useWindowsAuth,
-                "Integrated Security=True;",
-                $"User Id={username};Password={password};")
-
-            Return $"Server={server};Database={database};{auth}" &
-                   "MultipleActiveResultSets=True;" &
-                   "Pooling=True;Max Pool Size=200;Min Pool Size=5;" &
-                   "Connect Timeout=10;"
+            Return BuildConnectionString(server, database, username, password, useWindowsAuth)
         End Get
     End Property
 
@@ -95,6 +102,96 @@ Public Module DBModule
         Catch
             Return False
         End Try
+    End Function
+
+    ' ══════════════════════════════════════════════════════════
+    ' اكتشاف خوادم SQL المثبتة على الجهاز تلقائياً
+    ' (LocalDB ثم النسخ المسماة من الريجستري ثم الافتراضيات الشائعة)
+    ' الترتيب = أولوية المحاولة عند الاتصال التلقائي.
+    ' ══════════════════════════════════════════════════════════
+    Public Function DetectSqlServers() As List(Of String)
+        Dim found As New List(Of String)
+
+        ' (1) نسخ LocalDB عبر أداة sqllocaldb
+        Try
+            Dim psi As New ProcessStartInfo("sqllocaldb", "info") With {
+                .RedirectStandardOutput = True,
+                .UseShellExecute = False,
+                .CreateNoWindow = True
+            }
+            Using p = Process.Start(psi)
+                Dim output As String = p.StandardOutput.ReadToEnd()
+                p.WaitForExit(3000)
+                For Each line As String In output.Split(New String() {vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries)
+                    Dim inst As String = line.Trim()
+                    If inst <> "" Then found.Add("(localdb)\" & inst)
+                Next
+            End Using
+        Catch
+        End Try
+
+        ' التأكد من وجود النسخة الافتراضية لـ LocalDB دائماً
+        If Not found.Any(Function(s) s.ToLower().Contains("mssqllocaldb")) Then
+            found.Add("(localdb)\MSSQLLocalDB")
+        End If
+
+        ' (2) نسخ SQL المثبتة محلياً من الريجستري
+        Try
+            Using key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(
+                "SOFTWARE\Microsoft\Microsoft SQL Server\Instance Names\SQL")
+                If key IsNot Nothing Then
+                    For Each instName As String In key.GetValueNames()
+                        If instName.ToUpper() = "MSSQLSERVER" Then
+                            AddUnique(found, Environment.MachineName)
+                            AddUnique(found, ".")
+                        Else
+                            AddUnique(found, Environment.MachineName & "\" & instName)
+                            AddUnique(found, ".\" & instName)
+                        End If
+                    Next
+                End If
+            End Using
+        Catch
+        End Try
+
+        ' (3) افتراضيات شائعة كحل أخير
+        For Each fb As String In {".\SQLEXPRESS", "localhost", "."}
+            AddUnique(found, fb)
+        Next
+
+        Return found
+    End Function
+
+    Private Sub AddUnique(list As List(Of String), value As String)
+        If Not list.Any(Function(x) String.Equals(x, value, StringComparison.OrdinalIgnoreCase)) Then
+            list.Add(value)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' محاولة اتصال تلقائية صامتة: تجرّب الإعدادات المحفوظة أولاً،
+    ''' فإن فشلت تجرّب كل الخوادم المكتشفة بنفس قاعدة البيانات والمصادقة.
+    ''' عند أول نجاح تحفظ الخادم الناجح في db_config.ini.
+    ''' ترجع True إذا نجح الاتصال.
+    ''' </summary>
+    Public Function TryAutoConnect() As Boolean
+        ' (1) جرّب الإعدادات المحفوظة الحالية كما هي
+        If TestConnection() Then Return True
+
+        ' (2) جرّب كل خادم مكتشف بنفس قاعدة البيانات والمصادقة
+        For Each srv As String In DetectSqlServers()
+            Dim cs As String = BuildConnectionString(srv, database, username, password, useWindowsAuth)
+            If TestConnection(cs) Then
+                server = srv
+                Try
+                    SaveDbSettings()
+                Catch
+                End Try
+                Return True
+            End If
+        Next
+
+        Return False
     End Function
 
     ' ══════════════════════════════════════════════════════════

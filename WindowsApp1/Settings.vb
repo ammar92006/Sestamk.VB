@@ -50,7 +50,8 @@ Public Class Settings
     Private btnRefreshBarcodePrinters As Button
 
     ' ══ عناصر تبويب قاعدة البيانات ══
-    Private txtDbServer As TextBox
+    Private txtDbServer As ComboBox
+    Private btnDetectServers As Button
     Private txtDbName As TextBox
     Private txtDbUser As TextBox
     Private txtDbPassword As TextBox
@@ -257,8 +258,23 @@ Public Class Settings
                            yD += 55
                        End Sub
 
-        txtDbServer = New TextBox()
+        txtDbServer = New ComboBox() With {.DropDownStyle = ComboBoxStyle.DropDown}
         AddDbRow("الخادم (Server):", txtDbServer)
+
+        ' زر الاكتشاف التلقائي لخوادم SQL المثبتة (يسار حقل الخادم)
+        btnDetectServers = New Button() With {
+            .Text = "🔍 اكتشاف تلقائي",
+            .Location = New Point(TabPage2.Width - 750 - 175, txtDbServer.Top - 1),
+            .Width = 165, .Height = 30,
+            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
+            .BackColor = Color.FromArgb(40, 52, 70), .ForeColor = Color.White,
+            .FlatStyle = FlatStyle.Flat
+        }
+        AddHandler btnDetectServers.Click, AddressOf btnDetectServers_Click
+        TabPage2.Controls.Add(btnDetectServers)
+
+        ' تعبئة قائمة الخوادم المكتشفة عند فتح الفورم
+        PopulateDetectedServers()
 
         txtDbName = New TextBox()
         AddDbRow("اسم قاعدة البيانات:", txtDbName)
@@ -796,6 +812,51 @@ Public Class Settings
             UpdateAuthFields()
         Catch ex As Exception
             MessageBox.Show("خطأ في تحميل إعدادات قاعدة البيانات: " & ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>تعبئة قائمة الخوادم المكتشفة في الـ ComboBox مع الحفاظ على القيمة الحالية</summary>
+    Private Sub PopulateDetectedServers()
+        Try
+            Dim current As String = txtDbServer.Text
+            txtDbServer.Items.Clear()
+            For Each srv As String In DBModule.DetectSqlServers()
+                txtDbServer.Items.Add(srv)
+            Next
+            If Not String.IsNullOrEmpty(current) Then txtDbServer.Text = current
+        Catch ex As Exception
+            Debug.WriteLine("PopulateDetectedServers: " & ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>زر الاكتشاف التلقائي: يحدّث القائمة ويحاول إيجاد خادم يتصل بقاعدة البيانات فعلياً</summary>
+    Private Sub btnDetectServers_Click(sender As Object, e As EventArgs)
+        Try
+            PopulateDetectedServers()
+
+            Dim dbName As String = txtDbName.Text.Trim()
+            If String.IsNullOrEmpty(dbName) Then dbName = DBModule.database
+
+            Dim winAuth As Boolean = chkWindowsAuth.Checked
+            Dim usr As String = txtDbUser.Text.Trim()
+            Dim pwd As String = txtDbPassword.Text
+
+            ' تجربة كل خادم مكتشف لإيجاد أول واحد يتصل بقاعدة البيانات
+            For Each srv As String In DBModule.DetectSqlServers()
+                Dim cs As String = DBModule.BuildConnectionString(srv, dbName, usr, pwd, winAuth)
+                If DBModule.TestConnection(cs) Then
+                    txtDbServer.Text = srv
+                    lblDbStatus.Text = "✅ تم العثور على خادم متصل: " & srv
+                    lblDbStatus.ForeColor = Color.LightGreen
+                    Return
+                End If
+            Next
+
+            lblDbStatus.Text = "⚠️ تم تحديث القائمة لكن لم يتصل أي خادم بقاعدة البيانات."
+            lblDbStatus.ForeColor = Color.Orange
+        Catch ex As Exception
+            lblDbStatus.Text = "❌ " & ex.Message
+            lblDbStatus.ForeColor = Color.OrangeRed
         End Try
     End Sub
 

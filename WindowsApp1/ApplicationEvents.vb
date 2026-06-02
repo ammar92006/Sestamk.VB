@@ -9,30 +9,28 @@ Namespace My
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
-            ' تحميل إعدادات قاعدة البيانات من الملف قبل فتح أي فورم
+            ' تحميل إعدادات قاعدة البيانات المحفوظة من الملف قبل فتح أي فورم
             DBModule.LoadDbSettings()
 
-            ' التحقق من الاتصال - لو فشل نفتح إعدادات قاعدة البيانات
-            If Not DBModule.TestConnection() Then
-                MessageBox.Show(
-                    "تعذّر الاتصال بقاعدة البيانات." & vbCrLf &
-                    "سيتم فتح نافذة الإعدادات لضبط بيانات الاتصال." & vbCrLf &
-                    "بعد الحفظ سيتم إعادة تشغيل البرنامج تلقائياً.",
-                    "مشكلة في الاتصال",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning)
+            ' محاولة اتصال تلقائية صامتة:
+            ' 1) تجرّب الإعدادات المحفوظة. 2) تكتشف خوادم SQL المثبتة وتجرّبها.
+            ' بدون أي رسالة مزعجة للمستخدم في الحالة الطبيعية.
+            If DBModule.TryAutoConnect() Then Exit Sub
 
-                Using settingsForm As New Settings()
-                    ' الانتقال تلقائياً لتبويب قاعدة البيانات عند ظهور الفورم
-                    AddHandler settingsForm.Shown,
-                        Sub(s, ev) settingsForm.public_set.SelectedIndex = 1
-                    settingsForm.ShowDialog()
-                End Using
+            ' فشل الاتصال نهائياً → نفتح الإعدادات مباشرة على تبويب قاعدة البيانات
+            ' (بدون MessageBox) ليضبطها المستخدم يدوياً إذا رغب.
+            Using settingsForm As New Settings()
+                AddHandler settingsForm.Shown,
+                    Sub(s, ev) settingsForm.public_set.SelectedIndex = 1
+                settingsForm.ShowDialog()
+            End Using
 
-                ' إعادة تشغيل البرنامج بعد تعديل الإعدادات
+            ' بعد إغلاق الإعدادات: لو الاتصال بقى ناجحاً نعيد التشغيل لتطبيق
+            ' الإعدادات الجديدة على كل الفورمات، وإلا نُلغي بدء التشغيل بهدوء.
+            If DBModule.TestConnection() Then
                 System.Windows.Forms.Application.Restart()
-                e.Cancel = True
             End If
+            e.Cancel = True
         End Sub
     End Class
 End Namespace
