@@ -27,6 +27,29 @@ Public Module SettingsManager
         End Try
     End Function
 
+    ' 🟢 قراءة الإعداد مع قيمة افتراضية لو غير موجود أو فارغ
+    Public Function GetSettingOrDefault(key As String, defaultValue As String) As String
+        Dim v = GetSetting(key)
+        Return If(String.IsNullOrEmpty(v), defaultValue, v)
+    End Function
+
+    ' 🟢 قراءة إعداد منطقي (Boolean)
+    Public Function GetBoolSetting(key As String, defaultValue As Boolean) As Boolean
+        Dim v = GetSetting(key)
+        If String.IsNullOrEmpty(v) Then Return defaultValue
+        Dim b As Boolean
+        If Boolean.TryParse(v, b) Then Return b
+        Return v.Trim().ToLower() = "true" OrElse v.Trim() = "1"
+    End Function
+
+    ' 🟢 قراءة إعداد رقمي (Integer)
+    Public Function GetIntSetting(key As String, defaultValue As Integer) As Integer
+        Dim v = GetSetting(key)
+        Dim n As Integer
+        If Not String.IsNullOrEmpty(v) AndAlso Integer.TryParse(v, n) Then Return n
+        Return defaultValue
+    End Function
+
     ' 🟡 حفظ أو تحديث الإعداد
     Public Sub SaveSetting(key As String, value As String)
         Using cn As New SqlConnection(ConnectionString)
