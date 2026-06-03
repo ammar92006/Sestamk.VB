@@ -260,9 +260,9 @@ Public Class MainForm
         ' [FIX #3] تشغيل العمليات الثقيلة بشكل Async لمنع تجميد الواجهة
         Await Task.Run(Sub() LoadAllCountsAsync())
 
-        ' تحديث الـ Badge والأعلى 10 على UI Thread
+        ' تحديث الـ Badge والأعلى 10
         UpdateLowStockBadge()
-        LoadTop10Products()
+        Await LoadTop10ProductsAsync()
     End Sub
 
     ' ═══════════════════════════════════════════════════════════════════════
@@ -747,70 +747,78 @@ Public Class MainForm
     End Sub
 
     ' ═══════════════════════════════════════════════════════════════════════
-    ' [FIX #8] إصلاح Double Connect() في LoadTop10Products
-    ' المشكلة: Connect() تُستدعى مرتين - مرة قبل Using ومرة داخله
-    '          Using Conn يغلق الاتصال، ثم Connect() الداخلية تفتح اتصالاً جديداً
-    '          لكن الـ cmd مرتبط بالـ Conn القديم = خطأ في Runtime
-    ' الحل: استدعاء Connect() مرة واحدة فقط + Using صحيح
+    ' [FIX أداء] الأكثر مبيعاً (Top 10) — كان السبب الرئيسي في تجميد البرنامج:
+    '   • كان يقرأ جدول SalesDetails كاملاً (SUM/GROUP BY/ORDER BY) بلا TOP
+    '     ولا فلتر → يبطؤ مع نمو المبيعات حتى Execution Timeout.
+    '   • كان يعمل على UI Thread → تجميد الواجهة (ContextSwitchDeadlock).
+    '   • كان Using Conn يغلق الاتصال العام المشترك.
+    ' الحل:
+    '   • TOP 10 داخل SQL (لا نرتّب آلاف الصفوف لعرض 10).
+    '   • تنفيذ Async على اتصال محلي (NewConnAsync) — الواجهة لا تتجمد.
+    '   • مهلة محددة + تسجيل الأخطاء بهدوء.
+    ' (توصية: إنشاء فهرس على SalesDetails يسرّع التجميع أكثر — موضّح في الرد.)
     ' ═══════════════════════════════════════════════════════════════════════
-    Private Sub LoadTop10Products()
+    Private Async Function LoadTop10ProductsAsync() As Task
         Dim query As String =
-                "SELECT 
-                    Product_ID,
+                "SELECT TOP 10
                     Product_Name,
                     ProductUnit_Name,
                     Sale_Price_Per_Unit,
                     SUM(Total_Line_Amount) AS Total_Line_Amount,
                     SUM(Quantity_Sold)     AS TotalQuantitySold
                 FROM SalesDetails
-                WHERE 
+                WHERE
                     ProductUnit_Name NOT LIKE N'%جرام%'
                     AND ProductUnit_Name NOT LIKE N'%جم%'
-                GROUP BY 
-                    Product_ID,
+                GROUP BY
                     Product_Name,
                     ProductUnit_Name,
                     Sale_Price_Per_Unit
-                ORDER BY 
+                ORDER BY
                     TotalQuantitySold DESC"
 
+        ' نجمع النتائج في الخلفية (خارج UI Thread) ثم نحدّث العناصر
+        Dim rows As New List(Of String())
         Try
-            Connect() ' [FIX] استدعاء واحد فقط هنا
-
-            Using Conn ' Using يضمن الإغلاق التلقائي
-                Using cmd As New SqlCommand(query, Conn)
-                    ' [FIX] حُذفت: Connect() الداخلية المكررة
-                    Using dr As SqlDataReader = cmd.ExecuteReader()
-                        Dim i As Integer = 1
-
-                        While dr.Read() AndAlso i <= 10
-                            Dim lblP = TryCast(PanelTop10.Controls("lblProduct" & i), Label)
-                            Dim lblPU = TryCast(PanelTop10.Controls("lblProductUnit" & i), Label)
-                            Dim lblQ = TryCast(PanelTop10.Controls("lblTotalQuantity" & i), Label)
-                            Dim lblPrice = TryCast(PanelTop10.Controls("lblSale_Price" & i), Label)
-                            Dim lblPrice_Total = TryCast(PanelTop10.Controls("lblTotal" & i), Label)
-
-                            If lblP IsNot Nothing Then lblP.Text = dr("Product_Name").ToString()
-                            If lblPU IsNot Nothing Then lblPU.Text = dr("ProductUnit_Name").ToString()
-                            If lblQ IsNot Nothing Then lblQ.Text = dr("TotalQuantitySold").ToString()
-
-                            If lblPrice IsNot Nothing Then
-                                lblPrice.Text = Convert.ToDecimal(dr("Sale_Price_Per_Unit")).ToString("N2")
-                            End If
-
-                            If lblPrice_Total IsNot Nothing Then
-                                lblPrice_Total.Text = Convert.ToDecimal(dr("Total_Line_Amount")).ToString("N2")
-                            End If
-
-                            i += 1
+            Using cn As SqlConnection = Await NewConnAsync()
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.CommandTimeout = 60
+                    Using dr As SqlDataReader = Await cmd.ExecuteReaderAsync()
+                        While Await dr.ReadAsync()
+                            rows.Add(New String() {
+                                dr("Product_Name").ToString(),
+                                dr("ProductUnit_Name").ToString(),
+                                dr("TotalQuantitySold").ToString(),
+                                If(Convert.IsDBNull(dr("Sale_Price_Per_Unit")), "", Convert.ToDecimal(dr("Sale_Price_Per_Unit")).ToString("N2")),
+                                If(Convert.IsDBNull(dr("Total_Line_Amount")), "", Convert.ToDecimal(dr("Total_Line_Amount")).ToString("N2"))
+                            })
                         End While
                     End Using
                 End Using
             End Using
-
         Catch ex As Exception
-            Debug.WriteLine("LoadTop10Products Error: " & ex.Message)
+            Logger.LogError("LoadTop10ProductsAsync", ex)
+            Return
         End Try
-    End Sub
+
+        ' تحديث الواجهة (نحن على UI Thread بعد الـ Await)
+        Dim i As Integer = 1
+        For Each r As String() In rows
+            If i > 10 Then Exit For
+            Dim lblP = TryCast(PanelTop10.Controls("lblProduct" & i), Label)
+            Dim lblPU = TryCast(PanelTop10.Controls("lblProductUnit" & i), Label)
+            Dim lblQ = TryCast(PanelTop10.Controls("lblTotalQuantity" & i), Label)
+            Dim lblPrice = TryCast(PanelTop10.Controls("lblSale_Price" & i), Label)
+            Dim lblPrice_Total = TryCast(PanelTop10.Controls("lblTotal" & i), Label)
+
+            If lblP IsNot Nothing Then lblP.Text = r(0)
+            If lblPU IsNot Nothing Then lblPU.Text = r(1)
+            If lblQ IsNot Nothing Then lblQ.Text = r(2)
+            If lblPrice IsNot Nothing Then lblPrice.Text = r(3)
+            If lblPrice_Total IsNot Nothing Then lblPrice_Total.Text = r(4)
+
+            i += 1
+        Next
+    End Function
 
 End Class

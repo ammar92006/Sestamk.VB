@@ -166,6 +166,16 @@ Public Class Sales
         txt_totelProduct.Text = "0"
         DataGridView1.Columns("ColQtyPlus").Width = 30
         DataGridView1.Columns("ColQtyMinus").Width = 30
+
+
+        ''الزراير
+        Me.btnSaveInvoice.Location = New System.Drawing.Point(1250, 5)
+        Me.btn_Sales_Returns.Location = New System.Drawing.Point(900, 5)
+        Me.btnDelete.Location = New System.Drawing.Point(600, 5)
+        Me.Button1.Location = New System.Drawing.Point(280, 5)
+        Me.btnToggleScanner.Location = New System.Drawing.Point(2, 5)
+
+
     End Sub
 
     Private Sub SetupComboPayment()
@@ -2243,7 +2253,7 @@ Public Class Sales
 
     Private Sub PrintInvoice80mmProfessionalCore(invoiceID As Integer, data As PrintData)
         Dim styleVal As String = SettingsManager.GetSetting("PrintStyle")
-        If String.IsNullOrEmpty(styleVal) Then styleVal = "1"
+        If String.IsNullOrEmpty(styleVal) Then styleVal = "2"
         If styleVal = "2" Then
             PrintInvoice80mm_Style2(invoiceID, data)
         Else
@@ -2544,7 +2554,7 @@ Public Class Sales
                                     If Not String.IsNullOrEmpty(thermalPrinter) Then
                                         pd.PrinterSettings.PrinterName = thermalPrinter
                                     End If
-                                    pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
+                                    pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
                                     pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
                                     Dim handler As PrintPageEventHandler = Nothing
@@ -2555,28 +2565,28 @@ Public Class Sales
                                                   Dim leftX As Integer = e.MarginBounds.Left
 
                                                   Using fmtC As New StringFormat() With {
-                                                  .Alignment = StringAlignment.Center,
-                                                  .LineAlignment = StringAlignment.Center,
-                                                  .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+                                                .Alignment = StringAlignment.Center,
+                                                .LineAlignment = StringAlignment.Center,
+                                                .FormatFlags = StringFormatFlags.DirectionRightToLeft}
                                                       Using fmtR As New StringFormat() With {
-                                                      .Alignment = StringAlignment.Far,
-                                                      .LineAlignment = StringAlignment.Center,
-                                                      .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+                                                    .Alignment = StringAlignment.Far,
+                                                    .LineAlignment = StringAlignment.Center,
+                                                    .FormatFlags = StringFormatFlags.DirectionRightToLeft}
                                                           Using fmtWrap As New StringFormat() With {
-                                                          .Alignment = StringAlignment.Near,
-                                                          .LineAlignment = StringAlignment.Center,
-                                                          .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
+                                                        .Alignment = StringAlignment.Near,
+                                                        .LineAlignment = StringAlignment.Center,
+                                                        .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
                                                               Using linePen As New Pen(Color.Black, 1)
 
                                                                   Dim centerLine = Sub(t As String, f As Font)
                                                                                        g.DrawString(t, f, Brushes.Black,
-                                                                                                New RectangleF(leftX, Y, pageW, f.Height + 5), fmtC)
+                                                                                              New RectangleF(leftX, Y, pageW, f.Height + 5), fmtC)
                                                                                        Y += f.Height + 5
                                                                                    End Sub
 
                                                                   Dim rightLine = Sub(t As String, f As Font)
                                                                                       g.DrawString(t, f, Brushes.Black,
-                                                                                               New RectangleF(leftX, Y, pageW, f.Height + 4), fmtR)
+                                                                                             New RectangleF(leftX, Y, pageW, f.Height + 4), fmtR)
                                                                                       Y += f.Height + 4
                                                                                   End Sub
 
@@ -2592,7 +2602,7 @@ Public Class Sales
                                                                   ' rightLine المعدّل: محاذاة اليمين داخل عرض آمن (مش لحافة الورق)
                                                                   Dim rightLineSafe = Sub(t As String, f As Font)
                                                                                           g.DrawString(t, f, Brushes.Black,
-                                                                                                   New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
+                                                                                                 New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
                                                                                           Y += f.Height + 4
                                                                                       End Sub
 
@@ -2625,31 +2635,18 @@ Public Class Sales
                                                                   End If
                                                                   Dim brandH As Integer = brandFont.Height + 4
                                                                   g.DrawString(StoreName, brandFont, Brushes.Black,
-                                                                           New RectangleF(logoColX, logoY, logoColW, brandH), fmtC)
+                                                                         New RectangleF(logoColX, logoY, logoColW, brandH), fmtC)
                                                                   logoY += brandH
 
                                                                   ' (شمال): بيانات العميل/الفاتورة (label : value) بمحاذاة يمنى
-                                                                  ' [إصلاح التداخل] نقيس الارتفاع الفعلي للنص مع الالتفاف ونضيف هوامش رأسية
-                                                                  ' حتى لا يتداخل أي سطر (مثل سطر التاريخ) مع السطر التالي، ويُطبَّق هذا
-                                                                  ' تلقائياً على كل الحقول (اسم العميل، الفاتورة، التاريخ، المستخدم، الدفع)
-                                                                  ' كما يتمدّد الصف رأسياً إذا كان النص طويلاً (التفاف لأكثر من سطر).
-                                                                  Dim fieldPadX As Integer = 6
-                                                                  Dim fieldPadY As Integer = 5
-                                                                  Dim fieldGap As Integer = 3
                                                                   Dim drawRightField = Sub(label As String, value As String)
-                                                                                           Dim txt As String = label & " : " & If(value, "").Trim()
-                                                                                           Dim availW As Integer = infoColW - fieldPadX * 2
-                                                                                           If availW < 20 Then availW = infoColW
-                                                                                           ' قياس الارتفاع الفعلي مع الالتفاف داخل عرض العمود
-                                                                                           Dim measured As SizeF = g.MeasureString(txt, f10, availW, fmtR)
-                                                                                           Dim textH As Integer = Math.Max(f10.Height, CInt(Math.Ceiling(measured.Height)))
-                                                                                           Dim rowH As Integer = textH + fieldPadY * 2
+                                                                                           Dim txt As String = label & " : " & value
+                                                                                           Dim hh As Integer = f10.Height + 6
                                                                                            g.DrawString(txt, f10, Brushes.Black,
-                                                                                                    New RectangleF(infoColX + fieldPadX, infoY + fieldPadY, availW, textH), fmtR)
-                                                                                           infoY += rowH
-                                                                                           ' خط فاصل أسفل الحقل مع فجوة صغيرة قبل الحقل التالي
-                                                                                           g.DrawLine(linePen, infoColX, infoY, infoColX + infoColW, infoY)
-                                                                                           infoY += fieldGap
+                                                                                                  New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
+                                                                                           ' خط فاصل أسفل كل حقل
+                                                                                           g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
+                                                                                           infoY += hh + 1
                                                                                        End Sub
 
                                                                   drawRightField("اسم العميل", data.CustomerName)
@@ -2707,13 +2704,13 @@ Public Class Sales
                                                                       Dim measured As SizeF = g.MeasureString(cleanName, f10, nameTextWidth, fmtWrap)
                                                                       Dim h As Integer = Math.Max(24, CInt(measured.Height) + 8)
                                                                       g.DrawString(cleanName, f10, Brushes.Black,
-                                                                      New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
+                                                                    New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
                                                                       g.DrawString(line.Quantity.ToString("0.##"), f10, Brushes.Black,
-                                                                      New RectangleF(xQ, Y, colQW, h), fmtC)
+                                                                    New RectangleF(xQ, Y, colQW, h), fmtC)
                                                                       g.DrawString(FormatNumber(line.SalePrice, 2), f10, Brushes.Black,
-                                                                      New RectangleF(xP, Y, colPW, h), fmtC)
+                                                                    New RectangleF(xP, Y, colPW, h), fmtC)
                                                                       g.DrawString(FormatNumber(line.Total, 2), f10, Brushes.Black,
-                                                                      New RectangleF(xT, Y, colTW, h), fmtC)
+                                                                    New RectangleF(xT, Y, colTW, h), fmtC)
                                                                       Y += h
                                                                       g.DrawLine(linePen, leftX, Y, leftX + tableW, Y)
                                                                   Next
@@ -2779,7 +2776,6 @@ Public Class Sales
             If logoImg IsNot Nothing Then logoImg.Dispose()
         End Try
     End Sub
-
     Private Function GenerateQRCode(text As String) As Bitmap
         Dim writer As New ZXing.BarcodeWriter() With {
             .Format = ZXing.BarcodeFormat.CODE_128,

@@ -334,7 +334,7 @@ Partial Class Sales
         Me.btnToggleScanner.Appearance.Options.UseFont = True
         Me.btnToggleScanner.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.scanner
         Me.btnToggleScanner.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnToggleScanner.Location = New System.Drawing.Point(2, 5)
+        Me.btnToggleScanner.Location = New System.Drawing.Point(1402, 5)
         Me.btnToggleScanner.Name = "btnToggleScanner"
         Me.btnToggleScanner.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnToggleScanner.Size = New System.Drawing.Size(269, 57)
@@ -348,7 +348,7 @@ Partial Class Sales
         Me.Button1.Appearance.Options.UseFont = True
         Me.Button1.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
         Me.Button1.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.Button1.Location = New System.Drawing.Point(280, 5)
+        Me.Button1.Location = New System.Drawing.Point(1680, 5)
         Me.Button1.Name = "Button1"
         Me.Button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Button1.Size = New System.Drawing.Size(318, 57)
@@ -362,7 +362,7 @@ Partial Class Sales
         Me.btnDelete.Appearance.Options.UseFont = True
         Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
         Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnDelete.Location = New System.Drawing.Point(600, 5)
+        Me.btnDelete.Location = New System.Drawing.Point(2000, 5)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnDelete.Size = New System.Drawing.Size(298, 57)
@@ -376,7 +376,7 @@ Partial Class Sales
         Me.btn_Sales_Returns.Appearance.Options.UseFont = True
         Me.btn_Sales_Returns.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
         Me.btn_Sales_Returns.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btn_Sales_Returns.Location = New System.Drawing.Point(900, 5)
+        Me.btn_Sales_Returns.Location = New System.Drawing.Point(2300, 5)
         Me.btn_Sales_Returns.Name = "btn_Sales_Returns"
         Me.btn_Sales_Returns.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btn_Sales_Returns.Size = New System.Drawing.Size(339, 57)
@@ -390,7 +390,7 @@ Partial Class Sales
         Me.btnSaveInvoice.Appearance.Options.UseFont = True
         Me.btnSaveInvoice.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btnSaveInvoice.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSaveInvoice.Location = New System.Drawing.Point(1250, 5)
+        Me.btnSaveInvoice.Location = New System.Drawing.Point(2650, 5)
         Me.btnSaveInvoice.Name = "btnSaveInvoice"
         Me.btnSaveInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnSaveInvoice.Size = New System.Drawing.Size(333, 57)

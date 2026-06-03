@@ -347,11 +347,11 @@ Partial Class Settings
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LabelDeveloper.AutoSize = True
-        Me.LabelDeveloper.Font = New System.Drawing.Font("Microsoft Sans Serif", 26.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelDeveloper.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelDeveloper.ForeColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
         Me.LabelDeveloper.Location = New System.Drawing.Point(433, 3)
         Me.LabelDeveloper.Name = "LabelDeveloper"
-        Me.LabelDeveloper.Size = New System.Drawing.Size(529, 39)
+        Me.LabelDeveloper.Size = New System.Drawing.Size(417, 31)
         Me.LabelDeveloper.TabIndex = 1
         Me.LabelDeveloper.Text = "تم تصميم هذا البرنامج بواسطة عمار احمد"
         Me.LabelDeveloper.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
