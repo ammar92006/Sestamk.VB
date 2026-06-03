@@ -31,8 +31,8 @@ Partial Class Settings
         Me.public_set = New Guna.UI2.WinForms.Guna2TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.TabPage4 = New System.Windows.Forms.TabPage()
+        Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.btnRefreshPorts = New DevExpress.XtraEditors.SimpleButton()
@@ -47,7 +47,6 @@ Partial Class Settings
         Me.pnlHeader.SuspendLayout()
         Me.public_set.SuspendLayout()
         Me.TabPage3.SuspendLayout()
-        Me.TabPage4.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -152,6 +151,7 @@ Partial Class Settings
         '
         'TabPage1
         '
+        Me.TabPage1.AutoScroll = True
         Me.TabPage1.Location = New System.Drawing.Point(4, 4)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
@@ -169,6 +169,16 @@ Partial Class Settings
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "قاعدة البيانات"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'TabPage4
+        '
+        Me.TabPage4.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
+        Me.TabPage4.Location = New System.Drawing.Point(4, 4)
+        Me.TabPage4.Name = "TabPage4"
+        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage4.Size = New System.Drawing.Size(1272, 722)
+        Me.TabPage4.TabIndex = 3
+        Me.TabPage4.Text = "طابعة الباركود"
         '
         'TabPage3
         '
@@ -188,16 +198,6 @@ Partial Class Settings
         Me.TabPage3.Size = New System.Drawing.Size(1272, 722)
         Me.TabPage3.TabIndex = 2
         Me.TabPage3.Text = "scanner barcode"
-        '
-        'TabPage4
-        '
-        Me.TabPage4.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
-        Me.TabPage4.Location = New System.Drawing.Point(4, 4)
-        Me.TabPage4.Name = "TabPage4"
-        Me.TabPage4.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage4.Size = New System.Drawing.Size(1272, 722)
-        Me.TabPage4.TabIndex = 3
-        Me.TabPage4.Text = "طابعة الباركود"
         '
         'lblStatus
         '
@@ -376,8 +376,6 @@ Partial Class Settings
         Me.public_set.ResumeLayout(False)
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
-        Me.TabPage4.ResumeLayout(False)
-        Me.TabPage4.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)

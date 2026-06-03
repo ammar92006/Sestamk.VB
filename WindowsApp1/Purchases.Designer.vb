@@ -36,6 +36,9 @@ Partial Class Purchases
         Me.btnEdit = New DevExpress.XtraEditors.SimpleButton()
         Me.btnSaveInvoice = New DevExpress.XtraEditors.SimpleButton()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Guna2ToggleSwitch1 = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+        Me.btn_auto_pay = New System.Windows.Forms.Button()
         Me.cmbVendor = New System.Windows.Forms.ComboBox()
         Me.DateTimePicker1 = New System.Windows.Forms.DateTimePicker()
         Me.txt_Invoice_ID = New Guna.UI2.WinForms.Guna2TextBox()
@@ -76,9 +79,6 @@ Partial Class Purchases
         Me.Label5 = New System.Windows.Forms.Label()
         Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
         Me.dgv_Purchases = New System.Windows.Forms.DataGridView()
-        Me.btn_auto_pay = New System.Windows.Forms.Button()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Guna2ToggleSwitch1 = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.panelHeader.SuspendLayout()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
@@ -194,7 +194,7 @@ Partial Class Purchases
         Me.btn_add_new_product.Appearance.Options.UseFont = True
         Me.btn_add_new_product.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btn_add_new_product.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btn_add_new_product.Location = New System.Drawing.Point(2, 5)
+        Me.btn_add_new_product.Location = New System.Drawing.Point(10, 5)
         Me.btn_add_new_product.Name = "btn_add_new_product"
         Me.btn_add_new_product.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btn_add_new_product.Size = New System.Drawing.Size(403, 75)
@@ -208,7 +208,7 @@ Partial Class Purchases
         Me.btnDelete.Appearance.Options.UseFont = True
         Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
         Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnDelete.Location = New System.Drawing.Point(410, 5)
+        Me.btnDelete.Location = New System.Drawing.Point(430, 5)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnDelete.Size = New System.Drawing.Size(348, 75)
@@ -222,7 +222,7 @@ Partial Class Purchases
         Me.btnEdit.Appearance.Options.UseFont = True
         Me.btnEdit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
         Me.btnEdit.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnEdit.Location = New System.Drawing.Point(770, 5)
+        Me.btnEdit.Location = New System.Drawing.Point(800, 5)
         Me.btnEdit.Name = "btnEdit"
         Me.btnEdit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnEdit.Size = New System.Drawing.Size(385, 75)
@@ -236,7 +236,7 @@ Partial Class Purchases
         Me.btnSaveInvoice.Appearance.Options.UseFont = True
         Me.btnSaveInvoice.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btnSaveInvoice.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSaveInvoice.Location = New System.Drawing.Point(1180, 5)
+        Me.btnSaveInvoice.Location = New System.Drawing.Point(1190, 5)
         Me.btnSaveInvoice.Name = "btnSaveInvoice"
         Me.btnSaveInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnSaveInvoice.Size = New System.Drawing.Size(403, 75)
@@ -298,6 +298,47 @@ Partial Class Purchases
         Me.grpCustomerInfo.TabIndex = 75
         Me.grpCustomerInfo.Text = "بيانات الفاتورة"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label8
+        '
+        Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label8.AutoSize = True
+        Me.Label8.BackColor = System.Drawing.Color.Transparent
+        Me.Label8.Location = New System.Drawing.Point(398, 3)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(126, 33)
+        Me.Label8.TabIndex = 5635
+        Me.Label8.Text = "حفظ تلقائيا"
+        '
+        'Guna2ToggleSwitch1
+        '
+        Me.Guna2ToggleSwitch1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Guna2ToggleSwitch1.BackColor = System.Drawing.Color.Transparent
+        Me.Guna2ToggleSwitch1.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Guna2ToggleSwitch1.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Guna2ToggleSwitch1.CheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.Guna2ToggleSwitch1.CheckedState.InnerColor = System.Drawing.Color.White
+        Me.Guna2ToggleSwitch1.Location = New System.Drawing.Point(530, 3)
+        Me.Guna2ToggleSwitch1.Name = "Guna2ToggleSwitch1"
+        Me.Guna2ToggleSwitch1.Size = New System.Drawing.Size(78, 32)
+        Me.Guna2ToggleSwitch1.TabIndex = 5634
+        Me.Guna2ToggleSwitch1.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
+        Me.Guna2ToggleSwitch1.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
+        Me.Guna2ToggleSwitch1.UncheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.Guna2ToggleSwitch1.UncheckedState.InnerColor = System.Drawing.Color.White
+        '
+        'btn_auto_pay
+        '
+        Me.btn_auto_pay.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_auto_pay.Image = Global.WindowsApp1.My.Resources.Resources.pay__1_
+        Me.btn_auto_pay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btn_auto_pay.Location = New System.Drawing.Point(322, 97)
+        Me.btn_auto_pay.Name = "btn_auto_pay"
+        Me.btn_auto_pay.Size = New System.Drawing.Size(90, 45)
+        Me.btn_auto_pay.TabIndex = 5632
+        Me.btn_auto_pay.Text = "OK"
+        Me.btn_auto_pay.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btn_auto_pay.UseVisualStyleBackColor = True
         '
         'cmbVendor
         '
@@ -909,47 +950,6 @@ Partial Class Purchases
         Me.dgv_Purchases.RowTemplate.Height = 50
         Me.dgv_Purchases.Size = New System.Drawing.Size(1600, 354)
         Me.dgv_Purchases.TabIndex = 76
-        '
-        'btn_auto_pay
-        '
-        Me.btn_auto_pay.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_auto_pay.Image = Global.WindowsApp1.My.Resources.Resources.pay__1_
-        Me.btn_auto_pay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btn_auto_pay.Location = New System.Drawing.Point(322, 97)
-        Me.btn_auto_pay.Name = "btn_auto_pay"
-        Me.btn_auto_pay.Size = New System.Drawing.Size(90, 45)
-        Me.btn_auto_pay.TabIndex = 5632
-        Me.btn_auto_pay.Text = "OK"
-        Me.btn_auto_pay.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btn_auto_pay.UseVisualStyleBackColor = True
-        '
-        'Label8
-        '
-        Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label8.AutoSize = True
-        Me.Label8.BackColor = System.Drawing.Color.Transparent
-        Me.Label8.Location = New System.Drawing.Point(398, 3)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(126, 33)
-        Me.Label8.TabIndex = 5635
-        Me.Label8.Text = "حفظ تلقائيا"
-        '
-        'Guna2ToggleSwitch1
-        '
-        Me.Guna2ToggleSwitch1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2ToggleSwitch1.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2ToggleSwitch1.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Guna2ToggleSwitch1.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Guna2ToggleSwitch1.CheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch1.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch1.Location = New System.Drawing.Point(530, 3)
-        Me.Guna2ToggleSwitch1.Name = "Guna2ToggleSwitch1"
-        Me.Guna2ToggleSwitch1.Size = New System.Drawing.Size(78, 32)
-        Me.Guna2ToggleSwitch1.TabIndex = 5634
-        Me.Guna2ToggleSwitch1.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.Guna2ToggleSwitch1.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.Guna2ToggleSwitch1.UncheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch1.UncheckedState.InnerColor = System.Drawing.Color.White
         '
         'Purchases
         '

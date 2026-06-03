@@ -13,6 +13,7 @@ Public Class Settings
     Dim x, y As Integer
     Dim newpoint As New Point
     Dim WithEvents serial As SerialPort
+    Private ReadOnly _tips As New ToolTip() With {.AutoPopDelay = 6000, .InitialDelay = 300, .ReshowDelay = 100}
 
     ' ══ عناصر تبويب الاعدادات العامة ══
     Private txtShopName As TextBox
@@ -166,11 +167,21 @@ Public Class Settings
         }
         TabPage1.Controls.Add(txtLogoPath)
         btnBrowseLogo = New Button() With {
-            .Text = "📂 استعراض", .Location = New Point(100, yOff - 3),
-            .Width = 95, .Height = 28, .Font = New Font("Segoe UI", 9)
+            .Text = "📂 اختر صورة اللوجو",
+            .Location = New Point(40, yOff - 7),
+            .Width = 150, .Height = 38,
+            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
+            .BackColor = Color.FromArgb(76, 132, 255),
+            .ForeColor = Color.White,
+            .FlatStyle = FlatStyle.Flat,
+            .Cursor = Cursors.Hand,
+            .TextAlign = ContentAlignment.MiddleCenter
         }
+        btnBrowseLogo.FlatAppearance.BorderSize = 0
+        btnBrowseLogo.FlatAppearance.MouseOverBackColor = Color.FromArgb(96, 152, 255)
         AddHandler btnBrowseLogo.Click, AddressOf btnBrowseLogo_Click
         TabPage1.Controls.Add(btnBrowseLogo)
+        _tips.SetToolTip(btnBrowseLogo, "اضغط لاختيار صورة شعار/لوجو المحل من جهازك")
         yOff += 50
 
         ' الطابعة الحرارية
@@ -1126,6 +1137,18 @@ Public Class Settings
             newpoint.X -= x
             newpoint.Y -= y
             Me.Location = newpoint
+        End If
+    End Sub
+
+    Private Sub btn_min_Click(sender As Object, e As EventArgs) Handles btn_min.Click
+        WindowState = FormWindowState.Minimized
+    End Sub
+
+    Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
+        If WindowState = WindowState.Normal Then
+            WindowState = FormWindowState.Maximized
+        ElseIf WindowState.Maximized Then
+            WindowState = FormWindowState.Normal
         End If
     End Sub
 
