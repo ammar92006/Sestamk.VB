@@ -170,8 +170,9 @@ Public Module DBModule
 
     ''' <summary>
     ''' محاولة اتصال تلقائية صامتة: تجرّب الإعدادات المحفوظة أولاً،
-    ''' فإن فشلت تجرّب كل الخوادم المكتشفة بنفس قاعدة البيانات والمصادقة.
-    ''' عند أول نجاح تحفظ الخادم الناجح في db_config.ini.
+    ''' فإن فشلت تجرّب كل الخوادم المكتشفة بنفس قاعدة البيانات والمصادقة،
+    ''' وكحل أخير تُهيّئ قاعدة LocalDB من نسخة احتياطية مرفقة (لأجهزة التثبيت الجديدة).
+    ''' عند أول نجاح تحفظ الإعدادات الناجحة في db_config.ini.
     ''' ترجع True إذا نجح الاتصال.
     ''' </summary>
     Public Function TryAutoConnect() As Boolean
@@ -191,7 +192,94 @@ Public Module DBModule
             End If
         Next
 
+        ' (3) حل أخير: تهيئة قاعدة LocalDB من النسخة الاحتياطية المرفقة (db\<database>.bak)
+        '     يفيد عند التثبيت على جهاز جديد لا توجد عليه قاعدة بيانات بعد.
+        If EnsureLocalDbDatabase() Then
+            server = "(localdb)\MSSQLLocalDB"
+            useWindowsAuth = True
+            If TestConnection() Then
+                Try
+                    SaveDbSettings()
+                Catch
+                End Try
+                Return True
+            End If
+        End If
+
         Return False
+    End Function
+
+    ''' <summary>
+    ''' تتأكد من وجود قاعدة البيانات على LocalDB، وإن لم تكن موجودة تستعيدها من
+    ''' نسخة احتياطية مرفقة بالبرنامج في المجلد db\&lt;database&gt;.bak.
+    ''' لا تفعل شيئاً (وترجع False بهدوء) إن لم توجد النسخة الاحتياطية أو فشلت العملية.
+    ''' </summary>
+    Public Function EnsureLocalDbDatabase() As Boolean
+        Try
+            ' تشغيل نسخة LocalDB الافتراضية (إنشاء + بدء) بأفضل جهد
+            For Each arg As String In {"create MSSQLLocalDB", "start MSSQLLocalDB"}
+                Try
+                    Dim psi As New ProcessStartInfo("sqllocaldb", arg) With {
+                        .CreateNoWindow = True, .UseShellExecute = False,
+                        .WindowStyle = ProcessWindowStyle.Hidden}
+                    Process.Start(psi).WaitForExit(8000)
+                Catch
+                End Try
+            Next
+
+            Dim masterCs As String = "Server=(localdb)\MSSQLLocalDB;Database=master;Integrated Security=True;Connect Timeout=15;"
+            Using cn As New SqlConnection(masterCs)
+                cn.Open()
+
+                ' هل القاعدة موجودة بالفعل؟
+                Using chk As New SqlCommand("SELECT DB_ID(@n)", cn)
+                    chk.Parameters.AddWithValue("@n", database)
+                    Dim r = chk.ExecuteScalar()
+                    If r IsNot Nothing AndAlso Not Convert.IsDBNull(r) Then Return True
+                End Using
+
+                ' البحث عن النسخة الاحتياطية المرفقة
+                Dim bak As String = Path.Combine(Application.StartupPath, "db", database & ".bak")
+                If Not File.Exists(bak) Then Return False
+
+                ' قراءة الأسماء المنطقية من النسخة الاحتياطية
+                Dim dataLogical As String = "", logLogical As String = ""
+                Using fl As New SqlCommand("RESTORE FILELISTONLY FROM DISK=@p", cn)
+                    fl.Parameters.AddWithValue("@p", bak)
+                    Using rd = fl.ExecuteReader()
+                        While rd.Read()
+                            Dim t = rd("Type").ToString().ToUpper()
+                            If t = "D" AndAlso dataLogical = "" Then dataLogical = rd("LogicalName").ToString()
+                            If t = "L" AndAlso logLogical = "" Then logLogical = rd("LogicalName").ToString()
+                        End While
+                    End Using
+                End Using
+                If dataLogical = "" Then Return False
+                If logLogical = "" Then logLogical = dataLogical & "_log"
+
+                Dim dataDir As String = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+                Dim mdf As String = Path.Combine(dataDir, database & ".mdf")
+                Dim ldf As String = Path.Combine(dataDir, database & "_log.ldf")
+
+                ' بناء أمر RESTORE (الأسماء المنطقية لا تقبل Parameters في T-SQL فنُهرّب علامات الاقتباس)
+                Dim esc = Function(s As String) s.Replace("'", "''")
+                Dim restoreSql As String =
+                    "RESTORE DATABASE [" & database.Replace("]", "]]") & "] FROM DISK=@p WITH " &
+                    "MOVE '" & esc(dataLogical) & "' TO '" & esc(mdf) & "', " &
+                    "MOVE '" & esc(logLogical) & "' TO '" & esc(ldf) & "', REPLACE"
+
+                Using rs As New SqlCommand(restoreSql, cn)
+                    rs.CommandTimeout = 180
+                    rs.Parameters.AddWithValue("@p", bak)
+                    rs.ExecuteNonQuery()
+                End Using
+            End Using
+
+            Return True
+        Catch ex As Exception
+            Logger.LogError("EnsureLocalDbDatabase", ex)
+            Return False
+        End Try
     End Function
 
     ' ══════════════════════════════════════════════════════════

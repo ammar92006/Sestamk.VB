@@ -14,8 +14,11 @@ publish/
 packages/
 *.nupkg
 
-# Installer build output
+# Installer build output + large bundled binaries
 Installer/Output/
+Installer/redist/*.exe
+Installer/redist/*.msi
+Installer/db/*.bak
 *.exe.config
 
 # Misc
