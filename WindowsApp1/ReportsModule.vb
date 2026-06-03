@@ -1551,7 +1551,7 @@ End Sub
         If Not String.IsNullOrEmpty(thermalPrinter) Then
             pd.PrinterSettings.PrinterName = thermalPrinter
         End If
-        pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
+        pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
         pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
         AddHandler pd.PrintPage,
@@ -1636,23 +1636,13 @@ End Sub
                 logoY += brandH
 
                 ' حقول بيانات الفاتورة (شمال) - خط أصغر عشان تظهر كاملة
-                ' [إصلاح التداخل] قياس الارتفاع الفعلي مع الالتفاف + هوامش رأسية حتى لا
-                ' يتداخل أي سطر (مثل التاريخ) مع التالي، ويتمدّد الصف لو النص طويل.
-                Dim fieldPadX As Integer = 6
-                Dim fieldPadY As Integer = 5
-                Dim fieldGap As Integer = 3
                 Dim drawRightField = Sub(label As String, value As String)
-                                         Dim txt As String = label & " : " & If(value, "").Trim()
-                                         Dim availW As Integer = infoColW - fieldPadX * 2
-                                         If availW < 20 Then availW = infoColW
-                                         Dim measured As SizeF = g.MeasureString(txt, f8, availW, fmtR)
-                                         Dim textH As Integer = Math.Max(f8.Height, CInt(Math.Ceiling(measured.Height)))
-                                         Dim rowH As Integer = textH + fieldPadY * 2
+                                         Dim txt As String = label & " : " & value
+                                         Dim hh As Integer = f8.Height + 6
                                          g.DrawString(txt, f8, Brushes.Black,
-                                                      New RectangleF(infoColX + fieldPadX, infoY + fieldPadY, availW, textH), fmtR)
-                                         infoY += rowH
-                                         g.DrawLine(linePen, infoColX, infoY, infoColX + infoColW, infoY)
-                                         infoY += fieldGap
+                                                      New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
+                                         g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
+                                         infoY += hh + 1
                                      End Sub
 
                 drawRightField("اسم العميل", header.CustomerName)
@@ -1780,32 +1770,6 @@ End Sub
             Disconnect()
         End Try
     End Sub
-
-    ''' <summary>
-    ''' يختار مقاس ورق الطابعة الحرارية (80mm) تلقائياً من الأحجام التي يدعمها الدرايفر
-    ''' بدلاً من الاعتماد على إعداد الجهاز. يفضّل الورق الذي يحتوي اسمه على "80" أو الذي
-    ''' عرضه قريب من 80mm، ويختار الأكبر ارتفاعاً لتفادي قص الفواتير الطويلة.
-    ''' لو لم يجد، يرجع للمقاس المخصص القديم (300×5000).
-    ''' ملاحظة: يجب ضبط PrinterName على pd قبل استدعائها لتُقرأ أحجام الدرايفر الصحيحة.
-    ''' </summary>
-    Public Function ResolveThermalPaperSize(pd As PrintDocument) As PaperSize
-        Try
-            Dim best As PaperSize = Nothing
-            For Each ps As PaperSize In pd.PrinterSettings.PaperSizes
-                Dim nameHas80 As Boolean = ps.PaperName IsNot Nothing AndAlso ps.PaperName.Contains("80")
-                ' العرض بوحدة 1/100 بوصة: 80mm ≈ 315 ، و72.1mm ≈ 284 ، نسمح بمدى معقول
-                Dim widthOk As Boolean = ps.Width >= 270 AndAlso ps.Width <= 360
-                If (nameHas80 AndAlso ps.Width <= 400) OrElse widthOk Then
-                    ' نفضّل الأكبر ارتفاعاً (فواتير أطول بدون قص)
-                    If best Is Nothing OrElse ps.Height > best.Height Then best = ps
-                End If
-            Next
-            If best IsNot Nothing Then Return best
-        Catch
-        End Try
-        ' احتياطي: نفس المقاس المخصص القديم
-        Return New PaperSize("Custom", 300, 5000)
-    End Function
 
     Private Function GenerateQRCode(text As String) As Bitmap
         Dim writer As New ZXing.BarcodeWriter()

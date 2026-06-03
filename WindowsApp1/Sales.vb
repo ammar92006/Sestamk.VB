@@ -2294,7 +2294,7 @@ Public Class Sales
                             If Not String.IsNullOrEmpty(thermalPrinter) Then
                                 pd.PrinterSettings.PrinterName = thermalPrinter
                             End If
-                            pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
+                            pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
                             pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
                             Dim handler As PrintPageEventHandler = Nothing
@@ -2565,28 +2565,28 @@ Public Class Sales
                                                   Dim leftX As Integer = e.MarginBounds.Left
 
                                                   Using fmtC As New StringFormat() With {
-                                                .Alignment = StringAlignment.Center,
-                                                .LineAlignment = StringAlignment.Center,
-                                                .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+                                                  .Alignment = StringAlignment.Center,
+                                                  .LineAlignment = StringAlignment.Center,
+                                                  .FormatFlags = StringFormatFlags.DirectionRightToLeft}
                                                       Using fmtR As New StringFormat() With {
-                                                    .Alignment = StringAlignment.Far,
-                                                    .LineAlignment = StringAlignment.Center,
-                                                    .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+                                                      .Alignment = StringAlignment.Far,
+                                                      .LineAlignment = StringAlignment.Center,
+                                                      .FormatFlags = StringFormatFlags.DirectionRightToLeft}
                                                           Using fmtWrap As New StringFormat() With {
-                                                        .Alignment = StringAlignment.Near,
-                                                        .LineAlignment = StringAlignment.Center,
-                                                        .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
+                                                          .Alignment = StringAlignment.Near,
+                                                          .LineAlignment = StringAlignment.Center,
+                                                          .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
                                                               Using linePen As New Pen(Color.Black, 1)
 
                                                                   Dim centerLine = Sub(t As String, f As Font)
                                                                                        g.DrawString(t, f, Brushes.Black,
-                                                                                              New RectangleF(leftX, Y, pageW, f.Height + 5), fmtC)
+                                                                                                New RectangleF(leftX, Y, pageW, f.Height + 5), fmtC)
                                                                                        Y += f.Height + 5
                                                                                    End Sub
 
                                                                   Dim rightLine = Sub(t As String, f As Font)
                                                                                       g.DrawString(t, f, Brushes.Black,
-                                                                                             New RectangleF(leftX, Y, pageW, f.Height + 4), fmtR)
+                                                                                               New RectangleF(leftX, Y, pageW, f.Height + 4), fmtR)
                                                                                       Y += f.Height + 4
                                                                                   End Sub
 
@@ -2602,7 +2602,7 @@ Public Class Sales
                                                                   ' rightLine المعدّل: محاذاة اليمين داخل عرض آمن (مش لحافة الورق)
                                                                   Dim rightLineSafe = Sub(t As String, f As Font)
                                                                                           g.DrawString(t, f, Brushes.Black,
-                                                                                                 New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
+                                                                                                   New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
                                                                                           Y += f.Height + 4
                                                                                       End Sub
 
@@ -2635,7 +2635,7 @@ Public Class Sales
                                                                   End If
                                                                   Dim brandH As Integer = brandFont.Height + 4
                                                                   g.DrawString(StoreName, brandFont, Brushes.Black,
-                                                                         New RectangleF(logoColX, logoY, logoColW, brandH), fmtC)
+                                                                           New RectangleF(logoColX, logoY, logoColW, brandH), fmtC)
                                                                   logoY += brandH
 
                                                                   ' (شمال): بيانات العميل/الفاتورة (label : value) بمحاذاة يمنى
@@ -2643,7 +2643,7 @@ Public Class Sales
                                                                                            Dim txt As String = label & " : " & value
                                                                                            Dim hh As Integer = f10.Height + 6
                                                                                            g.DrawString(txt, f10, Brushes.Black,
-                                                                                                  New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
+                                                                                                    New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
                                                                                            ' خط فاصل أسفل كل حقل
                                                                                            g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
                                                                                            infoY += hh + 1
@@ -2704,74 +2704,74 @@ Public Class Sales
                                                                       Dim measured As SizeF = g.MeasureString(cleanName, f10, nameTextWidth, fmtWrap)
                                                                       Dim h As Integer = Math.Max(24, CInt(measured.Height) + 8)
                                                                       g.DrawString(cleanName, f10, Brushes.Black,
-                                                                    New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
+                                                                      New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
                                                                       g.DrawString(line.Quantity.ToString("0.##"), f10, Brushes.Black,
-                                                                    New RectangleF(xQ, Y, colQW, h), fmtC)
+                                                                      New RectangleF(xQ, Y, colQW, h), fmtC)
                                                                       g.DrawString(FormatNumber(line.SalePrice, 2), f10, Brushes.Black,
-                                                                    New RectangleF(xP, Y, colPW, h), fmtC)
-                                                                      g.DrawString(FormatNumber(line.Total, 2), f10, Brushes.Black,
-                                                                    New RectangleF(xT, Y, colTW, h), fmtC)
-                                                                      Y += h
-                                                                      g.DrawLine(linePen, leftX, Y, leftX + tableW, Y)
-                                                                  Next
+                                                                      New RectangleF(xP, Y, colPW, h), fmtC)
+                                                                  g.DrawString(FormatNumber(line.Total, 2), f10, Brushes.Black,
+                                                                      New RectangleF(xT, Y, colTW, h), fmtC)
+                                                                  Y += h
+                                                                  g.DrawLine(linePen, leftX, Y, leftX + tableW, Y)
+                                                              Next
 
-                                                                  Dim tableEndY As Integer = Y
-                                                                  g.DrawLine(linePen, leftX, tableY, leftX + tableW, tableY)
-                                                                  g.DrawLine(linePen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
-                                                                  g.DrawLine(linePen, xT, tableY, xT, tableEndY)
-                                                                  g.DrawLine(linePen, xP, tableY, xP, tableEndY)
-                                                                  g.DrawLine(linePen, xQ, tableY, xQ, tableEndY)
-                                                                  g.DrawLine(linePen, xN, tableY, xN, tableEndY)
-                                                                  g.DrawLine(linePen, xN + colNW, tableY, xN + colNW, tableEndY)
+                                                              Dim tableEndY As Integer = Y
+                                                              g.DrawLine(linePen, leftX, tableY, leftX + tableW, tableY)
+                                                              g.DrawLine(linePen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
+                                                              g.DrawLine(linePen, xT, tableY, xT, tableEndY)
+                                                              g.DrawLine(linePen, xP, tableY, xP, tableEndY)
+                                                              g.DrawLine(linePen, xQ, tableY, xQ, tableEndY)
+                                                              g.DrawLine(linePen, xN, tableY, xN, tableEndY)
+                                                              g.DrawLine(linePen, xN + colNW, tableY, xN + colNW, tableEndY)
 
-                                                                  separator()
-                                                                  If Val(data.Discount) > 0 Then
-                                                                      centerLine("إجمالي قبل الخصم : " & data.TotalRequired, fTotalLarge)
-                                                                      centerLine("الخصم           : " & data.Discount, fTotalLarge)
-                                                                      centerLine("الصافي          : " & data.TotalAfterDiscount, fTotalLarge)
-                                                                  Else
-                                                                      centerLine("إجمالي الفاتورة : " & data.TotalRequired, fTotalLarge)
-                                                                  End If
-                                                                  centerLine("المدفوع         : " & data.Paid, fTotalLarge)
-                                                                  centerLine("المتبقي         : " & data.Remaining, fTotalLarge)
+                                                              separator()
+                                                              If Val(data.Discount) > 0 Then
+                                                                  centerLine("إجمالي قبل الخصم : " & data.TotalRequired, fTotalLarge)
+                                                                  centerLine("الخصم           : " & data.Discount, fTotalLarge)
+                                                                  centerLine("الصافي          : " & data.TotalAfterDiscount, fTotalLarge)
+                                                              Else
+                                                                  centerLine("إجمالي الفاتورة : " & data.TotalRequired, fTotalLarge)
+                                                              End If
+                                                              centerLine("المدفوع         : " & data.Paid, fTotalLarge)
+                                                              centerLine("المتبقي         : " & data.Remaining, fTotalLarge)
 
-                                                                  If data.CustomerCode <> "1" Then
-                                                                      Dim prevBal As Decimal = 0D
-                                                                      Dim invRem As Decimal = 0D
-                                                                      Decimal.TryParse(data.CustomerBalance, prevBal)
-                                                                      Decimal.TryParse(data.Remaining, invRem)
-                                                                      rightLineSafe("رصيد سابق : " & prevBal.ToString("0.00"), fBold)
-                                                                      rightLineSafe("متبقي الفاتورة : " & invRem.ToString("0.00"), fBold)
-                                                                      rightLineSafe("إجمالي الحساب : " & (prevBal + invRem).ToString("0.00"), fBold)
-                                                                  End If
+                                                              If data.CustomerCode <> "1" Then
+                                                                  Dim prevBal As Decimal = 0D
+                                                                  Dim invRem As Decimal = 0D
+                                                                  Decimal.TryParse(data.CustomerBalance, prevBal)
+                                                                  Decimal.TryParse(data.Remaining, invRem)
+                                                                  rightLineSafe("رصيد سابق : " & prevBal.ToString("0.00"), fBold)
+                                                                  rightLineSafe("متبقي الفاتورة : " & invRem.ToString("0.00"), fBold)
+                                                                  rightLineSafe("إجمالي الحساب : " & (prevBal + invRem).ToString("0.00"), fBold)
+                                                              End If
 
-                                                                  separator()
-                                                                  centerLine("* " & FooterMsg & " *", fBold)
-                                                                  If Not String.IsNullOrEmpty(DeliveryText) Then
-                                                                      centerLine("** " & DeliveryText & " **", fBold)
-                                                                  End If
-                                                                  e.HasMorePages = False
-                                                                  separator()
+                                                              separator()
+                                                              centerLine("* " & FooterMsg & " *", fBold)
+                                                              If Not String.IsNullOrEmpty(DeliveryText) Then
+                                                                  centerLine("** " & DeliveryText & " **", fBold)
+                                                              End If
+                                                              e.HasMorePages = False
+                                                              separator()
 
-                                                              End Using : End Using : End Using : End Using
-                                              End Sub
+                                                          End Using : End Using : End Using : End Using
+                                          End Sub
 
-                                    AddHandler pd.PrintPage, handler
-                                    Try
-                                        If ShouldShowPrintPreview() Then
-                                            ShowPrintPreviewDialog(pd, "معاينة الفاتورة - استيل 2")
-                                        Else
-                                            pd.Print()
-                                        End If
-                                    Finally
-                                        RemoveHandler pd.PrintPage, handler
-                                    End Try
-                                End Using
+                                AddHandler pd.PrintPage, handler
+                                Try
+                                    If ShouldShowPrintPreview() Then
+                                        ShowPrintPreviewDialog(pd, "معاينة الفاتورة - استيل 2")
+                                    Else
+                                        pd.Print()
+                                    End If
+                                Finally
+                                    RemoveHandler pd.PrintPage, handler
+                                End Try
                             End Using
                         End Using
                     End Using
                 End Using
             End Using
+        End Using
         Finally
             If logoImg IsNot Nothing Then logoImg.Dispose()
         End Try
