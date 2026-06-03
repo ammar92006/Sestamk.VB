@@ -26,6 +26,7 @@ Public Class Settings
     Private cmbCurrency As ComboBox
     Private cmbBusinessType As ComboBox
     Private txtLogoPath As TextBox
+    Private picLogoPreview As PictureBox
     Private cmbThermalPrinter As ComboBox
     Private cmbNormalPrinter As ComboBox
     Private btnRefreshPrinters As Button
@@ -182,6 +183,22 @@ Public Class Settings
         AddHandler btnBrowseLogo.Click, AddressOf btnBrowseLogo_Click
         TabPage1.Controls.Add(btnBrowseLogo)
         _tips.SetToolTip(btnBrowseLogo, "اضغط لاختيار صورة شعار/لوجو المحل من جهازك")
+
+        ' معاينة مباشرة للّوجو (في العمود الأيسر الفارغ تحت الزر — لا تزحزح باقي الصفوف)
+        Dim lblPreview As New Label() With {
+            .Text = "معاينة اللوجو:", .ForeColor = Color.Gainsboro,
+            .Font = New Font("Segoe UI", 9, FontStyle.Bold), .AutoSize = True,
+            .Location = New Point(40, yOff + 34), .RightToLeft = RightToLeft.Yes
+        }
+        TabPage1.Controls.Add(lblPreview)
+        picLogoPreview = New PictureBox() With {
+            .Location = New Point(40, yOff + 56), .Size = New Size(130, 100),
+            .SizeMode = PictureBoxSizeMode.Zoom,
+            .BorderStyle = BorderStyle.FixedSingle,
+            .BackColor = Color.White
+        }
+        TabPage1.Controls.Add(picLogoPreview)
+        _tips.SetToolTip(picLogoPreview, "معاينة صورة اللوجو المختارة")
         yOff += 50
 
         ' الطابعة الحرارية
@@ -880,6 +897,7 @@ Public Class Settings
             cmbCurrency.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
             cmbBusinessType.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.BusinessType, "سوبر ماركت")
             txtLogoPath.Text = If(SettingsManager.GetSetting("LogoPath"), "")
+            LoadLogoPreview(txtLogoPath.Text)
 
             ' تحميل قائمة الطابعات
             LoadPrintersList()
@@ -939,8 +957,32 @@ Public Class Settings
             dlg.Filter = "صور|*.png;*.jpg;*.jpeg;*.bmp;*.gif|الكل|*.*"
             If dlg.ShowDialog() = DialogResult.OK Then
                 txtLogoPath.Text = dlg.FileName
+                LoadLogoPreview(dlg.FileName)
             End If
         End Using
+    End Sub
+
+    ''' <summary>تحميل صورة اللوجو في صندوق المعاينة بدون قفل الملف على القرص</summary>
+    Private Sub LoadLogoPreview(path As String)
+        Try
+            If picLogoPreview Is Nothing Then Return
+            ' تحرير الصورة القديمة أولاً
+            If picLogoPreview.Image IsNot Nothing Then
+                Dim old = picLogoPreview.Image
+                picLogoPreview.Image = Nothing
+                old.Dispose()
+            End If
+            If Not String.IsNullOrWhiteSpace(path) AndAlso IO.File.Exists(path) Then
+                ' نسخ الصورة من stream حتى لا يبقى الملف مقفولاً
+                Using fs As New IO.FileStream(path, IO.FileMode.Open, IO.FileAccess.Read)
+                    Using tmp As Image = Image.FromStream(fs)
+                        picLogoPreview.Image = New Bitmap(tmp)
+                    End Using
+                End Using
+            End If
+        Catch ex As Exception
+            Debug.WriteLine("LoadLogoPreview: " & ex.Message)
+        End Try
     End Sub
 
     Private Sub btnSaveGeneral_Click(sender As Object, e As EventArgs)
