@@ -2599,7 +2599,7 @@ Public Class Sales
                                                                   ' ─── الهيدر على غرار فاتورة المصطفى ───
                                                                   ' عمود اليمين (بصرياً): اللوجو + اسم المحل
                                                                   ' عمود الشمال (بصرياً): اسم العميل، رقم الفاتورة، التاريخ، المستخدم
-                                                                  Dim logoColW As Integer = CInt(usableW * 0.32)         ' عمود اللوجو (يمين الورق)
+                                                                  Dim logoColW As Integer = CInt(usableW * 0.42)         ' عمود اللوجو (يمين الورق) - أوسع ليظهر اللوجو أكبر وأوضح
                                                                   Dim infoColW As Integer = usableW - logoColW           ' عمود البيانات (شمال الورق)
                                                                   Dim infoColX As Integer = leftX                        ' x لعمود البيانات
                                                                   Dim logoColX As Integer = leftX + infoColW             ' x لعمود اللوجو
@@ -2608,7 +2608,7 @@ Public Class Sales
 
                                                                   ' (يمين): لوجو + اسم المحل تحته
                                                                   If logoImg IsNot Nothing Then
-                                                                      Dim logoWidth As Integer = Math.Min(95, logoColW - 6)
+                                                                      Dim logoWidth As Integer = Math.Min(130, logoColW - 6)
                                                                       Dim logoHeight As Integer = CInt(logoWidth * logoImg.Height / logoImg.Width)
                                                                       Dim logoXPos As Integer = logoColX + (logoColW - logoWidth) \ 2
                                                                       g.DrawImage(logoImg, logoXPos, logoY, logoWidth, logoHeight)

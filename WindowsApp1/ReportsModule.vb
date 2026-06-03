@@ -1605,7 +1605,7 @@ End Sub
 
                 ' ─── الهيدر: لوجو على اليمين + بيانات على الشمال ───
                 ' اللوجو ياخد مساحة أصغر عشان البيانات الأطول (التاريخ) تظهر كاملة
-                Dim logoColW As Integer = CInt(usableW * 0.32)
+                Dim logoColW As Integer = CInt(usableW * 0.42)   ' أوسع ليظهر اللوجو أكبر وأوضح
                 Dim infoColW As Integer = usableW - logoColW
                 Dim infoColX As Integer = leftX
                 Dim logoColX As Integer = leftX + infoColW
@@ -1613,7 +1613,7 @@ End Sub
                 Dim infoY As Integer = Y
 
                 If logoImg IsNot Nothing Then
-                    Dim logoWidth As Integer = Math.Min(95, logoColW - 6)
+                    Dim logoWidth As Integer = Math.Min(130, logoColW - 6)
                     Dim logoHeight As Integer = CInt(logoWidth * logoImg.Height / logoImg.Width)
                     Dim logoXPos As Integer = logoColX + (logoColW - logoWidth) \ 2
                     g.DrawImage(logoImg, logoXPos, logoY, logoWidth, logoHeight)

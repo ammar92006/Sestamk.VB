@@ -191,14 +191,30 @@ Public Class Settings
             .Location = New Point(40, yOff + 34), .RightToLeft = RightToLeft.Yes
         }
         TabPage1.Controls.Add(lblPreview)
+        ' مربّع المعاينة مربّع الشكل ليُلمّح بأن الأفضل صورة مربّعة
         picLogoPreview = New PictureBox() With {
-            .Location = New Point(40, yOff + 56), .Size = New Size(130, 100),
+            .Location = New Point(40, yOff + 56), .Size = New Size(120, 120),
             .SizeMode = PictureBoxSizeMode.Zoom,
             .BorderStyle = BorderStyle.FixedSingle,
             .BackColor = Color.White
         }
         TabPage1.Controls.Add(picLogoPreview)
         _tips.SetToolTip(picLogoPreview, "معاينة صورة اللوجو المختارة")
+
+        ' إرشاد المقاس المناسب للّوجو (بجانب المعاينة)
+        Dim lblLogoHint As New Label() With {
+            .Text = "💡 أفضل مقاس للّوجو:" & vbCrLf &
+                    "صورة مربّعة 300×300 بكسل" & vbCrLf &
+                    "(أو 200×200 على الأقل)" & vbCrLf &
+                    "بصيغة PNG بخلفية بيضاء أو شفافة.",
+            .ForeColor = Color.Khaki,
+            .Font = New Font("Segoe UI", 9, FontStyle.Bold),
+            .AutoSize = False, .Size = New Size(380, 110),
+            .Location = New Point(180, yOff + 56),
+            .RightToLeft = RightToLeft.Yes,
+            .TextAlign = ContentAlignment.TopRight
+        }
+        TabPage1.Controls.Add(lblLogoHint)
         yOff += 50
 
         ' الطابعة الحرارية
