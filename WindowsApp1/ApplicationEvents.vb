@@ -61,10 +61,20 @@ Namespace My
             e.Cancel = True
         End Sub
 
-        ''' <summary>عرض معالج أول تشغيل إذا لم تكتمل التهيئة بعد</summary>
+        ''' <summary>عرض معالج أول تشغيل فقط على تثبيت جديد فعلاً (غير مهيّأ)</summary>
         Private Sub ShowFirstRunIfNeeded()
             Try
                 If SettingsManager.GetBoolSetting(SettingsKeys.SetupCompleted, False) Then Exit Sub
+
+                ' مهم: التثبيتات القديمة/المهيّأة (اسم محل موجود أو فيه مستخدمين)
+                ' يجب ألا يظهر لها المعالج. نعتبرها مكتملة ونعلّمها لمنع تكرار الفحص.
+                If IsBusinessAlreadyConfigured() Then
+                    Try
+                        SettingsManager.SaveSetting(SettingsKeys.SetupCompleted, "true")
+                    Catch
+                    End Try
+                    Exit Sub
+                End If
 
                 Using wiz As New FirstRunSetup()
                     wiz.ShowDialog()
@@ -74,8 +84,24 @@ Namespace My
                 Settingsall.LoadAdminCredentials()
             Catch ex As Exception
                 ' لا نعطّل بدء التشغيل لو فشل المعالج لأي سبب
-                Debug.WriteLine("ShowFirstRunIfNeeded: " & ex.Message)
+                Logger.LogError("ShowFirstRunIfNeeded", ex)
             End Try
         End Sub
+
+        ''' <summary>هل النشاط مهيّأ مسبقاً؟ (اسم محل محفوظ أو يوجد مستخدمون)</summary>
+        Private Function IsBusinessAlreadyConfigured() As Boolean
+            Try
+                If Not String.IsNullOrWhiteSpace(SettingsManager.GetSetting(SettingsKeys.ShopName)) Then Return True
+
+                Using cn = DBModule.NewConn()
+                    Using cmd As New System.Data.SqlClient.SqlCommand("SELECT COUNT(*) FROM Users_TBL", cn)
+                        cmd.CommandTimeout = 8
+                        If Convert.ToInt32(cmd.ExecuteScalar()) > 0 Then Return True
+                    End Using
+                End Using
+            Catch
+            End Try
+            Return False
+        End Function
     End Class
 End Namespace
