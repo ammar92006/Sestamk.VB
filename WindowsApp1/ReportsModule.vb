@@ -1194,7 +1194,7 @@ SELECT
         If Not String.IsNullOrEmpty(thermalPrinter) Then
             pd.PrinterSettings.PrinterName = thermalPrinter
         End If
-        pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
+        pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
         pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
         AddHandler pd.PrintPage,
@@ -1551,7 +1551,7 @@ End Sub
         If Not String.IsNullOrEmpty(thermalPrinter) Then
             pd.PrinterSettings.PrinterName = thermalPrinter
         End If
-        pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
+        pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
         pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
         AddHandler pd.PrintPage,
@@ -1780,6 +1780,32 @@ End Sub
             Disconnect()
         End Try
     End Sub
+
+    ''' <summary>
+    ''' يختار مقاس ورق الطابعة الحرارية (80mm) تلقائياً من الأحجام التي يدعمها الدرايفر
+    ''' بدلاً من الاعتماد على إعداد الجهاز. يفضّل الورق الذي يحتوي اسمه على "80" أو الذي
+    ''' عرضه قريب من 80mm، ويختار الأكبر ارتفاعاً لتفادي قص الفواتير الطويلة.
+    ''' لو لم يجد، يرجع للمقاس المخصص القديم (300×5000).
+    ''' ملاحظة: يجب ضبط PrinterName على pd قبل استدعائها لتُقرأ أحجام الدرايفر الصحيحة.
+    ''' </summary>
+    Public Function ResolveThermalPaperSize(pd As PrintDocument) As PaperSize
+        Try
+            Dim best As PaperSize = Nothing
+            For Each ps As PaperSize In pd.PrinterSettings.PaperSizes
+                Dim nameHas80 As Boolean = ps.PaperName IsNot Nothing AndAlso ps.PaperName.Contains("80")
+                ' العرض بوحدة 1/100 بوصة: 80mm ≈ 315 ، و72.1mm ≈ 284 ، نسمح بمدى معقول
+                Dim widthOk As Boolean = ps.Width >= 270 AndAlso ps.Width <= 360
+                If (nameHas80 AndAlso ps.Width <= 400) OrElse widthOk Then
+                    ' نفضّل الأكبر ارتفاعاً (فواتير أطول بدون قص)
+                    If best Is Nothing OrElse ps.Height > best.Height Then best = ps
+                End If
+            Next
+            If best IsNot Nothing Then Return best
+        Catch
+        End Try
+        ' احتياطي: نفس المقاس المخصص القديم
+        Return New PaperSize("Custom", 300, 5000)
+    End Function
 
     Private Function GenerateQRCode(text As String) As Bitmap
         Dim writer As New ZXing.BarcodeWriter()

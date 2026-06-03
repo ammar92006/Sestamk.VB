@@ -2284,7 +2284,7 @@ Public Class Sales
                             If Not String.IsNullOrEmpty(thermalPrinter) Then
                                 pd.PrinterSettings.PrinterName = thermalPrinter
                             End If
-                            pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
+                            pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
                             pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
                             Dim handler As PrintPageEventHandler = Nothing
@@ -2544,7 +2544,7 @@ Public Class Sales
                                     If Not String.IsNullOrEmpty(thermalPrinter) Then
                                         pd.PrinterSettings.PrinterName = thermalPrinter
                                     End If
-                                    pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
+                                    pd.DefaultPageSettings.PaperSize = ResolveThermalPaperSize(pd)
                                     pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
                                     Dim handler As PrintPageEventHandler = Nothing
