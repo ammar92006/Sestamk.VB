@@ -8,6 +8,28 @@ Namespace My
     ' StartupNextInstance: Raised when launching a single-instance application and the application is already active. 
     ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
+
+        ''' <summary>
+        ''' معالج الأخطاء غير المتوقّعة: بدل أن يُغلق البرنامج فجأة، نسجّل الخطأ
+        ''' ونعرض رسالة عربية ودّية ونترك المستخدم يكمل عمله إن أمكن.
+        ''' </summary>
+        Private Sub MyApplication_UnhandledException(sender As Object, e As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
+            Try
+                Logger.LogError("UnhandledException", e.Exception)
+            Catch
+            End Try
+            Try
+                MessageBox.Show(
+                    "حدث خطأ غير متوقّع، وتم تسجيله تلقائياً." & vbCrLf &
+                    "يمكنك متابعة العمل، وإن تكرّر الخطأ أعد تشغيل البرنامج.",
+                    "تنبيه",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Catch
+            End Try
+            ' منع إغلاق البرنامج بسبب الخطأ
+            e.ExitApplication = False
+        End Sub
+
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
             ' تحميل إعدادات قاعدة البيانات المحفوظة من الملف قبل فتح أي فورم
             DBModule.LoadDbSettings()

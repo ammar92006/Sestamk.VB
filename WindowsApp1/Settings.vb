@@ -602,9 +602,9 @@ Public Class Settings
             SettingsManager.SaveSetting("BarcodeShowName", chkBarcodeShowName.Checked.ToString().ToLower())
             SettingsManager.SaveSetting("BarcodeShowPrice", chkBarcodeShowPrice.Checked.ToString().ToLower())
             SettingsManager.SaveSetting("BarcodeShowStoreName", chkBarcodeShowStoreName.Checked.ToString().ToLower())
-            MessageBox.Show("✅ تم حفظ إعدادات طابعة الباركود.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Notify.Toast("تم حفظ إعدادات طابعة الباركود", Notify.ToastType.Success)
         Catch ex As Exception
-            MessageBox.Show("❌ خطأ في الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Notify.Error("خطأ في الحفظ: " & ex.Message)
         End Try
     End Sub
 
@@ -956,9 +956,9 @@ Public Class Settings
             SettingsManager.SaveSetting("PrintBarcode", chkPrintBarcode.Checked.ToString().ToLower())
             SettingsManager.SaveSetting("PrintPreview", chkPrintPreview.Checked.ToString().ToLower())
 
-            MessageBox.Show("✅ تم حفظ الاعدادات العامة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Notify.Toast("تم حفظ الاعدادات العامة", Notify.ToastType.Success)
         Catch ex As Exception
-            MessageBox.Show("❌ خطأ في الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Notify.Error("خطأ في الحفظ: " & ex.Message)
         End Try
     End Sub
 

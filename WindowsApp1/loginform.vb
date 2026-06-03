@@ -390,7 +390,7 @@ Public Class Login
             Dim code As Integer = GetNextLoginCode()
             LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, Label6.Text)
 
-            MessageBox.Show("تم الدخول بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Notify.Toast("تم الدخول بنجاح", Notify.ToastType.Success)
 
             usernamelogin = enteredUser
             passwordlogin = enteredPass
@@ -451,7 +451,7 @@ Public Class Login
                         Dim code As Integer = GetNextLoginCode()
                         LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, Label6.Text)
 
-                        MessageBox.Show("تم تسجيل الدخول بنجاح ✅", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        Notify.Toast("تم تسجيل الدخول بنجاح", Notify.ToastType.Success)
                         usernamelogin = enteredUser
                         passwordlogin = enteredPass
 
