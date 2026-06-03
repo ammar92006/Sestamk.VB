@@ -1636,13 +1636,23 @@ End Sub
                 logoY += brandH
 
                 ' حقول بيانات الفاتورة (شمال) - خط أصغر عشان تظهر كاملة
+                ' [إصلاح التداخل] قياس الارتفاع الفعلي مع الالتفاف + هوامش رأسية حتى لا
+                ' يتداخل أي سطر (مثل التاريخ) مع التالي، ويتمدّد الصف لو النص طويل.
+                Dim fieldPadX As Integer = 6
+                Dim fieldPadY As Integer = 5
+                Dim fieldGap As Integer = 3
                 Dim drawRightField = Sub(label As String, value As String)
-                                         Dim txt As String = label & " : " & value
-                                         Dim hh As Integer = f8.Height + 6
+                                         Dim txt As String = label & " : " & If(value, "").Trim()
+                                         Dim availW As Integer = infoColW - fieldPadX * 2
+                                         If availW < 20 Then availW = infoColW
+                                         Dim measured As SizeF = g.MeasureString(txt, f8, availW, fmtR)
+                                         Dim textH As Integer = Math.Max(f8.Height, CInt(Math.Ceiling(measured.Height)))
+                                         Dim rowH As Integer = textH + fieldPadY * 2
                                          g.DrawString(txt, f8, Brushes.Black,
-                                                      New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
-                                         g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
-                                         infoY += hh + 1
+                                                      New RectangleF(infoColX + fieldPadX, infoY + fieldPadY, availW, textH), fmtR)
+                                         infoY += rowH
+                                         g.DrawLine(linePen, infoColX, infoY, infoColX + infoColW, infoY)
+                                         infoY += fieldGap
                                      End Sub
 
                 drawRightField("اسم العميل", header.CustomerName)

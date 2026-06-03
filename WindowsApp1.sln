@@ -1,16 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35514.174
+# Visual Studio Version 18
+VisualStudioVersion = 18.6.11822.322 stable
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ش", "WindowsApp1\ش.vbproj", "{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CashierMarket", "WindowsApp1\CashierMarket.vbproj", "{66E0FC04-9CF5-4D02-B3CD-F88F611D542D}"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CashierMarketInstaller", "CashierMarketInstaller\CashierMarketInstaller.vdproj", "{2462C1D7-F7F8-9E20-1D58-CD435E5F20D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Installer", "Installer", "{A1B2C3D4-E5F6-47A8-9B0C-1D2E3F4A5B6C}"
 	ProjectSection(SolutionItems) = preProject
-		Installer\CashierMarket.iss = Installer\CashierMarket.iss
 		Installer\build_installer.ps1 = Installer\build_installer.ps1
+		Installer\CashierMarket.iss = Installer\CashierMarket.iss
 		Installer\prepare_db_backup.ps1 = Installer\prepare_db_backup.ps1
 		Installer\README.md = Installer\README.md
 	EndProjectSection

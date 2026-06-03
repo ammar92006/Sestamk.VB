@@ -2629,14 +2629,27 @@ Public Class Sales
                                                                   logoY += brandH
 
                                                                   ' (شمال): بيانات العميل/الفاتورة (label : value) بمحاذاة يمنى
+                                                                  ' [إصلاح التداخل] نقيس الارتفاع الفعلي للنص مع الالتفاف ونضيف هوامش رأسية
+                                                                  ' حتى لا يتداخل أي سطر (مثل سطر التاريخ) مع السطر التالي، ويُطبَّق هذا
+                                                                  ' تلقائياً على كل الحقول (اسم العميل، الفاتورة، التاريخ، المستخدم، الدفع)
+                                                                  ' كما يتمدّد الصف رأسياً إذا كان النص طويلاً (التفاف لأكثر من سطر).
+                                                                  Dim fieldPadX As Integer = 6
+                                                                  Dim fieldPadY As Integer = 5
+                                                                  Dim fieldGap As Integer = 3
                                                                   Dim drawRightField = Sub(label As String, value As String)
-                                                                                           Dim txt As String = label & " : " & value
-                                                                                           Dim hh As Integer = f10.Height + 6
+                                                                                           Dim txt As String = label & " : " & If(value, "").Trim()
+                                                                                           Dim availW As Integer = infoColW - fieldPadX * 2
+                                                                                           If availW < 20 Then availW = infoColW
+                                                                                           ' قياس الارتفاع الفعلي مع الالتفاف داخل عرض العمود
+                                                                                           Dim measured As SizeF = g.MeasureString(txt, f10, availW, fmtR)
+                                                                                           Dim textH As Integer = Math.Max(f10.Height, CInt(Math.Ceiling(measured.Height)))
+                                                                                           Dim rowH As Integer = textH + fieldPadY * 2
                                                                                            g.DrawString(txt, f10, Brushes.Black,
-                                                                                                    New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
-                                                                                           ' خط فاصل أسفل كل حقل
-                                                                                           g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
-                                                                                           infoY += hh + 1
+                                                                                                    New RectangleF(infoColX + fieldPadX, infoY + fieldPadY, availW, textH), fmtR)
+                                                                                           infoY += rowH
+                                                                                           ' خط فاصل أسفل الحقل مع فجوة صغيرة قبل الحقل التالي
+                                                                                           g.DrawLine(linePen, infoColX, infoY, infoColX + infoColW, infoY)
+                                                                                           infoY += fieldGap
                                                                                        End Sub
 
                                                                   drawRightField("اسم العميل", data.CustomerName)
