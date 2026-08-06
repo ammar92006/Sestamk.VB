@@ -37,11 +37,6 @@ Partial Class Sales
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.txtRemaining = New Guna.UI2.WinForms.Guna2TextBox()
         Me.PanelControl1 = New DevExpress.XtraEditors.PanelControl()
-        Me.btnToggleScanner = New DevExpress.XtraEditors.SimpleButton()
-        Me.Button1 = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnDelete = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_Sales_Returns = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnSaveInvoice = New DevExpress.XtraEditors.SimpleButton()
         Me.txtDiscount = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblDiscount = New System.Windows.Forms.Label()
         Me.lblRemaining = New System.Windows.Forms.Label()
@@ -49,11 +44,6 @@ Partial Class Sales
         Me.Label8 = New System.Windows.Forms.Label()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.btn_Invoice_Edit = New Guna.UI2.WinForms.Guna2Button()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Guna2ToggleSwitch1 = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.btn_auto_pay = New System.Windows.Forms.Button()
-        Me.Pic_Logo = New System.Windows.Forms.PictureBox()
-        Me.btn_money = New DevExpress.XtraEditors.SimpleButton()
         Me.txt_free_profit = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Guna2TextBox2 = New Guna.UI2.WinForms.Guna2TextBox()
@@ -64,11 +54,8 @@ Partial Class Sales
         Me.txtDebit = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lbl_Credit = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtCredit = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btnToggleDiscount = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_search_Customer_name = New System.Windows.Forms.Button()
         Me.Guna2HtmlLabel9 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txt_notes = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btn_search_Customer_ID = New System.Windows.Forms.Button()
         Me.lstCodeSuggestions = New System.Windows.Forms.ListBox()
         Me.lstNameSuggestions = New System.Windows.Forms.ListBox()
         Me.Label16 = New System.Windows.Forms.Label()
@@ -84,12 +71,10 @@ Partial Class Sales
         Me.Label5 = New System.Windows.Forms.Label()
         Me.txt_Invoice_ID = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btn_add_product = New DevExpress.XtraEditors.SimpleButton()
         Me.txtTotalRequired = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblTotalBefore = New System.Windows.Forms.Label()
         Me.txt_Customer_Name = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
@@ -102,11 +87,26 @@ Partial Class Sales
         Me.lbl_user_name = New System.Windows.Forms.Label()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_auto_pay = New System.Windows.Forms.Button()
+        Me.Pic_Logo = New System.Windows.Forms.PictureBox()
+        Me.btn_money = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnToggleDiscount = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_search_Customer_name = New System.Windows.Forms.Button()
+        Me.btn_search_CustomerCode = New System.Windows.Forms.Button()
+        Me.btn_add_product = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnToggleScanner = New DevExpress.XtraEditors.SimpleButton()
+        Me.Button1 = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnDelete = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_Sales_Returns = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSaveInvoice = New DevExpress.XtraEditors.SimpleButton()
+        Me.cmbTreasury = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
-        CType(Me.Pic_Logo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelHeader.SuspendLayout()
+        CType(Me.Pic_Logo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label13
@@ -119,7 +119,7 @@ Partial Class Sales
         Me.Label13.Size = New System.Drawing.Size(164, 33)
         Me.Label13.TabIndex = 5594
         Me.Label13.Text = "الكمية"
-        Me.Label13.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.Label13.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'txtQuantity
         '
@@ -154,7 +154,7 @@ Partial Class Sales
         Me.Label12.Size = New System.Drawing.Size(148, 33)
         Me.Label12.TabIndex = 5592
         Me.Label12.Text = "سعر البيع"
-        Me.Label12.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.Label12.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'Label11
         '
@@ -166,7 +166,7 @@ Partial Class Sales
         Me.Label11.Size = New System.Drawing.Size(163, 33)
         Me.Label11.TabIndex = 5591
         Me.Label11.Text = "الواحدات"
-        Me.Label11.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.Label11.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'cmbUnit
         '
@@ -179,10 +179,10 @@ Partial Class Sales
         Me.cmbUnit.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.cmbUnit.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
         Me.cmbUnit.ForeColor = System.Drawing.Color.Black
-        Me.cmbUnit.ItemHeight = 30
+        Me.cmbUnit.ItemHeight = 45
         Me.cmbUnit.Location = New System.Drawing.Point(657, 413)
         Me.cmbUnit.Name = "cmbUnit"
-        Me.cmbUnit.Size = New System.Drawing.Size(163, 36)
+        Me.cmbUnit.Size = New System.Drawing.Size(163, 51)
         Me.cmbUnit.TabIndex = 5590
         Me.cmbUnit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -196,7 +196,7 @@ Partial Class Sales
         Me.Label10.Size = New System.Drawing.Size(243, 33)
         Me.Label10.TabIndex = 5589
         Me.Label10.Text = "كود المنتج"
-        Me.Label10.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'txtProductCodeSearch
         '
@@ -231,7 +231,7 @@ Partial Class Sales
         Me.Label9.Size = New System.Drawing.Size(522, 33)
         Me.Label9.TabIndex = 5587
         Me.Label9.Text = "اسم المنتج"
-        Me.Label9.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.Label9.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'txtSalePrice
         '
@@ -288,7 +288,7 @@ Partial Class Sales
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.DataGridView1.RowTemplate.Height = 50
-        Me.DataGridView1.Size = New System.Drawing.Size(1600, 420)
+        Me.DataGridView1.Size = New System.Drawing.Size(1600, 220)
         Me.DataGridView1.TabIndex = 80
         '
         'txtRemaining
@@ -326,76 +326,6 @@ Partial Class Sales
         Me.PanelControl1.Name = "PanelControl1"
         Me.PanelControl1.Size = New System.Drawing.Size(1600, 68)
         Me.PanelControl1.TabIndex = 78
-        '
-        'btnToggleScanner
-        '
-        Me.btnToggleScanner.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnToggleScanner.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnToggleScanner.Appearance.Options.UseFont = True
-        Me.btnToggleScanner.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.scanner
-        Me.btnToggleScanner.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnToggleScanner.Location = New System.Drawing.Point(1402, 5)
-        Me.btnToggleScanner.Name = "btnToggleScanner"
-        Me.btnToggleScanner.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnToggleScanner.Size = New System.Drawing.Size(269, 57)
-        Me.btnToggleScanner.TabIndex = 4
-        Me.btnToggleScanner.Text = "تشغيل الاسكنر"
-        '
-        'Button1
-        '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Appearance.Options.UseFont = True
-        Me.Button1.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
-        Me.Button1.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.Button1.Location = New System.Drawing.Point(1680, 5)
-        Me.Button1.Name = "Button1"
-        Me.Button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Button1.Size = New System.Drawing.Size(318, 57)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "طباعة الفاتورة (F5)"
-        '
-        'btnDelete
-        '
-        Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDelete.Appearance.Options.UseFont = True
-        Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
-        Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnDelete.Location = New System.Drawing.Point(2000, 5)
-        Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnDelete.Size = New System.Drawing.Size(298, 57)
-        Me.btnDelete.TabIndex = 2
-        Me.btnDelete.Text = "حذف الفاتورة (F4)"
-        '
-        'btn_Sales_Returns
-        '
-        Me.btn_Sales_Returns.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_Sales_Returns.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_Sales_Returns.Appearance.Options.UseFont = True
-        Me.btn_Sales_Returns.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
-        Me.btn_Sales_Returns.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btn_Sales_Returns.Location = New System.Drawing.Point(2300, 5)
-        Me.btn_Sales_Returns.Name = "btn_Sales_Returns"
-        Me.btn_Sales_Returns.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btn_Sales_Returns.Size = New System.Drawing.Size(339, 57)
-        Me.btn_Sales_Returns.TabIndex = 1
-        Me.btn_Sales_Returns.Text = "مرتجعات البيع (F3)"
-        '
-        'btnSaveInvoice
-        '
-        Me.btnSaveInvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSaveInvoice.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSaveInvoice.Appearance.Options.UseFont = True
-        Me.btnSaveInvoice.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSaveInvoice.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSaveInvoice.Location = New System.Drawing.Point(2650, 5)
-        Me.btnSaveInvoice.Name = "btnSaveInvoice"
-        Me.btnSaveInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSaveInvoice.Size = New System.Drawing.Size(333, 57)
-        Me.btnSaveInvoice.TabIndex = 0
-        Me.btnSaveInvoice.Text = "حفظ  الفاتورة (F2)"
         '
         'txtDiscount
         '
@@ -476,9 +406,9 @@ Partial Class Sales
         '
         'grpCustomerInfo
         '
-        Me.grpCustomerInfo.Controls.Add(Me.btn_Invoice_Edit)
+        Me.grpCustomerInfo.Controls.Add(Me.cmbTreasury)
         Me.grpCustomerInfo.Controls.Add(Me.Label4)
-        Me.grpCustomerInfo.Controls.Add(Me.Guna2ToggleSwitch1)
+        Me.grpCustomerInfo.Controls.Add(Me.btn_Invoice_Edit)
         Me.grpCustomerInfo.Controls.Add(Me.btn_auto_pay)
         Me.grpCustomerInfo.Controls.Add(Me.Pic_Logo)
         Me.grpCustomerInfo.Controls.Add(Me.btn_money)
@@ -496,7 +426,7 @@ Partial Class Sales
         Me.grpCustomerInfo.Controls.Add(Me.btn_search_Customer_name)
         Me.grpCustomerInfo.Controls.Add(Me.Guna2HtmlLabel9)
         Me.grpCustomerInfo.Controls.Add(Me.txt_notes)
-        Me.grpCustomerInfo.Controls.Add(Me.btn_search_Customer_ID)
+        Me.grpCustomerInfo.Controls.Add(Me.btn_search_CustomerCode)
         Me.grpCustomerInfo.Controls.Add(Me.lstCodeSuggestions)
         Me.grpCustomerInfo.Controls.Add(Me.lstNameSuggestions)
         Me.grpCustomerInfo.Controls.Add(Me.Label16)
@@ -562,72 +492,6 @@ Partial Class Sales
         Me.btn_Invoice_Edit.Size = New System.Drawing.Size(180, 30)
         Me.btn_Invoice_Edit.TabIndex = 5634
         Me.btn_Invoice_Edit.Text = "تعديل بيانات الفاتورة"
-        '
-        'Label4
-        '
-        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label4.AutoSize = True
-        Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.Location = New System.Drawing.Point(562, 4)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(126, 33)
-        Me.Label4.TabIndex = 5633
-        Me.Label4.Text = "حفظ تلقائيا"
-        '
-        'Guna2ToggleSwitch1
-        '
-        Me.Guna2ToggleSwitch1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2ToggleSwitch1.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2ToggleSwitch1.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Guna2ToggleSwitch1.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Guna2ToggleSwitch1.CheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch1.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch1.Location = New System.Drawing.Point(694, 4)
-        Me.Guna2ToggleSwitch1.Name = "Guna2ToggleSwitch1"
-        Me.Guna2ToggleSwitch1.Size = New System.Drawing.Size(78, 32)
-        Me.Guna2ToggleSwitch1.TabIndex = 5632
-        Me.Guna2ToggleSwitch1.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.Guna2ToggleSwitch1.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.Guna2ToggleSwitch1.UncheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch1.UncheckedState.InnerColor = System.Drawing.Color.White
-        '
-        'btn_auto_pay
-        '
-        Me.btn_auto_pay.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_auto_pay.Image = Global.WindowsApp1.My.Resources.Resources.pay__1_
-        Me.btn_auto_pay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.btn_auto_pay.Location = New System.Drawing.Point(352, 200)
-        Me.btn_auto_pay.Name = "btn_auto_pay"
-        Me.btn_auto_pay.Size = New System.Drawing.Size(90, 45)
-        Me.btn_auto_pay.TabIndex = 5631
-        Me.btn_auto_pay.Text = "OK"
-        Me.btn_auto_pay.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btn_auto_pay.UseVisualStyleBackColor = True
-        '
-        'Pic_Logo
-        '
-        Me.Pic_Logo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Pic_Logo.Image = Global.WindowsApp1.My.Resources.Resources.logo_app
-        Me.Pic_Logo.Location = New System.Drawing.Point(3, 47)
-        Me.Pic_Logo.Name = "Pic_Logo"
-        Me.Pic_Logo.Size = New System.Drawing.Size(343, 182)
-        Me.Pic_Logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.Pic_Logo.TabIndex = 5630
-        Me.Pic_Logo.TabStop = False
-        '
-        'btn_money
-        '
-        Me.btn_money.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_money.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_money.Appearance.Options.UseFont = True
-        Me.btn_money.AutoSize = True
-        Me.btn_money.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.money_stack
-        Me.btn_money.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btn_money.Location = New System.Drawing.Point(87, 2)
-        Me.btn_money.Name = "btn_money"
-        Me.btn_money.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btn_money.Size = New System.Drawing.Size(38, 36)
-        Me.btn_money.TabIndex = 5629
         '
         'txt_free_profit
         '
@@ -815,30 +679,6 @@ Partial Class Sales
         Me.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.txtCredit.Visible = False
         '
-        'btnToggleDiscount
-        '
-        Me.btnToggleDiscount.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnToggleDiscount.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnToggleDiscount.Appearance.Options.UseFont = True
-        Me.btnToggleDiscount.AutoSize = True
-        Me.btnToggleDiscount.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.gift
-        Me.btnToggleDiscount.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnToggleDiscount.Location = New System.Drawing.Point(5, 2)
-        Me.btnToggleDiscount.Name = "btnToggleDiscount"
-        Me.btnToggleDiscount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnToggleDiscount.Size = New System.Drawing.Size(38, 36)
-        Me.btnToggleDiscount.TabIndex = 5618
-        '
-        'btn_search_Customer_name
-        '
-        Me.btn_search_Customer_name.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_search_Customer_name.Image = Global.WindowsApp1.My.Resources.Resources.search1
-        Me.btn_search_Customer_name.Location = New System.Drawing.Point(957, 133)
-        Me.btn_search_Customer_name.Name = "btn_search_Customer_name"
-        Me.btn_search_Customer_name.Size = New System.Drawing.Size(66, 45)
-        Me.btn_search_Customer_name.TabIndex = 5617
-        Me.btn_search_Customer_name.UseVisualStyleBackColor = True
-        '
         'Guna2HtmlLabel9
         '
         Me.Guna2HtmlLabel9.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -875,16 +715,6 @@ Partial Class Sales
         Me.txt_notes.Size = New System.Drawing.Size(316, 108)
         Me.txt_notes.TabIndex = 5615
         '
-        'btn_search_Customer_ID
-        '
-        Me.btn_search_Customer_ID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_search_Customer_ID.Image = Global.WindowsApp1.My.Resources.Resources.search1
-        Me.btn_search_Customer_ID.Location = New System.Drawing.Point(957, 87)
-        Me.btn_search_Customer_ID.Name = "btn_search_Customer_ID"
-        Me.btn_search_Customer_ID.Size = New System.Drawing.Size(66, 41)
-        Me.btn_search_Customer_ID.TabIndex = 5613
-        Me.btn_search_Customer_ID.UseVisualStyleBackColor = True
-        '
         'lstCodeSuggestions
         '
         Me.lstCodeSuggestions.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -917,7 +747,7 @@ Partial Class Sales
         Me.Label16.Size = New System.Drawing.Size(156, 33)
         Me.Label16.TabIndex = 5608
         Me.Label16.Text = "الاجمالي"
-        Me.Label16.TextAlign = System.Drawing.ContentAlignment.BottomCenter
+        Me.Label16.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'txt_totelProduct
         '
@@ -1120,20 +950,6 @@ Partial Class Sales
         Me.Label1.Text = "رقم الفاتورة"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'btn_add_product
-        '
-        Me.btn_add_product.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_add_product.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_add_product.Appearance.Options.UseFont = True
-        Me.btn_add_product.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.queue__2_
-        Me.btn_add_product.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btn_add_product.Location = New System.Drawing.Point(7, 413)
-        Me.btn_add_product.Name = "btn_add_product"
-        Me.btn_add_product.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btn_add_product.Size = New System.Drawing.Size(159, 123)
-        Me.btn_add_product.TabIndex = 5595
-        Me.btn_add_product.Text = "اضافة"
-        '
         'txtTotalRequired
         '
         Me.txtTotalRequired.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1200,20 +1016,6 @@ Partial Class Sales
         Me.Label2.TabIndex = 5575
         Me.Label2.Text = "اسم العميل"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btn_clean
-        '
-        Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_clean.Appearance.Options.UseFont = True
-        Me.btn_clean.AutoSize = True
-        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
-        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btn_clean.Location = New System.Drawing.Point(1360, 2)
-        Me.btn_clean.Name = "btn_clean"
-        Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btn_clean.Size = New System.Drawing.Size(38, 36)
-        Me.btn_clean.TabIndex = 44
         '
         'Timer2
         '
@@ -1361,12 +1163,210 @@ Partial Class Sales
         Me.SimpleButton1.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton1.TabIndex = 81
         '
+        'btn_auto_pay
+        '
+        Me.btn_auto_pay.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_auto_pay.Image = Global.WindowsApp1.My.Resources.Resources.pay__1_
+        Me.btn_auto_pay.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btn_auto_pay.Location = New System.Drawing.Point(352, 200)
+        Me.btn_auto_pay.Name = "btn_auto_pay"
+        Me.btn_auto_pay.Size = New System.Drawing.Size(90, 45)
+        Me.btn_auto_pay.TabIndex = 5631
+        Me.btn_auto_pay.Text = "OK"
+        Me.btn_auto_pay.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btn_auto_pay.UseVisualStyleBackColor = True
+        '
+        'Pic_Logo
+        '
+        Me.Pic_Logo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Pic_Logo.Image = Global.WindowsApp1.My.Resources.Resources.Gemini_Generated_Image_d61npkd61npkd61n
+        Me.Pic_Logo.Location = New System.Drawing.Point(3, 47)
+        Me.Pic_Logo.Name = "Pic_Logo"
+        Me.Pic_Logo.Size = New System.Drawing.Size(343, 182)
+        Me.Pic_Logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.Pic_Logo.TabIndex = 5630
+        Me.Pic_Logo.TabStop = False
+        '
+        'btn_money
+        '
+        Me.btn_money.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_money.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_money.Appearance.Options.UseFont = True
+        Me.btn_money.AutoSize = True
+        Me.btn_money.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.money_stack
+        Me.btn_money.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btn_money.Location = New System.Drawing.Point(87, 2)
+        Me.btn_money.Name = "btn_money"
+        Me.btn_money.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btn_money.Size = New System.Drawing.Size(38, 36)
+        Me.btn_money.TabIndex = 5629
+        '
+        'btnToggleDiscount
+        '
+        Me.btnToggleDiscount.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnToggleDiscount.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnToggleDiscount.Appearance.Options.UseFont = True
+        Me.btnToggleDiscount.AutoSize = True
+        Me.btnToggleDiscount.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.gift
+        Me.btnToggleDiscount.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btnToggleDiscount.Location = New System.Drawing.Point(5, 2)
+        Me.btnToggleDiscount.Name = "btnToggleDiscount"
+        Me.btnToggleDiscount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnToggleDiscount.Size = New System.Drawing.Size(38, 36)
+        Me.btnToggleDiscount.TabIndex = 5618
+        '
+        'btn_search_Customer_name
+        '
+        Me.btn_search_Customer_name.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_search_Customer_name.Image = Global.WindowsApp1.My.Resources.Resources.search1
+        Me.btn_search_Customer_name.Location = New System.Drawing.Point(957, 133)
+        Me.btn_search_Customer_name.Name = "btn_search_Customer_name"
+        Me.btn_search_Customer_name.Size = New System.Drawing.Size(66, 45)
+        Me.btn_search_Customer_name.TabIndex = 5617
+        Me.btn_search_Customer_name.UseVisualStyleBackColor = True
+        '
+        'btn_search_CustomerCode
+        '
+        Me.btn_search_CustomerCode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_search_CustomerCode.Image = Global.WindowsApp1.My.Resources.Resources.search1
+        Me.btn_search_CustomerCode.Location = New System.Drawing.Point(957, 87)
+        Me.btn_search_CustomerCode.Name = "btn_search_CustomerCode"
+        Me.btn_search_CustomerCode.Size = New System.Drawing.Size(66, 41)
+        Me.btn_search_CustomerCode.TabIndex = 5613
+        Me.btn_search_CustomerCode.UseVisualStyleBackColor = True
+        '
+        'btn_add_product
+        '
+        Me.btn_add_product.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_add_product.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_add_product.Appearance.Options.UseFont = True
+        Me.btn_add_product.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.queue__2_
+        Me.btn_add_product.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btn_add_product.Location = New System.Drawing.Point(7, 413)
+        Me.btn_add_product.Name = "btn_add_product"
+        Me.btn_add_product.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btn_add_product.Size = New System.Drawing.Size(159, 123)
+        Me.btn_add_product.TabIndex = 5595
+        Me.btn_add_product.Text = "اضافة"
+        '
+        'btn_clean
+        '
+        Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_clean.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_clean.Appearance.Options.UseFont = True
+        Me.btn_clean.AutoSize = True
+        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
+        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btn_clean.Location = New System.Drawing.Point(1360, 2)
+        Me.btn_clean.Name = "btn_clean"
+        Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btn_clean.Size = New System.Drawing.Size(38, 36)
+        Me.btn_clean.TabIndex = 44
+        '
+        'btnToggleScanner
+        '
+        Me.btnToggleScanner.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnToggleScanner.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnToggleScanner.Appearance.Options.UseFont = True
+        Me.btnToggleScanner.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.scanner
+        Me.btnToggleScanner.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btnToggleScanner.Location = New System.Drawing.Point(2802, 5)
+        Me.btnToggleScanner.Name = "btnToggleScanner"
+        Me.btnToggleScanner.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnToggleScanner.Size = New System.Drawing.Size(269, 57)
+        Me.btnToggleScanner.TabIndex = 4
+        Me.btnToggleScanner.Text = "تشغيل الاسكنر"
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button1.Appearance.Options.UseFont = True
+        Me.Button1.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
+        Me.Button1.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.Button1.Location = New System.Drawing.Point(3080, 5)
+        Me.Button1.Name = "Button1"
+        Me.Button1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.Button1.Size = New System.Drawing.Size(318, 57)
+        Me.Button1.TabIndex = 3
+        Me.Button1.Text = "طباعة الفاتورة (F5)"
+        '
+        'btnDelete
+        '
+        Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDelete.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDelete.Appearance.Options.UseFont = True
+        Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
+        Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btnDelete.Location = New System.Drawing.Point(3400, 5)
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnDelete.Size = New System.Drawing.Size(298, 57)
+        Me.btnDelete.TabIndex = 2
+        Me.btnDelete.Text = "حذف الفاتورة (F4)"
+        '
+        'btn_Sales_Returns
+        '
+        Me.btn_Sales_Returns.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btn_Sales_Returns.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_Sales_Returns.Appearance.Options.UseFont = True
+        Me.btn_Sales_Returns.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
+        Me.btn_Sales_Returns.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
+        Me.btn_Sales_Returns.Location = New System.Drawing.Point(3700, 5)
+        Me.btn_Sales_Returns.Name = "btn_Sales_Returns"
+        Me.btn_Sales_Returns.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btn_Sales_Returns.Size = New System.Drawing.Size(339, 57)
+        Me.btn_Sales_Returns.TabIndex = 1
+        Me.btn_Sales_Returns.Text = "مرتجعات البيع (F3)"
+        '
+        'btnSaveInvoice
+        '
+        Me.btnSaveInvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSaveInvoice.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSaveInvoice.Appearance.Options.UseFont = True
+        Me.btnSaveInvoice.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
+        Me.btnSaveInvoice.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnSaveInvoice.Location = New System.Drawing.Point(4050, 5)
+        Me.btnSaveInvoice.Name = "btnSaveInvoice"
+        Me.btnSaveInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnSaveInvoice.Size = New System.Drawing.Size(333, 57)
+        Me.btnSaveInvoice.TabIndex = 0
+        Me.btnSaveInvoice.Text = "حفظ  الفاتورة (F2)"
+        '
+        'cmbTreasury
+        '
+        Me.cmbTreasury.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmbTreasury.BackColor = System.Drawing.Color.Transparent
+        Me.cmbTreasury.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbTreasury.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbTreasury.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.cmbTreasury.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
+        Me.cmbTreasury.ItemHeight = 40
+        Me.cmbTreasury.Location = New System.Drawing.Point(352, 312)
+        Me.cmbTreasury.Name = "cmbTreasury"
+        Me.cmbTreasury.Size = New System.Drawing.Size(414, 46)
+        Me.cmbTreasury.TabIndex = 5636
+        Me.cmbTreasury.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label4.BackColor = System.Drawing.Color.Transparent
+        Me.Label4.Location = New System.Drawing.Point(775, 318)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(157, 36)
+        Me.Label4.TabIndex = 5635
+        Me.Label4.Text = "الخزنة"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Sales
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1600, 1100)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.SimpleButton1)
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.grpCustomerInfo)
@@ -1380,9 +1380,9 @@ Partial Class Sales
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpCustomerInfo.ResumeLayout(False)
         Me.grpCustomerInfo.PerformLayout()
-        CType(Me.Pic_Logo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
+        CType(Me.Pic_Logo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1434,7 +1434,7 @@ Partial Class Sales
 	Friend WithEvents btnToggleScanner As DevExpress.XtraEditors.SimpleButton
 	Friend WithEvents lstNameSuggestions As ListBox
 	Friend WithEvents lstCodeSuggestions As ListBox
-	Friend WithEvents btn_search_Customer_ID As Button
+	Friend WithEvents btn_search_CustomerCode As Button
 	Friend WithEvents Guna2HtmlLabel9 As Guna.UI2.WinForms.Guna2HtmlLabel
 	Friend WithEvents txt_notes As Guna.UI2.WinForms.Guna2TextBox
 	Friend WithEvents btn_search_Customer_name As Button
@@ -1463,7 +1463,7 @@ Partial Class Sales
 	Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
 	Friend WithEvents btn_auto_pay As Button
 	Friend WithEvents lblLang As Label
-	Friend WithEvents Label4 As Label
-	Friend WithEvents Guna2ToggleSwitch1 As Guna.UI2.WinForms.Guna2ToggleSwitch
     Public WithEvents btn_Invoice_Edit As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents Label4 As Label
+    Public WithEvents cmbTreasury As Guna.UI2.WinForms.Guna2ComboBox
 End Class

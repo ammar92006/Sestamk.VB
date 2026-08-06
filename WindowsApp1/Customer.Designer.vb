@@ -23,9 +23,9 @@ Partial Class Customer
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Customer))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
@@ -75,7 +75,6 @@ Partial Class Customer
         Me.grpCustomerInfo.SuspendLayout()
         CType(Me.nudCreditLimit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PanelControl1.SuspendLayout()
         CType(Me.dgvCustomers, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -750,7 +749,7 @@ Partial Class Customer
         Me.btnImportExcel.Appearance.Options.UseFont = True
         Me.btnImportExcel.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.excel__1_
         Me.btnImportExcel.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnImportExcel.Location = New System.Drawing.Point(12, 2)
+        Me.btnImportExcel.Location = New System.Drawing.Point(5, 2)
         Me.btnImportExcel.Name = "btnImportExcel"
         Me.btnImportExcel.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnImportExcel.Size = New System.Drawing.Size(316, 68)
@@ -764,7 +763,7 @@ Partial Class Customer
         Me.btnExportExcel.Appearance.Options.UseFont = True
         Me.btnExportExcel.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.excel
         Me.btnExportExcel.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnExportExcel.Location = New System.Drawing.Point(346, 2)
+        Me.btnExportExcel.Location = New System.Drawing.Point(340, 2)
         Me.btnExportExcel.Name = "btnExportExcel"
         Me.btnExportExcel.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnExportExcel.Size = New System.Drawing.Size(233, 68)
@@ -778,7 +777,7 @@ Partial Class Customer
         Me.btnDelete.Appearance.Options.UseFont = True
         Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
         Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnDelete.Location = New System.Drawing.Point(597, 2)
+        Me.btnDelete.Location = New System.Drawing.Point(580, 2)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnDelete.Size = New System.Drawing.Size(283, 68)
@@ -792,7 +791,7 @@ Partial Class Customer
         Me.btnEdit.Appearance.Options.UseFont = True
         Me.btnEdit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
         Me.btnEdit.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btnEdit.Location = New System.Drawing.Point(898, 2)
+        Me.btnEdit.Location = New System.Drawing.Point(880, 2)
         Me.btnEdit.Name = "btnEdit"
         Me.btnEdit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnEdit.Size = New System.Drawing.Size(316, 68)
@@ -806,7 +805,7 @@ Partial Class Customer
         Me.btnNew.Appearance.Options.UseFont = True
         Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnNew.Location = New System.Drawing.Point(1232, 2)
+        Me.btnNew.Location = New System.Drawing.Point(1220, 2)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnNew.Size = New System.Drawing.Size(356, 68)
@@ -817,26 +816,26 @@ Partial Class Customer
         '
         Me.dgvCustomers.AllowUserToAddRows = False
         Me.dgvCustomers.AllowUserToDeleteRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
-        Me.dgvCustomers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvCustomers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.BackColor = System.Drawing.Color.White
+        Me.dgvCustomers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvCustomers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvCustomers.ColumnHeadersHeight = 4
         Me.dgvCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvCustomers.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvCustomers.DefaultCellStyle = DataGridViewCellStyle6
         Me.dgvCustomers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvCustomers.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvCustomers.Location = New System.Drawing.Point(0, 668)
@@ -845,7 +844,7 @@ Partial Class Customer
         Me.dgvCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvCustomers.RowHeadersVisible = False
         Me.dgvCustomers.RowTemplate.Height = 40
-        Me.dgvCustomers.Size = New System.Drawing.Size(1600, 392)
+        Me.dgvCustomers.Size = New System.Drawing.Size(1600, 232)
         Me.dgvCustomers.TabIndex = 36
         Me.dgvCustomers.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvCustomers.ThemeStyle.AlternatingRowsStyle.Font = Nothing
@@ -873,7 +872,7 @@ Partial Class Customer
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1600, 1060)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.dgvCustomers)
         Me.Controls.Add(Me.grpCustomerInfo)
         Me.Controls.Add(Me.PanelControl1)
@@ -888,7 +887,6 @@ Partial Class Customer
         Me.grpCustomerInfo.PerformLayout()
         CType(Me.nudCreditLimit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.PanelControl1.ResumeLayout(False)
         CType(Me.dgvCustomers, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 

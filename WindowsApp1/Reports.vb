@@ -1,4 +1,4 @@
-﻿'Imports System.Data.SqlClient
+'Imports System.Data.SqlClient
 'Imports System.Text
 'Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 
@@ -1247,12 +1247,12 @@ Public Class Reports
     ' ========================
     '     زر بحث الأرباح
     ' ========================
-    Private Sub btnSearchProfit_Click(sender As Object, e As EventArgs) Handles btnSearchProfit.Click
-        Dim f As Date? = If(chkProfitDate.Checked, dtProfitFrom.Value.Date, Nothing)
-        Dim t As Date? = If(chkProfitDate.Checked, dtProfitTo.Value.Date, Nothing)
+    Private Sub btnSearchProfit_Click(sender As Object, e As EventArgs)
+        'Dim f As Date? = If(chkProfitDate.Checked, dtProfitFrom.Value.Date, Nothing)
+        'Dim t As Date? = If(chkProfitDate.Checked, dtProfitTo.Value.Date, Nothing)
 
-        Dim dt = ReportsModule.GetProfit(f, t)
-        dgv_balance_download.DataSource = dt
+        'Dim dt = ReportsModule.GetProfit(f, t)
+        'dgv_balance_download.DataSource = dt
     End Sub
 
     Private Sub SimpleButton3_Click(sender As Object, e As EventArgs) Handles SimpleButton3.Click
@@ -1882,10 +1882,12 @@ Public Class Reports
 
         If frm Is Nothing Then
             frm = New Sales()
+            frm.inv_id_edit = invoiceID
             frm.Show()
+        Else
+            frm.inv_id_edit = invoiceID
         End If
 
-        frm.inv_id_edit = invoiceID
         frm.btn_Invoice_Edit.Visible = True
         Await frm.LoadInvoiceAsync(invoiceID)
 

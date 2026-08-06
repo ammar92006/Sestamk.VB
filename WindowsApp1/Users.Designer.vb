@@ -67,7 +67,6 @@ Partial Class Users
         CType(Me.pic_Barcode, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pic_user, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PanelControl1.SuspendLayout()
         CType(Me.dgv_Users, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -135,11 +134,11 @@ Partial Class Users
         '
         Me.Guna2HtmlLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("LBC", 28.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("Microsoft Sans Serif", 28.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.White
         Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(714, 9)
         Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(275, 49)
+        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(229, 44)
         Me.Guna2HtmlLabel1.TabIndex = 0
         Me.Guna2HtmlLabel1.Text = "  المستخدمين إدارة"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
@@ -174,7 +173,7 @@ Partial Class Users
         Me.grpCustomerInfo.Controls.Add(Me.txtUser_Code)
         Me.grpCustomerInfo.Dock = System.Windows.Forms.DockStyle.Top
         Me.grpCustomerInfo.FillColor = System.Drawing.Color.FromArgb(CType(CType(249, Byte), Integer), CType(CType(248, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.grpCustomerInfo.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.grpCustomerInfo.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.grpCustomerInfo.ForeColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
         Me.grpCustomerInfo.Location = New System.Drawing.Point(0, 158)
         Me.grpCustomerInfo.Name = "grpCustomerInfo"
@@ -187,7 +186,7 @@ Partial Class Users
         'btn_delet_barcode
         '
         Me.btn_delet_barcode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_delet_barcode.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_delet_barcode.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_delet_barcode.Appearance.Options.UseFont = True
         Me.btn_delet_barcode.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.delete
         Me.btn_delet_barcode.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -200,7 +199,7 @@ Partial Class Users
         'btn_barcode_print
         '
         Me.btn_barcode_print.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_barcode_print.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_barcode_print.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_barcode_print.Appearance.Options.UseFont = True
         Me.btn_barcode_print.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.printing
         Me.btn_barcode_print.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -230,7 +229,7 @@ Partial Class Users
         'btn_barcode_new
         '
         Me.btn_barcode_new.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_barcode_new.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_barcode_new.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_barcode_new.Appearance.Options.UseFont = True
         Me.btn_barcode_new.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.shopping
         Me.btn_barcode_new.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -248,7 +247,7 @@ Partial Class Users
         Me.Label7.BackColor = System.Drawing.Color.Transparent
         Me.Label7.Location = New System.Drawing.Point(386, 72)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(182, 37)
+        Me.Label7.Size = New System.Drawing.Size(170, 33)
         Me.Label7.TabIndex = 5569
         Me.Label7.Text = "صورة الباركود"
         '
@@ -266,7 +265,7 @@ Partial Class Users
         'btnSelectImage
         '
         Me.btnSelectImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSelectImage.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSelectImage.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnSelectImage.Appearance.Options.UseFont = True
         Me.btnSelectImage.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.new_hire
         Me.btnSelectImage.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -284,7 +283,7 @@ Partial Class Users
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.Location = New System.Drawing.Point(77, 72)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(213, 37)
+        Me.Label6.Size = New System.Drawing.Size(181, 33)
         Me.Label6.TabIndex = 5566
         Me.Label6.Text = "صورة المستخدم"
         '
@@ -304,7 +303,7 @@ Partial Class Users
         Me.Guna2HtmlLabel9.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Guna2HtmlLabel9.AutoSize = False
         Me.Guna2HtmlLabel9.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel9.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Guna2HtmlLabel9.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel9.ForeColor = System.Drawing.Color.Black
         Me.Guna2HtmlLabel9.Location = New System.Drawing.Point(915, 273)
         Me.Guna2HtmlLabel9.Name = "Guna2HtmlLabel9"
@@ -342,7 +341,7 @@ Partial Class Users
         Me.Label5.BackColor = System.Drawing.Color.Transparent
         Me.Label5.Location = New System.Drawing.Point(1010, 206)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(118, 37)
+        Me.Label5.Size = New System.Drawing.Size(97, 33)
         Me.Label5.TabIndex = 5561
         Me.Label5.Text = "الموظف"
         '
@@ -353,7 +352,7 @@ Partial Class Users
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.Location = New System.Drawing.Point(1421, 343)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(153, 37)
+        Me.Label4.Size = New System.Drawing.Size(137, 33)
         Me.Label4.TabIndex = 5560
         Me.Label4.Text = "كلمة المرور"
         '
@@ -386,7 +385,7 @@ Partial Class Users
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.Location = New System.Drawing.Point(1373, 247)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(201, 37)
+        Me.Label3.Size = New System.Drawing.Size(155, 33)
         Me.Label3.TabIndex = 5558
         Me.Label3.Text = "اسم المستخدم"
         '
@@ -397,7 +396,7 @@ Partial Class Users
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Location = New System.Drawing.Point(1423, 147)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(151, 37)
+        Me.Label2.Size = New System.Drawing.Size(127, 33)
         Me.Label2.TabIndex = 5557
         Me.Label2.Text = "الاسم كامل"
         '
@@ -408,14 +407,14 @@ Partial Class Users
         Me.Label1.BackColor = System.Drawing.Color.Transparent
         Me.Label1.Location = New System.Drawing.Point(1375, 50)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(199, 37)
+        Me.Label1.Size = New System.Drawing.Size(153, 33)
         Me.Label1.TabIndex = 5556
         Me.Label1.Text = "كود المستخدم"
         '
         'btn_clean
         '
         Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_clean.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_clean.Appearance.Options.UseFont = True
         Me.btn_clean.AutoSize = True
         Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
@@ -470,7 +469,7 @@ Partial Class Users
         Me.lblStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblStatus.AutoSize = False
         Me.lblStatus.BackColor = System.Drawing.Color.Transparent
-        Me.lblStatus.Font = New System.Drawing.Font("LBC", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblStatus.ForeColor = System.Drawing.Color.Black
         Me.lblStatus.Location = New System.Drawing.Point(800, 113)
         Me.lblStatus.Name = "lblStatus"
@@ -500,7 +499,7 @@ Partial Class Users
         Me.Guna2HtmlLabel8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Guna2HtmlLabel8.AutoSize = False
         Me.Guna2HtmlLabel8.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel8.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Guna2HtmlLabel8.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel8.ForeColor = System.Drawing.Color.Black
         Me.Guna2HtmlLabel8.Location = New System.Drawing.Point(961, 51)
         Me.Guna2HtmlLabel8.Name = "Guna2HtmlLabel8"
@@ -590,7 +589,7 @@ Partial Class Users
         'btn_Staff
         '
         Me.btn_Staff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_Staff.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_Staff.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_Staff.Appearance.Options.UseFont = True
         Me.btn_Staff.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.staff
         Me.btn_Staff.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -604,7 +603,7 @@ Partial Class Users
         'btnDelete
         '
         Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDelete.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnDelete.Appearance.Options.UseFont = True
         Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
         Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -618,7 +617,7 @@ Partial Class Users
         'btnEdit
         '
         Me.btnEdit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnEdit.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnEdit.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnEdit.Appearance.Options.UseFont = True
         Me.btnEdit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
         Me.btnEdit.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
@@ -632,7 +631,7 @@ Partial Class Users
         'btnNew
         '
         Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNew.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnNew.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnNew.Appearance.Options.UseFont = True
         Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
@@ -651,7 +650,7 @@ Partial Class Users
         Me.dgv_Users.Name = "dgv_Users"
         Me.dgv_Users.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgv_Users.RowTemplate.Height = 50
-        Me.dgv_Users.Size = New System.Drawing.Size(1600, 379)
+        Me.dgv_Users.Size = New System.Drawing.Size(1600, 219)
         Me.dgv_Users.TabIndex = 74
         '
         'Users
@@ -659,7 +658,7 @@ Partial Class Users
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1600, 1060)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.dgv_Users)
         Me.Controls.Add(Me.grpCustomerInfo)
         Me.Controls.Add(Me.PanelControl1)
@@ -677,7 +676,6 @@ Partial Class Users
         CType(Me.pic_Barcode, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.pic_user, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.PanelControl1.ResumeLayout(False)
         CType(Me.dgv_Users, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()

@@ -40,8 +40,34 @@ Public Class Suppliers
         Me.KeyPreview = True
         LoadSuppliers()
         Datagridviewsetup()
+        GetMaxProductCode()
+
     End Sub
 
+    Private Sub GetMaxProductCode()
+        Connect()
+        Try
+            Dim maxCode As Integer = 0
+
+            Using cmd As New SqlClient.SqlCommand("SELECT ISNULL(MAX(CAST(SuppliersCode AS INT)), 0) 
+                                                    FROM Suppliers
+                                                    WHERE ISNUMERIC(SuppliersCode) = 1
+                                                    ", Conn)
+                maxCode = Convert.ToInt32(cmd.ExecuteScalar())
+                Disconnect()
+            End Using
+
+
+            txtSupplierCode.Text = (maxCode + 1).ToString()
+
+        Catch ex As Exception
+            MessageBox.Show("حدث خطأ أثناء جلب كود المنتج: " & ex.Message,
+                        "خطأ",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error)
+        End Try
+
+    End Sub
     Private Sub panelHeader_MouseMove(sender As Object, e As MouseEventArgs) Handles panelHeader.MouseMove
         If e.Button = MouseButtons.Left Then
             newpoint = Control.MousePosition
@@ -382,6 +408,7 @@ Public Class Suppliers
 
     Private Sub btn_clean_Click(sender As Object, e As EventArgs) Handles btn_clean.Click
         ClearFields()
+        GetMaxProductCode()
     End Sub
 
     Private Sub dgvSuppliers_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSuppliers.CellClick
@@ -591,47 +618,47 @@ Public Class Suppliers
     End Sub
 
     Private Sub dgvSuppliers_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvSuppliers.CellDoubleClick
-        Try
-            If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Exit Sub
+        'Try
+        '    If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Exit Sub
 
-            ' خزن اسم القسم من العمود المطلوب
-            Dim sectionName As String = dgvSuppliers.Rows(e.RowIndex).Cells("SuppliersName").Value.ToString()
+        '    ' خزن اسم القسم من العمود المطلوب
+        '    Dim sectionName As String = dgvSuppliers.Rows(e.RowIndex).Cells("SuppliersName").Value.ToString()
 
-            ' تحقق إذا الفورم شغال بالفعل
-            Dim frm As Products = Nothing
-            For Each f As Form In Application.OpenForms
-                If TypeOf f Is Products Then
-                    frm = CType(f, Products)
-                    Exit For
-                End If
-            Next
+        '    ' تحقق إذا الفورم شغال بالفعل
+        '    Dim frm As Products = Nothing
+        '    For Each f As Form In Application.OpenForms
+        '        If TypeOf f Is Products Then
+        '            frm = CType(f, Products)
+        '            Exit For
+        '        End If
+        '    Next
 
-            If frm Is Nothing Then
-                ' افتح الفورم لأول مرة
-                frm = New Products
-                frm.Show()
-            Else
-                ' لو موجود بالفعل اعرضه قدام
-                frm.BringToFront()
-            End If
+        '    If frm Is Nothing Then
+        '        ' افتح الفورم لأول مرة
+        '        frm = New Products
+        '        frm.Show()
+        '    Else
+        '        ' لو موجود بالفعل اعرضه قدام
+        '        frm.BringToFront()
+        '    End If
 
-            ' اختياري: اختر القسم في ComboBox حسب الاسم أو Index
-            Try
-                frm.cmbSearchField.SelectedIndex = 5
-            Catch
-            End Try
+        '    ' اختياري: اختر القسم في ComboBox حسب الاسم أو Index
+        '    Try
+        '        frm.cmbSearchField.SelectedIndex = 5
+        '    Catch
+        '    End Try
 
-            ' ضع النص في TextBox وشغل TextChanged
-            Try
-                frm.txtSearch.Text = sectionName
-                ' تشغيل الحدث يدويًا لضمان ظهور الاقتراحات وتنفيذ LoadProducts
-                frm.txtSearch_TextChanged(frm.txtSearch, EventArgs.Empty)
-            Catch
-            End Try
+        '    ' ضع النص في TextBox وشغل TextChanged
+        '    Try
+        '        frm.txtSearch.Text = sectionName
+        '        ' تشغيل الحدث يدويًا لضمان ظهور الاقتراحات وتنفيذ LoadProducts
+        '        frm.txtSearch_TextChanged(frm.txtSearch, EventArgs.Empty)
+        '    Catch
+        '    End Try
 
-        Catch ex As Exception
-            ' تجاهل أي خطأ بصمت
-        End Try
+        'Catch ex As Exception
+        '    ' تجاهل أي خطأ بصمت
+        'End Try
     End Sub
 
     Private Async Sub btnSendWhatsApp_Click(sender As Object, e As EventArgs) Handles btnSendWhatsApp.Click

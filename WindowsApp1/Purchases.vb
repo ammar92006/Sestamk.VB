@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports DevExpress.Utils.Html.Internal
 Imports DocumentFormat.OpenXml.ExtendedProperties
@@ -295,6 +295,14 @@ Public Class Purchases
             End Sub
         txtDiscount.Text = 0
         txt_totelProduct.Text = 0
+
+
+        ''الزراير
+        Me.btn_add_new_product.Location = New System.Drawing.Point(20, 5)
+        Me.btnDelete.Location = New System.Drawing.Point(430, 5)
+        Me.btnEdit.Location = New System.Drawing.Point(800, 5)
+        Me.btnSaveInvoice.Location = New System.Drawing.Point(1200, 5)
+
     End Sub
     Private Sub LoadSuppliers()
         Try

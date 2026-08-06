@@ -25,6 +25,7 @@ Partial Class Reports
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Reports))
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btn_update = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
@@ -37,6 +38,8 @@ Partial Class Reports
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.lblHeader = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.tpSales = New System.Windows.Forms.TabPage()
+        Me.btn_show_pirfit = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_inv_delete = New System.Windows.Forms.Button()
         Me.Label39 = New System.Windows.Forms.Label()
         Me.txt_Total_Profit_dgv = New System.Windows.Forms.TextBox()
         Me.txt_sum_col = New System.Windows.Forms.TextBox()
@@ -48,6 +51,7 @@ Partial Class Reports
         Me.chkSalesDate = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.dtSalesTo = New System.Windows.Forms.DateTimePicker()
         Me.dtSalesFrom = New System.Windows.Forms.DateTimePicker()
+        Me.btnSearchSales = New DevExpress.XtraEditors.SimpleButton()
         Me.lblPay = New System.Windows.Forms.Label()
         Me.cboSalesPay = New System.Windows.Forms.ComboBox()
         Me.lblUser = New System.Windows.Forms.Label()
@@ -64,6 +68,7 @@ Partial Class Reports
         Me.chkPurchaseDate = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.dtPurchaseTo = New System.Windows.Forms.DateTimePicker()
         Me.dtPurchaseFrom = New System.Windows.Forms.DateTimePicker()
+        Me.btn_inv_purchases_del = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.cboPurchasePay = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -72,6 +77,7 @@ Partial Class Reports
         Me.cboPurchaseSupplier = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.btnSearchPurchase = New DevExpress.XtraEditors.SimpleButton()
         Me.TabStockMovement = New System.Windows.Forms.TabPage()
         Me.dgvStock = New System.Windows.Forms.DataGridView()
         Me.tabInvoiceDetails = New System.Windows.Forms.TabPage()
@@ -106,6 +112,8 @@ Partial Class Reports
         Me.txtCustomerName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.dgvInvoiceDetails = New System.Windows.Forms.DataGridView()
+        Me.btnSendInvoiceWhatsApp = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnPrint = New DevExpress.XtraEditors.SimpleButton()
         Me.TabSupplier = New System.Windows.Forms.TabPage()
         Me.txtSupplier_Num = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -137,35 +145,12 @@ Partial Class Reports
         Me.txtSupplierName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.dgvInvoiceDetailsPurchase = New System.Windows.Forms.DataGridView()
-        Me.txtSalesSearch = New System.Windows.Forms.TabPage()
-        Me.Guna2HtmlLabel7 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.dgv_balance_download = New System.Windows.Forms.DataGridView()
-        Me.Guna2HtmlLabel8 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.Guna2ToggleSwitch2 = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.chkProfitDate = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.dtProfitTo = New System.Windows.Forms.DateTimePicker()
-        Me.dtProfitFrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.ComboBox4 = New System.Windows.Forms.ComboBox()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.ComboBox5 = New System.Windows.Forms.ComboBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.ComboBox6 = New System.Windows.Forms.ComboBox()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.TabReports = New Guna.UI2.WinForms.Guna2TabControl()
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.btnSearchProfit = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_sand_supplier = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_purchases_print = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnSendInvoiceWhatsApp = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnPrint = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_inv_purchases_del = New System.Windows.Forms.Button()
-        Me.btnSearchPurchase = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_show_pirfit = New Guna.UI2.WinForms.Guna2Button()
-        Me.btn_inv_delete = New System.Windows.Forms.Button()
-        Me.btnSearchSales = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_update = New DevExpress.XtraEditors.SimpleButton()
+        Me.txtSalesSearch = New System.Windows.Forms.TabPage()
+        Me.dgv_balance_download = New System.Windows.Forms.DataGridView()
+        Me.TabReports = New Guna.UI2.WinForms.Guna2TabControl()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.panelHeader.SuspendLayout()
         Me.tpSales.SuspendLayout()
         CType(Me.dgvSales, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -203,6 +188,18 @@ Partial Class Reports
         Me.panelHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.panelHeader.Size = New System.Drawing.Size(1600, 70)
         Me.panelHeader.TabIndex = 78
+        '
+        'btn_update
+        '
+        Me.btn_update.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_update.Appearance.Options.UseFont = True
+        Me.btn_update.AutoSize = True
+        Me.btn_update.ImageOptions.Image = CType(resources.GetObject("btn_update.ImageOptions.Image"), System.Drawing.Image)
+        Me.btn_update.Location = New System.Drawing.Point(144, 17)
+        Me.btn_update.Name = "btn_update"
+        Me.btn_update.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_update.Size = New System.Drawing.Size(38, 36)
+        Me.btn_update.TabIndex = 13
         '
         'SimpleButton1
         '
@@ -362,17 +359,43 @@ Partial Class Reports
         Me.tpSales.Controls.Add(Me.lblFrom)
         Me.tpSales.Location = New System.Drawing.Point(4, 64)
         Me.tpSales.Name = "tpSales"
-        Me.tpSales.Size = New System.Drawing.Size(1592, 923)
+        Me.tpSales.Size = New System.Drawing.Size(1592, 762)
         Me.tpSales.TabIndex = 5
         Me.tpSales.Text = "المبيعات"
         Me.tpSales.UseVisualStyleBackColor = True
+        '
+        'btn_show_pirfit
+        '
+        Me.btn_show_pirfit.BorderRadius = 10
+        Me.btn_show_pirfit.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btn_show_pirfit.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btn_show_pirfit.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btn_show_pirfit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btn_show_pirfit.FillColor = System.Drawing.Color.Silver
+        Me.btn_show_pirfit.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.btn_show_pirfit.ForeColor = System.Drawing.Color.White
+        Me.btn_show_pirfit.Image = Global.WindowsApp1.My.Resources.Resources.show
+        Me.btn_show_pirfit.ImageSize = New System.Drawing.Size(64, 64)
+        Me.btn_show_pirfit.Location = New System.Drawing.Point(208, 708)
+        Me.btn_show_pirfit.Name = "btn_show_pirfit"
+        Me.btn_show_pirfit.Size = New System.Drawing.Size(94, 45)
+        Me.btn_show_pirfit.TabIndex = 46
+        '
+        'btn_inv_delete
+        '
+        Me.btn_inv_delete.Image = Global.WindowsApp1.My.Resources.Resources.delete1
+        Me.btn_inv_delete.Location = New System.Drawing.Point(14, 155)
+        Me.btn_inv_delete.Name = "btn_inv_delete"
+        Me.btn_inv_delete.Size = New System.Drawing.Size(106, 71)
+        Me.btn_inv_delete.TabIndex = 45
+        Me.btn_inv_delete.UseVisualStyleBackColor = True
         '
         'Label39
         '
         Me.Label39.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label39.Font = New System.Drawing.Font("Tahoma", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label39.ForeColor = System.Drawing.Color.Black
-        Me.Label39.Location = New System.Drawing.Point(619, 870)
+        Me.Label39.Location = New System.Drawing.Point(632, 708)
         Me.Label39.Name = "Label39"
         Me.Label39.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.Label39.Size = New System.Drawing.Size(318, 44)
@@ -383,7 +406,7 @@ Partial Class Reports
         '
         'txt_Total_Profit_dgv
         '
-        Me.txt_Total_Profit_dgv.Location = New System.Drawing.Point(295, 870)
+        Me.txt_Total_Profit_dgv.Location = New System.Drawing.Point(308, 708)
         Me.txt_Total_Profit_dgv.Name = "txt_Total_Profit_dgv"
         Me.txt_Total_Profit_dgv.Size = New System.Drawing.Size(318, 44)
         Me.txt_Total_Profit_dgv.TabIndex = 43
@@ -391,7 +414,7 @@ Partial Class Reports
         '
         'txt_sum_col
         '
-        Me.txt_sum_col.Location = New System.Drawing.Point(958, 866)
+        Me.txt_sum_col.Location = New System.Drawing.Point(971, 708)
         Me.txt_sum_col.Name = "txt_sum_col"
         Me.txt_sum_col.Size = New System.Drawing.Size(232, 44)
         Me.txt_sum_col.TabIndex = 41
@@ -405,10 +428,10 @@ Partial Class Reports
         Me.cboColumns.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.cboColumns.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.cboColumns.ForeColor = System.Drawing.Color.Black
-        Me.cboColumns.ItemHeight = 30
-        Me.cboColumns.Location = New System.Drawing.Point(1196, 866)
+        Me.cboColumns.ItemHeight = 35
+        Me.cboColumns.Location = New System.Drawing.Point(1209, 710)
         Me.cboColumns.Name = "cboColumns"
-        Me.cboColumns.Size = New System.Drawing.Size(217, 36)
+        Me.cboColumns.Size = New System.Drawing.Size(217, 41)
         Me.cboColumns.TabIndex = 40
         Me.cboColumns.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -434,7 +457,7 @@ Partial Class Reports
         Me.dgvSales.Location = New System.Drawing.Point(7, 248)
         Me.dgvSales.Name = "dgvSales"
         Me.dgvSales.RowTemplate.Height = 40
-        Me.dgvSales.Size = New System.Drawing.Size(1576, 612)
+        Me.dgvSales.Size = New System.Drawing.Size(1576, 454)
         Me.dgvSales.TabIndex = 39
         '
         'Guna2HtmlLabel1
@@ -498,6 +521,20 @@ Partial Class Reports
         Me.dtSalesFrom.Name = "dtSalesFrom"
         Me.dtSalesFrom.Size = New System.Drawing.Size(386, 44)
         Me.dtSalesFrom.TabIndex = 18
+        '
+        'btnSearchSales
+        '
+        Me.btnSearchSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSearchSales.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSearchSales.Appearance.Options.UseFont = True
+        Me.btnSearchSales.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
+        Me.btnSearchSales.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnSearchSales.Location = New System.Drawing.Point(126, 155)
+        Me.btnSearchSales.Name = "btnSearchSales"
+        Me.btnSearchSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnSearchSales.Size = New System.Drawing.Size(403, 71)
+        Me.btnSearchSales.TabIndex = 16
+        Me.btnSearchSales.Text = "بحث"
         '
         'lblPay
         '
@@ -613,7 +650,7 @@ Partial Class Reports
         Me.TabPurchases.Location = New System.Drawing.Point(4, 64)
         Me.TabPurchases.Name = "TabPurchases"
         Me.TabPurchases.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPurchases.Size = New System.Drawing.Size(1592, 923)
+        Me.TabPurchases.Size = New System.Drawing.Size(1592, 762)
         Me.TabPurchases.TabIndex = 1
         Me.TabPurchases.Text = "تقارير المشتريات"
         Me.TabPurchases.UseVisualStyleBackColor = True
@@ -636,10 +673,10 @@ Partial Class Reports
         '
         Me.dgvPurchase.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvPurchase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvPurchase.Location = New System.Drawing.Point(8, 245)
+        Me.dgvPurchase.Location = New System.Drawing.Point(20, 245)
         Me.dgvPurchase.Name = "dgvPurchase"
         Me.dgvPurchase.RowTemplate.Height = 40
-        Me.dgvPurchase.Size = New System.Drawing.Size(1576, 651)
+        Me.dgvPurchase.Size = New System.Drawing.Size(1576, 509)
         Me.dgvPurchase.TabIndex = 55
         '
         'Guna2HtmlLabel4
@@ -701,6 +738,15 @@ Partial Class Reports
         Me.dtPurchaseFrom.Name = "dtPurchaseFrom"
         Me.dtPurchaseFrom.Size = New System.Drawing.Size(386, 44)
         Me.dtPurchaseFrom.TabIndex = 49
+        '
+        'btn_inv_purchases_del
+        '
+        Me.btn_inv_purchases_del.Image = Global.WindowsApp1.My.Resources.Resources.delete1
+        Me.btn_inv_purchases_del.Location = New System.Drawing.Point(56, 153)
+        Me.btn_inv_purchases_del.Name = "btn_inv_purchases_del"
+        Me.btn_inv_purchases_del.Size = New System.Drawing.Size(106, 71)
+        Me.btn_inv_purchases_del.TabIndex = 56
+        Me.btn_inv_purchases_del.UseVisualStyleBackColor = True
         '
         'Label1
         '
@@ -794,12 +840,26 @@ Partial Class Reports
         Me.Label5.Text = "من تاريخ"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'btnSearchPurchase
+        '
+        Me.btnSearchPurchase.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSearchPurchase.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSearchPurchase.Appearance.Options.UseFont = True
+        Me.btnSearchPurchase.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
+        Me.btnSearchPurchase.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnSearchPurchase.Location = New System.Drawing.Point(165, 153)
+        Me.btnSearchPurchase.Name = "btnSearchPurchase"
+        Me.btnSearchPurchase.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnSearchPurchase.Size = New System.Drawing.Size(350, 71)
+        Me.btnSearchPurchase.TabIndex = 48
+        Me.btnSearchPurchase.Text = "بحث"
+        '
         'TabStockMovement
         '
         Me.TabStockMovement.Controls.Add(Me.dgvStock)
         Me.TabStockMovement.Location = New System.Drawing.Point(4, 64)
         Me.TabStockMovement.Name = "TabStockMovement"
-        Me.TabStockMovement.Size = New System.Drawing.Size(1592, 923)
+        Me.TabStockMovement.Size = New System.Drawing.Size(1592, 762)
         Me.TabStockMovement.TabIndex = 2
         Me.TabStockMovement.Text = "حركة المخزون"
         Me.TabStockMovement.UseVisualStyleBackColor = True
@@ -812,7 +872,7 @@ Partial Class Reports
         Me.dgvStock.Location = New System.Drawing.Point(0, 0)
         Me.dgvStock.Name = "dgvStock"
         Me.dgvStock.RowTemplate.Height = 40
-        Me.dgvStock.Size = New System.Drawing.Size(1592, 923)
+        Me.dgvStock.Size = New System.Drawing.Size(1592, 762)
         Me.dgvStock.TabIndex = 71
         '
         'tabInvoiceDetails
@@ -852,7 +912,7 @@ Partial Class Reports
         Me.tabInvoiceDetails.Controls.Add(Me.btnPrint)
         Me.tabInvoiceDetails.Location = New System.Drawing.Point(4, 64)
         Me.tabInvoiceDetails.Name = "tabInvoiceDetails"
-        Me.tabInvoiceDetails.Size = New System.Drawing.Size(1592, 923)
+        Me.tabInvoiceDetails.Size = New System.Drawing.Size(1592, 762)
         Me.tabInvoiceDetails.TabIndex = 3
         Me.tabInvoiceDetails.Text = "فاتورة بيع"
         Me.tabInvoiceDetails.UseVisualStyleBackColor = True
@@ -1345,11 +1405,39 @@ Partial Class Reports
         Me.dgvInvoiceDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvInvoiceDetails.ColumnHeadersHeight = 65
         Me.dgvInvoiceDetails.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvInvoiceDetails.Location = New System.Drawing.Point(0, 439)
+        Me.dgvInvoiceDetails.Location = New System.Drawing.Point(0, 407)
         Me.dgvInvoiceDetails.Name = "dgvInvoiceDetails"
         Me.dgvInvoiceDetails.RowTemplate.Height = 40
-        Me.dgvInvoiceDetails.Size = New System.Drawing.Size(1592, 484)
+        Me.dgvInvoiceDetails.Size = New System.Drawing.Size(1592, 355)
         Me.dgvInvoiceDetails.TabIndex = 40
+        '
+        'btnSendInvoiceWhatsApp
+        '
+        Me.btnSendInvoiceWhatsApp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSendInvoiceWhatsApp.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSendInvoiceWhatsApp.Appearance.Options.UseFont = True
+        Me.btnSendInvoiceWhatsApp.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
+        Me.btnSendInvoiceWhatsApp.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnSendInvoiceWhatsApp.Location = New System.Drawing.Point(8, 123)
+        Me.btnSendInvoiceWhatsApp.Name = "btnSendInvoiceWhatsApp"
+        Me.btnSendInvoiceWhatsApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnSendInvoiceWhatsApp.Size = New System.Drawing.Size(251, 71)
+        Me.btnSendInvoiceWhatsApp.TabIndex = 5645
+        Me.btnSendInvoiceWhatsApp.Text = "ارسال للعميل "
+        '
+        'btnPrint
+        '
+        Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPrint.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnPrint.Appearance.Options.UseFont = True
+        Me.btnPrint.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
+        Me.btnPrint.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnPrint.Location = New System.Drawing.Point(8, 250)
+        Me.btnPrint.Name = "btnPrint"
+        Me.btnPrint.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnPrint.Size = New System.Drawing.Size(251, 71)
+        Me.btnPrint.TabIndex = 5643
+        Me.btnPrint.Text = "طباعة"
         '
         'TabSupplier
         '
@@ -1387,7 +1475,7 @@ Partial Class Reports
         Me.TabSupplier.Controls.Add(Me.btn_purchases_print)
         Me.TabSupplier.Location = New System.Drawing.Point(4, 64)
         Me.TabSupplier.Name = "TabSupplier"
-        Me.TabSupplier.Size = New System.Drawing.Size(1592, 923)
+        Me.TabSupplier.Size = New System.Drawing.Size(1592, 762)
         Me.TabSupplier.TabIndex = 4
         Me.TabSupplier.Text = "فاتورة مشتريات"
         Me.TabSupplier.UseVisualStyleBackColor = True
@@ -1867,267 +1955,11 @@ Partial Class Reports
         '
         Me.dgvInvoiceDetailsPurchase.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvInvoiceDetailsPurchase.ColumnHeadersHeight = 65
-        Me.dgvInvoiceDetailsPurchase.Location = New System.Drawing.Point(5, 384)
+        Me.dgvInvoiceDetailsPurchase.Location = New System.Drawing.Point(8, 390)
         Me.dgvInvoiceDetailsPurchase.Name = "dgvInvoiceDetailsPurchase"
         Me.dgvInvoiceDetailsPurchase.RowTemplate.Height = 40
-        Me.dgvInvoiceDetailsPurchase.Size = New System.Drawing.Size(1576, 520)
+        Me.dgvInvoiceDetailsPurchase.Size = New System.Drawing.Size(1576, 364)
         Me.dgvInvoiceDetailsPurchase.TabIndex = 5648
-        '
-        'txtSalesSearch
-        '
-        Me.txtSalesSearch.Controls.Add(Me.Guna2HtmlLabel7)
-        Me.txtSalesSearch.Controls.Add(Me.dgv_balance_download)
-        Me.txtSalesSearch.Controls.Add(Me.Guna2HtmlLabel8)
-        Me.txtSalesSearch.Controls.Add(Me.Guna2ToggleSwitch2)
-        Me.txtSalesSearch.Controls.Add(Me.chkProfitDate)
-        Me.txtSalesSearch.Controls.Add(Me.dtProfitTo)
-        Me.txtSalesSearch.Controls.Add(Me.dtProfitFrom)
-        Me.txtSalesSearch.Controls.Add(Me.btnSearchProfit)
-        Me.txtSalesSearch.Controls.Add(Me.Label11)
-        Me.txtSalesSearch.Controls.Add(Me.ComboBox4)
-        Me.txtSalesSearch.Controls.Add(Me.Label12)
-        Me.txtSalesSearch.Controls.Add(Me.ComboBox5)
-        Me.txtSalesSearch.Controls.Add(Me.Label13)
-        Me.txtSalesSearch.Controls.Add(Me.ComboBox6)
-        Me.txtSalesSearch.Controls.Add(Me.Label15)
-        Me.txtSalesSearch.Controls.Add(Me.Label16)
-        Me.txtSalesSearch.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtSalesSearch.Location = New System.Drawing.Point(4, 64)
-        Me.txtSalesSearch.Name = "txtSalesSearch"
-        Me.txtSalesSearch.Padding = New System.Windows.Forms.Padding(3)
-        Me.txtSalesSearch.Size = New System.Drawing.Size(1592, 923)
-        Me.txtSalesSearch.TabIndex = 0
-        Me.txtSalesSearch.Text = "تنزيل الرصيد"
-        Me.txtSalesSearch.UseVisualStyleBackColor = True
-        '
-        'Guna2HtmlLabel7
-        '
-        Me.Guna2HtmlLabel7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel7.AutoSize = False
-        Me.Guna2HtmlLabel7.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel7.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel7.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel7.Location = New System.Drawing.Point(546, 256)
-        Me.Guna2HtmlLabel7.Name = "Guna2HtmlLabel7"
-        Me.Guna2HtmlLabel7.Size = New System.Drawing.Size(222, 45)
-        Me.Guna2HtmlLabel7.TabIndex = 86
-        Me.Guna2HtmlLabel7.Text = "نشط / غير نشط"
-        Me.Guna2HtmlLabel7.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'dgv_balance_download
-        '
-        Me.dgv_balance_download.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.dgv_balance_download.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_balance_download.Location = New System.Drawing.Point(8, 305)
-        Me.dgv_balance_download.Name = "dgv_balance_download"
-        Me.dgv_balance_download.RowTemplate.Height = 30
-        Me.dgv_balance_download.Size = New System.Drawing.Size(1576, 591)
-        Me.dgv_balance_download.TabIndex = 87
-        '
-        'Guna2HtmlLabel8
-        '
-        Me.Guna2HtmlLabel8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel8.AutoSize = False
-        Me.Guna2HtmlLabel8.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel8.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel8.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel8.Location = New System.Drawing.Point(546, 198)
-        Me.Guna2HtmlLabel8.Name = "Guna2HtmlLabel8"
-        Me.Guna2HtmlLabel8.Size = New System.Drawing.Size(222, 45)
-        Me.Guna2HtmlLabel8.TabIndex = 84
-        Me.Guna2HtmlLabel8.Text = "نشط / غير نشط"
-        Me.Guna2HtmlLabel8.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Guna2ToggleSwitch2
-        '
-        Me.Guna2ToggleSwitch2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2ToggleSwitch2.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Guna2ToggleSwitch2.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Guna2ToggleSwitch2.CheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch2.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch2.Location = New System.Drawing.Point(774, 256)
-        Me.Guna2ToggleSwitch2.Name = "Guna2ToggleSwitch2"
-        Me.Guna2ToggleSwitch2.Size = New System.Drawing.Size(93, 44)
-        Me.Guna2ToggleSwitch2.TabIndex = 85
-        Me.Guna2ToggleSwitch2.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.Guna2ToggleSwitch2.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.Guna2ToggleSwitch2.UncheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.Guna2ToggleSwitch2.UncheckedState.InnerColor = System.Drawing.Color.White
-        '
-        'chkProfitDate
-        '
-        Me.chkProfitDate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.chkProfitDate.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.chkProfitDate.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.chkProfitDate.CheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.chkProfitDate.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.chkProfitDate.Location = New System.Drawing.Point(774, 198)
-        Me.chkProfitDate.Name = "chkProfitDate"
-        Me.chkProfitDate.Size = New System.Drawing.Size(93, 44)
-        Me.chkProfitDate.TabIndex = 83
-        Me.chkProfitDate.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.chkProfitDate.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.chkProfitDate.UncheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.chkProfitDate.UncheckedState.InnerColor = System.Drawing.Color.White
-        '
-        'dtProfitTo
-        '
-        Me.dtProfitTo.Location = New System.Drawing.Point(108, 76)
-        Me.dtProfitTo.Name = "dtProfitTo"
-        Me.dtProfitTo.Size = New System.Drawing.Size(436, 44)
-        Me.dtProfitTo.TabIndex = 82
-        '
-        'dtProfitFrom
-        '
-        Me.dtProfitFrom.Location = New System.Drawing.Point(874, 76)
-        Me.dtProfitFrom.Name = "dtProfitFrom"
-        Me.dtProfitFrom.Size = New System.Drawing.Size(386, 44)
-        Me.dtProfitFrom.TabIndex = 81
-        '
-        'Label11
-        '
-        Me.Label11.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.ForeColor = System.Drawing.Color.Black
-        Me.Label11.Location = New System.Drawing.Point(1265, 215)
-        Me.Label11.Name = "Label11"
-        Me.Label11.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label11.Size = New System.Drawing.Size(318, 53)
-        Me.Label11.TabIndex = 79
-        Me.Label11.Text = "طريقة الدفع"
-        Me.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'ComboBox4
-        '
-        Me.ComboBox4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox4.FormattingEnabled = True
-        Me.ComboBox4.Location = New System.Drawing.Point(873, 215)
-        Me.ComboBox4.Name = "ComboBox4"
-        Me.ComboBox4.Size = New System.Drawing.Size(386, 45)
-        Me.ComboBox4.TabIndex = 78
-        '
-        'Label12
-        '
-        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.ForeColor = System.Drawing.Color.Black
-        Me.Label12.Location = New System.Drawing.Point(549, 142)
-        Me.Label12.Name = "Label12"
-        Me.Label12.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label12.Size = New System.Drawing.Size(318, 53)
-        Me.Label12.TabIndex = 77
-        Me.Label12.Text = "اسم المستخدم"
-        Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'ComboBox5
-        '
-        Me.ComboBox5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox5.FormattingEnabled = True
-        Me.ComboBox5.Location = New System.Drawing.Point(107, 142)
-        Me.ComboBox5.Name = "ComboBox5"
-        Me.ComboBox5.Size = New System.Drawing.Size(436, 45)
-        Me.ComboBox5.TabIndex = 76
-        '
-        'Label13
-        '
-        Me.Label13.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.ForeColor = System.Drawing.Color.Black
-        Me.Label13.Location = New System.Drawing.Point(1265, 143)
-        Me.Label13.Name = "Label13"
-        Me.Label13.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label13.Size = New System.Drawing.Size(318, 53)
-        Me.Label13.TabIndex = 75
-        Me.Label13.Text = "اسم العميل"
-        Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'ComboBox6
-        '
-        Me.ComboBox6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComboBox6.FormattingEnabled = True
-        Me.ComboBox6.Location = New System.Drawing.Point(873, 143)
-        Me.ComboBox6.Name = "ComboBox6"
-        Me.ComboBox6.Size = New System.Drawing.Size(386, 45)
-        Me.ComboBox6.TabIndex = 74
-        '
-        'Label15
-        '
-        Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.ForeColor = System.Drawing.Color.Black
-        Me.Label15.Location = New System.Drawing.Point(549, 71)
-        Me.Label15.Name = "Label15"
-        Me.Label15.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label15.Size = New System.Drawing.Size(318, 53)
-        Me.Label15.TabIndex = 73
-        Me.Label15.Text = "إلى تاريخ"
-        Me.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label16
-        '
-        Me.Label16.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(1265, 68)
-        Me.Label16.Name = "Label16"
-        Me.Label16.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.Label16.Size = New System.Drawing.Size(318, 53)
-        Me.Label16.TabIndex = 72
-        Me.Label16.Text = "من تاريخ"
-        Me.Label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'TabReports
-        '
-        Me.TabReports.Controls.Add(Me.txtSalesSearch)
-        Me.TabReports.Controls.Add(Me.TabSupplier)
-        Me.TabReports.Controls.Add(Me.tabInvoiceDetails)
-        Me.TabReports.Controls.Add(Me.TabStockMovement)
-        Me.TabReports.Controls.Add(Me.TabPurchases)
-        Me.TabReports.Controls.Add(Me.tpSales)
-        Me.TabReports.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TabReports.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabReports.ItemSize = New System.Drawing.Size(255, 60)
-        Me.TabReports.Location = New System.Drawing.Point(0, 70)
-        Me.TabReports.Name = "TabReports"
-        Me.TabReports.SelectedIndex = 0
-        Me.TabReports.Size = New System.Drawing.Size(1600, 991)
-        Me.TabReports.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty
-        Me.TabReports.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(52, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TabReports.TabButtonHoverState.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!)
-        Me.TabReports.TabButtonHoverState.ForeColor = System.Drawing.Color.White
-        Me.TabReports.TabButtonHoverState.InnerColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(52, Byte), Integer), CType(CType(70, Byte), Integer))
-        Me.TabReports.TabButtonIdleState.BorderColor = System.Drawing.Color.Empty
-        Me.TabReports.TabButtonIdleState.FillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(42, Byte), Integer), CType(CType(57, Byte), Integer))
-        Me.TabReports.TabButtonIdleState.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabReports.TabButtonIdleState.ForeColor = System.Drawing.Color.White
-        Me.TabReports.TabButtonIdleState.InnerColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(42, Byte), Integer), CType(CType(57, Byte), Integer))
-        Me.TabReports.TabButtonSelectedState.BorderColor = System.Drawing.Color.Empty
-        Me.TabReports.TabButtonSelectedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(29, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(49, Byte), Integer))
-        Me.TabReports.TabButtonSelectedState.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TabReports.TabButtonSelectedState.ForeColor = System.Drawing.Color.White
-        Me.TabReports.TabButtonSelectedState.InnerColor = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(132, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.TabReports.TabButtonSize = New System.Drawing.Size(255, 60)
-        Me.TabReports.TabIndex = 82
-        Me.TabReports.TabMenuBackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(42, Byte), Integer), CType(CType(57, Byte), Integer))
-        Me.TabReports.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop
-        Me.TabReports.TabStop = False
-        '
-        'Timer1
-        '
-        '
-        'btnSearchProfit
-        '
-        Me.btnSearchProfit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSearchProfit.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSearchProfit.Appearance.Options.UseFont = True
-        Me.btnSearchProfit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSearchProfit.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSearchProfit.Location = New System.Drawing.Point(108, 215)
-        Me.btnSearchProfit.Name = "btnSearchProfit"
-        Me.btnSearchProfit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSearchProfit.Size = New System.Drawing.Size(403, 71)
-        Me.btnSearchProfit.TabIndex = 80
-        Me.btnSearchProfit.Text = "بحث"
         '
         'btn_sand_supplier
         '
@@ -2157,115 +1989,73 @@ Partial Class Reports
         Me.btn_purchases_print.TabIndex = 5673
         Me.btn_purchases_print.Text = "طباعة"
         '
-        'btnSendInvoiceWhatsApp
+        'txtSalesSearch
         '
-        Me.btnSendInvoiceWhatsApp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSendInvoiceWhatsApp.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSendInvoiceWhatsApp.Appearance.Options.UseFont = True
-        Me.btnSendInvoiceWhatsApp.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSendInvoiceWhatsApp.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSendInvoiceWhatsApp.Location = New System.Drawing.Point(8, 123)
-        Me.btnSendInvoiceWhatsApp.Name = "btnSendInvoiceWhatsApp"
-        Me.btnSendInvoiceWhatsApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSendInvoiceWhatsApp.Size = New System.Drawing.Size(251, 71)
-        Me.btnSendInvoiceWhatsApp.TabIndex = 5645
-        Me.btnSendInvoiceWhatsApp.Text = "ارسال للعميل "
+        Me.txtSalesSearch.Controls.Add(Me.dgv_balance_download)
+        Me.txtSalesSearch.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtSalesSearch.Location = New System.Drawing.Point(4, 64)
+        Me.txtSalesSearch.Name = "txtSalesSearch"
+        Me.txtSalesSearch.Padding = New System.Windows.Forms.Padding(3)
+        Me.txtSalesSearch.Size = New System.Drawing.Size(1592, 762)
+        Me.txtSalesSearch.TabIndex = 0
+        Me.txtSalesSearch.Text = "تنزيل الرصيد"
+        Me.txtSalesSearch.UseVisualStyleBackColor = True
         '
-        'btnPrint
+        'dgv_balance_download
         '
-        Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPrint.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPrint.Appearance.Options.UseFont = True
-        Me.btnPrint.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnPrint.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnPrint.Location = New System.Drawing.Point(8, 250)
-        Me.btnPrint.Name = "btnPrint"
-        Me.btnPrint.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnPrint.Size = New System.Drawing.Size(251, 71)
-        Me.btnPrint.TabIndex = 5643
-        Me.btnPrint.Text = "طباعة"
+        Me.dgv_balance_download.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.dgv_balance_download.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_balance_download.Location = New System.Drawing.Point(3, 21)
+        Me.dgv_balance_download.Name = "dgv_balance_download"
+        Me.dgv_balance_download.RowTemplate.Height = 30
+        Me.dgv_balance_download.Size = New System.Drawing.Size(1576, 733)
+        Me.dgv_balance_download.TabIndex = 87
         '
-        'btn_inv_purchases_del
+        'TabReports
         '
-        Me.btn_inv_purchases_del.Image = Global.WindowsApp1.My.Resources.Resources.delete1
-        Me.btn_inv_purchases_del.Location = New System.Drawing.Point(56, 153)
-        Me.btn_inv_purchases_del.Name = "btn_inv_purchases_del"
-        Me.btn_inv_purchases_del.Size = New System.Drawing.Size(106, 71)
-        Me.btn_inv_purchases_del.TabIndex = 56
-        Me.btn_inv_purchases_del.UseVisualStyleBackColor = True
+        Me.TabReports.Controls.Add(Me.txtSalesSearch)
+        Me.TabReports.Controls.Add(Me.TabSupplier)
+        Me.TabReports.Controls.Add(Me.tabInvoiceDetails)
+        Me.TabReports.Controls.Add(Me.TabStockMovement)
+        Me.TabReports.Controls.Add(Me.TabPurchases)
+        Me.TabReports.Controls.Add(Me.tpSales)
+        Me.TabReports.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TabReports.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TabReports.ItemSize = New System.Drawing.Size(255, 60)
+        Me.TabReports.Location = New System.Drawing.Point(0, 70)
+        Me.TabReports.Name = "TabReports"
+        Me.TabReports.SelectedIndex = 0
+        Me.TabReports.Size = New System.Drawing.Size(1600, 830)
+        Me.TabReports.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty
+        Me.TabReports.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(52, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.TabReports.TabButtonHoverState.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!)
+        Me.TabReports.TabButtonHoverState.ForeColor = System.Drawing.Color.White
+        Me.TabReports.TabButtonHoverState.InnerColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(52, Byte), Integer), CType(CType(70, Byte), Integer))
+        Me.TabReports.TabButtonIdleState.BorderColor = System.Drawing.Color.Empty
+        Me.TabReports.TabButtonIdleState.FillColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(42, Byte), Integer), CType(CType(57, Byte), Integer))
+        Me.TabReports.TabButtonIdleState.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TabReports.TabButtonIdleState.ForeColor = System.Drawing.Color.White
+        Me.TabReports.TabButtonIdleState.InnerColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(42, Byte), Integer), CType(CType(57, Byte), Integer))
+        Me.TabReports.TabButtonSelectedState.BorderColor = System.Drawing.Color.Empty
+        Me.TabReports.TabButtonSelectedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(29, Byte), Integer), CType(CType(37, Byte), Integer), CType(CType(49, Byte), Integer))
+        Me.TabReports.TabButtonSelectedState.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TabReports.TabButtonSelectedState.ForeColor = System.Drawing.Color.White
+        Me.TabReports.TabButtonSelectedState.InnerColor = System.Drawing.Color.FromArgb(CType(CType(76, Byte), Integer), CType(CType(132, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.TabReports.TabButtonSize = New System.Drawing.Size(255, 60)
+        Me.TabReports.TabIndex = 82
+        Me.TabReports.TabMenuBackColor = System.Drawing.Color.FromArgb(CType(CType(33, Byte), Integer), CType(CType(42, Byte), Integer), CType(CType(57, Byte), Integer))
+        Me.TabReports.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop
+        Me.TabReports.TabStop = False
         '
-        'btnSearchPurchase
+        'Timer1
         '
-        Me.btnSearchPurchase.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSearchPurchase.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSearchPurchase.Appearance.Options.UseFont = True
-        Me.btnSearchPurchase.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSearchPurchase.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSearchPurchase.Location = New System.Drawing.Point(165, 153)
-        Me.btnSearchPurchase.Name = "btnSearchPurchase"
-        Me.btnSearchPurchase.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSearchPurchase.Size = New System.Drawing.Size(350, 71)
-        Me.btnSearchPurchase.TabIndex = 48
-        Me.btnSearchPurchase.Text = "بحث"
-        '
-        'btn_show_pirfit
-        '
-        Me.btn_show_pirfit.BorderRadius = 10
-        Me.btn_show_pirfit.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btn_show_pirfit.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btn_show_pirfit.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btn_show_pirfit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btn_show_pirfit.FillColor = System.Drawing.Color.Silver
-        Me.btn_show_pirfit.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.btn_show_pirfit.ForeColor = System.Drawing.Color.White
-        Me.btn_show_pirfit.Image = Global.WindowsApp1.My.Resources.Resources.show
-        Me.btn_show_pirfit.ImageSize = New System.Drawing.Size(64, 64)
-        Me.btn_show_pirfit.Location = New System.Drawing.Point(195, 870)
-        Me.btn_show_pirfit.Name = "btn_show_pirfit"
-        Me.btn_show_pirfit.Size = New System.Drawing.Size(94, 45)
-        Me.btn_show_pirfit.TabIndex = 46
-        '
-        'btn_inv_delete
-        '
-        Me.btn_inv_delete.Image = Global.WindowsApp1.My.Resources.Resources.delete1
-        Me.btn_inv_delete.Location = New System.Drawing.Point(14, 155)
-        Me.btn_inv_delete.Name = "btn_inv_delete"
-        Me.btn_inv_delete.Size = New System.Drawing.Size(106, 71)
-        Me.btn_inv_delete.TabIndex = 45
-        Me.btn_inv_delete.UseVisualStyleBackColor = True
-        '
-        'btnSearchSales
-        '
-        Me.btnSearchSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSearchSales.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSearchSales.Appearance.Options.UseFont = True
-        Me.btnSearchSales.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSearchSales.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSearchSales.Location = New System.Drawing.Point(126, 155)
-        Me.btnSearchSales.Name = "btnSearchSales"
-        Me.btnSearchSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSearchSales.Size = New System.Drawing.Size(403, 71)
-        Me.btnSearchSales.TabIndex = 16
-        Me.btnSearchSales.Text = "بحث"
-        '
-        'btn_update
-        '
-        Me.btn_update.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_update.Appearance.Options.UseFont = True
-        Me.btn_update.AutoSize = True
-        Me.btn_update.ImageOptions.Image = CType(resources.GetObject("btn_update.ImageOptions.Image"), System.Drawing.Image)
-        Me.btn_update.Location = New System.Drawing.Point(144, 17)
-        Me.btn_update.Name = "btn_update"
-        Me.btn_update.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btn_update.Size = New System.Drawing.Size(38, 36)
-        Me.btn_update.TabIndex = 13
         '
         'Reports
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 23.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1600, 1061)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.TabReports)
         Me.Controls.Add(Me.panelHeader)
         Me.Font = New System.Drawing.Font("Tahoma", 14.0!)
@@ -2347,22 +2137,7 @@ Partial Class Reports
     Friend WithEvents dgvInvoiceDetails As DataGridView
     Friend WithEvents TabSupplier As TabPage
     Friend WithEvents txtSalesSearch As TabPage
-    Friend WithEvents Guna2HtmlLabel7 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents dgv_balance_download As DataGridView
-    Friend WithEvents Guna2HtmlLabel8 As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents Guna2ToggleSwitch2 As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents chkProfitDate As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents dtProfitTo As DateTimePicker
-    Friend WithEvents dtProfitFrom As DateTimePicker
-    Friend WithEvents btnSearchProfit As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents Label11 As Label
-    Friend WithEvents ComboBox4 As ComboBox
-    Friend WithEvents Label12 As Label
-    Friend WithEvents ComboBox5 As ComboBox
-    Friend WithEvents Label13 As Label
-    Friend WithEvents ComboBox6 As ComboBox
-    Friend WithEvents Label15 As Label
-    Friend WithEvents Label16 As Label
     Friend WithEvents TabReports As Guna.UI2.WinForms.Guna2TabControl
     Friend WithEvents txtInvID As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label17 As Label

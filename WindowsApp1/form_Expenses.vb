@@ -7,6 +7,7 @@ Imports Org.BouncyCastle.Asn1.Cmp
 Public Class form_Expenses
     Dim x, y As Integer
     Dim newpoint As New System.Drawing.Point
+    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
         Close()
@@ -87,7 +88,12 @@ Public Class form_Expenses
             cmbPaymentMethod.Focus()
             Return False
         End If
-
+        ' التحقق من اختيار الخزنة
+        If cmbTreasury.SelectedValue Is Nothing Then
+            MessageBox.Show("يرجى اختيار الخزنة المراد الصرف منها.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cmbTreasury.Focus()
+            Return False
+        End If
         Return True
     End Function
 
@@ -105,61 +111,136 @@ Public Class form_Expenses
             Return
         End If
 
-        Dim query As String = "INSERT INTO Expenses (Expense_Date, Category, Amount, Payment_Method, Payee, Payment_Status, Notes, Created_By) " &
-                             "VALUES (@Date, @Category, @Amount, @Method, @Payee, @Status, @Notes, @User)"
+        Dim query As String = "INSERT INTO Expenses (Expense_Date, Category, Amount, Payment_Method, Payee, Payment_Status, Notes, Created_By, TreasuryID) " &
+                         "VALUES (@Date, @Category, @Amount, @Method, @Payee, @Status, @Notes, @User, @TreasuryID)"
 
-        ' 2. استخدام Using للاتصال لضمان إغلاقه وتحرير الموارد تلقائياً
+        ' استخدام Using لضمان إغلاق الاتصال وتحرير الموارد
         Using NewConn As New SqlConnection(ConnectionString)
-            Using cmd As New SqlCommand(query, NewConn)
+            Await NewConn.OpenAsync()
 
-                ' تجهيز البارامترات
-                With cmd.Parameters
-                    Dim selectedDate As DateTime = CType(dtpDate.Value, DateTime)
-                    .AddWithValue("@Date", selectedDate.Date)
-                    .AddWithValue("@Category", cmbCategory.Text)
+            ' 🛑 بدء الـ Transaction لحماية العملية المزدوجة
+            Using trans As SqlTransaction = NewConn.BeginTransaction()
+                Using cmd As New SqlCommand(query, NewConn, trans)
 
-                    ' معالجة المبلغ للتأكد من أنه رقم صحيح
-                    Dim amount As Decimal = 0
-                    Decimal.TryParse(txtAmount.Text, amount)
-                    .AddWithValue("@Amount", amount)
+                    ' تجهيز بارامترات فاتورة المصروف
+                    With cmd.Parameters
+                        Dim selectedDate As DateTime = CType(dtpDate.Value, DateTime)
+                        .AddWithValue("@Date", selectedDate.Date)
+                        .AddWithValue("@Category", cmbCategory.Text)
 
-                    .AddWithValue("@Method", cmbPaymentMethod.Text)
-                    .AddWithValue("@Payee", txtPayee.Text)
-                    .AddWithValue("@Status", cmbStatus.Text)
-                    .AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text))
-                    .AddWithValue("@User", If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "Unknown"))
-                End With
+                        Dim amount As Decimal = 0
+                        Decimal.TryParse(txtAmount.Text, amount)
+                        .AddWithValue("@Amount", amount)
 
-                Try
-                    ' 3. فتح الاتصال بشكل غير متزامن
-                    Await NewConn.OpenAsync()
+                        .AddWithValue("@Method", cmbPaymentMethod.Text)
+                        .AddWithValue("@Payee", txtPayee.Text)
+                        .AddWithValue("@Status", cmbStatus.Text)
+                        .AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text))
+                        .AddWithValue("@User", If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "Unknown"))
+                        .AddWithValue("@TreasuryID", Convert.ToInt32(cmbTreasury.SelectedValue))
+                    End With
 
-                    ' 4. تنفيذ الاستعلام بشكل غير متزامن
-                    Await cmd.ExecuteNonQueryAsync()
+                    Try
+                        ' أولاً: حفظ سجل المصروف في جدول الـ Expenses
+                        Await cmd.ExecuteNonQueryAsync()
 
-                    MessageBox.Show("تم حفظ البيانات بنجاح", "تأكيد الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        ' ثانياً: تسجيل حركة السحب من الخزنة المحددة وتحديث رصيدها تلقائياً
+                        Dim expenseAmount As Decimal = 0
+                        Decimal.TryParse(txtAmount.Text, expenseAmount)
 
-                    ' استدعاء دالة تفريغ الحقول
-                    ResetForm()
+                        Await TreasuryService.AddTransactionAsync(
+                        treasuryID:=Convert.ToInt32(cmbTreasury.SelectedValue),
+                        transactionType:=TreasuryTransactionTypes.Expense, ' القيمة 6 من الـ Enum الخاص بك للمصروفات
+                        amount:=expenseAmount,
+                        isDeposit:=False, ' سحب من الخزنة
+                        referenceID:=0,
+                        referenceNo:=txtPayee.Text.Trim(),
+                        notes:=cmbCategory.Text & " - " & txtNotes.Text.Trim(),
+                        userID:=Session.CurrentUserID,
+                        cn:=NewConn,
+                        trans:=trans
+                    )
 
-                Catch ex As SqlException
-                    MessageBox.Show($"خطأ في قاعدة البيانات: {ex.Message}", "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Catch ex As Exception
-                    MessageBox.Show($"خطأ عام: {ex.Message}", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End Try
+                        ' إذا نجحت العمليتان وتأكدنا من أن رصيد الخزنة لم يصبح سالباً، نقوم بالتثبيت النهائي
+                        trans.Commit()
+
+                        MessageBox.Show("تم حفظ بيانات المصروف وخصمه من الخزنة بنجاح", "تأكيد الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+
+                        ' استدعاء دالة تفريغ الحقول
+                        ResetForm()
+
+                    Catch ex As SqlException
+                        trans.Rollback()
+                        MessageBox.Show($"خطأ في قاعدة البيانات: {ex.Message}", "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Catch ex As Exception
+                        trans.Rollback()
+                        ' هنا ستظهر رسالة "عذراً، لا يمكن إتمام العملية نظراً لعدم وجود رصيد كافٍ في الخزنة" في حال حدوثها
+                        MessageBox.Show(ex.Message, "خطأ في الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Try
+                End Using
             End Using
         End Using
     End Function
 
-    Private Sub form_Expenses_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub form_Expenses_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'LoadDefaultValues()
+        'Dim gComboBoxes = {cmbCategory, cmbPaymentMethod, cmbStatus}
+
+        'dtpDate.Value = DateTime.Now
+        'For Each combo In gComboBoxes
+        '    combo.DropDownStyle = ComboBoxStyle.DropDown
+        'Next
+
+
         LoadDefaultValues()
-        Dim gComboBoxes = {cmbCategory, cmbPaymentMethod, cmbStatus}
+        Dim gComboBoxes = {cmbCategory, cmbPaymentMethod, cmbStatus, cmbTreasury} ' ⬅️ أضفنا الكومبو الجديد هنا
 
         dtpDate.Value = DateTime.Now
         For Each combo In gComboBoxes
-            combo.DropDownStyle = ComboBoxStyle.DropDown
+            combo.DropDownStyle = ComboBoxStyle.DropDownList ' 💡 يفضل DropDownList لضمان عدم إدخال اسم خزنة غير موجود
         Next
+
+        ' ⬅️ استدعاء دالة تعبئة الخزن بشكل غير متزامن
+        Await LoadTreasuriesAsync()
     End Sub
+    Private Async Function LoadTreasuriesAsync() As Task
+
+        Try
+
+            Dim dt As New System.Data.DataTable()
+
+            Using cn As SqlConnection = Await NewConnAsync()
+
+                Const sql As String =
+                    "
+                    SELECT
+                    TreasuryID,
+                    TreasuryNameAr
+                    FROM Treasury
+                    WHERE IsActive = 1
+                    AND IsDeleted = 0
+                    "
+
+                Using da As New SqlDataAdapter(sql, cn)
+
+                    Await Task.Run(Sub() da.Fill(dt))
+
+                End Using
+
+            End Using
+            cmbTreasury.DataSource = dt
+            cmbTreasury.DisplayMember = "TreasuryNameAr"
+            cmbTreasury.ValueMember = "TreasuryID"
+            defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+            cmbTreasury.SelectedIndex = defaultTreasuryid
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
+
+    End Function
 
     Private Sub btn_clean_Click(sender As Object, e As EventArgs) Handles btn_clean.Click
         ResetForm()
@@ -182,7 +263,7 @@ Public Class form_Expenses
         cmbCategory.SelectedIndex = -1
         cmbPaymentMethod.SelectedIndex = -1
         cmbStatus.SelectedIndex = -1
-
+        cmbTreasury.SelectedIndex = -1
         dtpDate.Value = DateTime.Now
     End Sub
 

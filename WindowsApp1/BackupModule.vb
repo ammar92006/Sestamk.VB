@@ -36,7 +36,7 @@ Public Module BackupModule
             End If
 
             Dim fileName As String =
-                $"Cashier_Market_{DateTime.Now:yyyyMMdd_HHmmss}_S{slot}.bak"
+                $"Sestamk_{DateTime.Now:yyyyMMdd_HHmmss}_S{slot}.bak"
 
             Dim fullPath As String = Path.Combine(folder, fileName)
 
@@ -93,7 +93,7 @@ Public Module BackupModule
             End If
 
             Dim fileName As String =
-                $"Cashier_Market_{DateTime.Now:yyyyMMdd_HHmmss}.bak"
+                $"Sestamk_{DateTime.Now:yyyyMMdd_HHmmss}.bak"
 
             Dim fullPath As String = Path.Combine(backupFolder, fileName)
 

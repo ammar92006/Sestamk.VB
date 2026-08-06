@@ -7,7 +7,7 @@
 ;  للبناء: شغّل build_installer.ps1 أو افتح هذا الملف في Inno Setup واضغط Compile.
 ; ============================================================================
 
-#define AppName "Cashier Market"
+#define AppName "Sestamk"
 #define AppVersion "1.0.0"
 #define AppPublisher "Ammar Ahmed"
 #define AppExe "Cashier Market.exe"

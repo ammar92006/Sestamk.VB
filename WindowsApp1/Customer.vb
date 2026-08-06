@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports System.IO
 Imports Guna.UI2.WinForms
@@ -108,8 +108,40 @@ Public Class Customer
         datagridviewsetup()
         ' [FIX] تفعيل DoubleBuffered لتقليل الـ Flickering
         EnableDoubleBuffer(dgvCustomers)
-    End Sub
+        GetMaxProductCode()
 
+        ''الزراير
+        Me.btnImportExcel.Location = New System.Drawing.Point(5, 2)
+        Me.btnExportExcel.Location = New System.Drawing.Point(340, 2)
+        Me.btnDelete.Location = New System.Drawing.Point(580, 2)
+        Me.btnEdit.Location = New System.Drawing.Point(880, 2)
+        Me.btnNew.Location = New System.Drawing.Point(1220, 2)
+
+    End Sub
+    Private Sub GetMaxProductCode()
+        Connect()
+        Try
+            Dim maxCode As Integer = 0
+
+            Using cmd As New SqlClient.SqlCommand("SELECT ISNULL(MAX(CAST(CustomerCode AS INT)), 0) 
+                                                    FROM Customers
+                                                    WHERE ISNUMERIC(CustomerCode) = 1
+                                                    ", Conn)
+                maxCode = Convert.ToInt32(cmd.ExecuteScalar())
+                Disconnect()
+            End Using
+
+
+            txtCustomerCode.Text = (maxCode + 1).ToString()
+
+        Catch ex As Exception
+            MessageBox.Show("حدث خطأ أثناء جلب كود المنتج: " & ex.Message,
+                        "خطأ",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error)
+        End Try
+
+    End Sub
     Private Function GetSuggestions(field As String, keyword As String) As List(Of String)
         Dim suggestions As New List(Of String)()
 
@@ -963,6 +995,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
     Private Sub btn_clean_Click(sender As Object, e As EventArgs) Handles btn_clean.Click
         ClearFields()
+        GetMaxProductCode()
     End Sub
     Private Sub SplitBalance(ByVal txtBalance As Guna2TextBox, ByVal txtDebit As Guna2TextBox, ByVal txtCredit As Guna2TextBox)
 

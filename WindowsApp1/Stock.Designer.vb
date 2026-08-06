@@ -24,6 +24,7 @@ Partial Class Stock
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Stock))
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.Pic_Product = New System.Windows.Forms.PictureBox()
         Me.dgvProducts = New System.Windows.Forms.DataGridView()
         Me.lstSuggestions = New System.Windows.Forms.ListBox()
         Me.cmbSearchField = New System.Windows.Forms.ComboBox()
@@ -31,7 +32,6 @@ Partial Class Stock
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtStockID = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.Pic_Product = New System.Windows.Forms.PictureBox()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblTime = New System.Windows.Forms.Label()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
@@ -60,8 +60,8 @@ Partial Class Stock
         Me.LabelControl7 = New DevExpress.XtraEditors.LabelControl()
         Me.LabelControl8 = New DevExpress.XtraEditors.LabelControl()
         Me.Guna2Panel1.SuspendLayout()
-        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.Pic_Product, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelHeader.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -104,8 +104,19 @@ Partial Class Stock
         Me.Guna2Panel1.ForeColor = System.Drawing.Color.Black
         Me.Guna2Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel1.Name = "Guna2Panel1"
-        Me.Guna2Panel1.Size = New System.Drawing.Size(1600, 1075)
+        Me.Guna2Panel1.Size = New System.Drawing.Size(1600, 900)
         Me.Guna2Panel1.TabIndex = 0
+        '
+        'Pic_Product
+        '
+        Me.Pic_Product.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Pic_Product.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.Pic_Product.Location = New System.Drawing.Point(13, 126)
+        Me.Pic_Product.Name = "Pic_Product"
+        Me.Pic_Product.Size = New System.Drawing.Size(420, 320)
+        Me.Pic_Product.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.Pic_Product.TabIndex = 5570
+        Me.Pic_Product.TabStop = False
         '
         'dgvProducts
         '
@@ -113,12 +124,12 @@ Partial Class Stock
         Me.dgvProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvProducts.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.dgvProducts.Location = New System.Drawing.Point(0, 587)
+        Me.dgvProducts.Location = New System.Drawing.Point(0, 585)
         Me.dgvProducts.Name = "dgvProducts"
         Me.dgvProducts.ReadOnly = True
         Me.dgvProducts.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvProducts.RowTemplate.Height = 40
-        Me.dgvProducts.Size = New System.Drawing.Size(1600, 488)
+        Me.dgvProducts.Size = New System.Drawing.Size(1600, 315)
         Me.dgvProducts.TabIndex = 5578
         '
         'lstSuggestions
@@ -146,9 +157,9 @@ Partial Class Stock
         '
         Me.lblLowStockCount.BackColor = System.Drawing.Color.DarkGray
         Me.lblLowStockCount.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblLowStockCount.Location = New System.Drawing.Point(915, 527)
+        Me.lblLowStockCount.Location = New System.Drawing.Point(950, 536)
         Me.lblLowStockCount.Name = "lblLowStockCount"
-        Me.lblLowStockCount.Size = New System.Drawing.Size(314, 57)
+        Me.lblLowStockCount.Size = New System.Drawing.Size(267, 46)
         Me.lblLowStockCount.TabIndex = 5575
         Me.lblLowStockCount.Text = " الغير متوفرة"
         Me.lblLowStockCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -196,17 +207,6 @@ Partial Class Stock
         Me.Label6.Size = New System.Drawing.Size(164, 37)
         Me.Label6.TabIndex = 5571
         Me.Label6.Text = "صورة المنتج"
-        '
-        'Pic_Product
-        '
-        Me.Pic_Product.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Pic_Product.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Pic_Product.Location = New System.Drawing.Point(13, 126)
-        Me.Pic_Product.Name = "Pic_Product"
-        Me.Pic_Product.Size = New System.Drawing.Size(420, 320)
-        Me.Pic_Product.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.Pic_Product.TabIndex = 5570
-        Me.Pic_Product.TabStop = False
         '
         'panelHeader
         '
@@ -351,7 +351,7 @@ Partial Class Stock
         Me.btn_clear.FillColor = System.Drawing.Color.DarkGray
         Me.btn_clear.Font = New System.Drawing.Font("Microsoft Sans Serif", 32.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_clear.ForeColor = System.Drawing.Color.Black
-        Me.btn_clear.Location = New System.Drawing.Point(15, 521)
+        Me.btn_clear.Location = New System.Drawing.Point(17, 457)
         Me.btn_clear.Name = "btn_clear"
         Me.btn_clear.Size = New System.Drawing.Size(418, 58)
         Me.btn_clear.TabIndex = 135
@@ -668,7 +668,7 @@ Partial Class Stock
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1600, 1075)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.Guna2Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "Stock"
@@ -678,8 +678,8 @@ Partial Class Stock
         Me.Text = " "
         Me.Guna2Panel1.ResumeLayout(False)
         Me.Guna2Panel1.PerformLayout()
-        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.Pic_Product, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).EndInit()
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
         Me.ResumeLayout(False)

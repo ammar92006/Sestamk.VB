@@ -35,18 +35,29 @@ Partial Class Settings
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.btnRefreshPorts = New DevExpress.XtraEditors.SimpleButton()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.CheckBoxEnabled = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+        Me.ComboBoxPorts = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.btnRefreshPorts = New DevExpress.XtraEditors.SimpleButton()
         Me.btnCloseConnection = New DevExpress.XtraEditors.SimpleButton()
         Me.btnTestConnection = New DevExpress.XtraEditors.SimpleButton()
         Me.btnSavebarcode = New DevExpress.XtraEditors.SimpleButton()
-        Me.CheckBoxEnabled = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.ComboBoxPorts = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.TabPage5 = New System.Windows.Forms.TabPage()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.toggleautoSaveinvoice = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+        Me.txtdefaultcustomercode = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Guna2Button1 = New Guna.UI2.WinForms.Guna2Button()
+        Me.txtInvoiceItemsPerPage = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LabelDeveloper = New System.Windows.Forms.Label()
+        Me.cmbTreasury = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.pnlHeader.SuspendLayout()
         Me.public_set.SuspendLayout()
         Me.TabPage3.SuspendLayout()
+        Me.TabPage5.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -121,6 +132,7 @@ Partial Class Settings
         Me.public_set.Controls.Add(Me.TabPage2)
         Me.public_set.Controls.Add(Me.TabPage4)
         Me.public_set.Controls.Add(Me.TabPage3)
+        Me.public_set.Controls.Add(Me.TabPage5)
         Me.public_set.Dock = System.Windows.Forms.DockStyle.Fill
         Me.public_set.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.public_set.ItemSize = New System.Drawing.Size(220, 65)
@@ -185,13 +197,13 @@ Partial Class Settings
         Me.TabPage3.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
         Me.TabPage3.Controls.Add(Me.lblStatus)
         Me.TabPage3.Controls.Add(Me.Label2)
-        Me.TabPage3.Controls.Add(Me.btnRefreshPorts)
         Me.TabPage3.Controls.Add(Me.Label1)
+        Me.TabPage3.Controls.Add(Me.CheckBoxEnabled)
+        Me.TabPage3.Controls.Add(Me.ComboBoxPorts)
+        Me.TabPage3.Controls.Add(Me.btnRefreshPorts)
         Me.TabPage3.Controls.Add(Me.btnCloseConnection)
         Me.TabPage3.Controls.Add(Me.btnTestConnection)
         Me.TabPage3.Controls.Add(Me.btnSavebarcode)
-        Me.TabPage3.Controls.Add(Me.CheckBoxEnabled)
-        Me.TabPage3.Controls.Add(Me.ComboBoxPorts)
         Me.TabPage3.Location = New System.Drawing.Point(4, 4)
         Me.TabPage3.Name = "TabPage3"
         Me.TabPage3.Padding = New System.Windows.Forms.Padding(3)
@@ -228,20 +240,6 @@ Partial Class Settings
         Me.Label2.Text = "حالة Scanner"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'btnRefreshPorts
-        '
-        Me.btnRefreshPorts.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRefreshPorts.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 30.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnRefreshPorts.Appearance.Options.UseFont = True
-        Me.btnRefreshPorts.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.software_testing
-        Me.btnRefreshPorts.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnRefreshPorts.Location = New System.Drawing.Point(588, 64)
-        Me.btnRefreshPorts.Name = "btnRefreshPorts"
-        Me.btnRefreshPorts.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnRefreshPorts.Size = New System.Drawing.Size(322, 79)
-        Me.btnRefreshPorts.TabIndex = 15
-        Me.btnRefreshPorts.Text = "تحديث المنافذ"
-        '
         'Label1
         '
         Me.Label1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -256,6 +254,52 @@ Partial Class Settings
         Me.Label1.TabIndex = 14
         Me.Label1.Text = "اختيار المنفذ (Port)"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'CheckBoxEnabled
+        '
+        Me.CheckBoxEnabled.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBoxEnabled.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.CheckBoxEnabled.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.CheckBoxEnabled.CheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.CheckBoxEnabled.CheckedState.InnerColor = System.Drawing.Color.White
+        Me.CheckBoxEnabled.Location = New System.Drawing.Point(1109, 271)
+        Me.CheckBoxEnabled.Name = "CheckBoxEnabled"
+        Me.CheckBoxEnabled.Size = New System.Drawing.Size(93, 44)
+        Me.CheckBoxEnabled.TabIndex = 10
+        Me.CheckBoxEnabled.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
+        Me.CheckBoxEnabled.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
+        Me.CheckBoxEnabled.UncheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.CheckBoxEnabled.UncheckedState.InnerColor = System.Drawing.Color.White
+        '
+        'ComboBoxPorts
+        '
+        Me.ComboBoxPorts.BackColor = System.Drawing.Color.Transparent
+        Me.ComboBoxPorts.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.ComboBoxPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.ComboBoxPorts.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.ComboBoxPorts.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.ComboBoxPorts.Font = New System.Drawing.Font("Segoe UI", 20.0!)
+        Me.ComboBoxPorts.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
+        Me.ComboBoxPorts.ItemHeight = 30
+        Me.ComboBoxPorts.Location = New System.Drawing.Point(916, 86)
+        Me.ComboBoxPorts.Name = "ComboBoxPorts"
+        Me.ComboBoxPorts.Size = New System.Drawing.Size(322, 36)
+        Me.ComboBoxPorts.TabIndex = 0
+        Me.ComboBoxPorts.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'btnRefreshPorts
+        '
+        Me.btnRefreshPorts.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefreshPorts.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 30.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRefreshPorts.Appearance.Options.UseFont = True
+        Me.btnRefreshPorts.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.software_testing
+        Me.btnRefreshPorts.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnRefreshPorts.Location = New System.Drawing.Point(588, 64)
+        Me.btnRefreshPorts.Name = "btnRefreshPorts"
+        Me.btnRefreshPorts.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnRefreshPorts.Size = New System.Drawing.Size(322, 79)
+        Me.btnRefreshPorts.TabIndex = 15
+        Me.btnRefreshPorts.Text = "تحديث المنافذ"
         '
         'btnCloseConnection
         '
@@ -299,37 +343,129 @@ Partial Class Settings
         Me.btnSavebarcode.TabIndex = 11
         Me.btnSavebarcode.Text = "حفظ"
         '
-        'CheckBoxEnabled
+        'TabPage5
         '
-        Me.CheckBoxEnabled.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CheckBoxEnabled.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.CheckBoxEnabled.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.CheckBoxEnabled.CheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.CheckBoxEnabled.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.CheckBoxEnabled.Location = New System.Drawing.Point(1109, 271)
-        Me.CheckBoxEnabled.Name = "CheckBoxEnabled"
-        Me.CheckBoxEnabled.Size = New System.Drawing.Size(93, 44)
-        Me.CheckBoxEnabled.TabIndex = 10
-        Me.CheckBoxEnabled.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.CheckBoxEnabled.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
-        Me.CheckBoxEnabled.UncheckedState.InnerBorderColor = System.Drawing.Color.White
-        Me.CheckBoxEnabled.UncheckedState.InnerColor = System.Drawing.Color.White
+        Me.TabPage5.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
+        Me.TabPage5.Controls.Add(Me.cmbTreasury)
+        Me.TabPage5.Controls.Add(Me.Label6)
+        Me.TabPage5.Controls.Add(Me.Label5)
+        Me.TabPage5.Controls.Add(Me.toggleautoSaveinvoice)
+        Me.TabPage5.Controls.Add(Me.txtdefaultcustomercode)
+        Me.TabPage5.Controls.Add(Me.Label4)
+        Me.TabPage5.Controls.Add(Me.Guna2Button1)
+        Me.TabPage5.Controls.Add(Me.txtInvoiceItemsPerPage)
+        Me.TabPage5.Controls.Add(Me.Label3)
+        Me.TabPage5.Location = New System.Drawing.Point(4, 4)
+        Me.TabPage5.Name = "TabPage5"
+        Me.TabPage5.Size = New System.Drawing.Size(1272, 722)
+        Me.TabPage5.TabIndex = 4
+        Me.TabPage5.Text = "المبيعات"
         '
-        'ComboBoxPorts
+        'Label5
         '
-        Me.ComboBoxPorts.BackColor = System.Drawing.Color.Transparent
-        Me.ComboBoxPorts.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.ComboBoxPorts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBoxPorts.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.ComboBoxPorts.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.ComboBoxPorts.Font = New System.Drawing.Font("Segoe UI", 20.0!)
-        Me.ComboBoxPorts.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
-        Me.ComboBoxPorts.ItemHeight = 30
-        Me.ComboBoxPorts.Location = New System.Drawing.Point(916, 86)
-        Me.ComboBoxPorts.Name = "ComboBoxPorts"
-        Me.ComboBoxPorts.Size = New System.Drawing.Size(322, 36)
-        Me.ComboBoxPorts.TabIndex = 0
-        Me.ComboBoxPorts.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.Label5.AutoSize = True
+        Me.Label5.ForeColor = System.Drawing.Color.White
+        Me.Label5.Location = New System.Drawing.Point(1080, 319)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(176, 29)
+        Me.Label5.TabIndex = 5635
+        Me.Label5.Text = "حفظ تلقائيا الفاتورة"
+        '
+        'toggleautoSaveinvoice
+        '
+        Me.toggleautoSaveinvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.toggleautoSaveinvoice.BackColor = System.Drawing.Color.Transparent
+        Me.toggleautoSaveinvoice.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.toggleautoSaveinvoice.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.toggleautoSaveinvoice.CheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.toggleautoSaveinvoice.CheckedState.InnerColor = System.Drawing.Color.White
+        Me.toggleautoSaveinvoice.Location = New System.Drawing.Point(698, 316)
+        Me.toggleautoSaveinvoice.Name = "toggleautoSaveinvoice"
+        Me.toggleautoSaveinvoice.Size = New System.Drawing.Size(78, 32)
+        Me.toggleautoSaveinvoice.TabIndex = 5634
+        Me.toggleautoSaveinvoice.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
+        Me.toggleautoSaveinvoice.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(125, Byte), Integer), CType(CType(137, Byte), Integer), CType(CType(149, Byte), Integer))
+        Me.toggleautoSaveinvoice.UncheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.toggleautoSaveinvoice.UncheckedState.InnerColor = System.Drawing.Color.White
+        '
+        'txtdefaultcustomercode
+        '
+        Me.txtdefaultcustomercode.BorderRadius = 10
+        Me.txtdefaultcustomercode.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtdefaultcustomercode.DefaultText = "1"
+        Me.txtdefaultcustomercode.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
+        Me.txtdefaultcustomercode.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
+        Me.txtdefaultcustomercode.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtdefaultcustomercode.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtdefaultcustomercode.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtdefaultcustomercode.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtdefaultcustomercode.ForeColor = System.Drawing.Color.Black
+        Me.txtdefaultcustomercode.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtdefaultcustomercode.Location = New System.Drawing.Point(698, 172)
+        Me.txtdefaultcustomercode.Margin = New System.Windows.Forms.Padding(5)
+        Me.txtdefaultcustomercode.Name = "txtdefaultcustomercode"
+        Me.txtdefaultcustomercode.PlaceholderText = ""
+        Me.txtdefaultcustomercode.SelectedText = ""
+        Me.txtdefaultcustomercode.Size = New System.Drawing.Size(306, 46)
+        Me.txtdefaultcustomercode.TabIndex = 4
+        Me.txtdefaultcustomercode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.ForeColor = System.Drawing.Color.White
+        Me.Label4.Location = New System.Drawing.Point(1058, 181)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(198, 29)
+        Me.Label4.TabIndex = 3
+        Me.Label4.Text = "كود العميل الافتراضي"
+        '
+        'Guna2Button1
+        '
+        Me.Guna2Button1.BorderRadius = 10
+        Me.Guna2Button1.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.Guna2Button1.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.Guna2Button1.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.Guna2Button1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.Guna2Button1.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.Guna2Button1.ForeColor = System.Drawing.Color.White
+        Me.Guna2Button1.Location = New System.Drawing.Point(578, 632)
+        Me.Guna2Button1.Name = "Guna2Button1"
+        Me.Guna2Button1.Size = New System.Drawing.Size(262, 45)
+        Me.Guna2Button1.TabIndex = 2
+        Me.Guna2Button1.Text = "حفظ"
+        '
+        'txtInvoiceItemsPerPage
+        '
+        Me.txtInvoiceItemsPerPage.BorderRadius = 10
+        Me.txtInvoiceItemsPerPage.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtInvoiceItemsPerPage.DefaultText = "25"
+        Me.txtInvoiceItemsPerPage.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
+        Me.txtInvoiceItemsPerPage.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
+        Me.txtInvoiceItemsPerPage.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtInvoiceItemsPerPage.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtInvoiceItemsPerPage.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtInvoiceItemsPerPage.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtInvoiceItemsPerPage.ForeColor = System.Drawing.Color.Black
+        Me.txtInvoiceItemsPerPage.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtInvoiceItemsPerPage.Location = New System.Drawing.Point(698, 35)
+        Me.txtInvoiceItemsPerPage.Margin = New System.Windows.Forms.Padding(5)
+        Me.txtInvoiceItemsPerPage.Name = "txtInvoiceItemsPerPage"
+        Me.txtInvoiceItemsPerPage.PlaceholderText = ""
+        Me.txtInvoiceItemsPerPage.SelectedText = ""
+        Me.txtInvoiceItemsPerPage.Size = New System.Drawing.Size(306, 46)
+        Me.txtInvoiceItemsPerPage.TabIndex = 1
+        Me.txtInvoiceItemsPerPage.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.ForeColor = System.Drawing.Color.White
+        Me.Label3.Location = New System.Drawing.Point(1012, 43)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(244, 29)
+        Me.Label3.TabIndex = 0
+        Me.Label3.Text = "عدد اصناف صفحة الطباعة"
         '
         'Panel2
         '
@@ -356,6 +492,36 @@ Partial Class Settings
         Me.LabelDeveloper.Text = "تم تصميم هذا البرنامج بواسطة عمار احمد"
         Me.LabelDeveloper.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'cmbTreasury
+        '
+        Me.cmbTreasury.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmbTreasury.BackColor = System.Drawing.Color.Transparent
+        Me.cmbTreasury.BorderRadius = 8
+        Me.cmbTreasury.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbTreasury.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbTreasury.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.cmbTreasury.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
+        Me.cmbTreasury.ItemHeight = 40
+        Me.cmbTreasury.Location = New System.Drawing.Point(698, 428)
+        Me.cmbTreasury.Name = "cmbTreasury"
+        Me.cmbTreasury.Size = New System.Drawing.Size(306, 46)
+        Me.cmbTreasury.TabIndex = 5638
+        Me.cmbTreasury.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label6
+        '
+        Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label6.BackColor = System.Drawing.Color.Transparent
+        Me.Label6.ForeColor = System.Drawing.Color.White
+        Me.Label6.Location = New System.Drawing.Point(1099, 434)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(157, 36)
+        Me.Label6.TabIndex = 5637
+        Me.Label6.Text = "الخزنة"
+        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Settings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -376,6 +542,8 @@ Partial Class Settings
         Me.public_set.ResumeLayout(False)
         Me.TabPage3.ResumeLayout(False)
         Me.TabPage3.PerformLayout()
+        Me.TabPage5.ResumeLayout(False)
+        Me.TabPage5.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
@@ -403,4 +571,14 @@ Partial Class Settings
     Friend WithEvents Label1 As Label
     Friend WithEvents lblStatus As Label
     Friend WithEvents Label2 As Label
+    Friend WithEvents TabPage5 As TabPage
+    Friend WithEvents Guna2Button1 As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents txtInvoiceItemsPerPage As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents Label3 As Label
+    Friend WithEvents txtdefaultcustomercode As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents Label4 As Label
+    Friend WithEvents Label5 As Label
+    Friend WithEvents toggleautoSaveinvoice As Guna.UI2.WinForms.Guna2ToggleSwitch
+    Public WithEvents cmbTreasury As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents Label6 As Label
 End Class

@@ -5,6 +5,8 @@ Imports Guna.UI2.WinForms
 Public Class Customer_Balance_Download
     Dim x, y As Integer
     Dim newpoint As New Point
+    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+
     Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
         If WindowState = FormWindowState.Maximized Then
             WindowState = FormWindowState.Normal
@@ -25,7 +27,7 @@ Public Class Customer_Balance_Download
         y = Control.MousePosition.Y - Me.Location.Y
     End Sub
 
-    Private Sub Customer_Balance_Download_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub Customer_Balance_Download_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cmbSearchField.Items.Add("كود العميل")
         cmbSearchField.Items.Add("اسم العميل")
         cmbSearchField.Items.Add("رقم الهاتف")
@@ -36,7 +38,47 @@ Public Class Customer_Balance_Download
         Me.KeyPreview = True
         LoadCustomers()
         datagridviewsetup()
+        Await LoadTreasuriesAsync()
     End Sub
+
+    Private Async Function LoadTreasuriesAsync() As Task
+
+        Try
+
+            Dim dt As New DataTable()
+
+            Using cn As SqlConnection = Await NewConnAsync()
+
+                Const sql As String =
+                    "
+                    SELECT
+                    TreasuryID,
+                    TreasuryNameAr
+                    FROM Treasury
+                    WHERE IsActive = 1
+                    AND IsDeleted = 0
+                    "
+
+                Using da As New SqlDataAdapter(sql, cn)
+
+                    Await Task.Run(Sub() da.Fill(dt))
+
+                End Using
+
+            End Using
+            cmbTreasury.DataSource = dt
+            cmbTreasury.DisplayMember = "TreasuryNameAr"
+            cmbTreasury.ValueMember = "TreasuryID"
+            defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+            cmbTreasury.SelectedIndex = defaultTreasuryid
+
+        Catch ex As Exception
+
+            MessageBox.Show(ex.Message)
+
+        End Try
+
+    End Function
     Private Sub LoadCustomers(Optional filter As String = "", Optional field As String = "")
         Using Conn
             Dim query As String = "SELECT CustomerID, CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes , CreatedAt , UpdatedAt FROM Customers"
@@ -338,6 +380,65 @@ Public Class Customer_Balance_Download
         SplitBalance(txtBalance, txtDebit, txtCredit)
     End Sub
 
+    'Private Sub btnDoPayment_Click(sender As Object, e As EventArgs) Handles btnDoPayment.Click
+    '    If txtAmountPaid.Text = "" Then
+    '        MsgBox("من فضلك قم بادخال قيمه الدفع")
+    '        Exit Sub
+    '    End If
+    '    If txtCustomerCode.Text = "" Or txtBalance.Text = "" Then
+    '        MsgBox("برجاء اختيار العميل")
+    '        Exit Sub
+    '    End If
+    '    '------------------------------
+    '    ' 1️⃣ جمع البيانات من الفورم
+    '    '------------------------------
+    '    Dim clientName As String = txtCustomerName.Text
+    '    Dim balance As Decimal = CDec(txtBalance.Text) ' موجب أو سالب
+    '    Dim payAmount As Decimal = CDec(txtAmountPaid.Text)
+    '    Dim notes As String = txtNotes.Text
+
+    '    ' فحص البيانات
+    '    If clientName = "" Then
+    '        MsgBox("من فضلك اختر العميل.", MsgBoxStyle.Exclamation)
+    '        Exit Sub
+    '    End If
+
+    '    'If payAmount <= 0 Then
+    '    '    MsgBox("قيمة الدفع يجب أن تكون أكبر من صفر.", MsgBoxStyle.Exclamation)
+    '    '    Exit Sub
+    '    'End If
+
+    '    '------------------------------
+    '    ' 2️⃣ حساب الرصيد الجديد
+    '    '------------------------------
+    '    Dim newBalance As Decimal = balance + payAmount  ' الدفع يقلل الدين (الدين سالب)
+
+    '    '------------------------------
+    '    ' 3️⃣ فتح فورم التأكيد مع تمرير البيانات
+    '    '------------------------------
+    '    Dim frm As New frmConfirmMessage()
+
+    '    frm.CustomerName = clientName
+    '    frm.BalanceBefore = balance
+    '    frm.AmountPaid = payAmount
+    '    frm.BalanceAfter = newBalance
+    '    frm.Notes = notes
+
+    '    If frm.ShowDialog() = DialogResult.OK Then
+
+    '        txtCustomerCode.Text = ""
+    '        txtCustomerName.Text = ""
+    '        nudCreditLimit.Text = "0"
+    '        txtBalance.Text = ""
+    '        txtAmountPaid.Text = ""
+    '        txtNotes.Text = ""
+    '        LoadCustomers()
+    '        dgvCustomers.ClearSelection()
+    '    End If
+    'End Sub
+
+
+
     Private Sub btnDoPayment_Click(sender As Object, e As EventArgs) Handles btnDoPayment.Click
         If txtAmountPaid.Text = "" Then
             MsgBox("من فضلك قم بادخال قيمه الدفع")
@@ -347,29 +448,31 @@ Public Class Customer_Balance_Download
             MsgBox("برجاء اختيار العميل")
             Exit Sub
         End If
+
+        ' 🛑 الجديد: التحقق من اختيار الخزنة
+        If cmbTreasury.SelectedValue Is Nothing Then
+            MsgBox("من فضلك اختر الخزنة التي سيتم إيداع المبلغ فيها.")
+            Exit Sub
+        End If
+        Dim selectedTreasuryID As Integer = Convert.ToInt32(cmbTreasury.SelectedValue)
+
         '------------------------------
         ' 1️⃣ جمع البيانات من الفورم
         '------------------------------
         Dim clientName As String = txtCustomerName.Text
-        Dim balance As Decimal = CDec(txtBalance.Text) ' موجب أو سالب
+        Dim balance As Decimal = CDec(txtBalance.Text)
         Dim payAmount As Decimal = CDec(txtAmountPaid.Text)
         Dim notes As String = txtNotes.Text
 
-        ' فحص البيانات
         If clientName = "" Then
             MsgBox("من فضلك اختر العميل.", MsgBoxStyle.Exclamation)
             Exit Sub
         End If
 
-        'If payAmount <= 0 Then
-        '    MsgBox("قيمة الدفع يجب أن تكون أكبر من صفر.", MsgBoxStyle.Exclamation)
-        '    Exit Sub
-        'End If
-
         '------------------------------
         ' 2️⃣ حساب الرصيد الجديد
         '------------------------------
-        Dim newBalance As Decimal = balance + payAmount  ' الدفع يقلل الدين (الدين سالب)
+        Dim newBalance As Decimal = balance + payAmount
 
         '------------------------------
         ' 3️⃣ فتح فورم التأكيد مع تمرير البيانات
@@ -381,20 +484,21 @@ Public Class Customer_Balance_Download
         frm.AmountPaid = payAmount
         frm.BalanceAfter = newBalance
         frm.Notes = notes
+        frm.TargetTreasuryID = selectedTreasuryID ' ⬅️ تمرير معرف الخزنة لفورم التأكيد
 
         If frm.ShowDialog() = DialogResult.OK Then
-
+            ' تنظيف الأدوات بعد النجاح
             txtCustomerCode.Text = ""
             txtCustomerName.Text = ""
             nudCreditLimit.Text = "0"
             txtBalance.Text = ""
             txtAmountPaid.Text = ""
             txtNotes.Text = ""
+            cmbTreasury.SelectedIndex = -1 ' تصفير الخزنة
             LoadCustomers()
             dgvCustomers.ClearSelection()
         End If
     End Sub
-
 
 
     Private Sub SplitBalance(ByVal txtBalance As Guna2TextBox, ByVal txtDebit As Guna2TextBox, ByVal txtCredit As Guna2TextBox)

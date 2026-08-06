@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class add_new_product
     Dim x, y As Integer
@@ -329,17 +329,17 @@ Public Class add_new_product
 
         Dim bar As String = txtUnitBarcode.Text.Trim()
 
-        ' 1 — فحص داخل GRID
-        If BarcodeExistsInGrid(bar) Then
-            MessageBox.Show("⚠ هذا الباركود مضاف بالفعل داخل الوحدات.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
+        '' 1 — فحص داخل GRID
+        'If BarcodeExistsInGrid(bar) Then
+        '    MessageBox.Show("⚠ هذا الباركود مضاف بالفعل داخل الوحدات.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '    Return
+        'End If
 
-        ' 2 — فحص داخل قاعدة البيانات
-        If BarcodeExistsInDatabase(bar) Then
-            MessageBox.Show("❌ هذا الباركود موجود بالفعل في قاعدة البيانات ولا يمكن تكراره.", "مكرر", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End If
+        '' 2 — فحص داخل قاعدة البيانات
+        'If BarcodeExistsInDatabase(bar) Then
+        '    MessageBox.Show("❌ هذا الباركود موجود بالفعل في قاعدة البيانات ولا يمكن تكراره.", "مكرر", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    Return
+        'End If
 
         ' بعد التأكد… إضافة الوحدة
         dgvUnits.Rows.Add(

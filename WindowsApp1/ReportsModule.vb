@@ -800,6 +800,7 @@ SELECT
         H.Net_Amount,
         H.Amount_Paid,
         H.Remaining,
+        H.PreviousBalance,
         H.Payment_Method,
         C.CurrentBalance
     FROM SalesHeader H
@@ -835,9 +836,9 @@ SELECT
                     .Paid = rd("Amount_Paid"),
                     .Remaining = remaining,
                     .PaymentMethod = rd("Payment_Method").ToString(),
-                    .PreviousBalance = currentBalance - remaining
+                    .PreviousBalance = rd("PreviousBalance")
                 }
-                    ' ✅ PreviousBalance = الرصيد الكلي للعميل - متبقي هذه الفاتورة = ما كان مديناً قبلها
+
                 End If
             End Using
         End Using
@@ -1165,11 +1166,10 @@ SELECT
 
     'End Sub
 
+    ' Dispatcher: إعادة طباعة من قاعدة البيانات (شاشة التقارير) — يختار النمط ويستدعي الرسم الموحّد
     Public Sub PrintInvoiceFromDBProfessional(invoiceID As Integer, copiesCount As Integer)
-
         If copiesCount <= 0 Then copiesCount = 1
 
-        ' Dispatcher: قراءة استيل الطباعة من الإعدادات
         Dim styleVal As String = SettingsManager.GetSetting("PrintStyle")
         If Not String.IsNullOrEmpty(styleVal) AndAlso styleVal.Trim() = "2" Then
             PrintInvoiceFromDB_Style2(invoiceID, copiesCount)
@@ -1177,14 +1177,28 @@ SELECT
         End If
 
         Connect()
+        Try
+            Dim header = GetInvoiceHeaderfromDB(invoiceID)
+            If header Is Nothing Then
+                MessageBox.Show("الفاتورة غير موجودة")
+                Return
+            End If
+            Dim items = GetInvoiceItemsfromDB(invoiceID)
+            Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
+            RenderInvoiceReceiptStyle1(header, items, copiesCount, ShouldShowReportPreview(), "معاينة الفاتورة - استيل 1", printBarcode)
+        Finally
+            Disconnect()
+        End Try
+    End Sub
 
-        Dim header = GetInvoiceHeaderfromDB(invoiceID)
-        If header Is Nothing Then
-            MessageBox.Show("الفاتورة غير موجودة")
-            Exit Sub
-        End If
-
-        Dim items = GetInvoiceItemsfromDB(invoiceID)
+    ' ════════════════════════════════════════════════════════════════
+    ' الرسم الموحّد لفاتورة استيل 1 — مصدر واحد للحقيقة.
+    ' يستخدمه: المبيعات (طباعة حية) + التقارير (إعادة طباعة).
+    ' ════════════════════════════════════════════════════════════════
+    Public Sub RenderInvoiceReceiptStyle1(header As InvoiceHeader, items As List(Of InvoiceItem),
+                                          copiesCount As Integer, usePreview As Boolean,
+                                          previewTitle As String, printBarcode As Boolean)
+        If copiesCount <= 0 Then copiesCount = 1
 
         Dim printedCount As Integer = 0
 
@@ -1261,6 +1275,22 @@ Sub(sender, e)
                               g.DrawString(t, f, Brushes.Black, New RectangleF(x, myY, pageW, f.Height + 6), fmtR)
                               myY += f.Height + 6
                           End Sub
+
+    ' [إصلاح الالتفاف]: يرسم النص في سطر واحد ويصغّر حجم الخط تلقائياً لو كان أعرض من العمود
+    Dim drawFitted = Sub(t As String, baseFont As Font, rect As RectangleF, fmt As StringFormat)
+                         Dim ff As Font = baseFont
+                         Dim ownFont As Boolean = False
+                         Dim guard As Integer = 0
+                         Do While g.MeasureString(t, ff).Width > rect.Width AndAlso ff.Size > 6.5F AndAlso guard < 40
+                             Dim newSize As Single = ff.Size - 0.5F
+                             If ownFont Then ff.Dispose()
+                             ff = New Font(baseFont.FontFamily, newSize, baseFont.Style)
+                             ownFont = True
+                             guard += 1
+                         Loop
+                         g.DrawString(t, ff, Brushes.Black, rect, fmt)
+                         If ownFont Then ff.Dispose()
+                     End Sub
 
     ' ==== إعداد شعار المتجر ومعلوماته ====
     Dim StoreName As String = SettingsManager.GetSetting("ShopName")
@@ -1374,9 +1404,10 @@ Sub(sender, e)
 
         Dim productRect As New RectangleF(xName, Y + 4, colNameW, h - 8)
         g.DrawString(name, f11, Brushes.Black, productRect, fmtWrap)
-        g.DrawString(qty, f11, Brushes.Black, New RectangleF(xQty, Y, colQtyW, h), fmtC)
-        g.DrawString(price, f11, Brushes.Black, New RectangleF(xPrice, Y, colPriceW, h), fmtC)
-        g.DrawString(total, f11, Brushes.Black, New RectangleF(xTotal, Y, colTotalW, h), fmtC)
+        ' [إصلاح تقسيم السعر سطرين]: أرقام بخط يتسع داخل العمود في سطر واحد
+        drawFitted(qty, f11, New RectangleF(xQty, Y, colQtyW, h), fmtC)
+        drawFitted(price, f11, New RectangleF(xPrice, Y, colPriceW, h), fmtC)
+        drawFitted(total, f11, New RectangleF(xTotal, Y, colTotalW, h), fmtC)
 
         Y += h
         g.DrawLine(pen, leftX, Y, leftX + pageW, Y)
@@ -1432,8 +1463,7 @@ Sub(sender, e)
     ' كود قديم: DrawSeparator(1)
     DrawSeparator(2)
 
-    ' باركود (مشروط بالإعداد)
-    Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").ToLower() = "true")
+    ' باركود (مشروط بالإعداد - يأتي كـ parameter من المُستدعي)
     If printBarcode Then
         Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
         g.DrawImage(qr, leftX + (pageW - qr.Width) \ 2, Y)
@@ -1460,15 +1490,13 @@ Sub(sender, e)
 End Sub
 
         Try
-            If ShouldShowReportPreview() Then
-                ShowReportPreviewDialog(pd, "معاينة الفاتورة - استيل 1")
+            If usePreview Then
+                ShowReportPreviewDialog(pd, previewTitle)
             Else
                 pd.Print()
             End If
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -1508,17 +1536,304 @@ End Sub
     ' ════════════════════════════════════════════════════════════════
     ' استيل 2 (شبيه فاتورة المصطفى): لوجو على الشمال + بيانات على اليمين
     ' ════════════════════════════════════════════════════════════════
+    ' Wrapper: إعادة طباعة من قاعدة البيانات (شاشة التقارير) — تجلب البيانات ثم تستدعي الرسم الموحّد
     Public Sub PrintInvoiceFromDB_Style2(invoiceID As Integer, copiesCount As Integer)
         If copiesCount <= 0 Then copiesCount = 1
-
         Connect()
+        Try
+            Dim header = GetInvoiceHeaderfromDB(invoiceID)
+            If header Is Nothing Then
+                MessageBox.Show("الفاتورة غير موجودة")
+                Return
+            End If
+            Dim items = GetInvoiceItemsfromDB(invoiceID)
+            Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
+            RenderInvoiceReceiptStyle2(header, items, copiesCount, ShouldShowReportPreview(), "معاينة الفاتورة - استيل 2", printBarcode)
+        Finally
+            Disconnect()
+        End Try
+    End Sub
 
-        Dim header = GetInvoiceHeaderfromDB(invoiceID)
-        If header Is Nothing Then
-            MessageBox.Show("الفاتورة غير موجودة")
-            Return
-        End If
-        Dim items = GetInvoiceItemsfromDB(invoiceID)
+    ' ════════════════════════════════════════════════════════════════
+    ' الرسم الموحّد لفاتورة استيل 2 — مصدر واحد للحقيقة.
+    ' يستخدمه: المبيعات (طباعة حية) + التقارير (إعادة طباعة).
+    ' أي تعديل في شكل الفاتورة يتم هنا فقط فينطبق على الاثنين.
+    ' ════════════════════════════════════════════════════════════════
+    'Public Sub RenderInvoiceReceiptStyle2(header As InvoiceHeader, items As List(Of InvoiceItem),
+    '                                      copiesCount As Integer, usePreview As Boolean,
+    '                                      previewTitle As String, printBarcode As Boolean)
+    '    If copiesCount <= 0 Then copiesCount = 1
+
+    '    ' ─── إعدادات العامة ───
+    '    Dim StoreName As String = SettingsManager.GetSetting("ShopName")
+    '    Dim ShopPhone As String = SettingsManager.GetSetting("ShopPhone")
+    '    Dim ShopPhone2 As String = SettingsManager.GetSetting("ShopPhone2")
+    '    Dim ShopAddress As String = SettingsManager.GetSetting("ShopAddress")
+    '    Dim TaxNumber As String = SettingsManager.GetSetting("TaxNumber")
+    '    Dim FooterMsg As String = SettingsManager.GetSetting("FooterText")
+    '    Dim DeliveryText As String = SettingsManager.GetSetting("DeliveryText")
+    '    If String.IsNullOrEmpty(DeliveryText) Then DeliveryText = "يوجد توصيل للمنازل"
+    '    If String.IsNullOrEmpty(StoreName) Then StoreName = "سوبر ماركت الحمد والرضا"
+    '    If String.IsNullOrEmpty(FooterMsg) Then FooterMsg = "❤ شكراً لتعاملكم معنا"
+
+    '    Dim thermalPrinter As String = SettingsManager.GetSetting("ThermalPrinterName")
+    '    Dim logoPath As String = SettingsManager.GetSetting("LogoPath")
+    '    Dim printLogoSetting As String = SettingsManager.GetSetting("PrintLogo")
+    '    Dim shouldPrintLogo As Boolean = String.IsNullOrEmpty(printLogoSetting) OrElse printLogoSetting.Trim().ToLower() = "true"
+
+    '    Dim logoImg As System.Drawing.Image = Nothing
+    '    Try
+    '        If shouldPrintLogo AndAlso Not String.IsNullOrEmpty(logoPath) AndAlso IO.File.Exists(logoPath) Then
+    '            logoImg = System.Drawing.Image.FromFile(logoPath)
+    '        End If
+    '    Catch
+    '    End Try
+
+    '    Dim printedCount As Integer = 0
+    '    Dim pd As New PrintDocument()
+    '    If Not String.IsNullOrEmpty(thermalPrinter) Then
+    '        pd.PrinterSettings.PrinterName = thermalPrinter
+    '    End If
+    '    pd.DefaultPageSettings.PaperSize = New PaperSize("Custom", 300, 5000)
+    '    pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
+
+    '    AddHandler pd.PrintPage,
+    '        Sub(sender, e)
+    '            printedCount += 1
+    '            Dim g = e.Graphics
+    '            Dim Y As Integer = e.MarginBounds.Top
+    '            Dim pageW As Integer = e.MarginBounds.Width
+    '            Dim leftX As Integer = e.MarginBounds.Left
+
+    '            Dim fBrand As New Font("Arial", 11, FontStyle.Bold)
+    '            Dim fBold As New Font("Arial", 11, FontStyle.Bold)
+    '            Dim fTotalLarge As New Font("Arial", 13, FontStyle.Bold)
+    '            Dim f10 As New Font("Arial", 10, FontStyle.Bold)
+    '            Dim f9 As New Font("Arial", 10, FontStyle.Bold)
+    '            Dim f8 As New Font("Arial", 9, FontStyle.Bold)
+
+    '            Dim fmtC As New StringFormat With {
+    '                .Alignment = StringAlignment.Center,
+    '                .LineAlignment = StringAlignment.Center,
+    '                .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+    '            Dim fmtR As New StringFormat With {
+    '                .Alignment = StringAlignment.Far,
+    '                .LineAlignment = StringAlignment.Center,
+    '                .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+    '            Dim fmtWrap As New StringFormat With {
+    '                .Alignment = StringAlignment.Near,
+    '                .LineAlignment = StringAlignment.Center,
+    '                .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
+    '            Dim linePen As New Pen(Color.Black, 1)
+
+    '            Const safeRightInset As Integer = 28
+    '            Dim usableW As Integer = pageW - safeRightInset
+
+    '            Dim centerLine = Sub(t As String, f As Font)
+    '                                 g.DrawString(t, f, Brushes.Black,
+    '                                              New RectangleF(leftX, Y, usableW, f.Height + 5), fmtC)
+    '                                 Y += f.Height + 5
+    '                             End Sub
+
+    '            Dim rightLineSafe = Sub(t As String, f As Font)
+    '                                    g.DrawString(t, f, Brushes.Black,
+    '                                                 New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
+    '                                    Y += f.Height + 4
+    '                                End Sub
+
+    '            ' [إصلاح الالتفاف]: يرسم النص في سطر واحد ويصغّر حجم الخط تلقائياً لو كان
+    '            ' أعرض من المستطيل — يمنع نزول التاريخ/السعر لسطر تاني.
+    '            Dim drawFitted = Sub(t As String, baseFont As Font, rect As RectangleF, fmt As StringFormat)
+    '                                 Dim ff As Font = baseFont
+    '                                 Dim ownFont As Boolean = False
+    '                                 Dim guard As Integer = 0
+    '                                 Do While g.MeasureString(t, ff).Width > rect.Width AndAlso ff.Size > 6.5F AndAlso guard < 40
+    '                                     Dim newSize As Single = ff.Size - 0.5F
+    '                                     If ownFont Then ff.Dispose()
+    '                                     ff = New Font(baseFont.FontFamily, newSize, baseFont.Style)
+    '                                     ownFont = True
+    '                                     guard += 1
+    '                                 Loop
+    '                                 g.DrawString(t, ff, Brushes.Black, rect, fmt)
+    '                                 If ownFont Then ff.Dispose()
+    '                             End Sub
+
+    '            Dim separator = Sub()
+    '                                g.DrawLine(linePen, leftX, Y, leftX + usableW, Y)
+    '                                Y += 6
+    '                            End Sub
+
+    '            ' ─── الهيدر: لوجو على اليمين + بيانات على الشمال ───
+    '            ' اللوجو ياخد مساحة أصغر عشان البيانات الأطول (التاريخ) تظهر كاملة
+    '            Dim logoColW As Integer = CInt(usableW * 0.32)
+    '            Dim infoColW As Integer = usableW - logoColW
+    '            Dim infoColX As Integer = leftX
+    '            Dim logoColX As Integer = leftX + infoColW
+    '            Dim logoY As Integer = Y
+    '            Dim infoY As Integer = Y
+
+    '            If logoImg IsNot Nothing Then
+    '                Dim logoWidth As Integer = Math.Min(95, logoColW - 6)
+    '                Dim logoHeight As Integer = CInt(logoWidth * logoImg.Height / logoImg.Width)
+    '                Dim logoXPos As Integer = logoColX + (logoColW - logoWidth) \ 2
+    '                g.DrawImage(logoImg, logoXPos, logoY, logoWidth, logoHeight)
+    '                logoY += logoHeight + 4
+    '            End If
+
+    '            ' اسم المحل فوق مع فرق بسيط من اللوجو
+    '            logoY += 5
+
+    '            ' [إصلاح وضوح اسم المحل]: نلفّ الاسم على أكثر من سطر داخل عمود اللوجو
+    '            ' ونحسب الارتفاع الفعلي بدل قصّه في سطر واحد.
+    '            Dim brandFont As Font = fBrand
+    '            Dim brandRectW As Integer = logoColW - 4
+    '            If g.MeasureString(StoreName, brandFont).Width > brandRectW * 2 Then
+    '                brandFont = New Font("Arial", 9, FontStyle.Bold)
+    '            End If
+    '            Dim brandSize As SizeF = g.MeasureString(StoreName, brandFont, brandRectW, fmtC)
+    '            Dim brandH As Integer = CInt(brandSize.Height) + 4
+    '            g.DrawString(StoreName, brandFont, Brushes.Black,
+    '                         New RectangleF(logoColX + 2, logoY, brandRectW, brandH), fmtC)
+    '            logoY += brandH
+    '            If Not brandFont Is fBrand Then brandFont.Dispose()
+
+    '            ' حقول بيانات الفاتورة (شمال) - خط أصغر عشان تظهر كاملة
+    '            Dim drawRightField = Sub(label As String, value As String)
+    '                                     Dim txt As String = label & " : " & value
+    '                                     Dim hh As Integer = f8.Height + 6
+    '                                     ' [إصلاح نزول التاريخ سطر تاني]: نرسم القيمة في سطر واحد بخط يتسع تلقائياً
+    '                                     drawFitted(txt, f8, New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
+    '                                     g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
+    '                                     infoY += hh + 1
+    '                                 End Sub
+
+    '            drawRightField("اسم العميل", header.CustomerName)
+    '            drawRightField("فاتورة رقم", header.InvoiceID.ToString())
+    '            ' تاريخ مختصر مع نظام 12 ساعة
+    '            drawRightField("التاريخ", header.InvoiceDate.ToString("yyyy/MM/dd hh:mm tt"))
+    '            drawRightField("المستخدم", header.UserName)
+    '            drawRightField("طريقة الدفع", header.PaymentMethod)
+
+    '            g.DrawLine(linePen, logoColX, Y, logoColX, Math.Max(logoY, infoY))
+
+    '            Y = Math.Max(infoY, logoY) + 4
+    '            g.DrawLine(linePen, leftX, Y, leftX + usableW, Y)
+    '            Y += 6
+
+    '            ' العنوان والهواتف
+    '            Dim phones As String = ShopPhone
+    '            If Not String.IsNullOrEmpty(ShopPhone2) Then
+    '                phones = If(String.IsNullOrEmpty(phones), ShopPhone2, ShopPhone & " - " & ShopPhone2)
+    '            End If
+    '            If Not String.IsNullOrEmpty(ShopAddress) Then centerLine(ShopAddress, f9)
+    '            If Not String.IsNullOrEmpty(phones) Then centerLine(phones, f9)
+    '            If Not String.IsNullOrEmpty(TaxNumber) Then centerLine("الرقم الضريبي: " & TaxNumber, f9)
+
+    '            separator()
+
+    '            ' ─── جدول المنتجات ───
+    '            Dim tableW As Integer = usableW
+    '            Dim colTW = CInt(tableW * 0.22)
+    '            Dim colPW = CInt(tableW * 0.18)
+    '            Dim colQW = CInt(tableW * 0.16)
+    '            Dim colNW = tableW - (colTW + colPW + colQW)
+    '            Dim xT As Integer = leftX
+    '            Dim xP As Integer = xT + colTW
+    '            Dim xQ As Integer = xP + colPW
+    '            Dim xN As Integer = xQ + colQW
+    '            Dim tableY As Integer = Y
+    '            Dim headerH As Integer = 26
+
+    '            g.DrawString("الصنف", fBold, Brushes.Black, New RectangleF(xN, Y, colNW, headerH), fmtC)
+    '            g.DrawString("الكمية", fBold, Brushes.Black, New RectangleF(xQ, Y, colQW, headerH), fmtC)
+    '            g.DrawString("السعر", fBold, Brushes.Black, New RectangleF(xP, Y, colPW, headerH), fmtC)
+    '            g.DrawString("إجمالي", fBold, Brushes.Black, New RectangleF(xT, Y, colTW, headerH), fmtC)
+    '            Y += headerH
+
+    '            Const namePadRight As Integer = 8
+    '            Const namePadLeft As Integer = 4
+    '            Dim nameTextWidth As Integer = colNW - namePadRight - namePadLeft
+    '            If nameTextWidth < 20 Then nameTextWidth = colNW
+    '            For Each it In items
+    '                Dim cleanName As String = If(it.ProductName, "").Replace(vbCr, " ").Replace(vbLf, " ").Trim()
+    '                Dim measured As SizeF = g.MeasureString(cleanName, f10, nameTextWidth, fmtWrap)
+    '                Dim h As Integer = Math.Max(24, CInt(measured.Height) + 8)
+    '                g.DrawString(cleanName, f10, Brushes.Black,
+    '                             New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
+    '                ' [إصلاح تقسيم السعر سطرين]: أرقام بخط يتسع داخل العمود في سطر واحد
+    '                drawFitted(it.Quantity.ToString("0.##"), f10, New RectangleF(xQ, Y, colQW, h), fmtC)
+    '                drawFitted(it.Price.ToString("0.00"), f10, New RectangleF(xP, Y, colPW, h), fmtC)
+    '                drawFitted(it.Total.ToString("0.00"), f10, New RectangleF(xT, Y, colTW, h), fmtC)
+    '                Y += h
+    '                g.DrawLine(linePen, leftX, Y, leftX + tableW, Y)
+    '            Next
+
+    '            Dim tableEndY As Integer = Y
+    '            g.DrawLine(linePen, leftX, tableY, leftX + tableW, tableY)
+    '            g.DrawLine(linePen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
+    '            g.DrawLine(linePen, xT, tableY, xT, tableEndY)
+    '            g.DrawLine(linePen, xP, tableY, xP, tableEndY)
+    '            g.DrawLine(linePen, xQ, tableY, xQ, tableEndY)
+    '            g.DrawLine(linePen, xN, tableY, xN, tableEndY)
+    '            g.DrawLine(linePen, xN + colNW, tableY, xN + colNW, tableEndY)
+
+    '            separator()
+    '            rightLineSafe("عدد الأصناف : " & items.Count, fBold)
+    '            separator()
+
+    '            If header.Discount > 0 Then
+    '                centerLine("إجمالي قبل الخصم : " & header.TotalAmount.ToString("0.00"), fTotalLarge)
+    '                centerLine("الخصم           : " & header.Discount.ToString("0.00"), fTotalLarge)
+    '                centerLine("الصافي          : " & header.NetAmount.ToString("0.00"), fTotalLarge)
+    '            Else
+    '                centerLine("إجمالي الفاتورة : " & header.TotalAmount.ToString("0.00"), fTotalLarge)
+    '            End If
+    '            centerLine("المدفوع         : " & header.Paid.ToString("0.00"), fTotalLarge)
+    '            centerLine("المتبقي         : " & header.Remaining.ToString("0.00"), fTotalLarge)
+
+    '            If header.CustomerCode <> "1" Then
+    '                Dim totalBalance As Decimal = header.PreviousBalance + header.Remaining
+    '                separator()
+    '                rightLineSafe("رصيد سابق    : " & header.PreviousBalance.ToString("0.00"), fBold)
+    '                rightLineSafe("متبقي الفاتورة: " & header.Remaining.ToString("0.00"), fBold)
+    '                rightLineSafe("إجمالي الحساب: " & totalBalance.ToString("0.00"), fBold)
+    '            End If
+
+    '            separator()
+    '            If printBarcode Then
+    '                Try
+    '                    Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
+    '                    g.DrawImage(qr, leftX + (usableW - qr.Width) \ 2, Y)
+    '                    Y += qr.Height + 5
+    '                Catch
+    '                End Try
+    '            End If
+    '            centerLine("* " & FooterMsg & " *", fBold)
+    '            If Not String.IsNullOrEmpty(DeliveryText) Then
+    '                centerLine("** " & DeliveryText & " **", fBold)
+    '            End If
+    '            separator()
+
+    '            e.HasMorePages = (printedCount < copiesCount)
+    '        End Sub
+
+    '    Try
+    '        If usePreview Then
+    '            ShowReportPreviewDialog(pd, previewTitle)
+    '        Else
+    '            pd.Print()
+    '        End If
+    '    Catch ex As Exception
+    '        MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    Finally
+    '        If logoImg IsNot Nothing Then logoImg.Dispose()
+    '    End Try
+    'End Sub
+
+    Public Sub RenderInvoiceReceiptStyle2(header As InvoiceHeader, items As List(Of InvoiceItem),
+                                      copiesCount As Integer, usePreview As Boolean,
+                                      previewTitle As String, printBarcode As Boolean)
+        If copiesCount <= 0 Then copiesCount = 1
 
         ' ─── إعدادات العامة ───
         Dim StoreName As String = SettingsManager.GetSetting("ShopName")
@@ -1536,7 +1851,6 @@ End Sub
         Dim logoPath As String = SettingsManager.GetSetting("LogoPath")
         Dim printLogoSetting As String = SettingsManager.GetSetting("PrintLogo")
         Dim shouldPrintLogo As Boolean = String.IsNullOrEmpty(printLogoSetting) OrElse printLogoSetting.Trim().ToLower() = "true"
-        Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
 
         Dim logoImg As System.Drawing.Image = Nothing
         Try
@@ -1545,6 +1859,24 @@ End Sub
             End If
         Catch
         End Try
+
+        ' ─── [جديد] تقسيم الأصناف على أكتر من صفحة ───
+        ' المتغير ده بيتقرأ من الإعدادات، واسمه: InvoiceItemsPerPage
+        ' لو مش موجود أو قيمته صفر أو غير صحيحة -> يبقى معناها "من غير تقسيم" (نفس السلوك القديم بالظبط)
+        Dim itemsPerPageSetting As String = SettingsManager.GetSetting("InvoiceItemsPerPage")
+        Dim itemsPerPage As Integer
+        If Not Integer.TryParse(itemsPerPageSetting, itemsPerPage) OrElse itemsPerPage <= 0 Then
+            itemsPerPage = Integer.MaxValue
+        End If
+
+        ' عدد "صفحات الأصناف" داخل النسخة الواحدة (لو الأصناف قليلة هتكون صفحة واحدة زي ما هي)
+        Dim totalItemPages As Integer = 1
+        If items.Count > 0 AndAlso itemsPerPage < items.Count Then
+            totalItemPages = CInt(Math.Ceiling(items.Count / CDbl(itemsPerPage)))
+        End If
+
+        ' إجمالي عدد الصفحات الحقيقي = عدد النسخ * عدد صفحات الأصناف في النسخة الواحدة
+        Dim totalPages As Integer = copiesCount * totalItemPages
 
         Dim printedCount As Integer = 0
         Dim pd As New PrintDocument()
@@ -1555,55 +1887,89 @@ End Sub
         pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
 
         AddHandler pd.PrintPage,
-            Sub(sender, e)
-                printedCount += 1
-                Dim g = e.Graphics
-                Dim Y As Integer = e.MarginBounds.Top
-                Dim pageW As Integer = e.MarginBounds.Width
-                Dim leftX As Integer = e.MarginBounds.Left
+        Sub(sender, e)
+            printedCount += 1
 
-                Dim fBrand As New Font("Arial", 11, FontStyle.Bold)
-                Dim fBold As New Font("Arial", 11, FontStyle.Bold)
-                Dim fTotalLarge As New Font("Arial", 13, FontStyle.Bold)
-                Dim f10 As New Font("Arial", 10, FontStyle.Bold)
-                Dim f9 As New Font("Arial", 10, FontStyle.Bold)
-                Dim f8 As New Font("Arial", 9, FontStyle.Bold)
+            ' [جديد] تحديد مكان الصفحة الحالية داخل تسلسل صفحات الأصناف (بمعزل عن رقم النسخة)
+            Dim itemPageIndex As Integer = (printedCount - 1) Mod totalItemPages ' 0-based
+            Dim isFirstItemPage As Boolean = (itemPageIndex = 0)
+            Dim isLastItemPage As Boolean = (itemPageIndex = totalItemPages - 1)
 
-                Dim fmtC As New StringFormat With {
-                    .Alignment = StringAlignment.Center,
-                    .LineAlignment = StringAlignment.Center,
-                    .FormatFlags = StringFormatFlags.DirectionRightToLeft}
-                Dim fmtR As New StringFormat With {
-                    .Alignment = StringAlignment.Far,
-                    .LineAlignment = StringAlignment.Center,
-                    .FormatFlags = StringFormatFlags.DirectionRightToLeft}
-                Dim fmtWrap As New StringFormat With {
-                    .Alignment = StringAlignment.Near,
-                    .LineAlignment = StringAlignment.Center,
-                    .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
-                Dim linePen As New Pen(Color.Black, 1)
+            ' [جديد] استخراج الأصناف الخاصة بالصفحة الحالية فقط
+            Dim startIdx As Integer = itemPageIndex * itemsPerPage
+            Dim pageItems As List(Of InvoiceItem)
+            If startIdx < items.Count Then
+                Dim countInPage As Integer = Math.Min(itemsPerPage, items.Count - startIdx)
+                pageItems = items.GetRange(startIdx, countInPage)
+            Else
+                pageItems = New List(Of InvoiceItem)()
+            End If
 
-                Const safeRightInset As Integer = 28
-                Dim usableW As Integer = pageW - safeRightInset
+            Dim g = e.Graphics
+            Dim Y As Integer = e.MarginBounds.Top
+            Dim pageW As Integer = e.MarginBounds.Width
+            Dim leftX As Integer = e.MarginBounds.Left
 
-                Dim centerLine = Sub(t As String, f As Font)
-                                     g.DrawString(t, f, Brushes.Black,
-                                                  New RectangleF(leftX, Y, usableW, f.Height + 5), fmtC)
-                                     Y += f.Height + 5
-                                 End Sub
+            Dim fBrand As New Font("Arial", 11, FontStyle.Bold)
+            Dim fBold As New Font("Arial", 11, FontStyle.Bold)
+            Dim fTotalLarge As New Font("Arial", 13, FontStyle.Bold)
+            Dim f10 As New Font("Arial", 10, FontStyle.Bold)
+            Dim f9 As New Font("Arial", 10, FontStyle.Bold)
+            Dim f8 As New Font("Arial", 9, FontStyle.Bold)
 
-                Dim rightLineSafe = Sub(t As String, f As Font)
-                                        g.DrawString(t, f, Brushes.Black,
-                                                     New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
-                                        Y += f.Height + 4
-                                    End Sub
+            Dim fmtC As New StringFormat With {
+                .Alignment = StringAlignment.Center,
+                .LineAlignment = StringAlignment.Center,
+                .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+            Dim fmtR As New StringFormat With {
+                .Alignment = StringAlignment.Far,
+                .LineAlignment = StringAlignment.Center,
+                .FormatFlags = StringFormatFlags.DirectionRightToLeft}
+            Dim fmtWrap As New StringFormat With {
+                .Alignment = StringAlignment.Near,
+                .LineAlignment = StringAlignment.Center,
+                .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
+            Dim linePen As New Pen(Color.Black, 1)
 
-                Dim separator = Sub()
-                                    g.DrawLine(linePen, leftX, Y, leftX + usableW, Y)
-                                    Y += 6
+            Const safeRightInset As Integer = 28
+            Dim usableW As Integer = pageW - safeRightInset
+
+            Dim centerLine = Sub(t As String, f As Font)
+                                 g.DrawString(t, f, Brushes.Black,
+                                              New RectangleF(leftX, Y, usableW, f.Height + 5), fmtC)
+                                 Y += f.Height + 5
+                             End Sub
+
+            Dim rightLineSafe = Sub(t As String, f As Font)
+                                    g.DrawString(t, f, Brushes.Black,
+                                                 New RectangleF(leftX, Y, usableW, f.Height + 4), fmtR)
+                                    Y += f.Height + 4
                                 End Sub
 
-                ' ─── الهيدر: لوجو على اليمين + بيانات على الشمال ───
+            ' [إصلاح الالتفاف]: يرسم النص في سطر واحد ويصغّر حجم الخط تلقائياً لو كان
+            ' أعرض من المستطيل — يمنع نزول التاريخ/السعر لسطر تاني.
+            Dim drawFitted = Sub(t As String, baseFont As Font, rect As RectangleF, fmt As StringFormat)
+                                 Dim ff As Font = baseFont
+                                 Dim ownFont As Boolean = False
+                                 Dim guard As Integer = 0
+                                 Do While g.MeasureString(t, ff).Width > rect.Width AndAlso ff.Size > 6.5F AndAlso guard < 40
+                                     Dim newSize As Single = ff.Size - 0.5F
+                                     If ownFont Then ff.Dispose()
+                                     ff = New Font(baseFont.FontFamily, newSize, baseFont.Style)
+                                     ownFont = True
+                                     guard += 1
+                                 Loop
+                                 g.DrawString(t, ff, Brushes.Black, rect, fmt)
+                                 If ownFont Then ff.Dispose()
+                             End Sub
+
+            Dim separator = Sub()
+                                g.DrawLine(linePen, leftX, Y, leftX + usableW, Y)
+                                Y += 6
+                            End Sub
+
+            If isFirstItemPage Then
+                ' ─── الهيدر: لوجو على اليمين + بيانات على الشمال (زي ما هو زمان، من غير أي تغيير في المقاسات) ───
                 ' اللوجو ياخد مساحة أصغر عشان البيانات الأطول (التاريخ) تظهر كاملة
                 Dim logoColW As Integer = CInt(usableW * 0.32)
                 Dim infoColW As Integer = usableW - logoColW
@@ -1623,24 +1989,26 @@ End Sub
                 ' اسم المحل فوق مع فرق بسيط من اللوجو
                 logoY += 5
 
-                ' اسم المحل: اختار حجم خط يناسب عرض العمود (auto-shrink)
+                ' [إصلاح وضوح اسم المحل]: نلفّ الاسم على أكثر من سطر داخل عمود اللوجو
+                ' ونحسب الارتفاع الفعلي بدل قصّه في سطر واحد.
                 Dim brandFont As Font = fBrand
-                Dim brandSize As SizeF = g.MeasureString(StoreName, brandFont)
-                If brandSize.Width > logoColW - 4 Then
+                Dim brandRectW As Integer = logoColW - 4
+                If g.MeasureString(StoreName, brandFont).Width > brandRectW * 2 Then
                     brandFont = New Font("Arial", 9, FontStyle.Bold)
-                    brandSize = g.MeasureString(StoreName, brandFont)
                 End If
+                Dim brandSize As SizeF = g.MeasureString(StoreName, brandFont, brandRectW, fmtC)
                 Dim brandH As Integer = CInt(brandSize.Height) + 4
                 g.DrawString(StoreName, brandFont, Brushes.Black,
-                             New RectangleF(logoColX, logoY, logoColW, brandH), fmtC)
+                             New RectangleF(logoColX + 2, logoY, brandRectW, brandH), fmtC)
                 logoY += brandH
+                If Not brandFont Is fBrand Then brandFont.Dispose()
 
                 ' حقول بيانات الفاتورة (شمال) - خط أصغر عشان تظهر كاملة
                 Dim drawRightField = Sub(label As String, value As String)
                                          Dim txt As String = label & " : " & value
                                          Dim hh As Integer = f8.Height + 6
-                                         g.DrawString(txt, f8, Brushes.Black,
-                                                      New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
+                                         ' [إصلاح نزول التاريخ سطر تاني]: نرسم القيمة في سطر واحد بخط يتسع تلقائياً
+                                         drawFitted(txt, f8, New RectangleF(infoColX + 4, infoY, infoColW - 8, hh), fmtR)
                                          g.DrawLine(linePen, infoColX, infoY + hh, infoColX + infoColW, infoY + hh)
                                          infoY += hh + 1
                                      End Sub
@@ -1668,55 +2036,63 @@ End Sub
                 If Not String.IsNullOrEmpty(TaxNumber) Then centerLine("الرقم الضريبي: " & TaxNumber, f9)
 
                 separator()
+            Else
+                ' [جديد] صفحة تكملة أصناف: هيدر مختصر بدل اللوجو والبيانات الكاملة
+                centerLine("تابع فاتورة رقم " & header.InvoiceID.ToString(), fBold)
+                centerLine("(الأصناف من " & (startIdx + 1) & " إلى " & (startIdx + pageItems.Count) & " من " & items.Count & ")", f9)
+                separator()
+            End If
 
-                ' ─── جدول المنتجات ───
-                Dim tableW As Integer = usableW
-                Dim colTW = CInt(tableW * 0.22)
-                Dim colPW = CInt(tableW * 0.18)
-                Dim colQW = CInt(tableW * 0.16)
-                Dim colNW = tableW - (colTW + colPW + colQW)
-                Dim xT As Integer = leftX
-                Dim xP As Integer = xT + colTW
-                Dim xQ As Integer = xP + colPW
-                Dim xN As Integer = xQ + colQW
-                Dim tableY As Integer = Y
-                Dim headerH As Integer = 26
+            ' ─── جدول المنتجات ───
+            Dim tableW As Integer = usableW
+            Dim colTW = CInt(tableW * 0.22)
+            Dim colPW = CInt(tableW * 0.18)
+            Dim colQW = CInt(tableW * 0.16)
+            Dim colNW = tableW - (colTW + colPW + colQW)
+            Dim xT As Integer = leftX
+            Dim xP As Integer = xT + colTW
+            Dim xQ As Integer = xP + colPW
+            Dim xN As Integer = xQ + colQW
+            Dim tableY As Integer = Y
+            Dim headerH As Integer = 26
 
-                g.DrawString("الصنف", fBold, Brushes.Black, New RectangleF(xN, Y, colNW, headerH), fmtC)
-                g.DrawString("الكمية", fBold, Brushes.Black, New RectangleF(xQ, Y, colQW, headerH), fmtC)
-                g.DrawString("السعر", fBold, Brushes.Black, New RectangleF(xP, Y, colPW, headerH), fmtC)
-                g.DrawString("إجمالي", fBold, Brushes.Black, New RectangleF(xT, Y, colTW, headerH), fmtC)
-                Y += headerH
+            g.DrawString("الصنف", fBold, Brushes.Black, New RectangleF(xN, Y, colNW, headerH), fmtC)
+            g.DrawString("الكمية", fBold, Brushes.Black, New RectangleF(xQ, Y, colQW, headerH), fmtC)
+            g.DrawString("السعر", fBold, Brushes.Black, New RectangleF(xP, Y, colPW, headerH), fmtC)
+            g.DrawString("إجمالي", fBold, Brushes.Black, New RectangleF(xT, Y, colTW, headerH), fmtC)
+            Y += headerH
 
-                Const namePadRight As Integer = 8
-                Const namePadLeft As Integer = 4
-                Dim nameTextWidth As Integer = colNW - namePadRight - namePadLeft
-                If nameTextWidth < 20 Then nameTextWidth = colNW
-                For Each it In items
-                    Dim cleanName As String = If(it.ProductName, "").Replace(vbCr, " ").Replace(vbLf, " ").Trim()
-                    Dim measured As SizeF = g.MeasureString(cleanName, f10, nameTextWidth, fmtWrap)
-                    Dim h As Integer = Math.Max(24, CInt(measured.Height) + 8)
-                    g.DrawString(cleanName, f10, Brushes.Black,
-                                 New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
-                    g.DrawString(it.Quantity.ToString("0.##"), f10, Brushes.Black,
-                                 New RectangleF(xQ, Y, colQW, h), fmtC)
-                    g.DrawString(it.Price.ToString("0.00"), f10, Brushes.Black,
-                                 New RectangleF(xP, Y, colPW, h), fmtC)
-                    g.DrawString(it.Total.ToString("0.00"), f10, Brushes.Black,
-                                 New RectangleF(xT, Y, colTW, h), fmtC)
-                    Y += h
-                    g.DrawLine(linePen, leftX, Y, leftX + tableW, Y)
-                Next
+            Const namePadRight As Integer = 8
+            Const namePadLeft As Integer = 4
+            Dim nameTextWidth As Integer = colNW - namePadRight - namePadLeft
+            If nameTextWidth < 20 Then nameTextWidth = colNW
 
-                Dim tableEndY As Integer = Y
-                g.DrawLine(linePen, leftX, tableY, leftX + tableW, tableY)
-                g.DrawLine(linePen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
-                g.DrawLine(linePen, xT, tableY, xT, tableEndY)
-                g.DrawLine(linePen, xP, tableY, xP, tableEndY)
-                g.DrawLine(linePen, xQ, tableY, xQ, tableEndY)
-                g.DrawLine(linePen, xN, tableY, xN, tableEndY)
-                g.DrawLine(linePen, xN + colNW, tableY, xN + colNW, tableEndY)
+            ' [تعديل] بنلف على أصناف الصفحة الحالية بس (pageItems) مش كل الأصناف
+            For Each it In pageItems
+                Dim cleanName As String = If(it.ProductName, "").Replace(vbCr, " ").Replace(vbLf, " ").Trim()
+                Dim measured As SizeF = g.MeasureString(cleanName, f10, nameTextWidth, fmtWrap)
+                Dim h As Integer = Math.Max(24, CInt(measured.Height) + 8)
+                g.DrawString(cleanName, f10, Brushes.Black,
+                             New RectangleF(xN + namePadLeft, Y + 3, nameTextWidth, h - 6), fmtWrap)
+                ' [إصلاح تقسيم السعر سطرين]: أرقام بخط يتسع داخل العمود في سطر واحد
+                drawFitted(it.Quantity.ToString("0.##"), f10, New RectangleF(xQ, Y, colQW, h), fmtC)
+                drawFitted(it.Price.ToString("0.00"), f10, New RectangleF(xP, Y, colPW, h), fmtC)
+                drawFitted(it.Total.ToString("0.00"), f10, New RectangleF(xT, Y, colTW, h), fmtC)
+                Y += h
+                g.DrawLine(linePen, leftX, Y, leftX + tableW, Y)
+            Next
 
+            Dim tableEndY As Integer = Y
+            g.DrawLine(linePen, leftX, tableY, leftX + tableW, tableY)
+            g.DrawLine(linePen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
+            g.DrawLine(linePen, xT, tableY, xT, tableEndY)
+            g.DrawLine(linePen, xP, tableY, xP, tableEndY)
+            g.DrawLine(linePen, xQ, tableY, xQ, tableEndY)
+            g.DrawLine(linePen, xN, tableY, xN, tableEndY)
+            g.DrawLine(linePen, xN + colNW, tableY, xN + colNW, tableEndY)
+
+            If isLastItemPage Then
+                ' [تعديل] المجاميع والفوتر بيتطبعوا بس في آخر صفحة أصناف
                 separator()
                 rightLineSafe("عدد الأصناف : " & items.Count, fBold)
                 separator()
@@ -1753,13 +2129,19 @@ End Sub
                     centerLine("** " & DeliveryText & " **", fBold)
                 End If
                 separator()
+            Else
+                ' [جديد] تنويه بسيط في نهاية الصفحة إن فيه تكملة جاية
+                separator()
+                centerLine("... تابع في الصفحة التالية", f9)
+            End If
 
-                e.HasMorePages = (printedCount < copiesCount)
-            End Sub
+            ' [تعديل] الشرط بيراعي إجمالي عدد الصفحات (نسخ * صفحات أصناف) مش عدد النسخ بس
+            e.HasMorePages = (printedCount < totalPages)
+        End Sub
 
         Try
-            If ShouldShowReportPreview() Then
-                ShowReportPreviewDialog(pd, "معاينة الفاتورة - استيل 2")
+            If usePreview Then
+                ShowReportPreviewDialog(pd, previewTitle)
             Else
                 pd.Print()
             End If
@@ -1767,7 +2149,6 @@ End Sub
             MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             If logoImg IsNot Nothing Then logoImg.Dispose()
-            Disconnect()
         End Try
     End Sub
 

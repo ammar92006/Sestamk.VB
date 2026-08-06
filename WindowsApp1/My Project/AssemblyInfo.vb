@@ -8,11 +8,11 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Cashier Market - POS System")>
+<Assembly: AssemblyTitle("Sestamk - POS System")>
 <Assembly: AssemblyDescription("A complete Point of Sale system designed for supermarkets, providing advanced sales management, inventory tracking, barcode generation, customer management, supplier management, and detailed reporting tools.")>
 <Assembly: AssemblyCompany("Ammar Ahmed Software Solutions")>
-<Assembly: AssemblyProduct("Cashier Market - Supermarket POS")>
-<Assembly: AssemblyCopyright("© 2025 Ammar Ahmed. All Rights Reserved.")>
+<Assembly: AssemblyProduct("Sestamk - Supermarket POS")>
+<Assembly: AssemblyCopyright("© 2026 Ammar Ahmed. All Rights Reserved.")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -28,5 +28,5 @@ Imports System.Runtime.InteropServices
 '      Revision
 '
 
-<Assembly: AssemblyVersion("2.2.0.0")>
-<Assembly: AssemblyFileVersion("2.2.0.0")>
+<Assembly: AssemblyVersion("1.0.0.0")>
+<Assembly: AssemblyFileVersion("1.0.0.0")>

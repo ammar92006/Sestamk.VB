@@ -186,15 +186,15 @@ Public Class MainForm
     End Sub
 
     Private Sub LabelDeveloper_MouseEnter(sender As Object, e As EventArgs) Handles LabelDeveloper.MouseEnter
-        LabelDeveloper.ForeColor = Color.FromArgb(252, 249, 234)
-        LabelDeveloper.Cursor = Cursors.Hand
-        LabelDeveloper.Font = New Font("LBC", 22, FontStyle.Underline)
+        'LabelDeveloper.ForeColor = Color.FromArgb(252, 249, 234)
+        'LabelDeveloper.Cursor = Cursors.Hand
+        'LabelDeveloper.Font = New Font("LBC", 22, FontStyle.Underline)
     End Sub
 
     Private Sub LabelDeveloper_MouseLeave(sender As Object, e As EventArgs) Handles LabelDeveloper.MouseLeave
-        LabelDeveloper.ForeColor = SystemColors.ControlText
-        LabelDeveloper.Cursor = Cursors.Default
-        LabelDeveloper.Font = New Font("LBC", 20, FontStyle.Bold)
+        'LabelDeveloper.ForeColor = SystemColors.ControlText
+        'LabelDeveloper.Cursor = Cursors.Default
+        'LabelDeveloper.Font = New Font("LBC", 20, FontStyle.Bold)
     End Sub
 
     ' ─── أزرار فتح النماذج ────────────────────────────────────────────────
@@ -259,10 +259,13 @@ Public Class MainForm
 
         ' [FIX #3] تشغيل العمليات الثقيلة بشكل Async لمنع تجميد الواجهة
         Await Task.Run(Sub() LoadAllCountsAsync())
+        Dim StoreName As String = SettingsManager.GetSetting("ShopName")
+        If String.IsNullOrEmpty(StoreName) Then StoreName = "سوبر ماركت"
 
+        pn_title_page.Text = StoreName
         ' تحديث الـ Badge والأعلى 10
         UpdateLowStockBadge()
-        Await LoadTop10ProductsAsync()
+        'Await LoadTop10ProductsAsync()
     End Sub
 
     ' ═══════════════════════════════════════════════════════════════════════
@@ -457,12 +460,12 @@ Public Class MainForm
     End Sub
 
     ' ─── سحب النافذة ──────────────────────────────────────────────────────
-    Private Sub pn_title_MouseDown(sender As Object, e As MouseEventArgs) Handles pn_title.MouseDown
+    Private Sub pn_title_MouseDown(sender As Object, e As MouseEventArgs) Handles pn_title.MouseDown, pn_title_page.MouseDown
         x = Control.MousePosition.X - Me.Location.X
         y = Control.MousePosition.Y - Me.Location.Y
     End Sub
 
-    Private Sub pn_title_MouseMove(sender As Object, e As MouseEventArgs) Handles pn_title.MouseMove
+    Private Sub pn_title_MouseMove(sender As Object, e As MouseEventArgs) Handles pn_title.MouseMove, pn_title_page.MouseMove
         If e.Button = MouseButtons.Left Then
             newpoint = Control.MousePosition
             newpoint.X -= x
@@ -510,6 +513,7 @@ Public Class MainForm
     Public Function GetReportsCount() As Integer
         Return GetSingleCount("SELECT COUNT(*) FROM SalesHeader", "عدد التقارير")
     End Function
+
 
     ' ═══════════════════════════════════════════════════════════════════════
     ' [REFACTOR] دالة مساعدة مشتركة لتجنب تكرار نفس كود Count
@@ -701,7 +705,7 @@ Public Class MainForm
     ' المشكلة: TypeOf f Is Stock لكن Cast إلى Reports = خطأ في Runtime!
     ' الحل: تصحيح TypeOf ليكون Is Reports
     ' ═══════════════════════════════════════════════════════════════════════
-    Private Sub btn_view_most_sale_Click(sender As Object, e As EventArgs) Handles btn_view_most_sale.Click
+    Private Sub btn_view_most_sale_Click(sender As Object, e As EventArgs)
         view_most_sale()
     End Sub
 
@@ -734,12 +738,16 @@ Public Class MainForm
         End Try
     End Sub
 
-    Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles Guna2Button1.Click
+    Private Sub Guna2Button1_Click(sender As Object, e As EventArgs)
         view_most_sale()
     End Sub
 
     Private Sub btn_Expenses_Click(sender As Object, e As EventArgs) Handles btn_Expenses.Click
         OpenSingleForm(Of form_Expenses)()
+    End Sub
+
+    Private Sub btnTreasury_Click(sender As Object, e As EventArgs) Handles btnTreasury.Click
+        OpenSingleForm(Of frmTreasury)()
     End Sub
 
     Private Sub pn_title_Paint(sender As Object, e As PaintEventArgs) Handles pn_title.Paint
@@ -758,67 +766,67 @@ Public Class MainForm
     '   • مهلة محددة + تسجيل الأخطاء بهدوء.
     ' (توصية: إنشاء فهرس على SalesDetails يسرّع التجميع أكثر — موضّح في الرد.)
     ' ═══════════════════════════════════════════════════════════════════════
-    Private Async Function LoadTop10ProductsAsync() As Task
-        Dim query As String =
-                "SELECT TOP 10
-                    Product_Name,
-                    ProductUnit_Name,
-                    Sale_Price_Per_Unit,
-                    SUM(Total_Line_Amount) AS Total_Line_Amount,
-                    SUM(Quantity_Sold)     AS TotalQuantitySold
-                FROM SalesDetails
-                WHERE
-                    ProductUnit_Name NOT LIKE N'%جرام%'
-                    AND ProductUnit_Name NOT LIKE N'%جم%'
-                GROUP BY
-                    Product_Name,
-                    ProductUnit_Name,
-                    Sale_Price_Per_Unit
-                ORDER BY
-                    TotalQuantitySold DESC"
+    'Private Async Function LoadTop10ProductsAsync() As Task
+    '    Dim query As String =
+    '            "SELECT TOP 10
+    '                Product_Name,
+    '                ProductUnit_Name,
+    '                Sale_Price_Per_Unit,
+    '                SUM(Total_Line_Amount) AS Total_Line_Amount,
+    '                SUM(Quantity_Sold)     AS TotalQuantitySold
+    '            FROM SalesDetails
+    '            WHERE
+    '                ProductUnit_Name NOT LIKE N'%جرام%'
+    '                AND ProductUnit_Name NOT LIKE N'%جم%'
+    '            GROUP BY
+    '                Product_Name,
+    '                ProductUnit_Name,
+    '                Sale_Price_Per_Unit
+    '            ORDER BY
+    '                TotalQuantitySold DESC"
 
-        ' نجمع النتائج في الخلفية (خارج UI Thread) ثم نحدّث العناصر
-        Dim rows As New List(Of String())
-        Try
-            Using cn As SqlConnection = Await NewConnAsync()
-                Using cmd As New SqlCommand(query, cn)
-                    cmd.CommandTimeout = 60
-                    Using dr As SqlDataReader = Await cmd.ExecuteReaderAsync()
-                        While Await dr.ReadAsync()
-                            rows.Add(New String() {
-                                dr("Product_Name").ToString(),
-                                dr("ProductUnit_Name").ToString(),
-                                dr("TotalQuantitySold").ToString(),
-                                If(Convert.IsDBNull(dr("Sale_Price_Per_Unit")), "", Convert.ToDecimal(dr("Sale_Price_Per_Unit")).ToString("N2")),
-                                If(Convert.IsDBNull(dr("Total_Line_Amount")), "", Convert.ToDecimal(dr("Total_Line_Amount")).ToString("N2"))
-                            })
-                        End While
-                    End Using
-                End Using
-            End Using
-        Catch ex As Exception
-            Logger.LogError("LoadTop10ProductsAsync", ex)
-            Return
-        End Try
+    '    ' نجمع النتائج في الخلفية (خارج UI Thread) ثم نحدّث العناصر
+    '    Dim rows As New List(Of String())
+    '    Try
+    '        Using cn As SqlConnection = Await NewConnAsync()
+    '            Using cmd As New SqlCommand(query, cn)
+    '                cmd.CommandTimeout = 60
+    '                Using dr As SqlDataReader = Await cmd.ExecuteReaderAsync()
+    '                    While Await dr.ReadAsync()
+    '                        rows.Add(New String() {
+    '                            dr("Product_Name").ToString(),
+    '                            dr("ProductUnit_Name").ToString(),
+    '                            dr("TotalQuantitySold").ToString(),
+    '                            If(Convert.IsDBNull(dr("Sale_Price_Per_Unit")), "", Convert.ToDecimal(dr("Sale_Price_Per_Unit")).ToString("N2")),
+    '                            If(Convert.IsDBNull(dr("Total_Line_Amount")), "", Convert.ToDecimal(dr("Total_Line_Amount")).ToString("N2"))
+    '                        })
+    '                    End While
+    '                End Using
+    '            End Using
+    '        End Using
+    '    Catch ex As Exception
+    '        Logger.LogError("LoadTop10ProductsAsync", ex)
+    '        Return
+    '    End Try
 
-        ' تحديث الواجهة (نحن على UI Thread بعد الـ Await)
-        Dim i As Integer = 1
-        For Each r As String() In rows
-            If i > 10 Then Exit For
-            Dim lblP = TryCast(PanelTop10.Controls("lblProduct" & i), Label)
-            Dim lblPU = TryCast(PanelTop10.Controls("lblProductUnit" & i), Label)
-            Dim lblQ = TryCast(PanelTop10.Controls("lblTotalQuantity" & i), Label)
-            Dim lblPrice = TryCast(PanelTop10.Controls("lblSale_Price" & i), Label)
-            Dim lblPrice_Total = TryCast(PanelTop10.Controls("lblTotal" & i), Label)
+    '    ' تحديث الواجهة (نحن على UI Thread بعد الـ Await)
+    '    Dim i As Integer = 1
+    '    For Each r As String() In rows
+    '        If i > 10 Then Exit For
+    '        Dim lblP = TryCast(PanelTop10.Controls("lblProduct" & i), Label)
+    '        Dim lblPU = TryCast(PanelTop10.Controls("lblProductUnit" & i), Label)
+    '        Dim lblQ = TryCast(PanelTop10.Controls("lblTotalQuantity" & i), Label)
+    '        Dim lblPrice = TryCast(PanelTop10.Controls("lblSale_Price" & i), Label)
+    '        Dim lblPrice_Total = TryCast(PanelTop10.Controls("lblTotal" & i), Label)
 
-            If lblP IsNot Nothing Then lblP.Text = r(0)
-            If lblPU IsNot Nothing Then lblPU.Text = r(1)
-            If lblQ IsNot Nothing Then lblQ.Text = r(2)
-            If lblPrice IsNot Nothing Then lblPrice.Text = r(3)
-            If lblPrice_Total IsNot Nothing Then lblPrice_Total.Text = r(4)
+    '        If lblP IsNot Nothing Then lblP.Text = r(0)
+    '        If lblPU IsNot Nothing Then lblPU.Text = r(1)
+    '        If lblQ IsNot Nothing Then lblQ.Text = r(2)
+    '        If lblPrice IsNot Nothing Then lblPrice.Text = r(3)
+    '        If lblPrice_Total IsNot Nothing Then lblPrice_Total.Text = r(4)
 
-            i += 1
-        Next
-    End Function
+    '        i += 1
+    '    Next
+    'End Function
 
 End Class

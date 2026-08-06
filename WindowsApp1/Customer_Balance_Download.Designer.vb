@@ -53,6 +53,8 @@ Partial Class Customer_Balance_Download
         Me.cmbSearchField = New System.Windows.Forms.ComboBox()
         Me.Guna2HtmlLabel2 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.btnDoPayment = New DevExpress.XtraEditors.SimpleButton()
+        Me.cmbTreasury = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.Label4 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvCustomers, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nudCreditLimit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -129,9 +131,9 @@ Partial Class Customer_Balance_Download
         Me.Guna2HtmlLabel13.BackColor = System.Drawing.Color.Transparent
         Me.Guna2HtmlLabel13.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel13.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel13.Location = New System.Drawing.Point(673, 276)
+        Me.Guna2HtmlLabel13.Location = New System.Drawing.Point(774, 187)
         Me.Guna2HtmlLabel13.Name = "Guna2HtmlLabel13"
-        Me.Guna2HtmlLabel13.Size = New System.Drawing.Size(172, 36)
+        Me.Guna2HtmlLabel13.Size = New System.Drawing.Size(157, 36)
         Me.Guna2HtmlLabel13.TabIndex = 54
         Me.Guna2HtmlLabel13.Text = "مديون"
         Me.Guna2HtmlLabel13.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter
@@ -149,12 +151,12 @@ Partial Class Customer_Balance_Download
         Me.txtDebit.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
         Me.txtDebit.ForeColor = System.Drawing.Color.Black
         Me.txtDebit.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDebit.Location = New System.Drawing.Point(673, 317)
+        Me.txtDebit.Location = New System.Drawing.Point(774, 232)
         Me.txtDebit.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.txtDebit.Name = "txtDebit"
         Me.txtDebit.PlaceholderText = ""
         Me.txtDebit.SelectedText = ""
-        Me.txtDebit.Size = New System.Drawing.Size(172, 45)
+        Me.txtDebit.Size = New System.Drawing.Size(157, 45)
         Me.txtDebit.TabIndex = 53
         Me.txtDebit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -165,9 +167,9 @@ Partial Class Customer_Balance_Download
         Me.Guna2HtmlLabel10.BackColor = System.Drawing.Color.Transparent
         Me.Guna2HtmlLabel10.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel10.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel10.Location = New System.Drawing.Point(461, 276)
+        Me.Guna2HtmlLabel10.Location = New System.Drawing.Point(612, 187)
         Me.Guna2HtmlLabel10.Name = "Guna2HtmlLabel10"
-        Me.Guna2HtmlLabel10.Size = New System.Drawing.Size(172, 36)
+        Me.Guna2HtmlLabel10.Size = New System.Drawing.Size(159, 36)
         Me.Guna2HtmlLabel10.TabIndex = 52
         Me.Guna2HtmlLabel10.Text = "دائن"
         Me.Guna2HtmlLabel10.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter
@@ -185,12 +187,12 @@ Partial Class Customer_Balance_Download
         Me.txtCredit.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
         Me.txtCredit.ForeColor = System.Drawing.Color.Black
         Me.txtCredit.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCredit.Location = New System.Drawing.Point(461, 321)
+        Me.txtCredit.Location = New System.Drawing.Point(612, 232)
         Me.txtCredit.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.txtCredit.Name = "txtCredit"
         Me.txtCredit.PlaceholderText = ""
         Me.txtCredit.SelectedText = ""
-        Me.txtCredit.Size = New System.Drawing.Size(172, 45)
+        Me.txtCredit.Size = New System.Drawing.Size(159, 45)
         Me.txtCredit.TabIndex = 51
         Me.txtCredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -454,7 +456,7 @@ Partial Class Customer_Balance_Download
         Me.txtCustomerCode.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
         Me.txtCustomerCode.ForeColor = System.Drawing.Color.Black
         Me.txtCustomerCode.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomerCode.Location = New System.Drawing.Point(461, 124)
+        Me.txtCustomerCode.Location = New System.Drawing.Point(417, 138)
         Me.txtCustomerCode.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.txtCustomerCode.Name = "txtCustomerCode"
         Me.txtCustomerCode.PlaceholderText = ""
@@ -470,7 +472,7 @@ Partial Class Customer_Balance_Download
         Me.Guna2HtmlLabel7.BackColor = System.Drawing.Color.Transparent
         Me.Guna2HtmlLabel7.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel7.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel7.Location = New System.Drawing.Point(461, 178)
+        Me.Guna2HtmlLabel7.Location = New System.Drawing.Point(417, 192)
         Me.Guna2HtmlLabel7.Name = "Guna2HtmlLabel7"
         Me.Guna2HtmlLabel7.Size = New System.Drawing.Size(186, 36)
         Me.Guna2HtmlLabel7.TabIndex = 69
@@ -481,7 +483,7 @@ Partial Class Customer_Balance_Download
         '
         Me.nudCreditLimit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.nudCreditLimit.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nudCreditLimit.Location = New System.Drawing.Point(461, 219)
+        Me.nudCreditLimit.Location = New System.Drawing.Point(417, 233)
         Me.nudCreditLimit.Maximum = New Decimal(New Integer() {10000000, 0, 0, 0})
         Me.nudCreditLimit.Name = "nudCreditLimit"
         Me.nudCreditLimit.Size = New System.Drawing.Size(186, 44)
@@ -491,6 +493,7 @@ Partial Class Customer_Balance_Download
         'cmbSearchField
         '
         Me.cmbSearchField.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmbSearchField.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbSearchField.Font = New System.Drawing.Font("Microsoft Sans Serif", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cmbSearchField.FormattingEnabled = True
         Me.cmbSearchField.Location = New System.Drawing.Point(704, 85)
@@ -505,7 +508,7 @@ Partial Class Customer_Balance_Download
         Me.Guna2HtmlLabel2.BackColor = System.Drawing.Color.Transparent
         Me.Guna2HtmlLabel2.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel2.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel2.Location = New System.Drawing.Point(461, 75)
+        Me.Guna2HtmlLabel2.Location = New System.Drawing.Point(417, 89)
         Me.Guna2HtmlLabel2.Name = "Guna2HtmlLabel2"
         Me.Guna2HtmlLabel2.Size = New System.Drawing.Size(212, 36)
         Me.Guna2HtmlLabel2.TabIndex = 71
@@ -526,11 +529,43 @@ Partial Class Customer_Balance_Download
         Me.btnDoPayment.TabIndex = 72
         Me.btnDoPayment.Text = "تسجيل الدفع"
         '
+        'cmbTreasury
+        '
+        Me.cmbTreasury.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmbTreasury.BackColor = System.Drawing.Color.Transparent
+        Me.cmbTreasury.BorderRadius = 8
+        Me.cmbTreasury.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbTreasury.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbTreasury.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.cmbTreasury.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
+        Me.cmbTreasury.ItemHeight = 40
+        Me.cmbTreasury.Location = New System.Drawing.Point(551, 307)
+        Me.cmbTreasury.Name = "cmbTreasury"
+        Me.cmbTreasury.Size = New System.Drawing.Size(380, 46)
+        Me.cmbTreasury.TabIndex = 5648
+        Me.cmbTreasury.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label4
+        '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label4.BackColor = System.Drawing.Color.Transparent
+        Me.Label4.Font = New System.Drawing.Font("Tahoma", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.Location = New System.Drawing.Point(412, 307)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(133, 46)
+        Me.Label4.TabIndex = 5647
+        Me.Label4.Text = "الخزنة"
+        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Customer_Balance_Download
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1492, 922)
+        Me.Controls.Add(Me.cmbTreasury)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.btnDoPayment)
         Me.Controls.Add(Me.Guna2HtmlLabel2)
         Me.Controls.Add(Me.cmbSearchField)
@@ -595,4 +630,6 @@ Partial Class Customer_Balance_Download
     Friend WithEvents cmbSearchField As ComboBox
     Friend WithEvents Guna2HtmlLabel2 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents btnDoPayment As DevExpress.XtraEditors.SimpleButton
+    Public WithEvents cmbTreasury As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents Label4 As Label
 End Class

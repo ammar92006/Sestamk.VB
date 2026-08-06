@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports DevExpress.Utils.About
 Imports DocumentFormat.OpenXml.ExtendedProperties
 Imports Org.BouncyCastle.Crypto.Operators

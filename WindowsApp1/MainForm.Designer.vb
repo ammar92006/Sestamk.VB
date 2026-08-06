@@ -26,6 +26,7 @@ Partial Class MainForm
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
         Me.pn_natpar = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.btnTreasury = New Guna.UI2.WinForms.Guna2Button()
         Me.btn_Expenses = New Guna.UI2.WinForms.Guna2Button()
         Me.btn_Settings = New Guna.UI2.WinForms.Guna2Button()
         Me.btn_backup = New Guna.UI2.WinForms.Guna2Button()
@@ -63,64 +64,6 @@ Partial Class MainForm
         Me.BehaviorManager1 = New DevExpress.Utils.Behaviors.BehaviorManager(Me.components)
         Me.TimerClock = New System.Windows.Forms.Timer(Me.components)
         Me.PanelMain = New System.Windows.Forms.Panel()
-        Me.PanelTop10 = New System.Windows.Forms.Panel()
-        Me.Guna2Button1 = New Guna.UI2.WinForms.Guna2Button()
-        Me.btn_view_most_sale = New Guna.UI2.WinForms.Guna2Button()
-        Me.lblTotal10 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity10 = New System.Windows.Forms.Label()
-        Me.lblSale_Price10 = New System.Windows.Forms.Label()
-        Me.lblProductUnit10 = New System.Windows.Forms.Label()
-        Me.lblProduct10 = New System.Windows.Forms.Label()
-        Me.lblTotal9 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity9 = New System.Windows.Forms.Label()
-        Me.lblSale_Price9 = New System.Windows.Forms.Label()
-        Me.lblProductUnit9 = New System.Windows.Forms.Label()
-        Me.lblProduct9 = New System.Windows.Forms.Label()
-        Me.lblTotal8 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity8 = New System.Windows.Forms.Label()
-        Me.lblSale_Price8 = New System.Windows.Forms.Label()
-        Me.lblProductUnit8 = New System.Windows.Forms.Label()
-        Me.lblProduct8 = New System.Windows.Forms.Label()
-        Me.lblTotal7 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity7 = New System.Windows.Forms.Label()
-        Me.lblSale_Price7 = New System.Windows.Forms.Label()
-        Me.lblProductUnit7 = New System.Windows.Forms.Label()
-        Me.lblProduct7 = New System.Windows.Forms.Label()
-        Me.lblTotal6 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity6 = New System.Windows.Forms.Label()
-        Me.lblSale_Price6 = New System.Windows.Forms.Label()
-        Me.lblProductUnit6 = New System.Windows.Forms.Label()
-        Me.lblProduct6 = New System.Windows.Forms.Label()
-        Me.lblTotal5 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity5 = New System.Windows.Forms.Label()
-        Me.lblSale_Price5 = New System.Windows.Forms.Label()
-        Me.lblProductUnit5 = New System.Windows.Forms.Label()
-        Me.lblProduct5 = New System.Windows.Forms.Label()
-        Me.lblTotal4 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity4 = New System.Windows.Forms.Label()
-        Me.lblSale_Price4 = New System.Windows.Forms.Label()
-        Me.lblProductUnit4 = New System.Windows.Forms.Label()
-        Me.lblProduct4 = New System.Windows.Forms.Label()
-        Me.lblTotal3 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity3 = New System.Windows.Forms.Label()
-        Me.lblSale_Price3 = New System.Windows.Forms.Label()
-        Me.lblProductUnit3 = New System.Windows.Forms.Label()
-        Me.lblProduct3 = New System.Windows.Forms.Label()
-        Me.lblTotal2 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity2 = New System.Windows.Forms.Label()
-        Me.lblSale_Price2 = New System.Windows.Forms.Label()
-        Me.lblProductUnit2 = New System.Windows.Forms.Label()
-        Me.lblProduct2 = New System.Windows.Forms.Label()
-        Me.lblTotal1 = New System.Windows.Forms.Label()
-        Me.lblTotalQuantity1 = New System.Windows.Forms.Label()
-        Me.lblSale_Price1 = New System.Windows.Forms.Label()
-        Me.lblProductUnit1 = New System.Windows.Forms.Label()
-        Me.lblProduct1 = New System.Windows.Forms.Label()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label3 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.pnlNotifications = New System.Windows.Forms.Panel()
         Me.dgvLowStock = New System.Windows.Forms.DataGridView()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -141,7 +84,6 @@ Partial Class MainForm
         Me.pn_title.SuspendLayout()
         CType(Me.BehaviorManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.PanelMain.SuspendLayout()
-        Me.PanelTop10.SuspendLayout()
         Me.pnlNotifications.SuspendLayout()
         CType(Me.dgvLowStock, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel4.SuspendLayout()
@@ -157,13 +99,14 @@ Partial Class MainForm
         Me.pn_natpar.Dock = System.Windows.Forms.DockStyle.Left
         Me.pn_natpar.Location = New System.Drawing.Point(0, 0)
         Me.pn_natpar.Name = "pn_natpar"
-        Me.pn_natpar.Size = New System.Drawing.Size(360, 1001)
+        Me.pn_natpar.Size = New System.Drawing.Size(360, 840)
         Me.pn_natpar.TabIndex = 0
         '
         'Panel3
         '
         Me.Panel3.AutoScroll = True
         Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
+        Me.Panel3.Controls.Add(Me.btnTreasury)
         Me.Panel3.Controls.Add(Me.btn_Expenses)
         Me.Panel3.Controls.Add(Me.btn_Settings)
         Me.Panel3.Controls.Add(Me.btn_backup)
@@ -180,8 +123,28 @@ Partial Class MainForm
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel3.Location = New System.Drawing.Point(0, 389)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(360, 612)
+        Me.Panel3.Size = New System.Drawing.Size(360, 451)
         Me.Panel3.TabIndex = 4
+        '
+        'btnTreasury
+        '
+        Me.btnTreasury.BackColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(62, Byte), Integer))
+        Me.btnTreasury.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnTreasury.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnTreasury.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnTreasury.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnTreasury.Dock = System.Windows.Forms.DockStyle.Top
+        Me.btnTreasury.FillColor = System.Drawing.Color.Transparent
+        Me.btnTreasury.Font = New System.Drawing.Font("Microsoft Sans Serif", 22.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnTreasury.ForeColor = System.Drawing.Color.White
+        Me.btnTreasury.Image = Global.WindowsApp1.My.Resources.Resources.construction
+        Me.btnTreasury.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnTreasury.ImageSize = New System.Drawing.Size(40, 40)
+        Me.btnTreasury.Location = New System.Drawing.Point(0, 702)
+        Me.btnTreasury.Name = "btnTreasury"
+        Me.btnTreasury.Size = New System.Drawing.Size(343, 54)
+        Me.btnTreasury.TabIndex = 14
+        Me.btnTreasury.Text = "الخزن"
         '
         'btn_Expenses
         '
@@ -557,25 +520,26 @@ Partial Class MainForm
         Me.pn_footer.Controls.Add(Me.lblVersion)
         Me.pn_footer.Controls.Add(Me.LabelDeveloper)
         Me.pn_footer.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.pn_footer.Location = New System.Drawing.Point(0, 1001)
+        Me.pn_footer.Location = New System.Drawing.Point(0, 840)
         Me.pn_footer.Name = "pn_footer"
-        Me.pn_footer.Size = New System.Drawing.Size(1924, 60)
+        Me.pn_footer.Size = New System.Drawing.Size(1600, 60)
         Me.pn_footer.TabIndex = 2
         '
         'btn_logout
         '
-        Me.btn_logout.BackColor = System.Drawing.Color.FromArgb(CType(CType(199, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(57, Byte), Integer))
+        Me.btn_logout.BackColor = System.Drawing.Color.Transparent
+        Me.btn_logout.BorderRadius = 10
         Me.btn_logout.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btn_logout.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btn_logout.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btn_logout.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btn_logout.FillColor = System.Drawing.Color.Transparent
+        Me.btn_logout.FillColor = System.Drawing.Color.FromArgb(CType(CType(199, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(57, Byte), Integer))
         Me.btn_logout.Font = New System.Drawing.Font("Segoe UI", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_logout.ForeColor = System.Drawing.Color.White
         Me.btn_logout.Image = Global.WindowsApp1.My.Resources.Resources.logout
         Me.btn_logout.ImageAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.btn_logout.ImageSize = New System.Drawing.Size(30, 30)
-        Me.btn_logout.Location = New System.Drawing.Point(1616, 8)
+        Me.btn_logout.Location = New System.Drawing.Point(1324, 12)
         Me.btn_logout.Name = "btn_logout"
         Me.btn_logout.Size = New System.Drawing.Size(221, 42)
         Me.btn_logout.TabIndex = 12
@@ -618,7 +582,7 @@ Partial Class MainForm
         Me.LabelDeveloper.AutoSize = True
         Me.LabelDeveloper.Font = New System.Drawing.Font("Microsoft Sans Serif", 26.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelDeveloper.ForeColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
-        Me.LabelDeveloper.Location = New System.Drawing.Point(765, 6)
+        Me.LabelDeveloper.Location = New System.Drawing.Point(501, 12)
         Me.LabelDeveloper.Name = "LabelDeveloper"
         Me.LabelDeveloper.Size = New System.Drawing.Size(529, 39)
         Me.LabelDeveloper.TabIndex = 0
@@ -636,7 +600,7 @@ Partial Class MainForm
         Me.pn_title.Dock = System.Windows.Forms.DockStyle.Top
         Me.pn_title.Location = New System.Drawing.Point(360, 0)
         Me.pn_title.Name = "pn_title"
-        Me.pn_title.Size = New System.Drawing.Size(1564, 75)
+        Me.pn_title.Size = New System.Drawing.Size(1240, 75)
         Me.pn_title.TabIndex = 3
         '
         'lblBadge
@@ -666,10 +630,9 @@ Partial Class MainForm
         Me.pn_title_page.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pn_title_page.AutoSize = True
         Me.pn_title_page.Font = New System.Drawing.Font("Microsoft Sans Serif", 30.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.pn_title_page.ForeColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
-        Me.pn_title_page.Location = New System.Drawing.Point(402, 11)
+        Me.pn_title_page.Location = New System.Drawing.Point(325, 11)
         Me.pn_title_page.Name = "pn_title_page"
         Me.pn_title_page.Size = New System.Drawing.Size(899, 46)
         Me.pn_title_page.TabIndex = 3
@@ -715,774 +678,17 @@ Partial Class MainForm
         'PanelMain
         '
         Me.PanelMain.BackColor = System.Drawing.Color.White
-        Me.PanelMain.BackgroundImage = Global.WindowsApp1.My.Resources.Resources.unnamed__1_
+        Me.PanelMain.BackgroundImage = Global.WindowsApp1.My.Resources.Resources.Gemini_Generated_Image_n1mvatn1mvatn1mv
         Me.PanelMain.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.PanelMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PanelMain.Controls.Add(Me.PanelTop10)
         Me.PanelMain.Controls.Add(Me.pnlNotifications)
         Me.PanelMain.Controls.Add(Me.pnlQuickActions)
         Me.PanelMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.PanelMain.Location = New System.Drawing.Point(360, 75)
         Me.PanelMain.Name = "PanelMain"
         Me.PanelMain.Padding = New System.Windows.Forms.Padding(3)
-        Me.PanelMain.Size = New System.Drawing.Size(1564, 926)
+        Me.PanelMain.Size = New System.Drawing.Size(1240, 765)
         Me.PanelMain.TabIndex = 4
-        '
-        'PanelTop10
-        '
-        Me.PanelTop10.BackColor = System.Drawing.Color.FromArgb(CType(CType(38, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(38, Byte), Integer))
-        Me.PanelTop10.Controls.Add(Me.Guna2Button1)
-        Me.PanelTop10.Controls.Add(Me.btn_view_most_sale)
-        Me.PanelTop10.Controls.Add(Me.lblTotal10)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity10)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price10)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit10)
-        Me.PanelTop10.Controls.Add(Me.lblProduct10)
-        Me.PanelTop10.Controls.Add(Me.lblTotal9)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity9)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price9)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit9)
-        Me.PanelTop10.Controls.Add(Me.lblProduct9)
-        Me.PanelTop10.Controls.Add(Me.lblTotal8)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity8)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price8)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit8)
-        Me.PanelTop10.Controls.Add(Me.lblProduct8)
-        Me.PanelTop10.Controls.Add(Me.lblTotal7)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity7)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price7)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit7)
-        Me.PanelTop10.Controls.Add(Me.lblProduct7)
-        Me.PanelTop10.Controls.Add(Me.lblTotal6)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity6)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price6)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit6)
-        Me.PanelTop10.Controls.Add(Me.lblProduct6)
-        Me.PanelTop10.Controls.Add(Me.lblTotal5)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity5)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price5)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit5)
-        Me.PanelTop10.Controls.Add(Me.lblProduct5)
-        Me.PanelTop10.Controls.Add(Me.lblTotal4)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity4)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price4)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit4)
-        Me.PanelTop10.Controls.Add(Me.lblProduct4)
-        Me.PanelTop10.Controls.Add(Me.lblTotal3)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity3)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price3)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit3)
-        Me.PanelTop10.Controls.Add(Me.lblProduct3)
-        Me.PanelTop10.Controls.Add(Me.lblTotal2)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity2)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price2)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit2)
-        Me.PanelTop10.Controls.Add(Me.lblProduct2)
-        Me.PanelTop10.Controls.Add(Me.lblTotal1)
-        Me.PanelTop10.Controls.Add(Me.lblTotalQuantity1)
-        Me.PanelTop10.Controls.Add(Me.lblSale_Price1)
-        Me.PanelTop10.Controls.Add(Me.lblProductUnit1)
-        Me.PanelTop10.Controls.Add(Me.lblProduct1)
-        Me.PanelTop10.Controls.Add(Me.Label5)
-        Me.PanelTop10.Controls.Add(Me.Label4)
-        Me.PanelTop10.Controls.Add(Me.Label3)
-        Me.PanelTop10.Controls.Add(Me.Label2)
-        Me.PanelTop10.Controls.Add(Me.Label1)
-        Me.PanelTop10.Location = New System.Drawing.Point(385, 90)
-        Me.PanelTop10.Name = "PanelTop10"
-        Me.PanelTop10.Size = New System.Drawing.Size(1167, 540)
-        Me.PanelTop10.TabIndex = 10
-        '
-        'Guna2Button1
-        '
-        Me.Guna2Button1.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.Guna2Button1.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.Guna2Button1.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.Guna2Button1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.Guna2Button1.FillColor = System.Drawing.Color.Transparent
-        Me.Guna2Button1.Font = New System.Drawing.Font("Tahoma", 18.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2Button1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.Guna2Button1.Location = New System.Drawing.Point(861, 10)
-        Me.Guna2Button1.Name = "Guna2Button1"
-        Me.Guna2Button1.Size = New System.Drawing.Size(290, 45)
-        Me.Guna2Button1.TabIndex = 77
-        Me.Guna2Button1.Text = "المنتجات الاكثر مبيعا"
-        '
-        'btn_view_most_sale
-        '
-        Me.btn_view_most_sale.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btn_view_most_sale.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btn_view_most_sale.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btn_view_most_sale.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btn_view_most_sale.FillColor = System.Drawing.Color.Transparent
-        Me.btn_view_most_sale.Font = New System.Drawing.Font("Tahoma", 18.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_view_most_sale.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.btn_view_most_sale.Location = New System.Drawing.Point(10, 10)
-        Me.btn_view_most_sale.Name = "btn_view_most_sale"
-        Me.btn_view_most_sale.Size = New System.Drawing.Size(164, 45)
-        Me.btn_view_most_sale.TabIndex = 76
-        Me.btn_view_most_sale.Text = "عرض الكل"
-        Me.btn_view_most_sale.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'lblTotal10
-        '
-        Me.lblTotal10.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal10.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal10.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal10.Location = New System.Drawing.Point(10, 491)
-        Me.lblTotal10.Name = "lblTotal10"
-        Me.lblTotal10.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal10.TabIndex = 75
-        Me.lblTotal10.Text = "اجمالي المبيعات"
-        Me.lblTotal10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity10
-        '
-        Me.lblTotalQuantity10.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity10.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity10.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity10.Location = New System.Drawing.Point(201, 491)
-        Me.lblTotalQuantity10.Name = "lblTotalQuantity10"
-        Me.lblTotalQuantity10.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity10.TabIndex = 74
-        Me.lblTotalQuantity10.Text = "الكمية المباعة"
-        Me.lblTotalQuantity10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price10
-        '
-        Me.lblSale_Price10.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price10.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price10.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price10.Location = New System.Drawing.Point(392, 491)
-        Me.lblSale_Price10.Name = "lblSale_Price10"
-        Me.lblSale_Price10.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price10.TabIndex = 73
-        Me.lblSale_Price10.Text = "السعر"
-        Me.lblSale_Price10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit10
-        '
-        Me.lblProductUnit10.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit10.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit10.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit10.Location = New System.Drawing.Point(583, 491)
-        Me.lblProductUnit10.Name = "lblProductUnit10"
-        Me.lblProductUnit10.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit10.TabIndex = 72
-        Me.lblProductUnit10.Text = "القسم الافتراضي"
-        Me.lblProductUnit10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct10
-        '
-        Me.lblProduct10.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct10.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct10.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct10.Location = New System.Drawing.Point(774, 491)
-        Me.lblProduct10.Name = "lblProduct10"
-        Me.lblProduct10.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct10.TabIndex = 71
-        Me.lblProduct10.Text = "منتج"
-        Me.lblProduct10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal9
-        '
-        Me.lblTotal9.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal9.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal9.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal9.Location = New System.Drawing.Point(10, 451)
-        Me.lblTotal9.Name = "lblTotal9"
-        Me.lblTotal9.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal9.TabIndex = 70
-        Me.lblTotal9.Text = "اجمالي المبيعات"
-        Me.lblTotal9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity9
-        '
-        Me.lblTotalQuantity9.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity9.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity9.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity9.Location = New System.Drawing.Point(201, 451)
-        Me.lblTotalQuantity9.Name = "lblTotalQuantity9"
-        Me.lblTotalQuantity9.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity9.TabIndex = 69
-        Me.lblTotalQuantity9.Text = "الكمية المباعة"
-        Me.lblTotalQuantity9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price9
-        '
-        Me.lblSale_Price9.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price9.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price9.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price9.Location = New System.Drawing.Point(392, 451)
-        Me.lblSale_Price9.Name = "lblSale_Price9"
-        Me.lblSale_Price9.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price9.TabIndex = 68
-        Me.lblSale_Price9.Text = "السعر"
-        Me.lblSale_Price9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit9
-        '
-        Me.lblProductUnit9.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit9.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit9.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit9.Location = New System.Drawing.Point(583, 451)
-        Me.lblProductUnit9.Name = "lblProductUnit9"
-        Me.lblProductUnit9.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit9.TabIndex = 67
-        Me.lblProductUnit9.Text = "القسم الافتراضي"
-        Me.lblProductUnit9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct9
-        '
-        Me.lblProduct9.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct9.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct9.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct9.Location = New System.Drawing.Point(774, 451)
-        Me.lblProduct9.Name = "lblProduct9"
-        Me.lblProduct9.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct9.TabIndex = 66
-        Me.lblProduct9.Text = "منتج"
-        Me.lblProduct9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal8
-        '
-        Me.lblTotal8.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal8.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal8.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal8.Location = New System.Drawing.Point(10, 411)
-        Me.lblTotal8.Name = "lblTotal8"
-        Me.lblTotal8.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal8.TabIndex = 65
-        Me.lblTotal8.Text = "اجمالي المبيعات"
-        Me.lblTotal8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity8
-        '
-        Me.lblTotalQuantity8.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity8.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity8.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity8.Location = New System.Drawing.Point(201, 411)
-        Me.lblTotalQuantity8.Name = "lblTotalQuantity8"
-        Me.lblTotalQuantity8.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity8.TabIndex = 64
-        Me.lblTotalQuantity8.Text = "الكمية المباعة"
-        Me.lblTotalQuantity8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price8
-        '
-        Me.lblSale_Price8.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price8.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price8.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price8.Location = New System.Drawing.Point(392, 411)
-        Me.lblSale_Price8.Name = "lblSale_Price8"
-        Me.lblSale_Price8.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price8.TabIndex = 63
-        Me.lblSale_Price8.Text = "السعر"
-        Me.lblSale_Price8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit8
-        '
-        Me.lblProductUnit8.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit8.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit8.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit8.Location = New System.Drawing.Point(583, 411)
-        Me.lblProductUnit8.Name = "lblProductUnit8"
-        Me.lblProductUnit8.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit8.TabIndex = 62
-        Me.lblProductUnit8.Text = "القسم الافتراضي"
-        Me.lblProductUnit8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct8
-        '
-        Me.lblProduct8.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct8.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct8.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct8.Location = New System.Drawing.Point(774, 411)
-        Me.lblProduct8.Name = "lblProduct8"
-        Me.lblProduct8.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct8.TabIndex = 61
-        Me.lblProduct8.Text = "منتج"
-        Me.lblProduct8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal7
-        '
-        Me.lblTotal7.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal7.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal7.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal7.Location = New System.Drawing.Point(10, 371)
-        Me.lblTotal7.Name = "lblTotal7"
-        Me.lblTotal7.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal7.TabIndex = 60
-        Me.lblTotal7.Text = "اجمالي المبيعات"
-        Me.lblTotal7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity7
-        '
-        Me.lblTotalQuantity7.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity7.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity7.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity7.Location = New System.Drawing.Point(201, 371)
-        Me.lblTotalQuantity7.Name = "lblTotalQuantity7"
-        Me.lblTotalQuantity7.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity7.TabIndex = 59
-        Me.lblTotalQuantity7.Text = "الكمية المباعة"
-        Me.lblTotalQuantity7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price7
-        '
-        Me.lblSale_Price7.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price7.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price7.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price7.Location = New System.Drawing.Point(392, 371)
-        Me.lblSale_Price7.Name = "lblSale_Price7"
-        Me.lblSale_Price7.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price7.TabIndex = 58
-        Me.lblSale_Price7.Text = "السعر"
-        Me.lblSale_Price7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit7
-        '
-        Me.lblProductUnit7.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit7.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit7.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit7.Location = New System.Drawing.Point(583, 371)
-        Me.lblProductUnit7.Name = "lblProductUnit7"
-        Me.lblProductUnit7.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit7.TabIndex = 57
-        Me.lblProductUnit7.Text = "القسم الافتراضي"
-        Me.lblProductUnit7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct7
-        '
-        Me.lblProduct7.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct7.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct7.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct7.Location = New System.Drawing.Point(774, 371)
-        Me.lblProduct7.Name = "lblProduct7"
-        Me.lblProduct7.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct7.TabIndex = 56
-        Me.lblProduct7.Text = "منتج"
-        Me.lblProduct7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal6
-        '
-        Me.lblTotal6.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal6.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal6.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal6.Location = New System.Drawing.Point(10, 331)
-        Me.lblTotal6.Name = "lblTotal6"
-        Me.lblTotal6.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal6.TabIndex = 55
-        Me.lblTotal6.Text = "اجمالي المبيعات"
-        Me.lblTotal6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity6
-        '
-        Me.lblTotalQuantity6.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity6.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity6.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity6.Location = New System.Drawing.Point(201, 331)
-        Me.lblTotalQuantity6.Name = "lblTotalQuantity6"
-        Me.lblTotalQuantity6.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity6.TabIndex = 54
-        Me.lblTotalQuantity6.Text = "الكمية المباعة"
-        Me.lblTotalQuantity6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price6
-        '
-        Me.lblSale_Price6.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price6.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price6.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price6.Location = New System.Drawing.Point(392, 331)
-        Me.lblSale_Price6.Name = "lblSale_Price6"
-        Me.lblSale_Price6.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price6.TabIndex = 53
-        Me.lblSale_Price6.Text = "السعر"
-        Me.lblSale_Price6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit6
-        '
-        Me.lblProductUnit6.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit6.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit6.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit6.Location = New System.Drawing.Point(583, 331)
-        Me.lblProductUnit6.Name = "lblProductUnit6"
-        Me.lblProductUnit6.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit6.TabIndex = 52
-        Me.lblProductUnit6.Text = "القسم الافتراضي"
-        Me.lblProductUnit6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct6
-        '
-        Me.lblProduct6.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct6.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct6.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct6.Location = New System.Drawing.Point(774, 331)
-        Me.lblProduct6.Name = "lblProduct6"
-        Me.lblProduct6.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct6.TabIndex = 51
-        Me.lblProduct6.Text = "منتج"
-        Me.lblProduct6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal5
-        '
-        Me.lblTotal5.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal5.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal5.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal5.Location = New System.Drawing.Point(10, 291)
-        Me.lblTotal5.Name = "lblTotal5"
-        Me.lblTotal5.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal5.TabIndex = 50
-        Me.lblTotal5.Text = "اجمالي المبيعات"
-        Me.lblTotal5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity5
-        '
-        Me.lblTotalQuantity5.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity5.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity5.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity5.Location = New System.Drawing.Point(201, 291)
-        Me.lblTotalQuantity5.Name = "lblTotalQuantity5"
-        Me.lblTotalQuantity5.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity5.TabIndex = 49
-        Me.lblTotalQuantity5.Text = "الكمية المباعة"
-        Me.lblTotalQuantity5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price5
-        '
-        Me.lblSale_Price5.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price5.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price5.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price5.Location = New System.Drawing.Point(392, 291)
-        Me.lblSale_Price5.Name = "lblSale_Price5"
-        Me.lblSale_Price5.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price5.TabIndex = 48
-        Me.lblSale_Price5.Text = "السعر"
-        Me.lblSale_Price5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit5
-        '
-        Me.lblProductUnit5.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit5.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit5.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit5.Location = New System.Drawing.Point(583, 291)
-        Me.lblProductUnit5.Name = "lblProductUnit5"
-        Me.lblProductUnit5.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit5.TabIndex = 47
-        Me.lblProductUnit5.Text = "القسم الافتراضي"
-        Me.lblProductUnit5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct5
-        '
-        Me.lblProduct5.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct5.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct5.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct5.Location = New System.Drawing.Point(774, 291)
-        Me.lblProduct5.Name = "lblProduct5"
-        Me.lblProduct5.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct5.TabIndex = 46
-        Me.lblProduct5.Text = "منتج"
-        Me.lblProduct5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal4
-        '
-        Me.lblTotal4.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal4.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal4.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal4.Location = New System.Drawing.Point(10, 251)
-        Me.lblTotal4.Name = "lblTotal4"
-        Me.lblTotal4.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal4.TabIndex = 45
-        Me.lblTotal4.Text = "اجمالي المبيعات"
-        Me.lblTotal4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity4
-        '
-        Me.lblTotalQuantity4.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity4.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity4.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity4.Location = New System.Drawing.Point(201, 251)
-        Me.lblTotalQuantity4.Name = "lblTotalQuantity4"
-        Me.lblTotalQuantity4.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity4.TabIndex = 44
-        Me.lblTotalQuantity4.Text = "الكمية المباعة"
-        Me.lblTotalQuantity4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price4
-        '
-        Me.lblSale_Price4.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price4.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price4.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price4.Location = New System.Drawing.Point(392, 251)
-        Me.lblSale_Price4.Name = "lblSale_Price4"
-        Me.lblSale_Price4.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price4.TabIndex = 43
-        Me.lblSale_Price4.Text = "السعر"
-        Me.lblSale_Price4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit4
-        '
-        Me.lblProductUnit4.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit4.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit4.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit4.Location = New System.Drawing.Point(583, 251)
-        Me.lblProductUnit4.Name = "lblProductUnit4"
-        Me.lblProductUnit4.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit4.TabIndex = 42
-        Me.lblProductUnit4.Text = "القسم الافتراضي"
-        Me.lblProductUnit4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct4
-        '
-        Me.lblProduct4.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct4.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct4.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct4.Location = New System.Drawing.Point(774, 251)
-        Me.lblProduct4.Name = "lblProduct4"
-        Me.lblProduct4.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct4.TabIndex = 41
-        Me.lblProduct4.Text = "منتج"
-        Me.lblProduct4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal3
-        '
-        Me.lblTotal3.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal3.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal3.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal3.Location = New System.Drawing.Point(10, 211)
-        Me.lblTotal3.Name = "lblTotal3"
-        Me.lblTotal3.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal3.TabIndex = 40
-        Me.lblTotal3.Text = "اجمالي المبيعات"
-        Me.lblTotal3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity3
-        '
-        Me.lblTotalQuantity3.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity3.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity3.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity3.Location = New System.Drawing.Point(201, 211)
-        Me.lblTotalQuantity3.Name = "lblTotalQuantity3"
-        Me.lblTotalQuantity3.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity3.TabIndex = 39
-        Me.lblTotalQuantity3.Text = "الكمية المباعة"
-        Me.lblTotalQuantity3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price3
-        '
-        Me.lblSale_Price3.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price3.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price3.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price3.Location = New System.Drawing.Point(392, 211)
-        Me.lblSale_Price3.Name = "lblSale_Price3"
-        Me.lblSale_Price3.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price3.TabIndex = 38
-        Me.lblSale_Price3.Text = "السعر"
-        Me.lblSale_Price3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit3
-        '
-        Me.lblProductUnit3.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit3.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit3.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit3.Location = New System.Drawing.Point(583, 211)
-        Me.lblProductUnit3.Name = "lblProductUnit3"
-        Me.lblProductUnit3.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit3.TabIndex = 37
-        Me.lblProductUnit3.Text = "القسم الافتراضي"
-        Me.lblProductUnit3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct3
-        '
-        Me.lblProduct3.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct3.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct3.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct3.Location = New System.Drawing.Point(774, 211)
-        Me.lblProduct3.Name = "lblProduct3"
-        Me.lblProduct3.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct3.TabIndex = 36
-        Me.lblProduct3.Text = "منتج"
-        Me.lblProduct3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal2
-        '
-        Me.lblTotal2.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal2.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal2.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal2.Location = New System.Drawing.Point(10, 171)
-        Me.lblTotal2.Name = "lblTotal2"
-        Me.lblTotal2.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal2.TabIndex = 35
-        Me.lblTotal2.Text = "اجمالي المبيعات"
-        Me.lblTotal2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity2
-        '
-        Me.lblTotalQuantity2.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity2.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity2.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity2.Location = New System.Drawing.Point(201, 171)
-        Me.lblTotalQuantity2.Name = "lblTotalQuantity2"
-        Me.lblTotalQuantity2.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity2.TabIndex = 34
-        Me.lblTotalQuantity2.Text = "الكمية المباعة"
-        Me.lblTotalQuantity2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price2
-        '
-        Me.lblSale_Price2.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price2.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price2.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price2.Location = New System.Drawing.Point(392, 171)
-        Me.lblSale_Price2.Name = "lblSale_Price2"
-        Me.lblSale_Price2.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price2.TabIndex = 33
-        Me.lblSale_Price2.Text = "السعر"
-        Me.lblSale_Price2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit2
-        '
-        Me.lblProductUnit2.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit2.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit2.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit2.Location = New System.Drawing.Point(583, 171)
-        Me.lblProductUnit2.Name = "lblProductUnit2"
-        Me.lblProductUnit2.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit2.TabIndex = 32
-        Me.lblProductUnit2.Text = "القسم الافتراضي"
-        Me.lblProductUnit2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct2
-        '
-        Me.lblProduct2.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct2.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct2.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct2.Location = New System.Drawing.Point(774, 171)
-        Me.lblProduct2.Name = "lblProduct2"
-        Me.lblProduct2.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct2.TabIndex = 31
-        Me.lblProduct2.Text = "منتج"
-        Me.lblProduct2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotal1
-        '
-        Me.lblTotal1.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotal1.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotal1.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotal1.Location = New System.Drawing.Point(10, 131)
-        Me.lblTotal1.Name = "lblTotal1"
-        Me.lblTotal1.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotal1.TabIndex = 30
-        Me.lblTotal1.Text = "اجمالي المبيعات"
-        Me.lblTotal1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblTotalQuantity1
-        '
-        Me.lblTotalQuantity1.BackColor = System.Drawing.Color.Transparent
-        Me.lblTotalQuantity1.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalQuantity1.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblTotalQuantity1.Location = New System.Drawing.Point(201, 131)
-        Me.lblTotalQuantity1.Name = "lblTotalQuantity1"
-        Me.lblTotalQuantity1.Size = New System.Drawing.Size(186, 29)
-        Me.lblTotalQuantity1.TabIndex = 29
-        Me.lblTotalQuantity1.Text = "الكمية المباعة"
-        Me.lblTotalQuantity1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblSale_Price1
-        '
-        Me.lblSale_Price1.BackColor = System.Drawing.Color.Transparent
-        Me.lblSale_Price1.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSale_Price1.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblSale_Price1.Location = New System.Drawing.Point(392, 131)
-        Me.lblSale_Price1.Name = "lblSale_Price1"
-        Me.lblSale_Price1.Size = New System.Drawing.Size(186, 29)
-        Me.lblSale_Price1.TabIndex = 28
-        Me.lblSale_Price1.Text = "السعر"
-        Me.lblSale_Price1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProductUnit1
-        '
-        Me.lblProductUnit1.BackColor = System.Drawing.Color.Transparent
-        Me.lblProductUnit1.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProductUnit1.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProductUnit1.Location = New System.Drawing.Point(583, 131)
-        Me.lblProductUnit1.Name = "lblProductUnit1"
-        Me.lblProductUnit1.Size = New System.Drawing.Size(186, 29)
-        Me.lblProductUnit1.TabIndex = 27
-        Me.lblProductUnit1.Text = "القسم الافتراضي"
-        Me.lblProductUnit1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblProduct1
-        '
-        Me.lblProduct1.BackColor = System.Drawing.Color.Transparent
-        Me.lblProduct1.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblProduct1.ForeColor = System.Drawing.Color.WhiteSmoke
-        Me.lblProduct1.Location = New System.Drawing.Point(774, 131)
-        Me.lblProduct1.Name = "lblProduct1"
-        Me.lblProduct1.Size = New System.Drawing.Size(382, 29)
-        Me.lblProduct1.TabIndex = 26
-        Me.lblProduct1.Text = "منتج"
-        Me.lblProduct1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label5
-        '
-        Me.Label5.BackColor = System.Drawing.Color.Transparent
-        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.Label5.Location = New System.Drawing.Point(10, 73)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(186, 29)
-        Me.Label5.TabIndex = 25
-        Me.Label5.Text = "اجمالي المبيعات"
-        Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label4
-        '
-        Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.Label4.Location = New System.Drawing.Point(201, 73)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(186, 29)
-        Me.Label4.TabIndex = 24
-        Me.Label4.Text = "الكمية المباعة"
-        Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label3
-        '
-        Me.Label3.BackColor = System.Drawing.Color.Transparent
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.Label3.Location = New System.Drawing.Point(392, 73)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(186, 29)
-        Me.Label3.TabIndex = 23
-        Me.Label3.Text = "السعر"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label2
-        '
-        Me.Label2.BackColor = System.Drawing.Color.Transparent
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.Label2.Location = New System.Drawing.Point(583, 73)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(186, 29)
-        Me.Label2.TabIndex = 22
-        Me.Label2.Text = "الوحدة"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label1
-        '
-        Me.Label1.BackColor = System.Drawing.Color.Transparent
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(206, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(774, 73)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(382, 29)
-        Me.Label1.TabIndex = 21
-        Me.Label1.Text = "اسم المنتج"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'pnlNotifications
         '
@@ -1546,7 +752,7 @@ Partial Class MainForm
         Me.pnlQuickActions.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnlQuickActions.Location = New System.Drawing.Point(3, 3)
         Me.pnlQuickActions.Name = "pnlQuickActions"
-        Me.pnlQuickActions.Size = New System.Drawing.Size(1556, 65)
+        Me.pnlQuickActions.Size = New System.Drawing.Size(1232, 161)
         Me.pnlQuickActions.TabIndex = 3
         '
         'btn_Customer_Balance_Download
@@ -1560,7 +766,7 @@ Partial Class MainForm
         Me.btn_Customer_Balance_Download.ForeColor = System.Drawing.Color.White
         Me.btn_Customer_Balance_Download.Image = Global.WindowsApp1.My.Resources.Resources._1486564407_plus_green_81521
         Me.btn_Customer_Balance_Download.ImageSize = New System.Drawing.Size(40, 40)
-        Me.btn_Customer_Balance_Download.Location = New System.Drawing.Point(1251, 3)
+        Me.btn_Customer_Balance_Download.Location = New System.Drawing.Point(931, 80)
         Me.btn_Customer_Balance_Download.Name = "btn_Customer_Balance_Download"
         Me.btn_Customer_Balance_Download.Size = New System.Drawing.Size(298, 55)
         Me.btn_Customer_Balance_Download.TabIndex = 5
@@ -1656,7 +862,7 @@ Partial Class MainForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1924, 1061)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.PanelMain)
         Me.Controls.Add(Me.pn_title)
         Me.Controls.Add(Me.pn_natpar)
@@ -1684,7 +890,6 @@ Partial Class MainForm
         Me.pn_title.PerformLayout()
         CType(Me.BehaviorManager1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.PanelMain.ResumeLayout(False)
-        Me.PanelTop10.ResumeLayout(False)
         Me.pnlNotifications.ResumeLayout(False)
         CType(Me.dgvLowStock, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel4.ResumeLayout(False)
@@ -1742,63 +947,6 @@ Partial Class MainForm
     Friend WithEvents btn_Customer_Balance_Download As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Button1 As Button
-    Friend WithEvents PanelTop10 As Panel
-    Friend WithEvents Label1 As Label
-    Friend WithEvents Label5 As Label
-    Friend WithEvents Label4 As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents Label2 As Label
-    Friend WithEvents lblTotal10 As Label
-    Friend WithEvents lblTotalQuantity10 As Label
-    Friend WithEvents lblSale_Price10 As Label
-    Friend WithEvents lblProductUnit10 As Label
-    Friend WithEvents lblProduct10 As Label
-    Friend WithEvents lblTotal9 As Label
-    Friend WithEvents lblTotalQuantity9 As Label
-    Friend WithEvents lblSale_Price9 As Label
-    Friend WithEvents lblProductUnit9 As Label
-    Friend WithEvents lblProduct9 As Label
-    Friend WithEvents lblTotal8 As Label
-    Friend WithEvents lblTotalQuantity8 As Label
-    Friend WithEvents lblSale_Price8 As Label
-    Friend WithEvents lblProductUnit8 As Label
-    Friend WithEvents lblProduct8 As Label
-    Friend WithEvents lblTotal7 As Label
-    Friend WithEvents lblTotalQuantity7 As Label
-    Friend WithEvents lblSale_Price7 As Label
-    Friend WithEvents lblProductUnit7 As Label
-    Friend WithEvents lblProduct7 As Label
-    Friend WithEvents lblTotal6 As Label
-    Friend WithEvents lblTotalQuantity6 As Label
-    Friend WithEvents lblSale_Price6 As Label
-    Friend WithEvents lblProductUnit6 As Label
-    Friend WithEvents lblProduct6 As Label
-    Friend WithEvents lblTotal5 As Label
-    Friend WithEvents lblTotalQuantity5 As Label
-    Friend WithEvents lblSale_Price5 As Label
-    Friend WithEvents lblProductUnit5 As Label
-    Friend WithEvents lblProduct5 As Label
-    Friend WithEvents lblTotal4 As Label
-    Friend WithEvents lblTotalQuantity4 As Label
-    Friend WithEvents lblSale_Price4 As Label
-    Friend WithEvents lblProductUnit4 As Label
-    Friend WithEvents lblProduct4 As Label
-    Friend WithEvents lblTotal3 As Label
-    Friend WithEvents lblTotalQuantity3 As Label
-    Friend WithEvents lblSale_Price3 As Label
-    Friend WithEvents lblProductUnit3 As Label
-    Friend WithEvents lblProduct3 As Label
-    Friend WithEvents lblTotal2 As Label
-    Friend WithEvents lblTotalQuantity2 As Label
-    Friend WithEvents lblSale_Price2 As Label
-    Friend WithEvents lblProductUnit2 As Label
-    Friend WithEvents lblProduct2 As Label
-    Friend WithEvents lblTotal1 As Label
-    Friend WithEvents lblTotalQuantity1 As Label
-    Friend WithEvents lblSale_Price1 As Label
-    Friend WithEvents lblProductUnit1 As Label
-    Friend WithEvents lblProduct1 As Label
-    Friend WithEvents Guna2Button1 As Guna.UI2.WinForms.Guna2Button
-    Friend WithEvents btn_view_most_sale As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btn_Expenses As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnTreasury As Guna.UI2.WinForms.Guna2Button
 End Class

@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Drawing.Printing
 Imports System.Globalization

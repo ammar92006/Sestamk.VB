@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports Guna.UI2.WinForms
+Imports System.Drawing.Imaging
 ' [FIX] Alias لتجنب تضارب Timer بين System.Threading.Timer و System.Windows.Forms.Timer
 Imports WinFormsTimer = System.Windows.Forms.Timer
 
@@ -20,7 +21,7 @@ Public Module DBModule
     ' إعدادات الاتصال - يمكن تغييرها من فورم الاعدادات
     ' ══════════════════════════════════════════════════════════
     Public server As String = "(localdb)\MSSQLLocalDB"
-    Public database As String = "Cashier_Market"
+    Public database As String = "SestamkDB"
     Public username As String = ""
     Public password As String = ""
     Public useWindowsAuth As Boolean = True  ' True = Windows Auth, False = SQL Auth
@@ -45,6 +46,58 @@ Public Module DBModule
             Return BuildConnectionString(server, database, username, password, useWindowsAuth)
         End Get
     End Property
+
+    Public Function ExecuteQuery(query As String) As DataTable
+        ' 💡 ضع نص الاتصال (Connection String) الخاص بقاعدة بياناتك هنا
+
+        Dim dt As New DataTable()
+
+        ' استخدام Using يضمن إغلاق وتفريغ الاتصال فوراً حتى لو حصل خطأ
+        Using conn As New SqlConnection(ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                Using da As New SqlDataAdapter(cmd)
+                    Try
+                        conn.Open()
+                        da.Fill(dt)
+                        Return dt
+                    Catch ex As Exception
+                        ' عرض الخطأ بشكل واضح لمعرفته أثناء التطوير
+                        MessageBox.Show("حدث خطأ أثناء الاتصال بقاعدة البيانات: " & ex.Message,
+                                    "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return Nothing
+                    End Try
+                End Using
+            End Using
+        End Using
+    End Function
+
+    ' تحويل النص من قاعدة البيانات (Base64) إلى صورة لعرضها
+    Public Function Base64ToImage(base64String As String) As Image
+        If String.IsNullOrEmpty(base64String) Then Return Nothing
+        Try
+            Dim imageBytes As Byte() = Convert.FromBase64String(base64String)
+            Using ms As New MemoryStream(imageBytes)
+                Return Image.FromStream(ms)
+            End Using
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    ' تحويل الصورة من الـ PictureBox إلى نص Base64 لحفظها
+    Public Function ImageToBase64(img As Image) As String
+        If img Is Nothing Then Return String.Empty
+        Try
+            Using ms As New MemoryStream()
+                ' حفظ الصورة في الذاكرة بصيغة Png للحفاظ على الشفافية والجودة
+                img.Save(ms, ImageFormat.Png)
+                Dim imageBytes As Byte() = ms.ToArray()
+                Return Convert.ToBase64String(imageBytes)
+            End Using
+        Catch
+            Return String.Empty
+        End Try
+    End Function
 
     ' ══════════════════════════════════════════════════════════
     ' مسار ملف الاعدادات المحلي

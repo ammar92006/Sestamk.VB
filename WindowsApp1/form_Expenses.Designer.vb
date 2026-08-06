@@ -30,6 +30,9 @@ Partial Class form_Expenses
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.cmbTreasury = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.dtpDate = New Guna.UI2.WinForms.Guna2DateTimePicker()
         Me.cmbStatus = New System.Windows.Forms.ComboBox()
         Me.cmbCategory = New System.Windows.Forms.ComboBox()
         Me.cmbPaymentMethod = New System.Windows.Forms.ComboBox()
@@ -50,7 +53,6 @@ Partial Class form_Expenses
         Me.btnSave = New DevExpress.XtraEditors.SimpleButton()
         Me.btnCancel = New DevExpress.XtraEditors.SimpleButton()
         Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
-        Me.dtpDate = New Guna.UI2.WinForms.Guna2DateTimePicker()
         Me.Panel1.SuspendLayout()
         Me.grpCustomerInfo.SuspendLayout()
         CType(Me.txtAmount, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -128,6 +130,8 @@ Partial Class form_Expenses
         '
         'grpCustomerInfo
         '
+        Me.grpCustomerInfo.Controls.Add(Me.cmbTreasury)
+        Me.grpCustomerInfo.Controls.Add(Me.Label8)
         Me.grpCustomerInfo.Controls.Add(Me.dtpDate)
         Me.grpCustomerInfo.Controls.Add(Me.cmbStatus)
         Me.grpCustomerInfo.Controls.Add(Me.cmbCategory)
@@ -157,6 +161,51 @@ Partial Class form_Expenses
         Me.grpCustomerInfo.TabIndex = 80
         Me.grpCustomerInfo.Text = "البيانات"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'cmbTreasury
+        '
+        Me.cmbTreasury.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cmbTreasury.BackColor = System.Drawing.Color.Transparent
+        Me.cmbTreasury.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbTreasury.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbTreasury.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cmbTreasury.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.cmbTreasury.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(112, Byte), Integer))
+        Me.cmbTreasury.ItemHeight = 40
+        Me.cmbTreasury.Location = New System.Drawing.Point(15, 296)
+        Me.cmbTreasury.Name = "cmbTreasury"
+        Me.cmbTreasury.Size = New System.Drawing.Size(323, 46)
+        Me.cmbTreasury.TabIndex = 5641
+        Me.cmbTreasury.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label8
+        '
+        Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label8.BackColor = System.Drawing.Color.Transparent
+        Me.Label8.Location = New System.Drawing.Point(344, 296)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(125, 46)
+        Me.Label8.TabIndex = 5640
+        Me.Label8.Text = "الخزنة"
+        Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'dtpDate
+        '
+        Me.dtpDate.BackColor = System.Drawing.Color.Transparent
+        Me.dtpDate.BorderRadius = 10
+        Me.dtpDate.Checked = True
+        Me.dtpDate.FillColor = System.Drawing.Color.Silver
+        Me.dtpDate.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.[Long]
+        Me.dtpDate.Location = New System.Drawing.Point(478, 50)
+        Me.dtpDate.MaxDate = New Date(9998, 12, 31, 0, 0, 0, 0)
+        Me.dtpDate.MinDate = New Date(1753, 1, 1, 0, 0, 0, 0)
+        Me.dtpDate.Name = "dtpDate"
+        Me.dtpDate.Size = New System.Drawing.Size(315, 41)
+        Me.dtpDate.TabIndex = 5639
+        Me.dtpDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.dtpDate.Value = New Date(2026, 3, 27, 2, 8, 57, 279)
         '
         'cmbStatus
         '
@@ -192,7 +241,7 @@ Partial Class form_Expenses
         Me.Guna2HtmlLabel4.BackColor = System.Drawing.Color.Transparent
         Me.Guna2HtmlLabel4.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel4.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel4.Location = New System.Drawing.Point(152, 326)
+        Me.Guna2HtmlLabel4.Location = New System.Drawing.Point(152, 340)
         Me.Guna2HtmlLabel4.Name = "Guna2HtmlLabel4"
         Me.Guna2HtmlLabel4.Size = New System.Drawing.Size(317, 36)
         Me.Guna2HtmlLabel4.TabIndex = 5635
@@ -203,7 +252,7 @@ Partial Class form_Expenses
         '
         Me.txtUserPassword.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtUserPassword.ForeColor = System.Drawing.Color.Black
-        Me.txtUserPassword.Location = New System.Drawing.Point(15, 368)
+        Me.txtUserPassword.Location = New System.Drawing.Point(15, 382)
         Me.txtUserPassword.Name = "txtUserPassword"
         Me.txtUserPassword.Size = New System.Drawing.Size(454, 38)
         Me.txtUserPassword.TabIndex = 5634
@@ -414,23 +463,6 @@ Partial Class form_Expenses
         Me.SimpleButton1.TabIndex = 5636
         Me.SimpleButton1.Text = "عرض المصروفات السابقه"
         '
-        'dtpDate
-        '
-        Me.dtpDate.BackColor = System.Drawing.Color.Transparent
-        Me.dtpDate.BorderRadius = 10
-        Me.dtpDate.Checked = True
-        Me.dtpDate.FillColor = System.Drawing.Color.Silver
-        Me.dtpDate.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtpDate.Format = System.Windows.Forms.DateTimePickerFormat.[Long]
-        Me.dtpDate.Location = New System.Drawing.Point(478, 50)
-        Me.dtpDate.MaxDate = New Date(9998, 12, 31, 0, 0, 0, 0)
-        Me.dtpDate.MinDate = New Date(1753, 1, 1, 0, 0, 0, 0)
-        Me.dtpDate.Name = "dtpDate"
-        Me.dtpDate.Size = New System.Drawing.Size(315, 36)
-        Me.dtpDate.TabIndex = 5639
-        Me.dtpDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
-        Me.dtpDate.Value = New Date(2026, 3, 27, 2, 8, 57, 279)
-        '
         'form_Expenses
         '
         Me.AcceptButton = Me.btnSave
@@ -486,4 +518,6 @@ Partial Class form_Expenses
     Friend WithEvents cmbPaymentMethod As ComboBox
     Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents dtpDate As Guna.UI2.WinForms.Guna2DateTimePicker
+    Public WithEvents cmbTreasury As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents Label8 As Label
 End Class

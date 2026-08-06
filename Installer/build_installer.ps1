@@ -31,4 +31,4 @@ Write-Host "تجميع ملف التثبيت ..." -ForegroundColor Cyan
 & $iscc "/DSourceBin=$binDir" $iss
 if ($LASTEXITCODE -ne 0) { throw "فشل تجميع ملف التثبيت." }
 
-Write-Host "تم! ملف التثبيت في: $(Join-Path $PSScriptRoot 'Output\CashierMarket-Setup.exe')" -ForegroundColor Green
+Write-Host "تم! ملف التثبيت في: $(Join-Path $PSScriptRoot 'Output\Sestamk-Setup.exe')" -ForegroundColor Green

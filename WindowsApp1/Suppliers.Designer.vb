@@ -39,6 +39,9 @@ Partial Class Suppliers
         Me.btnNew = New DevExpress.XtraEditors.SimpleButton()
         Me.dgvSuppliers = New Guna.UI2.WinForms.Guna2DataGridView()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.btnSendWhatsApp = New DevExpress.XtraEditors.SimpleButton()
+        Me.Guna2HtmlLabel14 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Me.txtMessage = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel13 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtDebit = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel10 = New Guna.UI2.WinForms.Guna2HtmlLabel()
@@ -68,12 +71,8 @@ Partial Class Suppliers
         Me.txtSupplierName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel2 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtSupplierCode = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.txtMessage = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btnSendWhatsApp = New DevExpress.XtraEditors.SimpleButton()
-        Me.Guna2HtmlLabel14 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.panelHeader.SuspendLayout()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.PanelControl1.SuspendLayout()
         CType(Me.dgvSuppliers, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
         Me.SuspendLayout()
@@ -256,7 +255,7 @@ Partial Class Suppliers
         Me.dgvSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvSuppliers.RowHeadersVisible = False
         Me.dgvSuppliers.RowTemplate.Height = 40
-        Me.dgvSuppliers.Size = New System.Drawing.Size(1600, 902)
+        Me.dgvSuppliers.Size = New System.Drawing.Size(1600, 742)
         Me.dgvSuppliers.TabIndex = 38
         Me.dgvSuppliers.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvSuppliers.ThemeStyle.AlternatingRowsStyle.Font = Nothing
@@ -325,6 +324,55 @@ Partial Class Suppliers
         Me.grpCustomerInfo.TabIndex = 39
         Me.grpCustomerInfo.Text = "بيانات المورد"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'btnSendWhatsApp
+        '
+        Me.btnSendWhatsApp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSendWhatsApp.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSendWhatsApp.Appearance.Options.UseFont = True
+        Me.btnSendWhatsApp.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.logo__1_
+        Me.btnSendWhatsApp.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
+        Me.btnSendWhatsApp.Location = New System.Drawing.Point(6, 288)
+        Me.btnSendWhatsApp.Name = "btnSendWhatsApp"
+        Me.btnSendWhatsApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnSendWhatsApp.Size = New System.Drawing.Size(141, 131)
+        Me.btnSendWhatsApp.TabIndex = 38425459
+        '
+        'Guna2HtmlLabel14
+        '
+        Me.Guna2HtmlLabel14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Guna2HtmlLabel14.AutoSize = False
+        Me.Guna2HtmlLabel14.BackColor = System.Drawing.Color.Transparent
+        Me.Guna2HtmlLabel14.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Guna2HtmlLabel14.ForeColor = System.Drawing.Color.Black
+        Me.Guna2HtmlLabel14.Location = New System.Drawing.Point(582, 243)
+        Me.Guna2HtmlLabel14.Name = "Guna2HtmlLabel14"
+        Me.Guna2HtmlLabel14.Size = New System.Drawing.Size(91, 36)
+        Me.Guna2HtmlLabel14.TabIndex = 38425458
+        Me.Guna2HtmlLabel14.Text = "الرسالة"
+        Me.Guna2HtmlLabel14.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        '
+        'txtMessage
+        '
+        Me.txtMessage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.txtMessage.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtMessage.DefaultText = ""
+        Me.txtMessage.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
+        Me.txtMessage.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
+        Me.txtMessage.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtMessage.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtMessage.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtMessage.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.txtMessage.ForeColor = System.Drawing.Color.Black
+        Me.txtMessage.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtMessage.Location = New System.Drawing.Point(151, 288)
+        Me.txtMessage.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
+        Me.txtMessage.Multiline = True
+        Me.txtMessage.Name = "txtMessage"
+        Me.txtMessage.PlaceholderText = ""
+        Me.txtMessage.SelectedText = ""
+        Me.txtMessage.Size = New System.Drawing.Size(522, 131)
+        Me.txtMessage.TabIndex = 38425457
         '
         'Guna2HtmlLabel13
         '
@@ -831,60 +879,11 @@ Partial Class Suppliers
         Me.txtSupplierCode.TabIndex = 3
         Me.txtSupplierCode.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'txtMessage
-        '
-        Me.txtMessage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtMessage.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtMessage.DefaultText = ""
-        Me.txtMessage.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtMessage.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtMessage.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtMessage.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtMessage.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtMessage.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtMessage.ForeColor = System.Drawing.Color.Black
-        Me.txtMessage.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtMessage.Location = New System.Drawing.Point(151, 288)
-        Me.txtMessage.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
-        Me.txtMessage.Multiline = True
-        Me.txtMessage.Name = "txtMessage"
-        Me.txtMessage.PlaceholderText = ""
-        Me.txtMessage.SelectedText = ""
-        Me.txtMessage.Size = New System.Drawing.Size(522, 131)
-        Me.txtMessage.TabIndex = 38425457
-        '
-        'btnSendWhatsApp
-        '
-        Me.btnSendWhatsApp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSendWhatsApp.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSendWhatsApp.Appearance.Options.UseFont = True
-        Me.btnSendWhatsApp.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.logo__1_
-        Me.btnSendWhatsApp.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSendWhatsApp.Location = New System.Drawing.Point(6, 288)
-        Me.btnSendWhatsApp.Name = "btnSendWhatsApp"
-        Me.btnSendWhatsApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSendWhatsApp.Size = New System.Drawing.Size(141, 131)
-        Me.btnSendWhatsApp.TabIndex = 38425459
-        '
-        'Guna2HtmlLabel14
-        '
-        Me.Guna2HtmlLabel14.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel14.AutoSize = False
-        Me.Guna2HtmlLabel14.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel14.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel14.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel14.Location = New System.Drawing.Point(582, 243)
-        Me.Guna2HtmlLabel14.Name = "Guna2HtmlLabel14"
-        Me.Guna2HtmlLabel14.Size = New System.Drawing.Size(91, 36)
-        Me.Guna2HtmlLabel14.TabIndex = 38425458
-        Me.Guna2HtmlLabel14.Text = "الرسالة"
-        Me.Guna2HtmlLabel14.TextAlignment = System.Drawing.ContentAlignment.BottomRight
-        '
         'Suppliers
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1600, 1060)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.grpCustomerInfo)
         Me.Controls.Add(Me.dgvSuppliers)
         Me.Controls.Add(Me.PanelControl1)
@@ -896,7 +895,6 @@ Partial Class Suppliers
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
         CType(Me.PanelControl1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.PanelControl1.ResumeLayout(False)
         CType(Me.dgvSuppliers, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpCustomerInfo.ResumeLayout(False)
         Me.grpCustomerInfo.PerformLayout()

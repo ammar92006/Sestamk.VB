@@ -842,7 +842,7 @@ Partial Class ProductUnits
         Me.dgv_ProductUnits.RowTemplate.Height = 40
         Me.dgv_ProductUnits.RowTemplate.ReadOnly = True
         Me.dgv_ProductUnits.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgv_ProductUnits.Size = New System.Drawing.Size(1500, 440)
+        Me.dgv_ProductUnits.Size = New System.Drawing.Size(1500, 320)
         Me.dgv_ProductUnits.TabIndex = 4
         '
         'ProductUnits
@@ -850,7 +850,7 @@ Partial Class ProductUnits
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(1500, 1020)
+        Me.ClientSize = New System.Drawing.Size(1500, 900)
         Me.Controls.Add(Me.dgv_ProductUnits)
         Me.Controls.Add(Me.Guna2Panel3)
         Me.Controls.Add(Me.Guna2GroupBox1)

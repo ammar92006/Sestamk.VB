@@ -2,7 +2,7 @@
 # الاستخدام: .\prepare_db_backup.ps1 -Server ".\SQLEXPRESS" -Database "Cashier_Market"
 param(
     [string]$Server   = ".\SQLEXPRESS",
-    [string]$Database = "Cashier_Market"
+    [string]$Database = "SestamkDB"
 )
 
 $ErrorActionPreference = "Stop"

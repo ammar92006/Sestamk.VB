@@ -87,7 +87,7 @@ Public Class Login
         Try
             Connect()
             Using command As New SqlCommand(query, Conn)
-                command.Parameters.AddWithValue("@username", username.Text.Trim)
+                command.Parameters.AddWithValue("@username", txtusername.Text.Trim)
                 Dim result As Object = command.ExecuteScalar()
                 If result IsNot Nothing AndAlso Integer.TryParse(result.ToString(), New Integer()) Then
                     useridlogin = Convert.ToInt32(result)
@@ -103,12 +103,12 @@ Public Class Login
     End Sub
 
 
-    Private Sub Login_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown
+    Private Sub Login_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown, pn_main.MouseDown
         x = Control.MousePosition.X - Me.Location.X
         y = Control.MousePosition.Y - Me.Location.Y
     End Sub
 
-    Private Sub Login_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+    Private Sub Login_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove, pn_main.MouseMove
         If e.Button = MouseButtons.Left Then
             newpoint = Control.MousePosition
             newpoint.X -= x
@@ -130,24 +130,28 @@ Public Class Login
         Application.Exit()
     End Sub
 
-    Private Sub username_KeyDown(sender As Object, e As KeyEventArgs) Handles username.KeyDown
+    Private Sub txtusername_KeyDown(sender As Object, e As KeyEventArgs) Handles txtusername.KeyDown
         If e.KeyCode = Keys.Enter Then
-            password.Focus()
+            txtpassword.Focus()
         End If
     End Sub
 
-    Private Sub password_KeyDown(sender As Object, e As KeyEventArgs) Handles password.KeyDown
+    Private Sub txtpassword_KeyDown(sender As Object, e As KeyEventArgs) Handles txtpassword.KeyDown
         If e.KeyCode = Keys.Enter Then
             btnlogin.PerformClick()
         End If
     End Sub
 
     Private Sub CheckBox1_CheckStateChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckStateChanged
-        If CheckBox1.Checked Then
-            password.PasswordChar = ControlChars.NullChar
-        Else
-            password.PasswordChar = "*"c
-        End If
+        'If CheckBox1.Checked Then
+        '    password.PasswordChar = ControlChars.NullChar
+        'Else
+        '    password.PasswordChar = "*"c
+        'End If
+
+
+        txtpassword.UseSystemPasswordChar = Not CheckBox1.Checked
+        'password.PasswordChar = CheckBox1.Checked ?  ? '\0' : '●'
     End Sub
 
     Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -169,9 +173,15 @@ Public Class Login
         '    Return
         'End If
         ' [FIX] إخفاء عناصر فحص الإنترنت (تم إلغاء الميزة بناءً على طلب المستخدم)
+        'Dim StoreName As String = SettingsManager.GetSetting("ShopName")
+        'If String.IsNullOrEmpty(StoreName) Then StoreName = ""
+
+        'lbltitle.Text = StoreName
+
+
         Try
-            Label6.Visible = False
-            PictureBox2.Visible = False
+            'Label6.Visible = False
+            'PictureBox2.Visible = False
         Catch
         End Try
 
@@ -183,7 +193,7 @@ Public Class Login
 
         AddHandler Application.ApplicationExit, AddressOf AppExit
 
-        username.Focus()
+        txtusername.Focus()
 
         ' [FIX] تشغيل النسخ الاحتياطي وحذف القديمة في الخلفية
         ' بدلاً من حجب UI Thread وقت فتح شاشة الدخول
@@ -340,13 +350,13 @@ Public Class Login
 
             If code.Contains(":") Then
                 Dim parts = code.Split(":"c)
-                username.Clear()
-                password.Clear()
-                username.Text = parts(0)
-                If parts.Length > 1 Then password.Text = parts(1)
+                txtusername.Clear()
+                txtpassword.Clear()
+                txtusername.Text = parts(0)
+                If parts.Length > 1 Then txtpassword.Text = parts(1)
                 btnlogin.PerformClick()
             Else
-                If String.IsNullOrEmpty(username.Text) Then
+                If String.IsNullOrEmpty(txtusername.Text) Then
                     'username.Text = code
                 Else
                     'password.Text = code
@@ -365,17 +375,17 @@ Public Class Login
 
 
     Public Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
-        If String.IsNullOrWhiteSpace(username.Text) Then
+        If String.IsNullOrWhiteSpace(txtusername.Text) Then
             MessageBox.Show("يرجى إدخال اسم المستخدم", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
-        If String.IsNullOrWhiteSpace(password.Text) Then
+        If String.IsNullOrWhiteSpace(txtpassword.Text) Then
             MessageBox.Show("يرجى إدخال كلمة المرور", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
 
-        Dim enteredUser As String = username.Text.Trim()
-        Dim enteredPass As String = password.Text.Trim()
+        Dim enteredUser As String = txtusername.Text.Trim()
+        Dim enteredPass As String = txtpassword.Text.Trim()
 
         Dim deviceName As String = Environment.MachineName
         Dim macAddress As String = GetMacAddress()
@@ -388,7 +398,7 @@ Public Class Login
             mainForm.Show()
 
             Dim code As Integer = GetNextLoginCode()
-            LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, Label6.Text)
+            LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, "")
 
             Notify.Toast("تم الدخول بنجاح", Notify.ToastType.Success)
 
@@ -396,8 +406,8 @@ Public Class Login
             passwordlogin = enteredPass
             GetUserId()
 
-            username.Text = String.Empty
-            password.Text = String.Empty
+            txtusername.Text = String.Empty
+            txtpassword.Text = String.Empty
             Return
         End If
 
@@ -422,9 +432,9 @@ Public Class Login
 
                         If userStats = False Then
                             MessageBox.Show("⚠️ هذا المستخدم محظور أو غير مفعل.", "مستخدم محظور", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                            username.Clear()
-                            password.Clear()
-                            username.Focus()
+                            txtusername.Clear()
+                            txtpassword.Clear()
+                            txtusername.Focus()
                             Return
                         End If
 
@@ -449,20 +459,20 @@ Public Class Login
                         mainForm.Show()
 
                         Dim code As Integer = GetNextLoginCode()
-                        LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, Label6.Text)
+                        LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, "")
 
                         Notify.Toast("تم تسجيل الدخول بنجاح", Notify.ToastType.Success)
                         usernamelogin = enteredUser
                         passwordlogin = enteredPass
 
-                        username.Clear()
-                        password.Clear()
+                        txtusername.Clear()
+                        txtpassword.Clear()
                         Return
                     Else
                         MessageBox.Show("❌ اسم المستخدم أو كلمة المرور غير صحيحة", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        username.Clear()
-                        password.Clear()
-                        username.Focus()
+                        txtusername.Clear()
+                        txtpassword.Clear()
+                        txtusername.Focus()
                     End If
                 End Using
             End Using

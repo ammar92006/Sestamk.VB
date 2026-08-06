@@ -75,10 +75,14 @@ Public Class Settings
     Private lblScanTestHint As Label
     Private _scannerTesting As Boolean = False
 
+
+    Private defaultTreasuryid As Integer
+
+
     '══════════════════════════════════════════════════════════════
     ' عند تحميل الفورم - نحمل كل الإعدادات
     '══════════════════════════════════════════════════════════════
-    Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' التجاوب مع الشاشة: ملاءمة حجم الفورم للمساحة المتاحة + توسيطه
         LayoutHelper.FitToWorkingArea(Me)
 
@@ -97,6 +101,8 @@ Public Class Settings
 
         ' تبويب قاعدة البيانات
         LoadDbSettingsToForm()
+        Await LoadTreasuriesAsync()
+
     End Sub
 
     ''' <summary>إنشاء عناصر التحكم الجديدة لتبويبَي الاعدادات العامة وقاعدة البيانات</summary>
@@ -790,6 +796,46 @@ Public Class Settings
         End Try
     End Sub
 
+    Private Async Function LoadTreasuriesAsync() As Task
+
+        Try
+
+            Dim dt As New DataTable()
+
+            Using cn As SqlConnection = Await NewConnAsync()
+
+                Const sql As String =
+                "
+                SELECT
+                TreasuryID,
+                TreasuryNameAr
+                FROM Treasury
+                WHERE IsActive = 1
+                AND IsDeleted = 0
+                ORDER BY IsDefault DESC, TreasuryNameAr
+                "
+
+                Using da As New SqlDataAdapter(sql, cn)
+
+                    Await Task.Run(Sub() da.Fill(dt))
+
+                End Using
+
+            End Using
+
+            cmbTreasury.DataSource = dt
+            cmbTreasury.DisplayMember = "TreasuryNameAr"
+            cmbTreasury.ValueMember = "TreasuryID"
+            cmbTreasury.SelectedIndex = -1
+
+
+            defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+            cmbTreasury.SelectedIndex = defaultTreasuryid
+        Catch ex As Exception
+        End Try
+
+    End Function
+
     Private Sub btnRefreshPorts_Click(sender As Object, e As EventArgs) Handles btnRefreshPorts.Click
         LoadPorts()
         lblStatus.Text = "✅ تم تحديث المنافذ"
@@ -946,6 +992,12 @@ Public Class Settings
             Dim printPreview = If(SettingsManager.GetSetting("PrintPreview"), "false")
             chkPrintPreview.Checked = (printPreview.ToLower() = "true")
 
+
+            txtInvoiceItemsPerPage.Text = If(SettingsManager.GetSetting("InvoiceItemsPerPage"), "25")
+            txtdefaultcustomercode.Text = If(SettingsManager.GetSetting("defaultcustomercode"), "1")
+            toggleautoSaveinvoice.Checked = If(SettingsManager.GetSetting("autoSaveinvoice"), "false")
+
+            'cmbTreasury.SelectedIndex = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
         Catch ex As Exception
             MessageBox.Show("خطأ في تحميل الاعدادات العامة: " & ex.Message)
         End Try
@@ -1208,6 +1260,18 @@ Public Class Settings
         ElseIf WindowState.Maximized Then
             WindowState = FormWindowState.Normal
         End If
+    End Sub
+
+    Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles Guna2Button1.Click
+        Try
+            SettingsManager.SaveSetting("InvoiceItemsPerPage", txtInvoiceItemsPerPage.Text)
+            SettingsManager.SaveSetting("defaultcustomercode", txtdefaultcustomercode.Text)
+            SettingsManager.SaveSetting("autoSaveinvoice", toggleautoSaveinvoice.Checked)
+            SettingsManager.SaveSetting("defaultTreasuryid", cmbTreasury.SelectedIndex)
+            Notify.Toast("تم حفظ إعدادات المبيعات", Notify.ToastType.Success)
+        Catch ex As Exception
+            Notify.Error("خطأ في الحفظ: " & ex.Message)
+        End Try
     End Sub
 
     ' زر الإغلاق

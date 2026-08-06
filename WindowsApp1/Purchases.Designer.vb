@@ -194,7 +194,7 @@ Partial Class Purchases
         Me.btn_add_new_product.Appearance.Options.UseFont = True
         Me.btn_add_new_product.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btn_add_new_product.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btn_add_new_product.Location = New System.Drawing.Point(10, 5)
+        Me.btn_add_new_product.Location = New System.Drawing.Point(20, 5)
         Me.btn_add_new_product.Name = "btn_add_new_product"
         Me.btn_add_new_product.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btn_add_new_product.Size = New System.Drawing.Size(403, 75)
@@ -236,7 +236,7 @@ Partial Class Purchases
         Me.btnSaveInvoice.Appearance.Options.UseFont = True
         Me.btnSaveInvoice.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
         Me.btnSaveInvoice.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
-        Me.btnSaveInvoice.Location = New System.Drawing.Point(1190, 5)
+        Me.btnSaveInvoice.Location = New System.Drawing.Point(1200, 5)
         Me.btnSaveInvoice.Name = "btnSaveInvoice"
         Me.btnSaveInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.btnSaveInvoice.Size = New System.Drawing.Size(403, 75)
@@ -948,14 +948,14 @@ Partial Class Purchases
         Me.dgv_Purchases.Name = "dgv_Purchases"
         Me.dgv_Purchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgv_Purchases.RowTemplate.Height = 50
-        Me.dgv_Purchases.Size = New System.Drawing.Size(1600, 354)
+        Me.dgv_Purchases.Size = New System.Drawing.Size(1600, 194)
         Me.dgv_Purchases.TabIndex = 76
         '
         'Purchases
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1600, 1060)
+        Me.ClientSize = New System.Drawing.Size(1600, 900)
         Me.Controls.Add(Me.dgv_Purchases)
         Me.Controls.Add(Me.grpCustomerInfo)
         Me.Controls.Add(Me.PanelControl1)
