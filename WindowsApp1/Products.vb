@@ -979,7 +979,7 @@ Public Class Products
             "الفئة",
             "الوصف"
         })
-
+        txtProductCode.Text = GetNextCode("Products", "ProductCode")
         ' تحديد العنصر الأول كخيار افتراضي (الاسم عربي) لكي لا يظل فارغاً
         If cmbSearchField.Items.Count > 0 Then
             cmbSearchField.SelectedIndex = 0
@@ -1013,7 +1013,8 @@ Public Class Products
 
     ' 3. دالة تنظيف الحقول
     Private Sub ClearFields()
-        txtProductCode.Clear()
+        'txtProductCode.Clear()
+        txtProductCode.Text = GetNextCode("Products", "ProductCode")
         txtProductNameAr.Clear()
         txtProductNameEn.Clear()
         txtDescription.Clear()
@@ -1378,6 +1379,11 @@ Public Class Products
         _searchTimer.Start()
     End Sub
 
+    Private Sub btnAddCategoryForm_Click(sender As Object, e As EventArgs) Handles btnAddCategoryForm.Click
+        Dim frm As New Categories()
+        frm.ShowDialog()
+        FillCategoriesComboBox()
+    End Sub
 
     Private Sub panelHeader_MouseDown(sender As Object, e As MouseEventArgs) Handles panelHeader.MouseDown
         x = Control.MousePosition.X - Me.Location.X

@@ -8,6 +8,8 @@ Public Module Session
     Public CurrentRoleID As Integer = 0
     Public Permissions As DataTable = Nothing
 
+
+
     ' تحميل الصلاحيات من قاعدة البيانات وحفظها في Session.Permissions
     ' [FIX] استبدال Connect/Disconnect بـ Using محلي + Dispose للجدول القديم
     Public Sub LoadPermissions(roleId As Integer)

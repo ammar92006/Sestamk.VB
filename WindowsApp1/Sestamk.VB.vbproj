@@ -72,8 +72,7 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>loge.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -258,7 +257,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\SQLABC_ModernUI.dll</HintPath>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="System">
+      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
+    </Reference>
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
     </Reference>
@@ -339,6 +340,15 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ThemeSystem\ThemeHelper.vb" />
+    <Compile Include="ThemeSystem\ThemeManager.vb" />
+    <Compile Include="ThemeSystem\DarkThemePalette.vb" />
+    <Compile Include="ThemeSystem\LightThemePalette.vb" />
+    <Compile Include="ThemeSystem\ThemePalette.vb" />
+    <Compile Include="ThemeSystem\ThemeEnums.vb" />
+    <Compile Include="Base\BaseForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="add_new_Categorie.Designer.vb">
       <DependentUpon>add_new_Categorie.vb</DependentUpon>
     </Compile>
@@ -399,8 +409,12 @@
     <Compile Include="About_the_program.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="classes\ColorHelper.vb" />
     <Compile Include="classes\FormDragHelper.vb" />
     <Compile Include="classes\Main_Classes.vb" />
+    <Compile Include="classes\POSRepository.vb" />
+    <Compile Include="classes\ShiftSession.vb" />
+    <Compile Include="classes\SupplierRepository.vb" />
     <Compile Include="Customer.Designer.vb">
       <DependentUpon>Customer.vb</DependentUpon>
     </Compile>
@@ -443,10 +457,28 @@
     <Compile Include="forms\frmColors.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmCustomerStatement.Designer.vb">
+      <DependentUpon>FrmCustomerStatement.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmCustomerStatement.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmDeliveryAreas.Designer.vb">
+      <DependentUpon>frmDeliveryAreas.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmDeliveryAreas.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="forms\frmDepartments.Designer.vb">
       <DependentUpon>frmDepartments.vb</DependentUpon>
     </Compile>
     <Compile Include="forms\frmDepartments.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmDriverReport.Designer.vb">
+      <DependentUpon>FrmDriverReport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmDriverReport.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="forms\frmJobTitles.Designer.vb">
@@ -455,10 +487,34 @@
     <Compile Include="forms\frmJobTitles.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmPendingInvoices.Designer.vb">
+      <DependentUpon>FrmPendingInvoices.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmPendingInvoices.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="forms\frmPrinters.Designer.vb">
       <DependentUpon>frmPrinters.vb</DependentUpon>
     </Compile>
     <Compile Include="forms\frmPrinters.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmProductOptions.Designer.vb">
+      <DependentUpon>FrmProductOptions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmProductOptions.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmQuickPayment.Designer.vb">
+      <DependentUpon>FrmQuickPayment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmQuickPayment.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmRecipes.Designer.vb">
+      <DependentUpon>frmRecipes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmRecipes.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="forms\frmSalarySystems.Designer.vb">
@@ -467,11 +523,83 @@
     <Compile Include="forms\frmSalarySystems.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmSelectCustomer.Designer.vb">
+      <DependentUpon>FrmSelectCustomer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmSelectCustomer.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmSelectDriver.Designer.vb">
+      <DependentUpon>FrmSelectDriver.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmSelectDriver.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmSelectTable.Designer.vb">
+      <DependentUpon>FrmSelectTable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmSelectTable.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="forms\frmSizes.Designer.vb">
       <DependentUpon>frmSizes.vb</DependentUpon>
     </Compile>
     <Compile Include="forms\frmSizes.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmStores.Designer.vb">
+      <DependentUpon>FrmStores.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmStores.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmSupplierTransactions.Designer.vb">
+      <DependentUpon>FrmSupplierTransactions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmSupplierTransactions.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmUnits.Designer.vb">
+      <DependentUpon>frmUnits.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmUnits.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmStoreStock.Designer.vb">
+      <DependentUpon>frmStoreStock.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmStoreStock.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmWorkShifts.Designer.vb">
+      <DependentUpon>frmWorkShifts.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmWorkShifts.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmRestaurantSections.Designer.vb">
+      <DependentUpon>frmRestaurantSections.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmRestaurantSections.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmHeldInvoices.Designer.vb">
+      <DependentUpon>frmHeldInvoices.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmHeldInvoices.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\UC_Main\UCCategoryCard.Designer.vb">
+      <DependentUpon>UCCategoryCard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\UC_Main\UCCategoryCard.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="forms\UC_Main\UCProductCard.Designer.vb">
+      <DependentUpon>UCProductCard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\UC_Main\UCProductCard.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="form_Expenses.Designer.vb">
       <DependentUpon>form_Expenses.vb</DependentUpon>
@@ -491,6 +619,18 @@
     <Compile Include="frmConfirmMessage.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FrmCustomers.Designer.vb">
+      <DependentUpon>FrmCustomers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FrmCustomers.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDeliveryDrivers.Designer.vb">
+      <DependentUpon>frmDeliveryDrivers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmDeliveryDrivers.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmEmployees.Designer.vb">
       <DependentUpon>frmEmployees.vb</DependentUpon>
     </Compile>
@@ -501,6 +641,42 @@
       <DependentUpon>frmPOS.vb</DependentUpon>
     </Compile>
     <Compile Include="frmPOS.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRawMaterials.Designer.vb">
+      <DependentUpon>frmRawMaterials.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmRawMaterials.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSalesReport.Designer.vb">
+      <DependentUpon>FrmSalesReport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSalesReport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmShifts.Designer.vb">
+      <DependentUpon>frmShifts.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmShifts.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRestaurantTables.Designer.vb">
+      <DependentUpon>frmRestaurantTables.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmRestaurantTables.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSelectSizeAndAddons.Designer.vb">
+      <DependentUpon>frmSelectSizeAndAddons.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmSelectSizeAndAddons.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPayInvoice.Designer.vb">
+      <DependentUpon>frmPayInvoice.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmPayInvoice.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmPreview.Designer.vb">
@@ -519,6 +695,12 @@
       <DependentUpon>frmProductSizes.vb</DependentUpon>
     </Compile>
     <Compile Include="frmProductSizes.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSuppliers.Designer.vb">
+      <DependentUpon>FrmSuppliers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSuppliers.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmTreasury.Designer.vb">
@@ -557,12 +739,29 @@
     <Compile Include="frm_LowStockProducts.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="moduls\CustomerModel.vb" />
+    <Compile Include="moduls\Data\AddonModel.vb" />
+    <Compile Include="moduls\Data\CategoryModel.vb" />
+    <Compile Include="moduls\Data\ColorModel.vb" />
+    <Compile Include="moduls\Data\DeliveryAreaModel.vb" />
+    <Compile Include="moduls\Data\DeliveryDriverModel.vb" />
+    <Compile Include="moduls\Data\DriverModel.vb" />
+    <Compile Include="moduls\Data\OrderItemModel.vb" />
+    <Compile Include="moduls\Data\ProductAddonModel.vb" />
+    <Compile Include="moduls\Data\ProductModel.vb" />
+    <Compile Include="moduls\Data\ProductSizeModel.vb" />
+    <Compile Include="moduls\Data\RestaurantSectionModel.vb" />
+    <Compile Include="moduls\Data\RestaurantTableModel.vb" />
+    <Compile Include="moduls\Data\SizeModel.vb" />
     <Compile Include="moduls\DBModule.vb" />
     <Compile Include="moduls\FormHelper.vb" />
+    <Compile Include="moduls\InvoiceModel.vb" />
     <Compile Include="moduls\Main.vb" />
+    <Compile Include="moduls\ModuleRecipeDeduction.vb" />
     <Compile Include="moduls\ScannerModule.vb" />
     <Compile Include="moduls\ServerManager.vb" />
     <Compile Include="moduls\Settingsall.vb" />
+    <Compile Include="moduls\ShiftModel.vb" />
     <Compile Include="moduls\temp_manager.vb" />
     <Compile Include="moduls\TreasuryTransactionModel.vb" />
     <Compile Include="moduls\WhatsAppHelper.vb" />
@@ -746,20 +945,77 @@
     <EmbeddedResource Include="forms\frmColors.resx">
       <DependentUpon>frmColors.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmCustomerStatement.resx">
+      <DependentUpon>FrmCustomerStatement.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmDeliveryAreas.resx">
+      <DependentUpon>frmDeliveryAreas.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="forms\frmDepartments.resx">
       <DependentUpon>frmDepartments.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmDriverReport.resx">
+      <DependentUpon>FrmDriverReport.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\frmJobTitles.resx">
       <DependentUpon>frmJobTitles.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmPendingInvoices.resx">
+      <DependentUpon>FrmPendingInvoices.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="forms\frmPrinters.resx">
       <DependentUpon>frmPrinters.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmProductOptions.resx">
+      <DependentUpon>FrmProductOptions.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmQuickPayment.resx">
+      <DependentUpon>FrmQuickPayment.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmRecipes.resx">
+      <DependentUpon>frmRecipes.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\frmSalarySystems.resx">
       <DependentUpon>frmSalarySystems.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmSelectCustomer.resx">
+      <DependentUpon>FrmSelectCustomer.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmSelectDriver.resx">
+      <DependentUpon>FrmSelectDriver.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmSelectTable.resx">
+      <DependentUpon>FrmSelectTable.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="forms\frmSizes.resx">
       <DependentUpon>frmSizes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmStores.resx">
+      <DependentUpon>FrmStores.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmStoreStock.resx">
+      <DependentUpon>frmStoreStock.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmSupplierTransactions.resx">
+      <DependentUpon>FrmSupplierTransactions.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmUnits.resx">
+      <DependentUpon>frmUnits.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmWorkShifts.resx">
+      <DependentUpon>frmWorkShifts.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmRestaurantSections.resx">
+      <DependentUpon>frmRestaurantSections.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmHeldInvoices.resx">
+      <DependentUpon>frmHeldInvoices.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\UC_Main\UCCategoryCard.resx">
+      <DependentUpon>UCCategoryCard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\UC_Main\UCProductCard.resx">
+      <DependentUpon>UCProductCard.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="form_Expenses.resx">
       <DependentUpon>form_Expenses.vb</DependentUpon>
@@ -769,6 +1025,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmConfirmMessage.resx">
       <DependentUpon>frmConfirmMessage.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmCustomers.resx">
+      <DependentUpon>FrmCustomers.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmDeliveryDrivers.resx">
+      <DependentUpon>frmDeliveryDrivers.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmEmployees.resx">
       <DependentUpon>frmEmployees.vb</DependentUpon>
@@ -784,6 +1046,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmProductSizes.resx">
       <DependentUpon>frmProductSizes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRawMaterials.resx">
+      <DependentUpon>frmRawMaterials.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRestaurantTables.resx">
+      <DependentUpon>frmRestaurantTables.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSalesReport.resx">
+      <DependentUpon>FrmSalesReport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmShifts.resx">
+      <DependentUpon>frmShifts.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSuppliers.resx">
+      <DependentUpon>FrmSuppliers.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTreasury.resx">
       <DependentUpon>frmTreasury.vb</DependentUpon>
@@ -961,6 +1238,50 @@
     <None Include="Resources\544.png" />
     <None Include="Resources\2013-634988045225330147-533_main.jpg" />
     <None Include="Resources\Gemini_Generated_Image_xxl0cixxl0cixxl0.png" />
+    <None Include="Resources\take-away.png" />
+    <None Include="Resources\delivery-bike.png" />
+    <None Include="Resources\dinning-hall.png" />
+    <None Include="Resources\payment.png" />
+    <None Include="Resources\hold.png" />
+    <None Include="Resources\clear %281%29.png" />
+    <None Include="Resources\dining-room.png" />
+    <None Include="Resources\pause.png" />
+    <None Include="Resources\client.png" />
+    <None Include="Resources\application.png" />
+    <None Include="Resources\file %281%29.png" />
+    <None Include="Resources\measuring-tape.png" />
+    <None Include="Resources\order.png" />
+    <None Include="Resources\product.png" />
+    <None Include="Resources\extension.png" />
+    <None Include="Resources\diet.png" />
+    <None Include="Resources\active-user.png" />
+    <None Include="Resources\shopping-cart2.png" />
+    <None Include="Resources\shopping-cart3.png" />
+    <None Include="Resources\market-analysis.png" />
+    <None Include="Resources\artist.png" />
+    <None Include="Resources\color-palette.png" />
+    <None Include="Resources\printer %281%29.png" />
+    <None Include="Resources\delivery-bike %281%29.png" />
+    <None Include="Resources\delivery-bike %281%291.png" />
+    <None Include="Resources\location.png" />
+    <None Include="Resources\financial.png" />
+    <None Include="Resources\treasury.png" />
+    <None Include="Resources\exchange %281%29.png" />
+    <None Include="Resources\web.png" />
+    <None Include="Resources\videos.png" />
+    <None Include="Resources\round-table.png" />
+    <None Include="Resources\scheduling.png" />
+    <None Include="Resources\branch.png" />
+    <None Include="Resources\team.png" />
+    <None Include="Resources\backup.png" />
+    <None Include="Resources\cubes.png" />
+    <None Include="Resources\in-stock.png" />
+    <None Include="Resources\stock.png" />
+    <None Include="Resources\raw-materials.png" />
+    <None Include="Resources\report.png" />
+    <None Include="Resources\setting.png" />
+    <None Include="Resources\loge.png" />
+    <Content Include="loge.ico" />
     <Content Include="store_icon-icons.com_54371.ico" />
     <None Include="Resources\info %281%29.png" />
     <None Include="Resources\info.png" />
@@ -1074,9 +1395,10 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <ItemGroup>
     <Analyzer Include="..\packages\DevExpress.Data.25.1.7\analyzers\dotnet\DevExpress.Generator.dll" />
-    <Analyzer Include="C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.8-pre-25338\analyzers\dotnet\DevExpress.Generator.dll" Visible="false" Condition="Exists('C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.8-pre-25338\analyzers\dotnet\DevExpress.Generator.dll')" />
+    <Analyzer Include="C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.8-pre-25338\analyzers\dotnet\DevExpress.Generator.dll" Condition="Exists('C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.8-pre-25338\analyzers\dotnet\DevExpress.Generator.dll')" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="classes\Data\" />
     <Folder Include="Files\" />
   </ItemGroup>
   <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.143.0.7499.19200\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.143.0.7499.19200\build\Selenium.WebDriver.ChromeDriver.targets')" />

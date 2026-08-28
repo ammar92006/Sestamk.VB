@@ -471,9 +471,9 @@ Partial Class frmAddons
         Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.White
         Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(643, 12)
         Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(81, 39)
+        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(106, 39)
         Me.Guna2HtmlLabel1.TabIndex = 0
-        Me.Guna2HtmlLabel1.Text = "الأحجام"
+        Me.Guna2HtmlLabel1.Text = "الاضافات"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
         '
         'frmAddons

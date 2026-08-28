@@ -4,784 +4,190 @@ Imports System.Drawing.Printing
 Imports System.IO
 
 ''' <summary>
-''' فورم الاعدادات العامة - يحتوي على 3 تبويبات:
-''' 1. الاعدادات العامة (معلومات المحل + الطابعة)
-''' 2. قاعدة البيانات (إعدادات الاتصال)
-''' 3. Scanner Barcode
+''' فورم الاعدادات العامة - يحتوي على تبويبات الإعدادات
 ''' </summary>
 Public Class Settings
     Dim x, y As Integer
     Dim newpoint As New Point
     Dim WithEvents serial As SerialPort
-    Private ReadOnly _tips As New ToolTip() With {.AutoPopDelay = 6000, .InitialDelay = 300, .ReshowDelay = 100}
 
-    ' ══ عناصر تبويب الاعدادات العامة ══
-    Private txtShopName As TextBox
-    Private txtShopPhone As TextBox
-    Private txtShopPhone2 As TextBox
-    Private txtShopAddress As TextBox
-    Private txtShopTax As TextBox
-    Private txtFooterText As TextBox
-    Private txtDeliveryText As TextBox
-    Private cmbCurrency As ComboBox
-    Private cmbBusinessType As ComboBox
-    Private txtLogoPath As TextBox
-    Private picLogoPreview As PictureBox
-    Private cmbThermalPrinter As ComboBox
-    Private cmbNormalPrinter As ComboBox
-    Private btnRefreshPrinters As Button
-    Private btnBrowseLogo As Button
-    Private btnSaveGeneral As Button
-    Private btnTestThermal As Button
-    Private rbStyleSimple As RadioButton
-    Private rbStyleAdvanced As RadioButton
-    Private chkPrintLogo As CheckBox
-    Private chkPrintBarcode As CheckBox
-    Private chkPrintPreview As CheckBox
-
-    ' ══ عناصر تبويب طابعة الباركود (TabPage4) ══
-    Private cmbBarcodePrinter As ComboBox
-    Private numBarcodeLabelWidth As NumericUpDown
-    Private numBarcodeLabelHeight As NumericUpDown
-    Private numBarcodeCopies As NumericUpDown
-    Private numBarcodeFontSize As NumericUpDown
-    Private txtBarcodeFooter As TextBox
-    Private chkBarcodeShowName As CheckBox
-    Private chkBarcodeShowPrice As CheckBox
-    Private chkBarcodeShowStoreName As CheckBox
-    Private btnSaveBarcodePrinter As Button
-    Private btnTestBarcodePrinter As Button
-    Private btnRefreshBarcodePrinters As Button
-
-    ' ══ عناصر تبويب قاعدة البيانات ══
-    Private txtDbServer As ComboBox
-    Private btnDetectServers As Button
-    Private txtDbName As TextBox
-    Private txtDbUser As TextBox
-    Private txtDbPassword As TextBox
-    Private chkWindowsAuth As CheckBox
-    Private btnTestDbConnection As Button
-    Private btnSaveDbSettings As Button
-    Private lblDbStatus As Label
-    Private lblDbUser As Label
-    Private lblDbPassword As Label
-
-    ' ══ عناصر الإعدادات المتقدمة للاسكنر (TabPage3) ══
-    Private cmbBaudRate As ComboBox
-    Private cmbDataBits As ComboBox
-    Private cmbParity As ComboBox
-    Private cmbStopBits As ComboBox
-    Private txtScanTestResult As TextBox
-    Private lblScanTestHint As Label
     Private _scannerTesting As Boolean = False
-
-
     Private defaultTreasuryid As Integer
-
+    Private IsDineInServiceFeePercent As Boolean
+    Private DineInServiceFee As Decimal
 
     '══════════════════════════════════════════════════════════════
     ' عند تحميل الفورم - نحمل كل الإعدادات
     '══════════════════════════════════════════════════════════════
     Private Async Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' التجاوب مع الشاشة: ملاءمة حجم الفورم للمساحة المتاحة + توسيطه
-        LayoutHelper.FitToWorkingArea(Me)
-
-        ' بناء عناصر التحكم الجديدة
-        InitializeCustomControls()
+        'LayoutHelper.FitToWorkingArea(Me)
 
         ' تبويب الباركود (Scanner)
-        BuildScannerAdvancedControls()
-        LoadPorts()
+        'LoadPorts()
         Dim savedPort = SettingsManager.GetSetting(SettingsKeys.ScannerPort)
         If Not String.IsNullOrEmpty(savedPort) Then ComboBoxPorts.Text = savedPort
-        LoadScannerSettings()
+        'LoadScannerSettings()
+
+        ' تبويب طابعة الباركود
+        'LoadBarcodePrintersList()
+        'LoadBarcodePrinterSettings()
 
         ' تبويب الاعدادات العامة
         LoadGeneralSettings()
 
         ' تبويب قاعدة البيانات
+        PopulateDetectedServers()
         LoadDbSettingsToForm()
         Await LoadTreasuriesAsync()
-
     End Sub
 
-    ''' <summary>إنشاء عناصر التحكم الجديدة لتبويبَي الاعدادات العامة وقاعدة البيانات</summary>
-    Private Sub InitializeCustomControls()
-        ' ═══════════════════════════════════════════════
-        ' ── TabPage1: الاعدادات العامة ──
-        ' ═══════════════════════════════════════════════
-        TabPage1.BackColor = Color.FromArgb(55, 53, 62)
-        Dim yOff As Integer = 30
+    '══════════════════════════════════════════════════════════════
+    ' إعدادات طابعة الباركود (TabPage4)
+    '══════════════════════════════════════════════════════════════
+    'Private Sub LoadBarcodePrintersList()
+    '    cmbBarcodePrinter.Items.Clear()
+    '    For Each printerName As String In PrinterSettings.InstalledPrinters
+    '        cmbBarcodePrinter.Items.Add(printerName)
+    '    Next
+    'End Sub
 
-        Dim MakeLabel = Function(txt As String, yy As Integer) As Label
-                            Dim lb As New Label() With {
-                                .Text = txt, .ForeColor = Color.White,
-                                .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-                                .AutoSize = True,
-                                .Location = New Point(TabPage1.Width - 200, yy),
-                                .RightToLeft = RightToLeft.Yes
-                            }
-                            TabPage1.Controls.Add(lb)
-                            Return lb
-                        End Function
+    'Private Sub LoadBarcodePrinterSettings()
+    '    Try
+    '        Dim savedPrinter = If(SettingsManager.GetSetting("BarcodePrinterName"), "")
+    '        If Not String.IsNullOrEmpty(savedPrinter) Then cmbBarcodePrinter.Text = savedPrinter
 
-        Dim MakeTextBox = Function(yy As Integer, wide As Integer) As TextBox
-                              Dim tb As New TextBox() With {
-                                  .Location = New Point(TabPage1.Width - 200 - wide - 15, yy - 3),
-                                  .Width = wide, .Height = 30,
-                                  .Font = New Font("Segoe UI", 11),
-                                  .RightToLeft = RightToLeft.Yes
-                              }
-                              TabPage1.Controls.Add(tb)
-                              Return tb
-                          End Function
+    '        Dim w = SettingsManager.GetSetting("BarcodeLabelWidth")
+    '        If Not String.IsNullOrEmpty(w) Then
+    '            Dim wi As Integer
+    '            If Integer.TryParse(w, wi) AndAlso wi >= numBarcodeLabelWidth.Minimum AndAlso wi <= numBarcodeLabelWidth.Maximum Then
+    '                numBarcodeLabelWidth.Value = wi
+    '            End If
+    '        End If
 
-        MakeLabel("اسم المحل:", yOff) : txtShopName = MakeTextBox(yOff, 400) : yOff += 45
-        MakeLabel("رقم الهاتف 1:", yOff) : txtShopPhone = MakeTextBox(yOff, 300) : yOff += 45
-        MakeLabel("رقم الهاتف 2:", yOff) : txtShopPhone2 = MakeTextBox(yOff, 300) : yOff += 45
-        MakeLabel("العنوان:", yOff) : txtShopAddress = MakeTextBox(yOff, 500) : yOff += 45
-        MakeLabel("الرقم الضريبي:", yOff) : txtShopTax = MakeTextBox(yOff, 300) : yOff += 45
-        MakeLabel("نص التذييل:", yOff) : txtFooterText = MakeTextBox(yOff, 500) : yOff += 45
-        MakeLabel("نص التوصيل:", yOff) : txtDeliveryText = MakeTextBox(yOff, 500) : yOff += 45
+    '        Dim h = SettingsManager.GetSetting("BarcodeLabelHeight")
+    '        If Not String.IsNullOrEmpty(h) Then
+    '            Dim hi As Integer
+    '            If Integer.TryParse(h, hi) AndAlso hi >= numBarcodeLabelHeight.Minimum AndAlso hi <= numBarcodeLabelHeight.Maximum Then
+    '                numBarcodeLabelHeight.Value = hi
+    '            End If
+    '        End If
 
-        ' العملة
-        MakeLabel("العملة:", yOff)
-        cmbCurrency = New ComboBox() With {
-            .Location = New Point(TabPage1.Width - 200 - 300 - 15, yOff - 3), .Width = 300,
-            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDown,
-            .RightToLeft = RightToLeft.Yes
-        }
-        cmbCurrency.Items.AddRange(New String() {"ج.م", "ر.س", "د.إ", "د.ك", "د.ع", "$", "€"})
-        TabPage1.Controls.Add(cmbCurrency)
-        yOff += 45
+    '        Dim c = SettingsManager.GetSetting("BarcodeCopies")
+    '        If Not String.IsNullOrEmpty(c) Then
+    '            Dim ci As Integer
+    '            If Integer.TryParse(c, ci) AndAlso ci >= numBarcodeCopies.Minimum AndAlso ci <= numBarcodeCopies.Maximum Then
+    '                numBarcodeCopies.Value = ci
+    '            End If
+    '        End If
 
-        ' نوع النشاط
-        MakeLabel("نوع النشاط:", yOff)
-        cmbBusinessType = New ComboBox() With {
-            .Location = New Point(TabPage1.Width - 200 - 300 - 15, yOff - 3), .Width = 300,
-            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDown,
-            .RightToLeft = RightToLeft.Yes
-        }
-        cmbBusinessType.Items.AddRange(New String() {"سوبر ماركت", "بقالة", "صيدلية", "مخبز", "ملابس", "إلكترونيات", "أخرى"})
-        TabPage1.Controls.Add(cmbBusinessType)
-        yOff += 55
+    '        Dim fs = SettingsManager.GetSetting("BarcodeFontSize")
+    '        If Not String.IsNullOrEmpty(fs) Then
+    '            Dim fsi As Integer
+    '            If Integer.TryParse(fs, fsi) AndAlso fsi >= numBarcodeFontSize.Minimum AndAlso fsi <= numBarcodeFontSize.Maximum Then
+    '                numBarcodeFontSize.Value = fsi
+    '            End If
+    '        End If
 
-        ' اللوجو
-        MakeLabel("مسار اللوجو:", yOff)
-        txtLogoPath = New TextBox() With {
-            .Location = New Point(200, yOff - 3), .Width = 500,
-            .Font = New Font("Segoe UI", 10), .RightToLeft = RightToLeft.Yes
-        }
-        TabPage1.Controls.Add(txtLogoPath)
-        btnBrowseLogo = New Button() With {
-            .Text = "📂 اختر صورة اللوجو",
-            .Location = New Point(40, yOff - 7),
-            .Width = 150, .Height = 38,
-            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
-            .BackColor = Color.FromArgb(76, 132, 255),
-            .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat,
-            .Cursor = Cursors.Hand,
-            .TextAlign = ContentAlignment.MiddleCenter
-        }
-        btnBrowseLogo.FlatAppearance.BorderSize = 0
-        btnBrowseLogo.FlatAppearance.MouseOverBackColor = Color.FromArgb(96, 152, 255)
-        AddHandler btnBrowseLogo.Click, AddressOf btnBrowseLogo_Click
-        TabPage1.Controls.Add(btnBrowseLogo)
-        _tips.SetToolTip(btnBrowseLogo, "اضغط لاختيار صورة شعار/لوجو المحل من جهازك")
+    '        txtBarcodeFooter.Text = If(SettingsManager.GetSetting("BarcodeFooterText"), "")
+    '        chkBarcodeShowName.Checked = (If(SettingsManager.GetSetting("BarcodeShowName"), "true").ToLower() = "true")
+    '        chkBarcodeShowPrice.Checked = (If(SettingsManager.GetSetting("BarcodeShowPrice"), "true").ToLower() = "true")
+    '        chkBarcodeShowStoreName.Checked = (If(SettingsManager.GetSetting("BarcodeShowStoreName"), "false").ToLower() = "true")
+    '    Catch ex As Exception
+    '        MessageBox.Show("خطأ في تحميل إعدادات طابعة الباركود: " & ex.Message)
+    '    End Try
+    'End Sub
 
-        ' معاينة مباشرة للّوجو (في العمود الأيسر الفارغ تحت الزر — لا تزحزح باقي الصفوف)
-        Dim lblPreview As New Label() With {
-            .Text = "معاينة اللوجو:", .ForeColor = Color.Gainsboro,
-            .Font = New Font("Segoe UI", 9, FontStyle.Bold), .AutoSize = True,
-            .Location = New Point(40, yOff + 34), .RightToLeft = RightToLeft.Yes
-        }
-        TabPage1.Controls.Add(lblPreview)
-        ' مربّع المعاينة مربّع الشكل ليُلمّح بأن الأفضل صورة مربّعة
-        picLogoPreview = New PictureBox() With {
-            .Location = New Point(40, yOff + 56), .Size = New Size(120, 120),
-            .SizeMode = PictureBoxSizeMode.Zoom,
-            .BorderStyle = BorderStyle.FixedSingle,
-            .BackColor = Color.White
-        }
-        TabPage1.Controls.Add(picLogoPreview)
-        _tips.SetToolTip(picLogoPreview, "معاينة صورة اللوجو المختارة")
+    'Private Sub btnRefreshBarcodePrinters_Click(sender As Object, e As EventArgs)
+    '    LoadBarcodePrintersList()
+    '    MessageBox.Show("✅ تم تحديث قائمة الطابعات.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    'End Sub
 
-        ' إرشاد المقاس المناسب للّوجو (بجانب المعاينة)
-        Dim lblLogoHint As New Label() With {
-            .Text = "💡 أفضل مقاس للّوجو:" & vbCrLf &
-                    "صورة مربّعة 300×300 بكسل" & vbCrLf &
-                    "(أو 200×200 على الأقل)" & vbCrLf &
-                    "بصيغة PNG بخلفية بيضاء أو شفافة.",
-            .ForeColor = Color.Khaki,
-            .Font = New Font("Segoe UI", 9, FontStyle.Bold),
-            .AutoSize = False, .Size = New Size(380, 110),
-            .Location = New Point(180, yOff + 56),
-            .RightToLeft = RightToLeft.Yes,
-            .TextAlign = ContentAlignment.TopRight
-        }
-        TabPage1.Controls.Add(lblLogoHint)
-        yOff += 50
+    'Private Sub btnSaveBarcodePrinter_Click(sender As Object, e As EventArgs)
+    '    Try
+    '        SettingsManager.SaveSetting("BarcodePrinterName", cmbBarcodePrinter.Text)
+    '        SettingsManager.SaveSetting("BarcodeLabelWidth", CInt(numBarcodeLabelWidth.Value).ToString())
+    '        SettingsManager.SaveSetting("BarcodeLabelHeight", CInt(numBarcodeLabelHeight.Value).ToString())
+    '        SettingsManager.SaveSetting("BarcodeCopies", CInt(numBarcodeCopies.Value).ToString())
+    '        SettingsManager.SaveSetting("BarcodeFontSize", CInt(numBarcodeFontSize.Value).ToString())
+    '        SettingsManager.SaveSetting("BarcodeFooterText", txtBarcodeFooter.Text.Trim())
+    '        SettingsManager.SaveSetting("BarcodeShowName", chkBarcodeShowName.Checked.ToString().ToLower())
+    '        SettingsManager.SaveSetting("BarcodeShowPrice", chkBarcodeShowPrice.Checked.ToString().ToLower())
+    '        SettingsManager.SaveSetting("BarcodeShowStoreName", chkBarcodeShowStoreName.Checked.ToString().ToLower())
+    '        Notify.Toast("تم حفظ إعدادات طابعة الباركود", Notify.ToastType.Success)
+    '    Catch ex As Exception
+    '        Notify.Error("خطأ في الحفظ: " & ex.Message)
+    '    End Try
+    'End Sub
 
-        ' الطابعة الحرارية
-        MakeLabel("الطابعة الحرارية:", yOff)
-        cmbThermalPrinter = New ComboBox() With {
-            .Location = New Point(TabPage1.Width - 650, yOff - 3), .Width = 430,
-            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDownList,
-            .RightToLeft = RightToLeft.Yes
-        }
-        TabPage1.Controls.Add(cmbThermalPrinter)
-        yOff += 45
+    'Private Sub btnTestBarcodePrinter_Click(sender As Object, e As EventArgs)
+    '    Try
+    '        If String.IsNullOrEmpty(cmbBarcodePrinter.Text) Then
+    '            MessageBox.Show("يرجى اختيار طابعة الباركود أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    '            Return
+    '        End If
 
-        ' الطابعة العادية
-        MakeLabel("الطابعة العادية:", yOff)
-        cmbNormalPrinter = New ComboBox() With {
-            .Location = New Point(TabPage1.Width - 650, yOff - 3), .Width = 430,
-            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDownList,
-            .RightToLeft = RightToLeft.Yes
-        }
-        TabPage1.Controls.Add(cmbNormalPrinter)
-        yOff += 45
+    '        Dim labelWmm As Integer = CInt(numBarcodeLabelWidth.Value)
+    '        Dim labelHmm As Integer = CInt(numBarcodeLabelHeight.Value)
+    '        Dim labelWhi As Integer = CInt(labelWmm * 3.937)  ' مم → 1/100 بوصة
+    '        Dim labelHhi As Integer = CInt(labelHmm * 3.937)
+    '        Dim fontSize As Integer = CInt(numBarcodeFontSize.Value)
+    '        Dim footer As String = txtBarcodeFooter.Text
 
-        ' نمط الطباعة
-        MakeLabel("نمط الطباعة:", yOff)
-        rbStyleSimple = New RadioButton() With {
-            .Text = "استيل 1", .Location = New Point(TabPage1.Width - 430, yOff),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .Checked = True, .AutoSize = True
-        }
-        rbStyleAdvanced = New RadioButton() With {
-            .Text = "استيل 2", .Location = New Point(TabPage1.Width - 650, yOff),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True
-        }
-        TabPage1.Controls.Add(rbStyleSimple)
-        TabPage1.Controls.Add(rbStyleAdvanced)
-        yOff += 40
+    '        Using pd As New PrintDocument()
+    '            pd.PrinterSettings.PrinterName = cmbBarcodePrinter.Text
+    '            pd.DefaultPageSettings.PaperSize = New PaperSize("BarcodeLabel", labelWhi, labelHhi)
+    '            pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
+    '            pd.OriginAtMargins = False
 
-        ' طباعة اللوجو
-        chkPrintLogo = New CheckBox() With {
-            .Text = "طباعة اللوجو مع الفاتورة",
-            .Location = New Point(TabPage1.Width - 450, yOff),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True, .Checked = True
-        }
-        TabPage1.Controls.Add(chkPrintLogo)
-        yOff += 40
-
-        ' طباعة الباركود
-        chkPrintBarcode = New CheckBox() With {
-            .Text = "طباعة الباركود مع الفاتورة",
-            .Location = New Point(TabPage1.Width - 450, yOff),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True, .Checked = True
-        }
-        TabPage1.Controls.Add(chkPrintBarcode)
-        yOff += 40
-
-        ' معاينة قبل الطباعة
-        chkPrintPreview = New CheckBox() With {
-            .Text = "عرض معاينة قبل الطباعة",
-            .Location = New Point(TabPage1.Width - 450, yOff),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True, .Checked = False
-        }
-        TabPage1.Controls.Add(chkPrintPreview)
-        yOff += 50
-
-        ' أزرار
-        btnRefreshPrinters = New Button() With {
-            .Text = "🔄 تحديث الطابعات",
-            .Location = New Point(TabPage1.Width - 300, yOff),
-            .Width = 180, .Height = 40,
-            .Font = New Font("Segoe UI", 11, FontStyle.Bold),
-            .BackColor = Color.FromArgb(40, 52, 70), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnRefreshPrinters.Click, AddressOf btnRefreshPrinters_Click
-        TabPage1.Controls.Add(btnRefreshPrinters)
-
-        btnTestThermal = New Button() With {
-            .Text = "🖨️ اختبار الحرارية",
-            .Location = New Point(TabPage1.Width - 500, yOff),
-            .Width = 180, .Height = 40,
-            .Font = New Font("Segoe UI", 11, FontStyle.Bold),
-            .BackColor = Color.FromArgb(30, 100, 60), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnTestThermal.Click, AddressOf btnTestThermal_Click
-        TabPage1.Controls.Add(btnTestThermal)
-
-        btnSaveGeneral = New Button() With {
-            .Text = "💾 حفظ الاعدادات",
-            .Location = New Point(TabPage1.Width - 720, yOff),
-            .Width = 190, .Height = 40,
-            .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-            .BackColor = Color.FromArgb(76, 132, 255), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnSaveGeneral.Click, AddressOf btnSaveGeneral_Click
-        TabPage1.Controls.Add(btnSaveGeneral)
-
-        ' ═══════════════════════════════════════════════
-        ' ── TabPage2: قاعدة البيانات ──
-        ' ═══════════════════════════════════════════════
-        TabPage2.BackColor = Color.FromArgb(45, 45, 55)
-        Dim yD As Integer = 40
-
-        Dim AddDbRow = Sub(lbl As String, ctrl As Control)
-                           Dim lb2 As New Label() With {
-                               .Text = lbl, .ForeColor = Color.White,
-                               .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-                               .AutoSize = True,
-                               .Location = New Point(TabPage2.Width - 230, yD),
-                               .RightToLeft = RightToLeft.Yes
-                           }
-                           ctrl.Location = New Point(TabPage2.Width - 750, yD - 3)
-                           ctrl.Width = 490
-                           ctrl.Font = New Font("Segoe UI", 11)
-                           CType(ctrl, Control).RightToLeft = RightToLeft.Yes
-                           TabPage2.Controls.Add(lb2)
-                           TabPage2.Controls.Add(ctrl)
-                           yD += 55
-                       End Sub
-
-        txtDbServer = New ComboBox() With {.DropDownStyle = ComboBoxStyle.DropDown}
-        AddDbRow("الخادم (Server):", txtDbServer)
-
-        ' زر الاكتشاف التلقائي لخوادم SQL المثبتة (يسار حقل الخادم)
-        btnDetectServers = New Button() With {
-            .Text = "🔍 اكتشاف تلقائي",
-            .Location = New Point(TabPage2.Width - 750 - 175, txtDbServer.Top - 1),
-            .Width = 165, .Height = 30,
-            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
-            .BackColor = Color.FromArgb(40, 52, 70), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnDetectServers.Click, AddressOf btnDetectServers_Click
-        TabPage2.Controls.Add(btnDetectServers)
-
-        ' تعبئة قائمة الخوادم المكتشفة عند فتح الفورم
-        PopulateDetectedServers()
-
-        txtDbName = New TextBox()
-        AddDbRow("اسم قاعدة البيانات:", txtDbName)
-
-        chkWindowsAuth = New CheckBox() With {
-            .Text = "استخدام Windows Authentication",
-            .ForeColor = Color.White,
-            .Font = New Font("Segoe UI", 11),
-            .AutoSize = True,
-            .RightToLeft = RightToLeft.Yes,
-            .Location = New Point(TabPage2.Width - 550, yD)
-        }
-        AddHandler chkWindowsAuth.CheckedChanged, AddressOf chkWindowsAuth_CheckedChanged
-        TabPage2.Controls.Add(chkWindowsAuth)
-        yD += 50
-
-        lblDbUser = New Label() With {
-            .Text = "اسم المستخدم:", .ForeColor = Color.White,
-            .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-            .AutoSize = True, .Location = New Point(TabPage2.Width - 230, yD),
-            .RightToLeft = RightToLeft.Yes
-        }
-        txtDbUser = New TextBox() With {.Location = New Point(TabPage2.Width - 750, yD - 3), .Width = 490, .Font = New Font("Segoe UI", 11), .RightToLeft = RightToLeft.Yes}
-        TabPage2.Controls.Add(lblDbUser)
-        TabPage2.Controls.Add(txtDbUser)
-        yD += 55
-
-        lblDbPassword = New Label() With {
-            .Text = "كلمة المرور:", .ForeColor = Color.White,
-            .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-            .AutoSize = True, .Location = New Point(TabPage2.Width - 230, yD),
-            .RightToLeft = RightToLeft.Yes
-        }
-        txtDbPassword = New TextBox() With {
-            .Location = New Point(TabPage2.Width - 750, yD - 3), .Width = 490,
-            .Font = New Font("Segoe UI", 11), .PasswordChar = "•"c,
-            .RightToLeft = RightToLeft.Yes
-        }
-        TabPage2.Controls.Add(lblDbPassword)
-        TabPage2.Controls.Add(txtDbPassword)
-        yD += 65
-
-        lblDbStatus = New Label() With {
-            .Text = "", .ForeColor = Color.LightGreen,
-            .Font = New Font("Segoe UI", 14, FontStyle.Bold),
-            .AutoSize = True, .Location = New Point(TabPage2.Width - 550, yD)
-        }
-        TabPage2.Controls.Add(lblDbStatus)
-        yD += 45
-
-        btnTestDbConnection = New Button() With {
-            .Text = "🔌 اختبار الاتصال",
-            .Location = New Point(TabPage2.Width - 450, yD),
-            .Width = 180, .Height = 42,
-            .Font = New Font("Segoe UI", 11, FontStyle.Bold),
-            .BackColor = Color.FromArgb(40, 52, 70), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnTestDbConnection.Click, AddressOf btnTestDbConnection_Click
-        TabPage2.Controls.Add(btnTestDbConnection)
-
-        btnSaveDbSettings = New Button() With {
-            .Text = "💾 حفظ إعدادات قاعدة البيانات",
-            .Location = New Point(TabPage2.Width - 720, yD),
-            .Width = 240, .Height = 42,
-            .Font = New Font("Segoe UI", 11, FontStyle.Bold),
-            .BackColor = Color.FromArgb(76, 132, 255), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnSaveDbSettings.Click, AddressOf btnSaveDbSettings_Click
-        TabPage2.Controls.Add(btnSaveDbSettings)
-
-        ' ═══════════════════════════════════════════════
-        ' ── TabPage4: إعدادات طابعة الباركود ──
-        ' ═══════════════════════════════════════════════
-        BuildBarcodePrinterTab()
-    End Sub
-
-    ''' <summary>إنشاء عناصر تبويب طابعة الباركود</summary>
-    Private Sub BuildBarcodePrinterTab()
-        Dim yB As Integer = 30
-
-        Dim MakeBLabel = Function(txt As String, yy As Integer) As Label
-                             Dim lb As New Label() With {
-                                 .Text = txt, .ForeColor = Color.White,
-                                 .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-                                 .AutoSize = True,
-                                 .Location = New Point(TabPage4.Width - 250, yy),
-                                 .RightToLeft = RightToLeft.Yes
-                             }
-                             TabPage4.Controls.Add(lb)
-                             Return lb
-                         End Function
-
-        ' اسم طابعة الباركود
-        MakeBLabel("طابعة الباركود:", yB)
-        cmbBarcodePrinter = New ComboBox() With {
-            .Location = New Point(TabPage4.Width - 700, yB - 3), .Width = 430,
-            .Font = New Font("Segoe UI", 11), .DropDownStyle = ComboBoxStyle.DropDownList,
-            .RightToLeft = RightToLeft.Yes
-        }
-        TabPage4.Controls.Add(cmbBarcodePrinter)
-        yB += 50
-
-        ' عرض الملصق (مم)
-        MakeBLabel("عرض الملصق (مم):", yB)
-        numBarcodeLabelWidth = New NumericUpDown() With {
-            .Location = New Point(TabPage4.Width - 450, yB - 3), .Width = 180,
-            .Font = New Font("Segoe UI", 11), .Minimum = 10, .Maximum = 200,
-            .Value = 50, .RightToLeft = RightToLeft.Yes
-        }
-        TabPage4.Controls.Add(numBarcodeLabelWidth)
-        yB += 45
-
-        ' ارتفاع الملصق (مم)
-        MakeBLabel("ارتفاع الملصق (مم):", yB)
-        numBarcodeLabelHeight = New NumericUpDown() With {
-            .Location = New Point(TabPage4.Width - 450, yB - 3), .Width = 180,
-            .Font = New Font("Segoe UI", 11), .Minimum = 10, .Maximum = 200,
-            .Value = 25, .RightToLeft = RightToLeft.Yes
-        }
-        TabPage4.Controls.Add(numBarcodeLabelHeight)
-        yB += 45
-
-        ' عدد النسخ
-        MakeBLabel("عدد النسخ الافتراضي:", yB)
-        numBarcodeCopies = New NumericUpDown() With {
-            .Location = New Point(TabPage4.Width - 450, yB - 3), .Width = 180,
-            .Font = New Font("Segoe UI", 11), .Minimum = 1, .Maximum = 999,
-            .Value = 1, .RightToLeft = RightToLeft.Yes
-        }
-        TabPage4.Controls.Add(numBarcodeCopies)
-        yB += 45
-
-        ' حجم الخط
-        MakeBLabel("حجم خط الملصق:", yB)
-        numBarcodeFontSize = New NumericUpDown() With {
-            .Location = New Point(TabPage4.Width - 450, yB - 3), .Width = 180,
-            .Font = New Font("Segoe UI", 11), .Minimum = 5, .Maximum = 24,
-            .Value = 8, .RightToLeft = RightToLeft.Yes
-        }
-        TabPage4.Controls.Add(numBarcodeFontSize)
-        yB += 45
-
-        ' نص التذييل
-        MakeBLabel("نص أسفل الملصق:", yB)
-        txtBarcodeFooter = New TextBox() With {
-            .Location = New Point(TabPage4.Width - 700, yB - 3), .Width = 430,
-            .Font = New Font("Segoe UI", 11), .RightToLeft = RightToLeft.Yes
-        }
-        TabPage4.Controls.Add(txtBarcodeFooter)
-        yB += 50
-
-        ' خيارات إظهار اسم المنتج / السعر / اسم المحل
-        chkBarcodeShowName = New CheckBox() With {
-            .Text = "إظهار اسم المنتج",
-            .Location = New Point(TabPage4.Width - 450, yB),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True, .Checked = True
-        }
-        TabPage4.Controls.Add(chkBarcodeShowName)
-        yB += 35
-
-        chkBarcodeShowPrice = New CheckBox() With {
-            .Text = "إظهار السعر",
-            .Location = New Point(TabPage4.Width - 450, yB),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True, .Checked = True
-        }
-        TabPage4.Controls.Add(chkBarcodeShowPrice)
-        yB += 35
-
-        chkBarcodeShowStoreName = New CheckBox() With {
-            .Text = "إظهار اسم المحل",
-            .Location = New Point(TabPage4.Width - 450, yB),
-            .Font = New Font("Segoe UI", 11), .ForeColor = Color.White,
-            .RightToLeft = RightToLeft.Yes, .AutoSize = True, .Checked = False
-        }
-        TabPage4.Controls.Add(chkBarcodeShowStoreName)
-        yB += 55
-
-        ' أزرار
-        btnRefreshBarcodePrinters = New Button() With {
-            .Text = "🔄 تحديث الطابعات",
-            .Location = New Point(TabPage4.Width - 300, yB),
-            .Width = 180, .Height = 40,
-            .Font = New Font("Segoe UI", 11, FontStyle.Bold),
-            .BackColor = Color.FromArgb(40, 52, 70), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnRefreshBarcodePrinters.Click, AddressOf btnRefreshBarcodePrinters_Click
-        TabPage4.Controls.Add(btnRefreshBarcodePrinters)
-
-        btnTestBarcodePrinter = New Button() With {
-            .Text = "🖨️ اختبار الطباعة",
-            .Location = New Point(TabPage4.Width - 500, yB),
-            .Width = 180, .Height = 40,
-            .Font = New Font("Segoe UI", 11, FontStyle.Bold),
-            .BackColor = Color.FromArgb(30, 100, 60), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnTestBarcodePrinter.Click, AddressOf btnTestBarcodePrinter_Click
-        TabPage4.Controls.Add(btnTestBarcodePrinter)
-
-        btnSaveBarcodePrinter = New Button() With {
-            .Text = "💾 حفظ الإعدادات",
-            .Location = New Point(TabPage4.Width - 720, yB),
-            .Width = 200, .Height = 40,
-            .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-            .BackColor = Color.FromArgb(76, 132, 255), .ForeColor = Color.White,
-            .FlatStyle = FlatStyle.Flat
-        }
-        AddHandler btnSaveBarcodePrinter.Click, AddressOf btnSaveBarcodePrinter_Click
-        TabPage4.Controls.Add(btnSaveBarcodePrinter)
-
-        ' تعبئة قائمة الطابعات وقراءة القيم المحفوظة
-        LoadBarcodePrintersList()
-        LoadBarcodePrinterSettings()
-    End Sub
-
-    Private Sub LoadBarcodePrintersList()
-        cmbBarcodePrinter.Items.Clear()
-        For Each printerName As String In PrinterSettings.InstalledPrinters
-            cmbBarcodePrinter.Items.Add(printerName)
-        Next
-    End Sub
-
-    Private Sub LoadBarcodePrinterSettings()
-        Try
-            Dim savedPrinter = If(SettingsManager.GetSetting("BarcodePrinterName"), "")
-            If Not String.IsNullOrEmpty(savedPrinter) Then cmbBarcodePrinter.Text = savedPrinter
-
-            Dim w = SettingsManager.GetSetting("BarcodeLabelWidth")
-            If Not String.IsNullOrEmpty(w) Then
-                Dim wi As Integer
-                If Integer.TryParse(w, wi) AndAlso wi >= numBarcodeLabelWidth.Minimum AndAlso wi <= numBarcodeLabelWidth.Maximum Then
-                    numBarcodeLabelWidth.Value = wi
-                End If
-            End If
-
-            Dim h = SettingsManager.GetSetting("BarcodeLabelHeight")
-            If Not String.IsNullOrEmpty(h) Then
-                Dim hi As Integer
-                If Integer.TryParse(h, hi) AndAlso hi >= numBarcodeLabelHeight.Minimum AndAlso hi <= numBarcodeLabelHeight.Maximum Then
-                    numBarcodeLabelHeight.Value = hi
-                End If
-            End If
-
-            Dim c = SettingsManager.GetSetting("BarcodeCopies")
-            If Not String.IsNullOrEmpty(c) Then
-                Dim ci As Integer
-                If Integer.TryParse(c, ci) AndAlso ci >= numBarcodeCopies.Minimum AndAlso ci <= numBarcodeCopies.Maximum Then
-                    numBarcodeCopies.Value = ci
-                End If
-            End If
-
-            Dim fs = SettingsManager.GetSetting("BarcodeFontSize")
-            If Not String.IsNullOrEmpty(fs) Then
-                Dim fsi As Integer
-                If Integer.TryParse(fs, fsi) AndAlso fsi >= numBarcodeFontSize.Minimum AndAlso fsi <= numBarcodeFontSize.Maximum Then
-                    numBarcodeFontSize.Value = fsi
-                End If
-            End If
-
-            txtBarcodeFooter.Text = If(SettingsManager.GetSetting("BarcodeFooterText"), "")
-            chkBarcodeShowName.Checked = (If(SettingsManager.GetSetting("BarcodeShowName"), "true").ToLower() = "true")
-            chkBarcodeShowPrice.Checked = (If(SettingsManager.GetSetting("BarcodeShowPrice"), "true").ToLower() = "true")
-            chkBarcodeShowStoreName.Checked = (If(SettingsManager.GetSetting("BarcodeShowStoreName"), "false").ToLower() = "true")
-        Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل إعدادات طابعة الباركود: " & ex.Message)
-        End Try
-    End Sub
-
-    Private Sub btnRefreshBarcodePrinters_Click(sender As Object, e As EventArgs)
-        LoadBarcodePrintersList()
-        MessageBox.Show("✅ تم تحديث قائمة الطابعات.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-    End Sub
-
-    Private Sub btnSaveBarcodePrinter_Click(sender As Object, e As EventArgs)
-        Try
-            SettingsManager.SaveSetting("BarcodePrinterName", cmbBarcodePrinter.Text)
-            SettingsManager.SaveSetting("BarcodeLabelWidth", CInt(numBarcodeLabelWidth.Value).ToString())
-            SettingsManager.SaveSetting("BarcodeLabelHeight", CInt(numBarcodeLabelHeight.Value).ToString())
-            SettingsManager.SaveSetting("BarcodeCopies", CInt(numBarcodeCopies.Value).ToString())
-            SettingsManager.SaveSetting("BarcodeFontSize", CInt(numBarcodeFontSize.Value).ToString())
-            SettingsManager.SaveSetting("BarcodeFooterText", txtBarcodeFooter.Text.Trim())
-            SettingsManager.SaveSetting("BarcodeShowName", chkBarcodeShowName.Checked.ToString().ToLower())
-            SettingsManager.SaveSetting("BarcodeShowPrice", chkBarcodeShowPrice.Checked.ToString().ToLower())
-            SettingsManager.SaveSetting("BarcodeShowStoreName", chkBarcodeShowStoreName.Checked.ToString().ToLower())
-            Notify.Toast("تم حفظ إعدادات طابعة الباركود", Notify.ToastType.Success)
-        Catch ex As Exception
-            Notify.Error("خطأ في الحفظ: " & ex.Message)
-        End Try
-    End Sub
-
-    Private Sub btnTestBarcodePrinter_Click(sender As Object, e As EventArgs)
-        Try
-            If String.IsNullOrEmpty(cmbBarcodePrinter.Text) Then
-                MessageBox.Show("يرجى اختيار طابعة الباركود أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                Return
-            End If
-
-            Dim labelWmm As Integer = CInt(numBarcodeLabelWidth.Value)
-            Dim labelHmm As Integer = CInt(numBarcodeLabelHeight.Value)
-            Dim labelWhi As Integer = CInt(labelWmm * 3.937)  ' مم → 1/100 بوصة
-            Dim labelHhi As Integer = CInt(labelHmm * 3.937)
-            Dim fontSize As Integer = CInt(numBarcodeFontSize.Value)
-            Dim footer As String = txtBarcodeFooter.Text
-
-            Using pd As New PrintDocument()
-                pd.PrinterSettings.PrinterName = cmbBarcodePrinter.Text
-                pd.DefaultPageSettings.PaperSize = New PaperSize("BarcodeLabel", labelWhi, labelHhi)
-                pd.DefaultPageSettings.Margins = New Margins(0, 0, 0, 0)
-                pd.OriginAtMargins = False
-
-                Dim handler As PrintPageEventHandler = Nothing
-                handler = Sub(s2, ev)
-                              Dim writer As New ZXing.BarcodeWriter() With {
-                                  .Format = ZXing.BarcodeFormat.CODE_128,
-                                  .Options = New ZXing.Common.EncodingOptions With {
-                                      .Height = Math.Max(40, ev.PageBounds.Height - 35),
-                                      .Width = Math.Max(80, ev.PageBounds.Width - 10),
-                                      .Margin = 0, .PureBarcode = True}}
-                              Using img As Bitmap = writer.Write("TEST12345")
-                                  Dim x As Integer = (ev.PageBounds.Width - img.Width) \ 2
-                                  ev.Graphics.DrawImage(img, x, 3)
-                                  Using fnt As New Font("Arial", fontSize, FontStyle.Bold)
-                                      Dim txt As String = "TEST12345"
-                                      Dim sz = ev.Graphics.MeasureString(txt, fnt)
-                                      ev.Graphics.DrawString(txt, fnt, Brushes.Black,
-                                                             (ev.PageBounds.Width - sz.Width) / 2, img.Height + 5)
-                                      If Not String.IsNullOrEmpty(footer) Then
-                                          Using fnt2 As New Font("Arial", Math.Max(6, fontSize - 2))
-                                              Dim sz2 = ev.Graphics.MeasureString(footer, fnt2)
-                                              ev.Graphics.DrawString(footer, fnt2, Brushes.Black,
-                                                                     (ev.PageBounds.Width - sz2.Width) / 2,
-                                                                     img.Height + 5 + sz.Height + 2)
-                                          End Using
-                                      End If
-                                  End Using
-                              End Using
-                              ev.HasMorePages = False
-                          End Sub
-                AddHandler pd.PrintPage, handler
-                Try
-                    pd.Print()
-                    MessageBox.Show("✅ تم إرسال طباعة اختبار.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Finally
-                    RemoveHandler pd.PrintPage, handler
-                End Try
-            End Using
-        Catch ex As Exception
-            MessageBox.Show("❌ خطأ في الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-    End Sub
+    '            Dim handler As PrintPageEventHandler = Nothing
+    '            handler = Sub(s2, ev)
+    '                          Dim writer As New ZXing.BarcodeWriter() With {
+    '                              .Format = ZXing.BarcodeFormat.CODE_128,
+    '                              .Options = New ZXing.Common.EncodingOptions With {
+    '                                  .Height = Math.Max(40, ev.PageBounds.Height - 35),
+    '                                  .Width = Math.Max(80, ev.PageBounds.Width - 10),
+    '                                  .Margin = 0, .PureBarcode = True}}
+    '                          Using img As Bitmap = writer.Write("TEST12345")
+    '                              Dim x As Integer = (ev.PageBounds.Width - img.Width) \ 2
+    '                              ev.Graphics.DrawImage(img, x, 3)
+    '                              Using fnt As New Font("Arial", fontSize, FontStyle.Bold)
+    '                                  Dim txt As String = "TEST12345"
+    '                                  Dim sz = ev.Graphics.MeasureString(txt, fnt)
+    '                                  ev.Graphics.DrawString(txt, fnt, Brushes.Black,
+    '                                                         (ev.PageBounds.Width - sz.Width) / 2, img.Height + 5)
+    '                                  If Not String.IsNullOrEmpty(footer) Then
+    '                                      Using fnt2 As New Font("Arial", Math.Max(6, fontSize - 2))
+    '                                          Dim sz2 = ev.Graphics.MeasureString(footer, fnt2)
+    '                                          ev.Graphics.DrawString(footer, fnt2, Brushes.Black,
+    '                                                                 (ev.PageBounds.Width - sz2.Width) / 2,
+    '                                                                 img.Height + 5 + sz.Height + 2)
+    '                                      End Using
+    '                                  End If
+    '                              End Using
+    '                          End Using
+    '                          ev.HasMorePages = False
+    '                      End Sub
+    '            AddHandler pd.PrintPage, handler
+    '            Try
+    '                pd.Print()
+    '                MessageBox.Show("✅ تم إرسال طباعة اختبار.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    '            Finally
+    '                RemoveHandler pd.PrintPage, handler
+    '            End Try
+    '        End Using
+    '    Catch ex As Exception
+    '        MessageBox.Show("❌ خطأ في الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    End Try
+    'End Sub
 
     '══════════════════════════════════════════════════════════════
     ' ➊ تبويب الباركود (Scanner) — إعدادات متقدمة + تجربة حيّة
     '══════════════════════════════════════════════════════════════
-    Private Sub LoadPorts()
-        ComboBoxPorts.Items.Clear()
-        ComboBoxPorts.Items.AddRange(SerialPort.GetPortNames())
-    End Sub
-
-    ''' <summary>بناء عناصر الإعدادات المتقدمة للاسكنر (Baud / DataBits / Parity / StopBits + صندوق التجربة)</summary>
-    Private Sub BuildScannerAdvancedControls()
-        Dim pnl As New Panel() With {
-            .Location = New Point(60, 150),
-            .Size = New Size(580, 450),
-            .BackColor = Color.FromArgb(45, 45, 55),
-            .RightToLeft = RightToLeft.Yes
-        }
-        TabPage3.Controls.Add(pnl)
-
-        Dim title As New Label() With {
-            .Text = "⚙️ إعدادات متقدمة", .ForeColor = Color.White,
-            .Font = New Font("Segoe UI", 15, FontStyle.Bold), .AutoSize = True,
-            .Location = New Point(360, 8), .RightToLeft = RightToLeft.Yes
-        }
-        pnl.Controls.Add(title)
-
-        Dim MakeRow = Function(labelText As String, items() As String, yy As Integer) As ComboBox
-                          Dim lb As New Label() With {
-                              .Text = labelText, .ForeColor = Color.White,
-                              .Font = New Font("Segoe UI", 12, FontStyle.Bold), .AutoSize = True,
-                              .Location = New Point(420, yy + 4), .RightToLeft = RightToLeft.Yes
-                          }
-                          Dim cb As New ComboBox() With {
-                              .Location = New Point(110, yy), .Width = 290, .Height = 32,
-                              .Font = New Font("Segoe UI", 12),
-                              .DropDownStyle = ComboBoxStyle.DropDownList,
-                              .RightToLeft = RightToLeft.Yes
-                          }
-                          cb.Items.AddRange(items)
-                          pnl.Controls.Add(lb)
-                          pnl.Controls.Add(cb)
-                          Return cb
-                      End Function
-
-        cmbBaudRate = MakeRow("سرعة النقل (Baud):", New String() {"9600", "19200", "38400", "57600", "115200"}, 55)
-        cmbDataBits = MakeRow("بِتّات البيانات:", New String() {"7", "8"}, 100)
-        cmbParity = MakeRow("التماثل (Parity):", New String() {"None", "Even", "Odd", "Mark", "Space"}, 145)
-        cmbStopBits = MakeRow("بِتّات التوقّف:", New String() {"One", "Two", "OnePointFive"}, 190)
-
-        lblScanTestHint = New Label() With {
-            .Text = "اضغط «اختبار الاتصال» ثم امسح أي باركود — ستظهر النتيجة هنا:",
-            .ForeColor = Color.Gainsboro, .Font = New Font("Segoe UI", 10), .AutoSize = True,
-            .Location = New Point(40, 235), .RightToLeft = RightToLeft.Yes
-        }
-        pnl.Controls.Add(lblScanTestHint)
-
-        txtScanTestResult = New TextBox() With {
-            .Location = New Point(20, 265), .Size = New Size(540, 170),
-            .Multiline = True, .ReadOnly = True, .ScrollBars = ScrollBars.Vertical,
-            .BackColor = Color.FromArgb(28, 28, 36), .ForeColor = Color.LightGreen,
-            .Font = New Font("Consolas", 12, FontStyle.Bold), .RightToLeft = RightToLeft.No
-        }
-        pnl.Controls.Add(txtScanTestResult)
-    End Sub
+    'Private Sub LoadPorts()
+    '    ComboBoxPorts.Items.Clear()
+    '    ComboBoxPorts.Items.AddRange(SerialPort.GetPortNames())
+    'End Sub
 
     ''' <summary>تحميل إعدادات الاسكنر المحفوظة إلى عناصر التحكم</summary>
     Private Sub LoadScannerSettings()
@@ -797,13 +203,9 @@ Public Class Settings
     End Sub
 
     Private Async Function LoadTreasuriesAsync() As Task
-
         Try
-
             Dim dt As New DataTable()
-
             Using cn As SqlConnection = Await NewConnAsync()
-
                 Const sql As String =
                 "
                 SELECT
@@ -816,11 +218,8 @@ Public Class Settings
                 "
 
                 Using da As New SqlDataAdapter(sql, cn)
-
                     Await Task.Run(Sub() da.Fill(dt))
-
                 End Using
-
             End Using
 
             cmbTreasury.DataSource = dt
@@ -828,16 +227,14 @@ Public Class Settings
             cmbTreasury.ValueMember = "TreasuryID"
             cmbTreasury.SelectedIndex = -1
 
-
             defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
             cmbTreasury.SelectedIndex = defaultTreasuryid
         Catch ex As Exception
         End Try
-
     End Function
 
     Private Sub btnRefreshPorts_Click(sender As Object, e As EventArgs) Handles btnRefreshPorts.Click
-        LoadPorts()
+        'LoadPorts()
         lblStatus.Text = "✅ تم تحديث المنافذ"
         lblStatus.ForeColor = Color.LightGreen
     End Sub
@@ -934,7 +331,7 @@ Public Class Settings
                                End Sub)
             End If
         Catch ex As Exception
-            Debug.WriteLine("scan test recv: " & ex.Message)
+            'Debug.WriteLine("scan test recv: " & ex.Message)
         End Try
     End Sub
 
@@ -956,8 +353,8 @@ Public Class Settings
             txtShopTax.Text = If(SettingsManager.GetSetting("TaxNumber"), "")
             txtFooterText.Text = If(SettingsManager.GetSetting("FooterText"), "")
             txtDeliveryText.Text = If(SettingsManager.GetSetting("DeliveryText"), "يوجد توصيل للمنازل")
-            cmbCurrency.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
-            cmbBusinessType.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.BusinessType, "سوبر ماركت")
+            'cmbCurrency.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
+            'cmbBusinessType.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.BusinessType, "سوبر ماركت")
             txtLogoPath.Text = If(SettingsManager.GetSetting("LogoPath"), "")
             LoadLogoPreview(txtLogoPath.Text)
 
@@ -992,12 +389,42 @@ Public Class Settings
             Dim printPreview = If(SettingsManager.GetSetting("PrintPreview"), "false")
             chkPrintPreview.Checked = (printPreview.ToLower() = "true")
 
-
             txtInvoiceItemsPerPage.Text = If(SettingsManager.GetSetting("InvoiceItemsPerPage"), "25")
-            txtdefaultcustomercode.Text = If(SettingsManager.GetSetting("defaultcustomercode"), "1")
-            toggleautoSaveinvoice.Checked = If(SettingsManager.GetSetting("autoSaveinvoice"), "false")
+            'txtdefaultcustomercode.Text = If(SettingsManager.GetSetting("defaultcustomercode"), "1")
+            btnIsDineInServiceFeePercent.Checked = If(SettingsManager.GetSetting("IsDineInServiceFeePercent"), False)
+            txtDineInServiceFee.Text = If(SettingsManager.GetSetting("DineInServiceFee"), "0")
 
-            'cmbTreasury.SelectedIndex = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+
+            ' استدعاء الدالة أولاً لملء القوائم
+            FillDefaultSettingsDropdowns()
+
+            ' قراءة نوع الطلب الافتراضي المحفوظ (الافتراضي: 1 = تيك أوي)
+            Dim defaultOrderType = If(SettingsManager.GetSetting("DefaultOrderType"), "1")
+            cmbDefaultOrderType.SelectedValue = Convert.ToInt32(defaultOrderType)
+
+            ' قراءة العميل الافتراضي المحفوظ
+            Dim defaultCustomerID = If(SettingsManager.GetSetting("DefaultCustomerID"), "")
+            If Not String.IsNullOrEmpty(defaultCustomerID) Then
+                cmbDefaultCustomer.SelectedValue = Convert.ToInt32(defaultCustomerID)
+            End If
+
+            ' قراءة الطيار الافتراضي المحفوظ
+            Dim defaultDriverID = If(SettingsManager.GetSetting("DefaultDriverID"), "")
+            If Not String.IsNullOrEmpty(defaultDriverID) Then
+                cmbDefaultDriver.SelectedValue = Convert.ToInt32(defaultDriverID)
+            End If
+
+            ' قراءة الفرع الحالي المحفوظ
+            Dim defaultBranchID = If(SettingsManager.GetSetting("CurrentBranchID"), "")
+            If Not String.IsNullOrEmpty(defaultBranchID) Then
+                cmbBranches.SelectedValue = Convert.ToInt32(defaultBranchID)
+            End If
+
+            ' قراءة المخزن الحالي المحفوظ
+            Dim defaultStoreID = If(SettingsManager.GetSetting("CurrentStoreID"), "")
+            If Not String.IsNullOrEmpty(defaultStoreID) Then
+                cmbStores.SelectedValue = Convert.ToInt32(defaultStoreID)
+            End If
         Catch ex As Exception
             MessageBox.Show("خطأ في تحميل الاعدادات العامة: " & ex.Message)
         End Try
@@ -1014,7 +441,7 @@ Public Class Settings
         Next
     End Sub
 
-    Private Sub btnRefreshPrinters_Click(sender As Object, e As EventArgs)
+    Private Sub btnRefreshPrinters_Click(sender As Object, e As EventArgs) Handles btnRefreshPrinters.Click
         LoadPrintersList()
         MessageBox.Show("✅ تم تحديث قائمة الطابعات.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
@@ -1053,7 +480,7 @@ Public Class Settings
         End Try
     End Sub
 
-    Private Sub btnSaveGeneral_Click(sender As Object, e As EventArgs)
+    Private Sub btnSaveGeneral_Click(sender As Object, e As EventArgs) Handles btnSaveGeneral.Click
         Try
             ' حفظ معلومات المحل
             SettingsManager.SaveSetting("ShopName", txtShopName.Text.Trim())
@@ -1063,8 +490,8 @@ Public Class Settings
             SettingsManager.SaveSetting("TaxNumber", txtShopTax.Text.Trim())
             SettingsManager.SaveSetting("FooterText", txtFooterText.Text.Trim())
             SettingsManager.SaveSetting("DeliveryText", txtDeliveryText.Text.Trim())
-            SettingsManager.SaveSetting(SettingsKeys.Currency, cmbCurrency.Text.Trim())
-            SettingsManager.SaveSetting(SettingsKeys.BusinessType, cmbBusinessType.Text.Trim())
+            'SettingsManager.SaveSetting(SettingsKeys.Currency, cmbCurrency.Text.Trim())
+            'SettingsManager.SaveSetting(SettingsKeys.BusinessType, cmbBusinessType.Text.Trim())
             SettingsManager.SaveSetting("LogoPath", txtLogoPath.Text.Trim())
 
             ' حفظ أسماء الطابعات
@@ -1083,7 +510,7 @@ Public Class Settings
         End Try
     End Sub
 
-    Private Sub btnTestThermal_Click(sender As Object, e As EventArgs)
+    Private Sub btnTestThermal_Click(sender As Object, e As EventArgs) Handles btnTestThermal.Click
         If String.IsNullOrEmpty(cmbThermalPrinter.Text) Then
             MessageBox.Show("يرجى اختيار الطابعة الحرارية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
@@ -1137,7 +564,7 @@ Public Class Settings
     End Sub
 
     ''' <summary>زر الاكتشاف التلقائي: يحدّث القائمة ويحاول إيجاد خادم يتصل بقاعدة البيانات فعلياً</summary>
-    Private Sub btnDetectServers_Click(sender As Object, e As EventArgs)
+    Private Sub btnDetectServers_Click(sender As Object, e As EventArgs) Handles btnDetectServers.Click
         Try
             PopulateDetectedServers()
 
@@ -1167,7 +594,7 @@ Public Class Settings
         End Try
     End Sub
 
-    Private Sub chkWindowsAuth_CheckedChanged(sender As Object, e As EventArgs)
+    Private Sub chkWindowsAuth_CheckedChanged(sender As Object, e As EventArgs) Handles chkWindowsAuth.CheckedChanged
         UpdateAuthFields()
     End Sub
 
@@ -1179,7 +606,7 @@ Public Class Settings
         lblDbPassword.Enabled = Not useWin
     End Sub
 
-    Private Sub btnTestDbConnection_Click(sender As Object, e As EventArgs)
+    Private Sub btnTestDbConnection_Click(sender As Object, e As EventArgs) Handles btnTestDbConnection.Click
         Try
             ' بناء connection string مؤقت للاختبار
             Dim tempCs As String
@@ -1202,7 +629,7 @@ Public Class Settings
         End Try
     End Sub
 
-    Private Sub btnSaveDbSettings_Click(sender As Object, e As EventArgs)
+    Private Sub btnSaveDbSettings_Click(sender As Object, e As EventArgs) Handles btnSaveDbSettings.Click
         Try
             DBModule.server = txtDbServer.Text.Trim()
             DBModule.database = txtDbName.Text.Trim()
@@ -1255,9 +682,9 @@ Public Class Settings
     End Sub
 
     Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
-        If WindowState = WindowState.Normal Then
+        If WindowState = FormWindowState.Normal Then
             WindowState = FormWindowState.Maximized
-        ElseIf WindowState.Maximized Then
+        ElseIf WindowState = FormWindowState.Maximized Then
             WindowState = FormWindowState.Normal
         End If
     End Sub
@@ -1265,9 +692,32 @@ Public Class Settings
     Private Sub Guna2Button1_Click(sender As Object, e As EventArgs) Handles Guna2Button1.Click
         Try
             SettingsManager.SaveSetting("InvoiceItemsPerPage", txtInvoiceItemsPerPage.Text)
-            SettingsManager.SaveSetting("defaultcustomercode", txtdefaultcustomercode.Text)
-            SettingsManager.SaveSetting("autoSaveinvoice", toggleautoSaveinvoice.Checked)
+            'SettingsManager.SaveSetting("defaultcustomercode", txtdefaultcustomercode.Text)
             SettingsManager.SaveSetting("defaultTreasuryid", cmbTreasury.SelectedIndex)
+            SettingsManager.SaveSetting("IsDineInServiceFeePercent", btnIsDineInServiceFeePercent.Checked)
+            SettingsManager.SaveSetting("DineInServiceFee", txtDineInServiceFee.Text)
+
+            ' حفظ نوع الطلب الافتراضي والعميل الافتراضي
+            If cmbDefaultOrderType.SelectedValue IsNot Nothing Then
+                SettingsManager.SaveSetting("DefaultOrderType", cmbDefaultOrderType.SelectedValue.ToString())
+            End If
+
+            If cmbDefaultCustomer.SelectedValue IsNot Nothing Then
+                SettingsManager.SaveSetting("DefaultCustomerID", cmbDefaultCustomer.SelectedValue.ToString())
+            End If
+            If cmbDefaultDriver.SelectedValue IsNot Nothing Then
+                SettingsManager.SaveSetting("DefaultDriverID", cmbDefaultDriver.SelectedValue.ToString())
+            End If
+
+            ' حفظ الفرع والمخزن الحاليين
+            If cmbBranches.SelectedValue IsNot Nothing Then
+                SettingsManager.SaveSetting("CurrentBranchID", cmbBranches.SelectedValue.ToString())
+            End If
+
+            If cmbStores.SelectedValue IsNot Nothing Then
+                SettingsManager.SaveSetting("CurrentStoreID", cmbStores.SelectedValue.ToString())
+            End If
+
             Notify.Toast("تم حفظ إعدادات المبيعات", Notify.ToastType.Success)
         Catch ex As Exception
             Notify.Error("خطأ في الحفظ: " & ex.Message)
@@ -1279,4 +729,51 @@ Public Class Settings
         Close()
     End Sub
 
+
+    Private Sub FillDefaultSettingsDropdowns()
+
+
+        Dim repo As New POSRepository(DBModule.ConnectionString)
+        ' 1. تعبئة قائمة الفروع
+        Dim dtBranches = repo.GetActiveBranches()
+        cmbBranches.DataSource = dtBranches
+        cmbBranches.DisplayMember = "BranchName"
+        cmbBranches.ValueMember = "BranchID"
+        cmbBranches.SelectedIndex = -1
+
+        ' 2. تعبئة قائمة المخازن
+        Dim dtStores = repo.GetActiveStores()
+        cmbStores.DataSource = dtStores
+        cmbStores.DisplayMember = "StoreName"
+        cmbStores.ValueMember = "StoreID"
+        cmbStores.SelectedIndex = -1
+
+        ' 1. تعبئة قائمة نوع الطلب الافتراضي
+        Dim dtOrderTypes As New DataTable()
+        dtOrderTypes.Columns.Add("TypeID", GetType(Integer))
+        dtOrderTypes.Columns.Add("TypeName", GetType(String))
+
+        dtOrderTypes.Rows.Add(1, "تيك أوي")
+        dtOrderTypes.Rows.Add(2, "صالة")
+        dtOrderTypes.Rows.Add(3, "دليفري")
+
+        cmbDefaultOrderType.DataSource = dtOrderTypes
+        cmbDefaultOrderType.DisplayMember = "TypeName"
+        cmbDefaultOrderType.ValueMember = "TypeID"
+
+        ' 2. تعبئة قائمة العملاء
+        Dim customers = repo.GetActiveCustomers()
+
+        cmbDefaultCustomer.DataSource = customers
+        cmbDefaultCustomer.DisplayMember = "CustomerName"
+        cmbDefaultCustomer.ValueMember = "CustomerID"
+
+
+        ' جلب قائمة الطيارين النشطين
+        Dim drivers = repo.GetActiveDeliveryDrivers()
+        cmbDefaultDriver.DataSource = drivers
+        cmbDefaultDriver.DisplayMember = "DriverName"
+        cmbDefaultDriver.ValueMember = "DriverID"
+        cmbDefaultDriver.SelectedIndex = -1
+    End Sub
 End Class

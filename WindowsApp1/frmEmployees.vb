@@ -32,6 +32,7 @@ Public Class frmEmployees
 
             ' Setup Form Dragging Helper if available
             Dim drag As New FormDragHelper(Me, panelHeader)
+            Dim drag2 As New FormDragHelper(Me, Guna2HtmlLabel1)
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء تحميل شاشة الموظفين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try

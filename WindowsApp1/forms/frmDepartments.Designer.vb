@@ -22,9 +22,11 @@ Partial Class frmDepartments
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmDepartments))
         Me.dgvDepartments = New System.Windows.Forms.DataGridView()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.lstSuggestions = New System.Windows.Forms.ListBox()
         Me.btnRefresh = New Guna.UI2.WinForms.Guna2Button()
         Me.btnClear = New Guna.UI2.WinForms.Guna2Button()
         Me.tgStatus = New Guna.UI2.WinForms.Guna2ToggleSwitch()
@@ -45,6 +47,7 @@ Partial Class frmDepartments
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         CType(Me.dgvDepartments, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
         Me.panelHeader.SuspendLayout()
@@ -60,11 +63,12 @@ Partial Class frmDepartments
         Me.dgvDepartments.Name = "dgvDepartments"
         Me.dgvDepartments.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvDepartments.RowTemplate.Height = 40
-        Me.dgvDepartments.Size = New System.Drawing.Size(1359, 500)
+        Me.dgvDepartments.Size = New System.Drawing.Size(1310, 500)
         Me.dgvDepartments.TabIndex = 41
         '
         'grpCustomerInfo
         '
+        Me.grpCustomerInfo.Controls.Add(Me.lstSuggestions)
         Me.grpCustomerInfo.Controls.Add(Me.btnRefresh)
         Me.grpCustomerInfo.Controls.Add(Me.btnClear)
         Me.grpCustomerInfo.Controls.Add(Me.tgStatus)
@@ -87,10 +91,23 @@ Partial Class frmDepartments
         Me.grpCustomerInfo.Location = New System.Drawing.Point(0, 70)
         Me.grpCustomerInfo.Name = "grpCustomerInfo"
         Me.grpCustomerInfo.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.grpCustomerInfo.Size = New System.Drawing.Size(1359, 230)
+        Me.grpCustomerInfo.Size = New System.Drawing.Size(1310, 230)
         Me.grpCustomerInfo.TabIndex = 40
         Me.grpCustomerInfo.Text = "البيانات"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'lstSuggestions
+        '
+        Me.lstSuggestions.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.lstSuggestions.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.lstSuggestions.FormattingEnabled = True
+        Me.lstSuggestions.ItemHeight = 17
+        Me.lstSuggestions.Location = New System.Drawing.Point(24, 88)
+        Me.lstSuggestions.Margin = New System.Windows.Forms.Padding(4)
+        Me.lstSuggestions.Name = "lstSuggestions"
+        Me.lstSuggestions.Size = New System.Drawing.Size(354, 106)
+        Me.lstSuggestions.TabIndex = 37
+        Me.lstSuggestions.Visible = False
         '
         'btnRefresh
         '
@@ -129,7 +146,7 @@ Partial Class frmDepartments
         Me.tgStatus.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.tgStatus.CheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.tgStatus.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.tgStatus.Location = New System.Drawing.Point(370, 53)
+        Me.tgStatus.Location = New System.Drawing.Point(810, 99)
         Me.tgStatus.Name = "tgStatus"
         Me.tgStatus.Size = New System.Drawing.Size(70, 30)
         Me.tgStatus.TabIndex = 5599
@@ -157,7 +174,7 @@ Partial Class frmDepartments
         '
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label4.Location = New System.Drawing.Point(450, 50)
+        Me.Label4.Location = New System.Drawing.Point(810, 60)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(100, 36)
         Me.Label4.TabIndex = 5598
@@ -183,9 +200,9 @@ Partial Class frmDepartments
         '
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label3.Location = New System.Drawing.Point(830, 50)
+        Me.Label3.Location = New System.Drawing.Point(716, 48)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(110, 36)
+        Me.Label3.Size = New System.Drawing.Size(87, 36)
         Me.Label3.TabIndex = 5587
         Me.Label3.Text = "الملاحظات"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -218,13 +235,13 @@ Partial Class frmDepartments
         Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.txtNotes.ForeColor = System.Drawing.Color.Black
         Me.txtNotes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtNotes.Location = New System.Drawing.Point(570, 50)
+        Me.txtNotes.Location = New System.Drawing.Point(553, 88)
         Me.txtNotes.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.PlaceholderText = ""
         Me.txtNotes.SelectedText = ""
-        Me.txtNotes.Size = New System.Drawing.Size(250, 86)
+        Me.txtNotes.Size = New System.Drawing.Size(250, 56)
         Me.txtNotes.TabIndex = 5586
         Me.txtNotes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -232,9 +249,9 @@ Partial Class frmDepartments
         '
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label2.Location = New System.Drawing.Point(1220, 100)
+        Me.Label2.Location = New System.Drawing.Point(1196, 99)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(110, 36)
+        Me.Label2.Size = New System.Drawing.Size(85, 36)
         Me.Label2.TabIndex = 5585
         Me.Label2.Text = "اسم القسم"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -252,7 +269,7 @@ Partial Class frmDepartments
         Me.txtDepartmentName.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.txtDepartmentName.ForeColor = System.Drawing.Color.Black
         Me.txtDepartmentName.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepartmentName.Location = New System.Drawing.Point(960, 100)
+        Me.txtDepartmentName.Location = New System.Drawing.Point(939, 100)
         Me.txtDepartmentName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtDepartmentName.Name = "txtDepartmentName"
         Me.txtDepartmentName.PlaceholderText = ""
@@ -265,9 +282,9 @@ Partial Class frmDepartments
         '
         Me.Label1.BackColor = System.Drawing.Color.Transparent
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label1.Location = New System.Drawing.Point(1220, 50)
+        Me.Label1.Location = New System.Drawing.Point(1196, 49)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(110, 36)
+        Me.Label1.Size = New System.Drawing.Size(85, 36)
         Me.Label1.TabIndex = 5583
         Me.Label1.Text = "كود القسم"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -284,7 +301,7 @@ Partial Class frmDepartments
         Me.cmbSearchField.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.cmbSearchField.ForeColor = System.Drawing.Color.Black
         Me.cmbSearchField.ItemHeight = 30
-        Me.cmbSearchField.Location = New System.Drawing.Point(190, 50)
+        Me.cmbSearchField.Location = New System.Drawing.Point(385, 50)
         Me.cmbSearchField.Name = "cmbSearchField"
         Me.cmbSearchField.Size = New System.Drawing.Size(160, 36)
         Me.cmbSearchField.TabIndex = 2
@@ -303,13 +320,13 @@ Partial Class frmDepartments
         Me.txtSearch.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.txtSearch.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtSearch.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtSearch.Location = New System.Drawing.Point(20, 50)
+        Me.txtSearch.Location = New System.Drawing.Point(24, 50)
         Me.txtSearch.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.PlaceholderText = "ابحث عن قسم"
         Me.txtSearch.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.txtSearch.SelectedText = ""
-        Me.txtSearch.Size = New System.Drawing.Size(160, 36)
+        Me.txtSearch.Size = New System.Drawing.Size(354, 36)
         Me.txtSearch.TabIndex = 1
         Me.txtSearch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -326,7 +343,7 @@ Partial Class frmDepartments
         Me.txtDepartmentCode.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.txtDepartmentCode.ForeColor = System.Drawing.Color.Black
         Me.txtDepartmentCode.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtDepartmentCode.Location = New System.Drawing.Point(960, 50)
+        Me.txtDepartmentCode.Location = New System.Drawing.Point(939, 50)
         Me.txtDepartmentCode.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtDepartmentCode.Name = "txtDepartmentCode"
         Me.txtDepartmentCode.PlaceholderText = ""
@@ -346,7 +363,7 @@ Partial Class frmDepartments
         Me.panelHeader.Location = New System.Drawing.Point(0, 0)
         Me.panelHeader.Name = "panelHeader"
         Me.panelHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.panelHeader.Size = New System.Drawing.Size(1359, 70)
+        Me.panelHeader.Size = New System.Drawing.Size(1310, 70)
         Me.panelHeader.TabIndex = 39
         '
         'btn_min
@@ -398,11 +415,18 @@ Partial Class frmDepartments
         Me.Guna2HtmlLabel1.Text = "الأقسام"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
         '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
         'frmDepartments
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1359, 800)
+        Me.ClientSize = New System.Drawing.Size(1310, 800)
         Me.Controls.Add(Me.dgvDepartments)
         Me.Controls.Add(Me.grpCustomerInfo)
         Me.Controls.Add(Me.panelHeader)
@@ -435,6 +459,7 @@ Partial Class frmDepartments
     Friend WithEvents txtDepartmentName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbSearchField As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents lstSuggestions As ListBox
     Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtDepartmentCode As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
@@ -442,4 +467,5 @@ Partial Class frmDepartments
     Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
 End Class

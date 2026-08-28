@@ -13,8 +13,7 @@ Public Class frm_LowStockProducts
         WHERE 
             S.Quantity_OnHand < S.Min_Quantity
             OR S.Quantity_OnHand = 0
-        ORDER BY S.Quantity_OnHand ASC
-    "
+        ORDER BY S.Quantity_OnHand ASC"
 
         Dim dt As New DataTable()
 

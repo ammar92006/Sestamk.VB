@@ -22,6 +22,7 @@ Partial Class Backup
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Backup))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -32,6 +33,7 @@ Partial Class Backup
         Me.dgv_backup = New System.Windows.Forms.DataGridView()
         Me.btn_Backup = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_Restore = New DevExpress.XtraEditors.SimpleButton()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_backup, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -147,6 +149,13 @@ Partial Class Backup
         Me.btn_Restore.TabIndex = 6
         Me.btn_Restore.Text = "استعادة النسخه الاحتياطية"
         '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
         'Backup
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 24.0!)
@@ -181,4 +190,5 @@ Partial Class Backup
     Friend WithEvents dgv_backup As DataGridView
     Friend WithEvents btn_Backup As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents btn_Restore As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
 End Class

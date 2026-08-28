@@ -22,9 +22,10 @@ Partial Class frmCategoryTypes
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmCategoryTypes))
         Me.dgvCategoryTypes = New Guna.UI2.WinForms.Guna2DataGridView()
         Me.Panel2 = New System.Windows.Forms.Panel()
@@ -32,7 +33,6 @@ Partial Class frmCategoryTypes
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.pn_title_page = New System.Windows.Forms.Label()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnClearFields = New Guna.UI2.WinForms.Guna2Button()
         Me.btnDeleteType = New Guna.UI2.WinForms.Guna2Button()
         Me.btnEditType = New Guna.UI2.WinForms.Guna2Button()
         Me.btnAddType = New Guna.UI2.WinForms.Guna2Button()
@@ -42,6 +42,8 @@ Partial Class frmCategoryTypes
         Me.txtTypeName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.tgStatus = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+        Me.btnClearFields = New Guna.UI2.WinForms.Guna2Button()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         CType(Me.dgvCategoryTypes, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
@@ -51,27 +53,27 @@ Partial Class frmCategoryTypes
         '
         Me.dgvCategoryTypes.AllowUserToAddRows = False
         Me.dgvCategoryTypes.AllowUserToDeleteRows = False
-        DataGridViewCellStyle16.BackColor = System.Drawing.Color.White
-        Me.dgvCategoryTypes.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.dgvCategoryTypes.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvCategoryTypes.BackgroundColor = System.Drawing.Color.Silver
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle17.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle17.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvCategoryTypes.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvCategoryTypes.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvCategoryTypes.ColumnHeadersHeight = 4
         Me.dgvCategoryTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvCategoryTypes.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvCategoryTypes.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvCategoryTypes.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgvCategoryTypes.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvCategoryTypes.Location = New System.Drawing.Point(0, 276)
@@ -130,7 +132,7 @@ Partial Class frmCategoryTypes
         Me.pn_title_page.AutoSize = True
         Me.pn_title_page.Font = New System.Drawing.Font("Microsoft Sans Serif", 30.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.pn_title_page.ForeColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
-        Me.pn_title_page.Location = New System.Drawing.Point(438, 8)
+        Me.pn_title_page.Location = New System.Drawing.Point(366, 9)
         Me.pn_title_page.Name = "pn_title_page"
         Me.pn_title_page.Size = New System.Drawing.Size(188, 46)
         Me.pn_title_page.TabIndex = 4
@@ -147,21 +149,6 @@ Partial Class frmCategoryTypes
         Me.Guna2Panel1.Name = "Guna2Panel1"
         Me.Guna2Panel1.Size = New System.Drawing.Size(785, 63)
         Me.Guna2Panel1.TabIndex = 5611
-        '
-        'btnClearFields
-        '
-        Me.btnClearFields.BorderRadius = 8
-        Me.btnClearFields.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnClearFields.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnClearFields.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnClearFields.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnClearFields.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnClearFields.ForeColor = System.Drawing.Color.White
-        Me.btnClearFields.Image = Global.WindowsApp1.My.Resources.Resources.cleaning
-        Me.btnClearFields.Location = New System.Drawing.Point(7, 10)
-        Me.btnClearFields.Name = "btnClearFields"
-        Me.btnClearFields.Size = New System.Drawing.Size(180, 45)
-        Me.btnClearFields.TabIndex = 3
         '
         'btnDeleteType
         '
@@ -303,6 +290,28 @@ Partial Class frmCategoryTypes
         Me.tgStatus.UncheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.tgStatus.UncheckedState.InnerColor = System.Drawing.Color.White
         '
+        'btnClearFields
+        '
+        Me.btnClearFields.BorderRadius = 8
+        Me.btnClearFields.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnClearFields.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnClearFields.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnClearFields.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnClearFields.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnClearFields.ForeColor = System.Drawing.Color.White
+        Me.btnClearFields.Image = Global.WindowsApp1.My.Resources.Resources.cleaning
+        Me.btnClearFields.Location = New System.Drawing.Point(7, 10)
+        Me.btnClearFields.Name = "btnClearFields"
+        Me.btnClearFields.Size = New System.Drawing.Size(180, 45)
+        Me.btnClearFields.TabIndex = 3
+        '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
         'frmCategoryTypes
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -346,4 +355,5 @@ Partial Class frmCategoryTypes
     Friend WithEvents txtTypeName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents tgStatus As Guna.UI2.WinForms.Guna2ToggleSwitch
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
 End Class

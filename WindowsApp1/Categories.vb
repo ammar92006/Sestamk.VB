@@ -302,9 +302,10 @@ Public Class Categories
         cmbSearchField.Items.Add("الطابعه")
         cmbSearchField.Items.Add("نوع الفئة")
 
-
+        txtCategoryCode.Text = GetNextCode("Categories", "CategoryCode")
         cmbSearchField.SelectedIndex = 1
         datagridviewsetup()
+
         EnableDoubleBuffer(dvg_Categories)
         ' بعد تحميل البيانات أعدل الهيدر
         If dvg_Categories.Columns.Contains("Products_Count") Then
@@ -554,7 +555,8 @@ Public Class Categories
     End Sub
     Private Sub ClearFields()
         ' --- تفريغ صناديق النصوص (TextBoxes) باستخدام .Clear() ---
-        txtCategoryCode.Clear()       ' كود الفئة
+        'txtCategoryCode.Clear()       ' كود الفئة
+        txtCategoryCode.Text = GetNextCode("Categories", "CategoryCode")
         txtCategoryNameAr.Clear()     ' اسم الفئة عربي
         txtCategoryNameEn.Clear()     ' اسم الفئة انجليزي
         txtDescription.Clear()        ' وصف الفئة
@@ -747,7 +749,7 @@ Public Class Categories
 
 
     Private Sub FillColorsComboBox()
-        Dim query As String = "SELECT ColorID, ColorName FROM Colors Where IsActive = 1 AND IsDeleted = 0"
+        Dim query As String = "SELECT ColorID, ColorName FROM Colors Where IsActive = 1 AND IsDeleted = 0 OR IsDeleted IS NULL"
 
         Try
             ' -------------------------------------------------------------------------
@@ -768,7 +770,7 @@ Public Class Categories
     End Sub
 
     Private Sub FillPrintersComboBox()
-        Dim query As String = "SELECT PrinterID, PrinterName FROM Printers Where IsActive = 1 AND IsDeleted = 0"
+        Dim query As String = "SELECT PrinterID, PrinterName FROM Printers Where IsActive = 1 AND IsDeleted = 0 OR IsDeleted IS NULL"
 
         Try
             ' -------------------------------------------------------------------------
@@ -811,7 +813,7 @@ Public Class Categories
         picCategory.Image = Nothing
     End Sub
     Private Sub FillCategoryTypesComboBox()
-        Dim query As String = "SELECT CategoryTypeID, TypeName FROM CategoryTypes Where IsActive = 1 AND IsDeleted = 0"
+        Dim query As String = "SELECT CategoryTypeID, TypeName FROM CategoryTypes Where IsActive = 1 AND IsDeleted = 0 OR IsDeleted IS NULL"
 
         Try
             ' -------------------------------------------------------------------------

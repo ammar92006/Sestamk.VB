@@ -41,7 +41,8 @@ Public Class frmSizes
 
     ' 3. دالة تنظيف الحقول
     Private Sub ClearFields()
-        txtSizeCode.Clear()
+        'txtSizeCode.Clear()
+        txtSizeCode.Text = GetNextCode("Sizes", "SizeCode")
         txtSizeNameAr.Clear()
         txtSizeNameEn.Clear()
         txtNotes.Clear()
@@ -50,6 +51,7 @@ Public Class frmSizes
     End Sub
 
     Private Sub frmSizes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        txtSizeCode.Text = GetNextCode("Sizes", "SizeCode")
         LoadSizesGrid()
         datagridviewsetup(dgvSizes)
         Dim Drag As FormDragHelper

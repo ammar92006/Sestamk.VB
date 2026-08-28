@@ -25,9 +25,6 @@ Public Class Login
 
         Return "لم يتم العثور على بطاقة شبكة نشطة"
     End Function
-
-
-
     Private Function GetNextLoginCode() As Integer
         Dim query As String = "SELECT COUNT(ID) AS NumberOfItems FROM Login_Info_TBL WHERE ID IS NOT NULL"
         Try
@@ -46,7 +43,25 @@ Public Class Login
         End Try
         Return 1
     End Function
+    Private Sub FillUsersComboBox()
+        Dim query As String = "SELECT User_ID, User_username FROM Users_TBL Where IsActive = 1 AND IsDeleted = 0 OR IsDeleted IS NULL"
 
+        Try
+            ' -------------------------------------------------------------------------
+            ' 💡 ضع سطر تحميل البيانات وجلب الـ DataTable الخاص بك هنا بنفس طريقتك
+            ' -------------------------------------------------------------------------
+            Dim dt As DataTable = ExecuteQuery(query) ' استبدل ExecuteQuery بالدالة المعتمدة عندك
+
+            If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
+                cmbUsername.DataSource = dt
+                cmbUsername.DisplayMember = "User_username"
+                cmbUsername.ValueMember = "User_ID"
+                cmbUsername.SelectedIndex = -1
+            End If
+        Catch ex As Exception
+            MessageBox.Show("خطأ في تحميل أنواع الفئات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
     Private Sub LogLoginInfo(loginCode As Integer,
                              deviceName As String,
                              macAddress As String,
@@ -87,7 +102,7 @@ Public Class Login
         Try
             Connect()
             Using command As New SqlCommand(query, Conn)
-                command.Parameters.AddWithValue("@username", txtusername.Text.Trim)
+                command.Parameters.AddWithValue("@username", cmbUsername.Text.Trim)
                 Dim result As Object = command.ExecuteScalar()
                 If result IsNot Nothing AndAlso Integer.TryParse(result.ToString(), New Integer()) Then
                     useridlogin = Convert.ToInt32(result)
@@ -130,7 +145,7 @@ Public Class Login
         Application.Exit()
     End Sub
 
-    Private Sub txtusername_KeyDown(sender As Object, e As KeyEventArgs) Handles txtusername.KeyDown
+    Private Sub txtusername_KeyDown(sender As Object, e As KeyEventArgs)
         If e.KeyCode = Keys.Enter Then
             txtpassword.Focus()
         End If
@@ -182,6 +197,7 @@ Public Class Login
         Try
             'Label6.Visible = False
             'PictureBox2.Visible = False
+            FillUsersComboBox()
         Catch
         End Try
 
@@ -193,8 +209,8 @@ Public Class Login
 
         AddHandler Application.ApplicationExit, AddressOf AppExit
 
-        txtusername.Focus()
-
+        cmbUsername.Focus()
+        Dim Drag0 As FormDragHelper = New FormDragHelper(Me, pn_0)
         ' [FIX] تشغيل النسخ الاحتياطي وحذف القديمة في الخلفية
         ' بدلاً من حجب UI Thread وقت فتح شاشة الدخول
         Task.Run(Sub()
@@ -345,25 +361,25 @@ Public Class Login
     ' Timer1 لا يزال موجوداً في Designer لكنه بلا handler ولا يبدأ.
 
     Public Sub FillFromScanner(code As String)
-        Try
-            If String.IsNullOrWhiteSpace(code) Then Return
+        'Try
+        '    If String.IsNullOrWhiteSpace(code) Then Return
 
-            If code.Contains(":") Then
-                Dim parts = code.Split(":"c)
-                txtusername.Clear()
-                txtpassword.Clear()
-                txtusername.Text = parts(0)
-                If parts.Length > 1 Then txtpassword.Text = parts(1)
-                btnlogin.PerformClick()
-            Else
-                If String.IsNullOrEmpty(txtusername.Text) Then
-                    'username.Text = code
-                Else
-                    'password.Text = code
-                End If
-            End If
-        Catch ex As Exception
-        End Try
+        '    If code.Contains(":") Then
+        '        Dim parts = code.Split(":"c)
+        '        cmbUsername.SelectedIndex = -1
+        '        txtpassword.Clear()
+        '        txtusername.Text = parts(0)
+        '        If parts.Length > 1 Then txtpassword.Text = parts(1)
+        '        btnlogin.PerformClick()
+        '    Else
+        '        If String.IsNullOrEmpty(txtusername.Text) Then
+        '            'username.Text = code
+        '        Else
+        '            'password.Text = code
+        '        End If
+        '    End If
+        'Catch ex As Exception
+        'End Try
     End Sub
 
     Public Sub HideAllFormsExcept(targetForm As Form)
@@ -372,11 +388,13 @@ Public Class Login
         Next
     End Sub
 
-
+    Private Sub btnsup_Click(sender As Object, e As EventArgs) Handles btnsup.Click
+        MsgBox("Ammar Ahmed : !!!!!!!")
+    End Sub
 
     Public Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
-        If String.IsNullOrWhiteSpace(txtusername.Text) Then
-            MessageBox.Show("يرجى إدخال اسم المستخدم", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        If String.IsNullOrWhiteSpace(cmbUsername.SelectedIndex = -1) Then
+            MessageBox.Show("يرجى إدخال اختيار المستخدم", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
         If String.IsNullOrWhiteSpace(txtpassword.Text) Then
@@ -384,7 +402,7 @@ Public Class Login
             Return
         End If
 
-        Dim enteredUser As String = txtusername.Text.Trim()
+        Dim enteredUser As String = cmbUsername.Text.Trim()
         Dim enteredPass As String = txtpassword.Text.Trim()
 
         Dim deviceName As String = Environment.MachineName
@@ -406,16 +424,16 @@ Public Class Login
             passwordlogin = enteredPass
             GetUserId()
 
-            txtusername.Text = String.Empty
+            cmbUsername.Text = String.Empty
             txtpassword.Text = String.Empty
             Return
         End If
 
-
         Dim query As String = "
-    SELECT User_ID, RoleID, User_username, User_Stats ,User_Name
-    FROM Users_TBL 
-    WHERE User_username = @username AND User_password = @password"
+            SELECT User_ID, RoleID, User_username, User_Stats ,User_Name
+            FROM Users_TBL 
+            WHERE User_username = @username AND User_password = @password"
+
         Try
             Connect()
             Using cmd As New SqlClient.SqlCommand(query, Conn)
@@ -432,9 +450,9 @@ Public Class Login
 
                         If userStats = False Then
                             MessageBox.Show("⚠️ هذا المستخدم محظور أو غير مفعل.", "مستخدم محظور", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                            txtusername.Clear()
+                            cmbUsername.SelectedIndex = -1
                             txtpassword.Clear()
-                            txtusername.Focus()
+                            cmbUsername.Focus()
                             Return
                         End If
 
@@ -453,7 +471,7 @@ Public Class Login
                         Session.CurrentRoleID = roleId
 
                         Session.LoadPermissions(roleId)
-
+                        InitializeShiftSession()
                         Me.Hide()
                         Dim mainForm As New MainForm()
                         mainForm.Show()
@@ -465,14 +483,14 @@ Public Class Login
                         usernamelogin = enteredUser
                         passwordlogin = enteredPass
 
-                        txtusername.Clear()
+                        cmbUsername.SelectedIndex = -1
                         txtpassword.Clear()
                         Return
                     Else
                         MessageBox.Show("❌ اسم المستخدم أو كلمة المرور غير صحيحة", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        txtusername.Clear()
+                        cmbUsername.SelectedIndex = -1
                         txtpassword.Clear()
-                        txtusername.Focus()
+                        cmbUsername.Focus()
                     End If
                 End Using
             End Using
@@ -482,4 +500,7 @@ Public Class Login
             Disconnect()
         End Try
     End Sub
+
+
+
 End Class

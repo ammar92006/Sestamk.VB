@@ -67,6 +67,7 @@ Partial Class Products
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
+        Me.btnAddCategoryForm = New Guna.UI2.WinForms.Guna2Button()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
@@ -102,6 +103,7 @@ Partial Class Products
         '
         'grpCustomerInfo
         '
+        Me.grpCustomerInfo.Controls.Add(Me.btnAddCategoryForm)
         Me.grpCustomerInfo.Controls.Add(Me.btnTaxType)
         Me.grpCustomerInfo.Controls.Add(Me.btnDiscountType)
         Me.grpCustomerInfo.Controls.Add(Me.dtpPrepTime)
@@ -233,9 +235,9 @@ Partial Class Products
         Me.cmbCategory.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
         Me.cmbCategory.ForeColor = System.Drawing.Color.Black
         Me.cmbCategory.ItemHeight = 43
-        Me.cmbCategory.Location = New System.Drawing.Point(1274, 368)
+        Me.cmbCategory.Location = New System.Drawing.Point(1320, 368)
         Me.cmbCategory.Name = "cmbCategory"
-        Me.cmbCategory.Size = New System.Drawing.Size(311, 49)
+        Me.cmbCategory.Size = New System.Drawing.Size(265, 49)
         Me.cmbCategory.TabIndex = 5611
         Me.cmbCategory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -745,6 +747,24 @@ Partial Class Products
         Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
         Me.Guna2BorderlessForm1.TransparentWhileDrag = True
         '
+        'btnAddCategoryForm
+        '
+        Me.btnAddCategoryForm.BackColor = System.Drawing.Color.Transparent
+        Me.btnAddCategoryForm.BorderRadius = 8
+        Me.btnAddCategoryForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddCategoryForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddCategoryForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnAddCategoryForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnAddCategoryForm.FillColor = System.Drawing.Color.Empty
+        Me.btnAddCategoryForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnAddCategoryForm.ForeColor = System.Drawing.Color.White
+        Me.btnAddCategoryForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
+        Me.btnAddCategoryForm.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnAddCategoryForm.Location = New System.Drawing.Point(1274, 368)
+        Me.btnAddCategoryForm.Name = "btnAddCategoryForm"
+        Me.btnAddCategoryForm.Size = New System.Drawing.Size(40, 49)
+        Me.btnAddCategoryForm.TabIndex = 5616
+        '
         'Products
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -812,4 +832,5 @@ Partial Class Products
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents btnTaxType As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnDiscountType As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnAddCategoryForm As Guna.UI2.WinForms.Guna2Button
 End Class

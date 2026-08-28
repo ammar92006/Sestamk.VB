@@ -40,7 +40,8 @@ Public Class frmAddons
 
     ' 3. دالة تنظيف وتفريغ الحقول
     Private Sub ClearFields()
-        txtAddonCode.Clear()
+        'txtAddonCode.Clear()
+        txtAddonCode.Text = GetNextCode("Addons", "AddonCode")
         txtAddonNameAr.Clear()
         txtAddonNameEn.Clear()
         tgStatus.Checked = True
@@ -50,7 +51,7 @@ Public Class frmAddons
     ' حدث تحميل الشاشة
     Private Sub frmAddons_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadAddonsGrid()
-
+        txtAddonCode.Text = GetNextCode("Addons", "AddonCode")
         datagridviewsetup(dgvAddons)
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
@@ -161,5 +162,17 @@ Public Class frmAddons
         _cachedAddons = Nothing
         LoadAddonsGrid()
         ClearFields()
+    End Sub
+
+    Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
+        Close()
+    End Sub
+
+    Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
+        FormHelper.ToggleMaximize(Me)
+    End Sub
+
+    Private Sub btn_min_Click(sender As Object, e As EventArgs) Handles btn_min.Click
+        FormHelper.Minimiz(Me)
     End Sub
 End Class

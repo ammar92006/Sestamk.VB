@@ -22,9 +22,11 @@ Partial Class frmSalarySystems
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmSalarySystems))
         Me.dgvSalarySystems = New System.Windows.Forms.DataGridView()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.lstSuggestions = New System.Windows.Forms.ListBox()
         Me.txtNotes = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.txtPaymentDays = New Guna.UI2.WinForms.Guna2TextBox()
@@ -47,6 +49,7 @@ Partial Class frmSalarySystems
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         CType(Me.dgvSalarySystems, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
         Me.panelHeader.SuspendLayout()
@@ -67,6 +70,7 @@ Partial Class frmSalarySystems
         '
         'grpCustomerInfo
         '
+        Me.grpCustomerInfo.Controls.Add(Me.lstSuggestions)
         Me.grpCustomerInfo.Controls.Add(Me.txtNotes)
         Me.grpCustomerInfo.Controls.Add(Me.Label5)
         Me.grpCustomerInfo.Controls.Add(Me.txtPaymentDays)
@@ -96,6 +100,19 @@ Partial Class frmSalarySystems
         Me.grpCustomerInfo.Text = "البيانات"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'lstSuggestions
+        '
+        Me.lstSuggestions.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.lstSuggestions.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.lstSuggestions.FormattingEnabled = True
+        Me.lstSuggestions.ItemHeight = 17
+        Me.lstSuggestions.Location = New System.Drawing.Point(13, 93)
+        Me.lstSuggestions.Margin = New System.Windows.Forms.Padding(4)
+        Me.lstSuggestions.Name = "lstSuggestions"
+        Me.lstSuggestions.Size = New System.Drawing.Size(319, 106)
+        Me.lstSuggestions.TabIndex = 37
+        Me.lstSuggestions.Visible = False
+        '
         'txtNotes
         '
         Me.txtNotes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -109,7 +126,7 @@ Partial Class frmSalarySystems
         Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.txtNotes.ForeColor = System.Drawing.Color.Black
         Me.txtNotes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtNotes.Location = New System.Drawing.Point(510, 100)
+        Me.txtNotes.Location = New System.Drawing.Point(524, 100)
         Me.txtNotes.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
@@ -123,7 +140,7 @@ Partial Class frmSalarySystems
         '
         Me.Label5.BackColor = System.Drawing.Color.Transparent
         Me.Label5.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label5.Location = New System.Drawing.Point(770, 100)
+        Me.Label5.Location = New System.Drawing.Point(784, 100)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(150, 36)
         Me.Label5.TabIndex = 5601
@@ -189,7 +206,7 @@ Partial Class frmSalarySystems
         Me.tgStatus.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.tgStatus.CheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.tgStatus.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.tgStatus.Location = New System.Drawing.Point(330, 103)
+        Me.tgStatus.Location = New System.Drawing.Point(998, 143)
         Me.tgStatus.Name = "tgStatus"
         Me.tgStatus.Size = New System.Drawing.Size(70, 30)
         Me.tgStatus.TabIndex = 5599
@@ -217,7 +234,7 @@ Partial Class frmSalarySystems
         '
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label4.Location = New System.Drawing.Point(410, 100)
+        Me.Label4.Location = New System.Drawing.Point(1078, 140)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(80, 36)
         Me.Label4.TabIndex = 5598
@@ -269,7 +286,7 @@ Partial Class frmSalarySystems
         '
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label2.Location = New System.Drawing.Point(770, 50)
+        Me.Label2.Location = New System.Drawing.Point(784, 50)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(150, 36)
         Me.Label2.TabIndex = 5585
@@ -289,7 +306,7 @@ Partial Class frmSalarySystems
         Me.txtSalarySystemName.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.txtSalarySystemName.ForeColor = System.Drawing.Color.Black
         Me.txtSalarySystemName.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtSalarySystemName.Location = New System.Drawing.Point(510, 50)
+        Me.txtSalarySystemName.Location = New System.Drawing.Point(524, 50)
         Me.txtSalarySystemName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtSalarySystemName.Name = "txtSalarySystemName"
         Me.txtSalarySystemName.PlaceholderText = ""
@@ -321,9 +338,9 @@ Partial Class frmSalarySystems
         Me.cmbSearchField.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.cmbSearchField.ForeColor = System.Drawing.Color.Black
         Me.cmbSearchField.ItemHeight = 30
-        Me.cmbSearchField.Location = New System.Drawing.Point(190, 50)
+        Me.cmbSearchField.Location = New System.Drawing.Point(333, 50)
         Me.cmbSearchField.Name = "cmbSearchField"
-        Me.cmbSearchField.Size = New System.Drawing.Size(160, 36)
+        Me.cmbSearchField.Size = New System.Drawing.Size(184, 36)
         Me.cmbSearchField.TabIndex = 2
         Me.cmbSearchField.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -340,13 +357,13 @@ Partial Class frmSalarySystems
         Me.txtSearch.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.txtSearch.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtSearch.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtSearch.Location = New System.Drawing.Point(20, 50)
+        Me.txtSearch.Location = New System.Drawing.Point(13, 50)
         Me.txtSearch.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.PlaceholderText = "البحث"
         Me.txtSearch.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.txtSearch.SelectedText = ""
-        Me.txtSearch.Size = New System.Drawing.Size(160, 36)
+        Me.txtSearch.Size = New System.Drawing.Size(319, 36)
         Me.txtSearch.TabIndex = 1
         Me.txtSearch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -435,6 +452,13 @@ Partial Class frmSalarySystems
         Me.Guna2HtmlLabel1.Text = "أنظمة الرواتب"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
         '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
         'frmSalarySystems
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -471,6 +495,7 @@ Partial Class frmSalarySystems
     Friend WithEvents txtSalarySystemName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbSearchField As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents lstSuggestions As ListBox
     Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtSalarySystemCode As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
@@ -481,4 +506,5 @@ Partial Class frmSalarySystems
     Friend WithEvents txtPaymentDays As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtNotes As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label5 As Label
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
 End Class

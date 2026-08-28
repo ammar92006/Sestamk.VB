@@ -69,6 +69,9 @@ Partial Class frmEmployees
         Me.cmbDepartment = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.cmbBranch = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.btnAddBranchesForm = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnAddDepartmentForm = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnAddJobTitleForm = New Guna.UI2.WinForms.Guna2Button()
         Me.tabPageSalary = New System.Windows.Forms.TabPage()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.tgStatus = New Guna.UI2.WinForms.Guna2ToggleSwitch()
@@ -96,8 +99,14 @@ Partial Class frmEmployees
         Me.Label20 = New System.Windows.Forms.Label()
         Me.dtpCheckInTime = New Guna.UI2.WinForms.Guna2DateTimePicker()
         Me.Label19 = New System.Windows.Forms.Label()
+        Me.btnAddSalarySystemForm = New Guna.UI2.WinForms.Guna2Button()
         Me.tabPageAttachments = New System.Windows.Forms.TabPage()
         Me.lblCvStatus = New System.Windows.Forms.Label()
+        Me.picNationalBack = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.picNationalFront = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.btnRemovePhoto = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnUploadPhoto = New Guna.UI2.WinForms.Guna2Button()
+        Me.picEmployee = New Guna.UI2.WinForms.Guna2PictureBox()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
         Me.cmbSearchField = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
@@ -107,15 +116,7 @@ Partial Class frmEmployees
         Me.btnUpdate = New Guna.UI2.WinForms.Guna2Button()
         Me.btnAdd = New Guna.UI2.WinForms.Guna2Button()
         Me._searchTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.btnAddBranchesForm = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnAddDepartmentForm = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnAddJobTitleForm = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnAddSalarySystemForm = New Guna.UI2.WinForms.Guna2Button()
-        Me.picNationalBack = New Guna.UI2.WinForms.Guna2PictureBox()
-        Me.picNationalFront = New Guna.UI2.WinForms.Guna2PictureBox()
-        Me.btnRemovePhoto = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnUploadPhoto = New Guna.UI2.WinForms.Guna2Button()
-        Me.picEmployee = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         CType(Me.dgvEmployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.panelHeader.SuspendLayout()
         Me.Guna2TabControl1.SuspendLayout()
@@ -123,10 +124,10 @@ Partial Class frmEmployees
         Me.tabPageJob.SuspendLayout()
         Me.tabPageSalary.SuspendLayout()
         Me.tabPageAttachments.SuspendLayout()
-        Me.Guna2Panel1.SuspendLayout()
         CType(Me.picNationalBack, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picNationalFront, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Guna2Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'dgvEmployees
@@ -271,6 +272,7 @@ Partial Class frmEmployees
         '
         'dtpBirthDate
         '
+        Me.dtpBirthDate.BorderRadius = 8
         Me.dtpBirthDate.Checked = True
         Me.dtpBirthDate.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.dtpBirthDate.Format = System.Windows.Forms.DateTimePickerFormat.[Long]
@@ -826,6 +828,60 @@ Partial Class frmEmployees
         Me.cmbBranch.TabIndex = 5597
         Me.cmbBranch.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
+        'btnAddBranchesForm
+        '
+        Me.btnAddBranchesForm.BackColor = System.Drawing.Color.Transparent
+        Me.btnAddBranchesForm.BorderRadius = 8
+        Me.btnAddBranchesForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddBranchesForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddBranchesForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnAddBranchesForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnAddBranchesForm.FillColor = System.Drawing.Color.Empty
+        Me.btnAddBranchesForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnAddBranchesForm.ForeColor = System.Drawing.Color.White
+        Me.btnAddBranchesForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
+        Me.btnAddBranchesForm.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnAddBranchesForm.Location = New System.Drawing.Point(827, 12)
+        Me.btnAddBranchesForm.Name = "btnAddBranchesForm"
+        Me.btnAddBranchesForm.Size = New System.Drawing.Size(38, 36)
+        Me.btnAddBranchesForm.TabIndex = 5638
+        '
+        'btnAddDepartmentForm
+        '
+        Me.btnAddDepartmentForm.BackColor = System.Drawing.Color.Transparent
+        Me.btnAddDepartmentForm.BorderRadius = 8
+        Me.btnAddDepartmentForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddDepartmentForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddDepartmentForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnAddDepartmentForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnAddDepartmentForm.FillColor = System.Drawing.Color.Empty
+        Me.btnAddDepartmentForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnAddDepartmentForm.ForeColor = System.Drawing.Color.White
+        Me.btnAddDepartmentForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
+        Me.btnAddDepartmentForm.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnAddDepartmentForm.Location = New System.Drawing.Point(827, 58)
+        Me.btnAddDepartmentForm.Name = "btnAddDepartmentForm"
+        Me.btnAddDepartmentForm.Size = New System.Drawing.Size(38, 36)
+        Me.btnAddDepartmentForm.TabIndex = 5637
+        '
+        'btnAddJobTitleForm
+        '
+        Me.btnAddJobTitleForm.BackColor = System.Drawing.Color.Transparent
+        Me.btnAddJobTitleForm.BorderRadius = 8
+        Me.btnAddJobTitleForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddJobTitleForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddJobTitleForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnAddJobTitleForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnAddJobTitleForm.FillColor = System.Drawing.Color.Empty
+        Me.btnAddJobTitleForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnAddJobTitleForm.ForeColor = System.Drawing.Color.White
+        Me.btnAddJobTitleForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
+        Me.btnAddJobTitleForm.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnAddJobTitleForm.Location = New System.Drawing.Point(827, 104)
+        Me.btnAddJobTitleForm.Name = "btnAddJobTitleForm"
+        Me.btnAddJobTitleForm.Size = New System.Drawing.Size(38, 36)
+        Me.btnAddJobTitleForm.TabIndex = 5636
+        '
         'tabPageSalary
         '
         Me.tabPageSalary.Controls.Add(Me.Label31)
@@ -1193,6 +1249,7 @@ Partial Class frmEmployees
         '
         'dtpCheckOutTime
         '
+        Me.dtpCheckOutTime.BorderRadius = 8
         Me.dtpCheckOutTime.Checked = True
         Me.dtpCheckOutTime.CustomFormat = "HH:mm:ss"
         Me.dtpCheckOutTime.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
@@ -1219,6 +1276,7 @@ Partial Class frmEmployees
         '
         'dtpCheckInTime
         '
+        Me.dtpCheckInTime.BorderRadius = 8
         Me.dtpCheckInTime.Checked = True
         Me.dtpCheckInTime.CustomFormat = "HH:mm:ss"
         Me.dtpCheckInTime.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
@@ -1242,6 +1300,24 @@ Partial Class frmEmployees
         Me.Label19.TabIndex = 5604
         Me.Label19.Text = "وقت الحضور"
         Me.Label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'btnAddSalarySystemForm
+        '
+        Me.btnAddSalarySystemForm.BackColor = System.Drawing.Color.Transparent
+        Me.btnAddSalarySystemForm.BorderRadius = 8
+        Me.btnAddSalarySystemForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddSalarySystemForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddSalarySystemForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnAddSalarySystemForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnAddSalarySystemForm.FillColor = System.Drawing.Color.Empty
+        Me.btnAddSalarySystemForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnAddSalarySystemForm.ForeColor = System.Drawing.Color.White
+        Me.btnAddSalarySystemForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
+        Me.btnAddSalarySystemForm.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnAddSalarySystemForm.Location = New System.Drawing.Point(974, 162)
+        Me.btnAddSalarySystemForm.Name = "btnAddSalarySystemForm"
+        Me.btnAddSalarySystemForm.Size = New System.Drawing.Size(38, 36)
+        Me.btnAddSalarySystemForm.TabIndex = 5634
         '
         'tabPageAttachments
         '
@@ -1268,6 +1344,84 @@ Partial Class frmEmployees
         Me.lblCvStatus.TabIndex = 5614
         Me.lblCvStatus.Text = "بطاقة الرقم القومي (الوجه / الظهر)"
         Me.lblCvStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'picNationalBack
+        '
+        Me.picNationalBack.BorderRadius = 8
+        Me.picNationalBack.FillColor = System.Drawing.Color.AliceBlue
+        Me.picNationalBack.Image = Global.WindowsApp1.My.Resources.Resources._2013_634988045225330147_533_main
+        Me.picNationalBack.ImageRotate = 0!
+        Me.picNationalBack.Location = New System.Drawing.Point(116, 15)
+        Me.picNationalBack.Name = "picNationalBack"
+        Me.picNationalBack.Size = New System.Drawing.Size(250, 160)
+        Me.picNationalBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picNationalBack.TabIndex = 5608
+        Me.picNationalBack.TabStop = False
+        '
+        'picNationalFront
+        '
+        Me.picNationalFront.BorderRadius = 8
+        Me.picNationalFront.FillColor = System.Drawing.Color.AliceBlue
+        Me.picNationalFront.Image = Global.WindowsApp1.My.Resources.Resources._544
+        Me.picNationalFront.ImageRotate = 0!
+        Me.picNationalFront.Location = New System.Drawing.Point(588, 15)
+        Me.picNationalFront.Name = "picNationalFront"
+        Me.picNationalFront.Size = New System.Drawing.Size(250, 160)
+        Me.picNationalFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picNationalFront.TabIndex = 5607
+        Me.picNationalFront.TabStop = False
+        '
+        'btnRemovePhoto
+        '
+        Me.btnRemovePhoto.BackColor = System.Drawing.Color.Transparent
+        Me.btnRemovePhoto.BorderColor = System.Drawing.Color.BurlyWood
+        Me.btnRemovePhoto.BorderRadius = 6
+        Me.btnRemovePhoto.BorderThickness = 1
+        Me.btnRemovePhoto.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnRemovePhoto.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnRemovePhoto.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnRemovePhoto.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnRemovePhoto.FillColor = System.Drawing.Color.White
+        Me.btnRemovePhoto.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnRemovePhoto.ForeColor = System.Drawing.Color.Black
+        Me.btnRemovePhoto.Image = Global.WindowsApp1.My.Resources.Resources.delete__1_
+        Me.btnRemovePhoto.Location = New System.Drawing.Point(1060, 185)
+        Me.btnRemovePhoto.Name = "btnRemovePhoto"
+        Me.btnRemovePhoto.Size = New System.Drawing.Size(75, 36)
+        Me.btnRemovePhoto.TabIndex = 5606
+        Me.btnRemovePhoto.Text = "حذف"
+        '
+        'btnUploadPhoto
+        '
+        Me.btnUploadPhoto.BackColor = System.Drawing.Color.Transparent
+        Me.btnUploadPhoto.BorderColor = System.Drawing.Color.BurlyWood
+        Me.btnUploadPhoto.BorderRadius = 6
+        Me.btnUploadPhoto.BorderThickness = 1
+        Me.btnUploadPhoto.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnUploadPhoto.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnUploadPhoto.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnUploadPhoto.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnUploadPhoto.FillColor = System.Drawing.Color.White
+        Me.btnUploadPhoto.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnUploadPhoto.ForeColor = System.Drawing.Color.Black
+        Me.btnUploadPhoto.Image = Global.WindowsApp1.My.Resources.Resources.edit
+        Me.btnUploadPhoto.Location = New System.Drawing.Point(1145, 185)
+        Me.btnUploadPhoto.Name = "btnUploadPhoto"
+        Me.btnUploadPhoto.Size = New System.Drawing.Size(75, 36)
+        Me.btnUploadPhoto.TabIndex = 5605
+        Me.btnUploadPhoto.Text = "رفع"
+        '
+        'picEmployee
+        '
+        Me.picEmployee.BorderRadius = 8
+        Me.picEmployee.Image = Global.WindowsApp1.My.Resources.Resources.Gemini_Generated_Image_xxl0cixxl0cixxl0
+        Me.picEmployee.ImageRotate = 0!
+        Me.picEmployee.Location = New System.Drawing.Point(1060, 15)
+        Me.picEmployee.Name = "picEmployee"
+        Me.picEmployee.Size = New System.Drawing.Size(160, 160)
+        Me.picEmployee.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picEmployee.TabIndex = 5604
+        Me.picEmployee.TabStop = False
         '
         'Guna2Panel1
         '
@@ -1404,155 +1558,12 @@ Partial Class frmEmployees
         '
         Me._searchTimer.Interval = 300
         '
-        'btnAddBranchesForm
+        'Guna2BorderlessForm1
         '
-        Me.btnAddBranchesForm.BackColor = System.Drawing.Color.Transparent
-        Me.btnAddBranchesForm.BorderRadius = 8
-        Me.btnAddBranchesForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddBranchesForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddBranchesForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnAddBranchesForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnAddBranchesForm.FillColor = System.Drawing.Color.Empty
-        Me.btnAddBranchesForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnAddBranchesForm.ForeColor = System.Drawing.Color.White
-        Me.btnAddBranchesForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
-        Me.btnAddBranchesForm.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnAddBranchesForm.Location = New System.Drawing.Point(827, 12)
-        Me.btnAddBranchesForm.Name = "btnAddBranchesForm"
-        Me.btnAddBranchesForm.Size = New System.Drawing.Size(38, 36)
-        Me.btnAddBranchesForm.TabIndex = 5638
-        '
-        'btnAddDepartmentForm
-        '
-        Me.btnAddDepartmentForm.BackColor = System.Drawing.Color.Transparent
-        Me.btnAddDepartmentForm.BorderRadius = 8
-        Me.btnAddDepartmentForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddDepartmentForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddDepartmentForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnAddDepartmentForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnAddDepartmentForm.FillColor = System.Drawing.Color.Empty
-        Me.btnAddDepartmentForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnAddDepartmentForm.ForeColor = System.Drawing.Color.White
-        Me.btnAddDepartmentForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
-        Me.btnAddDepartmentForm.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnAddDepartmentForm.Location = New System.Drawing.Point(827, 58)
-        Me.btnAddDepartmentForm.Name = "btnAddDepartmentForm"
-        Me.btnAddDepartmentForm.Size = New System.Drawing.Size(38, 36)
-        Me.btnAddDepartmentForm.TabIndex = 5637
-        '
-        'btnAddJobTitleForm
-        '
-        Me.btnAddJobTitleForm.BackColor = System.Drawing.Color.Transparent
-        Me.btnAddJobTitleForm.BorderRadius = 8
-        Me.btnAddJobTitleForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddJobTitleForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddJobTitleForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnAddJobTitleForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnAddJobTitleForm.FillColor = System.Drawing.Color.Empty
-        Me.btnAddJobTitleForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnAddJobTitleForm.ForeColor = System.Drawing.Color.White
-        Me.btnAddJobTitleForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
-        Me.btnAddJobTitleForm.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnAddJobTitleForm.Location = New System.Drawing.Point(827, 104)
-        Me.btnAddJobTitleForm.Name = "btnAddJobTitleForm"
-        Me.btnAddJobTitleForm.Size = New System.Drawing.Size(38, 36)
-        Me.btnAddJobTitleForm.TabIndex = 5636
-        '
-        'btnAddSalarySystemForm
-        '
-        Me.btnAddSalarySystemForm.BackColor = System.Drawing.Color.Transparent
-        Me.btnAddSalarySystemForm.BorderRadius = 8
-        Me.btnAddSalarySystemForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddSalarySystemForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddSalarySystemForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnAddSalarySystemForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnAddSalarySystemForm.FillColor = System.Drawing.Color.Empty
-        Me.btnAddSalarySystemForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnAddSalarySystemForm.ForeColor = System.Drawing.Color.White
-        Me.btnAddSalarySystemForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
-        Me.btnAddSalarySystemForm.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnAddSalarySystemForm.Location = New System.Drawing.Point(974, 162)
-        Me.btnAddSalarySystemForm.Name = "btnAddSalarySystemForm"
-        Me.btnAddSalarySystemForm.Size = New System.Drawing.Size(38, 36)
-        Me.btnAddSalarySystemForm.TabIndex = 5634
-        '
-        'picNationalBack
-        '
-        Me.picNationalBack.BorderRadius = 8
-        Me.picNationalBack.FillColor = System.Drawing.Color.AliceBlue
-        Me.picNationalBack.Image = Global.WindowsApp1.My.Resources.Resources._2013_634988045225330147_533_main
-        Me.picNationalBack.ImageRotate = 0!
-        Me.picNationalBack.Location = New System.Drawing.Point(116, 15)
-        Me.picNationalBack.Name = "picNationalBack"
-        Me.picNationalBack.Size = New System.Drawing.Size(250, 160)
-        Me.picNationalBack.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picNationalBack.TabIndex = 5608
-        Me.picNationalBack.TabStop = False
-        '
-        'picNationalFront
-        '
-        Me.picNationalFront.BorderRadius = 8
-        Me.picNationalFront.FillColor = System.Drawing.Color.AliceBlue
-        Me.picNationalFront.Image = Global.WindowsApp1.My.Resources.Resources._544
-        Me.picNationalFront.ImageRotate = 0!
-        Me.picNationalFront.Location = New System.Drawing.Point(588, 15)
-        Me.picNationalFront.Name = "picNationalFront"
-        Me.picNationalFront.Size = New System.Drawing.Size(250, 160)
-        Me.picNationalFront.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picNationalFront.TabIndex = 5607
-        Me.picNationalFront.TabStop = False
-        '
-        'btnRemovePhoto
-        '
-        Me.btnRemovePhoto.BackColor = System.Drawing.Color.Transparent
-        Me.btnRemovePhoto.BorderColor = System.Drawing.Color.BurlyWood
-        Me.btnRemovePhoto.BorderRadius = 6
-        Me.btnRemovePhoto.BorderThickness = 1
-        Me.btnRemovePhoto.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnRemovePhoto.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnRemovePhoto.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnRemovePhoto.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnRemovePhoto.FillColor = System.Drawing.Color.White
-        Me.btnRemovePhoto.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.btnRemovePhoto.ForeColor = System.Drawing.Color.Black
-        Me.btnRemovePhoto.Image = Global.WindowsApp1.My.Resources.Resources.delete__1_
-        Me.btnRemovePhoto.Location = New System.Drawing.Point(1060, 185)
-        Me.btnRemovePhoto.Name = "btnRemovePhoto"
-        Me.btnRemovePhoto.Size = New System.Drawing.Size(75, 36)
-        Me.btnRemovePhoto.TabIndex = 5606
-        Me.btnRemovePhoto.Text = "حذف"
-        '
-        'btnUploadPhoto
-        '
-        Me.btnUploadPhoto.BackColor = System.Drawing.Color.Transparent
-        Me.btnUploadPhoto.BorderColor = System.Drawing.Color.BurlyWood
-        Me.btnUploadPhoto.BorderRadius = 6
-        Me.btnUploadPhoto.BorderThickness = 1
-        Me.btnUploadPhoto.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnUploadPhoto.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnUploadPhoto.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnUploadPhoto.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnUploadPhoto.FillColor = System.Drawing.Color.White
-        Me.btnUploadPhoto.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.btnUploadPhoto.ForeColor = System.Drawing.Color.Black
-        Me.btnUploadPhoto.Image = Global.WindowsApp1.My.Resources.Resources.edit
-        Me.btnUploadPhoto.Location = New System.Drawing.Point(1145, 185)
-        Me.btnUploadPhoto.Name = "btnUploadPhoto"
-        Me.btnUploadPhoto.Size = New System.Drawing.Size(75, 36)
-        Me.btnUploadPhoto.TabIndex = 5605
-        Me.btnUploadPhoto.Text = "رفع"
-        '
-        'picEmployee
-        '
-        Me.picEmployee.BorderRadius = 8
-        Me.picEmployee.Image = Global.WindowsApp1.My.Resources.Resources.Gemini_Generated_Image_xxl0cixxl0cixxl0
-        Me.picEmployee.ImageRotate = 0!
-        Me.picEmployee.Location = New System.Drawing.Point(1060, 15)
-        Me.picEmployee.Name = "picEmployee"
-        Me.picEmployee.Size = New System.Drawing.Size(160, 160)
-        Me.picEmployee.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picEmployee.TabIndex = 5604
-        Me.picEmployee.TabStop = False
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
         '
         'frmEmployees
         '
@@ -1575,10 +1586,10 @@ Partial Class frmEmployees
         Me.tabPageJob.ResumeLayout(False)
         Me.tabPageSalary.ResumeLayout(False)
         Me.tabPageAttachments.ResumeLayout(False)
-        Me.Guna2Panel1.ResumeLayout(False)
         CType(Me.picNationalBack, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picNationalFront, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picEmployee, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Guna2Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1675,4 +1686,5 @@ Partial Class frmEmployees
     Friend WithEvents btnAddJobTitleForm As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnAddSalarySystemForm As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents picEmployee As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
 End Class

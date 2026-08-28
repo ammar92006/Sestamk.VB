@@ -70,7 +70,20 @@ Public Module DBModule
             End Using
         End Using
     End Function
-
+    Public Function ExecuteNonQuery(query As String) As Integer
+        Using conn As New SqlConnection(ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                Try
+                    conn.Open()
+                    Return cmd.ExecuteNonQuery()
+                Catch ex As Exception
+                    MessageBox.Show("حدث خطأ أثناء تنفيذ العملية: " & ex.Message,
+                                    "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return -1
+                End Try
+            End Using
+        End Using
+    End Function
     ' تحويل النص من قاعدة البيانات (Base64) إلى صورة لعرضها
     Public Function Base64ToImage(base64String As String) As Image
         If String.IsNullOrEmpty(base64String) Then Return Nothing

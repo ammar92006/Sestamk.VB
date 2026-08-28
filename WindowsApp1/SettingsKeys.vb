@@ -50,4 +50,7 @@ Public Module SettingsKeys
     Public Const ScannerParity As String = "ScannerParity"
     Public Const ScannerStopBits As String = "ScannerStopBits"
 
+    ' ── الثيم والمظهر (Appearance / Theme) ──
+    Public Const AppTheme As String = "AppTheme"
+
 End Module

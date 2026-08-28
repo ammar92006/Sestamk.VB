@@ -22,9 +22,11 @@ Partial Class frmJobTitles
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmJobTitles))
         Me.dgvJobTitles = New System.Windows.Forms.DataGridView()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.lstSuggestions = New System.Windows.Forms.ListBox()
         Me.cmbDepartment = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.btnRefresh = New Guna.UI2.WinForms.Guna2Button()
         Me.btnClear = New Guna.UI2.WinForms.Guna2Button()
@@ -46,6 +48,7 @@ Partial Class frmJobTitles
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         CType(Me.dgvJobTitles, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
         Me.panelHeader.SuspendLayout()
@@ -66,6 +69,7 @@ Partial Class frmJobTitles
         '
         'grpCustomerInfo
         '
+        Me.grpCustomerInfo.Controls.Add(Me.lstSuggestions)
         Me.grpCustomerInfo.Controls.Add(Me.cmbDepartment)
         Me.grpCustomerInfo.Controls.Add(Me.btnRefresh)
         Me.grpCustomerInfo.Controls.Add(Me.btnClear)
@@ -94,6 +98,19 @@ Partial Class frmJobTitles
         Me.grpCustomerInfo.Text = "البيانات"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'lstSuggestions
+        '
+        Me.lstSuggestions.BackColor = System.Drawing.SystemColors.ControlDark
+        Me.lstSuggestions.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.lstSuggestions.FormattingEnabled = True
+        Me.lstSuggestions.ItemHeight = 17
+        Me.lstSuggestions.Location = New System.Drawing.Point(20, 88)
+        Me.lstSuggestions.Margin = New System.Windows.Forms.Padding(4)
+        Me.lstSuggestions.Name = "lstSuggestions"
+        Me.lstSuggestions.Size = New System.Drawing.Size(289, 106)
+        Me.lstSuggestions.TabIndex = 37
+        Me.lstSuggestions.Visible = False
+        '
         'cmbDepartment
         '
         Me.cmbDepartment.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -120,7 +137,7 @@ Partial Class frmJobTitles
         Me.btnRefresh.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnRefresh.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnRefresh.ForeColor = System.Drawing.Color.White
-        Me.btnRefresh.Location = New System.Drawing.Point(730, 185)
+        Me.btnRefresh.Location = New System.Drawing.Point(450, 192)
         Me.btnRefresh.Name = "btnRefresh"
         Me.btnRefresh.Size = New System.Drawing.Size(110, 36)
         Me.btnRefresh.TabIndex = 4
@@ -135,7 +152,7 @@ Partial Class frmJobTitles
         Me.btnClear.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnClear.ForeColor = System.Drawing.Color.White
-        Me.btnClear.Location = New System.Drawing.Point(850, 185)
+        Me.btnClear.Location = New System.Drawing.Point(570, 192)
         Me.btnClear.Name = "btnClear"
         Me.btnClear.Size = New System.Drawing.Size(120, 36)
         Me.btnClear.TabIndex = 3
@@ -148,7 +165,7 @@ Partial Class frmJobTitles
         Me.tgStatus.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.tgStatus.CheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.tgStatus.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.tgStatus.Location = New System.Drawing.Point(710, 103)
+        Me.tgStatus.Location = New System.Drawing.Point(756, 106)
         Me.tgStatus.Name = "tgStatus"
         Me.tgStatus.Size = New System.Drawing.Size(70, 30)
         Me.tgStatus.TabIndex = 5599
@@ -166,7 +183,7 @@ Partial Class frmJobTitles
         Me.btnDelete.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnDelete.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnDelete.ForeColor = System.Drawing.Color.White
-        Me.btnDelete.Location = New System.Drawing.Point(980, 185)
+        Me.btnDelete.Location = New System.Drawing.Point(700, 192)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(110, 36)
         Me.btnDelete.TabIndex = 2
@@ -176,9 +193,9 @@ Partial Class frmJobTitles
         '
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.Label4.Location = New System.Drawing.Point(790, 100)
+        Me.Label4.Location = New System.Drawing.Point(836, 103)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(130, 36)
+        Me.Label4.Size = New System.Drawing.Size(92, 36)
         Me.Label4.TabIndex = 5598
         Me.Label4.Text = "حالة الوظيفة"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -192,7 +209,7 @@ Partial Class frmJobTitles
         Me.btnUpdate.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnUpdate.ForeColor = System.Drawing.Color.White
-        Me.btnUpdate.Location = New System.Drawing.Point(1100, 185)
+        Me.btnUpdate.Location = New System.Drawing.Point(820, 192)
         Me.btnUpdate.Name = "btnUpdate"
         Me.btnUpdate.Size = New System.Drawing.Size(110, 36)
         Me.btnUpdate.TabIndex = 1
@@ -218,7 +235,7 @@ Partial Class frmJobTitles
         Me.btnAdd.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnAdd.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnAdd.ForeColor = System.Drawing.Color.White
-        Me.btnAdd.Location = New System.Drawing.Point(1220, 185)
+        Me.btnAdd.Location = New System.Drawing.Point(940, 192)
         Me.btnAdd.Name = "btnAdd"
         Me.btnAdd.Size = New System.Drawing.Size(110, 36)
         Me.btnAdd.TabIndex = 0
@@ -282,7 +299,7 @@ Partial Class frmJobTitles
         Me.cmbSearchField.ItemHeight = 30
         Me.cmbSearchField.Location = New System.Drawing.Point(316, 50)
         Me.cmbSearchField.Name = "cmbSearchField"
-        Me.cmbSearchField.Size = New System.Drawing.Size(160, 36)
+        Me.cmbSearchField.Size = New System.Drawing.Size(207, 36)
         Me.cmbSearchField.TabIndex = 2
         Me.cmbSearchField.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -337,13 +354,13 @@ Partial Class frmJobTitles
         Me.txtNotes.DefaultText = ""
         Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.txtNotes.ForeColor = System.Drawing.Color.Black
-        Me.txtNotes.Location = New System.Drawing.Point(200, 100)
+        Me.txtNotes.Location = New System.Drawing.Point(363, 106)
         Me.txtNotes.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.PlaceholderText = "الملاحظات"
         Me.txtNotes.SelectedText = ""
-        Me.txtNotes.Size = New System.Drawing.Size(480, 75)
+        Me.txtNotes.Size = New System.Drawing.Size(386, 75)
         Me.txtNotes.TabIndex = 5601
         '
         'panelHeader
@@ -409,6 +426,13 @@ Partial Class frmJobTitles
         Me.Guna2HtmlLabel1.Text = " الوظيفية المسميات"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
         '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
         'frmJobTitles
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -445,6 +469,7 @@ Partial Class frmJobTitles
     Friend WithEvents txtJobTitleName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents cmbSearchField As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents lstSuggestions As ListBox
     Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtJobTitleCode As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
@@ -454,4 +479,5 @@ Partial Class frmJobTitles
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents cmbDepartment As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents txtNotes As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
 End Class
