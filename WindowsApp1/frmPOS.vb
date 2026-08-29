@@ -863,85 +863,85 @@ Public Class frmPOS
     '==========================================
     ' 1. رسم الأقسام داخل flpCategories
     ' ==========================================
-    Private Sub LoadCategories()
-        Dim categories = _repo.GetCategories()
+    'Private Sub LoadCategories()
+    '    Dim categories = _repo.GetCategories()
 
-        flpCategories.SuspendLayout()
-        Try
-            flpCategories.Controls.Clear()
+    '    flpCategories.SuspendLayout()
+    '    Try
+    '        flpCategories.Controls.Clear()
 
-            For Each cat As CategoryModel In categories
-                Dim card As New UCCategoryCard With {
-                    .Width = 130,
-                    .Height = 140,
-                    .Category = cat
-                }
+    '        For Each cat As CategoryModel In categories
+    '            Dim card As New UCCategoryCard With {
+    '                .Width = 130,
+    '                .Height = 140,
+    '                .Category = cat
+    '            }
 
-                ' استلام حدث الضغط على القسم
-                AddHandler card.CategoryClicked, AddressOf CategoryCard_Click
+    '            ' استلام حدث الضغط على القسم
+    '            AddHandler card.CategoryClicked, AddressOf CategoryCard_Click
 
-                flpCategories.Controls.Add(card)
-            Next
-        Finally
-            flpCategories.ResumeLayout()
-        End Try
-    End Sub
+    '            flpCategories.Controls.Add(card)
+    '        Next
+    '    Finally
+    '        flpCategories.ResumeLayout()
+    '    End Try
+    'End Sub
 
-    ' عند الضغط على كارت قسم
-    Private Sub CategoryCard_Click(category As CategoryModel)
-        ' جلب أصناف هذا القسم ورسمها
-        LoadProducts(category.Category_ID)
-    End Sub
+    '' عند الضغط على كارت قسم
+    'Private Sub CategoryCard_Click(category As CategoryModel)
+    '    ' جلب أصناف هذا القسم ورسمها
+    '    LoadProducts(category.Category_ID)
+    'End Sub
 
 
-    ' ==========================================
-    ' 2. رسم الأصناف داخل flpProducts
-    ' ==========================================
-    Private Sub LoadProducts(categoryID As Integer)
-        Dim products = _repo.GetProductsByCategoryID(categoryID)
+    '' ==========================================
+    '' 2. رسم الأصناف داخل flpProducts
+    '' ==========================================
+    'Private Sub LoadProducts(categoryID As Integer)
+    '    Dim products = _repo.GetProductsByCategoryID(categoryID)
 
-        flpProducts.SuspendLayout()
-        Try
-            flpProducts.Controls.Clear()
+    '    flpProducts.SuspendLayout()
+    '    Try
+    '        flpProducts.Controls.Clear()
 
-            For Each prod As ProductModel In products
-                Dim card As New UCProductCard With {
-                    .Width = 140,
-                    .Height = 150,
-                    .Product = prod
-                }
+    '        For Each prod As ProductModel In products
+    '            Dim card As New UCProductCard With {
+    '                .Width = 140,
+    '                .Height = 150,
+    '                .Product = prod
+    '            }
 
-                ' استلام حدث الضغط على الصنف
-                AddHandler card.ProductClicked, AddressOf ProductCard_Click
+    '            ' استلام حدث الضغط على الصنف
+    '            AddHandler card.ProductClicked, AddressOf ProductCard_Click
 
-                flpProducts.Controls.Add(card)
-            Next
-        Finally
-            flpProducts.ResumeLayout()
-        End Try
-    End Sub
+    '            flpProducts.Controls.Add(card)
+    '        Next
+    '    Finally
+    '        flpProducts.ResumeLayout()
+    '    End Try
+    'End Sub
 
-    ' ==========================================
-    ' حدث الضغط على كارت الصنف في شاشة البيع
-    ' ==========================================
-    Private Sub ProductCard_Click(product As ProductModel)
+    '' ==========================================
+    '' حدث الضغط على كارت الصنف في شاشة البيع
+    '' ==========================================
+    'Private Sub ProductCard_Click(product As ProductModel)
 
-        ' 1. فتح فورم خيارات الصنف (الأحجام والإضافات) كـ Dialog
-        Using frmOptions As New FrmProductOptions(product, _repo)
+    '    ' 1. فتح فورم خيارات الصنف (الأحجام والإضافات) كـ Dialog
+    '    Using frmOptions As New FrmProductOptions(product, _repo)
 
-            ' 2. التحقق مما إذا كان الكاشير قد ضغط على زر "إضافة" (DialogResult.OK)
-            If frmOptions.ShowDialog() = DialogResult.OK Then
+    '        ' 2. التحقق مما إذا كان الكاشير قد ضغط على زر "إضافة" (DialogResult.OK)
+    '        If frmOptions.ShowDialog() = DialogResult.OK Then
 
-                ' 3. استلام كافة العناصر المختارة ببيانات الأحجام والإضافات وإضافتها للفاتورة
-                For Each selectedItem In frmOptions.ResultOrderItems
-                    AddItemToInvoice(selectedItem)
-                Next
+    '            ' 3. استلام كافة العناصر المختارة ببيانات الأحجام والإضافات وإضافتها للفاتورة
+    '            For Each selectedItem In frmOptions.ResultOrderItems
+    '                AddItemToInvoice(selectedItem)
+    '            Next
 
-            End If
+    '        End If
 
-        End Using
+    '    End Using
 
-    End Sub
+    'End Sub
     ' =========================================================
     ' دالة جلب وعرض رقم الفاتورة الحالي المتسلسل
     ' =========================================================
@@ -1525,4 +1525,993 @@ Public Class frmPOS
             End If
         End Using
     End Sub
+
+
+    '```vbnet
+    '==========================================================
+    ' POS DISPLAY SYSTEM
+    '==========================================================
+    ' يدعم:
+    '
+    ' 1) عرض الفئات Cards
+    ' 2) عرض الفئات Buttons
+    '
+    ' 3) عرض المنتجات Cards
+    ' 4) عرض المنتجات Buttons
+    '
+    ' 5) التحكم في عدد أعمدة وصفوف الفئات
+    ' 6) التحكم التلقائي في ارتفاع Panel الفئات
+    ' 7) المنتجات لا تعتمد على Rows / Columns
+    ' 8) المنتجات يتم توزيعها تلقائياً بواسطة FlowLayoutPanel
+    '
+    '==========================================================
+
+
+    '==========================================================
+    ' 1. إعدادات العرض
+    '==========================================================
+
+    Private Enum POSDisplayMode
+        Cards = 0
+        Buttons = 1
+    End Enum
+
+
+    '==========================================================
+    ' 2. متغيرات النظام
+    '==========================================================
+
+    ' طريقة عرض الفئات
+    Private _categoryDisplayMode As POSDisplayMode = POSDisplayMode.Cards
+
+    ' طريقة عرض المنتجات
+    Private _productDisplayMode As POSDisplayMode = POSDisplayMode.Cards
+
+
+    '==========================================================
+    ' إعدادات الفئات
+    '==========================================================
+
+    ' عدد الأعمدة
+    Private _categoryColumns As Integer = 4
+
+    ' عدد الصفوف
+    Private _categoryRows As Integer = 3
+
+    ' حجم زر الفئة
+    Private _categoryButtonWidth As Integer = 150
+
+    Private _categoryButtonHeight As Integer = 55
+
+
+    ' أقصى ارتفاع للـ Panel الخاص بالفئات
+    Private _categoryPanelMaxHeight As Integer = 220
+
+
+    '==========================================================
+    ' إعدادات المنتجات
+    '==========================================================
+
+    ' عرض زر المنتج
+    Private _productButtonWidth As Integer = 180
+
+    ' ارتفاع زر المنتج
+    Private _productButtonHeight As Integer = 75
+
+
+    '==========================================================
+    ' اللون الحالي للفئة المختارة
+    ' يستخدم لتلوين أزرار المنتجات
+    '==========================================================
+
+    Private _selectedCategoryColor As Color = Color.DodgerBlue
+
+
+    '==========================================================
+    ' 3. تحميل إعدادات العرض
+    '==========================================================
+
+    Private Sub LoadDisplaySettings()
+
+        '------------------------------------------------------
+        ' هنا تقدر مستقبلاً تربط القيم بـ My.Settings
+        '------------------------------------------------------
+
+        ' مثال:
+        '
+        ' _categoryDisplayMode =
+        '     If(My.Settings.CategoryDisplayMode = 1,
+        '        POSDisplayMode.Buttons,
+        '        POSDisplayMode.Cards)
+        '
+        ' _productDisplayMode =
+        '     If(My.Settings.ProductDisplayMode = 1,
+        '        POSDisplayMode.Buttons,
+        '        POSDisplayMode.Cards)
+        '
+        ' _categoryColumns = My.Settings.CategoryColumns
+        ' _categoryRows = My.Settings.CategoryRows
+
+
+        '------------------------------------------------------
+        ' حالياً القيم الافتراضية
+        '------------------------------------------------------
+
+        _categoryDisplayMode = POSDisplayMode.Buttons
+        _productDisplayMode = POSDisplayMode.Buttons
+
+        _categoryColumns = 4
+        _categoryRows = 3
+
+        _categoryButtonHeight = 55
+
+        _categoryPanelMaxHeight = 220
+
+        _productButtonWidth = 180
+        _productButtonHeight = 75
+
+    End Sub
+
+
+    '==========================================================
+    ' 4. عند تحميل شاشة البيع
+    '==========================================================
+
+    Private Sub FrmSales_Load(
+    sender As Object,
+    e As EventArgs
+) Handles MyBase.Load
+
+        ' تحميل إعدادات طريقة العرض
+        LoadDisplaySettings()
+
+        ' تحميل الفئات
+        LoadCategories()
+
+    End Sub
+
+
+    '==========================================================
+    ' 5. تحميل الفئات
+    '==========================================================
+
+    Private Sub LoadCategories()
+
+        Dim categories = _repo.GetCategories()
+
+        flpCategories.SuspendLayout()
+
+        Try
+
+            flpCategories.Controls.Clear()
+
+            '----------------------------------------------
+            ' إعدادات FlowLayoutPanel
+            '----------------------------------------------
+
+            flpCategories.FlowDirection =
+            FlowDirection.LeftToRight
+
+            flpCategories.WrapContents = True
+
+            flpCategories.AutoScroll = True
+
+
+            '----------------------------------------------
+            ' تحديد طريقة العرض
+            '----------------------------------------------
+
+            If _categoryDisplayMode = POSDisplayMode.Cards Then
+
+                LoadCategoriesAsCards(categories)
+
+            Else
+
+                LoadCategoriesAsButtons(categories)
+
+            End If
+
+        Finally
+
+            flpCategories.ResumeLayout()
+
+        End Try
+
+    End Sub
+
+
+    '==========================================================
+    ' 6. عرض الفئات بالكروت
+    '==========================================================
+
+    Private Sub LoadCategoriesAsCards(categories)
+
+        For Each cat As CategoryModel In categories
+
+            Dim card As New UCCategoryCard With {
+            .Width = 130,
+            .Height = 140,
+            .Category = cat
+        }
+
+            ' حدث الضغط على الكارت
+            AddHandler card.CategoryClicked,
+                   AddressOf CategoryCard_Click
+
+            flpCategories.Controls.Add(card)
+
+        Next
+
+    End Sub
+
+
+    '==========================================================
+    ' 7. عرض الفئات كأزرار
+    '==========================================================
+
+    Private Sub LoadCategoriesAsButtons(categories)
+
+        '----------------------------------------------
+        ' حساب عرض الزر بناءً على عدد الأعمدة
+        '----------------------------------------------
+
+        ConfigureCategoryButtonWidth()
+
+
+        For Each cat As CategoryModel In categories
+
+            Dim btn As Button =
+            CreateCategoryButton(cat)
+
+            ' حدث الضغط
+            AddHandler btn.Click,
+                   AddressOf CategoryButton_Click
+
+            flpCategories.Controls.Add(btn)
+
+        Next
+
+
+        '----------------------------------------------
+        ' حساب ارتفاع الـ Panel
+        '----------------------------------------------
+
+        UpdateCategoryPanelHeight()
+
+    End Sub
+
+
+    '==========================================================
+    ' 8. إنشاء زر الفئة
+    '==========================================================
+
+    Private Function CreateCategoryButton(
+    category As CategoryModel
+) As Button
+
+        Dim btn As New Button()
+
+
+        '----------------------------------------------
+        ' الحجم
+        '----------------------------------------------
+
+        btn.Width = _categoryButtonWidth
+
+        btn.Height = _categoryButtonHeight
+
+
+        '----------------------------------------------
+        ' النص
+        '----------------------------------------------
+
+        btn.Text = category.Category_NameAr
+
+
+        '----------------------------------------------
+        ' تخزين بيانات الفئة داخل الزر
+        '----------------------------------------------
+
+        btn.Tag = category
+
+
+        '----------------------------------------------
+        ' المسافة بين الأزرار
+        '----------------------------------------------
+
+        btn.Margin = New Padding(5)
+
+
+        '----------------------------------------------
+        ' الشكل
+        '----------------------------------------------
+
+        btn.FlatStyle = FlatStyle.Flat
+
+        btn.FlatAppearance.BorderSize = 0
+
+
+        '----------------------------------------------
+        ' اللون
+        '----------------------------------------------
+
+        btn.BackColor =
+        GetCategoryColor(category)
+
+
+        btn.ForeColor = Color.White
+
+
+        '----------------------------------------------
+        ' الخط
+        '----------------------------------------------
+
+        btn.Font = New Font(
+        "Segoe UI",
+        10,
+        FontStyle.Bold
+    )
+
+
+        '----------------------------------------------
+        ' محاذاة النص
+        '----------------------------------------------
+
+        btn.TextAlign =
+        ContentAlignment.MiddleCenter
+
+
+        '----------------------------------------------
+        ' شكل الماوس
+        '----------------------------------------------
+
+        btn.Cursor = Cursors.Hand
+
+
+        Return btn
+
+    End Function
+
+
+    '==========================================================
+    ' 9. الحصول على لون الفئة
+    '==========================================================
+
+    Private Function GetCategoryColor(
+    category As CategoryModel
+) As Color
+
+        Try
+
+            '----------------------------------------------
+            ' لو CategoryColorHex موجود
+            ' مثال:
+            ' #2196F3
+            ' #4CAF50
+            ' #FF9800
+            '----------------------------------------------
+
+            If Not String.IsNullOrWhiteSpace(
+            category.CategoryColor.HexCode
+        ) Then
+
+                Return ColorTranslator.FromHtml(
+                category.CategoryColor.HexCode
+            )
+
+            End If
+
+        Catch
+            ' لو اللون غير صحيح نستخدم اللون الافتراضي
+        End Try
+
+
+        Return Color.DodgerBlue
+
+    End Function
+
+
+    '==========================================================
+    ' 10. حساب عرض أزرار الفئات
+    '==========================================================
+
+    Private Sub ConfigureCategoryButtonWidth()
+
+        If _categoryColumns <= 0 Then
+            _categoryColumns = 4
+        End If
+
+
+        Dim availableWidth As Integer =
+        flpCategories.ClientSize.Width
+
+
+        ' المسافات:
+        '
+        ' كل زر لديه Margin = 5 يمين + 5 يسار
+        '
+        Dim totalMargins As Integer =
+        _categoryColumns * 10
+
+
+        Dim calculatedWidth As Integer =
+        (availableWidth - totalMargins) \ _categoryColumns
+
+
+        ' حماية من القيم الصغيرة
+        If calculatedWidth < 50 Then
+            calculatedWidth = 50
+        End If
+
+
+        _categoryButtonWidth = calculatedWidth
+
+    End Sub
+
+
+    '==========================================================
+    ' 11. حساب ارتفاع Panel الفئات
+    '==========================================================
+
+    Private Sub UpdateCategoryPanelHeight()
+
+        If _categoryRows <= 0 Then
+            _categoryRows = 3
+        End If
+
+
+        Dim buttonHeight As Integer =
+        _categoryButtonHeight + 10
+
+
+        Dim calculatedHeight As Integer =
+        (_categoryRows * buttonHeight) +
+        flpCategories.Padding.Top +
+        flpCategories.Padding.Bottom
+
+
+        '----------------------------------------------
+        ' الحد الأقصى
+        '----------------------------------------------
+
+        If calculatedHeight >
+       _categoryPanelMaxHeight Then
+
+            calculatedHeight =
+            _categoryPanelMaxHeight
+
+        End If
+
+
+        flpCategories.Height =
+        calculatedHeight
+
+    End Sub
+
+
+    '==========================================================
+    ' 12. الضغط على زر الفئة
+    '==========================================================
+
+    Private Sub CategoryButton_Click(
+    sender As Object,
+    e As EventArgs
+)
+
+        Dim btn As Button =
+        DirectCast(sender, Button)
+
+
+        Dim category As CategoryModel =
+        DirectCast(btn.Tag, CategoryModel)
+
+
+        '----------------------------------------------
+        ' حفظ لون الفئة الحالية
+        '----------------------------------------------
+
+        _selectedCategoryColor =
+        GetCategoryColor(category)
+
+
+        '----------------------------------------------
+        ' تحميل المنتجات
+        '----------------------------------------------
+
+        LoadProducts(
+        category.Category_ID
+    )
+
+    End Sub
+
+
+    '==========================================================
+    ' 13. الضغط على كارت الفئة
+    '==========================================================
+
+    Private Sub CategoryCard_Click(
+    category As CategoryModel
+)
+
+        ' حفظ لون الفئة الحالية
+        _selectedCategoryColor =
+        GetCategoryColor(category)
+
+
+        ' تحميل المنتجات
+        LoadProducts(
+        category.Category_ID
+    )
+
+    End Sub
+
+
+    '==========================================================
+    ' 14. تحميل المنتجات
+    '==========================================================
+
+    Private Sub LoadProducts(
+    categoryID As Integer
+)
+
+        Dim products =
+        _repo.GetProductsByCategoryID(categoryID)
+
+
+        flpProducts.SuspendLayout()
+
+        Try
+
+            flpProducts.Controls.Clear()
+
+
+            '----------------------------------------------
+            ' إعداد FlowLayoutPanel المنتجات
+            '----------------------------------------------
+
+            flpProducts.FlowDirection =
+            FlowDirection.LeftToRight
+
+            flpProducts.WrapContents = True
+
+            flpProducts.AutoScroll = True
+
+
+            '----------------------------------------------
+            ' تحديد طريقة العرض
+            '----------------------------------------------
+
+            If _productDisplayMode =
+           POSDisplayMode.Cards Then
+
+                LoadProductsAsCards(products)
+
+            Else
+
+                LoadProductsAsButtons(products)
+
+            End If
+
+        Finally
+
+            flpProducts.ResumeLayout()
+
+        End Try
+
+    End Sub
+
+
+    '==========================================================
+    ' 15. عرض المنتجات بالكروت
+    '==========================================================
+
+    Private Sub LoadProductsAsCards(products)
+
+        For Each prod As ProductModel In products
+
+            Dim card As New UCProductCard With {
+            .Width = 140,
+            .Height = 150,
+            .Product = prod
+        }
+
+
+            ' حدث الضغط على المنتج
+            AddHandler card.ProductClicked,
+                   AddressOf ProductCard_Click
+
+
+            flpProducts.Controls.Add(card)
+
+        Next
+
+    End Sub
+
+
+    '==========================================================
+    ' 16. عرض المنتجات كأزرار
+    '==========================================================
+
+    Private Sub LoadProductsAsButtons(products)
+
+        For Each prod As ProductModel In products
+
+            Dim btn As Button =
+            CreateProductButton(prod)
+
+
+            ' حدث الضغط
+            AddHandler btn.Click,
+                   AddressOf ProductButton_Click
+
+
+            flpProducts.Controls.Add(btn)
+
+        Next
+
+    End Sub
+
+
+    '==========================================================
+    ' 17. إنشاء زر المنتج
+    '==========================================================
+
+    Private Function CreateProductButton(
+    product As ProductModel
+) As Button
+
+        Dim btn As New Button()
+
+
+        '----------------------------------------------
+        ' الحجم
+        '----------------------------------------------
+
+        btn.Width =
+        _productButtonWidth
+
+        btn.Height =
+        _productButtonHeight
+
+
+        '----------------------------------------------
+        ' وصف المنتج
+        '----------------------------------------------
+
+        btn.Text = product.Description
+
+
+        '----------------------------------------------
+        ' تخزين المنتج داخل الزر
+        '----------------------------------------------
+
+        btn.Tag = product
+
+
+        '----------------------------------------------
+        ' المسافة
+        '----------------------------------------------
+
+        btn.Margin = New Padding(5)
+
+
+        '----------------------------------------------
+        ' الشكل
+        '----------------------------------------------
+
+        btn.FlatStyle = FlatStyle.Flat
+
+        btn.FlatAppearance.BorderSize = 0
+
+
+        '----------------------------------------------
+        ' لون الفئة
+        '----------------------------------------------
+
+        btn.BackColor =
+        _selectedCategoryColor
+
+
+        btn.ForeColor =
+        Color.White
+
+
+        '----------------------------------------------
+        ' الخط
+        '----------------------------------------------
+
+        btn.Font =
+        New Font(
+            "Segoe UI",
+            10,
+            FontStyle.Bold
+        )
+
+
+        '----------------------------------------------
+        ' النص
+        '----------------------------------------------
+
+        btn.TextAlign =
+        ContentAlignment.MiddleCenter
+
+
+        '----------------------------------------------
+        ' لو اسم المنتج طويل
+        '----------------------------------------------
+
+        btn.AutoEllipsis =
+        True
+
+
+        '----------------------------------------------
+        ' الماوس
+        '----------------------------------------------
+
+        btn.Cursor =
+        Cursors.Hand
+
+
+        Return btn
+
+    End Function
+
+
+    '==========================================================
+    ' 18. الضغط على زر المنتج
+    '==========================================================
+
+    Private Sub ProductButton_Click(
+    sender As Object,
+    e As EventArgs
+)
+
+        Dim btn As Button =
+        DirectCast(sender, Button)
+
+
+        Dim product As ProductModel =
+        DirectCast(btn.Tag, ProductModel)
+
+
+        '----------------------------------------------
+        ' استخدام نفس منطق الكروت
+        '----------------------------------------------
+
+        ProductCard_Click(product)
+
+    End Sub
+
+
+    '==========================================================
+    ' 19. الضغط على كارت المنتج
+    '==========================================================
+
+    Private Sub ProductCard_Click(
+    product As ProductModel
+)
+
+        '----------------------------------------------
+        ' فتح شاشة خيارات المنتج
+        '----------------------------------------------
+
+        Using frmOptions As New FrmProductOptions(
+        product,
+        _repo
+    )
+
+            '------------------------------------------
+            ' المستخدم ضغط إضافة
+            '------------------------------------------
+
+            If frmOptions.ShowDialog() =
+           DialogResult.OK Then
+
+
+                '--------------------------------------
+                ' إضافة العناصر للفاتورة
+                '--------------------------------------
+
+                For Each selectedItem In
+                frmOptions.ResultOrderItems
+
+                    AddItemToInvoice(
+                    selectedItem
+                )
+
+                Next
+
+            End If
+
+        End Using
+
+    End Sub
+
+
+    '==========================================================
+    ' 20. إعادة ضبط عرض الفئات عند تغيير حجم الشاشة
+    '==========================================================
+
+    Private Sub flpCategories_Resize(
+    sender As Object,
+    e As EventArgs
+) Handles flpCategories.Resize
+
+        ' لو طريقة العرض Buttons فقط
+        If _categoryDisplayMode =
+       POSDisplayMode.Buttons Then
+
+
+            ' إعادة حساب عرض الأزرار
+            ConfigureCategoryButtonWidth()
+
+
+            ' تحديث حجم الأزرار الموجودة
+            For Each ctrl As Control In
+            flpCategories.Controls
+
+                If TypeOf ctrl Is Button Then
+
+                    ctrl.Width =
+                    _categoryButtonWidth
+
+                    ctrl.Height =
+                    _categoryButtonHeight
+
+                End If
+
+            Next
+
+
+            ' تحديث ارتفاع الـ Panel
+            UpdateCategoryPanelHeight()
+
+        End If
+
+    End Sub
+
+
+    '==========================================================
+    ' 21. دالة لتغيير طريقة العرض من أي مكان
+    '==========================================================
+
+    Private Sub RefreshPOSDisplay()
+
+        '----------------------------------------------
+        ' إعادة تحميل الفئات
+        '----------------------------------------------
+
+        LoadCategories()
+
+    End Sub
+
+
+    '==========================================================
+    ' 22. أمثلة لتغيير الإعدادات
+    '==========================================================
+
+    '----------------------------------------------
+    ' Cards
+    '----------------------------------------------
+
+    Private Sub SetCardsMode()
+
+        _categoryDisplayMode =
+        POSDisplayMode.Cards
+
+        _productDisplayMode =
+        POSDisplayMode.Cards
+
+        RefreshPOSDisplay()
+
+    End Sub
+
+
+    '----------------------------------------------
+    ' Buttons
+    '----------------------------------------------
+
+    Private Sub SetButtonsMode()
+
+        _categoryDisplayMode =
+        POSDisplayMode.Buttons
+
+        _productDisplayMode =
+        POSDisplayMode.Buttons
+
+        RefreshPOSDisplay()
+
+    End Sub
+
+
+    '==========================================================
+    ' 23. تغيير إعدادات شبكة الفئات
+    '==========================================================
+
+    Private Sub SetCategoryGrid(
+    columns As Integer,
+    rows As Integer
+)
+
+        If columns < 1 Then
+            columns = 1
+        End If
+
+
+        If rows < 1 Then
+            rows = 1
+        End If
+
+
+        _categoryColumns =
+        columns
+
+        _categoryRows =
+        rows
+
+
+        ' إعادة رسم الفئات
+        RefreshPOSDisplay()
+
+    End Sub
+
+
+    '==========================================================
+    ' أمثلة:
+    '
+    ' 3 × 4
+    '==========================================================
+
+    ' SetCategoryGrid(4, 3)
+
+
+    '==========================================================
+    ' 5 × 2
+    '==========================================================
+
+    ' SetCategoryGrid(5, 2)
+
+
+    '==========================================================
+    ' 6 × 3
+    '==========================================================
+
+    ' SetCategoryGrid(6, 3)
+
+
+    '==========================================================
+    ' 24. تغيير حجم أزرار المنتجات
+    '==========================================================
+
+    Private Sub SetProductButtonSize(
+    width As Integer,
+    height As Integer
+)
+
+        If width < 80 Then
+            width = 80
+        End If
+
+
+        If height < 40 Then
+            height = 40
+        End If
+
+
+        _productButtonWidth =
+        width
+
+        _productButtonHeight =
+        height
+
+
+        ' لو فيه قسم مفتوح
+        ' نعيد رسم المنتجات
+        '
+        ' LoadProducts(categoryID)
+        '
+        ' ويمكنك استدعاؤها من مكان حفظ الإعدادات.
+
+    End Sub
+
 End Class

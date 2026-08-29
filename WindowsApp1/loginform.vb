@@ -6,7 +6,7 @@ Imports System.Threading
 
 Public Class Login
     Private x As Integer, y As Integer
-    Private newpoint As New Point
+    Private newpoint As Point
     Private lastRow As Integer
     Private Shared appMutex As Mutex
 
