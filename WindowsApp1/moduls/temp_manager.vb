@@ -461,10 +461,10 @@ Public Class temp_manager
             txtProductCode.Text = drv("Product_Code").ToString()
             txtProductName.Text = drv("Product_Name").ToString()
             lstBox.Visible = False
-
-            Dim sales As New Sales
+            Dim tempSalePrice As Decimal = 0
+            Dim tempConversionFactor As Decimal = 0
             LoadUnitsAndSetDefaultPrice(SelectedProductId, cmbUnit, txtSalePrice,
-                                        sales.CurrentSalePrice, sales.CurrentConversionFactor)
+                                        tempSalePrice, tempConversionFactor)
 
         Catch ex As Exception
             MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالكود: " & ex.Message)
@@ -499,9 +499,10 @@ Public Class temp_manager
             lstBox.Visible = False
             lstBox2.Visible = False
 
-            Dim sales As New Sales
+            Dim tempSalePrice2 As Decimal = 0
+            Dim tempConversionFactor2 As Decimal = 0
             LoadUnitsAndSetDefaultPrice(SelectedProductId, cmbUnit, txtSalePrice,
-                                        sales.CurrentSalePrice, sales.CurrentConversionFactor)
+                                        tempSalePrice2, tempConversionFactor2)
 
         Catch ex As Exception
             MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
@@ -533,10 +534,10 @@ Public Class temp_manager
             txtProductCode.Text = drv("Product_Code").ToString()
             lstBox.Visible = False
             lstBox2.Visible = False
-
-            Dim sales As New Sales
+            Dim tempSalePrice3 As Decimal = 0
+            Dim tempConversionFactor3 As Decimal = 0
             LoadUnitsAndSetDefaultPrice2(SelectedProductId, cmbUnit, txtSalePrice,
-                                        sales.CurrentSalePrice, sales.CurrentConversionFactor)
+                                         tempSalePrice3, tempConversionFactor3)
 
         Catch ex As Exception
             MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)

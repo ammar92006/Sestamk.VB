@@ -50,6 +50,9 @@ Public Class frmAddons
 
     ' حدث تحميل الشاشة
     Private Sub frmAddons_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Session.CheckCanOpen(Me) Then Return
+        Session.ApplyFormPermissions(Me)
+
         LoadAddonsGrid()
         txtAddonCode.Text = GetNextCode("Addons", "AddonCode")
         datagridviewsetup(dgvAddons)

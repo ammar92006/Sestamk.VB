@@ -132,71 +132,8 @@ Public Class ProductUnits
         End Try
     End Sub
     Private Sub datagridviewsetup()
+        Main.datagridviewsetup(dgv_ProductUnits)
         With dgv_ProductUnits
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToDeleteRows = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 45, 48)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue
-            .DefaultCellStyle.SelectionBackColor = Color.RoyalBlue
-
-            '---------------------------
-            ' إعداد العنوان (Header)
-            '---------------------------
-            .EnableHeadersVisualStyles = False
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(40, 40, 43)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersHeight = 65
-            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            '---------------------------
-            ' إعداد الصفوف (Rows)
-            '---------------------------
-            .DefaultCellStyle.BackColor = Color.FromArgb(50, 50, 55)
-            .DefaultCellStyle.ForeColor = Color.White
-            .DefaultCellStyle.SelectionBackColor = Color.FromArgb(70, 130, 180) ' لون أزرق أنيق عند التحديد
-            .DefaultCellStyle.SelectionForeColor = Color.White
-            .DefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Regular)
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .DefaultCellStyle.Padding = New Padding(5, 5, 5, 5)
-            '.RowTemplate.Height = 60
-
-            '---------------------------
-            ' الصفوف المتبادلة
-            '---------------------------
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(60, 60, 65)
-
-            '---------------------------
-            ' شكل الشبكة
-            '---------------------------
-            .GridColor = Color.FromArgb(80, 80, 80)
-            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-
-            '---------------------------
-            ' الإعدادات العامة
-            '---------------------------
-            .BackgroundColor = Color.FromArgb(30, 30, 35)
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-            .RowHeadersVisible = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToResizeRows = True
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-
-            ' ✅ ضبط النص في المنتصف داخل الخلايا
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-            ' ✅ إظهار عناوين الأعمدة (لو كانت مخفية)
-            .ColumnHeadersVisible = True
 
 
             .Columns(0).Visible = False

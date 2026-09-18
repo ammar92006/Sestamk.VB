@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports DevExpress.Office.Utils
 Imports DevExpress.PivotGrid.Design
@@ -22,72 +22,8 @@ Public Class Categories
         Me.WindowState = FormWindowState.Minimized
     End Sub
     Private Sub datagridviewsetup()
+        Main.datagridviewsetup(dvg_Categories)
         With dvg_Categories
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-            .AllowUserToResizeRows = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 45, 48)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue
-            .DefaultCellStyle.SelectionBackColor = Color.RoyalBlue
-
-            '---------------------------
-            ' إعداد العنوان (Header)
-            '---------------------------
-            .EnableHeadersVisualStyles = False
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(40, 40, 43)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersHeight = 70
-            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            '---------------------------
-            ' إعداد الصفوف (Rows)
-            '---------------------------
-            .DefaultCellStyle.BackColor = Color.FromArgb(50, 50, 55)
-            .DefaultCellStyle.ForeColor = Color.White
-            .DefaultCellStyle.SelectionBackColor = Color.FromArgb(70, 130, 180) ' لون أزرق أنيق عند التحديد
-            .DefaultCellStyle.SelectionForeColor = Color.White
-            .DefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Regular)
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .DefaultCellStyle.Padding = New Padding(5, 5, 5, 5)
-            '.RowTemplate.Height = 60
-
-            '---------------------------
-            ' الصفوف المتبادلة
-            '---------------------------
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(60, 60, 65)
-
-            '---------------------------
-            ' شكل الشبكة
-            '---------------------------
-            .GridColor = Color.FromArgb(80, 80, 80)
-            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-
-            '---------------------------
-            ' الإعدادات العامة
-            '---------------------------
-            .BackgroundColor = Color.FromArgb(30, 30, 35)
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-            .RowHeadersVisible = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToResizeRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-
-            ' ✅ ضبط النص في المنتصف داخل الخلايا
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-            .ColumnHeadersVisible = True
 
             .Columns("Category_ID").Visible = False
             .Columns("ColorID").Visible = False
@@ -320,90 +256,11 @@ Public Class Categories
     End Sub
 
     Private Sub btn_add_Click(sender As Object, e As EventArgs)
-        'Try
-        '    ' ==== 1) التحقق من صحة البيانات قبل الإضافة ====
-        '    If String.IsNullOrWhiteSpace(TextBox2.Text) Then
-        '        MessageBox.Show("❌ من فضلك أدخل اسم الصنف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        '        TextBox2.Focus()
-        '        Exit Sub
-        '    End If
 
-        '    If String.IsNullOrWhiteSpace(TextBox3.Text) Then
-        '        MessageBox.Show("❌ من فضلك أدخل وصف الصنف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        '        TextBox3.Focus()
-        '        Exit Sub
-        '    End If
-
-        '    ' ==== 2) التحقق من عدم تكرار اسم الصنف ====
-        '    Dim checkQuery As String = "SELECT COUNT(*) FROM Categories WHERE Category_Name = @Category_Name"
-        '    Using checkCmd As New SqlCommand(checkQuery, Conn)
-        '        Connect()
-        '        checkCmd.Parameters.AddWithValue("@Category_Name", TextBox2.Text.Trim())
-
-        '        Dim exists As Integer = CInt(checkCmd.ExecuteScalar())
-
-        '        If exists > 0 Then
-        '            MessageBox.Show("⚠ الصنف موجود بالفعل، لا يمكن إضافته مرة أخرى.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        '            Disconnect()
-        '            Exit Sub
-        '        End If
-        '    End Using
-
-        '    ' ==== 3) تنفيذ عملية الإضافة ====
-        '    Dim insertQuery As String = "INSERT INTO Categories (Category_Name, Description)
-        '                         VALUES (@Category_Name, @Description)"
-
-        '    Using insertCmd As New SqlCommand(insertQuery, Conn)
-        '        insertCmd.Parameters.AddWithValue("@Category_Name", TextBox2.Text.Trim())
-        '        insertCmd.Parameters.AddWithValue("@Description", TextBox3.Text.Trim())
-
-        '        insertCmd.ExecuteNonQuery()
-        '    End Using
-
-        '    Disconnect()
-
-        '    MessageBox.Show("✅ تم إضافة الصنف بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-        '    DataGridView1.ClearSelection()
-
-        'Catch ex As Exception
-        '    MessageBox.Show("⚠ حدث خطأ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-
-        'Finally
-        '    LoadData()
-
-        'End Try
 
     End Sub
 
     Private Sub Guna2Button1_Click(sender As Object, e As EventArgs)
-        'Try
-        '    If TextBox1.Text = "" Then
-        '        MessageBox.Show("من فضلك اختر وحدة لتعديلها أولاً")
-        '        Return
-        '    End If
-
-        '    Connect()
-        '    Dim query As String = "UPDATE Categories SET 
-        '                        Category_Name=@Category_Name,
-        '                        Description=@Description
-        '                      WHERE Category_ID=@Category_ID  "
-
-        '    Dim cmd As New SqlCommand(query, Conn)
-        '    cmd.Parameters.AddWithValue("@Category_Name", TextBox2.Text)
-        '    cmd.Parameters.AddWithValue("@Description", TextBox3.Text)
-        '    cmd.Parameters.AddWithValue("@Category_ID", TextBox1.Text)
-
-
-        '    cmd.ExecuteNonQuery()
-        '    MessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    Disconnect()
-
-        'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
-        'Finally
-        '    LoadData()
-        'End Try
     End Sub
 
 
@@ -417,69 +274,9 @@ Public Class Categories
     End Sub
 
     Private Sub Guna2Button2_Click(sender As Object, e As EventArgs)
-        'Try
-        '    If TextBox1.Text = "" Then
-        '        MessageBox.Show("من فضلك اختر المنتج لحذفه أولاً")
-        '        Return
-        '    End If
-
-        '    If MessageBox.Show("هل أنت متأكد من الحذف؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-        '        Connect()
-        '        Dim query As String = "DELETE FROM Categories WHERE Category_ID=@Category_ID"
-        '        Dim cmd As New SqlCommand(query, Conn)
-        '        cmd.Parameters.AddWithValue("@Category_ID", TextBox1.Text)
-        '        cmd.ExecuteNonQuery()
-        '        Disconnect()
-        '        MessageBox.Show("🗑️ تم الحذف بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '        LoadData()
-        '    End If
-        'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
-        'End Try
-        'DataGridView1.ClearSelection()
-
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs)
-        '================================================================================
-        ' كود البحث/الفلترة
-        '================================================================================
-
-        'Try
-        '    ' 1. التأكد من الاتصال بقاعدة البيانات
-        '    Connect()
-
-        '    ' 2. تعريف جملة SQL للبحث/الفلترة
-        '    ' نستخدم (LIKE) و (CONCAT('%', @SearchTerm, '%')) للبحث الجزئي
-        '    ' استبدل 'Categories' و 'Category_Name' بأسماء جدولك وعمود البحث الفعليين
-        '    Dim searchQuery As String = "SELECT * FROM Categories WHERE Category_Name LIKE @SearchTerm OR Description LIKE @SearchTerm"
-
-        '    ' 3. إنشاء الأمر (Command)
-        '    Dim cmd As New SqlCommand(searchQuery, Conn)
-
-        '    ' 4. إضافة بارامتر قيمة البحث
-        '    ' نضيف علامات % قبل وبعد النص للسماح بالبحث الجزئي
-        '    cmd.Parameters.AddWithValue("@SearchTerm", "%" & txtSearch.Text & "%")
-
-        '    ' 5. تنفيذ الأمر وتعبئة البيانات في DataGridView
-        '    Dim da1 As New SqlDataAdapter(cmd)
-        '    Dim dt1 As New DataTable()
-        '    da1.Fill(dt1)
-
-        '    ' عرض النتائج في DataGridView
-        '    DataGridView1.DataSource = dt1
-
-        '    ' 6. رسالة تأكيد (اختياري)
-        '    MessageBox.Show($"تم العثور على {dt1.Rows.Count} سجل مطابق.", "نتائج البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-        'Catch ex As Exception
-        '    ' معالجة أي خطأ قد يحدث أثناء الاتصال أو الاستعلام
-        '    MessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-
-        'Finally
-        '    ' 7. قطع الاتصال بقاعدة البيانات
-        '    Disconnect()
-        'End Try
     End Sub
 
     Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
@@ -510,31 +307,6 @@ Public Class Categories
 
 
     Private Sub dvg_Categories_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dvg_Categories.CellClick
-        'Try
-        '    ' تجاهل الضغط على الهيدر
-        '    If e.RowIndex < 0 Then Return
-
-        '    Dim row As DataGridViewRow = dvg_Categories.Rows(e.RowIndex)
-
-        '    '============================
-        '    ' تحميل بيانات التصنيف داخل التكست بوكس
-        '    '============================
-        '    txtCategoryCode.Text = row.Cells("Category_ID").Value.ToString()
-        '    txt_CategoryName.Text = row.Cells("Category_Name").Value.ToString()
-        '    txt_Description.Text = row.Cells("Description").Value.ToString()
-
-        '    '============================
-        '    ' حساب عدد المنتجات المرتبطة بالتصنيف
-        '    '============================
-        '    Dim categoryID As Integer = Convert.ToInt32(row.Cells("Category_ID").Value)
-        '    Dim productCount As Integer = GetProductsCount(categoryID)
-
-        '    ' ضع العدد في TextBox أو Label
-        '    txt_ProductsCount.Text = productCount.ToString()
-
-        'Catch ex As Exception
-        '    MessageBox.Show("خطأ: " & ex.Message)
-        'End Try
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
@@ -632,40 +404,6 @@ Public Class Categories
     End Function
 
     Private Sub dvg_Categories_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dvg_Categories.CellDoubleClick
-        'Try
-        '    If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Exit Sub
-
-        '    Dim sectionName As String = dvg_Categories.Rows(e.RowIndex).Cells("Category_Name").Value.ToString()
-
-        '    Dim frm As Products = Nothing
-        '    For Each f As Form In Application.OpenForms
-        '        If TypeOf f Is Products Then
-        '            frm = CType(f, Products)
-        '            Exit For
-        '        End If
-        '    Next
-
-        '    If frm Is Nothing Then
-        '        frm = New Products
-        '        frm.Show()
-        '    Else
-        '        frm.BringToFront()
-        '    End If
-
-        '    Try
-        '        frm.cmbSearchField.SelectedIndex = 3
-        '    Catch
-        '    End Try
-
-        '    Try
-        '        frm.txtSearch.Text = sectionName
-        '        frm.txtSearch_TextChanged(frm.txtSearch, EventArgs.Empty)
-        '    Catch
-        '    End Try
-
-        'Catch ex As Exception
-        '    ' تجاهل أي خطأ بصمت
-        'End Try
     End Sub
 
     Private Sub lstSuggestions_Click(sender As Object, e As EventArgs) Handles lstSuggestions.Click
@@ -704,49 +442,10 @@ Public Class Categories
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
         ClearFields()
     End Sub
-    'Private Sub Selectrow(rowIndex As Integer)
-    '    If rowIndex < 0 OrElse rowIndex >= dvg_Categories.Rows.Count Then Exit Sub
-
-    '    Dim row As DataGridViewRow = dvg_Categories.Rows(rowIndex)
-    '    Try
-
-    '        'txtCustomerCode.Text = row.Cells("CustomerCode").Value?.ToString()
-    '        '============================
-    '        ' تحميل بيانات التصنيف داخل التكست بوكس
-    '        '============================
-    '        txtCategoryCode.Text = row.Cells("Category_ID").Value.ToString()
-    '        txt_CategoryName.Text = row.Cells("Category_Name").Value.ToString()
-    '        txt_Description.Text = row.Cells("Description").Value.ToString()
-
-    '        '============================
-    '        ' حساب عدد المنتجات المرتبطة بالتصنيف
-    '        '============================
-    '        Dim categoryID As Integer = Convert.ToInt32(row.Cells("Category_ID").Value)
-    '        Dim productCount As Integer = GetProductsCount(categoryID)
-
-    '        ' ضع العدد في TextBox أو Label
-    '        txt_ProductsCount.Text = productCount.ToString()
-
-    '    Catch ex As Exception
-    '        MessageBox.Show("خطأ: " & ex.Message)
-    '    End Try
-    'End Sub
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
         Close()
     End Sub
-
-    'Private Sub LoadData()
-    '    'Dim query As String = "SELECT Category_ID as 'كود الصنف',Category_Name as 'اسم الصنف',Description as 'الملاحظات' From Categories"
-    '    'Connect()
-    '    'da = New SqlDataAdapter(query, Conn)
-    '    'dt = New DataTable()
-    '    'da.Fill(dt)
-    '    'DataGridView1.DataSource = dt
-    '    'DataGridView1.ClearSelection()
-    '    'Disconnect()
-    'End Sub
-
 
     Private Sub FillColorsComboBox()
         Dim query As String = "SELECT ColorID, ColorName FROM Colors Where IsActive = 1 AND IsDeleted = 0 OR IsDeleted IS NULL"

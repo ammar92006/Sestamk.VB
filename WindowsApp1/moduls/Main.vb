@@ -3,74 +3,105 @@ Imports System.Data.SqlClient
 Module Main
     Public Sub datagridviewsetup(dgv As DataGridView)
         With dgv
+            '---------------------------
+            ' الصلاحيات والتحكم
+            '---------------------------
             .ReadOnly = True
             .AllowUserToAddRows = False
             .AllowUserToDeleteRows = False
+            ' منع تغيير حجم الأعمدة والصفوف
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
             .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .MultiSelect = False
+
+            '---------------------------
+            ' الإعدادات العامة للشكل
+            '---------------------------
+            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
+            .RowHeadersVisible = False
             .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 45, 48)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue
-            .DefaultCellStyle.SelectionBackColor = Color.RoyalBlue
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
 
             '---------------------------
             ' إعداد العنوان (Header)
             '---------------------------
             .EnableHeadersVisualStyles = False
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(40, 40, 43)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .ColumnHeadersVisible = True
             .ColumnHeadersHeight = 70
             .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
+            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
+            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
             '---------------------------
             ' إعداد الصفوف (Rows)
             '---------------------------
-            .DefaultCellStyle.BackColor = Color.FromArgb(50, 50, 55)
-            .DefaultCellStyle.ForeColor = Color.White
-            .DefaultCellStyle.SelectionBackColor = Color.FromArgb(70, 130, 180) ' لون أزرق أنيق عند التحديد
-            .DefaultCellStyle.SelectionForeColor = Color.White
             .DefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Regular)
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
             .DefaultCellStyle.Padding = New Padding(5, 5, 5, 5)
-            '.RowTemplate.Height = 60
 
             '---------------------------
-            ' الصفوف المتبادلة
+            ' تطبيق ألوان السمة الحالية (Light / Dark)
             '---------------------------
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(60, 60, 65)
-
-            '---------------------------
-            ' شكل الشبكة
-            '---------------------------
-            .GridColor = Color.FromArgb(80, 80, 80)
-            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-
-            '---------------------------
-            ' الإعدادات العامة
-            '---------------------------
-            .BackgroundColor = Color.FromArgb(30, 30, 35)
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-            .RowHeadersVisible = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToResizeRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersVisible = True
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .MultiSelect = False
+            ThemeHelper.ApplyDataGridViewTheme(dgv, ThemeManager.Instance.CurrentPalette)
         End With
     End Sub
 
+    Public Sub datagridviewsetup_Editable(dgv As DataGridView)
+        With dgv
+            '---------------------------
+            ' الصلاحيات والتحكم (قابلة للتعديل)
+            '---------------------------
+            .ReadOnly = False ' السماح بالتعديل
+            .AllowUserToAddRows = True  ' يمكنك جعلها False إذا أردت منعه من إضافة صفوف جديدة
+            .AllowUserToDeleteRows = True ' يمكنك جعلها False إذا أردت منعه من حذف الصفوف
+            ' منع تغيير حجم الأعمدة والصفوف
+            .AllowUserToResizeColumns = False
+            .AllowUserToResizeRows = False
+            ' تحديد الخلية فقط بدلاً من الصف بالكامل لتسهيل التعديل
+            .SelectionMode = DataGridViewSelectionMode.CellSelect
+            .MultiSelect = False
+
+            '---------------------------
+            ' الإعدادات العامة للشكل
+            '---------------------------
+            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
+            .RowHeadersVisible = False
+            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+
+            '---------------------------
+            ' إعداد العنوان (Header)
+            '---------------------------
+            .EnableHeadersVisualStyles = False
+            .ColumnHeadersVisible = True
+            .ColumnHeadersHeight = 70
+            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
+            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
+            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+            '---------------------------
+            ' إعداد الصفوف (Rows)
+            '---------------------------
+            .DefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Regular)
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .DefaultCellStyle.Padding = New Padding(5, 5, 5, 5)
+
+            '---------------------------
+            ' تطبيق ألوان السمة الحالية (Light / Dark)
+            '---------------------------
+            ThemeHelper.ApplyDataGridViewTheme(dgv, ThemeManager.Instance.CurrentPalette)
+        End With
+    End Sub
     Public Sub OpenFormOnce(ByVal formType As Type, ByVal btn As ToolStripButton)
+        ' 1. التحقق من صلاحية الفتح
+        If Not Session.HasPermission(formType.Name, "CanOpen") Then
+            Dim dispName As String = Session.GetScreenDisplayName(formType.Name)
+            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If btn IsNot Nothing Then btn.Checked = False
+            Exit Sub
+        End If
+
         ' نبحث عن أي فورم من نفس النوع مفتوحة بالفعل
         For Each f As Form In Application.OpenForms
             If f.GetType() Is formType Then
@@ -78,7 +109,8 @@ Module Main
                 f.Show()
                 f.BringToFront()
                 f.Activate()
-                btn.Checked = True
+                Session.ApplyFormPermissions(f, formType.Name)
+                If btn IsNot Nothing Then btn.Checked = True
                 Return
             End If
         Next
@@ -86,13 +118,24 @@ Module Main
         ' لو مش موجودة: نفتح واحدة جديدة
         Dim frm As Form = CType(Activator.CreateInstance(formType), Form)
 
+        ' تطبيق الصلاحيات والسمة على الفورم عند التحميل وعند الظهور
+        AddHandler frm.Load, Sub(sender, e)
+                                 Session.ApplyFormPermissions(frm, formType.Name)
+                                 ThemeManager.Instance.ApplyTheme(frm)
+                             End Sub
+        AddHandler frm.Shown, Sub(sender, e)
+                                  Session.ApplyFormPermissions(frm, formType.Name)
+                                  ThemeManager.Instance.ApplyTheme(frm)
+                              End Sub
+
         ' لما الفورم تتقفل نرجع الزرار لحالته الطبيعية
         AddHandler frm.FormClosed, Sub(sender, e)
-                                       btn.Checked = False
+                                       If btn IsNot Nothing Then btn.Checked = False
                                    End Sub
 
+        ThemeManager.Instance.ApplyTheme(frm)
         frm.Show()
-        btn.Checked = True
+        If btn IsNot Nothing Then btn.Checked = True
     End Sub
 
     Public Sub InitializeShiftSession()

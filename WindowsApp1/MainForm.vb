@@ -30,6 +30,63 @@ Public Class MainForm
         ' تطبيق ثيم MainForm المتوافق مع الهوية الأصلية
         ApplyMainFormTheme()
         AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
+
+        ' تطبيق قيود الصلاحيات على أزرار الشاشة الرئيسية
+        ApplyPermissionsToMainForm()
+
+        ' إضافة زر شاشة المطبخ الذكية (KDS) لشريط المبيعات
+        Try
+            Dim sepKds As New ToolStripSeparator()
+            Dim btnKds As New ToolStripButton With {
+                .Text = "شاشة المطبخ (KDS)",
+                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
+                .DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                .TextImageRelation = TextImageRelation.ImageAboveText
+            }
+            btnKds.Image = My.Resources.dinning_hall
+            AddHandler btnKds.Click, Sub()
+                                         Dim frm As New FrmKitchenDisplay()
+                                         frm.Show()
+                                     End Sub
+            ToolStrip4.Items.Add(sepKds)
+            ToolStrip4.Items.Add(btnKds)
+
+            ' إضافة زر إدارة هالك وتالف المطبخ
+            Dim sepWaste As New ToolStripSeparator()
+            Dim btnWaste As New ToolStripButton With {
+                .Text = "هالك وتالف المطبخ",
+                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
+                .DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                .TextImageRelation = TextImageRelation.ImageAboveText
+            }
+            btnWaste.Image = My.Resources.dinning_hall
+            AddHandler btnWaste.Click, Sub()
+                                           Dim frm As New FrmKitchenWaste()
+                                           ThemeManager.Instance.ApplyTheme(frm)
+                                           frm.ShowDialog()
+                                       End Sub
+            ToolStrip4.Items.Add(sepWaste)
+            ToolStrip4.Items.Add(btnWaste)
+
+            ' إضافة زر إدارة حجوزات طاولات الصالة والعربون
+            Dim sepRes As New ToolStripSeparator()
+            Dim btnRes As New ToolStripButton With {
+                .Text = "حجوزات الصالة",
+                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
+                .DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+                .TextImageRelation = TextImageRelation.ImageAboveText
+            }
+            btnRes.Image = My.Resources.dining_room
+            AddHandler btnRes.Click, Sub()
+                                         Dim frm As New FrmTableReservations()
+                                         ThemeManager.Instance.ApplyTheme(frm)
+                                         frm.ShowDialog()
+                                     End Sub
+            ToolStrip4.Items.Add(sepRes)
+            ToolStrip4.Items.Add(btnRes)
+        Catch ex As Exception
+            Logger.LogError("Add KDS button to MainForm", ex)
+        End Try
     End Sub
 
     Private Sub ReverseTabPages()
@@ -241,25 +298,118 @@ Public Class MainForm
         OpenFormOnce(GetType(FrmSupplierTransactions), ToolStripButton4)
     End Sub
 
-    Private Sub ToolStripButton13_Click(sender As Object, e As EventArgs) Handles ToolStripButton13.Click
-        OpenFormOnce(GetType(Purchases), ToolStripButton13)
+    Private Sub ToolStripButton13_Click(sender As Object, e As EventArgs) Handles btnfrmPurchases.Click
+        OpenFormOnce(GetType(frmPurchases), btnfrmPurchases)
     End Sub
 
-    Private Sub ToolStripButton14_Click(sender As Object, e As EventArgs) Handles ToolStripButton14.Click
-        OpenFormOnce(GetType(Purchase_Return), ToolStripButton14)
-    End Sub
+
 
     Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
         OpenFormOnce(GetType(Sales_Returns), ToolStripButton11)
     End Sub
 
     Private Sub OpenTreasuryWithOperation(op As FrmTreasuryTransaction.TreasuryOperation, btn As ToolStripButton)
+        If Not Session.HasPermission("FrmTreasuryTransaction", "CanOpen") Then
+            Dim dispName As String = Session.GetScreenDisplayName("FrmTreasuryTransaction")
+            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If btn IsNot Nothing Then btn.Checked = False
+            Exit Sub
+        End If
+
         Dim frm As New FrmTreasuryTransaction(op)
+        AddHandler frm.Load, Sub(s, ev)
+                                 Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
+                                 ThemeManager.Instance.ApplyTheme(frm)
+                             End Sub
+        AddHandler frm.Shown, Sub(s, ev)
+                                  Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
+                                  ThemeManager.Instance.ApplyTheme(frm)
+                              End Sub
         AddHandler frm.FormClosed, Sub(s, ev)
-                                       btn.Checked = False
+                                       If btn IsNot Nothing Then btn.Checked = False
                                    End Sub
+        ThemeManager.Instance.ApplyTheme(frm)
         frm.Show()
-        btn.Checked = True
+        If btn IsNot Nothing Then btn.Checked = True
     End Sub
 
+    Private Sub btnfrmSalaryPayment_Click(sender As Object, e As EventArgs) Handles btnfrmSalaryPayment.Click
+        OpenFormOnce(GetType(frmSalaryPayment), btnfrmSalaryPayment)
+    End Sub
+
+    Private Sub btnfrmUsers_Click(sender As Object, e As EventArgs) Handles btnfrmUsers.Click
+        OpenFormOnce(GetType(frmUsers), btnfrmUsers)
+
+    End Sub
+
+    Private Sub btnfrmRolesAndPermissions_Click(sender As Object, e As EventArgs) Handles btnfrmRolesAndPermissions.Click
+        OpenFormOnce(GetType(frmRolesAndPermissions), btnfrmRolesAndPermissions)
+    End Sub
+
+    ''' <summary>
+    ''' تطبيق الصلاحيات على أزرار القائمة الرئيسية في MainForm
+    ''' </summary>
+    Public Sub ApplyPermissionsToMainForm()
+        If Session.CurrentRoleID = 1 Then Return ' مدير النظام لديه وصول كامل
+
+        Dim mappings As New Dictionary(Of ToolStripButton, String) From {
+            {btnCategories, "Categories"},
+            {btnProducts, "Products"},
+            {btnfrmProductSizes, "frmProductSizes"},
+            {btnfrmProductAddons, "frmProductAddons"},
+            {btnfrmPOS, "frmPOS"},
+            {btnfrmEmployees, "frmEmployees"},
+            {btnfrmJobTitles, "frmJobTitles"},
+            {btnfrmDepartments, "frmDepartments"},
+            {btnfrmSalarySystems, "frmSalarySystems"},
+            {btnfrmColors, "frmColors"},
+            {btnfrmDeliveryAreas, "frmDeliveryAreas"},
+            {btnfrmDeliveryDrivers, "frmDeliveryDrivers"},
+            {btnfrmTreasury, "frmTreasury"},
+            {btnFrmTreasuryTransfer, "FrmTreasuryTransfer"},
+            {btnFrmTreasuryTransactionsReport, "FrmTreasuryTransactionsReport"},
+            {btnfrmPrinters, "frmPrinters"},
+            {btnfrmRestaurantSections, "frmRestaurantSections"},
+            {btnfrmRestaurantTables, "frmRestaurantTables"},
+            {btnfrmShifts, "frmShifts"},
+            {btnfrmBranches, "frmBranches"},
+            {btnFrmCustomers, "FrmCustomers"},
+            {btnSettings, "Settings"},
+            {btnBackups, "Backup"},
+            {btnFrmCustomerStatement, "FrmCustomerStatement"},
+            {btnFrmSalesReport, "FrmSalesReport"},
+            {btnFrmDriverReport, "FrmDriverReport"},
+            {btnDeposit, "FrmTreasuryTransaction"},
+            {btnWithdraw, "FrmTreasuryTransaction"},
+            {btnform_Expenses, "form_Expenses"},
+            {btnExpensesReportForm, "ExpensesReportForm"},
+            {btnfrmUnits, "frmUnits"},
+            {btnfrmStores, "FrmStores"},
+            {btnfrmStoreStock, "frmStoreStock"},
+            {btnfrmRawMaterials, "frmRawMaterials"},
+            {btnfrmRecipes, "frmRecipes"},
+            {ToolStripButton3, "FrmSuppliers"},
+            {ToolStripButton4, "FrmSupplierTransactions"},
+            {btnfrmPurchases, "Purchases"},
+            {btnfrmPurchaseReports, "frmPurchaseReports"},
+            {ToolStripButton11, "Sales_Returns"},
+            {btnfrmSalaryPayment, "frmSalaryPayment"},
+            {btnfrmUsers, "frmUsers"},
+            {btnfrmRolesAndPermissions, "frmRolesAndPermissions"}
+        }
+
+        For Each kvp In mappings
+            If kvp.Key IsNot Nothing Then
+                Dim allowed As Boolean = Session.HasPermission(kvp.Value, "CanOpen")
+                kvp.Key.Enabled = allowed
+                If Not allowed Then
+                    kvp.Key.ToolTipText = "غير مصرح لك بفتح هذه الشاشة"
+                End If
+            End If
+        Next
+    End Sub
+
+    Private Sub btnfrmPurchaseReports_Click(sender As Object, e As EventArgs) Handles btnfrmPurchaseReports.Click
+        OpenFormOnce(GetType(frmPurchaseReports), btnfrmPurchaseReports)
+    End Sub
 End Class

@@ -1,67 +1,76 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
+Imports System.IO
+Imports System.Drawing.Drawing2D
 Imports System.Net.NetworkInformation
-Imports System.IO.Ports
 Imports System.Windows.Forms
-Imports System.Threading
+Imports System.Threading.Tasks
 
 Public Class Login
     Private x As Integer, y As Integer
     Private newpoint As Point
-    Private lastRow As Integer
-    Private Shared appMutex As Mutex
+
+    ' ──────────────────────────────────────────────────────────
+    ' الدوال المساعدة (Helpers)
+    ' ──────────────────────────────────────────────────────────
 
     Private Function GetMacAddress() As String
         Try
             Dim networkInterfaces As NetworkInterface() = NetworkInterface.GetAllNetworkInterfaces()
             For Each netInterface As NetworkInterface In networkInterfaces
-                If netInterface.OperationalStatus = OperationalStatus.Up Then
+                If netInterface.OperationalStatus = OperationalStatus.Up AndAlso
+                   netInterface.NetworkInterfaceType <> NetworkInterfaceType.Loopback Then
                     Dim bytes = netInterface.GetPhysicalAddress().GetAddressBytes()
-                    Return BitConverter.ToString(bytes)
+                    If bytes IsNot Nothing AndAlso bytes.Length > 0 Then
+                        Return BitConverter.ToString(bytes)
+                    End If
                 End If
             Next
         Catch ex As Exception
+            Logger.LogError("GetMacAddress", ex)
             Return "لا يمكن الحصول على عنوان MAC"
         End Try
 
         Return "لم يتم العثور على بطاقة شبكة نشطة"
     End Function
+
     Private Function GetNextLoginCode() As Integer
-        Dim query As String = "SELECT COUNT(ID) AS NumberOfItems FROM Login_Info_TBL WHERE ID IS NOT NULL"
+        Dim query As String = "SELECT ISNULL(MAX(ID), 0) + 1 FROM Login_Info_TBL"
         Try
-            Connect()
-            Using cmd As New SqlCommand(query, Conn)
-                Dim resultObj As Object = cmd.ExecuteScalar()
-                Dim cnt As Integer = 0
-                If resultObj IsNot Nothing AndAlso Integer.TryParse(resultObj.ToString(), cnt) Then
-                    Return cnt + 1
-                End If
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(query, cn)
+                    Dim resultObj As Object = cmd.ExecuteScalar()
+                    If resultObj IsNot Nothing AndAlso Not Convert.IsDBNull(resultObj) Then
+                        Return Convert.ToInt32(resultObj)
+                    End If
+                End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء جلب رقم الإدخال: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
+            Logger.LogError("GetNextLoginCode", ex)
         End Try
         Return 1
     End Function
+
     Private Sub FillUsersComboBox()
-        Dim query As String = "SELECT User_ID, User_username FROM Users_TBL Where IsActive = 1 AND IsDeleted = 0 OR IsDeleted IS NULL"
-
+        Dim query As String = "SELECT User_ID, User_username FROM Users_TBL WHERE (IsActive = 1 OR IsActive IS NULL) AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY User_username"
         Try
-            ' -------------------------------------------------------------------------
-            ' 💡 ضع سطر تحميل البيانات وجلب الـ DataTable الخاص بك هنا بنفس طريقتك
-            ' -------------------------------------------------------------------------
-            Dim dt As DataTable = ExecuteQuery(query) ' استبدل ExecuteQuery بالدالة المعتمدة عندك
-
-            If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
-                cmbUsername.DataSource = dt
-                cmbUsername.DisplayMember = "User_username"
-                cmbUsername.ValueMember = "User_ID"
-                cmbUsername.SelectedIndex = -1
-            End If
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using da As New SqlDataAdapter(query, cn)
+                    Dim dt As New DataTable()
+                    da.Fill(dt)
+                    If dt.Rows.Count > 0 Then
+                        cmbUsername.DataSource = dt
+                        cmbUsername.DisplayMember = "User_username"
+                        cmbUsername.ValueMember = "User_ID"
+                        cmbUsername.SelectedIndex = -1
+                    End If
+                End Using
+            End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل أنواع الفئات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Logger.LogError("FillUsersComboBox", ex)
+            MessageBox.Show("حدث خطأ أثناء تحميل قائمة المستخدمين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
     Private Sub LogLoginInfo(loginCode As Integer,
                              deviceName As String,
                              macAddress As String,
@@ -77,46 +86,270 @@ Public Class Login
             "VALUES (@Login_Code, @Login_DeviceName, @Login_MacAddress, @Login_CurrentDate, @Login_CurrentTime, @Login_Username, @Login_Password, @Login_Note)"
 
         Try
-            Connect()
-            Using cmd As New SqlCommand(insertSql, Conn)
-                cmd.Parameters.AddWithValue("@Login_Code", loginCode)
-                cmd.Parameters.AddWithValue("@Login_DeviceName", deviceName)
-                cmd.Parameters.AddWithValue("@Login_MacAddress", macAddress)
-                cmd.Parameters.AddWithValue("@Login_CurrentDate", currentDate)
-                cmd.Parameters.AddWithValue("@Login_CurrentTime", currentTime)
-                cmd.Parameters.AddWithValue("@Login_Username", usernameValue)
-                cmd.Parameters.AddWithValue("@Login_Password", passwordValue)
-                cmd.Parameters.AddWithValue("@Login_Note", note)
-                cmd.ExecuteNonQuery()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(insertSql, cn)
+                    cmd.Parameters.AddWithValue("@Login_Code", loginCode)
+                    cmd.Parameters.AddWithValue("@Login_DeviceName", deviceName)
+                    cmd.Parameters.AddWithValue("@Login_MacAddress", macAddress)
+                    cmd.Parameters.AddWithValue("@Login_CurrentDate", currentDate)
+                    cmd.Parameters.AddWithValue("@Login_CurrentTime", currentTime)
+                    cmd.Parameters.AddWithValue("@Login_Username", usernameValue)
+                    cmd.Parameters.AddWithValue("@Login_Password", passwordValue)
+                    cmd.Parameters.AddWithValue("@Login_Note", note)
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تسجيل الدخول: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
+            Logger.LogError("LogLoginInfo", ex)
         End Try
     End Sub
 
-    Private Sub GetUserId()
-        Dim query As String =
-            "SELECT User_ID FROM Users_TBL WHERE User_username = @username"
+    Private Function GetUserId(username As String) As Integer
+        Dim query As String = "SELECT ISNULL(User_ID, 0) FROM Users_TBL WHERE User_username = @username"
         Try
-            Connect()
-            Using command As New SqlCommand(query, Conn)
-                command.Parameters.AddWithValue("@username", cmbUsername.Text.Trim)
-                Dim result As Object = command.ExecuteScalar()
-                If result IsNot Nothing AndAlso Integer.TryParse(result.ToString(), New Integer()) Then
-                    useridlogin = Convert.ToInt32(result)
-                Else
-                    useridlogin = 0
-                End If
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@username", username)
+                    Dim result = cmd.ExecuteScalar()
+                    If result IsNot Nothing AndAlso Not Convert.IsDBNull(result) Then
+                        Return Convert.ToInt32(result)
+                    End If
+                End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
+            Logger.LogError("GetUserId", ex)
+        End Try
+        Return 0
+    End Function
+
+    Public Sub DeleteOldBackups(backupFolder As String, Optional days As Integer = 30)
+        Try
+            Dim limitDate As DateTime = DateTime.Now.AddDays(-days)
+            Dim query As String = "SELECT Backup_ID, Backup_File FROM Backup_Log WHERE Backup_Date < @LimitDate"
+
+            Dim filesToDelete As New List(Of String)
+            Dim idsToDelete As New List(Of Integer)
+
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@LimitDate", limitDate)
+                    Using dr As SqlDataReader = cmd.ExecuteReader()
+                        While dr.Read()
+                            filesToDelete.Add(dr("Backup_File").ToString())
+                            idsToDelete.Add(Convert.ToInt32(dr("Backup_ID")))
+                        End While
+                    End Using
+                End Using
+
+                ' حذف الملفات الفعلية من القرص
+                For Each filePath In filesToDelete
+                    Try
+                        If File.Exists(filePath) Then File.Delete(filePath)
+                    Catch
+                    End Try
+                Next
+
+                ' حذف السجلات من جدول Backup_Log
+                For Each id In idsToDelete
+                    Using delCmd As New SqlCommand("DELETE FROM Backup_Log WHERE Backup_ID = @ID", cn)
+                        delCmd.Parameters.AddWithValue("@ID", id)
+                        delCmd.ExecuteNonQuery()
+                    End Using
+                Next
+            End Using
+
+        Catch ex As Exception
+            Logger.LogError("DeleteOldBackups", ex)
         End Try
     End Sub
 
+    ' ──────────────────────────────────────────────────────────
+    ' أحداث النافذة وعناصر التحكم (Form Events)
+    ' ──────────────────────────────────────────────────────────
+
+    Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Try
+            FillUsersComboBox()
+        Catch ex As Exception
+            Logger.LogError("Login_Load.FillUsers", ex)
+        End Try
+
+        ' ── تطبيق السمة الحالية وضبط زر التبديل ──
+        ThemeManager.Instance.ApplyTheme(Me)
+        UpdateThemeToggleButton()
+
+        AddHandler ThemeManager.Instance.ThemeChanged, Sub(s, theme, palette)
+                                                           UpdateThemeToggleButton()
+                                                           pn_0.Invalidate()
+                                                       End Sub
+
+        ' تفعيل سحب النافذة عبر اللوحة اليسرى واللوحة الرئيسية
+        Dim drag0 As New FormDragHelper(Me, pn_0)
+
+        ' ── تحسين اللوحة الجانبية: إضافة نصوص ترحيبية ──
+        SetupSidePanelLabels()
+
+        ' ── تأثير Fade-in عند فتح النافذة ──
+        Me.Opacity = 0
+        Dim fadeTimer As New Timer() With {.Interval = 15}
+        AddHandler fadeTimer.Tick, Sub(s, ev)
+                                       If Me.Opacity < 1 Then
+                                           Me.Opacity += 0.05
+                                       Else
+                                           Me.Opacity = 1
+                                           fadeTimer.Stop()
+                                           fadeTimer.Dispose()
+                                       End If
+                                   End Sub
+        fadeTimer.Start()
+
+        ' ── تذكر آخر مستخدم سجل دخوله ──
+        Try
+            Dim lastUser As String = SettingsManager.GetSetting("LastLoggedInUser")
+            If Not String.IsNullOrEmpty(lastUser) Then
+                cmbUsername.Text = lastUser
+                txtpassword.Focus()
+            Else
+                cmbUsername.Focus()
+            End If
+        Catch
+            cmbUsername.Focus()
+        End Try
+
+        ' ── النسخ الاحتياطي التلقائي في مجلد البرنامج (Backups) بدون حجب واجهة المستخدم ──
+        Task.Run(Sub()
+                     Try
+                         Dim appBackupFolder As String = Path.Combine(Application.StartupPath, "Backups")
+                         If Not Directory.Exists(appBackupFolder) Then
+                             Directory.CreateDirectory(appBackupFolder)
+                         End If
+
+                         CheckAndTakeScheduledBackup(appBackupFolder, "نسخة بدء التشغيل")
+                         DeleteOldBackups(appBackupFolder)
+                     Catch ex As Exception
+                         Logger.LogError("BackgroundBackup", ex)
+                     End Try
+                 End Sub)
+
+        ' ضبط مؤقت التفعيل لفترة منطقية (كل 5 دقائق بدل ثانية واحدة لتوفير المعالج)
+        Try
+            BackgroundActivationTimer.Interval = 300000
+            BackgroundActivationTimer.Start()
+        Catch
+        End Try
+    End Sub
+
+    Private Sub btnThemeToggle_Click(sender As Object, e As EventArgs) Handles btnThemeToggle.Click
+        ThemeManager.Instance.ToggleTheme()
+    End Sub
+
+    Private Sub UpdateThemeToggleButton()
+        If ThemeManager.Instance.CurrentTheme = AppTheme.Dark Then
+            btnThemeToggle.Text = "☀️"
+            btnThemeToggle.ForeColor = Color.FromArgb(250, 204, 21)
+            btnThemeToggle.HoverState.FillColor = Color.FromArgb(40, 50, 70)
+        Else
+            btnThemeToggle.Text = "🌙"
+            btnThemeToggle.ForeColor = Color.FromArgb(71, 85, 105)
+            btnThemeToggle.HoverState.FillColor = Color.FromArgb(226, 232, 240)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' رسم التدرج اللوني على اللوحة الجانبية
+    ''' </summary>
+    Private Sub pn_0_Paint(sender As Object, e As PaintEventArgs) Handles pn_0.Paint
+        Dim panel = DirectCast(sender, Control)
+        Dim topColor As Color
+        Dim bottomColor As Color
+
+        If ThemeManager.Instance.CurrentTheme = AppTheme.Dark Then
+            topColor = Color.FromArgb(15, 23, 42)
+            bottomColor = Color.FromArgb(30, 41, 59)
+        Else
+            topColor = Color.FromArgb(12, 40, 100)
+            bottomColor = Color.FromArgb(35, 100, 190)
+        End If
+
+        Using brush As New LinearGradientBrush(
+            panel.ClientRectangle,
+            topColor,
+            bottomColor,
+            LinearGradientMode.Vertical)
+            e.Graphics.FillRectangle(brush, panel.ClientRectangle)
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' إعداد نصوص ترحيبية على اللوحة الجانبية
+    ''' </summary>
+    Private Sub SetupSidePanelLabels()
+        ' العنوان الرئيسي
+        Dim lblWelcome As New Label() With {
+            .Text = "مرحباً بك",
+            .Font = New Font("Segoe UI", 28, FontStyle.Bold),
+            .ForeColor = Color.White,
+            .BackColor = Color.Transparent,
+            .AutoSize = False,
+            .Size = New Size(400, 55),
+            .Location = New Point(80, 250),
+            .TextAlign = ContentAlignment.MiddleCenter
+        }
+        pn_0.Controls.Add(lblWelcome)
+
+        ' العنوان الفرعي
+        Dim lblBrand As New Label() With {
+            .Text = "في نظام سستامك",
+            .Font = New Font("Segoe UI", 22, FontStyle.Regular),
+            .ForeColor = Color.FromArgb(200, 210, 230),
+            .BackColor = Color.Transparent,
+            .AutoSize = False,
+            .Size = New Size(400, 45),
+            .Location = New Point(80, 310),
+            .TextAlign = ContentAlignment.MiddleCenter
+        }
+        pn_0.Controls.Add(lblBrand)
+
+        ' الوصف
+        Dim lblDesc As New Label() With {
+            .Text = "نظام متكامل لإدارة نقاط البيع والمطاعم" & vbCrLf &
+                    "بأحدث التقنيات وأسهل الطرق",
+            .Font = New Font("Segoe UI", 12, FontStyle.Regular),
+            .ForeColor = Color.FromArgb(160, 180, 210),
+            .BackColor = Color.Transparent,
+            .AutoSize = False,
+            .Size = New Size(400, 60),
+            .Location = New Point(80, 390),
+            .TextAlign = ContentAlignment.MiddleCenter
+        }
+        pn_0.Controls.Add(lblDesc)
+
+        ' خط فاصل مزخرف
+        Dim lblLine As New Label() With {
+            .Text = "━━━━━━━━━━━━━━━━━━━━━",
+            .Font = New Font("Segoe UI", 10, FontStyle.Regular),
+            .ForeColor = Color.FromArgb(80, 120, 180),
+            .BackColor = Color.Transparent,
+            .AutoSize = False,
+            .Size = New Size(400, 20),
+            .Location = New Point(80, 470),
+            .TextAlign = ContentAlignment.MiddleCenter
+        }
+        pn_0.Controls.Add(lblLine)
+
+        ' حقوق النشر في اللوحة الجانبية
+        Dim lblSideCopyright As New Label() With {
+            .Text = "Sestamk © 2026",
+            .Font = New Font("Segoe UI", 10, FontStyle.Regular),
+            .ForeColor = Color.FromArgb(100, 140, 190),
+            .BackColor = Color.Transparent,
+            .AutoSize = False,
+            .Size = New Size(400, 25),
+            .Location = New Point(80, 740),
+            .TextAlign = ContentAlignment.MiddleCenter
+        }
+        pn_0.Controls.Add(lblSideCopyright)
+    End Sub
 
     Private Sub Login_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown, pn_main.MouseDown
         x = Control.MousePosition.X - Me.Location.X
@@ -133,374 +366,236 @@ Public Class Login
     End Sub
 
     Private Sub btnclose_Click(sender As Object, e As EventArgs) Handles btnclose.Click
-        ' [FIX] استبدال Process.Kill بإغلاق نظيف يحرر الموارد
         Try
-            StopScanner()
+            Application.Exit()
         Catch
+            End
         End Try
-        Try
-            Disconnect()
-        Catch
-        End Try
-        Application.Exit()
     End Sub
 
-    Private Sub txtusername_KeyDown(sender As Object, e As KeyEventArgs)
+    Private Sub cmbUsername_KeyDown(sender As Object, e As KeyEventArgs) Handles cmbUsername.KeyDown
         If e.KeyCode = Keys.Enter Then
             txtpassword.Focus()
+            e.SuppressKeyPress = True
         End If
     End Sub
 
     Private Sub txtpassword_KeyDown(sender As Object, e As KeyEventArgs) Handles txtpassword.KeyDown
         If e.KeyCode = Keys.Enter Then
             btnlogin.PerformClick()
+            e.SuppressKeyPress = True
         End If
     End Sub
 
     Private Sub CheckBox1_CheckStateChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckStateChanged
-        'If CheckBox1.Checked Then
-        '    password.PasswordChar = ControlChars.NullChar
-        'Else
-        '    password.PasswordChar = "*"c
-        'End If
-
-
         txtpassword.UseSystemPasswordChar = Not CheckBox1.Checked
-        'password.PasswordChar = CheckBox1.Checked ?  ? '\0' : '●'
-    End Sub
-
-    Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        '' --- منع تشغيل أكثر من نسخة ---
-        'Dim createdNew As Boolean = False
-
-        '' اسم فريد للبرنامج - غيره لأي اسم خاص بالبرنامج
-        'appMutex = New Mutex(True, "AmmarAppMutex2025_UniqueName", createdNew)
-
-        '' لو createdNew = False → يبقى في نسخة شغالة قبل كده
-        'If Not createdNew Then
-        '    MsgBox("يوجد نسخة أخرى من البرنامج تعمل بالفعل، سيتم إعادة تشغيل البرنامج.", vbExclamation)
-
-        '    ' شغل نسخة جديدة
-        '    Process.Start(Application.ExecutablePath)
-
-        '    ' اقفل النسخة الحالية فورًا
-        '    End
-        '    Return
-        'End If
-        ' [FIX] إخفاء عناصر فحص الإنترنت (تم إلغاء الميزة بناءً على طلب المستخدم)
-        'Dim StoreName As String = SettingsManager.GetSetting("ShopName")
-        'If String.IsNullOrEmpty(StoreName) Then StoreName = ""
-
-        'lbltitle.Text = StoreName
-
-
-        Try
-            'Label6.Visible = False
-            'PictureBox2.Visible = False
-            FillUsersComboBox()
-        Catch
-        End Try
-
-        ' [FIX] جعل الـ Scanner لا يظهر MessageBox عند فشل فتح المنفذ
-        Try
-            StartScanner()
-        Catch
-        End Try
-
-        AddHandler Application.ApplicationExit, AddressOf AppExit
-
-        cmbUsername.Focus()
-        Dim Drag0 As FormDragHelper = New FormDragHelper(Me, pn_0)
-        ' [FIX] تشغيل النسخ الاحتياطي وحذف القديمة في الخلفية
-        ' بدلاً من حجب UI Thread وقت فتح شاشة الدخول
-        Task.Run(Sub()
-                     Try
-                         CheckAndTakeScheduledBackup("D:\Backups", "نسخة بدأ التشغيل")
-                     Catch ex As Exception
-                         Debug.WriteLine("Background backup error: " & ex.Message)
-                     End Try
-
-                     Try
-                         DeleteOldBackups()
-                     Catch ex As Exception
-                         Debug.WriteLine("Background delete-old error: " & ex.Message)
-                     End Try
-                 End Sub)
-        'If IsInternetAvailable() Then
-        '    If Not CheckActivation.IsActivated() Then
-        '        FormActivation.Show()
-
-        '        If Not CheckActivation.IsActivated() Then
-        '            MsgBox("البرنامج مغلق لحين التفعيل.", vbCritical)
-        '            End
-        '        End If
-        '    End If
-        'Else
-
-        'End If
-        'BackgroundActivationTimer.Interval = 1000 ' كل 60 ثانية
-        'BackgroundActivationTimer.Start()
-        ' البرنامج اشتغل بنجاح
-        '' التعامل مع مفتاح التجربة في الريجستري
-        'Try
-        '    Dim trialKey As String = "HKEY_CURRENT_USER\keyammar"
-        '    Dim trialValueName As String = "keyammar"
-        '    Dim currentValue As Object = My.Computer.Registry.GetValue(trialKey, trialValueName, Nothing)
-
-        '    If currentValue Is Nothing Then
-        '        My.Computer.Registry.SetValue(trialKey, trialValueName, 30)
-        '    Else
-        '        Dim mm As Integer
-        '        If Integer.TryParse(currentValue.ToString(), mm) Then
-        '            mm -= 1
-        '            My.Computer.Registry.SetValue(trialKey, trialValueName, mm)
-
-        '            If mm < 1 Then
-        '                MessageBox.Show("عذرًا، انتهت الفترة التجريبية للبرنامج. يُرجى شراء النسخة الكاملة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-        '                ' اغلاق التطبيق بأمان
-        '                For Each frm As Form In Application.OpenForms.Cast(Of Form)().ToList()
-        '                    frm.Close()
-        '                Next
-        '                Return
-        '            End If
-        '        Else
-        '            MessageBox.Show("حدث خطأ: القيمة المخزنة غير صالحة.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        '        End If
-        '    End If
-        'Catch ex As Exception
-        '    MessageBox.Show("خطأ أثناء التحقق من التجربة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        'End Try
-
-        ' [FIX] DeleteOldBackups() نُقلت إلى Task.Run أعلاه (لا حجب لـ UI Thread)
-
-    End Sub
-    Public Sub DeleteOldBackups(Optional days As Integer = 30)
-        Try
-            DBModule.Connect()
-
-            Dim limitDate As DateTime = DateTime.Now.AddDays(-days)
-
-            Dim query As String =
-            "SELECT Backup_ID, Backup_File 
-             FROM Backup_Log 
-             WHERE Backup_Date < @LimitDate"
-
-            Using cmd As New SqlCommand(query, DBModule.Conn)
-                cmd.Parameters.AddWithValue("@LimitDate", limitDate)
-
-                Using dr As SqlDataReader = cmd.ExecuteReader()
-                    Dim filesToDelete As New List(Of String)
-                    Dim idsToDelete As New List(Of Integer)
-
-                    While dr.Read()
-                        filesToDelete.Add(dr("Backup_File").ToString())
-                        idsToDelete.Add(Convert.ToInt32(dr("Backup_ID")))
-                    End While
-
-                    dr.Close()
-
-                    ' ===== حذف الملفات من الهارد =====
-                    For Each filePath In filesToDelete
-                        If System.IO.File.Exists(filePath) Then
-                            System.IO.File.Delete(filePath)
-                        End If
-                    Next
-
-                    ' ===== حذف السجلات من قاعدة البيانات =====
-                    For Each id In idsToDelete
-                        Using delCmd As New SqlCommand(
-                        "DELETE FROM Backup_Log WHERE Backup_ID = @ID", DBModule.Conn)
-                            delCmd.Parameters.AddWithValue("@ID", id)
-                            delCmd.ExecuteNonQuery()
-                        End Using
-                    Next
-                End Using
-            End Using
-
-        Catch ex As Exception
-            MsgBox("خطأ أثناء تنظيف النسخ القديمة: " & ex.Message)
-        End Try
-    End Sub
-
-    Private Sub AppExit(sender As Object, e As EventArgs)
-        'StopServer()
-    End Sub
-    Private Sub BackgroundActivationTimer_Tick(sender As Object, e As EventArgs) Handles BackgroundActivationTimer.Tick
-        Task.Run(Sub()
-                     Dim ok = CheckActivation.CheckActivationBackground()
-
-                     If Not ok Then
-                         Me.Invoke(Sub()
-
-                                       BackgroundActivationTimer.Stop()
-
-                                       MsgBox("تم إلغاء تفعيل البرنامج من السيرفر.", vbCritical)
-
-                                       Dim actForm As New FormActivation()
-                                       actForm.Show()
-
-                                       For Each frm As Form In Application.OpenForms.Cast(Of Form)().ToList()
-                                           If frm IsNot actForm Then
-                                               frm.Close()
-                                           End If
-                                       Next
-
-                                   End Sub)
-
-
-                     End If
-
-                 End Sub)
-    End Sub
-
-    ' [FIX] حُذفت دوال CheckInternetStatus / IsInternetAvailable / Timer1_Tick
-    ' فحص الإنترنت كل ثانية كان من أكبر أسباب التهنيج:
-    '   - NetworkInterface.GetIsNetworkAvailable() يحجب UI Thread حتى 30 ثانية
-    '     عند انقطاع الشبكة.
-    '   - Timer كل 1000ms يكدّس استدعاءات إذا تأخر الأول.
-    ' Timer1 لا يزال موجوداً في Designer لكنه بلا handler ولا يبدأ.
-
-    Public Sub FillFromScanner(code As String)
-        'Try
-        '    If String.IsNullOrWhiteSpace(code) Then Return
-
-        '    If code.Contains(":") Then
-        '        Dim parts = code.Split(":"c)
-        '        cmbUsername.SelectedIndex = -1
-        '        txtpassword.Clear()
-        '        txtusername.Text = parts(0)
-        '        If parts.Length > 1 Then txtpassword.Text = parts(1)
-        '        btnlogin.PerformClick()
-        '    Else
-        '        If String.IsNullOrEmpty(txtusername.Text) Then
-        '            'username.Text = code
-        '        Else
-        '            'password.Text = code
-        '        End If
-        '    End If
-        'Catch ex As Exception
-        'End Try
-    End Sub
-
-    Public Sub HideAllFormsExcept(targetForm As Form)
-        For Each openForm As Form In Application.OpenForms.OfType(Of Form)().ToList()
-            openForm.Close()
-        Next
     End Sub
 
     Private Sub btnsup_Click(sender As Object, e As EventArgs) Handles btnsup.Click
-        MsgBox("Ammar Ahmed : !!!!!!!")
+        Dim phone As String = SettingsManager.GetSetting(SettingsKeys.ShopPhone)
+        Dim msg As String =
+            "نظام سستامك لإدارة نقاط البيع والمطاعم" & vbCrLf &
+            "لطلب الدعم الفني والمساعدة:" & vbCrLf &
+            If(Not String.IsNullOrWhiteSpace(phone), "الهاتف: " & phone & vbCrLf, "") &
+            "الإصدار: 2026"
+        MessageBox.Show(msg, "الدعم الفني", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
-    Public Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
-        If String.IsNullOrWhiteSpace(cmbUsername.SelectedIndex = -1) Then
-            MessageBox.Show("يرجى إدخال اختيار المستخدم", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        End If
-        If String.IsNullOrWhiteSpace(txtpassword.Text) Then
-            MessageBox.Show("يرجى إدخال كلمة المرور", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    Private Sub BackgroundActivationTimer_Tick(sender As Object, e As EventArgs) Handles BackgroundActivationTimer.Tick
+        Task.Run(Sub()
+                     Try
+                         Dim ok = CheckActivation.CheckActivationBackground()
+                         If Not ok Then
+                             Me.Invoke(Sub()
+                                           BackgroundActivationTimer.Stop()
+                                           MessageBox.Show("تم إلغاء تفعيل البرنامج من السيرفر.", "تنبيه التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                                           Dim actForm As New FormActivation()
+                                           actForm.Show()
+                                           For Each frm As Form In Application.OpenForms.Cast(Of Form)().ToList()
+                                               If frm IsNot actForm Then frm.Close()
+                                           Next
+                                       End Sub)
+                         End If
+                     Catch ex As Exception
+                         Logger.LogError("ActivationBackgroundCheck", ex)
+                     End Try
+                 End Sub)
+    End Sub
+
+    ' ──────────────────────────────────────────────────────────
+    ' عملية تسجيل الدخول (Async Login)
+    ' ──────────────────────────────────────────────────────────
+
+    Public Async Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
+        ' ── 1. التحقق من صحة المدخلات ──
+        Dim enteredUser As String = cmbUsername.Text.Trim()
+        Dim enteredPass As String = txtpassword.Text.Trim()
+
+        If cmbUsername.SelectedIndex = -1 AndAlso String.IsNullOrWhiteSpace(enteredUser) Then
+            MessageBox.Show("يرجى اختيار اسم المستخدم", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cmbUsername.Focus()
             Return
         End If
 
-        Dim enteredUser As String = cmbUsername.Text.Trim()
-        Dim enteredPass As String = txtpassword.Text.Trim()
+        If String.IsNullOrWhiteSpace(enteredPass) Then
+            MessageBox.Show("يرجى إدخال كلمة المرور", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtpassword.Focus()
+            Return
+        End If
+
+        ' ── 2. حالة التحميل (Busy State لمنع النقر المزدوج وتجميد الشاشة) ──
+        btnlogin.Enabled = False
+        Dim originalButtonText As String = btnlogin.Text
+        btnlogin.Text = "جاري التحقق..."
+        Me.Cursor = Cursors.WaitCursor
 
         Dim deviceName As String = Environment.MachineName
         Dim macAddress As String = GetMacAddress()
         Dim currentDate As DateTime = DateTime.Today
         Dim currentTime As String = DateTime.Now.ToString("hh:mm:ss tt")
 
-        If enteredUser = usernameadmin AndAlso enteredPass = passwordadmin Then
-            Me.Hide()
-            Dim mainForm As New MainForm()
-            mainForm.Show()
-
-            Dim code As Integer = GetNextLoginCode()
-            LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, "")
-
-            Notify.Toast("تم الدخول بنجاح", Notify.ToastType.Success)
-
-            usernamelogin = enteredUser
-            passwordlogin = enteredPass
-            GetUserId()
-
-            cmbUsername.Text = String.Empty
-            txtpassword.Text = String.Empty
-            Return
-        End If
-
-        Dim query As String = "
-            SELECT User_ID, RoleID, User_username, User_Stats ,User_Name
-            FROM Users_TBL 
-            WHERE User_username = @username AND User_password = @password"
-
         Try
-            Connect()
-            Using cmd As New SqlClient.SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@username", enteredUser)
-                cmd.Parameters.AddWithValue("@password", enteredPass)
+            ' ── 3. فحص حساب المدير (Admin Credentials) ──
+            If Not String.IsNullOrEmpty(usernameadmin) AndAlso enteredUser = usernameadmin AndAlso enteredPass = passwordadmin Then
+                ' تهيئة جلسة المدير بالكامل
+                Dim adminId As Integer = GetUserId(enteredUser)
+                Session.CurrentUserID = If(adminId > 0, adminId, 1)
+                Session.CurrentUserfullName = "المدير العام"
+                Session.CurrentUserName = enteredUser
+                Session.CurrentUserPassword = enteredPass
+                Session.CurrentRoleID = 1
+                Session.LoadPermissions(1)
+                InitializeShiftSession()
 
-                Using reader As SqlClient.SqlDataReader = cmd.ExecuteReader()
-                    If reader.Read() Then
+                usernamelogin = enteredUser
+                passwordlogin = enteredPass
+                useridlogin = Session.CurrentUserID
 
-                        Dim userStats As Boolean = False
-                        If Not IsDBNull(reader("User_Stats")) Then
-                            userStats = Convert.ToBoolean(reader("User_Stats"))
-                        End If
+                ' حفظ آخر مستخدم
+                Try
+                    SettingsManager.SaveSetting("LastLoggedInUser", enteredUser)
+                Catch
+                End Try
 
-                        If userStats = False Then
-                            MessageBox.Show("⚠️ هذا المستخدم محظور أو غير مفعل.", "مستخدم محظور", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                            cmbUsername.SelectedIndex = -1
+                ' تسجيل حركة الدخول
+                Dim code As Integer = GetNextLoginCode()
+                LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, "دخول مدير النظام")
+
+                Notify.Toast("تم تسجيل دخول المدير بنجاح ✅", Notify.ToastType.Success)
+
+                Me.Hide()
+                Dim mainForm As New MainForm()
+                mainForm.Show()
+
+                txtpassword.Clear()
+                Return
+            End If
+
+            ' ── 4. فحص المستخدم من قاعدة البيانات (Async Query) ──
+            Dim query As String = "
+                SELECT User_ID, RoleID, User_username, IsActive, User_Name, IsDeleted
+                FROM Users_TBL 
+                WHERE User_username = @username AND User_password = @password"
+
+            Using cn As SqlConnection = Await DBModule.NewConnAsync()
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@username", enteredUser)
+                    cmd.Parameters.AddWithValue("@password", enteredPass)
+
+                    Using reader As SqlDataReader = Await cmd.ExecuteReaderAsync()
+                        If Await reader.ReadAsync() Then
+                            ' فحص حالة التفعيل
+                            Dim userStats As Boolean = True
+                            If Not IsDBNull(reader("IsActive")) Then
+                                userStats = Convert.ToBoolean(reader("IsActive"))
+                            End If
+
+                            If Not userStats Then
+                                MessageBox.Show("⚠️ هذا المستخدم غير مفعل، يرجى مراجعة إدارة النظام.", "مستخدم غير نشط", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                                txtpassword.Clear()
+                                txtpassword.Focus()
+                                Return
+                            End If
+
+                            ' قراءة البيانات
+                            Dim userId As Integer = Convert.ToInt32(reader("User_ID"))
+                            Dim roleId As Integer = 0
+                            If Not IsDBNull(reader("RoleID")) Then
+                                Integer.TryParse(reader("RoleID").ToString(), roleId)
+                            End If
+
+                            Dim fullName As String = If(Not IsDBNull(reader("User_Name")), reader("User_Name").ToString(), enteredUser)
+
+                            ' تهيئة الجلسة بالكامل
+                            Session.CurrentUserID = userId
+                            Session.CurrentUserfullName = fullName
+                            Session.CurrentUserName = enteredUser
+                            Session.CurrentUserPassword = enteredPass
+                            Session.CurrentRoleID = roleId
+                            Session.LoadPermissions(roleId)
+                            InitializeShiftSession()
+
+                            usernamelogin = enteredUser
+                            passwordlogin = enteredPass
+                            useridlogin = userId
+
+                            ' حفظ آخر مستخدم
+                            Try
+                                SettingsManager.SaveSetting("LastLoggedInUser", enteredUser)
+                            Catch
+                            End Try
+
+                            ' تسجيل حركة الدخول
+                            Dim code As Integer = GetNextLoginCode()
+                            LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, "دخول ناجح")
+
+                            Notify.Toast("تم تسجيل الدخول بنجاح ✅", Notify.ToastType.Success)
+
+                            Me.Hide()
+                            Dim mainForm As New MainForm()
+                            mainForm.Show()
+
                             txtpassword.Clear()
-                            cmbUsername.Focus()
                             Return
+                        Else
+                            MessageBox.Show("❌ اسم المستخدم أو كلمة المرور غير صحيحة.", "خطأ في تسجيل الدخول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            txtpassword.Clear()
+                            txtpassword.Focus()
                         End If
-
-                        Dim userId As Integer = 0
-                        Integer.TryParse(reader("User_ID").ToString(), userId)
-
-                        Dim roleId As Integer = 0
-                        If Not IsDBNull(reader("RoleID")) Then
-                            Integer.TryParse(reader("RoleID").ToString(), roleId)
-                        End If
-
-                        Session.CurrentUserID = userId
-                        Session.CurrentUserfullName = reader("User_Name").ToString()
-                        Session.CurrentUserName = enteredUser
-                        Session.CurrentUserPassword = enteredPass
-                        Session.CurrentRoleID = roleId
-
-                        Session.LoadPermissions(roleId)
-                        InitializeShiftSession()
-                        Me.Hide()
-                        Dim mainForm As New MainForm()
-                        mainForm.Show()
-
-                        Dim code As Integer = GetNextLoginCode()
-                        LogLoginInfo(code, deviceName, macAddress, currentDate, currentTime, enteredUser, enteredPass, "")
-
-                        Notify.Toast("تم تسجيل الدخول بنجاح", Notify.ToastType.Success)
-                        usernamelogin = enteredUser
-                        passwordlogin = enteredPass
-
-                        cmbUsername.SelectedIndex = -1
-                        txtpassword.Clear()
-                        Return
-                    Else
-                        MessageBox.Show("❌ اسم المستخدم أو كلمة المرور غير صحيحة", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        cmbUsername.SelectedIndex = -1
-                        txtpassword.Clear()
-                        cmbUsername.Focus()
-                    End If
+                    End Using
                 End Using
             End Using
+
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تسجيل الدخول: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Logger.LogError("btnlogin_Click", ex)
+            MessageBox.Show("حدث خطأ أثناء الاتصال بالخادم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
-            Disconnect()
+            btnlogin.Enabled = True
+            btnlogin.Text = originalButtonText
+            Me.Cursor = Cursors.Default
         End Try
     End Sub
 
+    ''' <summary>
+    ''' استقبال بيانات الاسكانر لتسجيل الدخول السريع عبر كارت الكاشير
+    ''' </summary>
+    Public Sub FillFromScanner(code As String)
+        Try
+            If String.IsNullOrWhiteSpace(code) Then Return
+            code = code.Trim()
 
+            If code.Contains(":") Then
+                Dim parts = code.Split(":"c)
+                cmbUsername.Text = parts(0).Trim()
+                If parts.Length > 1 Then txtpassword.Text = parts(1).Trim()
+                btnlogin.PerformClick()
+            Else
+                cmbUsername.Text = code
+                txtpassword.Focus()
+            End If
+        Catch ex As Exception
+            Logger.LogError("FillFromScanner", ex)
+        End Try
+    End Sub
 
 End Class

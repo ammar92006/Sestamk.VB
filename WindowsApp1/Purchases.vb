@@ -1544,18 +1544,7 @@ Public Class Purchases
         dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
         dgv.EnableHeadersVisualStyles = False
 
-        Dim darkBackground As Color = Color.FromArgb(30, 30, 30)
-        Dim darkRow As Color = Color.FromArgb(45, 45, 45)
-        Dim darkAltRow As Color = Color.FromArgb(55, 55, 55)
-        Dim darkHeader As Color = Color.FromArgb(64, 64, 64)
-        Dim highlightColor As Color = Color.FromArgb(0, 122, 204)
-        Dim textColor As Color = Color.Gainsboro
-
-        dgv.BackgroundColor = darkBackground
-        dgv.RowsDefaultCellStyle.BackColor = darkRow
-        dgv.AlternatingRowsDefaultCellStyle.BackColor = darkAltRow
-        dgv.DefaultCellStyle.ForeColor = textColor
-        dgv.GridColor = Color.FromArgb(80, 80, 80)
+        ThemeHelper.ApplyDataGridViewTheme(dgv, ThemeManager.Instance.CurrentPalette)
 
         With dgv
 
@@ -1610,13 +1599,9 @@ Public Class Purchases
             dgv.RowTemplate.Height = 32
             dgv.ColumnHeadersHeight = 45
 
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = darkHeader
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke
             dgv.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 14.0!, FontStyle.Bold)
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
 
-            dgv.DefaultCellStyle.SelectionBackColor = highlightColor
-            dgv.DefaultCellStyle.SelectionForeColor = Color.White
             dgv.DefaultCellStyle.Font = New Font("Segoe UI", 12.0!)
 
             dgv.RowHeadersVisible = False

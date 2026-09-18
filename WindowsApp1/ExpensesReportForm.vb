@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Data
 Imports System.Threading.Tasks
 
@@ -8,87 +8,15 @@ Public Class ExpensesReportForm
     Dim newpoint As New Point
 
     Private Sub SetupDataGridViewSales(ByVal dgv As DataGridView)
-        dgv.AllowUserToAddRows = False
-        'dgv.AllowUser = False
-        dgv.ReadOnly = True
-        dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgv.MultiSelect = False
+        Main.datagridviewsetup(dgv)
         dgv.BorderStyle = BorderStyle.None
-        dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-        dgv.EnableHeadersVisualStyles = False
-
-        Dim darkBackground As Color = Color.FromArgb(30, 30, 30)
-        Dim darkRow As Color = Color.FromArgb(45, 45, 45)
-        Dim darkAltRow As Color = Color.FromArgb(55, 55, 55)
-        Dim darkHeader As Color = Color.FromArgb(64, 64, 64)
-        Dim highlightColor As Color = Color.FromArgb(0, 122, 204)
-        Dim textColor As Color = Color.Gainsboro
-
-        dgv.BackgroundColor = darkBackground
-        dgv.RowsDefaultCellStyle.BackColor = darkRow
-        dgv.AlternatingRowsDefaultCellStyle.BackColor = darkAltRow
-        dgv.DefaultCellStyle.ForeColor = textColor
-        dgv.GridColor = Color.FromArgb(80, 80, 80)
 
         With dgv
-
-            '.Columns.Clear()
-            '.Columns("Invoice_ID").HeaderText = "كود الفاتورة"
-            '.Columns("Invoice_Date").HeaderText = "تاريخ الفاتورة"
-            '.Columns("CustomerName").HeaderText = "اسم العميل"
-            '.Columns("Total_Amount").HeaderText = "اجمالي الفاتورة"
-            '.Columns("Discount_Value").HeaderText = "الخصم"
-            '.Columns("Net_Amount").HeaderText = "الصافي"
-            '.Columns("Amount_Paid").HeaderText = "المدفوع"
-            '.Columns("Remaining").HeaderText = "المتبقي"
-            '.Columns("Payment_Method").HeaderText = "طريقه الدفع"
-            '.Columns("User_Name").HeaderText = "اسم المستخدم"
-            '.Columns("Product_ID").HeaderText = "ID المنتج"
-            '.Columns("Product_Name").HeaderText = "اسم المنتج"
-            '.Columns("Quantity_Sold").HeaderText = "الكمية الاساسية"
-            '.Columns("Sale_Price_Per_Unit").HeaderText = "سعر البيع"
-            '.Columns("Total_Line_Amount").HeaderText = "اجمالي Line"
-
-
-            '    .Columns("ColProductID").Visible = False
-            '    .Columns("ColUnitID").Visible = False
-            '    .Columns("ColFactor").Visible = False
-
-            '    Dim btnCol As New DataGridViewButtonColumn()
-            '    btnCol.HeaderText = "حذف"
-            '    btnCol.Text = "❌"
-            '    btnCol.Name = "ColDelete"
-            '    btnCol.UseColumnTextForButtonValue = True
-            '    .Columns.Add(btnCol)
-
-            '.Columns("ColProductName").Width = 230
-            '    .Columns("ColQuantity").Width = 160
-
-            '    .Columns("ColPrice").DefaultCellStyle.Format = "N2"
-            '    .Columns("ColTotal").DefaultCellStyle.Format = "N2"
-
             For Each col As DataGridViewColumn In dgv.Columns
                 col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             Next
-
-            dgv.RowTemplate.Height = 40
-            dgv.ColumnHeadersHeight = 60
-
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = darkHeader
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke
-            dgv.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 14.0!, FontStyle.Bold)
-            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            dgv.DefaultCellStyle.SelectionBackColor = highlightColor
-            dgv.DefaultCellStyle.SelectionForeColor = Color.White
-            dgv.DefaultCellStyle.Font = New Font("Segoe UI", 12.0!)
-
-            dgv.RowHeadersVisible = False
-            dgv.DefaultCellStyle.Padding = New Padding(5, 0, 5, 0)
-
         End With
-
     End Sub
     ' سلسلة الاتصال بقاعدة البيانات
     Private ReadOnly connString As String = ConnectionString

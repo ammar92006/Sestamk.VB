@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.IO.Ports
 Imports System.Management
@@ -12,11 +12,29 @@ End Class
 
 Public Module SettingsManager
 
+    Private Sub EnsureSettingsTable(cn As SqlConnection)
+        Try
+            Using cmd As New SqlCommand("
+                IF OBJECT_ID('AppSettings', 'U') IS NULL
+                BEGIN
+                    CREATE TABLE AppSettings (
+                        SettingKey NVARCHAR(100) NOT NULL PRIMARY KEY,
+                        SettingValue NVARCHAR(MAX) NULL
+                    );
+                END", cn)
+                cmd.ExecuteNonQuery()
+            End Using
+        Catch ex As Exception
+            ' Log or ignore if table already exists
+        End Try
+    End Sub
+
     ' 🟢 قراءة الإعداد
     Public Function GetSetting(key As String) As String
         Try
             Using cn As New SqlConnection(ConnectionString)
                 cn.Open()
+                EnsureSettingsTable(cn)
                 Dim cmd As New SqlCommand("SELECT SettingValue FROM AppSettings WHERE SettingKey = @key", cn)
                 cmd.Parameters.AddWithValue("@key", key)
                 Dim result = cmd.ExecuteScalar()
@@ -33,9 +51,27 @@ Public Module SettingsManager
         Return If(String.IsNullOrEmpty(v), defaultValue, v)
     End Function
 
+    ' 🟢 قراءة إعداد بمفتاحين بديلين (Key1 ثم Key2)
+    Public Function GetSettingDual(key1 As String, key2 As String, Optional defaultValue As String = "") As String
+        Dim v = GetSetting(key1)
+        If Not String.IsNullOrEmpty(v) Then Return v
+        v = GetSetting(key2)
+        If Not String.IsNullOrEmpty(v) Then Return v
+        Return defaultValue
+    End Function
+
     ' 🟢 قراءة إعداد منطقي (Boolean)
     Public Function GetBoolSetting(key As String, defaultValue As Boolean) As Boolean
         Dim v = GetSetting(key)
+        If String.IsNullOrEmpty(v) Then Return defaultValue
+        Dim b As Boolean
+        If Boolean.TryParse(v, b) Then Return b
+        Return v.Trim().ToLower() = "true" OrElse v.Trim() = "1"
+    End Function
+
+    ' 🟢 قراءة إعداد منطقي بمفتاحين بديلين
+    Public Function GetBoolSettingDual(key1 As String, key2 As String, defaultValue As Boolean) As Boolean
+        Dim v = GetSettingDual(key1, key2, "")
         If String.IsNullOrEmpty(v) Then Return defaultValue
         Dim b As Boolean
         If Boolean.TryParse(v, b) Then Return b
@@ -52,17 +88,30 @@ Public Module SettingsManager
 
     ' 🟡 حفظ أو تحديث الإعداد
     Public Sub SaveSetting(key As String, value As String)
-        Using cn As New SqlConnection(ConnectionString)
-            cn.Open()
-            Dim cmd As New SqlCommand("
-                IF EXISTS (SELECT 1 FROM AppSettings WHERE SettingKey = @key)
-                    UPDATE AppSettings SET SettingValue = @value WHERE SettingKey = @key
-                ELSE
-                    INSERT INTO AppSettings (SettingKey, SettingValue) VALUES (@key, @value)", cn)
-            cmd.Parameters.AddWithValue("@key", key)
-            cmd.Parameters.AddWithValue("@value", If(value, ""))
-            cmd.ExecuteNonQuery()
-        End Using
+        Try
+            Using cn As New SqlConnection(ConnectionString)
+                cn.Open()
+                EnsureSettingsTable(cn)
+                Dim cmd As New SqlCommand("
+                    IF EXISTS (SELECT 1 FROM AppSettings WHERE SettingKey = @key)
+                        UPDATE AppSettings SET SettingValue = @value WHERE SettingKey = @key
+                    ELSE
+                        INSERT INTO AppSettings (SettingKey, SettingValue) VALUES (@key, @value)", cn)
+                cmd.Parameters.AddWithValue("@key", key)
+                cmd.Parameters.AddWithValue("@value", If(value, ""))
+                cmd.ExecuteNonQuery()
+            End Using
+        Catch ex As Exception
+            ' تجاهل أو تسجيل الخطأ
+        End Try
+    End Sub
+
+    ' 🟡 حفظ الإعداد بمفتاحين متطابقين لمزامنة التوافق
+    Public Sub SaveSettingDual(key1 As String, key2 As String, value As String)
+        SaveSetting(key1, value)
+        If Not String.Equals(key1, key2, StringComparison.OrdinalIgnoreCase) Then
+            SaveSetting(key2, value)
+        End If
     End Sub
     ''' <summary>إغلاق منفذ الباركود بهدوء (بدون رسائل). يُفضّل استخدام ScannerModule.StopScanner.</summary>
     Public Sub CloseBarcodePort(portName As String)
@@ -73,7 +122,7 @@ Public Module SettingsManager
                 End Using
             End If
         Catch ex As Exception
-            Debug.WriteLine("CloseBarcodePort: " & ex.Message)
+            'Debug.WriteLine("CloseBarcodePort: " & ex.Message)
         End Try
     End Sub
 

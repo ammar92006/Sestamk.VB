@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class frmSalarySystems
     Private _cachedSalaries As DataTable = Nothing
@@ -46,6 +46,9 @@ Public Class frmSalarySystems
     End Sub
 
     Private Sub frmSalarySystems_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Session.CheckCanOpen(Me) Then Return
+        Session.ApplyFormPermissions(Me)
+
         cmbSearchField.Items.Clear()
         cmbSearchField.Items.Add("اسم نظام الرواتب")
         cmbSearchField.Items.Add("كود النظام")

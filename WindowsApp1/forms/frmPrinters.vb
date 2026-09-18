@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Drawing.Printing ' 🖨️ مكتبة التعامل مع طابعات الويندوز
 
 Public Class frmPrinters
@@ -42,6 +42,9 @@ Public Class frmPrinters
 
     ' حدث تحميل الفورم
     Private Sub frmPrinters_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Session.CheckCanOpen(Me) Then Return
+        Session.ApplyFormPermissions(Me)
+
         GetSystemPrinters() ' 1. جلب طابعات الويندوز أولاً
         LoadPrintersGrid()  ' 2. عرض البيانات المخزنة في الجريد
         datagridviewsetup()
@@ -155,79 +158,7 @@ Public Class frmPrinters
         End If
     End Sub
     Private Sub datagridviewsetup()
-        With dgvPrinters
-
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-            .AllowUserToResizeRows = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 45, 48)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue
-            .DefaultCellStyle.SelectionBackColor = Color.RoyalBlue
-
-            '---------------------------
-            ' إعداد العنوان (Header)
-            '---------------------------
-            .EnableHeadersVisualStyles = False
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(40, 40, 43)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 16, FontStyle.Bold)
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersHeight = 70
-            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            '---------------------------
-            ' إعداد الصفوف (Rows)
-            '---------------------------
-            .DefaultCellStyle.BackColor = Color.FromArgb(50, 50, 55)
-            .DefaultCellStyle.ForeColor = Color.White
-            .DefaultCellStyle.SelectionBackColor = Color.FromArgb(70, 130, 180) ' لون أزرق أنيق عند التحديد
-            .DefaultCellStyle.SelectionForeColor = Color.White
-            .DefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Regular)
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .DefaultCellStyle.Padding = New Padding(5, 5, 5, 5)
-            '.RowTemplate.Height = 60
-
-            '---------------------------
-            ' الصفوف المتبادلة
-            '---------------------------
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(60, 60, 65)
-
-            '---------------------------
-            ' شكل الشبكة
-            '---------------------------
-            .GridColor = Color.FromArgb(80, 80, 80)
-            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-
-            '---------------------------
-            ' الإعدادات العامة
-            '---------------------------
-            .BackgroundColor = Color.FromArgb(30, 30, 35)
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-            .RowHeadersVisible = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToResizeRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-
-            ' ✅ ضبط النص في المنتصف داخل الخلايا
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-            .ColumnHeadersVisible = True
-
-            ' ✅ عرض الأعمدة بالتساوي
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
-            .MultiSelect = False
-        End With
+        Main.datagridviewsetup(dgvPrinters)
     End Sub
 
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
@@ -257,5 +188,29 @@ Public Class frmPrinters
         cmbWindowsPrinters.SelectedIndex = -1
         txtNote.Clear()
         tgStatus.Checked = False
+    End Sub
+
+    Private Sub btnTestCurrentPrinter_Click(sender As Object, e As EventArgs) Handles btnTestCurrentPrinter.Click
+        Dim targetPrinter As String = cmbWindowsPrinters.Text
+        If String.IsNullOrWhiteSpace(targetPrinter) AndAlso dgvPrinters.SelectedRows.Count > 0 Then
+            Dim row As DataGridViewRow = dgvPrinters.SelectedRows(0)
+            If row.Cells("TargetPrinter").Value IsNot Nothing Then
+                targetPrinter = row.Cells("TargetPrinter").Value.ToString()
+            End If
+        End If
+
+        If String.IsNullOrWhiteSpace(targetPrinter) Then
+            MessageBox.Show("يرجى اختيار طابعة لتجربتها أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        ThermalTestReceiptHelper.PrintTestReceipt(
+            printerName:=targetPrinter,
+            paperSize:="80mm",
+            printLogo:=True,
+            printBarcode:=True,
+            openDrawer:=False,
+            usePreview:=False
+        )
     End Sub
 End Class

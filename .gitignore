@@ -24,3 +24,8 @@ Installer/db/*.bak
 # Misc
 *.log
 UpgradeLog*.htm
+
+# Executable files in source tree
+WindowsApp1/CSharp_MainForm/
+*.exe
+!WindowsApp1/chromedriver.exe

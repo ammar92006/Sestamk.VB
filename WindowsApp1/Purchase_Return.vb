@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports DevExpress.Utils.Html.Internal
 Imports DocumentFormat.OpenXml.ExtendedProperties
@@ -1050,20 +1050,9 @@ Public Class Purchase_Return
         dgv.EnableHeadersVisualStyles = False
 
         ' ------------------------------
-        ' 2. ألوان الوضع الداكن (Dark Mode)
+        ' 2. تطبيق ألوان السمة (Light / Dark)
         ' ------------------------------
-        Dim darkBackground As Color = Color.FromArgb(30, 30, 30)           ' خلفية رئيسية
-        Dim darkRow As Color = Color.FromArgb(45, 45, 45)                  ' صف عادي
-        Dim darkAltRow As Color = Color.FromArgb(55, 55, 55)               ' صف متناوب
-        Dim darkHeader As Color = Color.FromArgb(64, 64, 64)               ' رؤوس الأعمدة
-        Dim highlightColor As Color = Color.FromArgb(0, 122, 204)          ' لون الصف المحدد
-        Dim textColor As Color = Color.Gainsboro                           ' النصوص العادية
-
-        dgv.BackgroundColor = darkBackground
-        dgv.RowsDefaultCellStyle.BackColor = darkRow
-        dgv.AlternatingRowsDefaultCellStyle.BackColor = darkAltRow
-        dgv.DefaultCellStyle.ForeColor = textColor
-        dgv.GridColor = Color.FromArgb(80, 80, 80)
+        ThemeHelper.ApplyDataGridViewTheme(dgv, ThemeManager.Instance.CurrentPalette)
 
         ' ------------------------------
         ' 3. تنسيق الأعمدة والعناوين
@@ -1125,18 +1114,9 @@ Public Class Purchase_Return
             dgv.RowTemplate.Height = 32
             dgv.ColumnHeadersHeight = 45
 
-
-            ' رؤوس الأعمدة
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = darkHeader
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke
             dgv.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 10.5!, FontStyle.Bold)
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
 
-            ' ------------------------------
-            ' 5. الصف المحدد (Selection)
-            ' ------------------------------
-            dgv.DefaultCellStyle.SelectionBackColor = highlightColor
-            dgv.DefaultCellStyle.SelectionForeColor = Color.White
             dgv.DefaultCellStyle.Font = New Font("Segoe UI", 10.5!)
 
             ' ------------------------------

@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmPrinters
     Inherits System.Windows.Forms.Form
 
@@ -44,6 +44,7 @@ Partial Class frmPrinters
         Me.tgStatus = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.txtNote = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.btnTestCurrentPrinter = New Guna.UI2.WinForms.Guna2Button()
         CType(Me.dgvPrinters, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
@@ -330,11 +331,28 @@ Partial Class frmPrinters
         Me.txtNote.Size = New System.Drawing.Size(392, 80)
         Me.txtNote.TabIndex = 5618
         '
+        'btnTestCurrentPrinter
+        '
+        Me.btnTestCurrentPrinter.BorderRadius = 8
+        Me.btnTestCurrentPrinter.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnTestCurrentPrinter.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnTestCurrentPrinter.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnTestCurrentPrinter.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnTestCurrentPrinter.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.btnTestCurrentPrinter.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnTestCurrentPrinter.ForeColor = System.Drawing.Color.White
+        Me.btnTestCurrentPrinter.Location = New System.Drawing.Point(80, 75)
+        Me.btnTestCurrentPrinter.Name = "btnTestCurrentPrinter"
+        Me.btnTestCurrentPrinter.Size = New System.Drawing.Size(200, 45)
+        Me.btnTestCurrentPrinter.TabIndex = 5622
+        Me.btnTestCurrentPrinter.Text = "🖨️ تجربة الطباعة"
+        '
         'frmPrinters
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1205, 638)
+        Me.Controls.Add(Me.btnTestCurrentPrinter)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.tgStatus)
         Me.Controls.Add(Me.Label5)
@@ -377,4 +395,5 @@ Partial Class frmPrinters
     Friend WithEvents tgStatus As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label5 As Label
     Friend WithEvents txtNote As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents btnTestCurrentPrinter As Guna.UI2.WinForms.Guna2Button
 End Class

@@ -51,6 +51,9 @@ Public Class frmSizes
     End Sub
 
     Private Sub frmSizes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Session.CheckCanOpen(Me) Then Return
+        Session.ApplyFormPermissions(Me)
+
         txtSizeCode.Text = GetNextCode("Sizes", "SizeCode")
         LoadSizesGrid()
         datagridviewsetup(dgvSizes)

@@ -31,6 +31,9 @@ Namespace My
         End Sub
 
         Private Sub MyApplication_Startup(sender As Object, e As StartupEventArgs) Handles Me.Startup
+            ' تهيئة نظام الـ Theme قبل فتح أي فورم لضمان عدم حدوث وميض في الألوان
+            ThemeManager.Instance.Initialize()
+
             ' تحميل إعدادات قاعدة البيانات المحفوظة من الملف قبل فتح أي فورم
             DBModule.LoadDbSettings()
 

@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
@@ -80,6 +80,19 @@ Public Module DBModule
                     MessageBox.Show("حدث خطأ أثناء تنفيذ العملية: " & ex.Message,
                                     "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return -1
+                End Try
+            End Using
+        End Using
+    End Function
+
+    Public Function ExecuteScalar(query As String) As Object
+        Using conn As New SqlConnection(ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                Try
+                    conn.Open()
+                    Return cmd.ExecuteScalar()
+                Catch ex As Exception
+                    Return Nothing
                 End Try
             End Using
         End Using
@@ -600,8 +613,15 @@ Public Module DBModule
         End If
     End Sub
 
-    ' دالة عامة لفتح أي فورم بدون تكرار
+    ' دالة عامة لفتح أي فورم بدون تكرار مع فحص الصلاحيات وتطبيقها
     Public Sub OpenSingleForm(Of T As {Form, New})()
+        Dim formName As String = GetType(T).Name
+        If Not Session.HasPermission(formName, "CanOpen") Then
+            Dim dispName As String = Session.GetScreenDisplayName(formName)
+            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح هذه الشاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
         Dim frm As Form = Application.OpenForms.
             Cast(Of Form)().
             FirstOrDefault(Function(f) TypeOf f Is T)
@@ -609,8 +629,15 @@ Public Module DBModule
             frm.WindowState = FormWindowState.Normal
             frm.BringToFront()
             frm.Focus()
+            Session.ApplyFormPermissions(frm, formName)
         Else
             Dim newForm As New T()
+            AddHandler newForm.Load, Sub(s, e)
+                                         Session.ApplyFormPermissions(newForm, formName)
+                                     End Sub
+            AddHandler newForm.Shown, Sub(s, e)
+                                          Session.ApplyFormPermissions(newForm, formName)
+                                      End Sub
             newForm.Show()
         End If
     End Sub

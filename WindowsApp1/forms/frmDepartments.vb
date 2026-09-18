@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class frmDepartments
     Private _cachedDepts As DataTable = Nothing
@@ -45,6 +45,9 @@ Public Class frmDepartments
     End Sub
 
     Private Sub frmDepartments_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Session.CheckCanOpen(Me) Then Return
+        Session.ApplyFormPermissions(Me)
+
         cmbSearchField.Items.Clear()
         cmbSearchField.Items.Add("اسم القسم")
         cmbSearchField.Items.Add("كود القسم")

@@ -184,18 +184,7 @@ Public Class Sales_Returns
         dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
         dgv.EnableHeadersVisualStyles = False
 
-        Dim darkBackground As Color = Color.FromArgb(30, 30, 30)
-        Dim darkRow As Color = Color.FromArgb(45, 45, 45)
-        Dim darkAltRow As Color = Color.FromArgb(55, 55, 55)
-        Dim darkHeader As Color = Color.FromArgb(64, 64, 64)
-        Dim highlightColor As Color = Color.FromArgb(0, 122, 204)
-        Dim textColor As Color = Color.Gainsboro
-
-        dgv.BackgroundColor = darkBackground
-        dgv.RowsDefaultCellStyle.BackColor = darkRow
-        dgv.AlternatingRowsDefaultCellStyle.BackColor = darkAltRow
-        dgv.DefaultCellStyle.ForeColor = textColor
-        dgv.GridColor = Color.FromArgb(80, 80, 80)
+        ThemeHelper.ApplyDataGridViewTheme(dgv, ThemeManager.Instance.CurrentPalette)
 
         With dgv
 
@@ -236,13 +225,9 @@ Public Class Sales_Returns
             dgv.RowTemplate.Height = 32
             dgv.ColumnHeadersHeight = 45
 
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = darkHeader
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke
             dgv.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 10.5!, FontStyle.Bold)
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
 
-            dgv.DefaultCellStyle.SelectionBackColor = highlightColor
-            dgv.DefaultCellStyle.SelectionForeColor = Color.White
             dgv.DefaultCellStyle.Font = New Font("Segoe UI", 10.5!)
 
             dgv.RowHeadersVisible = False
@@ -739,32 +724,79 @@ Public Class Sales_Returns
 
                 MessageBox.Show(
                     "الاختصارات المتاحة:" & vbCrLf &
-                    "F2 / Ctrl+N : إضافة جديد" & vbCrLf &
-                    "F3 : تعديل" & vbCrLf &
-                    "F4 : حذف" & vbCrLf &
-                    "F5 : تحديث الجدول" & vbCrLf &
+                    "F2 / Ctrl+N : حفظ الفاتورة" & vbCrLf &
+                    "F8 : استدعاء فاتورة مبيعات بالرقم" & vbCrLf &
                     "F6 : مسح الحقول" & vbCrLf &
-                    "Ctrl+F : بحث" & vbCrLf &
+                    "Ctrl+F : بحث عن العميل" & vbCrLf &
                     "Esc : خروج",
                     "دليل الاختصارات",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information
                 )
 
-                'Case Keys.F3
-                '    btn_Sales_Returns.PerformClick()
+            Case Keys.F8
+                Dim invNum = InputBox("أدخل رقم فاتورة المبيعات الأصلية (مثال: INV-2026... أو رقم الفاتورة) لاسترجاع أصنافها:", "استدعاء فاتورة مبيعات")
+                If Not String.IsNullOrWhiteSpace(invNum) Then
+                    LoadOriginalInvoiceForReturn(invNum)
+                End If
 
-                'Case Keys.F4
-                '    btnDelete.PerformClick()
-
-                'Case Keys.F6
-                '    cleartxts()
-
-                'Case Keys.Escape
-                '    Me.Close()
+            Case Keys.F6
+                cleartxts()
 
         End Select
 
+    End Sub
+
+    ' =========================================================
+    ' استدعاء فاتورة مبيعات مطعم أصلية واسترجاع أصنافها للمرتجع
+    ' =========================================================
+    Public Sub LoadOriginalInvoiceForReturn(invNum As String)
+        If String.IsNullOrWhiteSpace(invNum) Then Return
+        Try
+            Dim repo As New POSRepository(DBModule.ConnectionString)
+            Dim inv = repo.GetInvoiceByNumber(invNum.Trim())
+            If inv IsNot Nothing Then
+                DataGridView1.Rows.Clear()
+
+                ' جلب وتعبئة بيانات العميل
+                If inv.CustomerID.HasValue AndAlso inv.CustomerID.Value > 0 Then
+                    Dim cust = repo.GetCustomerByID(inv.CustomerID.Value)
+                    If cust IsNot Nothing Then
+                        txt_Customer_Code.Text = cust.CustomerCode
+                        txt_Customer_Name.Text = cust.CustomerName
+                        txt_Customer_Balance.Text = cust.CurrentBalance.ToString("N2")
+                    End If
+                Else
+                    txt_Customer_Code.Text = "CASH"
+                    txt_Customer_Name.Text = "عميل نقدي"
+                    txt_Customer_Balance.Text = "0.00"
+                End If
+
+                txtDiscount.Text = inv.DiscountAmount.ToString("N2")
+                txt_notes.Text = "مرتجع مبيعات للفاتورة الأصلية رقم " & inv.InvoiceNumber
+
+                For Each det In inv.Details
+                    Dim rowIdx As Integer = DataGridView1.Rows.Add()
+                    Dim r = DataGridView1.Rows(rowIdx)
+                    r.Cells("ColProductID").Value = det.ProductID
+                    r.Cells("ColProduct_Code").Value = det.ProductID.ToString()
+                    r.Cells("ColProductName").Value = det.ProductName & If(Not String.IsNullOrEmpty(det.SizeName), " (" & det.SizeName & ")", "")
+                    r.Cells("ColUnitName").Value = If(Not String.IsNullOrEmpty(det.SizeName), det.SizeName, "قطعة")
+                    r.Cells("ColPrice").Value = det.UnitPrice
+                    r.Cells("ColQuantity").Value = det.Quantity
+                    r.Cells("ColTotal").Value = det.TotalPrice
+                    r.Cells("ColUnitID").Value = 1
+                    r.Cells("ColFactor").Value = 1
+                Next
+
+                UpdateInvoiceTotals()
+                MessageBox.Show($"تم استرجاع أصناف الفاتورة [{inv.InvoiceNumber}] بنجاح، يرجى حذف أي أصناف لا يرغب العميل في إرجاعها أو تعديل الكميات.", "نجاح الاسترجاع", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Else
+                MessageBox.Show("لم يتم العثور على فاتورة مبيعات مسجلة بهذا الرقم!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء جلب الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     '----------------------------------------------------
@@ -1614,8 +1646,7 @@ Public Class Sales_Returns
         ' 1. التحقق من العميل وأصناف الفاتورة
         ' --------------------------
         If String.IsNullOrWhiteSpace(txt_Customer_Code.Text) OrElse
-       String.IsNullOrWhiteSpace(txt_Customer_Name.Text) OrElse
-       String.IsNullOrWhiteSpace(txt_Customer_Balance.Text) Then
+           String.IsNullOrWhiteSpace(txt_Customer_Name.Text) Then
             MessageBox.Show("الرجاء التأكد من بيانات العميل أولاً.", "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txt_Customer_Name.Focus()
             Exit Sub
@@ -1628,23 +1659,31 @@ Public Class Sales_Returns
 
         Dim CustomerCode As String = txt_Customer_Code.Text.Trim()
         Dim CustomerID As Integer = GetCustomerID(CustomerCode)
-        If CustomerID = 0 Then Exit Sub
+        If CustomerID = 0 Then CustomerID = 1 ' افتراضي عميل نقدي
 
         ' --------------------------
-        ' 2. جلب قيم الفاتورة
+        ' 2. جلب قيم الفاتورة بدقة
         ' --------------------------
         Dim totalBeforeDiscount As Decimal = ParseDecimal(txtTotalRequired.Text)
-        Dim totalAfterDiscount As Decimal = 0
-        Dim discountValue As Decimal = 0
-        Dim paidAmount As Decimal = 0
-        Dim Remaining As Decimal = 0
+        Dim discountValue As Decimal = ParseDecimal(txtDiscount.Text)
+        Dim totalAfterDiscount As Decimal = ParseDecimal(txtTotalAfterDiscount.Text)
+        If totalAfterDiscount = 0 AndAlso totalBeforeDiscount > 0 Then
+            totalAfterDiscount = totalBeforeDiscount - discountValue
+        End If
+
+        Dim paymentType As String = If(cmb_Pay.SelectedItem IsNot Nothing, cmb_Pay.SelectedItem.ToString(), "نقدي")
+        Dim paidAmount As Decimal = ParseDecimal(txtPaid.Text)
+        If paidAmount = 0 AndAlso paymentType <> "آجل" AndAlso totalAfterDiscount > 0 Then
+            paidAmount = totalAfterDiscount
+        End If
+        Dim Remaining As Decimal = ParseDecimal(txtRemaining.Text)
+
         Dim notes As String = txt_notes.Text.Trim()
-        Dim userID As Integer = Session.CurrentUserID
-        Dim userName As String = lbl_user_name.Text.Trim()
-        Dim paymentType As String = ""
+        Dim userID As Integer = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1)
+        Dim userName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, lbl_user_name.Text.Trim())
 
         ' --------------------------
-        ' 3. بدء المعاملة
+        ' 3. بدء المعاملة وحفظ البيانات متكاملة
         ' --------------------------
         Connect()
         Using transaction As SqlTransaction = Conn.BeginTransaction()
@@ -1653,16 +1692,51 @@ Public Class Sales_Returns
                 Dim NewInvoiceID As Integer = InsertReturnInvoiceHeader(CustomerID, totalBeforeDiscount, totalAfterDiscount, discountValue,
                                                                     paidAmount, Remaining, notes, userID, userName, paymentType, transaction)
 
-                ' إدخال تفاصيل الفاتورة وتحديث المخزون
+                ' إدخال تفاصيل الفاتورة وتحديث المخزون والخامات
                 InsertReturnInvoiceDetailsAndUpdateStock(NewInvoiceID, transaction)
 
-                ' تحديث رصيد العميل بالمبلغ الصافي للمرتجع
-                UpdateCustomerBalance(CustomerCode, totalAfterDiscount, transaction)
+                ' تحديث رصيد العميل إذا كان هناك آجل أو خصم من حسابه
+                If Remaining > 0 OrElse paymentType = "آجل" Then
+                    Dim creditRefund = If(Remaining > 0, Remaining, totalAfterDiscount)
+                    UpdateCustomerBalance(CustomerCode, -creditRefund, transaction)
+                End If
+
+                ' تحديث إجمالي مرتجعات الوردية النشطة بالداتا بيز والذاكرة
+                Dim queryShiftRefund As String = "UPDATE Shifts SET TotalRefunds = ISNULL(TotalRefunds, 0) + @Refund WHERE Status = 1;"
+                Using cmdShift As New SqlCommand(queryShiftRefund, Conn, transaction)
+                    cmdShift.Parameters.AddWithValue("@Refund", totalAfterDiscount)
+                    cmdShift.ExecuteNonQuery()
+                End Using
+
+                If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                    ShiftSession.CurrentShift.TotalRefunds += totalAfterDiscount
+                End If
+
+                ' تسجيل حركة صرف نقدية من الخزينة لقاء المرتجع المدفوع كاش
+                If paidAmount > 0 Then
+                    Dim currentTreasuryID As Integer = 1
+                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso ShiftSession.CurrentShift.TreasuryID.HasValue AndAlso ShiftSession.CurrentShift.TreasuryID.Value > 0 Then
+                        currentTreasuryID = ShiftSession.CurrentShift.TreasuryID.Value
+                    End If
+
+                    Dim queryTreasury As String = "
+                        INSERT INTO TreasuryTransactions (TreasuryID, TransactionType, Amount, TransactionDate, Description, ShiftID, UserID, IsActive, IsDeleted)
+                        VALUES (@TreasuryID, N'صرف', @Amount, GETDATE(), @Desc, @ShiftID, @UserID, 1, 0);
+                    "
+                    Using cmdTreasury As New SqlCommand(queryTreasury, Conn, transaction)
+                        cmdTreasury.Parameters.AddWithValue("@TreasuryID", currentTreasuryID)
+                        cmdTreasury.Parameters.AddWithValue("@Amount", paidAmount)
+                        cmdTreasury.Parameters.AddWithValue("@Desc", "مرتجع مبيعات فاتورة #" & NewInvoiceID)
+                        cmdTreasury.Parameters.AddWithValue("@ShiftID", If(ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, CType(DBNull.Value, Object)))
+                        cmdTreasury.Parameters.AddWithValue("@UserID", userID)
+                        cmdTreasury.ExecuteNonQuery()
+                    End Using
+                End If
 
                 ' تأكيد المعاملة
                 transaction.Commit()
 
-                MessageBox.Show($"✅ تم حفظ الفاتورة رقم {NewInvoiceID} بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show($"✅ تم حفظ فاتورة المرتجع رقم {NewInvoiceID} بنجاح وقيد الصرف في الوردية والخزينة.", "تم الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 cleartxts()
 
             Catch ex As Exception
@@ -1713,9 +1787,12 @@ Public Class Sales_Returns
     End Function
 
     ' ========================================
-    ' إدخال التفاصيل وتحديث المخزون
+    ' إدخال التفاصيل وتحديث المخزون والخامات
     ' ========================================
     Private Sub InsertReturnInvoiceDetailsAndUpdateStock(NewInvoiceID As Integer, transaction As SqlTransaction)
+        Dim currentStoreID As Integer = 1
+        Integer.TryParse(SettingsManager.GetSettingOrDefault("CurrentStoreID", "1"), currentStoreID)
+
         For Each row In GetValidRows()
             Dim PID As Integer = Convert.ToInt32(row.Cells("ColProductID").Value)
             Dim UnitID As Integer = Convert.ToInt32(row.Cells("ColUnitID").Value)
@@ -1741,7 +1818,7 @@ VALUES (@InvID, @PID, @UnitID, @QtySold, @Price, @TotalLine);"
             End Using
 
             ' ==============================================
-            ' تحديث المخزون → زيادة الكمية لكل المنتجات
+            ' 1. تحديث المخزون العام للمنتج
             ' ==============================================
             Dim queryStock As String = "
 UPDATE Stock SET Quantity_OnHand = Quantity_OnHand + @QtyToAdd WHERE Product_ID = @PID;"
@@ -1751,6 +1828,15 @@ UPDATE Stock SET Quantity_OnHand = Quantity_OnHand + @QtyToAdd WHERE Product_ID 
                 cmdStock.Parameters.Add("@PID", SqlDbType.Int).Value = PID
                 cmdStock.ExecuteNonQuery()
             End Using
+
+            ' ==============================================
+            ' 2. استرجاع خامات الريسيبي للمطبخ/المخزن إن وجدت
+            ' ==============================================
+            Try
+                InventoryDeductionManager.RestoreItemRecipe(Conn, transaction, currentStoreID, PID, Nothing, Nothing, QtySold, "RET-" & NewInvoiceID)
+            Catch exRecipe As Exception
+                Debug.WriteLine("RestoreItemRecipe error: " & exRecipe.Message)
+            End Try
 
         Next
     End Sub

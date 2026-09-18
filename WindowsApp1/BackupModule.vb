@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
 
 Public Module BackupModule
@@ -130,6 +130,42 @@ Public Module BackupModule
 
     Public Sub RestoreBackup(backupFile As String)
         Try
+            ' ── التحقق من صحة الملف قبل الاستعادة ──
+            If String.IsNullOrWhiteSpace(backupFile) Then
+                MsgBox("❌ لم يتم تحديد ملف النسخة الاحتياطية.", MsgBoxStyle.Critical)
+                Return
+            End If
+
+            If Not IO.File.Exists(backupFile) Then
+                MsgBox("❌ ملف النسخة الاحتياطية غير موجود:" & vbCrLf & backupFile, MsgBoxStyle.Critical)
+                Return
+            End If
+
+            ' التحقق من امتداد الملف
+            Dim ext As String = IO.Path.GetExtension(backupFile).ToLower()
+            If ext <> ".bak" Then
+                MsgBox("❌ نوع الملف غير صالح. يجب أن يكون بامتداد .bak", MsgBoxStyle.Critical)
+                Return
+            End If
+
+            ' التحقق من حجم الملف (يجب ألا يكون فارغاً)
+            Dim fileInfo As New IO.FileInfo(backupFile)
+            If fileInfo.Length = 0 Then
+                MsgBox("❌ ملف النسخة الاحتياطية فارغ.", MsgBoxStyle.Critical)
+                Return
+            End If
+
+            ' تأكيد من المستخدم قبل الاستعادة
+            Dim result = MessageBox.Show(
+                "⚠️ استعادة النسخة الاحتياطية ستحل محل قاعدة البيانات الحالية بالكامل." & vbCrLf &
+                "الملف: " & IO.Path.GetFileName(backupFile) & vbCrLf &
+                "الحجم: " & Math.Round(fileInfo.Length / 1024.0 / 1024.0, 2) & " MB" & vbCrLf & vbCrLf &
+                "هل أنت متأكد من المتابعة؟",
+                "تأكيد استعادة النسخة الاحتياطية",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+
+            If result <> DialogResult.Yes Then Return
+
             DBModule.Disconnect()
 
             Dim masterConnStr As String =
@@ -137,6 +173,20 @@ Public Module BackupModule
 
             Using conn As New SqlConnection(masterConnStr)
                 conn.Open()
+
+                ' التحقق من صحة النسخة الاحتياطية قبل الاستعادة
+                Try
+                    Using verifyCmd As New SqlCommand("RESTORE VERIFYONLY FROM DISK = @path", conn)
+                        verifyCmd.Parameters.AddWithValue("@path", backupFile)
+                        verifyCmd.CommandTimeout = 300
+                        verifyCmd.ExecuteNonQuery()
+                    End Using
+                Catch verifyEx As Exception
+                    MsgBox("❌ ملف النسخة الاحتياطية تالف أو غير صالح:" & vbCrLf & verifyEx.Message,
+                           MsgBoxStyle.Critical)
+                    Logger.LogError("RestoreBackup.Verify", verifyEx)
+                    Return
+                End Try
 
                 Dim restoreQuery As String =
                     $"ALTER DATABASE [{DBModule.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
@@ -152,9 +202,11 @@ Public Module BackupModule
                 End Using
             End Using
 
+            Logger.LogInfo("تم استعادة النسخة الاحتياطية بنجاح: " & backupFile)
             MsgBox("✅ تم استعادة النسخة الاحتياطية بنجاح", MsgBoxStyle.Information)
 
         Catch ex As Exception
+            Logger.LogError("RestoreBackup", ex)
             MsgBox("❌ خطأ أثناء الاستعادة:" & vbCrLf & ex.Message,
                    MsgBoxStyle.Critical)
         End Try

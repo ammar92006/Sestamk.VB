@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class add_new_Categorie
+
     Dim x, y As Integer
     Dim newpoint As New Point
 
@@ -18,61 +19,83 @@ Public Class add_new_Categorie
         End If
     End Sub
 
-    Private Sub btn_SaveProduct_Click(sender As Object, e As EventArgs) Handles btn_SaveProduct.Click
+    Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         Try
-            ' ==== 1) التحقق من صحة البيانات قبل الإضافة ====
-            If String.IsNullOrWhiteSpace(TextBox2.Text) Then
-                MessageBox.Show("❌ من فضلك أدخل اسم الصنف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                TextBox2.Focus()
-                Exit Sub
+            If Not IsValidData() Then Exit Sub
+
+            If InsertCategory() Then
+                MessageBox.Show("تمت إضافة الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ' هنا تستدعي دالة تحديث الداتا جريد فيو لتظهر البيانات الجديدة
+                ClearFields()
             End If
 
-            If String.IsNullOrWhiteSpace(TextBox3.Text) Then
-                MessageBox.Show("❌ من فضلك أدخل وصف الصنف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                TextBox3.Focus()
-                Exit Sub
-            End If
-
-            ' ==== 2) التحقق من عدم تكرار اسم الصنف ====
-            Connect()
-            Dim checkQuery As String = "SELECT COUNT(*) FROM Categories WHERE Category_Name = @Category_Name"
-            Using checkCmd As New SqlCommand(checkQuery, Conn)
-                checkCmd.Parameters.AddWithValue("@Category_Name", TextBox2.Text.Trim())
-
-                Dim exists As Integer = CInt(checkCmd.ExecuteScalar())
-
-                If exists > 0 Then
-                    MessageBox.Show("⚠ الصنف موجود بالفعل، لا يمكن إضافته مرة أخرى.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    Exit Sub
-                End If
-            End Using
-            Disconnect()
-            Connect()
-
-            ' ==== 3) تنفيذ عملية الإضافة ====
-            Dim insertQuery As String = "INSERT INTO Categories (Category_Name, Description)
-                                 VALUES (@Category_Name, @Description)"
-
-            Using insertCmd As New SqlCommand(insertQuery, Conn)
-                insertCmd.Parameters.AddWithValue("@Category_Name", TextBox2.Text.Trim())
-                insertCmd.Parameters.AddWithValue("@Description", TextBox3.Text.Trim())
-
-                insertCmd.ExecuteNonQuery()
-            End Using
-
-            Disconnect()
-
-            MessageBox.Show("✅ تم إضافة القسم بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-            TextBox2.Clear()
-            TextBox3.Clear()
         Catch ex As Exception
-            MessageBox.Show("⚠ حدث خطأ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-
-
-
+            MessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
         End Try
+    End Sub
+    Private Function IsValidData() As Boolean
+        ' 1. التحقق من كود الفئة
+        If String.IsNullOrWhiteSpace(txtCategoryCode.Text) Then
+            MessageBox.Show("عذراً، يجب إدخال كود الفئة أولاً!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtCategoryCode.Focus()
+            Return False
+        End If
 
+        ' 2. التحقق من اسم الفئة باللغة العربية
+        If String.IsNullOrWhiteSpace(txtCategoryName.Text) Then
+            MessageBox.Show("عذراً، يجب إدخال اسم الفئة باللغة العربية!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtCategoryName.Focus()
+            Return False
+        End If
+
+        ' 💡 يمكنك إضافة أي شروط إضافية هنا (مثل التأكد من اختيار لون أو طابعة إذا كانت إجبارية)
+
+        ' إذا اجتازت البيانات كل الشروط ترجع الدالة True
+        Return True
+    End Function
+
+    Private Function InsertCategory() As Boolean
+        ' تأكد من تطابق أسماء الأعمدة في الجدول الخاص بك
+        Dim query As String = "INSERT INTO Categories (CategoryCode, Category_NameAr, IsActive, ColorID, Imagebase64, IsDeleted) " &
+                          "VALUES (@CategoryCode, @Category_NameAr, @IsActive, @ColorID, @Imagebase64, 0)"
+
+        ' استخدام الخاصية الجاهزة ConnectionString من الـ DBModule الخاص بك
+        Using conn As New SqlConnection(DBModule.ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                ' إضافة المعاملات (Parameters) بأمان
+                cmd.Parameters.AddWithValue("@CategoryCode", If(String.IsNullOrEmpty(txtCategoryCode.Text), DBNull.Value, txtCategoryCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Category_NameAr", If(String.IsNullOrEmpty(txtCategoryName.Text), DBNull.Value, txtCategoryName.Text.Trim()))
+                cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
+
+                ' معاملات الـ ComboBoxes بناءً على الـ ValueMember
+                cmd.Parameters.AddWithValue("@ColorID", If(cmbColor.SelectedValue Is Nothing, DBNull.Value, cmbColor.SelectedValue))
+
+                ' تحويل الصورة وحفظها كـ Base64 عبر دالة الموديول الذكية
+                Dim imgBase64 As String = DBModule.ImageToBase64(picCategory.Image)
+                cmd.Parameters.AddWithValue("@Imagebase64", If(String.IsNullOrEmpty(imgBase64), DBNull.Value, imgBase64))
+
+                Try
+                    conn.Open()
+                    Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
+                    Return rowsAffected > 0
+                Catch ex As Exception
+                    MessageBox.Show("خطأ أثناء إضافة الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False
+                End Try
+            End Using
+        End Using
+    End Function
+    Private Sub ClearFields()
+        ' --- تفريغ صناديق النصوص (TextBoxes) باستخدام .Clear() ---
+        'txtCategoryCode.Clear()       ' كود الفئة
+        txtCategoryCode.Text = GetNextCode("Categories", "CategoryCode")
+        txtCategoryName.Clear()     ' اسم الفئة عربي
+
+        ' --- إعادة تعيين القوائم المنسدلة (ComboBoxes) ---
+        cmbColor.SelectedIndex = -1      ' لون الفئة
+
+        ' --- إعادة تعيين زر الحالة (ToggleSwitch) ---
+        tgStatus.Checked = False         ' حاله القسم
     End Sub
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click

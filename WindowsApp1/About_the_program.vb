@@ -16,11 +16,11 @@ Public Class About_the_program
 
     Private Sub About_the_program_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim query As String = "SELECT ID as 'كود العملية',Login_DeviceName as 'اسم الجهاز',Login_MacAddress as 'عنوان الماك',Login_CurrentDate as 'التاريخ' , Login_CurrentTime as 'الوقت', Login_Username as 'اسم المستخدم',Login_Password as 'كلمة المرور',Login_Note as 'حالة الاتصال' From Login_Info_TBL ORDER BY ID ASC"
-        Connect()
-        adapter = New SqlDataAdapter(query, Conn)
-        adapter.Fill(ds, "Login_Info_TBL")
+        Using cn As SqlConnection = DBModule.NewConn()
+            adapter = New SqlDataAdapter(query, cn)
+            adapter.Fill(ds, "Login_Info_TBL")
+        End Using
         dgvUsers.DataSource = ds.Tables("Login_Info_TBL")
-        Disconnect()
     End Sub
     Private Sub DataGridView1_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvUsers.CellClick
         ' التحقق من أن الصف الحالي صالح

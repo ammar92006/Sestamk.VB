@@ -385,51 +385,49 @@ LEFT JOIN
 LEFT JOIN
     dbo.Suppliers AS V ON P.Partner_ID = V.SuppliersID ;"
 
-        Using Conn
-            Try
-                Disconnect()
-                Connect()
+        Try
+            Disconnect()
+            Connect()
 
-                Using cmd As New SqlCommand(stockQuery, Conn)
-                    Using reader As SqlDataReader = cmd.ExecuteReader()
+            Using cmd As New SqlCommand(stockQuery, Conn)
+                Using reader As SqlDataReader = cmd.ExecuteReader()
 
-                        While reader.Read()
+                    While reader.Read()
 
-                            Dim productId As Integer = SafeGetInt(reader, "Product_ID")
-                            Dim baseQty As Decimal = SafeGetDecimal(reader, "Quantity_OnHand")
+                        Dim productId As Integer = SafeGetInt(reader, "Product_ID")
+                        Dim baseQty As Decimal = SafeGetDecimal(reader, "Quantity_OnHand")
 
-                            Dim displayQuantity As String =
-                                DecomposeQuantity(Conn, productId, baseQty)
+                        Dim displayQuantity As String =
+                            DecomposeQuantity(Conn, productId, baseQty)
 
-                            Dim item As New StockDisplayItem With {
-                                .ProductId = productId,
-                                .Stock_ID = SafeGetInt(reader, "Stock_ID"),
-                                .ProductCode = SafeGetString(reader, "Product_Code"),
-                                .ProductName = SafeGetString(reader, "Product_Name"),
-                                .Partner_ID = SafeGetInt(reader, "SuppliersID"),
-                                .Partner_Name = SafeGetString(reader, "SuppliersName"),
-                                .BaseQuantityTotal = baseQty,
-                                .MinQuantity = SafeGetDecimal(reader, "Min_Quantity"),
-                                .LastUpdate = SafeGetDate(reader, "Last_Update"),
-                                .BaseUnitName = SafeGetString(reader, "BaseUnit_Name"),
-                                .CategoryName = SafeGetString(reader, "Category_Name"),
-                                .ProductImagePath = SafeGetImagePath(reader, "Product_Image"),
-                                .DisplayStockQuantity = displayQuantity
-                            }
+                        Dim item As New StockDisplayItem With {
+                            .ProductId = productId,
+                            .Stock_ID = SafeGetInt(reader, "Stock_ID"),
+                            .ProductCode = SafeGetString(reader, "Product_Code"),
+                            .ProductName = SafeGetString(reader, "Product_Name"),
+                            .Partner_ID = SafeGetInt(reader, "SuppliersID"),
+                            .Partner_Name = SafeGetString(reader, "SuppliersName"),
+                            .BaseQuantityTotal = baseQty,
+                            .MinQuantity = SafeGetDecimal(reader, "Min_Quantity"),
+                            .LastUpdate = SafeGetDate(reader, "Last_Update"),
+                            .BaseUnitName = SafeGetString(reader, "BaseUnit_Name"),
+                            .CategoryName = SafeGetString(reader, "Category_Name"),
+                            .ProductImagePath = SafeGetImagePath(reader, "Product_Image"),
+                            .DisplayStockQuantity = displayQuantity
+                        }
 
-                            stockList.Add(item)
-                        End While
+                        stockList.Add(item)
+                    End While
 
-                    End Using
                 End Using
+            End Using
 
-            Catch ex As Exception
-                Throw New Exception("حدث خطأ أثناء جلب بيانات المخزون: " & ex.Message, ex)
+        Catch ex As Exception
+            Throw New Exception("حدث خطأ أثناء جلب بيانات المخزون: " & ex.Message, ex)
 
-            Finally
-                Disconnect()
-            End Try
-        End Using
+        Finally
+            Disconnect()
+        End Try
 
         Return stockList
     End Function

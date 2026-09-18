@@ -1,4 +1,4 @@
-Imports System.IO.Ports
+﻿Imports System.IO.Ports
 
 Module PrinterManager
 
@@ -53,8 +53,8 @@ Module PrinterManager
                     Try
                         If TypeOf frm Is Login Then
                             frm.Invoke(Sub() DirectCast(frm, Login).FillFromScanner(code))
-                        ElseIf TypeOf frm Is Sales Then
-                            frm.Invoke(Sub() DirectCast(frm, Sales).ProcessBarcodeData(code))
+                            'ElseIf TypeOf frm Is Sales Then
+                            'frm.Invoke(Sub() DirectCast(frm, Sales).ProcessBarcodeData(code))
                         ElseIf TypeOf frm Is ProductUnits Then
                             frm.Invoke(Sub() DirectCast(frm, ProductUnits).scannerPort_DataReceived(code))
                         End If

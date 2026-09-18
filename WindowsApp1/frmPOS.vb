@@ -1,566 +1,5 @@
-'Public Class frmPOS
-'    Private _repo As POSRepository
-
-
-
-'    ' متغيرات حفظ معلومات نوع الطلب المختار
-'    Public Enum OrderType
-'        Takeaway = 1
-'        DineIn = 2
-'        Delivery = 3
-'    End Enum
-
-
-'    Public Property CurrentOrderType As OrderType = OrderType.Takeaway
-'    Public Property SelectedTableID As Integer? = Nothing
-'    Public Property SelectedTableName As String = ""
-'    Public Property SelectedDriverID As Integer? = Nothing
-'    Public Property SelectedDriverName As String = ""
-'    Public Property DeliveryFee As Decimal = 0
-'    Public Property CurrentCustomer As CustomerModel
-
-'    'Dim currentShiftID As Integer = ShiftManager.CurrentShift.ShiftID
-'    'Dim currentTreasuryID As Integer = ShiftManager.CurrentShift.TreasuryID
-
-'    ' إرسال currentShiftID لجدول الفواتير (Invoices/Sales)
-
-'    Private Sub frmPOS_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-'        _repo = New POSRepository(DBModule.ConnectionString)
-'        LoadCategories()
-'        datagridviewsetup(dgvInvoice)
-'        SetupInvoiceGrid()
-'        Dim Drag0 As FormDragHelper = New FormDragHelper(Me, panelHeader)
-'        Dim Drag1 As FormDragHelper = New FormDragHelper(Me, Guna2HtmlLabel1)
-'        Dim Drag2 As FormDragHelper = New FormDragHelper(Me, Label8)
-'        Dim Drag4 As FormDragHelper = New FormDragHelper(Me, lblCurrentShift)
-'        Dim Drag5 As FormDragHelper = New FormDragHelper(Me, Label4)
-'        Dim Drag6 As FormDragHelper = New FormDragHelper(Me, Label10)
-'        Dim Drag7 As FormDragHelper = New FormDragHelper(Me, lblDateTime)
-'        If Session.CurrentUserfullName IsNot Nothing AndAlso String.IsNullOrEmpty(Session.CurrentUserfullName) = False Then
-'            lblUser_fullName.Text = Session.CurrentUserfullName
-'        End If
-
-'        Timer1.Start()
-'        ' ضبط التيك أوي كاختيار افتراضي
-'        btnTakeaway.Checked = True
-'        CurrentOrderType = OrderType.Takeaway
-'    End Sub
-
-'    Private Sub frmPOS_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-'        If Not CheckAndEnsureActiveShift() Then
-'            ' لو مفيش وردية والكاشير رفض يفتح وردية أو قفل الشاشة بدون فتح وردية
-'            ' نستخدم BeginInvoke حتى تكتمل جميع الأحداث المتعلقة بظهور الفورم (مثل Guna2 ShadowForm) قبل الإغلاق
-'            Me.BeginInvoke(Sub() Me.Close())
-'        Else
-'            If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
-'                lblCurrentShift.Text = ShiftSession.CurrentShift.WorkShiftName
-'            End If
-'        End If
-'    End Sub
-
-'   
-'    ' ==========================================
-'    ' 1. رسم الأقسام داخل flpCategories
-'    ' ==========================================
-'    Private Sub LoadCategories()
-'        Dim categories = _repo.GetCategories()
-
-'        flpCategories.SuspendLayout()
-'        Try
-'            flpCategories.Controls.Clear()
-
-'            For Each cat As CategoryModel In categories
-'                Dim card As New UCCategoryCard With {
-'                    .Width = 130,
-'                    .Height = 140,
-'                    .Category = cat
-'                }
-
-'                ' استلام حدث الضغط على القسم
-'                AddHandler card.CategoryClicked, AddressOf CategoryCard_Click
-
-'                flpCategories.Controls.Add(card)
-'            Next
-'        Finally
-'            flpCategories.ResumeLayout()
-'        End Try
-'    End Sub
-
-'    ' عند الضغط على كارت قسم
-'    Private Sub CategoryCard_Click(category As CategoryModel)
-'        ' جلب أصناف هذا القسم ورسمها
-'        LoadProducts(category.Category_ID)
-'    End Sub
-
-
-'    ' ==========================================
-'    ' 2. رسم الأصناف داخل flpProducts
-'    ' ==========================================
-'    Private Sub LoadProducts(categoryID As Integer)
-'        Dim products = _repo.GetProductsByCategoryID(categoryID)
-
-'        flpProducts.SuspendLayout()
-'        Try
-'            flpProducts.Controls.Clear()
-
-'            For Each prod As ProductModel In products
-'                Dim card As New UCProductCard With {
-'                    .Width = 140,
-'                    .Height = 150,
-'                    .Product = prod
-'                }
-
-'                ' استلام حدث الضغط على الصنف
-'                AddHandler card.ProductClicked, AddressOf ProductCard_Click
-
-'                flpProducts.Controls.Add(card)
-'            Next
-'        Finally
-'            flpProducts.ResumeLayout()
-'        End Try
-'    End Sub
-
-'    ' ==========================================
-'    ' حدث الضغط على كارت الصنف في شاشة البيع
-'    ' ==========================================
-'    Private Sub ProductCard_Click(product As ProductModel)
-
-'        ' 1. فتح فورم خيارات الصنف (الأحجام والإضافات) كـ Dialog
-'        Using frmOptions As New FrmProductOptions(product, _repo)
-
-'            ' 2. التحقق مما إذا كان الكاشير قد ضغط على زر "إضافة" (DialogResult.OK)
-'            If frmOptions.ShowDialog() = DialogResult.OK Then
-
-'                ' 3. استلام كافة العناصر المختارة ببيانات الأحجام والإضافات وإضافتها للفاتورة
-'                For Each selectedItem In frmOptions.ResultOrderItems
-'                    AddItemToInvoice(selectedItem)
-'                Next
-
-'            End If
-
-'        End Using
-
-'    End Sub
-'    ' ==========================================
-'    ' دالة إدراج العنصر المختار داخل الفاتورة
-'    ' ==========================================
-'    Private Sub AddItemToInvoice(item As OrderItemModel)
-'        ' 1. نص الحجم
-'        Dim sizeName As String = If(item.SelectedSize IsNot Nothing, item.SelectedSize.SizeInfo.SizeNameAr, "عادي")
-
-'        ' 2. نص الإضافات
-'        Dim addonsList As New List(Of String)
-'        For Each addon In item.SelectedAddons
-'            addonsList.Add(addon.AddonInfo.AddonNameAr)
-'        Next
-'        Dim addonsText As String = If(addonsList.Count > 0, String.Join(", ", addonsList), "-")
-
-'        ' 3. حساب سعر القطعة الواحدة (حجم + إضافات)
-'        Dim baseSizePrice As Decimal = If(item.SelectedSize IsNot Nothing, item.SelectedSize.SalePrice, 0)
-'        Dim addonsTotalPrice As Decimal = 0
-'        For Each addon In item.SelectedAddons
-'            addonsTotalPrice += addon.SalePrice
-'        Next
-'        Dim singleUnitPrice As Decimal = baseSizePrice + addonsTotalPrice
-
-'        ' 4. إضافة الصف للجدول
-'        Dim rowIndex As Integer = dgvInvoice.Rows.Add(
-'        dgvInvoice.Rows.Count + 1, ' الرقم التسلسلي
-'        item.ProductName,
-'        sizeName,
-'        addonsText,
-'        singleUnitPrice,
-'        item.Quantity,
-'        item.TotalPrice,
-'        item.Notes,
-'        item.Product_ID
-'    )
-
-'        ' 5. إعادة تحديث الإجمالي الكلي للفاتورة
-'        CalculateInvoiceGrandTotal()
-'    End Sub
-
-'    ' دالة حاسبة للإجمالي العام أسفل الشاشة
-'    Private Sub CalculateInvoiceGrandTotal()
-'        Dim grandTotal As Decimal = 0
-
-'        For Each row As DataGridViewRow In dgvInvoice.Rows
-'            grandTotal += Convert.ToDecimal(row.Cells("colTotalPrice").Value)
-'        Next
-
-'        ' lblGrandTotal.Text = grandTotal.ToString("N2") & " EGP"
-'    End Sub
-
-'    
-
-'    Private Sub btnAddCategoryForm_Click(sender As Object, e As EventArgs) Handles btnAddCategoryForm.Click
-'        Dim frm As New Categories()
-'        frm.ShowDialog()
-'        LoadCategories()
-'    End Sub
-
-
-
-'    Private Sub btnDineIn_Click(sender As Object, e As EventArgs) Handles btnDineIn.Click
-'        CurrentOrderType = OrderType.DineIn
-'        SelectedDriverID = Nothing
-'        SelectedDriverName = ""
-'        DeliveryFee = 0
-'        lblDeliveryFee.Text = 0.00
-'        ' فتح فورم الطاولات
-'        Using frmTables As New FrmSelectTable(_repo)
-'            If frmTables.ShowDialog() = DialogResult.OK Then
-
-'                ' حفظ بيانات الطاولة المختارة
-'                SelectedTableID = frmTables.SelectedTableID
-'                SelectedTableName = frmTables.SelectedTableName
-
-'                lblOrderTypeStatus.Text = "نوع الطلب: صالة | الطاولة: " & SelectedTableName
-
-'                CalculateInvoiceGrandTotal()
-'            Else
-'                ' في حالة الإلغاء نرجع للتيك أوي افتراضياً
-'                btnTakeaway.Checked = True
-'                btnTakeaway_Click(Nothing, Nothing)
-'            End If
-'        End Using
-'    End Sub
-
-
-
-
-
-
-
-
-'    
-'    Private Sub btnDeleteRow_Click(sender As Object, e As EventArgs) Handles btnDeleteRow.Click
-
-'    End Sub
-
-'    'Private Sub btnPay_Click(sender As Object, e As EventArgs) Handles btnPay.Click
-'    '    ' =========================================================
-'    '    ' 1. التحققات الأساسية قبل فتح شاشة الدفع (Validation)
-'    '    ' =========================================================
-
-'    '    ' أ) التأكد من أن الفاتورة ليست فارغة
-'    '    If dgvInvoice.Rows.Count = 0 Then
-'    '        MessageBox.Show("لا يمكن إتمام عملية الدفع بفاتورة فارغة! برجاء إضافة أصناف أولاً.",
-'    '                    "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'    '        Return
-'    '    End If
-
-'    '    ' ب) التحقق من تحديد الطاولة إذا كان نوع الطلب (صالة)
-'    '    If CurrentOrderType = OrderType.DineIn AndAlso Not SelectedTableID.HasValue Then
-'    '        MessageBox.Show("برجاء تحديد رقم الطاولة أولاً لطلبات الصالة!",
-'    '                    "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'    '        Return
-'    '    End If
-
-'    '    ' ج) التحقق من العميل والطيار إذا كان نوع الطلب (دليفري)
-'    '    If CurrentOrderType = OrderType.Delivery Then
-'    '        If CurrentCustomer Is Nothing Then
-'    '            MessageBox.Show("برجاء تحديد بيانات العميل أولاً لطلبات الدليفري!",
-'    '                        "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'    '            Return
-'    '        End If
-
-'    '        If Not SelectedDriverID.HasValue Then
-'    '            MessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!",
-'    '                        "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'    '            Return
-'    '        End If
-'    '    End If
-
-
-'    '    ' =========================================================
-'    '    ' 2. حساب إجمالي الفاتورة مع رسوم التوصيل
-'    '    ' =========================================================
-'    '    Dim itemsTotal As Decimal = GetInvoiceTotalFromGrid()
-'    '    Dim finalInvoiceTotal As Decimal = itemsTotal
-
-'    '    ' إضافة رسوم التوصيل إذا كان نوع الطلب دليفري
-'    '    If CurrentOrderType = OrderType.Delivery Then
-'    '        finalInvoiceTotal += DeliveryFee
-'    '    End If
-
-
-'    '    ' =========================================================
-'    '    ' 3. فتح شاشة الدفع السريع تمرير البيانات واستقبال النتائج
-'    '    ' =========================================================
-'    '    Using frmPay As New FrmQuickPayment(finalInvoiceTotal, CurrentCustomer)
-
-'    '        If frmPay.ShowDialog() = DialogResult.OK Then
-
-'    '            ' استلام نتائج الحسابات من شاشة الدفع
-'    '            Dim totalBeforeDiscount As Decimal = frmPay.FinalGrandTotal ' الإجمالي قبل الخصم
-'    '            Dim totalDiscount As Decimal = frmPay.TotalDiscount        ' إجمالي الخصم (افتراضي + يدوي)
-'    '            Dim netTotal As Decimal = frmPay.NetTotal                  ' الصافي بعد الخصم
-'    '            Dim paidAmount As Decimal = frmPay.PaidAmount              ' المدفوع
-'    '            Dim remainingAmount As Decimal = frmPay.RemainingAmount    ' المتبقي على العميل
-'    '            Dim treasuryID As Integer = frmPay.SelectedTreasuryID      ' الخزنة المختارة
-'    '            Dim isCredit As Boolean = frmPay.IsCreditOrder             ' هل الفاتورة آجل؟
-
-'    '            ' =========================================================
-'    '            ' 4. عرض ملخص النتيجة مؤقتاً (لحين برمجة الحفظ في الداتا بيز)
-'    '            ' =========================================================
-'    '            Dim payTypeStr As String = If(isCredit, "آجل", "نقدي")
-
-'    '            MessageBox.Show("تم تأكيد بيانات الدفع بنجاح!" & vbCrLf &
-'    '                        "طريقة الدفع: " & payTypeStr & vbCrLf &
-'    '                        "الإجمالي الأصلي: " & totalBeforeDiscount.ToString("N2") & " ج" & vbCrLf &
-'    '                        "إجمالي الخصم: " & totalDiscount.ToString("N2") & " ج" & vbCrLf &
-'    '                        "الصافي المطلوب: " & netTotal.ToString("N2") & " ج" & vbCrLf &
-'    '                        "المدفوع: " & paidAmount.ToString("N2") & " ج" & vbCrLf &
-'    '                        "المتبقي: " & remainingAmount.ToString("N2") & " ج",
-'    '                        "عملية الدفع", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-'    '            ' الخطوة القادمة: استدعاء دالة حفظ الفاتورة في قاعدة البيانات والطباعة
-'    '            ' SaveInvoiceToDatabase(...)
-
-'    '        End If
-
-'    '    End Using
-
-'    'End Sub
-
-
-
-'    ' =========================================================
-'    ' 1. دالة تفريغ الشاشة وإعادتها للوضع الافتراضي بالكامل
-'    ' =========================================================
-'    Private Sub ResetPOSForm()
-'        ' أ) مسح جميع الصفوف من DataGridView الفاتورة
-'        dgvInvoice.Rows.Clear()
-
-'        ' ب) تفريغ اختيار العميل والطاولة والطيار ورسوم التوصيل
-'        CurrentCustomer = Nothing
-'        txtCustomer.Text = ""
-'        SelectedTableID = Nothing
-'        SelectedTableName = ""
-'        SelectedDriverID = Nothing
-'        SelectedDriverName = ""
-'        DeliveryFee = 0
-'        lblDeliveryFee.Text = "0.00"
-
-'        ' ج) إعادة نوع الطلب للتيك أوي
-'        btnTakeaway.Checked = True
-'        CurrentOrderType = OrderType.Takeaway
-'        lblOrderTypeStatus.Text = "نوع الطلب: تيك أوي"
-
-'        ' د) حساب المجموع الكلي من جديد (ليكون 0.00)
-'        CalculateInvoiceGrandTotal()
-'    End Sub
-
-'    ' =========================================================
-'    ' 2. تحديث حدث btnPay_Click للحفظ الفعلي في الداتا بيز
-'    ' =========================================================
-'    Private Sub btnPay_Click(sender As Object, e As EventArgs) Handles btnPay.Click
-
-'        ' 1. التحققات الأساسية
-'        If dgvInvoice.Rows.Count = 0 Then
-'            MessageBox.Show("لا يمكن إتمام عملية الدفع بفاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'            Return
-'        End If
-
-'        If CurrentOrderType = OrderType.DineIn AndAlso Not SelectedTableID.HasValue Then
-'            MessageBox.Show("برجاء تحديد رقم الطاولة أولاً لطلبات الصالة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'            Return
-'        End If
-
-'        If CurrentOrderType = OrderType.Delivery Then
-'            If CurrentCustomer Is Nothing Then
-'                MessageBox.Show("برجاء تحديد بيانات العميل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'                Return
-'            End If
-
-'            If Not SelectedDriverID.HasValue Then
-'                MessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'                Return
-'            End If
-'        End If
-
-'        ' 2. حساب الإجمالي
-'        Dim itemsTotal As Decimal = GetInvoiceTotalFromGrid()
-'        Dim finalInvoiceTotal As Decimal = itemsTotal
-'        If CurrentOrderType = OrderType.Delivery Then finalInvoiceTotal += DeliveryFee
-
-'        ' 3. فتح شاشة الدفع السريع
-'        Using frmPay As New FrmQuickPayment(finalInvoiceTotal, CurrentCustomer)
-'            If frmPay.ShowDialog() = DialogResult.OK Then
-
-'                ' 4. تجهيز كائن الفاتورة للحفظ
-'                Dim invoice As New InvoiceModel With {
-'                    .OrderType = CByte(CurrentOrderType),
-'                    .ShiftID = ShiftSession.CurrentShift.ShiftID,
-'                    .UserID = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1),
-'                    .CustomerID = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?)),
-'                    .TableID = SelectedTableID,
-'                    .DriverID = SelectedDriverID,
-'                    .DeliveryFee = DeliveryFee,
-'                    .TotalBeforeDiscount = frmPay.FinalGrandTotal,
-'                    .DiscountAmount = frmPay.TotalDiscount,
-'                    .NetTotal = frmPay.NetTotal,
-'                    .PaidAmount = frmPay.PaidAmount,
-'                    .RemainingAmount = frmPay.RemainingAmount,
-'                    .IsCredit = frmPay.IsCreditOrder,
-'                    .TreasuryID = If(frmPay.SelectedTreasuryID > 0, frmPay.SelectedTreasuryID, CType(Nothing, Integer?))
-'                }
-
-'                ' إدراج تفاصيل الأسطر من DataGridView
-'                For Each row As DataGridViewRow In dgvInvoice.Rows
-'                    If Not row.IsNewRow Then
-'                        invoice.Details.Add(New InvoiceDetailModel With {
-'                            .ProductID = Convert.ToInt32(row.Cells("colProductID").Value),
-'                            .ProductName = row.Cells("colProductName").Value.ToString(),
-'                            .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
-'                            .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
-'                            .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
-'                            .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
-'                            .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
-'                            .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
-'                        })
-'                    End If
-'                Next
-
-'                Try
-'                    ' 5. حفظ الفاتورة في الداتا بيز
-'                    Dim savedInvNum As String = _repo.SaveInvoice(invoice)
-
-'                    MessageBox.Show("تم حفظ الفاتورة بنجاح برقم: " & savedInvNum, "حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-'                    ' 6. تفريغ الشاشة لتكون جاهزة للفاتورة التالية
-'                    ResetPOSForm()
-
-'                Catch ex As Exception
-'                    MessageBox.Show("حدث خطأ أثناء حفظ الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-'                End Try
-
-'            End If
-'        End Using
-
-'    End Sub
-
-'    ' =========================================================
-'    ' 3. زر تعليق الفاتورة الحالي (btnHoldInvoice)
-'    ' =========================================================
-'    Private Sub btnHoldInvoice_Click(sender As Object, e As EventArgs) Handles btnHoldInvoice.Click
-'        If dgvInvoice.Rows.Count = 0 Then
-'            MessageBox.Show("لا يمكن تعليق فاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-'            Return
-'        End If
-
-'        ' تجميع تفاصيل الأسطر بأسلوب نصي مبسط
-'        Dim itemsList As New List(Of String)
-'        For Each row As DataGridViewRow In dgvInvoice.Rows
-'            If Not row.IsNewRow Then
-'                Dim pID As String = row.Cells("colProductID").Value.ToString()
-'                Dim pName As String = row.Cells("colProductName").Value.ToString()
-'                Dim sz As String = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), "")
-'                Dim ad As String = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), "")
-'                Dim pr As String = row.Cells("colUnitPrice").Value.ToString()
-'                Dim qty As String = row.Cells("colQuantity").Value.ToString()
-'                Dim tot As String = row.Cells("colTotalPrice").Value.ToString()
-'                Dim nt As String = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
-
-'                itemsList.Add($"{pID}|{pName}|{sz}|{ad}|{pr}|{qty}|{tot}|{nt}")
-'            End If
-'        Next
-
-'        Dim jsonItems As String = String.Join("~", itemsList)
-
-'        ' تجهيز كائن الفاتورة المعلقة
-'        Dim pendingInv As New PendingInvoiceModel With {
-'            .ShiftID = ShiftSession.CurrentShift.ShiftID,
-'            .UserID = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1),
-'            .OrderType = CByte(CurrentOrderType),
-'            .CustomerID = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?)),
-'            .CustomerName = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, ""),
-'            .TableID = SelectedTableID,
-'            .TableName = SelectedTableName,
-'            .DriverID = SelectedDriverID,
-'            .DriverName = SelectedDriverName,
-'            .DeliveryFee = DeliveryFee,
-'            .InvoiceJSON = jsonItems,
-'            .TotalAmount = GetInvoiceTotalFromGrid()
-'        }
-
-'        If _repo.SavePendingInvoice(pendingInv) Then
-'            MessageBox.Show("تم تعليق الفاتورة بنجاح!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
-'            ResetPOSForm()
-'        End If
-'    End Sub
-
-'    ' =========================================================
-'    ' 4. زر عرض واسترجاع الفواتير المعلقة (btnPendingInvoices)
-'    ' =========================================================
-'    Private Sub btnPendingInvoices_Click(sender As Object, e As EventArgs) Handles btnPendingInvoices.Click
-'        Using frmPending As New FrmPendingInvoices(_repo)
-'            If frmPending.ShowDialog() = DialogResult.OK Then
-
-'                Dim pendingItem = frmPending.SelectedPendingInvoice
-'                If pendingItem IsNot Nothing Then
-
-'                    ' أ) تفريغ الشاشة الحالية أولاً
-'                    ResetPOSForm()
-
-'                    ' ب) استرجاع نوع الطلب والبيانات
-'                    CurrentOrderType = CType(pendingItem.OrderType, OrderType)
-'                    Select Case CurrentOrderType
-'                        Case OrderType.Takeaway
-'                            btnTakeaway.Checked = True
-'                        Case OrderType.DineIn
-'                            btnDineIn.Checked = True
-'                            SelectedTableID = pendingItem.TableID
-'                            SelectedTableName = pendingItem.TableName
-'                            lblOrderTypeStatus.Text = "نوع الطلب: صالة | الطاولة: " & SelectedTableName
-'                        Case OrderType.Delivery
-'                            btnDelivery.Checked = True
-'                            SelectedDriverID = pendingItem.DriverID
-'                            SelectedDriverName = pendingItem.DriverName
-'                            DeliveryFee = pendingItem.DeliveryFee
-'                            lblDeliveryFee.Text = DeliveryFee.ToString("N2")
-'                            lblOrderTypeStatus.Text = "نوع الطلب: دليفري | الطيار: " & SelectedDriverName
-'                    End Select
-
-'                    ' ج) استرجاع تفاصيل الأسطر
-'                    Dim rowsData() As String = pendingItem.InvoiceJSON.Split("~"c)
-'                    For Each rData In rowsData
-'                        Dim parts() As String = rData.Split("|"c)
-'                        If parts.Length >= 8 Then
-'                            dgvInvoice.Rows.Add(
-'                                dgvInvoice.Rows.Count + 1,
-'                                parts(1), ' ProductName
-'                                parts(2), ' Size
-'                                parts(3), ' Addons
-'                                Convert.ToDecimal(parts(4)), ' Price
-'                                Convert.ToInt32(parts(5)),   ' Qty
-'                                Convert.ToDecimal(parts(6)), ' Total
-'                                parts(7), ' Notes
-'                                Convert.ToInt32(parts(0))    ' ProductID
-'                            )
-'                        End If
-'                    Next
-
-'                    CalculateInvoiceGrandTotal()
-
-'                    ' د) إغلاق الفاتورة المعلقة من الداتا بيز بعد استرجاعها
-'                    _repo.DeletePendingInvoice(pendingItem.PendingID)
-
-'                End If
-
-'            End If
-'        End Using
-'    End Sub
-
-'    Private Sub btnclear_Click(sender As Object, e As EventArgs) Handles btnclear.Click
-'        ResetPOSForm()
-'    End Sub
-'End Class
-
-
 Public Class frmPOS
-    Private _repo As POSRepository
+    Private _repo As New POSRepository(DBModule.ConnectionString)
 
     Public Enum OrderType
         Takeaway = 1
@@ -574,13 +13,35 @@ Public Class frmPOS
     Public Property SelectedDriverID As Integer? = Nothing
     Public Property SelectedDriverName As String = ""
     Public Property DeliveryFee As Decimal = 0
-    Public Property IsDineInServiceFeePercent As Boolean = If(SettingsManager.GetSetting("IsDineInServiceFeePercent"), "false")
-    Public Property DineInServiceFee As Decimal = If(SettingsManager.GetSetting("DineInServiceFee"), "0")
+    Public Property IsDineInServiceFeePercent As Boolean = False
+    Public Property DineInServiceFee As Decimal = 0
     Public Property TaxAmount As Decimal = 0
     Public Property CurrentCustomer As CustomerModel
+    Public Property CurrentReservationDeposit As Decimal = 0
+    Public Property CurrentReservationID As Integer? = Nothing
+    Private _currentPendingInvoiceID As Integer? = Nothing
+
+    ' متغيرات الطباعة وإعادة الطباعة وعمليات الطاولات
+    Private _lastSavedInvoice As InvoiceModel = Nothing
+    Private _lastSavedCustomerName As String = ""
+    Private _lastSavedTableName As String = ""
+    Private _lastSavedDriverName As String = ""
+    Private _tablesContextMenu As ContextMenuStrip
+
+    ' متغيرات التحكم في شبكة الفئات والأصناف
+    Private _categoryColumns As Integer = 4
+    Private _categoryRows As Integer = 2
+    Private _selectedCategoryID As Integer = 0
+    Private _selectedCategoryColor As Color = Color.FromArgb(94, 148, 255)
+    Private _categoryButtons As New List(Of Guna.UI2.WinForms.Guna2Button)
 
     Private Sub frmPOS_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _repo = New POSRepository(DBModule.ConnectionString)
+        If _repo Is Nothing Then
+            _repo = New POSRepository(DBModule.ConnectionString)
+        End If
+        EnableTouchScrolling(flpProducts)
+        EnableTouchScrolling(flpCategories)
+        SetupCategoryControlsToolbar()
         LoadCategories()
         datagridviewsetup(dgvInvoice)
         SetupInvoiceGrid()
@@ -603,7 +64,151 @@ Public Class frmPOS
         ApplyDefaultPOSSettings()
         ' تحديث رقم الفاتورة القادمة
         UpdateNextInvoiceNumber()
+
+        Me.KeyPreview = True
+        SetupTablesContextMenu()
+        ApplyPOSTheme()
+        AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnPOSThemeChanged
     End Sub
+
+    Private Sub frmPOS_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        RemoveHandler ThemeManager.Instance.ThemeChanged, AddressOf OnPOSThemeChanged
+    End Sub
+
+    Private Sub OnPOSThemeChanged(sender As Object, theme As AppTheme, palette As ThemePalette)
+        ApplyPOSTheme(palette)
+    End Sub
+
+    ''' <summary>
+    ''' تطبيق سمة احترافية فائقة التباين والوضوح لشاشة الكاشير والمبيعات (POS)
+    ''' </summary>
+    Public Sub ApplyPOSTheme(Optional palette As ThemePalette = Nothing)
+        Try
+            If palette Is Nothing Then
+                palette = ThemeManager.Instance.CurrentPalette
+            End If
+            If palette Is Nothing Then Return
+
+            Dim isDark As Boolean = (palette.ThemeType = AppTheme.Dark)
+
+            Me.SuspendLayout()
+            Try
+                ' 1. خلفية النافذة الرئيسية والحاويات
+                Me.BackColor = palette.Background
+                Guna2Panel2.FillColor = palette.Background
+                Guna2Panel3.FillColor = palette.Surface
+                Guna2Panel3.BorderColor = palette.Border
+
+                ' 2. الشريط العلوي (Header)
+                panelHeader.FillColor = palette.SurfaceHeader
+                panelHeader.BackColor = Color.Transparent
+                lblDateTime.ForeColor = Color.White
+                lblUser_fullName.ForeColor = Color.White
+                lblCurrentShift.ForeColor = Color.White
+                Guna2HtmlLabel1.ForeColor = Color.White
+                Label4.ForeColor = Color.FromArgb(203, 213, 225)
+                Label8.ForeColor = Color.FromArgb(203, 213, 225)
+                Label10.ForeColor = Color.FromArgb(203, 213, 225)
+
+                ' 3. شريط رقم الفاتورة والأصناف أعلى جدول المبيعات
+                Guna2Panel9.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
+                Guna2Panel9.BorderColor = palette.Border
+                Label1.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                Label2.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                lblInvoiceNumber.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
+                lblInvoiceNumber.ForeColor = If(isDark, Color.FromArgb(56, 189, 248), Color.FromArgb(37, 99, 235))
+                lblInvoiceNumber.BorderStyle = BorderStyle.FixedSingle
+
+                ' 4. شريط نوع الطلب
+                Guna2Panel12.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
+                lblOrderTypeStatus.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+
+                ' 5. جدول الفاتورة
+                ThemeHelper.ApplyDataGridViewTheme(dgvInvoice, palette)
+
+                ' 6. شبكة ملخص الإجماليات (المجموع، التوصيل، خدمة الصالة، الضريبة)
+                Dim summaryBorder As Color = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(203, 213, 225))
+                Dim titleBg As Color = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
+                Dim titleFg As Color = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(51, 65, 85))
+                Dim valueBg As Color = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
+                Dim valueFg As Color = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+
+                ' المجموع
+                Guna2Panel16.FillColor = valueBg
+                Label12.BackColor = titleBg
+                Label12.ForeColor = titleFg
+                lblSubTotal.BackColor = valueBg
+                lblSubTotal.ForeColor = valueFg
+
+                ' التوصيل
+                Guna2Panel17.FillColor = valueBg
+                Label13.BackColor = titleBg
+                Label13.ForeColor = titleFg
+                lblDeliveryFee.BackColor = valueBg
+                lblDeliveryFee.ForeColor = valueFg
+
+                ' خدمة الصالة
+                Guna2Panel18.FillColor = valueBg
+                Label15.BackColor = titleBg
+                Label15.ForeColor = titleFg
+                lblDineInFee.BackColor = valueBg
+                lblDineInFee.ForeColor = valueFg
+
+                ' الضريبة
+                Guna2Panel19.FillColor = valueBg
+                Label17.BackColor = titleBg
+                Label17.ForeColor = titleFg
+                lblTax.BackColor = valueBg
+                lblTax.ForeColor = valueFg
+
+                ' الإجمالي النهائي
+                Guna2Panel24.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(239, 246, 255))
+                Guna2Panel26.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(239, 246, 255))
+                Label25.BackColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(219, 234, 254))
+                Label25.ForeColor = If(isDark, Color.FromArgb(96, 165, 250), Color.FromArgb(30, 64, 175))
+                lblGrandTotal.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(239, 246, 255))
+                lblGrandTotal.ForeColor = If(isDark, Color.FromArgb(34, 197, 94), Color.FromArgb(22, 163, 74))
+
+                ' 7. صف العميل
+                Guna2Panel21.FillColor = palette.Surface
+                Label6.BackColor = titleBg
+                Label6.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                txtCustomer.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
+                txtCustomer.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                txtCustomer.BorderColor = summaryBorder
+
+                ' 8. شريط أدوات شبكة الفئات (الأعمدة والصفوف)
+                pnlCategoryGridToolbar.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White)
+                pnlCategoryGridToolbar.BorderColor = summaryBorder
+                lblRowTitle.ForeColor = titleFg
+                lblColTitle.ForeColor = titleFg
+                lblRowValue.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                lblColValue.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+
+                Dim btnGridFill As Color = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(241, 245, 249))
+                Dim btnGridFore As Color = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                btnIncRow.FillColor = btnGridFill : btnIncRow.ForeColor = btnGridFore : btnIncRow.BorderThickness = 1 : btnIncRow.BorderColor = summaryBorder
+                btnDecRow.FillColor = btnGridFill : btnDecRow.ForeColor = btnGridFore : btnDecRow.BorderThickness = 1 : btnDecRow.BorderColor = summaryBorder
+                btnIncCol.FillColor = btnGridFill : btnIncCol.ForeColor = btnGridFore : btnIncCol.BorderThickness = 1 : btnIncCol.BorderColor = summaryBorder
+                btnDecCol.FillColor = btnGridFill : btnDecCol.ForeColor = btnGridFore : btnDecCol.BorderThickness = 1 : btnDecCol.BorderColor = summaryBorder
+
+                ' 9. حاويات الأصناف والفئات
+                flpProducts.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
+                flpCategories.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
+
+                ' 10. إعادة رسم الأصناف المفتوحة حالياً لتتوافق مع السمة (فقط إذا كانت الأقسام محملة بالفعل)
+                If _categoryButtons IsNot Nothing AndAlso _categoryButtons.Count > 0 Then
+                    LoadProducts(_selectedCategoryID)
+                End If
+
+            Finally
+                Me.ResumeLayout(True)
+            End Try
+        Catch ex As Exception
+            Logger.LogError("ApplyPOSTheme", ex)
+        End Try
+    End Sub
+
     Private Sub frmPOS_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         If Not CheckAndEnsureActiveShift() Then
             ' لو مفيش وردية والكاشير رفض يفتح وردية أو قفل الشاشة بدون فتح وردية
@@ -620,7 +225,7 @@ Public Class frmPOS
             ' =========================================================
             ' 1. تعيين نوع الطلب الافتراضي
             ' =========================================================
-            Dim defaultOrderTypeVal As String = If(SettingsManager.GetSetting("DefaultOrderType"), "1")
+            Dim defaultOrderTypeVal As String = SettingsManager.GetSettingOrDefault("DefaultOrderType", "1")
             Dim orderTypeInt As Integer = 1
             Integer.TryParse(defaultOrderTypeVal, orderTypeInt)
 
@@ -643,7 +248,7 @@ Public Class frmPOS
             ' =========================================================
             ' 2. تعيين العميل الافتراضي
             ' =========================================================
-            Dim defaultCustIDStr As String = If(SettingsManager.GetSetting("DefaultCustomerID"), "")
+            Dim defaultCustIDStr As String = SettingsManager.GetSettingOrDefault("DefaultCustomerID", "")
             Dim custID As Integer = 0
 
             If Integer.TryParse(defaultCustIDStr, custID) AndAlso custID > 0 Then
@@ -657,6 +262,7 @@ Public Class frmPOS
             End If
 
         Catch ex As Exception
+            Logger.LogError("ApplyDefaultPOSSettings", ex)
             ' في حال حدوث أي خطأ نرجع للقيم الأساسية
             btnTakeaway.Checked = True
             CurrentOrderType = OrderType.Takeaway
@@ -664,7 +270,7 @@ Public Class frmPOS
     End Sub
     Private Sub ApplyDefaultDriver()
         Try
-            Dim defaultDriverIDStr As String = If(SettingsManager.GetSetting("DefaultDriverID"), "")
+            Dim defaultDriverIDStr As String = SettingsManager.GetSettingOrDefault("DefaultDriverID", "")
             Dim drvID As Integer = 0
 
             If Integer.TryParse(defaultDriverIDStr, drvID) AndAlso drvID > 0 Then
@@ -682,7 +288,7 @@ Public Class frmPOS
                 End If
             End If
         Catch ex As Exception
-            ' في حال عدم العثور على الطيار الافتراضي
+            Logger.LogError("ApplyDefaultDriver", ex)
         End Try
     End Sub
     '=========================================================
@@ -724,7 +330,6 @@ Public Class frmPOS
             Else
                 MessageBox.Show("لم يتم فتح وردية نشطة، سيتم إغلاق شاشة البيع.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 Return False
-                Exit Function
             End If
 
         Else
@@ -860,88 +465,538 @@ Public Class frmPOS
         colProductID
     })
     End Sub
-    '==========================================
-    ' 1. رسم الأقسام داخل flpCategories
+    ' =========================================================
+    ' أداة شريط التحكم بشبكة الفئات (الأعمدة والصفوف) وحفظ الإعدادات
+    ' =========================================================
+    Private Sub SetupCategoryControlsToolbar()
+        Try
+            ' استرجاع الإعدادات المحفوظة للأعمدة والصفوف
+            Dim savedCols As String = SettingsManager.GetSettingOrDefault("POS_CategoryColumns", "4")
+            Dim savedRows As String = SettingsManager.GetSettingOrDefault("POS_CategoryRows", "2")
+            Integer.TryParse(savedCols, _categoryColumns)
+            Integer.TryParse(savedRows, _categoryRows)
+            If _categoryColumns < 2 Then _categoryColumns = 4
+            If _categoryRows < 1 Then _categoryRows = 2
+
+            ' ضبط القيم في عناصر التصميم
+            lblColValue.Text = _categoryColumns.ToString()
+            lblRowValue.Text = _categoryRows.ToString()
+
+            ' ربط حدث تغيير حجم الحاوية لإعادة ضبط أبعاد الأزرار تلقائياً
+            AddHandler flpCategories.Resize, Sub()
+                                                 UpdateCategoryButtonsLayout()
+                                             End Sub
+
+        Catch ex As Exception
+            Logger.LogError("SetupCategoryControlsToolbar", ex)
+        End Try
+    End Sub
+
+    Private Sub btnDecCol_Click(sender As Object, e As EventArgs) Handles btnDecCol.Click
+        If _categoryColumns > 2 Then
+            _categoryColumns -= 1
+            lblColValue.Text = _categoryColumns.ToString()
+            SettingsManager.SaveSetting("POS_CategoryColumns", _categoryColumns.ToString())
+            UpdateCategoryButtonsLayout()
+        End If
+    End Sub
+
+    Private Sub btnIncCol_Click(sender As Object, e As EventArgs) Handles btnIncCol.Click
+        If _categoryColumns < 8 Then
+            _categoryColumns += 1
+            lblColValue.Text = _categoryColumns.ToString()
+            SettingsManager.SaveSetting("POS_CategoryColumns", _categoryColumns.ToString())
+            UpdateCategoryButtonsLayout()
+        End If
+    End Sub
+
+    Private Sub btnDecRow_Click(sender As Object, e As EventArgs) Handles btnDecRow.Click
+        If _categoryRows > 1 Then
+            _categoryRows -= 1
+            lblRowValue.Text = _categoryRows.ToString()
+            SettingsManager.SaveSetting("POS_CategoryRows", _categoryRows.ToString())
+            UpdateCategoryButtonsLayout()
+        End If
+    End Sub
+
+    Private Sub btnIncRow_Click(sender As Object, e As EventArgs) Handles btnIncRow.Click
+        If _categoryRows < 5 Then
+            _categoryRows += 1
+            lblRowValue.Text = _categoryRows.ToString()
+            SettingsManager.SaveSetting("POS_CategoryRows", _categoryRows.ToString())
+            UpdateCategoryButtonsLayout()
+        End If
+    End Sub
+
+    ' =========================================================
+    ' ضبط أبعاد شبكة أزرار الفئات ديناميكياً حسب الأعمدة والصفوف
+    ' =========================================================
+    Private Sub UpdateCategoryButtonsLayout()
+        Try
+            If flpCategories Is Nothing Then Return
+
+            ' 1. تعديل ارتفاع Guna2Panel1 حسب عدد الصفوف
+            Dim targetPanelHeight As Integer = 56 + (_categoryRows * 65) + 25
+            If targetPanelHeight < 140 Then targetPanelHeight = 140
+            If targetPanelHeight > 420 Then targetPanelHeight = 420
+            If Guna2Panel1 IsNot Nothing AndAlso Guna2Panel1.Height <> targetPanelHeight Then
+                Guna2Panel1.Height = targetPanelHeight
+            End If
+
+            ' 2. حساب العرض والارتفاع المناسبين لكل زر فئة
+            Dim clientW As Integer = flpCategories.ClientSize.Width
+            If clientW <= 0 Then clientW = flpCategories.Width
+            Dim availW As Integer = clientW - flpCategories.Padding.Left - flpCategories.Padding.Right
+            Dim btnMarginH As Integer = 6 ' هامش إجمالي لكل زر (3 يمين + 3 يسار)
+            Dim colCount As Integer = Math.Max(1, _categoryColumns)
+            Dim calculatedW As Integer = CInt(Math.Floor((availW - (colCount * btnMarginH)) / colCount))
+            If calculatedW < 60 Then calculatedW = 60
+
+            Dim clientH As Integer = flpCategories.ClientSize.Height
+            If clientH <= 0 Then clientH = flpCategories.Height
+            Dim availH As Integer = clientH - flpCategories.Padding.Top - flpCategories.Padding.Bottom
+            Dim rowCount As Integer = Math.Max(1, _categoryRows)
+            Dim btnMarginV As Integer = 6
+            Dim calculatedH As Integer = CInt(Math.Floor((availH - (rowCount * btnMarginV)) / rowCount))
+            If calculatedH < 45 Then calculatedH = 45
+
+            flpCategories.SuspendLayout()
+            For Each c As Control In flpCategories.Controls
+                If TypeOf c Is Guna.UI2.WinForms.Guna2Button Then
+                    c.Size = New Size(calculatedW, calculatedH)
+                    c.Margin = New Padding(3)
+                End If
+            Next
+            flpCategories.ResumeLayout(True)
+        Catch ex As Exception
+            ' تجنب أي خطأ أثناء التهيئة الأولية
+        End Try
+    End Sub
+
+    ' =========================================================
+    ' السحب باللمس (Touch & Drag Scrolling) لشاشات الكاشير
+    ' =========================================================
+    Private _isDraggingTouch As Boolean = False
+    Private _touchDragStart As Point
+    Private _touchScrollStart As Point
+
+    Private Sub EnableTouchScrolling(flp As FlowLayoutPanel)
+        If flp Is Nothing Then Return
+        AddHandler flp.MouseDown, Sub(s, e)
+                                      If e.Button = MouseButtons.Left Then
+                                          _isDraggingTouch = True
+                                          _touchDragStart = e.Location
+                                          _touchScrollStart = flp.AutoScrollPosition
+                                      End If
+                                  End Sub
+
+        AddHandler flp.MouseMove, Sub(s, e)
+                                      If _isDraggingTouch AndAlso e.Button = MouseButtons.Left Then
+                                          Dim deltaX = _touchDragStart.X - e.Location.X
+                                          Dim deltaY = _touchDragStart.Y - e.Location.Y
+                                          flp.AutoScrollPosition = New Point(-_touchScrollStart.X + deltaX, -_touchScrollStart.Y + deltaY)
+                                      End If
+                                  End Sub
+
+        AddHandler flp.MouseUp, Sub(s, e)
+                                    _isDraggingTouch = False
+                                End Sub
+    End Sub
+
     ' ==========================================
-    'Private Sub LoadCategories()
-    '    Dim categories = _repo.GetCategories()
+    ' 1. رسم الأقسام كأزرار ملونة داخل flpCategories
+    ' ==========================================
+    Private Sub LoadCategories()
+        Try
+            If _repo Is Nothing Then
+                _repo = New POSRepository(DBModule.ConnectionString)
+            End If
+            Dim categories = _repo.GetCategories()
 
-    '    flpCategories.SuspendLayout()
-    '    Try
-    '        flpCategories.Controls.Clear()
+            flpCategories.SuspendLayout()
+            Try
+                flpCategories.Controls.Clear()
+                _categoryButtons.Clear()
 
-    '        For Each cat As CategoryModel In categories
-    '            Dim card As New UCCategoryCard With {
-    '                .Width = 130,
-    '                .Height = 140,
-    '                .Category = cat
-    '            }
+                ' تحديث أبعاد الحاوية
+                UpdateCategoryButtonsLayout()
 
-    '            ' استلام حدث الضغط على القسم
-    '            AddHandler card.CategoryClicked, AddressOf CategoryCard_Click
+                ' 1. إضافة زر "عرض الكل" كأول زر في شبكة الفئات
+                Dim allCat As New CategoryModel With {
+                    .Category_ID = 0,
+                    .Category_NameAr = "عرض الكل",
+                    .CategoryNameEn = "All"
+                }
 
-    '            flpCategories.Controls.Add(card)
-    '        Next
-    '    Finally
-    '        flpCategories.ResumeLayout()
-    '    End Try
-    'End Sub
+                Dim btnAll As New Guna.UI2.WinForms.Guna2Button With {
+                    .BorderRadius = 8,
+                    .Cursor = Cursors.Hand,
+                    .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
+                    .ForeColor = Color.White,
+                    .Tag = allCat,
+                    .Text = "عرض الكل",
+                    .Margin = New Padding(3),
+                    .Animated = True,
+                    .FillColor = Color.FromArgb(41, 128, 185)
+                }
+                btnAll.HoverState.FillColor = ControlPaint.Light(Color.FromArgb(41, 128, 185), 0.2F)
+                btnAll.HoverState.BorderColor = Color.White
 
-    '' عند الضغط على كارت قسم
-    'Private Sub CategoryCard_Click(category As CategoryModel)
-    '    ' جلب أصناف هذا القسم ورسمها
-    '    LoadProducts(category.Category_ID)
-    'End Sub
+                AddHandler btnAll.Click, AddressOf CategoryButton_Click
 
+                _categoryButtons.Add(btnAll)
+                flpCategories.Controls.Add(btnAll)
 
-    '' ==========================================
-    '' 2. رسم الأصناف داخل flpProducts
-    '' ==========================================
-    'Private Sub LoadProducts(categoryID As Integer)
-    '    Dim products = _repo.GetProductsByCategoryID(categoryID)
+                ' 2. إضافة باقي أزرار الفئات الملونة
+                For Each cat As CategoryModel In categories
+                    Dim btn As New Guna.UI2.WinForms.Guna2Button With {
+                        .BorderRadius = 8,
+                        .Cursor = Cursors.Hand,
+                        .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
+                        .ForeColor = Color.White,
+                        .Tag = cat,
+                        .Text = cat.Category_NameAr,
+                        .Margin = New Padding(3),
+                        .Animated = True
+                    }
 
-    '    flpProducts.SuspendLayout()
-    '    Try
-    '        flpProducts.Controls.Clear()
+                    ' استخراج لون الفئة المخصص أو استخدام لون افتراضي مناسب
+                    Dim catColor As Color = ColorHelper.GetColor(cat.CategoryColor)
+                    Dim isDarkTheme As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+                    If catColor.IsEmpty OrElse catColor = Color.Transparent OrElse (catColor.R = 0 AndAlso catColor.G = 0 AndAlso catColor.B = 0) OrElse (Not isDarkTheme AndAlso catColor.GetBrightness() < 0.25) Then
+                        Dim modernPalette = New Color() {
+                            Color.FromArgb(37, 99, 235),  ' أزرق ملكي
+                            Color.FromArgb(220, 38, 38),  ' أحمر ياقوتي
+                            Color.FromArgb(217, 119, 6),  ' برتقالي دافئ
+                            Color.FromArgb(13, 148, 136), ' تركواز
+                            Color.FromArgb(124, 58, 237), ' بنفسجي
+                            Color.FromArgb(225, 29, 72),  ' قرمزي
+                            Color.FromArgb(16, 185, 129), ' زمردي
+                            Color.FromArgb(79, 70, 229)   ' نيلي
+                        }
+                        catColor = modernPalette(Math.Abs(cat.Category_ID) Mod modernPalette.Length)
+                    End If
 
-    '        For Each prod As ProductModel In products
-    '            Dim card As New UCProductCard With {
-    '                .Width = 140,
-    '                .Height = 150,
-    '                .Product = prod
-    '            }
+                    btn.FillColor = catColor
+                    btn.HoverState.FillColor = ControlPaint.Light(catColor, 0.2F)
+                    btn.HoverState.BorderColor = Color.White
 
-    '            ' استلام حدث الضغط على الصنف
-    '            AddHandler card.ProductClicked, AddressOf ProductCard_Click
+                    AddHandler btn.Click, AddressOf CategoryButton_Click
 
-    '            flpProducts.Controls.Add(card)
-    '        Next
-    '    Finally
-    '        flpProducts.ResumeLayout()
-    '    End Try
-    'End Sub
+                    _categoryButtons.Add(btn)
+                    flpCategories.Controls.Add(btn)
+                Next
 
-    '' ==========================================
-    '' حدث الضغط على كارت الصنف في شاشة البيع
-    '' ==========================================
-    'Private Sub ProductCard_Click(product As ProductModel)
+                ' تحديد زر "عرض الكل" تلقائياً عند فتح الشاشة
+                SelectCategoryButton(btnAll, allCat)
 
-    '    ' 1. فتح فورم خيارات الصنف (الأحجام والإضافات) كـ Dialog
-    '    Using frmOptions As New FrmProductOptions(product, _repo)
+                ' إعادة تطبيق الأبعاد الدقيقة بعد ملء العناصر
+                UpdateCategoryButtonsLayout()
+            Finally
+                flpCategories.ResumeLayout(True)
+            End Try
+        Catch ex As Exception
+            Logger.LogError("LoadCategories", ex)
+            MessageBox.Show("حدث خطأ أثناء تحميل الأقسام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 
-    '        ' 2. التحقق مما إذا كان الكاشير قد ضغط على زر "إضافة" (DialogResult.OK)
-    '        If frmOptions.ShowDialog() = DialogResult.OK Then
+    ' تحديد القسم المختار وإبرازه بصرياً
+    Private Sub SelectCategoryButton(btn As Guna.UI2.WinForms.Guna2Button, cat As CategoryModel)
+        _selectedCategoryID = cat.Category_ID
+        Dim catColor As Color = ColorHelper.GetColor(cat.CategoryColor)
+        If catColor.IsEmpty OrElse catColor = Color.Transparent OrElse (catColor.R = 0 AndAlso catColor.G = 0 AndAlso catColor.B = 0) Then
+            catColor = If(cat.Category_ID = 0, Color.FromArgb(41, 128, 185), Color.FromArgb(94, 148, 255))
+        End If
+        _selectedCategoryColor = catColor
 
-    '            ' 3. استلام كافة العناصر المختارة ببيانات الأحجام والإضافات وإضافتها للفاتورة
-    '            For Each selectedItem In frmOptions.ResultOrderItems
-    '                AddItemToInvoice(selectedItem)
-    '            Next
+        For Each b In _categoryButtons
+            If b Is btn Then
+                b.BorderThickness = 3
+                b.BorderColor = Color.White
+            Else
+                b.BorderThickness = 0
+                b.BorderColor = Color.Transparent
+            End If
+        Next
 
-    '        End If
+        ' جلب أصناف هذا القسم ورسمها
+        LoadProducts(cat.Category_ID)
+    End Sub
 
-    '    End Using
+    ' عند الضغط على زر القسم
+    Private Sub CategoryButton_Click(sender As Object, e As EventArgs)
+        Dim btn = TryCast(sender, Guna.UI2.WinForms.Guna2Button)
+        If btn IsNot Nothing Then
+            Dim cat = TryCast(btn.Tag, CategoryModel)
+            If cat IsNot Nothing Then
+                SelectCategoryButton(btn, cat)
+            End If
+        End If
+    End Sub
 
-    'End Sub
+    ' ==========================================
+    ' 2. رسم الأصناف داخل flpProducts بنظام الأزرار الحديثة والبادج الاحترافي
+    ' ==========================================
+    Private Sub LoadProducts(categoryID As Integer)
+        Try
+            If _repo Is Nothing Then
+                _repo = New POSRepository(DBModule.ConnectionString)
+            End If
+            Dim products = _repo.GetProductsByCategoryID(categoryID)
+            Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+
+            flpProducts.SuspendLayout()
+            Try
+                flpProducts.Controls.Clear()
+
+                ' في حال كان القسم خالياً من الأصناف، إظهار بطاقة توضيحية راقية
+                If products Is Nothing OrElse products.Count = 0 Then
+                    Dim pnlEmpty As New Guna.UI2.WinForms.Guna2Panel With {
+                        .Width = Math.Max(320, flpProducts.ClientSize.Width - 50),
+                        .Height = 220,
+                        .BorderRadius = 14,
+                        .FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White),
+                        .BorderColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240)),
+                        .BorderThickness = 1,
+                        .Margin = New Padding(20, 35, 20, 20)
+                    }
+                    Dim lblEmpty As New Label With {
+                        .Dock = DockStyle.Fill,
+                        .Text = "🍽️ لا توجد أصناف في هذا القسم حالياً" & vbCrLf & vbCrLf & "يرجى اختيار قسم آخر أو الضغط على زر ""عرض الكل""",
+                        .Font = New Font("Segoe UI", 13.0!, FontStyle.Bold),
+                        .ForeColor = If(isDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139)),
+                        .TextAlign = ContentAlignment.MiddleCenter
+                    }
+                    pnlEmpty.Controls.Add(lblEmpty)
+                    flpProducts.Controls.Add(pnlEmpty)
+                    Return
+                End If
+
+                For Each prod As ProductModel In products
+                    Dim btn As New Guna.UI2.WinForms.Guna2Button With {
+                        .Width = 152,
+                        .Height = 110,
+                        .BorderRadius = 12,
+                        .Margin = New Padding(5),
+                        .Cursor = Cursors.Hand,
+                        .Tag = prod,
+                        .Animated = True,
+                        .FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White),
+                        .ForeColor = If(isDark, Color.White, Color.FromArgb(15, 23, 42)),
+                        .CustomBorderThickness = New Padding(0, 4, 0, 0),
+                        .CustomBorderColor = _selectedCategoryColor,
+                        .BorderThickness = 1,
+                        .BorderColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240)),
+                        .Text = ""
+                    }
+
+                    btn.HoverState.FillColor = If(isDark, Color.FromArgb(40, 49, 68), Color.FromArgb(248, 250, 252))
+                    btn.HoverState.CustomBorderColor = Color.White
+                    btn.HoverState.BorderColor = _selectedCategoryColor
+
+                    AddHandler btn.Paint, AddressOf ProductButton_Paint
+                    AddHandler btn.Click, AddressOf ProductButton_Click
+
+                    flpProducts.Controls.Add(btn)
+                Next
+            Finally
+                flpProducts.ResumeLayout(True)
+            End Try
+        Catch ex As Exception
+            Logger.LogError("LoadProducts", ex)
+            MessageBox.Show("حدث خطأ أثناء تحميل الأصناف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ' رسم محتويات زر الصنف بجماليات عالية: الاسم بالأعلى وبادج السعر بالأسفل
+    Private Sub ProductButton_Paint(sender As Object, e As PaintEventArgs)
+        Dim btn = TryCast(sender, Guna.UI2.WinForms.Guna2Button)
+        If btn Is Nothing Then Return
+        Dim prod = TryCast(btn.Tag, ProductModel)
+        If prod Is Nothing Then Return
+
+        Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+        Dim g As Graphics = e.Graphics
+        g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
+
+        ' 1. رسم اسم الصنف بأعلى البطاقة بمساحة كافية وخط واضح
+        Dim titleRect As New Rectangle(8, 12, btn.Width - 16, btn.Height - 50)
+        Using sf As New StringFormat()
+            sf.Alignment = StringAlignment.Center
+            sf.LineAlignment = StringAlignment.Center
+            sf.Trimming = StringTrimming.EllipsisWord
+            sf.FormatFlags = StringFormatFlags.NoClip
+
+            Using titleFont As New Font("Segoe UI", 11.0!, FontStyle.Bold)
+                Dim titleBrush As Brush = If(isDark, Brushes.White, New SolidBrush(Color.FromArgb(15, 23, 42)))
+                Try
+                    g.DrawString(prod.ProductNameAr, titleFont, titleBrush, titleRect, sf)
+                Finally
+                    If Not isDark Then titleBrush.Dispose()
+                End Try
+            End Using
+        End Using
+
+        ' 2. تحديد تفاصيل بادج السعر (Pill Badge)
+        Dim priceText As String
+        Dim pillBgColor As Color
+        Dim isDirect As Boolean = prod.IsDirectItem
+
+        If isDirect Then
+            priceText = prod.DefaultPrice.ToString("N2") & " ج.م"
+            pillBgColor = Color.FromArgb(16, 185, 129) ' أخضر زمردي جذاب للأصناف السريعة
+        Else
+            If prod.DefaultPrice > 0 Then
+                priceText = "من " & prod.DefaultPrice.ToString("N2") & " ج.م ⚙"
+            Else
+                priceText = "خيارات ⚙"
+            End If
+            pillBgColor = Color.FromArgb(37, 99, 235) ' أزرق ملكي للأصناف ذات الخيارات المتعددة
+        End If
+
+        ' 3. حساب أبعاد ورسم كبسولة السعر بالأسفل
+        Using badgeFont As New Font("Segoe UI", 9.5!, FontStyle.Bold)
+            Dim textSize = g.MeasureString(priceText, badgeFont)
+            Dim pillW As Integer = Math.Min(btn.Width - 16, CInt(Math.Ceiling(textSize.Width)) + 18)
+            Dim pillH As Integer = 25
+            Dim pillX As Integer = (btn.Width - pillW) \ 2
+            Dim pillY As Integer = btn.Height - pillH - 8
+            Dim pillRect As New Rectangle(pillX, pillY, pillW, pillH)
+
+            Using pillPath = GetRoundedRectanglePath(pillRect, 6)
+                Using pillBrush As New SolidBrush(pillBgColor)
+                    g.FillPath(pillBrush, pillPath)
+                End Using
+
+                Using sfBadge As New StringFormat()
+                    sfBadge.Alignment = StringAlignment.Center
+                    sfBadge.LineAlignment = StringAlignment.Center
+                    g.DrawString(priceText, badgeFont, Brushes.White, pillRect, sfBadge)
+                End Using
+            End Using
+        End Using
+    End Sub
+
+    ' مساعدة لرسم الأشكال المستديرة (Rounded Rectangle)
+    Private Function GetRoundedRectanglePath(rect As Rectangle, radius As Integer) As Drawing2D.GraphicsPath
+        Dim path As New Drawing2D.GraphicsPath()
+        Dim d As Integer = radius * 2
+        If d > rect.Width Then d = rect.Width
+        If d > rect.Height Then d = rect.Height
+
+        path.AddArc(rect.X, rect.Y, d, d, 180, 90)
+        path.AddArc(rect.Right - d, rect.Y, d, d, 270, 90)
+        path.AddArc(rect.Right - d, rect.Bottom - d, d, d, 0, 90)
+        path.AddArc(rect.X, rect.Bottom - d, d, d, 90, 90)
+        path.CloseFigure()
+        Return path
+    End Function
+
+    ' ==========================================
+    ' حدث الضغط على زر الصنف (إضافة مباشرة أو خيارات)
+    ' ==========================================
+    Private Sub ProductButton_Click(sender As Object, e As EventArgs)
+        Dim btn = TryCast(sender, Guna.UI2.WinForms.Guna2Button)
+        If btn Is Nothing Then Return
+        Dim product = TryCast(btn.Tag, ProductModel)
+        If product Is Nothing Then Return
+
+        Try
+            If product.IsDirectItem Then
+                ' صنف مباشر (حجم واحد وبدون إضافات) - إضافة مباشرة وسريعة بنقرة واحدة
+                Dim sizes = _repo.GetProductSizes(product.Product_ID)
+                Dim orderItem As New OrderItemModel With {
+                    .Product_ID = product.Product_ID,
+                    .ProductName = product.ProductNameAr,
+                    .Quantity = 1
+                }
+
+                If sizes IsNot Nothing AndAlso sizes.Count > 0 Then
+                    Dim defaultSize = sizes.FirstOrDefault(Function(s) s.IsDefault)
+                    If defaultSize Is Nothing Then defaultSize = sizes(0)
+                    orderItem.SelectedSize = defaultSize
+                Else
+                    orderItem.SelectedSize = New ProductSizeModel With {
+                        .ProductID = product.Product_ID,
+                        .SalePrice = product.DefaultPrice,
+                        .SizeInfo = New SizeModel With {.SizeNameAr = "عادي"}
+                    }
+                End If
+
+                AddItemToInvoice(orderItem)
+            Else
+                ' صنف يحتوي على خيارات متعددة (أحجام مختلفة أو إضافات) - فتح شاشة الخيارات كـ Dialog
+                Using frmOptions As New FrmProductOptions(product, _repo)
+                    If frmOptions.ShowDialog() = DialogResult.OK Then
+                        For Each selectedItem In frmOptions.ResultOrderItems
+                            AddItemToInvoice(selectedItem)
+                        Next
+                    End If
+                End Using
+            End If
+        Catch ex As Exception
+            Logger.LogError("ProductButton_Click", ex)
+            MessageBox.Show("حدث خطأ أثناء إضافة الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ' =========================================================================
+    ' [نظام الـ UserControl القديم - معلق للاحتفاظ به بناء على طلب المستخدم]
+    ' =========================================================================
+    ' Private Sub LoadCategories_OldUserControl()
+    '     Try
+    '         Dim categories = _repo.GetCategories()
+    '         flpCategories.SuspendLayout()
+    '         Try
+    '             flpCategories.Controls.Clear()
+    '             For Each cat As CategoryModel In categories
+    '                 Dim card As New UCCategoryCard With {
+    '                     .Width = 130,
+    '                     .Height = 140,
+    '                     .Category = cat
+    '                 }
+    '                 AddHandler card.CategoryClicked, AddressOf CategoryCard_Click_OldUserControl
+    '                 flpCategories.Controls.Add(card)
+    '             Next
+    '         Finally
+    '             flpCategories.ResumeLayout()
+    '         End Try
+    '     Catch ex As Exception
+    '         Logger.LogError("LoadCategories", ex)
+    '     End Try
+    ' End Sub
+    ' Private Sub CategoryCard_Click_OldUserControl(category As CategoryModel)
+    '     LoadProducts_OldUserControl(category.Category_ID)
+    ' End Sub
+    ' Private Sub LoadProducts_OldUserControl(categoryID As Integer)
+    '     Dim products = _repo.GetProductsByCategoryID(categoryID)
+    '     flpProducts.SuspendLayout()
+    '     Try
+    '         flpProducts.Controls.Clear()
+    '         For Each prod As ProductModel In products
+    '             Dim card As New UCProductCard With {
+    '                 .Width = 140,
+    '                 .Height = 150,
+    '                 .Product = prod
+    '             }
+    '             AddHandler card.ProductClicked, AddressOf ProductCard_Click_OldUserControl
+    '             flpProducts.Controls.Add(card)
+    '         Next
+    '     Finally
+    '         flpProducts.ResumeLayout()
+    '     End Try
+    ' End Sub
+    ' Private Sub ProductCard_Click_OldUserControl(product As ProductModel)
+    '     Using frmOptions As New FrmProductOptions(product, _repo)
+    '         If frmOptions.ShowDialog() = DialogResult.OK Then
+    '             For Each selectedItem In frmOptions.ResultOrderItems
+    '                 AddItemToInvoice(selectedItem)
+    '             Next
+    '         End If
+    '     End Using
+    ' End Sub
     ' =========================================================
     ' دالة جلب وعرض رقم الفاتورة الحالي المتسلسل
     ' =========================================================
@@ -969,8 +1024,10 @@ Public Class frmPOS
 
         ' 2. عرض الصافي الأولي
         lblSubTotal.Text = itemsTotal.ToString("N2")
-        DineInServiceFee = If(SettingsManager.GetSetting("DineInServiceFee"), "0")
-        Dim IsPercent As Boolean = If(SettingsManager.GetSetting("IsDineInServiceFeePercent"), "false")
+        Dim feeStr As String = SettingsManager.GetSettingOrDefault("DineInServiceFee", "0")
+        Decimal.TryParse(feeStr, DineInServiceFee)
+        Dim IsPercent As Boolean = SettingsManager.GetBoolSetting("IsDineInServiceFeePercent", False)
+        IsDineInServiceFeePercent = IsPercent
         ' 3. تحديد رسوم الدليفري ورسوم الصالة والضريبة
         Dim currentDelivery As Decimal = If(CurrentOrderType = OrderType.Delivery, DeliveryFee, 0)
         Dim currentDineInFee As Decimal
@@ -986,20 +1043,32 @@ Public Class frmPOS
         'lblDineInFee.Text = currentDineInFee.ToString("N2")
         lblTax.Text = TaxAmount.ToString("N2")
 
-        ' 4. حساب الإجمالي النهائي (مع مراعاة السوالب والعمليات الحسابية المتقاطعة)
-        Dim finalGrandTotal As Decimal = itemsTotal + currentDelivery + currentDineInFee + TaxAmount
+        ' 4. حساب الإجمالي النهائي (مع مراعاة السوالب والعمليات الحسابية المتقاطعة وخصم عربون الحجز)
+        Dim finalGrandTotal As Decimal = itemsTotal + currentDelivery + currentDineInFee + TaxAmount - CurrentReservationDeposit
 
         ' منع أي قيم سالبة غير منطقية
         If finalGrandTotal < 0 Then finalGrandTotal = 0
 
-        lblGrandTotal.Text = finalGrandTotal.ToString("N2") & " EGP"
+        If CurrentReservationDeposit > 0 Then
+            lblGrandTotal.Text = $"{finalGrandTotal:N2} EGP (عربون: -{CurrentReservationDeposit:N2})"
+        Else
+            lblGrandTotal.Text = finalGrandTotal.ToString("N2") & " EGP"
+        End If
     End Sub
 
     Private Sub AddItemToInvoice(item As OrderItemModel)
-        Dim sizeName As String = If(item.SelectedSize IsNot Nothing, item.SelectedSize.SizeInfo.SizeNameAr, "عادي")
+        Dim sizeName As String = "عادي"
+        If item.SelectedSize IsNot Nothing Then
+            If item.SelectedSize.SizeInfo IsNot Nothing AndAlso Not String.IsNullOrEmpty(item.SelectedSize.SizeInfo.SizeNameAr) Then
+                sizeName = item.SelectedSize.SizeInfo.SizeNameAr
+            End If
+        End If
+
         Dim addonsList As New List(Of String)
         For Each addon In item.SelectedAddons
-            addonsList.Add(addon.AddonInfo.AddonNameAr)
+            If addon.AddonInfo IsNot Nothing AndAlso Not String.IsNullOrEmpty(addon.AddonInfo.AddonNameAr) Then
+                addonsList.Add(addon.AddonInfo.AddonNameAr)
+            End If
         Next
         Dim addonsText As String = If(addonsList.Count > 0, String.Join(", ", addonsList), "-")
 
@@ -1086,12 +1155,53 @@ Public Class frmPOS
 
         If _repo.SavePendingInvoice(pendingInv) Then
 
+            ' إذا كانت هناك فاتورة معلقة سابقة مسترجعة، نحذفها بعد تعليق الفاتورة الجديدة
+            If _currentPendingInvoiceID.HasValue Then
+                _repo.DeletePendingInvoice(_currentPendingInvoiceID.Value)
+                _currentPendingInvoiceID = Nothing
+            End If
+
             ' إذا كان نوع الطلب صالة -> تغيير حالة الطاولة إلى مشغولة (2) في الداتا بيز
             If CurrentOrderType = OrderType.DineIn AndAlso SelectedTableID.HasValue Then
                 _repo.UpdateTableStatus(SelectedTableID.Value, 2) ' 2 = مشغولة/حجز معلق
             End If
 
-            MessageBox.Show("تم تعليق الفاتورة بنجاح!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ' طباعة بون المطبخ (Kitchen Order Ticket - KOT)
+            Try
+                Dim kotTypeDesc As String = If(CurrentOrderType = OrderType.DineIn, "صالة - طاولة: " & SelectedTableName, If(CurrentOrderType = OrderType.Delivery, "دليفري | الطيار: " & SelectedDriverName, "تيك أوي"))
+                Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
+                RestaurantPrintManager.PrintKitchenTicket("طلب #" & pendingInv.PendingID, kotTypeDesc, SelectedTableName, staffName, itemsList)
+            Catch exKot As Exception
+                Logger.LogError("btnHoldInvoice_Click - PrintKitchenTicket", exKot)
+            End Try
+
+            ' إرسال الطلب لشاشة المطبخ الرقمية (KDS)
+            Try
+                Dim kOrder As New KitchenOrderModel With {
+                    .OrderNumber = "طلب #" & pendingInv.PendingID,
+                    .OrderType = CByte(CurrentOrderType),
+                    .TableID = SelectedTableID,
+                    .TableName = SelectedTableName,
+                    .CustomerName = custName,
+                    .ServerName = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير"),
+                    .Status = KitchenOrderStatus.New
+                }
+                For Each itm In itemsList
+                    kOrder.Items.Add(New KitchenOrderItemModel With {
+                        .ProductID = itm.ProductID,
+                        .ProductName = itm.ProductName,
+                        .SizeName = itm.SizeName,
+                        .AddonsText = itm.AddonsText,
+                        .Quantity = itm.Quantity,
+                        .Notes = itm.Notes
+                    })
+                Next
+                Dim unusedTask = Task.Run(Async Function() Await _repo.CreateKitchenOrderAsync(kOrder))
+            Catch exKds As Exception
+                Logger.LogError("btnHoldInvoice_Click - KDS", exKds)
+            End Try
+
+            MessageBox.Show("تم تعليق الفاتورة وإرسال أمر التشغيل للمطبخ (KOT & KDS) بنجاح!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ResetPOSForm()
             UpdateNextInvoiceNumber() ' تغيير وتحديث رقم الفاتورة القادمة
@@ -1175,7 +1285,8 @@ Public Class frmPOS
                                     Next
                                 End If
                             Catch ex As Exception
-                                ' خطأ في فك الـ JSON
+                                Logger.LogError("btnPendingInvoices_Click - Deserializing InvoiceJSON", ex)
+                                MessageBox.Show("حدث خطأ أثناء قراءة أصناف الفاتورة المعلقة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                             End Try
                         Else
                             ' توافقية مع الفواتير المعلقة القديمة بنظام الـ Delimiter
@@ -1201,8 +1312,8 @@ Public Class frmPOS
 
                     CalculatePOSGrandTotal()
 
-                    ' إغلاق الفاتورة المعلقة من الداتا بيز بعد استرجاعها للشاشة
-                    _repo.DeletePendingInvoice(pendingItem.PendingID)
+                    ' الاحتفاظ برقم الفاتورة المعلقة لحذفها بأمان عند إتمام الدفع أو إعادة التعليق
+                    _currentPendingInvoiceID = pendingItem.PendingID
 
                 End If
 
@@ -1287,40 +1398,40 @@ Public Class frmPOS
 
         CalculatePOSGrandTotal()
         Dim itemsTotal As Decimal = GetInvoiceTotalFromGrid()
-        Dim finalInvoiceTotal As Decimal = itemsTotal
+        Dim currentDineInFee As Decimal = If(CurrentOrderType = OrderType.DineIn, If(IsDineInServiceFeePercent, itemsTotal * DineInServiceFee / 100, DineInServiceFee), 0)
+        Dim finalInvoiceTotal As Decimal = itemsTotal + currentDineInFee + TaxAmount
         If CurrentOrderType = OrderType.Delivery Then finalInvoiceTotal += DeliveryFee
+        If CurrentReservationDeposit > 0 Then
+            finalInvoiceTotal = Math.Max(0, finalInvoiceTotal - CurrentReservationDeposit)
+        End If
 
         Using frmPay As New FrmQuickPayment(finalInvoiceTotal, CurrentCustomer)
             If frmPay.ShowDialog() = DialogResult.OK Then
 
                 Dim custID As Integer? = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?))
 
-                'Dim invoice As New InvoiceModel With {
-                '    .OrderType = CByte(CurrentOrderType),
-                '    .ShiftID = If(ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, 1),
-                '    .UserID = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1),
-                '    .CustomerID = custID,
-                '    .TableID = SelectedTableID,
-                '    .DriverID = SelectedDriverID,
-                '    .DeliveryFee = DeliveryFee,
-                '    .TotalBeforeDiscount = frmPay.FinalGrandTotal,
-                '    .DiscountAmount = frmPay.TotalDiscount,
-                '    .NetTotal = frmPay.NetTotal,
-                '    .PaidAmount = frmPay.PaidAmount,
-                '    .RemainingAmount = frmPay.RemainingAmount,
-                '    .IsCredit = frmPay.IsCreditOrder,
-                '    .TreasuryID = If(frmPay.SelectedTreasuryID > 0, frmPay.SelectedTreasuryID, CType(Nothing, Integer?))
-                '}
+                ' جلب الفرع والمخزن الحاليين من الإعدادات بأمان
+                Dim currentBranchID As Integer = 1
+                Integer.TryParse(SettingsManager.GetSettingOrDefault("CurrentBranchID", "1"), currentBranchID)
 
-                ' جلب الفرع والمخزن الحاليين من الإعدادات
-                Dim currentBranchID As Integer = Convert.ToInt32(If(SettingsManager.GetSetting("CurrentBranchID"), "1"))
-                Dim currentStoreID As Integer = Convert.ToInt32(If(SettingsManager.GetSetting("CurrentStoreID"), "1"))
+                Dim currentStoreID As Integer = 1
+                Integer.TryParse(SettingsManager.GetSettingOrDefault("CurrentStoreID", "1"), currentStoreID)
+
+                Dim shiftIdVal As Integer = 1
+                If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                    shiftIdVal = ShiftSession.CurrentShift.ShiftID
+                End If
+
+                Dim invoiceNotes As String = ""
+                If CurrentReservationDeposit > 0 Then
+                    invoiceNotes = $"[تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} ج.م]"
+                End If
 
                 Dim invoice As New InvoiceModel With {
                     .OrderType = CByte(CurrentOrderType),
-                    .ShiftID = ShiftSession.CurrentShift.ShiftID,
+                    .ShiftID = shiftIdVal,
                     .UserID = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1),
-                    .CustomerID = CurrentCustomer.CustomerID,
+                    .CustomerID = custID,
                     .TableID = SelectedTableID,
                     .DriverID = SelectedDriverID,
                     .BranchID = currentBranchID,
@@ -1332,7 +1443,8 @@ Public Class frmPOS
                     .PaidAmount = frmPay.PaidAmount,
                     .RemainingAmount = frmPay.RemainingAmount,
                     .IsCredit = frmPay.IsCreditOrder,
-                    .TreasuryID = If(frmPay.SelectedTreasuryID > 0, frmPay.SelectedTreasuryID, CType(Nothing, Integer?))
+                    .TreasuryID = If(frmPay.SelectedTreasuryID > 0, frmPay.SelectedTreasuryID, CType(Nothing, Integer?)),
+                    .Notes = invoiceNotes
                 }
 
                 For Each row As DataGridViewRow In dgvInvoice.Rows
@@ -1350,10 +1462,11 @@ Public Class frmPOS
                     End If
                 Next
 
+                btnPay.Enabled = False
                 Try
                     Dim savedInvNum As String = Await _repo.SaveInvoiceAsync(invoice)
                     ' تحديث الذاكرة الحالية للوردية فوراً
-                    If ShiftSession.HasActiveShift Then
+                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
                         ShiftSession.CurrentShift.TotalSales += invoice.PaidAmount
                         ShiftSession.CurrentShift.TotalOrders += 1
                     End If
@@ -1362,13 +1475,82 @@ Public Class frmPOS
                         _repo.UpdateTableStatus(SelectedTableID.Value, 1) ' 1 = متاحة
                     End If
 
-                    MessageBox.Show("تم حفظ الفاتورة بنجاح برقم: " & savedInvNum, "حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ' إذا كان هناك حجز مرتبط بالطاولة، يتم تأكيد إتمامه وتصفية المتغيرات
+                    If CurrentReservationID.HasValue AndAlso SelectedTableID.HasValue Then
+                        _repo.CheckInReservation(CurrentReservationID.Value, SelectedTableID.Value)
+                        CurrentReservationID = Nothing
+                        CurrentReservationDeposit = 0
+                    End If
+
+                    ' إغلاق الفاتورة المعلقة بعد الحفظ الناجح
+                    If _currentPendingInvoiceID.HasValue Then
+                        _repo.DeletePendingInvoice(_currentPendingInvoiceID.Value)
+                        _currentPendingInvoiceID = Nothing
+                    End If
+
+                    invoice.InvoiceNumber = savedInvNum
+                    Dim custNameStr As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, "عميل نقدي")
+
+                    ' 1. الطباعة التلقائية لإيصال العميل (GDI+ مع QR وفتح الدرج)
+                    Try
+                        RestaurantPrintManager.PrintCustomerReceipt(invoice, custNameStr, SelectedTableName, SelectedDriverName)
+                    Catch printEx As Exception
+                        Logger.LogError("btnPay_Click - PrintCustomerReceipt", printEx)
+                    End Try
+
+                    ' 2. طباعة بون المطبخ (KOT) لطلبات التيك أوي والدليفري عند الدفع المباشر
+                    If CurrentOrderType <> OrderType.DineIn Then
+                        Try
+                            Dim orderDesc As String = If(CurrentOrderType = OrderType.Delivery, "دليفري | الطيار: " & SelectedDriverName, "تيك أوي")
+                            Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
+                            RestaurantPrintManager.PrintKitchenTicket(savedInvNum, orderDesc, SelectedTableName, staffName, invoice.Details)
+                        Catch exKot As Exception
+                            Logger.LogError("btnPay_Click - PrintKitchenTicket", exKot)
+                        End Try
+
+                        ' إرسال الطلب لشاشة المطبخ الرقمية (KDS)
+                        Try
+                            Dim kOrder As New KitchenOrderModel With {
+                                .OrderNumber = savedInvNum,
+                                .OrderType = CByte(CurrentOrderType),
+                                .TableID = SelectedTableID,
+                                .TableName = SelectedTableName,
+                                .CustomerName = custNameStr,
+                                .ServerName = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير"),
+                                .Status = KitchenOrderStatus.New
+                            }
+                            For Each itm In invoice.Details
+                                kOrder.Items.Add(New KitchenOrderItemModel With {
+                                    .ProductID = itm.ProductID,
+                                    .ProductName = itm.ProductName,
+                                    .SizeName = itm.SizeName,
+                                    .AddonsText = itm.AddonsText,
+                                    .Quantity = itm.Quantity,
+                                    .Notes = itm.Notes
+                                })
+                            Next
+                            Await _repo.CreateKitchenOrderAsync(kOrder)
+                        Catch exKds As Exception
+                            Logger.LogError("btnPay_Click - KDS", exKds)
+                        End Try
+                    End If
+
+                    ' 3. حفظ بيانات الفاتورة لإمكانية إعادة طباعتها فوراً
+                    _lastSavedInvoice = invoice
+                    _lastSavedCustomerName = custNameStr
+                    _lastSavedTableName = SelectedTableName
+                    _lastSavedDriverName = SelectedDriverName
+
+                    MessageBox.Show("تم حفظ وطباعة الفاتورة بنجاح برقم: " & savedInvNum, "حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                     ResetPOSForm()
                     UpdateNextInvoiceNumber() ' تحديث رقم الفاتورة القادمة تلقائياً
 
                 Catch ex As Exception
+                    Logger.LogError("btnPay_Click - SaveInvoiceAsync", ex)
                     MessageBox.Show("حدث خطأ أثناء حفظ الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    btnPay.Enabled = True
                 End Try
 
             End If
@@ -1391,6 +1573,9 @@ Public Class frmPOS
         DeliveryFee = 0
         DineInServiceFee = 0
         TaxAmount = 0
+        CurrentReservationDeposit = 0
+        CurrentReservationID = Nothing
+        _currentPendingInvoiceID = Nothing
 
         ApplyDefaultPOSSettings()
 
@@ -1471,7 +1656,7 @@ Public Class frmPOS
         End If
     End Sub
 
-    Private Sub btnAddCategoryForm_Click(sender As Object, e As EventArgs) Handles btnAddCategoryForm.Click
+    Private Sub btnAddCategoryForm_Click(sender As Object, e As EventArgs)
         Dim frm As New Categories()
         frm.ShowDialog()
         LoadCategories()
@@ -1501,9 +1686,51 @@ Public Class frmPOS
         End Using
     End Sub
 
+    Private Sub SetupTablesContextMenu()
+        _tablesContextMenu = New ContextMenuStrip()
+        _tablesContextMenu.Font = New Font("Segoe UI", 11.0!, FontStyle.Bold)
+        _tablesContextMenu.RightToLeft = RightToLeft.Yes
+
+        Dim itemSelectTable = _tablesContextMenu.Items.Add("اختيار / فتح طاولة صالة (F10)")
+        itemSelectTable.Image = My.Resources.dinning_hall
+        AddHandler itemSelectTable.Click, Sub() btnDineIn.PerformClick()
+
+        Dim itemTransfer = _tablesContextMenu.Items.Add("نقل طلب الطاولة الحالية إلى طاولة أخرى")
+        AddHandler itemTransfer.Click, Sub() TransferCurrentTable()
+
+        Dim itemKOT = _tablesContextMenu.Items.Add("طباعة طلب المطبخ / البار الحالي (KOT)")
+        AddHandler itemKOT.Click, Sub() PrintCurrentKOT()
+
+        Dim itemReprint = _tablesContextMenu.Items.Add("إعادة طباعة آخر فاتورة مبيعات (F9)")
+        AddHandler itemReprint.Click, Sub() ReprintLastInvoice()
+
+        Dim itemKDS = _tablesContextMenu.Items.Add("شاشة المطبخ الرقمية (KDS - F11)")
+        AddHandler itemKDS.Click, Sub() OpenKitchenDisplay()
+
+        Dim itemSplit = _tablesContextMenu.Items.Add("تقسيم الفاتورة وسداد الحصص (Split Bill - F8)")
+        AddHandler itemSplit.Click, Sub() OpenSplitBill()
+
+        Dim itemReservations = _tablesContextMenu.Items.Add("إدارة حجوزات طاولات الصالة والعربون")
+        AddHandler itemReservations.Click, Sub() OpenTableReservations()
+
+        _tablesContextMenu.Items.Add(New ToolStripSeparator())
+
+        Dim itemManage = _tablesContextMenu.Items.Add("إدارة أقسام وطاولات الصالة")
+        AddHandler itemManage.Click, Sub()
+                                         Dim frmRT As New frmRestaurantTables()
+                                         frmRT.ShowDialog()
+                                     End Sub
+
+        btntables.ContextMenuStrip = _tablesContextMenu
+    End Sub
+
     Private Sub btntables_Click(sender As Object, e As EventArgs) Handles btntables.Click
-        Dim frmRT As New frmRestaurantTables
-        frmRT.ShowDialog()
+        If _tablesContextMenu IsNot Nothing Then
+            _tablesContextMenu.Show(btntables, New Point(0, -_tablesContextMenu.Height))
+        Else
+            Dim frmRT As New frmRestaurantTables
+            frmRT.ShowDialog()
+        End If
     End Sub
 
     Private Sub btnDineIn_Click(sender As Object, e As EventArgs) Handles btnDineIn.Click
@@ -1518,6 +1745,23 @@ Public Class frmPOS
                 SelectedTableID = frmTables.SelectedTableID
                 SelectedTableName = frmTables.SelectedTableName
                 lblOrderTypeStatus.Text = "نوع الطلب: صالة | الطاولة: " & SelectedTableName
+
+                ' إذا تم اختيار طاولة مشغولة، استرجاع طلبها تلقائياً
+                If frmTables.IsOccupiedSelected AndAlso SelectedTableID.HasValue Then
+                    LoadPendingInvoiceForTable(SelectedTableID.Value)
+                End If
+
+                ' إذا كان للطاولة حجز نشط وتم تسكينه
+                If frmTables.HasActiveReservation AndAlso frmTables.ActiveReservation IsNot Nothing Then
+                    CurrentReservationDeposit = frmTables.ActiveReservation.DepositAmount
+                    CurrentReservationID = frmTables.ActiveReservation.ReservationID
+                    txtCustomer.Text = frmTables.ActiveReservation.CustomerName
+                    lblOrderTypeStatus.Text = $"نوع الطلب: صالة | {SelectedTableName} (حجز: {frmTables.ActiveReservation.CustomerName} - عربون: {CurrentReservationDeposit:N2} ج)"
+                    MessageBox.Show($"تم تسكين العميل ({frmTables.ActiveReservation.CustomerName}) بنجاح!" & vbCrLf &
+                                    $"سيتم خصم مبلغ العربون ({CurrentReservationDeposit:N2} ج.م) تلقائياً من إجمالي الفاتورة.",
+                                    "تسكين حجز الطاولة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                End If
+
                 CalculatePOSGrandTotal()
             Else
                 btnTakeaway.Checked = True
@@ -1526,992 +1770,320 @@ Public Class frmPOS
         End Using
     End Sub
 
-
-    '```vbnet
-    '==========================================================
-    ' POS DISPLAY SYSTEM
-    '==========================================================
-    ' يدعم:
-    '
-    ' 1) عرض الفئات Cards
-    ' 2) عرض الفئات Buttons
-    '
-    ' 3) عرض المنتجات Cards
-    ' 4) عرض المنتجات Buttons
-    '
-    ' 5) التحكم في عدد أعمدة وصفوف الفئات
-    ' 6) التحكم التلقائي في ارتفاع Panel الفئات
-    ' 7) المنتجات لا تعتمد على Rows / Columns
-    ' 8) المنتجات يتم توزيعها تلقائياً بواسطة FlowLayoutPanel
-    '
-    '==========================================================
-
-
-    '==========================================================
-    ' 1. إعدادات العرض
-    '==========================================================
-
-    Private Enum POSDisplayMode
-        Cards = 0
-        Buttons = 1
-    End Enum
-
-
-    '==========================================================
-    ' 2. متغيرات النظام
-    '==========================================================
-
-    ' طريقة عرض الفئات
-    Private _categoryDisplayMode As POSDisplayMode = POSDisplayMode.Cards
-
-    ' طريقة عرض المنتجات
-    Private _productDisplayMode As POSDisplayMode = POSDisplayMode.Cards
-
-
-    '==========================================================
-    ' إعدادات الفئات
-    '==========================================================
-
-    ' عدد الأعمدة
-    Private _categoryColumns As Integer = 4
-
-    ' عدد الصفوف
-    Private _categoryRows As Integer = 3
-
-    ' حجم زر الفئة
-    Private _categoryButtonWidth As Integer = 150
-
-    Private _categoryButtonHeight As Integer = 55
-
-
-    ' أقصى ارتفاع للـ Panel الخاص بالفئات
-    Private _categoryPanelMaxHeight As Integer = 220
-
-
-    '==========================================================
-    ' إعدادات المنتجات
-    '==========================================================
-
-    ' عرض زر المنتج
-    Private _productButtonWidth As Integer = 180
-
-    ' ارتفاع زر المنتج
-    Private _productButtonHeight As Integer = 75
-
-
-    '==========================================================
-    ' اللون الحالي للفئة المختارة
-    ' يستخدم لتلوين أزرار المنتجات
-    '==========================================================
-
-    Private _selectedCategoryColor As Color = Color.DodgerBlue
-
-
-    '==========================================================
-    ' 3. تحميل إعدادات العرض
-    '==========================================================
-
-    Private Sub LoadDisplaySettings()
-
-        '------------------------------------------------------
-        ' هنا تقدر مستقبلاً تربط القيم بـ My.Settings
-        '------------------------------------------------------
-
-        ' مثال:
-        '
-        ' _categoryDisplayMode =
-        '     If(My.Settings.CategoryDisplayMode = 1,
-        '        POSDisplayMode.Buttons,
-        '        POSDisplayMode.Cards)
-        '
-        ' _productDisplayMode =
-        '     If(My.Settings.ProductDisplayMode = 1,
-        '        POSDisplayMode.Buttons,
-        '        POSDisplayMode.Cards)
-        '
-        ' _categoryColumns = My.Settings.CategoryColumns
-        ' _categoryRows = My.Settings.CategoryRows
-
-
-        '------------------------------------------------------
-        ' حالياً القيم الافتراضية
-        '------------------------------------------------------
-
-        _categoryDisplayMode = POSDisplayMode.Buttons
-        _productDisplayMode = POSDisplayMode.Buttons
-
-        _categoryColumns = 4
-        _categoryRows = 3
-
-        _categoryButtonHeight = 55
-
-        _categoryPanelMaxHeight = 220
-
-        _productButtonWidth = 180
-        _productButtonHeight = 75
-
-    End Sub
-
-
-    '==========================================================
-    ' 4. عند تحميل شاشة البيع
-    '==========================================================
-
-    Private Sub FrmSales_Load(
-    sender As Object,
-    e As EventArgs
-) Handles MyBase.Load
-
-        ' تحميل إعدادات طريقة العرض
-        LoadDisplaySettings()
-
-        ' تحميل الفئات
-        LoadCategories()
-
-    End Sub
-
-
-    '==========================================================
-    ' 5. تحميل الفئات
-    '==========================================================
-
-    Private Sub LoadCategories()
-
-        Dim categories = _repo.GetCategories()
-
-        flpCategories.SuspendLayout()
-
+    ' =========================================================
+    ' استرجاع فاتورة وطلب طاولة مشغولة في الصالة
+    ' =========================================================
+    Public Sub LoadPendingInvoiceForTable(tableID As Integer)
         Try
-
-            flpCategories.Controls.Clear()
-
-            '----------------------------------------------
-            ' إعدادات FlowLayoutPanel
-            '----------------------------------------------
-
-            flpCategories.FlowDirection =
-            FlowDirection.LeftToRight
-
-            flpCategories.WrapContents = True
-
-            flpCategories.AutoScroll = True
-
-
-            '----------------------------------------------
-            ' تحديد طريقة العرض
-            '----------------------------------------------
-
-            If _categoryDisplayMode = POSDisplayMode.Cards Then
-
-                LoadCategoriesAsCards(categories)
-
-            Else
-
-                LoadCategoriesAsButtons(categories)
-
-            End If
-
-        Finally
-
-            flpCategories.ResumeLayout()
-
-        End Try
-
-    End Sub
-
-
-    '==========================================================
-    ' 6. عرض الفئات بالكروت
-    '==========================================================
-
-    Private Sub LoadCategoriesAsCards(categories)
-
-        For Each cat As CategoryModel In categories
-
-            Dim card As New UCCategoryCard With {
-            .Width = 130,
-            .Height = 140,
-            .Category = cat
-        }
-
-            ' حدث الضغط على الكارت
-            AddHandler card.CategoryClicked,
-                   AddressOf CategoryCard_Click
-
-            flpCategories.Controls.Add(card)
-
-        Next
-
-    End Sub
-
-
-    '==========================================================
-    ' 7. عرض الفئات كأزرار
-    '==========================================================
-
-    Private Sub LoadCategoriesAsButtons(categories)
-
-        '----------------------------------------------
-        ' حساب عرض الزر بناءً على عدد الأعمدة
-        '----------------------------------------------
-
-        ConfigureCategoryButtonWidth()
-
-
-        For Each cat As CategoryModel In categories
-
-            Dim btn As Button =
-            CreateCategoryButton(cat)
-
-            ' حدث الضغط
-            AddHandler btn.Click,
-                   AddressOf CategoryButton_Click
-
-            flpCategories.Controls.Add(btn)
-
-        Next
-
-
-        '----------------------------------------------
-        ' حساب ارتفاع الـ Panel
-        '----------------------------------------------
-
-        UpdateCategoryPanelHeight()
-
-    End Sub
-
-
-    '==========================================================
-    ' 8. إنشاء زر الفئة
-    '==========================================================
-
-    Private Function CreateCategoryButton(
-    category As CategoryModel
-) As Button
-
-        Dim btn As New Button()
-
-
-        '----------------------------------------------
-        ' الحجم
-        '----------------------------------------------
-
-        btn.Width = _categoryButtonWidth
-
-        btn.Height = _categoryButtonHeight
-
-
-        '----------------------------------------------
-        ' النص
-        '----------------------------------------------
-
-        btn.Text = category.Category_NameAr
-
-
-        '----------------------------------------------
-        ' تخزين بيانات الفئة داخل الزر
-        '----------------------------------------------
-
-        btn.Tag = category
-
-
-        '----------------------------------------------
-        ' المسافة بين الأزرار
-        '----------------------------------------------
-
-        btn.Margin = New Padding(5)
-
-
-        '----------------------------------------------
-        ' الشكل
-        '----------------------------------------------
-
-        btn.FlatStyle = FlatStyle.Flat
-
-        btn.FlatAppearance.BorderSize = 0
-
-
-        '----------------------------------------------
-        ' اللون
-        '----------------------------------------------
-
-        btn.BackColor =
-        GetCategoryColor(category)
-
-
-        btn.ForeColor = Color.White
-
-
-        '----------------------------------------------
-        ' الخط
-        '----------------------------------------------
-
-        btn.Font = New Font(
-        "Segoe UI",
-        10,
-        FontStyle.Bold
-    )
-
-
-        '----------------------------------------------
-        ' محاذاة النص
-        '----------------------------------------------
-
-        btn.TextAlign =
-        ContentAlignment.MiddleCenter
-
-
-        '----------------------------------------------
-        ' شكل الماوس
-        '----------------------------------------------
-
-        btn.Cursor = Cursors.Hand
-
-
-        Return btn
-
-    End Function
-
-
-    '==========================================================
-    ' 9. الحصول على لون الفئة
-    '==========================================================
-
-    Private Function GetCategoryColor(
-    category As CategoryModel
-) As Color
-
-        Try
-
-            '----------------------------------------------
-            ' لو CategoryColorHex موجود
-            ' مثال:
-            ' #2196F3
-            ' #4CAF50
-            ' #FF9800
-            '----------------------------------------------
-
-            If Not String.IsNullOrWhiteSpace(
-            category.CategoryColor.HexCode
-        ) Then
-
-                Return ColorTranslator.FromHtml(
-                category.CategoryColor.HexCode
-            )
-
-            End If
-
-        Catch
-            ' لو اللون غير صحيح نستخدم اللون الافتراضي
-        End Try
-
-
-        Return Color.DodgerBlue
-
-    End Function
-
-
-    '==========================================================
-    ' 10. حساب عرض أزرار الفئات
-    '==========================================================
-
-    Private Sub ConfigureCategoryButtonWidth()
-
-        If _categoryColumns <= 0 Then
-            _categoryColumns = 4
-        End If
-
-
-        Dim availableWidth As Integer =
-        flpCategories.ClientSize.Width
-
-
-        ' المسافات:
-        '
-        ' كل زر لديه Margin = 5 يمين + 5 يسار
-        '
-        Dim totalMargins As Integer =
-        _categoryColumns * 10
-
-
-        Dim calculatedWidth As Integer =
-        (availableWidth - totalMargins) \ _categoryColumns
-
-
-        ' حماية من القيم الصغيرة
-        If calculatedWidth < 50 Then
-            calculatedWidth = 50
-        End If
-
-
-        _categoryButtonWidth = calculatedWidth
-
-    End Sub
-
-
-    '==========================================================
-    ' 11. حساب ارتفاع Panel الفئات
-    '==========================================================
-
-    Private Sub UpdateCategoryPanelHeight()
-
-        If _categoryRows <= 0 Then
-            _categoryRows = 3
-        End If
-
-
-        Dim buttonHeight As Integer =
-        _categoryButtonHeight + 10
-
-
-        Dim calculatedHeight As Integer =
-        (_categoryRows * buttonHeight) +
-        flpCategories.Padding.Top +
-        flpCategories.Padding.Bottom
-
-
-        '----------------------------------------------
-        ' الحد الأقصى
-        '----------------------------------------------
-
-        If calculatedHeight >
-       _categoryPanelMaxHeight Then
-
-            calculatedHeight =
-            _categoryPanelMaxHeight
-
-        End If
-
-
-        flpCategories.Height =
-        calculatedHeight
-
-    End Sub
-
-
-    '==========================================================
-    ' 12. الضغط على زر الفئة
-    '==========================================================
-
-    Private Sub CategoryButton_Click(
-    sender As Object,
-    e As EventArgs
-)
-
-        Dim btn As Button =
-        DirectCast(sender, Button)
-
-
-        Dim category As CategoryModel =
-        DirectCast(btn.Tag, CategoryModel)
-
-
-        '----------------------------------------------
-        ' حفظ لون الفئة الحالية
-        '----------------------------------------------
-
-        _selectedCategoryColor =
-        GetCategoryColor(category)
-
-
-        '----------------------------------------------
-        ' تحميل المنتجات
-        '----------------------------------------------
-
-        LoadProducts(
-        category.Category_ID
-    )
-
-    End Sub
-
-
-    '==========================================================
-    ' 13. الضغط على كارت الفئة
-    '==========================================================
-
-    Private Sub CategoryCard_Click(
-    category As CategoryModel
-)
-
-        ' حفظ لون الفئة الحالية
-        _selectedCategoryColor =
-        GetCategoryColor(category)
-
-
-        ' تحميل المنتجات
-        LoadProducts(
-        category.Category_ID
-    )
-
-    End Sub
-
-
-    '==========================================================
-    ' 14. تحميل المنتجات
-    '==========================================================
-
-    Private Sub LoadProducts(
-    categoryID As Integer
-)
-
-        Dim products =
-        _repo.GetProductsByCategoryID(categoryID)
-
-
-        flpProducts.SuspendLayout()
-
-        Try
-
-            flpProducts.Controls.Clear()
-
-
-            '----------------------------------------------
-            ' إعداد FlowLayoutPanel المنتجات
-            '----------------------------------------------
-
-            flpProducts.FlowDirection =
-            FlowDirection.LeftToRight
-
-            flpProducts.WrapContents = True
-
-            flpProducts.AutoScroll = True
-
-
-            '----------------------------------------------
-            ' تحديد طريقة العرض
-            '----------------------------------------------
-
-            If _productDisplayMode =
-           POSDisplayMode.Cards Then
-
-                LoadProductsAsCards(products)
-
-            Else
-
-                LoadProductsAsButtons(products)
-
-            End If
-
-        Finally
-
-            flpProducts.ResumeLayout()
-
-        End Try
-
-    End Sub
-
-
-    '==========================================================
-    ' 15. عرض المنتجات بالكروت
-    '==========================================================
-
-    Private Sub LoadProductsAsCards(products)
-
-        For Each prod As ProductModel In products
-
-            Dim card As New UCProductCard With {
-            .Width = 140,
-            .Height = 150,
-            .Product = prod
-        }
-
-
-            ' حدث الضغط على المنتج
-            AddHandler card.ProductClicked,
-                   AddressOf ProductCard_Click
-
-
-            flpProducts.Controls.Add(card)
-
-        Next
-
-    End Sub
-
-
-    '==========================================================
-    ' 16. عرض المنتجات كأزرار
-    '==========================================================
-
-    Private Sub LoadProductsAsButtons(products)
-
-        For Each prod As ProductModel In products
-
-            Dim btn As Button =
-            CreateProductButton(prod)
-
-
-            ' حدث الضغط
-            AddHandler btn.Click,
-                   AddressOf ProductButton_Click
-
-
-            flpProducts.Controls.Add(btn)
-
-        Next
-
-    End Sub
-
-
-    '==========================================================
-    ' 17. إنشاء زر المنتج
-    '==========================================================
-
-    Private Function CreateProductButton(
-    product As ProductModel
-) As Button
-
-        Dim btn As New Button()
-
-
-        '----------------------------------------------
-        ' الحجم
-        '----------------------------------------------
-
-        btn.Width =
-        _productButtonWidth
-
-        btn.Height =
-        _productButtonHeight
-
-
-        '----------------------------------------------
-        ' وصف المنتج
-        '----------------------------------------------
-
-        btn.Text = product.Description
-
-
-        '----------------------------------------------
-        ' تخزين المنتج داخل الزر
-        '----------------------------------------------
-
-        btn.Tag = product
-
-
-        '----------------------------------------------
-        ' المسافة
-        '----------------------------------------------
-
-        btn.Margin = New Padding(5)
-
-
-        '----------------------------------------------
-        ' الشكل
-        '----------------------------------------------
-
-        btn.FlatStyle = FlatStyle.Flat
-
-        btn.FlatAppearance.BorderSize = 0
-
-
-        '----------------------------------------------
-        ' لون الفئة
-        '----------------------------------------------
-
-        btn.BackColor =
-        _selectedCategoryColor
-
-
-        btn.ForeColor =
-        Color.White
-
-
-        '----------------------------------------------
-        ' الخط
-        '----------------------------------------------
-
-        btn.Font =
-        New Font(
-            "Segoe UI",
-            10,
-            FontStyle.Bold
-        )
-
-
-        '----------------------------------------------
-        ' النص
-        '----------------------------------------------
-
-        btn.TextAlign =
-        ContentAlignment.MiddleCenter
-
-
-        '----------------------------------------------
-        ' لو اسم المنتج طويل
-        '----------------------------------------------
-
-        btn.AutoEllipsis =
-        True
-
-
-        '----------------------------------------------
-        ' الماوس
-        '----------------------------------------------
-
-        btn.Cursor =
-        Cursors.Hand
-
-
-        Return btn
-
-    End Function
-
-
-    '==========================================================
-    ' 18. الضغط على زر المنتج
-    '==========================================================
-
-    Private Sub ProductButton_Click(
-    sender As Object,
-    e As EventArgs
-)
-
-        Dim btn As Button =
-        DirectCast(sender, Button)
-
-
-        Dim product As ProductModel =
-        DirectCast(btn.Tag, ProductModel)
-
-
-        '----------------------------------------------
-        ' استخدام نفس منطق الكروت
-        '----------------------------------------------
-
-        ProductCard_Click(product)
-
-    End Sub
-
-
-    '==========================================================
-    ' 19. الضغط على كارت المنتج
-    '==========================================================
-
-    Private Sub ProductCard_Click(
-    product As ProductModel
-)
-
-        '----------------------------------------------
-        ' فتح شاشة خيارات المنتج
-        '----------------------------------------------
-
-        Using frmOptions As New FrmProductOptions(
-        product,
-        _repo
-    )
-
-            '------------------------------------------
-            ' المستخدم ضغط إضافة
-            '------------------------------------------
-
-            If frmOptions.ShowDialog() =
-           DialogResult.OK Then
-
-
-                '--------------------------------------
-                ' إضافة العناصر للفاتورة
-                '--------------------------------------
-
-                For Each selectedItem In
-                frmOptions.ResultOrderItems
-
-                    AddItemToInvoice(
-                    selectedItem
-                )
-
-                Next
-
-            End If
-
-        End Using
-
-    End Sub
-
-
-    '==========================================================
-    ' 20. إعادة ضبط عرض الفئات عند تغيير حجم الشاشة
-    '==========================================================
-
-    Private Sub flpCategories_Resize(
-    sender As Object,
-    e As EventArgs
-) Handles flpCategories.Resize
-
-        ' لو طريقة العرض Buttons فقط
-        If _categoryDisplayMode =
-       POSDisplayMode.Buttons Then
-
-
-            ' إعادة حساب عرض الأزرار
-            ConfigureCategoryButtonWidth()
-
-
-            ' تحديث حجم الأزرار الموجودة
-            For Each ctrl As Control In
-            flpCategories.Controls
-
-                If TypeOf ctrl Is Button Then
-
-                    ctrl.Width =
-                    _categoryButtonWidth
-
-                    ctrl.Height =
-                    _categoryButtonHeight
-
+            Dim pendingItem = _repo.GetPendingInvoiceByTableID(tableID)
+            If pendingItem IsNot Nothing Then
+                dgvInvoice.Rows.Clear()
+                _currentPendingInvoiceID = pendingItem.PendingID
+
+                If pendingItem.CustomerID.HasValue AndAlso pendingItem.CustomerID.Value > 0 Then
+                    CurrentCustomer = New CustomerModel With {
+                        .CustomerID = pendingItem.CustomerID.Value,
+                        .CustomerName = pendingItem.CustomerName
+                    }
+                    txtCustomer.Text = CurrentCustomer.CustomerName
+                ElseIf Not String.IsNullOrWhiteSpace(pendingItem.CustomerName) AndAlso pendingItem.CustomerName <> "عميل نقدي" Then
+                    txtCustomer.Text = pendingItem.CustomerName
                 End If
 
-            Next
+                If Not String.IsNullOrWhiteSpace(pendingItem.InvoiceJSON) Then
+                    If pendingItem.InvoiceJSON.Trim().StartsWith("[") Then
+                        Dim items = Newtonsoft.Json.JsonConvert.DeserializeObject(Of List(Of InvoiceDetailModel))(pendingItem.InvoiceJSON)
+                        If items IsNot Nothing Then
+                            For Each itm In items
+                                dgvInvoice.Rows.Add(
+                                    dgvInvoice.Rows.Count + 1,
+                                    itm.ProductName,
+                                    itm.SizeName,
+                                    itm.AddonsText,
+                                    itm.UnitPrice,
+                                    itm.Quantity,
+                                    itm.TotalPrice,
+                                    itm.Notes,
+                                    itm.ProductID
+                                )
+                            Next
+                        End If
+                    Else
+                        Dim rowsData() As String = pendingItem.InvoiceJSON.Split("~"c)
+                        For Each rData In rowsData
+                            Dim parts() As String = rData.Split("|"c)
+                            If parts.Length >= 8 Then
+                                dgvInvoice.Rows.Add(
+                                    dgvInvoice.Rows.Count + 1,
+                                    parts(1), parts(2), parts(3),
+                                    Convert.ToDecimal(parts(4)),
+                                    Convert.ToInt32(parts(5)),
+                                    Convert.ToDecimal(parts(6)),
+                                    parts(7),
+                                    Convert.ToInt32(parts(0))
+                                )
+                            End If
+                        Next
+                    End If
+                End If
 
-
-            ' تحديث ارتفاع الـ Panel
-            UpdateCategoryPanelHeight()
-
-        End If
-
+                CalculatePOSGrandTotal()
+                MessageBox.Show($"تم استرجاع طلب الطاولة [{SelectedTableName}] بنجاح، يمكنك تعديل الأصناف أو إتمام المحاسبة.", "طلب طاولة مفتوح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
+        Catch ex As Exception
+            Logger.LogError("LoadPendingInvoiceForTable", ex)
+            MessageBox.Show("حدث خطأ أثناء استرجاع طلب الطاولة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
-
-    '==========================================================
-    ' 21. دالة لتغيير طريقة العرض من أي مكان
-    '==========================================================
-
-    Private Sub RefreshPOSDisplay()
-
-        '----------------------------------------------
-        ' إعادة تحميل الفئات
-        '----------------------------------------------
-
-        LoadCategories()
-
-    End Sub
-
-
-    '==========================================================
-    ' 22. أمثلة لتغيير الإعدادات
-    '==========================================================
-
-    '----------------------------------------------
-    ' Cards
-    '----------------------------------------------
-
-    Private Sub SetCardsMode()
-
-        _categoryDisplayMode =
-        POSDisplayMode.Cards
-
-        _productDisplayMode =
-        POSDisplayMode.Cards
-
-        RefreshPOSDisplay()
-
-    End Sub
-
-
-    '----------------------------------------------
-    ' Buttons
-    '----------------------------------------------
-
-    Private Sub SetButtonsMode()
-
-        _categoryDisplayMode =
-        POSDisplayMode.Buttons
-
-        _productDisplayMode =
-        POSDisplayMode.Buttons
-
-        RefreshPOSDisplay()
-
-    End Sub
-
-
-    '==========================================================
-    ' 23. تغيير إعدادات شبكة الفئات
-    '==========================================================
-
-    Private Sub SetCategoryGrid(
-    columns As Integer,
-    rows As Integer
-)
-
-        If columns < 1 Then
-            columns = 1
+    ' =========================================================
+    ' نقل الطلب الحالي إلى طاولة أخرى
+    ' =========================================================
+    Public Sub TransferCurrentTable()
+        If Not SelectedTableID.HasValue Then
+            MessageBox.Show("برجاء تحديد طاولة صالة أولاً لنقلها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
         End If
 
-
-        If rows < 1 Then
-            rows = 1
+        ' لو كان هناك أصناف في الجدول غير معلقة بعد، نعلقها تلقائياً
+        If dgvInvoice.Rows.Count > 0 AndAlso Not _currentPendingInvoiceID.HasValue Then
+            btnHoldInvoice.PerformClick()
+            Return
         End If
 
+        Using frmTarget As New FrmSelectTable(_repo)
+            frmTarget.Text = "اختر الطاولة الفارغة المراد نقل الطلب إليها"
+            If frmTarget.ShowDialog() = DialogResult.OK Then
+                If frmTarget.IsOccupiedSelected Then
+                    MessageBox.Show("لا يمكن النقل إلى طاولة مشغولة بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
 
-        _categoryColumns =
-        columns
+                Dim targetTableID As Integer = frmTarget.SelectedTableID
+                Dim targetTableName As String = frmTarget.SelectedTableName
 
-        _categoryRows =
-        rows
-
-
-        ' إعادة رسم الفئات
-        RefreshPOSDisplay()
-
+                If _repo.TransferTable(SelectedTableID.Value, targetTableID, targetTableName) Then
+                    Dim oldName As String = SelectedTableName
+                    SelectedTableID = targetTableID
+                    SelectedTableName = targetTableName
+                    lblOrderTypeStatus.Text = "نوع الطلب: صالة | الطاولة: " & SelectedTableName
+                    MessageBox.Show($"تم نقل الطلب بنجاح من [{oldName}] إلى [{targetTableName}]", "نجاح النقل", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Else
+                    MessageBox.Show("حدث خطأ أثناء تحديث بيانات الطاولة في قاعدة البيانات.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End If
+        End Using
     End Sub
 
-
-    '==========================================================
-    ' أمثلة:
-    '
-    ' 3 × 4
-    '==========================================================
-
-    ' SetCategoryGrid(4, 3)
-
-
-    '==========================================================
-    ' 5 × 2
-    '==========================================================
-
-    ' SetCategoryGrid(5, 2)
-
-
-    '==========================================================
-    ' 6 × 3
-    '==========================================================
-
-    ' SetCategoryGrid(6, 3)
-
-
-    '==========================================================
-    ' 24. تغيير حجم أزرار المنتجات
-    '==========================================================
-
-    Private Sub SetProductButtonSize(
-    width As Integer,
-    height As Integer
-)
-
-        If width < 80 Then
-            width = 80
+    ' =========================================================
+    ' طباعة بون المطبخ (KOT) للأصناف الحالية
+    ' =========================================================
+    Public Sub PrintCurrentKOT()
+        If dgvInvoice.Rows.Count = 0 Then
+            MessageBox.Show("لا توجد أصناف في الفاتورة لإرسالها للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
         End If
 
+        Dim itemsList As New List(Of InvoiceDetailModel)
+        For Each row As DataGridViewRow In dgvInvoice.Rows
+            If Not row.IsNewRow Then
+                itemsList.Add(New InvoiceDetailModel With {
+                    .ProductID = Convert.ToInt32(row.Cells("colProductID").Value),
+                    .ProductName = row.Cells("colProductName").Value.ToString(),
+                    .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
+                    .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
+                    .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
+                    .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
+                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+                })
+            End If
+        Next
 
-        If height < 40 Then
-            height = 40
+        Try
+            Dim kotTypeDesc As String = If(CurrentOrderType = OrderType.DineIn, "صالة - طاولة: " & SelectedTableName, If(CurrentOrderType = OrderType.Delivery, "دليفري | الطيار: " & SelectedDriverName, "تيك أوي"))
+            Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
+            RestaurantPrintManager.PrintKitchenTicket("طلب يدوي", kotTypeDesc, SelectedTableName, staffName, itemsList)
+            MessageBox.Show("تمت طباعة بون المطبخ (KOT) بنجاح!", "طباعة المطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Catch ex As Exception
+            Logger.LogError("PrintCurrentKOT", ex)
+            MessageBox.Show("حدث خطأ أثناء طباعة بون المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ' =========================================================
+    ' إعادة طباعة آخر فاتورة مبيعات
+    ' =========================================================
+    Public Sub ReprintLastInvoice()
+        If _lastSavedInvoice IsNot Nothing Then
+            Try
+                RestaurantPrintManager.PrintCustomerReceipt(_lastSavedInvoice, _lastSavedCustomerName, _lastSavedTableName, _lastSavedDriverName)
+                MessageBox.Show("تمت إعادة طباعة الفاتورة بنجاح.", "إعادة الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Catch ex As Exception
+                MessageBox.Show("حدث خطأ أثناء إعادة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        Else
+            Dim lastInvNum As String = _repo.GetLastSavedInvoiceNumber()
+            If Not String.IsNullOrEmpty(lastInvNum) Then
+                Dim inv = _repo.GetInvoiceByNumber(lastInvNum)
+                If inv IsNot Nothing Then
+                    RestaurantPrintManager.PrintCustomerReceipt(inv, "عميل نقدي", "", "")
+                    MessageBox.Show("تمت إعادة طباعة الفاتورة رقم " & lastInvNum & " بنجاح.", "إعادة الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Return
+                End If
+            End If
+            MessageBox.Show("لا توجد فواتير مسجلة في الجلسة لإعادة طباعتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+    End Sub
+
+    ' =========================================================
+    ' اختصارات لوحة المفاتيح السريعة لنقاط البيع
+    ' =========================================================
+    Private Sub frmPOS_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        Select Case e.KeyCode
+            Case Keys.F5
+                e.Handled = True
+                btnHoldInvoice.PerformClick()
+            Case Keys.F8
+                e.Handled = True
+                OpenSplitBill()
+            Case Keys.F9
+                e.Handled = True
+                ReprintLastInvoice()
+            Case Keys.F10
+                e.Handled = True
+                btnDineIn.PerformClick()
+            Case Keys.F11
+                e.Handled = True
+                OpenKitchenDisplay()
+            Case Keys.F12
+                e.Handled = True
+                btnPay.PerformClick()
+        End Select
+    End Sub
+
+    Public Sub OpenKitchenDisplay()
+        Dim frmKds As New FrmKitchenDisplay()
+        frmKds.Show()
+    End Sub
+
+    Public Sub OpenTableReservations()
+        Dim frmRes As New FrmTableReservations()
+        frmRes.ShowDialog()
+    End Sub
+
+    Public Async Sub OpenSplitBill()
+        If dgvInvoice.Rows.Count = 0 Then
+            MessageBox.Show("لا يمكن تقسيم فاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
         End If
 
+        CalculatePOSGrandTotal()
+        Dim itemsTotal As Decimal = GetInvoiceTotalFromGrid()
+        Dim currentDineInFee As Decimal = If(CurrentOrderType = OrderType.DineIn, If(IsDineInServiceFeePercent, itemsTotal * DineInServiceFee / 100, DineInServiceFee), 0)
+        Dim netToSplit As Decimal = itemsTotal + currentDineInFee + TaxAmount
+        If CurrentOrderType = OrderType.Delivery Then netToSplit += DeliveryFee
 
-        _productButtonWidth =
-        width
+        If CurrentReservationDeposit > 0 Then
+            netToSplit = Math.Max(0, netToSplit - CurrentReservationDeposit)
+        End If
 
-        _productButtonHeight =
-        height
+        Dim tableDisplay = If(Not String.IsNullOrEmpty(SelectedTableName), SelectedTableName, "طلب عام")
+        Dim invNumDisplay = If(Not String.IsNullOrEmpty(lblInvoiceNumber.Text), lblInvoiceNumber.Text, "فاتورة جديدة")
 
+        Using frmSplit As New FrmSplitBill(netToSplit, tableDisplay, invNumDisplay)
+            If frmSplit.ShowDialog() = DialogResult.OK AndAlso frmSplit.IsFullySettled Then
+                Dim custID As Integer? = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?))
+                Dim currentBranchID As Integer = 1
+                Integer.TryParse(SettingsManager.GetSettingOrDefault("CurrentBranchID", "1"), currentBranchID)
+                Dim currentStoreID As Integer = 1
+                Integer.TryParse(SettingsManager.GetSettingOrDefault("CurrentStoreID", "1"), currentStoreID)
 
-        ' لو فيه قسم مفتوح
-        ' نعيد رسم المنتجات
-        '
-        ' LoadProducts(categoryID)
-        '
-        ' ويمكنك استدعاؤها من مكان حفظ الإعدادات.
+                Dim shiftIdVal As Integer = 1
+                If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                    shiftIdVal = ShiftSession.CurrentShift.ShiftID
+                End If
 
+                Dim noteText = $"[فاتورة مقسمة مسددة بالكامل - {frmSplit.GuestCount} أفراد]"
+                If CurrentReservationDeposit > 0 Then
+                    noteText &= $" | [تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} ج.م]"
+                End If
+
+                Dim invoice As New InvoiceModel With {
+                    .OrderType = CByte(CurrentOrderType),
+                    .ShiftID = shiftIdVal,
+                    .UserID = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1),
+                    .CustomerID = custID,
+                    .TableID = SelectedTableID,
+                    .DriverID = SelectedDriverID,
+                    .BranchID = currentBranchID,
+                    .StoreID = currentStoreID,
+                    .DeliveryFee = DeliveryFee,
+                    .TotalBeforeDiscount = netToSplit + CurrentReservationDeposit,
+                    .DiscountAmount = 0,
+                    .NetTotal = netToSplit,
+                    .PaidAmount = netToSplit,
+                    .RemainingAmount = 0,
+                    .IsCredit = False,
+                    .Notes = noteText
+                }
+
+                For Each row As DataGridViewRow In dgvInvoice.Rows
+                    If Not row.IsNewRow Then
+                        invoice.Details.Add(New InvoiceDetailModel With {
+                            .ProductID = Convert.ToInt32(row.Cells("colProductID").Value),
+                            .ProductName = row.Cells("colProductName").Value.ToString(),
+                            .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
+                            .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                            .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
+                            .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
+                            .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
+                            .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+                        })
+                    End If
+                Next
+
+                btnPay.Enabled = False
+                Try
+                    Dim savedInvNum As String = Await _repo.SaveInvoiceAsync(invoice)
+
+                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                        ShiftSession.CurrentShift.TotalSales += invoice.PaidAmount
+                        ShiftSession.CurrentShift.TotalOrders += 1
+                    End If
+
+                    If CurrentOrderType = OrderType.DineIn AndAlso SelectedTableID.HasValue Then
+                        _repo.UpdateTableStatus(SelectedTableID.Value, 1)
+                    End If
+
+                    If CurrentReservationID.HasValue AndAlso SelectedTableID.HasValue Then
+                        _repo.CheckInReservation(CurrentReservationID.Value, SelectedTableID.Value)
+                        CurrentReservationID = Nothing
+                        CurrentReservationDeposit = 0
+                    End If
+
+                    Dim custNameStr As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, "عميل نقدي")
+                    Try
+                        RestaurantPrintManager.PrintCustomerReceipt(invoice, custNameStr, SelectedTableName, SelectedDriverName)
+                    Catch printEx As Exception
+                        Logger.LogError("OpenSplitBill - PrintCustomerReceipt", printEx)
+                    End Try
+
+                    _lastSavedInvoice = invoice
+                    _lastSavedCustomerName = custNameStr
+                    _lastSavedTableName = SelectedTableName
+                    _lastSavedDriverName = SelectedDriverName
+
+                    MessageBox.Show($"تم سداد الفاتورة المقسمة بنجاح وحفظها برقم: {savedInvNum}", "نجاح السداد", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ResetPOSForm()
+                Catch ex As Exception
+                    Logger.LogError("OpenSplitBill - SaveInvoiceAsync", ex)
+                    MessageBox.Show("حدث خطأ أثناء حفظ الفاتورة المقسمة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    btnPay.Enabled = True
+                End Try
+            End If
+        End Using
     End Sub
 
 End Class

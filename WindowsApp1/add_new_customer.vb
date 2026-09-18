@@ -21,27 +21,25 @@ Public Class add_new_customer
         Dim exists As Boolean = False
 
         Try
-            Connect()
-
-            Dim query As String = "SELECT COUNT(*) FROM Customers WHERE CustomerCode = @code"
-            If excludeCustomerID <> -1 Then
-                query &= " AND CustomerID <> @id"
-            End If
-
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@code", customerCode)
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "SELECT COUNT(*) FROM Customers WHERE CustomerCode = @code"
                 If excludeCustomerID <> -1 Then
-                    cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    query &= " AND CustomerID <> @id"
                 End If
 
-                Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
-                exists = (count > 0)
-            End Using
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@code", customerCode)
+                    If excludeCustomerID <> -1 Then
+                        cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    End If
 
+                    Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
+                    exists = (count > 0)
+                End Using
+            End Using
         Catch ex As Exception
+            Logger.LogError(ex)
             MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
         Return exists
@@ -61,14 +59,12 @@ Public Class add_new_customer
             End If
 
             ' تنفيذ عملية الإضافة
-            Using Conn
-                Connect()
-
+            Using cn As SqlConnection = DBModule.NewConn()
                 Dim query As String = "
             INSERT INTO Customers (CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes, CreatedAt)
             VALUES (@Code, @Name, @Phone, @Address, @Limit, @CurrentBalance, @Active, @Notes, GETDATE())"
 
-                Using cmd As New SqlCommand(query, Conn)
+                Using cmd As New SqlCommand(query, cn)
                     cmd.Parameters.AddWithValue("@Code", txtCustomerCode.Text.Trim())
                     cmd.Parameters.AddWithValue("@Name", txtCustomerName.Text.Trim())
                     cmd.Parameters.AddWithValue("@Phone", txtPhone.Text.Trim())
@@ -85,9 +81,8 @@ Public Class add_new_customer
             ClearFields()
 
         Catch ex As Exception
+            Logger.LogError(ex)
             MessageBox.Show("حدث خطأ أثناء إضافة العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub

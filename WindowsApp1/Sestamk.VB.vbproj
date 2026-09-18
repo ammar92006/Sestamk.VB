@@ -90,7 +90,9 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
       <HintPath>..\packages\BouncyCastle.Cryptography.2.6.2\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
     </Reference>
@@ -340,6 +342,61 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="forms\frmMaterialUnits.Designer.vb">
+      <DependentUpon>frmMaterialUnits.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmMaterialUnits.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmSalaryPayment.Designer.vb">
+      <DependentUpon>frmSalaryPayment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmSalaryPayment.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmDeliveryDrivers.Designer.vb">
+      <DependentUpon>frmDeliveryDrivers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmDeliveryDrivers.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPOS.Designer.vb">
+      <DependentUpon>frmPOS.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmPOS.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPurchaseReports.Designer.vb">
+      <DependentUpon>frmPurchaseReports.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmPurchaseReports.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPurchases.Designer.vb">
+      <DependentUpon>frmPurchases.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmPurchases.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRestaurantTables.Designer.vb">
+      <DependentUpon>frmRestaurantTables.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmRestaurantTables.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRolesAndPermissions.Designer.vb">
+      <DependentUpon>frmRolesAndPermissions.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmRolesAndPermissions.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmUsers.Designer.vb">
+      <DependentUpon>frmUsers.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmUsers.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="moduls\InventoryDeductionManager.vb" />
     <Compile Include="ThemeSystem\ThemeHelper.vb" />
     <Compile Include="ThemeSystem\ThemeManager.vb" />
     <Compile Include="ThemeSystem\DarkThemePalette.vb" />
@@ -389,7 +446,6 @@
     </Compile>
     <Compile Include="BackupModule.vb" />
     <Compile Include="BarcodeManager.vb" />
-    <Compile Include="BarcodePrinter.vb" />
     <Compile Include="Categories.Designer.vb">
       <DependentUpon>Categories.vb</DependentUpon>
     </Compile>
@@ -413,6 +469,8 @@
     <Compile Include="classes\FormDragHelper.vb" />
     <Compile Include="classes\Main_Classes.vb" />
     <Compile Include="classes\POSRepository.vb" />
+    <Compile Include="classes\QRCodeHelper.vb" />
+    <Compile Include="classes\RestaurantPrintManager.vb" />
     <Compile Include="classes\ShiftSession.vb" />
     <Compile Include="classes\SupplierRepository.vb" />
     <Compile Include="Customer.Designer.vb">
@@ -541,6 +599,18 @@
     <Compile Include="forms\FrmSelectTable.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmKitchenDisplay.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmKitchenWaste.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmTableReservations.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmSplitBill.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="forms\frmSizes.Designer.vb">
       <DependentUpon>frmSizes.vb</DependentUpon>
     </Compile>
@@ -625,22 +695,10 @@
     <Compile Include="FrmCustomers.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmDeliveryDrivers.Designer.vb">
-      <DependentUpon>frmDeliveryDrivers.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmDeliveryDrivers.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmEmployees.Designer.vb">
       <DependentUpon>frmEmployees.vb</DependentUpon>
     </Compile>
     <Compile Include="frmEmployees.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPOS.Designer.vb">
-      <DependentUpon>frmPOS.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmPOS.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmRawMaterials.Designer.vb">
@@ -661,28 +719,10 @@
     <Compile Include="frmShifts.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmRestaurantTables.Designer.vb">
-      <DependentUpon>frmRestaurantTables.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmRestaurantTables.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSelectSizeAndAddons.Designer.vb">
-      <DependentUpon>frmSelectSizeAndAddons.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmSelectSizeAndAddons.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmPayInvoice.Designer.vb">
       <DependentUpon>frmPayInvoice.vb</DependentUpon>
     </Compile>
     <Compile Include="frmPayInvoice.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmPreview.Designer.vb">
-      <DependentUpon>frmPreview.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmPreview.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmProductAddons.Designer.vb">
@@ -727,12 +767,6 @@
     <Compile Include="FrmTreasuryTransfer.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FRM_ATM.Designer.vb">
-      <DependentUpon>FRM_ATM.vb</DependentUpon>
-    </Compile>
-    <Compile Include="FRM_ATM.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frm_LowStockProducts.Designer.vb">
       <DependentUpon>frm_LowStockProducts.vb</DependentUpon>
     </Compile>
@@ -745,6 +779,9 @@
     <Compile Include="moduls\Data\ColorModel.vb" />
     <Compile Include="moduls\Data\DeliveryAreaModel.vb" />
     <Compile Include="moduls\Data\DeliveryDriverModel.vb" />
+    <Compile Include="moduls\Data\KitchenOrderModel.vb" />
+    <Compile Include="moduls\Data\KitchenWasteModel.vb" />
+    <Compile Include="moduls\Data\TableReservationModel.vb" />
     <Compile Include="moduls\Data\DriverModel.vb" />
     <Compile Include="moduls\Data\OrderItemModel.vb" />
     <Compile Include="moduls\Data\ProductAddonModel.vb" />
@@ -799,13 +836,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ReportsModule.vb" />
-    <Compile Include="Sales.Designer.vb">
-      <DependentUpon>Sales.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Sales.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SalesManager.vb" />
     <Compile Include="Sales_Returns.Designer.vb">
       <DependentUpon>Sales_Returns.vb</DependentUpon>
     </Compile>
@@ -833,6 +863,55 @@
     </Compile>
     <Compile Include="Settings.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\ICloseRequest.vb" />
+    <Compile Include="UC_Settings\UCSystemSettings.Designer.vb">
+      <DependentUpon>UCSystemSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCSystemSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCSalesSettings.Designer.vb">
+      <DependentUpon>UCSalesSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCSalesSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCPrinterSettings.Designer.vb">
+      <DependentUpon>UCPrinterSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCPrinterSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCScannerSettings.Designer.vb">
+      <DependentUpon>UCScannerSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCScannerSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCReceiptSettings.Designer.vb">
+      <DependentUpon>UCReceiptSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCReceiptSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCDatabaseSettings.Designer.vb">
+      <DependentUpon>UCDatabaseSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCDatabaseSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCNotificationsSettings.Designer.vb">
+      <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCNotificationsSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCAbout.Designer.vb">
+      <DependentUpon>UCAbout.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCAbout.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SplashScreen.vb">
       <SubType>Form</SubType>
@@ -894,6 +973,7 @@
     <Compile Include="Users.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ThermalTestReceiptHelper.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="About_the_program.resx">
@@ -960,6 +1040,9 @@
     <EmbeddedResource Include="forms\frmJobTitles.resx">
       <DependentUpon>frmJobTitles.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmMaterialUnits.resx">
+      <DependentUpon>frmMaterialUnits.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="forms\FrmPendingInvoices.resx">
       <DependentUpon>FrmPendingInvoices.vb</DependentUpon>
     </EmbeddedResource>
@@ -974,6 +1057,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="forms\frmRecipes.resx">
       <DependentUpon>frmRecipes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmSalaryPayment.resx">
+      <DependentUpon>frmSalaryPayment.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\frmSalarySystems.resx">
       <DependentUpon>frmSalarySystems.vb</DependentUpon>
@@ -1038,20 +1124,26 @@
     <EmbeddedResource Include="frmPOS.resx">
       <DependentUpon>frmPOS.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmPreview.resx">
-      <DependentUpon>frmPreview.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmProductAddons.resx">
       <DependentUpon>frmProductAddons.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmProductSizes.resx">
       <DependentUpon>frmProductSizes.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmPurchaseReports.resx">
+      <DependentUpon>frmPurchaseReports.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPurchases.resx">
+      <DependentUpon>frmPurchases.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmRawMaterials.resx">
       <DependentUpon>frmRawMaterials.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmRestaurantTables.resx">
       <DependentUpon>frmRestaurantTables.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRolesAndPermissions.resx">
+      <DependentUpon>frmRolesAndPermissions.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSalesReport.resx">
       <DependentUpon>FrmSalesReport.vb</DependentUpon>
@@ -1075,8 +1167,8 @@
     <EmbeddedResource Include="FrmTreasuryTransfer.resx">
       <DependentUpon>FrmTreasuryTransfer.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FRM_ATM.resx">
-      <DependentUpon>FRM_ATM.vb</DependentUpon>
+    <EmbeddedResource Include="frmUsers.resx">
+      <DependentUpon>frmUsers.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frm_LowStockProducts.resx">
       <DependentUpon>frm_LowStockProducts.vb</DependentUpon>
@@ -1095,9 +1187,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports.resx">
       <DependentUpon>Reports.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Sales.resx">
-      <DependentUpon>Sales.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Sales_Returns.resx">
       <DependentUpon>Sales_Returns.vb</DependentUpon>
@@ -1282,6 +1371,11 @@
     <None Include="Resources\setting.png" />
     <None Include="Resources\loge.png" />
     <Content Include="loge.ico" />
+    <None Include="Resources\shopping-cart %281%29.png" />
+    <None Include="Resources\purchaser.png" />
+    <None Include="Resources\clear %282%29.png" />
+    <None Include="Resources\add %283%29.png" />
+    <None Include="Resources\minus.png" />
     <Content Include="store_icon-icons.com_54371.ico" />
     <None Include="Resources\info %281%29.png" />
     <None Include="Resources\info.png" />

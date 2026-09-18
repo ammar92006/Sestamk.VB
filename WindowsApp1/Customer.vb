@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports System.IO
 Imports Guna.UI2.WinForms
@@ -861,22 +861,22 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         'Catch ex As Exception
         '    MessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         'End Try
-        Try
-            Dim ofd As New OpenFileDialog()
-            ofd.Filter = "Excel Files|*.xlsx;*.xls"
+        'Try
+        '    Dim ofd As New OpenFileDialog()
+        '    ofd.Filter = "Excel Files|*.xlsx;*.xls"
 
-            If ofd.ShowDialog() = DialogResult.OK Then
-                Dim filePath As String = ofd.FileName
-                importedData = ImportExcelFile(filePath)
+        '    If ofd.ShowDialog() = DialogResult.OK Then
+        '        Dim filePath As String = ofd.FileName
+        '        importedData = ImportExcelFile(filePath)
 
-                ' فتح شاشة المعاينة
-                Dim preview As New FormPreviewCustomers(importedData)
-                preview.ShowDialog()
-            End If
+        '        ' فتح شاشة المعاينة
+        '        Dim preview As New FormPreviewCustomers(importedData)
+        '        preview.ShowDialog()
+        '    End If
 
-        Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+        'Catch ex As Exception
+        '    MessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        'End Try
 
     End Sub
 

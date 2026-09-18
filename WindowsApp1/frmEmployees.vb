@@ -823,44 +823,7 @@ Public Class frmEmployees
     ' =========================================================================
     Private Sub SetupDataGridViewStyle()
         DBModule.EnableDoubleBuffer(dgvEmployees)
-
-        With dgvEmployees
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-            .AllowUserToResizeRows = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .MultiSelect = False
-            .RowHeadersVisible = False
-
-            ' Header Styling
-            .EnableHeadersVisualStyles = False
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(40, 40, 43)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 13, FontStyle.Bold)
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersHeight = 50
-            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            ' Row Styling
-            .DefaultCellStyle.BackColor = Color.FromArgb(50, 50, 55)
-            .DefaultCellStyle.ForeColor = Color.White
-            .DefaultCellStyle.SelectionBackColor = Color.FromArgb(70, 130, 180)
-            .DefaultCellStyle.SelectionForeColor = Color.White
-            .DefaultCellStyle.Font = New Font("Segoe UI", 11, FontStyle.Regular)
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .DefaultCellStyle.Padding = New Padding(4)
-
-            ' Alternating Row Styling
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(60, 60, 65)
-
-            ' Grid Lines & Background
-            .GridColor = Color.FromArgb(80, 80, 80)
-            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-            .BackgroundColor = Color.FromArgb(30, 30, 35)
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        End With
+        Main.datagridviewsetup(dgvEmployees)
     End Sub
 
     ' =========================================================================

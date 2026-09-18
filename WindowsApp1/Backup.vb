@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Public Class Backup
     Dim x, y As Integer
@@ -71,51 +71,15 @@ Public Class Backup
     End Sub
 
     Private Sub SetupDataGridViewSales(ByVal dgv As DataGridView)
-        dgv.AllowUserToAddRows = False
-        'dgv.AllowUser = False
-        dgv.ReadOnly = True
-        dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgv.MultiSelect = False
+        Main.datagridviewsetup(dgv)
         dgv.BorderStyle = BorderStyle.None
-        dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-        dgv.EnableHeadersVisualStyles = False
-
-        Dim darkBackground As Color = Color.FromArgb(30, 30, 30)
-        Dim darkRow As Color = Color.FromArgb(45, 45, 45)
-        Dim darkAltRow As Color = Color.FromArgb(55, 55, 55)
-        Dim darkHeader As Color = Color.FromArgb(64, 64, 64)
-        Dim highlightColor As Color = Color.FromArgb(0, 122, 204)
-        Dim textColor As Color = Color.Gainsboro
-
-        dgv.BackgroundColor = darkBackground
-        dgv.RowsDefaultCellStyle.BackColor = darkRow
-        dgv.AlternatingRowsDefaultCellStyle.BackColor = darkAltRow
-        dgv.DefaultCellStyle.ForeColor = textColor
-        dgv.GridColor = Color.FromArgb(80, 80, 80)
 
         With dgv
             For Each col As DataGridViewColumn In dgv.Columns
                 col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             Next
-
-            'dgv.RowTemplate.Height = 40
-            'dgv.ColumnHeadersHeight = 80
-
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = darkHeader
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke
-            dgv.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 14.0!, FontStyle.Bold)
-            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            dgv.DefaultCellStyle.SelectionBackColor = highlightColor
-            dgv.DefaultCellStyle.SelectionForeColor = Color.White
-            dgv.DefaultCellStyle.Font = New Font("Segoe UI", 12.0!)
-
-            dgv.RowHeadersVisible = False
-            dgv.DefaultCellStyle.Padding = New Padding(5, 0, 5, 0)
-
         End With
-
     End Sub
     Private Sub Backup_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetupDataGridViewSales(dgv_backup)

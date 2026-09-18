@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Threading.Tasks
 Imports Guna.UI2.WinForms
 Imports WindowsApp1.FrmTreasuryTransaction
@@ -724,51 +724,14 @@ WHERE TreasuryID = @TreasuryID"
 
     End Sub
     Private Sub SetupDataGridView(ByVal dgv As DataGridView)
-        dgv.AllowUserToAddRows = False
-        dgv.AllowUserToResizeColumns = False
-        dgv.AllowUserToResizeRows = False
-        dgv.ReadOnly = True
-        dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgv.MultiSelect = False
+        Main.datagridviewsetup(dgv)
         dgv.BorderStyle = BorderStyle.None
-        dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-        dgv.EnableHeadersVisualStyles = False
-
-        Dim darkBg As Color = Color.FromArgb(30, 30, 30)
-        Dim darkRow As Color = Color.FromArgb(45, 45, 45)
-        Dim darkAlt As Color = Color.FromArgb(55, 55, 55)
-        Dim darkHdr As Color = Color.FromArgb(64, 64, 64)
-        Dim highlight As Color = Color.FromArgb(0, 122, 204)
-        Dim textClr As Color = Color.Gainsboro
-
-        dgv.BackgroundColor = darkBg
-        dgv.RowsDefaultCellStyle.BackColor = darkRow
-        dgv.AlternatingRowsDefaultCellStyle.BackColor = darkAlt
-        dgv.DefaultCellStyle.ForeColor = textClr
-        dgv.GridColor = Color.FromArgb(80, 80, 80)
 
         With dgv
-            '.Columns("ColProductName").Width = 230
-            '.Columns("ColQuantity").Width = 160
-            '.Columns("ColPrice").DefaultCellStyle.Format = "N2"
-            '.Columns("ColTotal").DefaultCellStyle.Format = "N2"
-
             For Each col As DataGridViewColumn In .Columns
                 col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             Next
-
-            .RowTemplate.Height = 35
-            .ColumnHeadersHeight = 48
-            .ColumnHeadersDefaultCellStyle.BackColor = darkHdr
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.WhiteSmoke
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 15.0!, FontStyle.Bold)
-            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-            .DefaultCellStyle.SelectionBackColor = highlight
-            .DefaultCellStyle.SelectionForeColor = Color.White
-            .DefaultCellStyle.Font = New Font("Segoe UI", 14.0!)
-            .RowHeadersVisible = False
-            .DefaultCellStyle.Padding = New Padding(5, 0, 5, 0)
         End With
     End Sub
 

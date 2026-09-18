@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class frmJobTitles
     Private _cachedJobs As DataTable = Nothing
@@ -63,6 +63,9 @@ Public Class frmJobTitles
     End Sub
 
     Private Sub frmJobTitles_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If Not Session.CheckCanOpen(Me) Then Return
+        Session.ApplyFormPermissions(Me)
+
         cmbSearchField.Items.Clear()
         cmbSearchField.Items.Add("المسمى الوظيفي")
         cmbSearchField.Items.Add("كود الوظيفة")

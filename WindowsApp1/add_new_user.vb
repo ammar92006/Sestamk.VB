@@ -10,11 +10,12 @@ Public Class add_new_user
             Dim cmd_LoadStaff As SqlCommand
             Dim da_LoadStaff As SqlDataAdapter
             Dim dt_LoadStaff As DataTable
-            Connect()
-            cmd_LoadStaff = New SqlCommand("SELECT RoleID, RoleName FROM Roles ORDER BY RoleID", Conn)
-            da_LoadStaff = New SqlDataAdapter(cmd_LoadStaff)
-            dt_LoadStaff = New DataTable
-            da_LoadStaff.Fill(dt_LoadStaff)
+            Using cn As SqlConnection = DBModule.NewConn()
+                cmd_LoadStaff = New SqlCommand("SELECT RoleID, RoleName FROM Roles ORDER BY RoleID", cn)
+                da_LoadStaff = New SqlDataAdapter(cmd_LoadStaff)
+                dt_LoadStaff = New DataTable
+                da_LoadStaff.Fill(dt_LoadStaff)
+            End Using
             cmbRoleName.DataSource = dt_LoadStaff
             cmbRoleName.DisplayMember = "RoleName"
             cmbRoleName.ValueMember = "RoleID"
@@ -22,9 +23,8 @@ Public Class add_new_user
             cmbRoleName.TextAlign = HorizontalAlignment.Center
 
         Catch ex As Exception
+            Logger.LogError(ex)
             MessageBox.Show(ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
@@ -77,29 +77,29 @@ Public Class add_new_user
             '===========================
             ' 🔌 بدء الاتصال
             '===========================
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String =
+                    "INSERT INTO Users_TBL 
+            (User_Code, User_Name, User_username, User_password, User_Stats, User_Note, RoleID, User_Barcode_path, User_photo_path)
+            VALUES 
+            (@User_Code, @User_Name, @User_username, @User_password, @User_Stats, @User_Note, @RoleID, @User_Barcode_path, @User_photo_path);"
 
-            Dim query As String =
-                "INSERT INTO Users_TBL 
-        (User_Code, User_Name, User_username, User_password, User_Stats, User_Note, RoleID, User_Barcode_path, User_photo_path)
-        VALUES 
-        (@User_Code, @User_Name, @User_username, @User_password, @User_Stats, @User_Note, @RoleID, @User_Barcode_path, @User_photo_path);"
+                Using cmd As New SqlCommand(query, cn)
 
-            Using cmd As New SqlCommand(query, Conn)
+                    cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
+                    cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
+                    cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
+                    cmd.Parameters.AddWithValue("@User_Barcode_path",
+                                                If(String.IsNullOrEmpty(User_Barcode_path), DBNull.Value, User_Barcode_path))
+                    cmd.Parameters.AddWithValue("@User_photo_path",
+                                                If(String.IsNullOrEmpty(User_photo_path), DBNull.Value, User_photo_path))
 
-                cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
-                cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
-                cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
-                cmd.Parameters.AddWithValue("@User_Barcode_path",
-                                            If(String.IsNullOrEmpty(User_Barcode_path), DBNull.Value, User_Barcode_path))
-                cmd.Parameters.AddWithValue("@User_photo_path",
-                                            If(String.IsNullOrEmpty(User_photo_path), DBNull.Value, User_photo_path))
-
-                cmd.ExecuteNonQuery()
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
 
             '===========================
@@ -110,36 +110,33 @@ Public Class add_new_user
             ClearFields()
 
         Catch ex As Exception
+            Logger.LogError(ex)
             MessageBox.Show("حدث خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
     End Sub
     Private Function IsUserCodeExists(customerCode As String, Optional excludeCustomerID As Integer = -1) As Boolean
         Dim exists As Boolean = False
 
         Try
-            Connect()
-
-            Dim query As String = "SELECT COUNT(*) FROM Users_TBL WHERE User_Code = @User_Code"
-            If excludeCustomerID <> -1 Then
-                query &= " AND CustomerID <> @id"
-            End If
-
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@User_Code", customerCode)
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "SELECT COUNT(*) FROM Users_TBL WHERE User_Code = @User_Code"
                 If excludeCustomerID <> -1 Then
-                    cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    query &= " AND CustomerID <> @id"
                 End If
 
-                Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
-                exists = (count > 0)
-            End Using
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@User_Code", customerCode)
+                    If excludeCustomerID <> -1 Then
+                        cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    End If
 
+                    Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
+                    exists = (count > 0)
+                End Using
+            End Using
         Catch ex As Exception
+            Logger.LogError(ex)
             MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
         Return exists

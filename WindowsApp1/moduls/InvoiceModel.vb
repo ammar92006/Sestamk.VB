@@ -1,0 +1,62 @@
+﻿Imports System
+Imports System.Collections.Generic
+
+Public Class InvoiceModel
+    Public Property InvoiceID As Integer
+    Public Property InvoiceNumber As String
+    Public Property InvoiceDate As DateTime = DateTime.Now
+    Public Property OrderType As Byte                 ' 1=Takeaway, 2=DineIn, 3=Delivery
+    Public Property ShiftID As Integer
+    Public Property UserID As Integer
+    Public Property CustomerID As Integer?
+    Public Property TableID As Integer?
+    Public Property DriverID As Integer?
+    Public Property DeliveryFee As Decimal = 0
+    Public Property TotalBeforeDiscount As Decimal = 0
+    Public Property DiscountAmount As Decimal = 0
+    Public Property NetTotal As Decimal = 0
+    Public Property PaidAmount As Decimal = 0
+    Public Property RemainingAmount As Decimal = 0
+    Public Property IsCredit As Boolean = False
+    Public Property TreasuryID As Integer?
+    Public Property Notes As String
+
+    Public Property BranchID As Integer?
+    Public Property StoreID As Integer?
+
+    ' تفاصيل الأصناف داخل الفاتورة
+    Public Property Details As New List(Of InvoiceDetailModel)
+End Class
+
+Public Class InvoiceDetailModel
+    Public Property DetailID As Integer
+    Public Property InvoiceID As Integer
+    Public Property ProductID As Integer
+    Public Property ProductName As String
+    Public Property SizeName As String
+    Public Property AddonsText As String
+    Public Property UnitPrice As Decimal
+    Public Property Quantity As Integer
+    Public Property TotalPrice As Decimal
+    Public Property Notes As String
+End Class
+
+' موديل الفاتورة المعلقة
+Public Class PendingInvoiceModel
+    Public Property PendingID As Integer
+    Public Property PendingNumber As String
+    Public Property PendingDate As DateTime
+    Public Property ShiftID As Integer
+    Public Property UserID As Integer
+    Public Property OrderType As Byte
+    Public Property CustomerID As Integer?
+    Public Property CustomerName As String
+    Public Property TableID As Integer?
+    Public Property TableName As String
+    Public Property DriverID As Integer?
+    Public Property DriverName As String
+    Public Property DeliveryFee As Decimal
+    Public Property InvoiceJSON As String
+    Public Property TotalAmount As Decimal
+    Public Property Notes As String
+End Class

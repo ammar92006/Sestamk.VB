@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmPOS
     Inherits System.Windows.Forms.Form
 
@@ -95,6 +95,16 @@ Partial Class frmPOS
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.pnlCategoryGridToolbar = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblRowValue = New System.Windows.Forms.Label()
+        Me.lblRowTitle = New System.Windows.Forms.Label()
+        Me.pnlColRowSep = New System.Windows.Forms.Panel()
+        Me.lblColValue = New System.Windows.Forms.Label()
+        Me.lblColTitle = New System.Windows.Forms.Label()
+        Me.btnDecCol = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnIncCol = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnDecRow = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnIncRow = New Guna.UI2.WinForms.Guna2Button()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
         Me.Guna2Panel3.SuspendLayout()
@@ -117,6 +127,7 @@ Partial Class frmPOS
         Me.Guna2Panel9.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
         Me.Guna2Panel4.SuspendLayout()
+        Me.pnlCategoryGridToolbar.SuspendLayout()
         Me.SuspendLayout()
         '
         'panelHeader
@@ -280,7 +291,7 @@ Partial Class frmPOS
         '
         'Guna2Panel8
         '
-        Me.Guna2Panel8.BackColor = System.Drawing.SystemColors.AppWorkspace
+        Me.Guna2Panel8.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
         Me.Guna2Panel8.Dock = System.Windows.Forms.DockStyle.Left
         Me.Guna2Panel8.Location = New System.Drawing.Point(0, 10)
         Me.Guna2Panel8.Name = "Guna2Panel8"
@@ -289,7 +300,7 @@ Partial Class frmPOS
         '
         'Guna2Panel7
         '
-        Me.Guna2Panel7.BackColor = System.Drawing.SystemColors.AppWorkspace
+        Me.Guna2Panel7.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
         Me.Guna2Panel7.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Guna2Panel7.Location = New System.Drawing.Point(0, 820)
         Me.Guna2Panel7.Name = "Guna2Panel7"
@@ -298,7 +309,7 @@ Partial Class frmPOS
         '
         'Guna2Panel6
         '
-        Me.Guna2Panel6.BackColor = System.Drawing.SystemColors.AppWorkspace
+        Me.Guna2Panel6.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
         Me.Guna2Panel6.Dock = System.Windows.Forms.DockStyle.Right
         Me.Guna2Panel6.Location = New System.Drawing.Point(840, 10)
         Me.Guna2Panel6.Name = "Guna2Panel6"
@@ -307,7 +318,7 @@ Partial Class frmPOS
         '
         'Guna2Panel5
         '
-        Me.Guna2Panel5.BackColor = System.Drawing.SystemColors.AppWorkspace
+        Me.Guna2Panel5.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
         Me.Guna2Panel5.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel5.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel5.Name = "Guna2Panel5"
@@ -578,7 +589,8 @@ Partial Class frmPOS
         Me.lblGrandTotal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblGrandTotal.Dock = System.Windows.Forms.DockStyle.Left
         Me.lblGrandTotal.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
-        Me.lblGrandTotal.ForeColor = System.Drawing.Color.White
+        Me.lblGrandTotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(46, Byte), Integer), CType(CType(204, Byte), Integer), CType(CType(113, Byte), Integer))
+        Me.lblGrandTotal.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
         Me.lblGrandTotal.Location = New System.Drawing.Point(0, 0)
         Me.lblGrandTotal.Name = "lblGrandTotal"
         Me.lblGrandTotal.Size = New System.Drawing.Size(311, 46)
@@ -989,6 +1001,7 @@ Partial Class frmPOS
         'Guna2Panel4
         '
         Me.Guna2Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+        Me.Guna2Panel4.Controls.Add(Me.pnlCategoryGridToolbar)
         Me.Guna2Panel4.Controls.Add(Me.btnAddCategoryForm)
         Me.Guna2Panel4.Controls.Add(Me.Label3)
         Me.Guna2Panel4.Dock = System.Windows.Forms.DockStyle.Top
@@ -1026,6 +1039,131 @@ Partial Class frmPOS
         Me.Label3.TabIndex = 5588
         Me.Label3.Text = "الفئات"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'pnlCategoryGridToolbar
+        '
+        Me.pnlCategoryGridToolbar.BackColor = System.Drawing.Color.Transparent
+        Me.pnlCategoryGridToolbar.BorderColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.pnlCategoryGridToolbar.BorderRadius = 6
+        Me.pnlCategoryGridToolbar.BorderThickness = 1
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnIncRow)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblRowValue)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnDecRow)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblColTitle)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblRowTitle)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.pnlColRowSep)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnIncCol)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblColValue)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnDecCol)
+        Me.pnlCategoryGridToolbar.FillColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.pnlCategoryGridToolbar.Location = New System.Drawing.Point(12, 9)
+        Me.pnlCategoryGridToolbar.Name = "pnlCategoryGridToolbar"
+        Me.pnlCategoryGridToolbar.Size = New System.Drawing.Size(320, 38)
+        Me.pnlCategoryGridToolbar.TabIndex = 2
+        '
+        'lblRowTitle
+        '
+        Me.lblRowTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblRowTitle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.lblRowTitle.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblRowTitle.Location = New System.Drawing.Point(239, 7)
+        Me.lblRowTitle.Name = "lblRowTitle"
+        Me.lblRowTitle.Size = New System.Drawing.Size(59, 26)
+        Me.lblRowTitle.TabIndex = 5
+        Me.lblRowTitle.Text = "الصفوف:"
+        Me.lblRowTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnIncRow
+        '
+        Me.btnIncRow.BorderRadius = 4
+        Me.btnIncRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnIncRow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnIncRow.ForeColor = System.Drawing.Color.White
+        Me.btnIncRow.Location = New System.Drawing.Point(211, 7)
+        Me.btnIncRow.Name = "btnIncRow"
+        Me.btnIncRow.Size = New System.Drawing.Size(24, 24)
+        Me.btnIncRow.TabIndex = 6
+        Me.btnIncRow.Text = "+"
+        '
+        'lblRowValue
+        '
+        Me.lblRowValue.BackColor = System.Drawing.Color.Transparent
+        Me.lblRowValue.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblRowValue.ForeColor = System.Drawing.Color.White
+        Me.lblRowValue.Location = New System.Drawing.Point(181, 7)
+        Me.lblRowValue.Name = "lblRowValue"
+        Me.lblRowValue.Size = New System.Drawing.Size(24, 26)
+        Me.lblRowValue.TabIndex = 7
+        Me.lblRowValue.Text = "2"
+        Me.lblRowValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnDecRow
+        '
+        Me.btnDecRow.BorderRadius = 4
+        Me.btnDecRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnDecRow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDecRow.ForeColor = System.Drawing.Color.White
+        Me.btnDecRow.Location = New System.Drawing.Point(153, 7)
+        Me.btnDecRow.Name = "btnDecRow"
+        Me.btnDecRow.Size = New System.Drawing.Size(24, 24)
+        Me.btnDecRow.TabIndex = 8
+        Me.btnDecRow.Text = "-"
+        '
+        'pnlColRowSep
+        '
+        Me.pnlColRowSep.BackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.pnlColRowSep.Location = New System.Drawing.Point(148, 7)
+        Me.pnlColRowSep.Name = "pnlColRowSep"
+        Me.pnlColRowSep.Size = New System.Drawing.Size(1, 24)
+        Me.pnlColRowSep.TabIndex = 4
+        '
+        'lblColTitle
+        '
+        Me.lblColTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblColTitle.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblColTitle.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblColTitle.Location = New System.Drawing.Point(96, 7)
+        Me.lblColTitle.Name = "lblColTitle"
+        Me.lblColTitle.Size = New System.Drawing.Size(47, 26)
+        Me.lblColTitle.TabIndex = 0
+        Me.lblColTitle.Text = "الأعمدة:"
+        Me.lblColTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnIncCol
+        '
+        Me.btnIncCol.BorderRadius = 4
+        Me.btnIncCol.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnIncCol.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnIncCol.ForeColor = System.Drawing.Color.White
+        Me.btnIncCol.Location = New System.Drawing.Point(67, 7)
+        Me.btnIncCol.Name = "btnIncCol"
+        Me.btnIncCol.Size = New System.Drawing.Size(24, 24)
+        Me.btnIncCol.TabIndex = 1
+        Me.btnIncCol.Text = "+"
+        '
+        'lblColValue
+        '
+        Me.lblColValue.BackColor = System.Drawing.Color.Transparent
+        Me.lblColValue.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblColValue.ForeColor = System.Drawing.Color.White
+        Me.lblColValue.Location = New System.Drawing.Point(37, 7)
+        Me.lblColValue.Name = "lblColValue"
+        Me.lblColValue.Size = New System.Drawing.Size(24, 26)
+        Me.lblColValue.TabIndex = 2
+        Me.lblColValue.Text = "4"
+        Me.lblColValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnDecCol
+        '
+        Me.btnDecCol.BorderRadius = 4
+        Me.btnDecCol.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnDecCol.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDecCol.ForeColor = System.Drawing.Color.White
+        Me.btnDecCol.Location = New System.Drawing.Point(8, 7)
+        Me.btnDecCol.Name = "btnDecCol"
+        Me.btnDecCol.Size = New System.Drawing.Size(24, 24)
+        Me.btnDecCol.TabIndex = 3
+        Me.btnDecCol.Text = "-"
         '
         'Guna2BorderlessForm1
         '
@@ -1073,8 +1211,9 @@ Partial Class frmPOS
         Me.Guna2Panel10.ResumeLayout(False)
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Guna2Panel9.ResumeLayout(False)
-        Me.Guna2Panel1.ResumeLayout(False)
+        Me.pnlCategoryGridToolbar.ResumeLayout(False)
         Me.Guna2Panel4.ResumeLayout(False)
+        Me.Guna2Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1147,4 +1286,14 @@ Partial Class frmPOS
     Friend WithEvents txtCustomer As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents btnclear As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents pnlCategoryGridToolbar As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblColTitle As Label
+    Friend WithEvents btnDecCol As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblColValue As Label
+    Friend WithEvents btnIncCol As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents pnlColRowSep As Panel
+    Friend WithEvents lblRowTitle As Label
+    Friend WithEvents btnDecRow As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblRowValue As Label
+    Friend WithEvents btnIncRow As Guna.UI2.WinForms.Guna2Button
 End Class
