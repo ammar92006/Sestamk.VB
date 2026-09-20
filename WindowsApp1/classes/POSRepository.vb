@@ -885,7 +885,8 @@ ORDER BY ShiftID DESC;"
         INSERT INTO PendingInvoices 
         (PendingNumber, PendingDate, ShiftID, UserID, OrderType, CustomerID, CustomerName, TableID, TableName, DriverID, DriverName, DeliveryFee, InvoiceJSON, TotalAmount, Notes, IsActive)
         VALUES 
-        (@Num, GETDATE(), @ShiftID, @UserID, @OrderType, @CustomerID, @CustomerName, @TableID, @TableName, @DriverID, @DriverName, @DeliveryFee, @JSON, @TotalAmount, @Notes, 1);"
+        (@Num, GETDATE(), @ShiftID, @UserID, @OrderType, @CustomerID, @CustomerName, @TableID, @TableName, @DriverID, @DriverName, @DeliveryFee, @JSON, @TotalAmount, @Notes, 1);
+        SELECT SCOPE_IDENTITY();"
 
         Using con As New SqlConnection(_ConnectionString)
             Using cmd As New SqlCommand(sql, con)
@@ -905,7 +906,14 @@ ORDER BY ShiftID DESC;"
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(pending.Notes), DBNull.Value, pending.Notes))
 
                 con.Open()
-                Return cmd.ExecuteNonQuery() > 0
+                Dim scalarResult = cmd.ExecuteScalar()
+                If scalarResult IsNot Nothing AndAlso Not IsDBNull(scalarResult) Then
+                    Dim newId = Convert.ToInt32(scalarResult)
+                    pending.PendingID = newId
+                    pending.PendingNumber = pendingNum
+                    Return newId > 0
+                End If
+                Return False
             End Using
         End Using
     End Function
@@ -929,12 +937,16 @@ ORDER BY ShiftID DESC;"
                             .ShiftID = Convert.ToInt32(rdr("ShiftID")),
                             .UserID = Convert.ToInt32(rdr("UserID")),
                             .OrderType = Convert.ToByte(rdr("OrderType")),
+                            .CustomerID = If(IsDBNull(rdr("CustomerID")), CType(Nothing, Integer?), Convert.ToInt32(rdr("CustomerID"))),
                             .CustomerName = If(IsDBNull(rdr("CustomerName")), "", rdr("CustomerName").ToString()),
+                            .TableID = If(IsDBNull(rdr("TableID")), CType(Nothing, Integer?), Convert.ToInt32(rdr("TableID"))),
                             .TableName = If(IsDBNull(rdr("TableName")), "", rdr("TableName").ToString()),
+                            .DriverID = If(IsDBNull(rdr("DriverID")), CType(Nothing, Integer?), Convert.ToInt32(rdr("DriverID"))),
                             .DriverName = If(IsDBNull(rdr("DriverName")), "", rdr("DriverName").ToString()),
                             .DeliveryFee = Convert.ToDecimal(rdr("DeliveryFee")),
                             .InvoiceJSON = rdr("InvoiceJSON").ToString(),
-                            .TotalAmount = Convert.ToDecimal(rdr("TotalAmount"))
+                            .TotalAmount = Convert.ToDecimal(rdr("TotalAmount")),
+                            .Notes = If(IsDBNull(rdr("Notes")), "", rdr("Notes").ToString())
                         })
                     End While
                 End Using

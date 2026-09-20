@@ -24,12 +24,12 @@ Partial Class frmPOS
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPOS))
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle_Center As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle_Right As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle_Money As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblDateTime = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -42,11 +42,26 @@ Partial Class frmPOS
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.Guna2Panel2 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.flpProducts = New System.Windows.Forms.FlowLayoutPanel()
+        Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.flpCategories = New System.Windows.Forms.FlowLayoutPanel()
+        Me.Guna2Panel4 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.pnlCategoryGridToolbar = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnIncRow = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblRowValue = New System.Windows.Forms.Label()
+        Me.btnDecRow = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblColTitle = New System.Windows.Forms.Label()
+        Me.lblRowTitle = New System.Windows.Forms.Label()
+        Me.pnlColRowSep = New System.Windows.Forms.Panel()
+        Me.btnIncCol = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblColValue = New System.Windows.Forms.Label()
+        Me.btnDecCol = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnAddCategoryForm = New Guna.UI2.WinForms.Guna2Button()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.Guna2Panel8 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel7 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel6 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel5 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.flpProducts = New System.Windows.Forms.FlowLayoutPanel()
         Me.Guna2Panel3 = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnclear = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2Panel21 = New Guna.UI2.WinForms.Guna2Panel()
@@ -100,25 +115,13 @@ Partial Class frmPOS
         Me.lblInvoiceNumber = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.flpCategories = New System.Windows.Forms.FlowLayoutPanel()
-        Me.Guna2Panel4 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnAddCategoryForm = New Guna.UI2.WinForms.Guna2Button()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.pnlCategoryGridToolbar = New Guna.UI2.WinForms.Guna2Panel()
-        Me.lblRowValue = New System.Windows.Forms.Label()
-        Me.lblRowTitle = New System.Windows.Forms.Label()
-        Me.pnlColRowSep = New System.Windows.Forms.Panel()
-        Me.lblColValue = New System.Windows.Forms.Label()
-        Me.lblColTitle = New System.Windows.Forms.Label()
-        Me.btnDecCol = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnIncCol = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnDecRow = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnIncRow = New Guna.UI2.WinForms.Guna2Button()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
+        Me.Guna2Panel1.SuspendLayout()
+        Me.Guna2Panel4.SuspendLayout()
+        Me.pnlCategoryGridToolbar.SuspendLayout()
         Me.Guna2Panel3.SuspendLayout()
         Me.Guna2Panel21.SuspendLayout()
         Me.Guna2Panel22.SuspendLayout()
@@ -137,9 +140,6 @@ Partial Class frmPOS
         Me.Guna2Panel10.SuspendLayout()
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Guna2Panel9.SuspendLayout()
-        Me.Guna2Panel1.SuspendLayout()
-        Me.Guna2Panel4.SuspendLayout()
-        Me.pnlCategoryGridToolbar.SuspendLayout()
         Me.SuspendLayout()
         '
         'panelHeader
@@ -164,7 +164,6 @@ Partial Class frmPOS
         '
         'lblDateTime
         '
-        Me.lblDateTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDateTime.BackColor = System.Drawing.Color.Transparent
         Me.lblDateTime.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.lblDateTime.ForeColor = System.Drawing.Color.White
@@ -172,12 +171,10 @@ Partial Class frmPOS
         Me.lblDateTime.Name = "lblDateTime"
         Me.lblDateTime.Size = New System.Drawing.Size(220, 36)
         Me.lblDateTime.TabIndex = 5594
-        Me.lblDateTime.Text = ""
         Me.lblDateTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label10
         '
-        Me.Label10.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label10.BackColor = System.Drawing.Color.Transparent
         Me.Label10.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
@@ -242,7 +239,6 @@ Partial Class frmPOS
         '
         'btn_min
         '
-        Me.btn_min.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
@@ -255,7 +251,6 @@ Partial Class frmPOS
         '
         'btn_max
         '
-        Me.btn_max.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
@@ -268,7 +263,6 @@ Partial Class frmPOS
         '
         'btn_close
         '
-        Me.btn_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
@@ -287,7 +281,7 @@ Partial Class frmPOS
         Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.White
         Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(660, 16)
         Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(95, 32)
+        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(94, 32)
         Me.Guna2HtmlLabel1.TabIndex = 0
         Me.Guna2HtmlLabel1.Text = "نقطة البيع"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter
@@ -307,6 +301,202 @@ Partial Class frmPOS
         Me.Guna2Panel2.Size = New System.Drawing.Size(850, 830)
         Me.Guna2Panel2.TabIndex = 42
         '
+        'flpProducts
+        '
+        Me.flpProducts.AutoScroll = True
+        Me.flpProducts.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.flpProducts.Location = New System.Drawing.Point(2, 10)
+        Me.flpProducts.Name = "flpProducts"
+        Me.flpProducts.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.flpProducts.Size = New System.Drawing.Size(846, 595)
+        Me.flpProducts.TabIndex = 1
+        '
+        'Guna2Panel1
+        '
+        Me.Guna2Panel1.Controls.Add(Me.flpCategories)
+        Me.Guna2Panel1.Controls.Add(Me.Guna2Panel4)
+        Me.Guna2Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel1.Location = New System.Drawing.Point(2, 605)
+        Me.Guna2Panel1.Name = "Guna2Panel1"
+        Me.Guna2Panel1.Size = New System.Drawing.Size(846, 215)
+        Me.Guna2Panel1.TabIndex = 41
+        '
+        'flpCategories
+        '
+        Me.flpCategories.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.flpCategories.Location = New System.Drawing.Point(0, 56)
+        Me.flpCategories.Name = "flpCategories"
+        Me.flpCategories.Padding = New System.Windows.Forms.Padding(10)
+        Me.flpCategories.Size = New System.Drawing.Size(846, 159)
+        Me.flpCategories.TabIndex = 0
+        '
+        'Guna2Panel4
+        '
+        Me.Guna2Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+        Me.Guna2Panel4.Controls.Add(Me.pnlCategoryGridToolbar)
+        Me.Guna2Panel4.Controls.Add(Me.btnAddCategoryForm)
+        Me.Guna2Panel4.Controls.Add(Me.Label3)
+        Me.Guna2Panel4.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Guna2Panel4.Location = New System.Drawing.Point(0, 0)
+        Me.Guna2Panel4.Name = "Guna2Panel4"
+        Me.Guna2Panel4.Size = New System.Drawing.Size(846, 56)
+        Me.Guna2Panel4.TabIndex = 1
+        '
+        'pnlCategoryGridToolbar
+        '
+        Me.pnlCategoryGridToolbar.BackColor = System.Drawing.Color.Transparent
+        Me.pnlCategoryGridToolbar.BorderColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.pnlCategoryGridToolbar.BorderRadius = 6
+        Me.pnlCategoryGridToolbar.BorderThickness = 1
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnIncRow)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblRowValue)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnDecRow)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblColTitle)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblRowTitle)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.pnlColRowSep)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnIncCol)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblColValue)
+        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnDecCol)
+        Me.pnlCategoryGridToolbar.FillColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(52, Byte), Integer))
+        Me.pnlCategoryGridToolbar.Location = New System.Drawing.Point(12, 9)
+        Me.pnlCategoryGridToolbar.Name = "pnlCategoryGridToolbar"
+        Me.pnlCategoryGridToolbar.Size = New System.Drawing.Size(320, 38)
+        Me.pnlCategoryGridToolbar.TabIndex = 2
+        '
+        'btnIncRow
+        '
+        Me.btnIncRow.BorderRadius = 4
+        Me.btnIncRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnIncRow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnIncRow.ForeColor = System.Drawing.Color.White
+        Me.btnIncRow.Location = New System.Drawing.Point(211, 7)
+        Me.btnIncRow.Name = "btnIncRow"
+        Me.btnIncRow.Size = New System.Drawing.Size(24, 24)
+        Me.btnIncRow.TabIndex = 6
+        Me.btnIncRow.Text = "+"
+        '
+        'lblRowValue
+        '
+        Me.lblRowValue.BackColor = System.Drawing.Color.Transparent
+        Me.lblRowValue.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblRowValue.ForeColor = System.Drawing.Color.White
+        Me.lblRowValue.Location = New System.Drawing.Point(181, 7)
+        Me.lblRowValue.Name = "lblRowValue"
+        Me.lblRowValue.Size = New System.Drawing.Size(24, 26)
+        Me.lblRowValue.TabIndex = 7
+        Me.lblRowValue.Text = "2"
+        Me.lblRowValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnDecRow
+        '
+        Me.btnDecRow.BorderRadius = 4
+        Me.btnDecRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnDecRow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDecRow.ForeColor = System.Drawing.Color.White
+        Me.btnDecRow.Location = New System.Drawing.Point(153, 7)
+        Me.btnDecRow.Name = "btnDecRow"
+        Me.btnDecRow.Size = New System.Drawing.Size(24, 24)
+        Me.btnDecRow.TabIndex = 8
+        Me.btnDecRow.Text = "-"
+        '
+        'lblColTitle
+        '
+        Me.lblColTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblColTitle.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblColTitle.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblColTitle.Location = New System.Drawing.Point(96, 7)
+        Me.lblColTitle.Name = "lblColTitle"
+        Me.lblColTitle.Size = New System.Drawing.Size(47, 26)
+        Me.lblColTitle.TabIndex = 0
+        Me.lblColTitle.Text = "الأعمدة:"
+        Me.lblColTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblRowTitle
+        '
+        Me.lblRowTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblRowTitle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.lblRowTitle.ForeColor = System.Drawing.Color.Gainsboro
+        Me.lblRowTitle.Location = New System.Drawing.Point(239, 7)
+        Me.lblRowTitle.Name = "lblRowTitle"
+        Me.lblRowTitle.Size = New System.Drawing.Size(59, 26)
+        Me.lblRowTitle.TabIndex = 5
+        Me.lblRowTitle.Text = "الصفوف:"
+        Me.lblRowTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'pnlColRowSep
+        '
+        Me.pnlColRowSep.BackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(90, Byte), Integer))
+        Me.pnlColRowSep.Location = New System.Drawing.Point(148, 7)
+        Me.pnlColRowSep.Name = "pnlColRowSep"
+        Me.pnlColRowSep.Size = New System.Drawing.Size(1, 24)
+        Me.pnlColRowSep.TabIndex = 4
+        '
+        'btnIncCol
+        '
+        Me.btnIncCol.BorderRadius = 4
+        Me.btnIncCol.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnIncCol.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnIncCol.ForeColor = System.Drawing.Color.White
+        Me.btnIncCol.Location = New System.Drawing.Point(67, 7)
+        Me.btnIncCol.Name = "btnIncCol"
+        Me.btnIncCol.Size = New System.Drawing.Size(24, 24)
+        Me.btnIncCol.TabIndex = 1
+        Me.btnIncCol.Text = "+"
+        '
+        'lblColValue
+        '
+        Me.lblColValue.BackColor = System.Drawing.Color.Transparent
+        Me.lblColValue.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblColValue.ForeColor = System.Drawing.Color.White
+        Me.lblColValue.Location = New System.Drawing.Point(37, 7)
+        Me.lblColValue.Name = "lblColValue"
+        Me.lblColValue.Size = New System.Drawing.Size(24, 26)
+        Me.lblColValue.TabIndex = 2
+        Me.lblColValue.Text = "4"
+        Me.lblColValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnDecCol
+        '
+        Me.btnDecCol.BorderRadius = 4
+        Me.btnDecCol.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnDecCol.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDecCol.ForeColor = System.Drawing.Color.White
+        Me.btnDecCol.Location = New System.Drawing.Point(8, 7)
+        Me.btnDecCol.Name = "btnDecCol"
+        Me.btnDecCol.Size = New System.Drawing.Size(24, 24)
+        Me.btnDecCol.TabIndex = 3
+        Me.btnDecCol.Text = "-"
+        '
+        'btnAddCategoryForm
+        '
+        Me.btnAddCategoryForm.BackColor = System.Drawing.Color.Transparent
+        Me.btnAddCategoryForm.BorderRadius = 8
+        Me.btnAddCategoryForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddCategoryForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnAddCategoryForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnAddCategoryForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnAddCategoryForm.FillColor = System.Drawing.Color.Empty
+        Me.btnAddCategoryForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnAddCategoryForm.ForeColor = System.Drawing.Color.White
+        Me.btnAddCategoryForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
+        Me.btnAddCategoryForm.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnAddCategoryForm.Location = New System.Drawing.Point(677, 8)
+        Me.btnAddCategoryForm.Name = "btnAddCategoryForm"
+        Me.btnAddCategoryForm.Size = New System.Drawing.Size(40, 36)
+        Me.btnAddCategoryForm.TabIndex = 5607
+        '
+        'Label3
+        '
+        Me.Label3.BackColor = System.Drawing.Color.Transparent
+        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.Label3.ForeColor = System.Drawing.Color.White
+        Me.Label3.Location = New System.Drawing.Point(723, 8)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(98, 36)
+        Me.Label3.TabIndex = 5588
+        Me.Label3.Text = "الفئات"
+        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'Guna2Panel8
         '
         Me.Guna2Panel8.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
@@ -322,7 +512,7 @@ Partial Class frmPOS
         Me.Guna2Panel7.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Guna2Panel7.Location = New System.Drawing.Point(0, 820)
         Me.Guna2Panel7.Name = "Guna2Panel7"
-        Me.Guna2Panel7.Size = New System.Drawing.Size(840, 10)
+        Me.Guna2Panel7.Size = New System.Drawing.Size(848, 10)
         Me.Guna2Panel7.TabIndex = 4
         '
         'Guna2Panel6
@@ -342,16 +532,6 @@ Partial Class frmPOS
         Me.Guna2Panel5.Name = "Guna2Panel5"
         Me.Guna2Panel5.Size = New System.Drawing.Size(850, 10)
         Me.Guna2Panel5.TabIndex = 2
-        '
-        'flpProducts
-        '
-        Me.flpProducts.AutoScroll = True
-        Me.flpProducts.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpProducts.Location = New System.Drawing.Point(2, 10)
-        Me.flpProducts.Name = "flpProducts"
-        Me.flpProducts.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.flpProducts.Size = New System.Drawing.Size(846, 595)
-        Me.flpProducts.TabIndex = 1
         '
         'Guna2Panel3
         '
@@ -385,7 +565,6 @@ Partial Class frmPOS
         Me.btnclear.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnclear.ForeColor = System.Drawing.Color.White
         Me.btnclear.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnclear.ImageSize = New System.Drawing.Size(20, 20)
         Me.btnclear.Location = New System.Drawing.Point(12, 774)
         Me.btnclear.Name = "btnclear"
         Me.btnclear.Size = New System.Drawing.Size(138, 44)
@@ -399,7 +578,7 @@ Partial Class frmPOS
         Me.Guna2Panel21.Controls.Add(Me.Guna2Panel22)
         Me.Guna2Panel21.Controls.Add(Me.Label6)
         Me.Guna2Panel21.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel21.Location = New System.Drawing.Point(0, 664)
+        Me.Guna2Panel21.Location = New System.Drawing.Point(0, 606)
         Me.Guna2Panel21.Name = "Guna2Panel21"
         Me.Guna2Panel21.Size = New System.Drawing.Size(600, 50)
         Me.Guna2Panel21.TabIndex = 12
@@ -414,7 +593,6 @@ Partial Class frmPOS
         Me.btnSelectCustomer.FillColor = System.Drawing.Color.LightSlateGray
         Me.btnSelectCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnSelectCustomer.ForeColor = System.Drawing.Color.White
-        Me.btnSelectCustomer.ImageSize = New System.Drawing.Size(20, 20)
         Me.btnSelectCustomer.Location = New System.Drawing.Point(15, 6)
         Me.btnSelectCustomer.Name = "btnSelectCustomer"
         Me.btnSelectCustomer.Size = New System.Drawing.Size(150, 38)
@@ -434,7 +612,6 @@ Partial Class frmPOS
         '
         Me.txtCustomer.BorderColor = System.Drawing.Color.Silver
         Me.txtCustomer.BorderRadius = 8
-        Me.txtCustomer.BorderThickness = 1
         Me.txtCustomer.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.txtCustomer.DefaultText = ""
         Me.txtCustomer.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
@@ -485,7 +662,7 @@ Partial Class frmPOS
         Me.btnPendingInvoices.Name = "btnPendingInvoices"
         Me.btnPendingInvoices.Size = New System.Drawing.Size(138, 44)
         Me.btnPendingInvoices.TabIndex = 11
-        Me.btnPendingInvoices.Text = "المعلقة"
+        Me.btnPendingInvoices.Text = "المعلقة [F7]"
         '
         'btntables
         '
@@ -518,7 +695,6 @@ Partial Class frmPOS
         Me.btnDeleteRow.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnDeleteRow.ForeColor = System.Drawing.Color.White
         Me.btnDeleteRow.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnDeleteRow.ImageSize = New System.Drawing.Size(20, 20)
         Me.btnDeleteRow.Location = New System.Drawing.Point(158, 774)
         Me.btnDeleteRow.Name = "btnDeleteRow"
         Me.btnDeleteRow.Size = New System.Drawing.Size(138, 44)
@@ -567,7 +743,7 @@ Partial Class frmPOS
         '
         Me.Guna2Panel20.Controls.Add(Me.Guna2Panel24)
         Me.Guna2Panel20.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel20.Location = New System.Drawing.Point(0, 618)
+        Me.Guna2Panel20.Location = New System.Drawing.Point(0, 554)
         Me.Guna2Panel20.Name = "Guna2Panel20"
         Me.Guna2Panel20.Size = New System.Drawing.Size(600, 52)
         Me.Guna2Panel20.TabIndex = 6
@@ -623,7 +799,7 @@ Partial Class frmPOS
         Me.Guna2Panel13.Controls.Add(Me.Guna2Panel15)
         Me.Guna2Panel13.Controls.Add(Me.Guna2Panel14)
         Me.Guna2Panel13.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel13.Location = New System.Drawing.Point(0, 552)
+        Me.Guna2Panel13.Location = New System.Drawing.Point(0, 488)
         Me.Guna2Panel13.Name = "Guna2Panel13"
         Me.Guna2Panel13.Size = New System.Drawing.Size(600, 66)
         Me.Guna2Panel13.TabIndex = 5
@@ -817,14 +993,12 @@ Partial Class frmPOS
         Me.btnDelivery.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnDelivery.ForeColor = System.Drawing.Color.White
         Me.btnDelivery.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike
-        Me.btnDelivery.ImageOffset = New System.Drawing.Point(6, 0)
         Me.btnDelivery.ImageSize = New System.Drawing.Size(24, 24)
         Me.btnDelivery.Location = New System.Drawing.Point(10, 38)
         Me.btnDelivery.Name = "btnDelivery"
         Me.btnDelivery.Size = New System.Drawing.Size(186, 54)
         Me.btnDelivery.TabIndex = 6
         Me.btnDelivery.Text = "دليفري"
-        Me.btnDelivery.TextOffset = New System.Drawing.Point(-4, 0)
         '
         'btnDineIn
         '
@@ -837,14 +1011,12 @@ Partial Class frmPOS
         Me.btnDineIn.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnDineIn.ForeColor = System.Drawing.Color.White
         Me.btnDineIn.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
-        Me.btnDineIn.ImageOffset = New System.Drawing.Point(6, 0)
         Me.btnDineIn.ImageSize = New System.Drawing.Size(24, 24)
         Me.btnDineIn.Location = New System.Drawing.Point(207, 38)
         Me.btnDineIn.Name = "btnDineIn"
         Me.btnDineIn.Size = New System.Drawing.Size(186, 54)
         Me.btnDineIn.TabIndex = 5
         Me.btnDineIn.Text = "صالة"
-        Me.btnDineIn.TextOffset = New System.Drawing.Point(-4, 0)
         '
         'btnTakeaway
         '
@@ -857,14 +1029,12 @@ Partial Class frmPOS
         Me.btnTakeaway.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnTakeaway.ForeColor = System.Drawing.Color.White
         Me.btnTakeaway.Image = Global.WindowsApp1.My.Resources.Resources.take_away
-        Me.btnTakeaway.ImageOffset = New System.Drawing.Point(6, 0)
         Me.btnTakeaway.ImageSize = New System.Drawing.Size(24, 24)
         Me.btnTakeaway.Location = New System.Drawing.Point(404, 38)
         Me.btnTakeaway.Name = "btnTakeaway"
         Me.btnTakeaway.Size = New System.Drawing.Size(186, 54)
         Me.btnTakeaway.TabIndex = 4
         Me.btnTakeaway.Text = "تيك اوي"
-        Me.btnTakeaway.TextOffset = New System.Drawing.Point(-4, 0)
         '
         'Guna2Panel12
         '
@@ -904,31 +1074,30 @@ Partial Class frmPOS
         Me.dgvInvoice.AllowUserToAddRows = False
         Me.dgvInvoice.AllowUserToDeleteRows = False
         Me.dgvInvoice.AllowUserToResizeRows = False
-        Me.dgvInvoice.AutoGenerateColumns = False
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.dgvInvoice.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvInvoice.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None
         Me.dgvInvoice.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        DataGridViewCellStyle7.BackColor = System.Drawing.Color.White
-        Me.dgvInvoice.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvInvoice.BackgroundColor = System.Drawing.Color.Silver
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvInvoice.ColumnHeadersHeight = 38
         Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID})
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle9.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Regular)
-        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvInvoice.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvInvoice.DefaultCellStyle = DataGridViewCellStyle6
         Me.dgvInvoice.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvInvoice.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvInvoice.Location = New System.Drawing.Point(0, 0)
@@ -938,15 +1107,20 @@ Partial Class frmPOS
         Me.dgvInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvInvoice.RowHeadersVisible = False
         Me.dgvInvoice.RowTemplate.Height = 36
-        Me.dgvInvoice.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.dgvInvoice.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvInvoice.Size = New System.Drawing.Size(600, 338)
         Me.dgvInvoice.TabIndex = 5611
+        Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
+        Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
+        Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.dgvInvoice.ThemeStyle.HeaderStyle.Height = 38
+        Me.dgvInvoice.ThemeStyle.ReadOnly = True
+        Me.dgvInvoice.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.dgvInvoice.ThemeStyle.RowsStyle.Height = 36
         '
         'colIndex
         '
-        DataGridViewCellStyle_Center.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.colIndex.DefaultCellStyle = DataGridViewCellStyle_Center
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.colIndex.DefaultCellStyle = DataGridViewCellStyle3
         Me.colIndex.HeaderText = "#"
         Me.colIndex.Name = "colIndex"
         Me.colIndex.ReadOnly = True
@@ -956,8 +1130,8 @@ Partial Class frmPOS
         '
         'colProductName
         '
-        DataGridViewCellStyle_Right.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colProductName.DefaultCellStyle = DataGridViewCellStyle_Right
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colProductName.DefaultCellStyle = DataGridViewCellStyle4
         Me.colProductName.HeaderText = "الصنف"
         Me.colProductName.Name = "colProductName"
         Me.colProductName.ReadOnly = True
@@ -966,8 +1140,7 @@ Partial Class frmPOS
         '
         'colSize
         '
-        DataGridViewCellStyle_Center.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.colSize.DefaultCellStyle = DataGridViewCellStyle_Center
+        Me.colSize.DefaultCellStyle = DataGridViewCellStyle3
         Me.colSize.HeaderText = "الحجم"
         Me.colSize.Name = "colSize"
         Me.colSize.ReadOnly = True
@@ -976,8 +1149,7 @@ Partial Class frmPOS
         '
         'colAddons
         '
-        DataGridViewCellStyle_Right.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colAddons.DefaultCellStyle = DataGridViewCellStyle_Right
+        Me.colAddons.DefaultCellStyle = DataGridViewCellStyle4
         Me.colAddons.HeaderText = "الإضافات"
         Me.colAddons.Name = "colAddons"
         Me.colAddons.ReadOnly = True
@@ -986,9 +1158,9 @@ Partial Class frmPOS
         '
         'colUnitPrice
         '
-        DataGridViewCellStyle_Money.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle_Money.Format = "N2"
-        Me.colUnitPrice.DefaultCellStyle = DataGridViewCellStyle_Money
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle5.Format = "N2"
+        Me.colUnitPrice.DefaultCellStyle = DataGridViewCellStyle5
         Me.colUnitPrice.HeaderText = "السعر"
         Me.colUnitPrice.Name = "colUnitPrice"
         Me.colUnitPrice.ReadOnly = True
@@ -997,8 +1169,7 @@ Partial Class frmPOS
         '
         'colQuantity
         '
-        DataGridViewCellStyle_Center.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.colQuantity.DefaultCellStyle = DataGridViewCellStyle_Center
+        Me.colQuantity.DefaultCellStyle = DataGridViewCellStyle3
         Me.colQuantity.HeaderText = "الكمية"
         Me.colQuantity.Name = "colQuantity"
         Me.colQuantity.ReadOnly = True
@@ -1007,9 +1178,7 @@ Partial Class frmPOS
         '
         'colTotalPrice
         '
-        DataGridViewCellStyle_Money.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle_Money.Format = "N2"
-        Me.colTotalPrice.DefaultCellStyle = DataGridViewCellStyle_Money
+        Me.colTotalPrice.DefaultCellStyle = DataGridViewCellStyle5
         Me.colTotalPrice.HeaderText = "الإجمالي"
         Me.colTotalPrice.Name = "colTotalPrice"
         Me.colTotalPrice.ReadOnly = True
@@ -1018,8 +1187,7 @@ Partial Class frmPOS
         '
         'colNotes
         '
-        DataGridViewCellStyle_Right.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colNotes.DefaultCellStyle = DataGridViewCellStyle_Right
+        Me.colNotes.DefaultCellStyle = DataGridViewCellStyle4
         Me.colNotes.HeaderText = "ملاحظات"
         Me.colNotes.Name = "colNotes"
         Me.colNotes.ReadOnly = True
@@ -1032,14 +1200,6 @@ Partial Class frmPOS
         Me.colProductID.Name = "colProductID"
         Me.colProductID.ReadOnly = True
         Me.colProductID.Visible = False
-        '
-        Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
-        Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
-        Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.dgvInvoice.ThemeStyle.HeaderStyle.Height = 38
-        Me.dgvInvoice.ThemeStyle.ReadOnly = True
-        Me.dgvInvoice.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Regular)
-        Me.dgvInvoice.ThemeStyle.RowsStyle.Height = 36
         '
         'Guna2Panel9
         '
@@ -1086,194 +1246,8 @@ Partial Class frmPOS
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(145, 34)
         Me.Label1.TabIndex = 5588
-        Me.Label1.Text = "سلة المبيعات"
+        Me.Label1.Text = "الاصناف"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Guna2Panel1
-        '
-        Me.Guna2Panel1.Controls.Add(Me.flpCategories)
-        Me.Guna2Panel1.Controls.Add(Me.Guna2Panel4)
-        Me.Guna2Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Guna2Panel1.Location = New System.Drawing.Point(10, 605)
-        Me.Guna2Panel1.Name = "Guna2Panel1"
-        Me.Guna2Panel1.Size = New System.Drawing.Size(830, 215)
-        Me.Guna2Panel1.TabIndex = 41
-        '
-        'flpCategories
-        '
-        Me.flpCategories.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpCategories.Location = New System.Drawing.Point(0, 56)
-        Me.flpCategories.Name = "flpCategories"
-        Me.flpCategories.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpCategories.Size = New System.Drawing.Size(830, 159)
-        Me.flpCategories.TabIndex = 0
-        '
-        'Guna2Panel4
-        '
-        Me.Guna2Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-        Me.Guna2Panel4.Controls.Add(Me.pnlCategoryGridToolbar)
-        Me.Guna2Panel4.Controls.Add(Me.btnAddCategoryForm)
-        Me.Guna2Panel4.Controls.Add(Me.Label3)
-        Me.Guna2Panel4.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel4.Location = New System.Drawing.Point(0, 0)
-        Me.Guna2Panel4.Name = "Guna2Panel4"
-        Me.Guna2Panel4.Size = New System.Drawing.Size(830, 56)
-        Me.Guna2Panel4.TabIndex = 1
-        '
-        'btnAddCategoryForm
-        '
-        Me.btnAddCategoryForm.BackColor = System.Drawing.Color.Transparent
-        Me.btnAddCategoryForm.BorderRadius = 8
-        Me.btnAddCategoryForm.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddCategoryForm.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnAddCategoryForm.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnAddCategoryForm.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnAddCategoryForm.FillColor = System.Drawing.Color.Empty
-        Me.btnAddCategoryForm.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnAddCategoryForm.ForeColor = System.Drawing.Color.White
-        Me.btnAddCategoryForm.Image = Global.WindowsApp1.My.Resources.Resources.add2
-        Me.btnAddCategoryForm.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnAddCategoryForm.Location = New System.Drawing.Point(677, 8)
-        Me.btnAddCategoryForm.Name = "btnAddCategoryForm"
-        Me.btnAddCategoryForm.Size = New System.Drawing.Size(40, 36)
-        Me.btnAddCategoryForm.TabIndex = 5607
-        '
-        'Label3
-        '
-        Me.Label3.BackColor = System.Drawing.Color.Transparent
-        Me.Label3.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label3.ForeColor = System.Drawing.Color.White
-        Me.Label3.Location = New System.Drawing.Point(723, 8)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(98, 36)
-        Me.Label3.TabIndex = 5588
-        Me.Label3.Text = "الفئات"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'pnlCategoryGridToolbar
-        '
-        Me.pnlCategoryGridToolbar.BackColor = System.Drawing.Color.Transparent
-        Me.pnlCategoryGridToolbar.BorderColor = System.Drawing.Color.FromArgb(CType(CType(70, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(80, Byte), Integer))
-        Me.pnlCategoryGridToolbar.BorderRadius = 6
-        Me.pnlCategoryGridToolbar.BorderThickness = 1
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnIncRow)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblRowValue)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnDecRow)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblColTitle)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblRowTitle)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.pnlColRowSep)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnIncCol)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.lblColValue)
-        Me.pnlCategoryGridToolbar.Controls.Add(Me.btnDecCol)
-        Me.pnlCategoryGridToolbar.FillColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(52, Byte), Integer))
-        Me.pnlCategoryGridToolbar.Location = New System.Drawing.Point(12, 9)
-        Me.pnlCategoryGridToolbar.Name = "pnlCategoryGridToolbar"
-        Me.pnlCategoryGridToolbar.Size = New System.Drawing.Size(320, 38)
-        Me.pnlCategoryGridToolbar.TabIndex = 2
-        '
-        'lblRowTitle
-        '
-        Me.lblRowTitle.BackColor = System.Drawing.Color.Transparent
-        Me.lblRowTitle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.lblRowTitle.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblRowTitle.Location = New System.Drawing.Point(239, 7)
-        Me.lblRowTitle.Name = "lblRowTitle"
-        Me.lblRowTitle.Size = New System.Drawing.Size(59, 26)
-        Me.lblRowTitle.TabIndex = 5
-        Me.lblRowTitle.Text = "الصفوف:"
-        Me.lblRowTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btnIncRow
-        '
-        Me.btnIncRow.BorderRadius = 4
-        Me.btnIncRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.btnIncRow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.btnIncRow.ForeColor = System.Drawing.Color.White
-        Me.btnIncRow.Location = New System.Drawing.Point(211, 7)
-        Me.btnIncRow.Name = "btnIncRow"
-        Me.btnIncRow.Size = New System.Drawing.Size(24, 24)
-        Me.btnIncRow.TabIndex = 6
-        Me.btnIncRow.Text = "+"
-        '
-        'lblRowValue
-        '
-        Me.lblRowValue.BackColor = System.Drawing.Color.Transparent
-        Me.lblRowValue.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.lblRowValue.ForeColor = System.Drawing.Color.White
-        Me.lblRowValue.Location = New System.Drawing.Point(181, 7)
-        Me.lblRowValue.Name = "lblRowValue"
-        Me.lblRowValue.Size = New System.Drawing.Size(24, 26)
-        Me.lblRowValue.TabIndex = 7
-        Me.lblRowValue.Text = "2"
-        Me.lblRowValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btnDecRow
-        '
-        Me.btnDecRow.BorderRadius = 4
-        Me.btnDecRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.btnDecRow.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.btnDecRow.ForeColor = System.Drawing.Color.White
-        Me.btnDecRow.Location = New System.Drawing.Point(153, 7)
-        Me.btnDecRow.Name = "btnDecRow"
-        Me.btnDecRow.Size = New System.Drawing.Size(24, 24)
-        Me.btnDecRow.TabIndex = 8
-        Me.btnDecRow.Text = "-"
-        '
-        'pnlColRowSep
-        '
-        Me.pnlColRowSep.BackColor = System.Drawing.Color.FromArgb(CType(CType(80, Byte), Integer), CType(CType(80, Byte), Integer), CType(CType(90, Byte), Integer))
-        Me.pnlColRowSep.Location = New System.Drawing.Point(148, 7)
-        Me.pnlColRowSep.Name = "pnlColRowSep"
-        Me.pnlColRowSep.Size = New System.Drawing.Size(1, 24)
-        Me.pnlColRowSep.TabIndex = 4
-        '
-        'lblColTitle
-        '
-        Me.lblColTitle.BackColor = System.Drawing.Color.Transparent
-        Me.lblColTitle.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.lblColTitle.ForeColor = System.Drawing.Color.Gainsboro
-        Me.lblColTitle.Location = New System.Drawing.Point(96, 7)
-        Me.lblColTitle.Name = "lblColTitle"
-        Me.lblColTitle.Size = New System.Drawing.Size(47, 26)
-        Me.lblColTitle.TabIndex = 0
-        Me.lblColTitle.Text = "الأعمدة:"
-        Me.lblColTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btnIncCol
-        '
-        Me.btnIncCol.BorderRadius = 4
-        Me.btnIncCol.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.btnIncCol.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.btnIncCol.ForeColor = System.Drawing.Color.White
-        Me.btnIncCol.Location = New System.Drawing.Point(67, 7)
-        Me.btnIncCol.Name = "btnIncCol"
-        Me.btnIncCol.Size = New System.Drawing.Size(24, 24)
-        Me.btnIncCol.TabIndex = 1
-        Me.btnIncCol.Text = "+"
-        '
-        'lblColValue
-        '
-        Me.lblColValue.BackColor = System.Drawing.Color.Transparent
-        Me.lblColValue.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.lblColValue.ForeColor = System.Drawing.Color.White
-        Me.lblColValue.Location = New System.Drawing.Point(37, 7)
-        Me.lblColValue.Name = "lblColValue"
-        Me.lblColValue.Size = New System.Drawing.Size(24, 26)
-        Me.lblColValue.TabIndex = 2
-        Me.lblColValue.Text = "4"
-        Me.lblColValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'btnDecCol
-        '
-        Me.btnDecCol.BorderRadius = 4
-        Me.btnDecCol.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.btnDecCol.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.btnDecCol.ForeColor = System.Drawing.Color.White
-        Me.btnDecCol.Location = New System.Drawing.Point(8, 7)
-        Me.btnDecCol.Name = "btnDecCol"
-        Me.btnDecCol.Size = New System.Drawing.Size(24, 24)
-        Me.btnDecCol.TabIndex = 3
-        Me.btnDecCol.Text = "-"
         '
         'Guna2BorderlessForm1
         '
@@ -1303,6 +1277,9 @@ Partial Class frmPOS
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
         Me.Guna2Panel2.ResumeLayout(False)
+        Me.Guna2Panel1.ResumeLayout(False)
+        Me.Guna2Panel4.ResumeLayout(False)
+        Me.pnlCategoryGridToolbar.ResumeLayout(False)
         Me.Guna2Panel3.ResumeLayout(False)
         Me.Guna2Panel21.ResumeLayout(False)
         Me.Guna2Panel22.ResumeLayout(False)
@@ -1321,9 +1298,6 @@ Partial Class frmPOS
         Me.Guna2Panel10.ResumeLayout(False)
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Guna2Panel9.ResumeLayout(False)
-        Me.pnlCategoryGridToolbar.ResumeLayout(False)
-        Me.Guna2Panel4.ResumeLayout(False)
-        Me.Guna2Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub

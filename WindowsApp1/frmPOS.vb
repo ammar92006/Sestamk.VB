@@ -1185,9 +1185,11 @@ Public Class frmPOS
             End Try
 
             If CurrentOrderType = OrderType.DineIn Then
-                MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وتسكينه على ({SelectedTableName}) بنجاح!", "إرسال للمطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وتسكينه على ({SelectedTableName}) بنجاح!" & vbCrLf & "سيظل الحساب معلقاً حتى انتهاء العميل من تناول وجبته وسداد الفاتورة.", "إرسال للمطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ElseIf CurrentOrderType = OrderType.Delivery Then
+                MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وإسناده للطيار ({SelectedDriverName}) بنجاح!" & vbCrLf & "يمكنك استرجاع الفاتورة وسدادها من المعلقة [F7] عند عودة الطيار بالتحصيل.", "إرسال دليفري", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
-                MessageBox.Show("تم تعليق الفاتورة وإرسال أمر التشغيل للمطبخ (KOT & KDS) بنجاح!", "تعليق الطلب", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                MessageBox.Show("تم إرسال الطلب للمطبخ (KOT & KDS) بنجاح!" & vbCrLf & "يمكنك استرجاع الفاتورة وسدادها من المعلقة [F7] فور استلام العميل للطلب.", "إرسال تيك أوي", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
             ResetPOSForm()
@@ -1212,13 +1214,17 @@ Public Class frmPOS
     ' تحديث نص ولون زر التعليق/الإرسال للمطبخ بناءً على نوع الطلب
     ' =========================================================
     Public Sub UpdateHoldButtonText()
-        If CurrentOrderType = OrderType.DineIn Then
-            btnHoldInvoice.Text = "🍳 إرسال للمطبخ [F5]"
-            btnHoldInvoice.FillColor = Color.FromArgb(79, 70, 229) ' Royal Indigo
-        Else
-            btnHoldInvoice.Text = "تعليق الطلب [F5]"
-            btnHoldInvoice.FillColor = Color.FromArgb(245, 158, 11) ' Amber
-        End If
+        Select Case CurrentOrderType
+            Case OrderType.DineIn
+                btnHoldInvoice.Text = "🍳 إرسال للمطبخ [F5]"
+                btnHoldInvoice.FillColor = Color.FromArgb(79, 70, 229) ' Royal Indigo
+            Case OrderType.Delivery
+                btnHoldInvoice.Text = "🛵 إرسال للطيار والمطبخ [F5]"
+                btnHoldInvoice.FillColor = Color.FromArgb(249, 115, 22) ' Vibrant Orange
+            Case OrderType.Takeaway
+                btnHoldInvoice.Text = "🥡 إرسال للمطبخ (دفع لاحق) [F5]"
+                btnHoldInvoice.FillColor = Color.FromArgb(13, 148, 136) ' Teal
+        End Select
     End Sub
 
     ' =========================================================
@@ -1966,6 +1972,9 @@ Public Class frmPOS
             Case Keys.F5
                 e.Handled = True
                 btnHoldInvoice.PerformClick()
+            Case Keys.F7
+                e.Handled = True
+                btnPendingInvoices.PerformClick()
             Case Keys.F8
                 e.Handled = True
                 OpenSplitBill()

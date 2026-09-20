@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 
 Public Class InvoiceModel
@@ -59,4 +59,34 @@ Public Class PendingInvoiceModel
     Public Property InvoiceJSON As String
     Public Property TotalAmount As Decimal
     Public Property Notes As String
+
+    Public ReadOnly Property OrderTypeDisplay As String
+        Get
+            Select Case OrderType
+                Case 1
+                    Return "🥡 تيك أوي"
+                Case 2
+                    Return "🍽️ صالة"
+                Case 3
+                    Return "🛵 دليفري"
+                Case Else
+                    Return "طلب"
+            End Select
+        End Get
+    End Property
+
+    Public ReadOnly Property OrderReferenceDisplay As String
+        Get
+            Select Case OrderType
+                Case 1
+                    Return "استلام كاونتر"
+                Case 2
+                    Return If(Not String.IsNullOrWhiteSpace(TableName), "طاولة: " & TableName, "-")
+                Case 3
+                    Return If(Not String.IsNullOrWhiteSpace(DriverName), "الطيار: " & DriverName, "دليفري")
+                Case Else
+                    Return "-"
+            End Select
+        End Get
+    End Property
 End Class

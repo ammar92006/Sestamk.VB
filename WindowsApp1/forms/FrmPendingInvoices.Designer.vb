@@ -27,12 +27,14 @@ Partial Class FrmPendingInvoices
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
         Me.dgvPending = New Guna.UI2.WinForms.Guna2DataGridView()
         Me.colNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colRef = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colCust = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colTable = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Guna2Panel2 = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnResume = New Guna.UI2.WinForms.Guna2Button()
@@ -47,6 +49,7 @@ Partial Class FrmPendingInvoices
         'panelHeader
         '
         Me.panelHeader.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.panelHeader.Controls.Add(Me.txtSearch)
         Me.panelHeader.Controls.Add(Me.Guna2HtmlLabel1)
         Me.panelHeader.Dock = System.Windows.Forms.DockStyle.Top
         Me.panelHeader.Location = New System.Drawing.Point(0, 0)
@@ -57,16 +60,30 @@ Partial Class FrmPendingInvoices
         '
         'Guna2HtmlLabel1
         '
-        Me.Guna2HtmlLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Guna2HtmlLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
+        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
         Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.White
-        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(525, 12)
+        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(830, 16)
         Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(175, 39)
+        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(340, 35)
         Me.Guna2HtmlLabel1.TabIndex = 0
-        Me.Guna2HtmlLabel1.Text = "المعلقة الفواتير"
-        Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
+        Me.Guna2HtmlLabel1.Text = "الفواتير المعلقة والطلبات الجارية"
+        '
+        'txtSearch
+        '
+        Me.txtSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtSearch.BorderRadius = 8
+        Me.txtSearch.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSearch.DefaultText = ""
+        Me.txtSearch.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.txtSearch.Location = New System.Drawing.Point(30, 15)
+        Me.txtSearch.Name = "txtSearch"
+        Me.txtSearch.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtSearch.PlaceholderText = "🔍 بحث سريع (اسم العميل / الطيار / رقم الطلب)..."
+        Me.txtSearch.SelectedText = ""
+        Me.txtSearch.Size = New System.Drawing.Size(380, 40)
+        Me.txtSearch.TabIndex = 1
         '
         'Guna2Panel1
         '
@@ -87,18 +104,18 @@ Partial Class FrmPendingInvoices
         Me.dgvPending.BackgroundColor = System.Drawing.Color.Silver
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvPending.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvPending.ColumnHeadersHeight = 4
-        Me.dgvPending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        Me.dgvPending.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colNum, Me.colDate, Me.colCust, Me.colTable, Me.colTotal})
+        Me.dgvPending.ColumnHeadersHeight = 38
+        Me.dgvPending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvPending.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colNum, Me.colType, Me.colRef, Me.colCust, Me.colDate, Me.colTotal})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
         DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
@@ -123,15 +140,23 @@ Partial Class FrmPendingInvoices
         Me.colNum.HeaderText = "رقم المعلقة"
         Me.colNum.Name = "colNum"
         Me.colNum.ReadOnly = True
-        Me.colNum.Width = 120
+        Me.colNum.Width = 140
         '
-        'colDate
+        'colType
         '
-        Me.colDate.DataPropertyName = "PendingDate"
-        Me.colDate.HeaderText = "التاريخ"
-        Me.colDate.Name = "colDate"
-        Me.colDate.ReadOnly = True
-        Me.colDate.Width = 130
+        Me.colType.DataPropertyName = "OrderTypeDisplay"
+        Me.colType.HeaderText = "نوع الطلب"
+        Me.colType.Name = "colType"
+        Me.colType.ReadOnly = True
+        Me.colType.Width = 130
+        '
+        'colRef
+        '
+        Me.colRef.DataPropertyName = "OrderReferenceDisplay"
+        Me.colRef.HeaderText = "الجهة (طاولة / طيار)"
+        Me.colRef.Name = "colRef"
+        Me.colRef.ReadOnly = True
+        Me.colRef.Width = 180
         '
         'colCust
         '
@@ -139,23 +164,23 @@ Partial Class FrmPendingInvoices
         Me.colCust.HeaderText = "العميل"
         Me.colCust.Name = "colCust"
         Me.colCust.ReadOnly = True
-        Me.colCust.Width = 120
+        Me.colCust.Width = 180
         '
-        'colTable
+        'colDate
         '
-        Me.colTable.DataPropertyName = "TableName"
-        Me.colTable.HeaderText = "الطاولة"
-        Me.colTable.Name = "colTable"
-        Me.colTable.ReadOnly = True
-        Me.colTable.Width = 90
+        Me.colDate.DataPropertyName = "PendingDate"
+        Me.colDate.HeaderText = "وقت الطلب"
+        Me.colDate.Name = "colDate"
+        Me.colDate.ReadOnly = True
+        Me.colDate.Width = 150
         '
         'colTotal
         '
         Me.colTotal.DataPropertyName = "TotalAmount"
-        Me.colTotal.HeaderText = "الإجمالي"
+        Me.colTotal.HeaderText = "المبلغ المطلوب"
         Me.colTotal.Name = "colTotal"
         Me.colTotal.ReadOnly = True
-        Me.colTotal.Width = 100
+        Me.colTotal.Width = 140
         '
         Me.dgvPending.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvPending.ThemeStyle.BackColor = System.Drawing.Color.Silver
@@ -248,12 +273,14 @@ Partial Class FrmPendingInvoices
 
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
+    Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents dgvPending As Guna.UI2.WinForms.Guna2DataGridView
     Friend WithEvents colNum As DataGridViewTextBoxColumn
-    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents colType As DataGridViewTextBoxColumn
+    Friend WithEvents colRef As DataGridViewTextBoxColumn
     Friend WithEvents colCust As DataGridViewTextBoxColumn
-    Friend WithEvents colTable As DataGridViewTextBoxColumn
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
     Friend WithEvents colTotal As DataGridViewTextBoxColumn
     Friend WithEvents Guna2Panel2 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents btnResume As Guna.UI2.WinForms.Guna2Button
