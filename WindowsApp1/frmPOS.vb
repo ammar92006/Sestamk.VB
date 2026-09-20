@@ -46,6 +46,7 @@ Public Class frmPOS
         LoadCategories()
         datagridviewsetup(dgvInvoice)
         SetupInvoiceGrid()
+        CalculatePOSGrandTotal()
         Dim Drag0 As FormDragHelper = New FormDragHelper(Me, panelHeader)
         Dim Drag1 As FormDragHelper = New FormDragHelper(Me, Guna2HtmlLabel1)
         Dim Drag2 As FormDragHelper = New FormDragHelper(Me, Label8)
@@ -115,22 +116,34 @@ Public Class frmPOS
                 Guna2Panel9.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
                 Guna2Panel9.BorderColor = palette.Border
                 Label1.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
-                Label2.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
-                lblInvoiceNumber.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
+                Label2.ForeColor = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(71, 85, 105))
+                lblInvoiceNumber.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(224, 231, 255))
                 lblInvoiceNumber.ForeColor = If(isDark, Color.FromArgb(56, 189, 248), Color.FromArgb(37, 99, 235))
-                lblInvoiceNumber.BorderStyle = BorderStyle.FixedSingle
+                lblInvoiceNumber.BorderStyle = BorderStyle.None
 
-                ' 4. شريط نوع الطلب
+                ' 4. شريط نوع الطلب وأزرار التبديل
                 Guna2Panel12.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
                 lblOrderTypeStatus.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+
+                Dim summaryBorder As Color = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(203, 213, 225))
+                Dim orderBtnInactiveFill As Color = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
+                Dim orderBtnInactiveFore As Color = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(71, 85, 105))
+                Dim orderBtnActiveFill As Color = Color.FromArgb(37, 99, 235)
+                For Each btn As Guna.UI2.WinForms.Guna2Button In {btnTakeaway, btnDineIn, btnDelivery}
+                    btn.CheckedState.FillColor = orderBtnActiveFill
+                    btn.CheckedState.ForeColor = Color.White
+                    btn.FillColor = orderBtnInactiveFill
+                    btn.ForeColor = orderBtnInactiveFore
+                    btn.BorderColor = summaryBorder
+                    btn.BorderThickness = 1
+                Next
 
                 ' 5. جدول الفاتورة
                 ThemeHelper.ApplyDataGridViewTheme(dgvInvoice, palette)
 
                 ' 6. شبكة ملخص الإجماليات (المجموع، التوصيل، خدمة الصالة، الضريبة)
-                Dim summaryBorder As Color = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(203, 213, 225))
                 Dim titleBg As Color = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
-                Dim titleFg As Color = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(51, 65, 85))
+                Dim titleFg As Color = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(71, 85, 105))
                 Dim valueBg As Color = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
                 Dim valueFg As Color = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
 
@@ -163,12 +176,12 @@ Public Class frmPOS
                 lblTax.ForeColor = valueFg
 
                 ' الإجمالي النهائي
-                Guna2Panel24.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(239, 246, 255))
-                Guna2Panel26.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(239, 246, 255))
-                Label25.BackColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(219, 234, 254))
-                Label25.ForeColor = If(isDark, Color.FromArgb(96, 165, 250), Color.FromArgb(30, 64, 175))
-                lblGrandTotal.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(239, 246, 255))
-                lblGrandTotal.ForeColor = If(isDark, Color.FromArgb(34, 197, 94), Color.FromArgb(22, 163, 74))
+                Guna2Panel24.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(240, 253, 244))
+                Guna2Panel26.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(240, 253, 244))
+                Label25.BackColor = Color.Transparent
+                Label25.ForeColor = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(21, 128, 61))
+                lblGrandTotal.BackColor = Color.Transparent
+                lblGrandTotal.ForeColor = If(isDark, Color.FromArgb(52, 211, 153), Color.FromArgb(16, 185, 129))
 
                 ' 7. صف العميل
                 Guna2Panel21.FillColor = palette.Surface
@@ -177,8 +190,24 @@ Public Class frmPOS
                 txtCustomer.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
                 txtCustomer.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
                 txtCustomer.BorderColor = summaryBorder
+                btnSelectCustomer.FillColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(71, 85, 105))
+                btnSelectCustomer.ForeColor = Color.White
 
-                ' 8. شريط أدوات شبكة الفئات (الأعمدة والصفوف)
+                ' 8. أزرار الإجراءات السفلية
+                btnPay.FillColor = Color.FromArgb(16, 185, 129)
+                btnPay.ForeColor = Color.White
+                btnHoldInvoice.FillColor = Color.FromArgb(245, 158, 11)
+                btnHoldInvoice.ForeColor = Color.White
+                btntables.FillColor = Color.FromArgb(99, 102, 241)
+                btntables.ForeColor = Color.White
+                btnPendingInvoices.FillColor = Color.FromArgb(59, 130, 246)
+                btnPendingInvoices.ForeColor = Color.White
+                btnDeleteRow.FillColor = Color.FromArgb(239, 68, 68)
+                btnDeleteRow.ForeColor = Color.White
+                btnclear.FillColor = Color.FromArgb(100, 116, 139)
+                btnclear.ForeColor = Color.White
+
+                ' 9. شريط أدوات شبكة الفئات (الأعمدة والصفوف)
                 pnlCategoryGridToolbar.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White)
                 pnlCategoryGridToolbar.BorderColor = summaryBorder
                 lblRowTitle.ForeColor = titleFg
@@ -193,7 +222,7 @@ Public Class frmPOS
                 btnIncCol.FillColor = btnGridFill : btnIncCol.ForeColor = btnGridFore : btnIncCol.BorderThickness = 1 : btnIncCol.BorderColor = summaryBorder
                 btnDecCol.FillColor = btnGridFill : btnDecCol.ForeColor = btnGridFore : btnDecCol.BorderThickness = 1 : btnDecCol.BorderColor = summaryBorder
 
-                ' 9. حاويات الأصناف والفئات
+                ' 10. حاويات الأصناف والفئات
                 flpProducts.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
                 flpCategories.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
                 Dim bgSpacerColor As Color = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
@@ -202,7 +231,7 @@ Public Class frmPOS
                 Guna2Panel7.BackColor = bgSpacerColor
                 Guna2Panel8.BackColor = bgSpacerColor
 
-                ' 10. إعادة رسم الأصناف المفتوحة حالياً لتتوافق مع السمة (فقط إذا كانت الأقسام محملة بالفعل)
+                ' 11. إعادة رسم الأصناف المفتوحة حالياً لتتوافق مع السمة (فقط إذا كانت الأقسام محملة بالفعل)
                 If _categoryButtons IsNot Nothing AndAlso _categoryButtons.Count > 0 Then
                     LoadProducts(_selectedCategoryID)
                 End If
@@ -351,6 +380,8 @@ Public Class frmPOS
     ' =========================================================
     Private Sub SetupInvoiceGrid()
         dgvInvoice.AutoGenerateColumns = False
+        dgvInvoice.ColumnHeadersHeight = 38
+        dgvInvoice.RowTemplate.Height = 36
     End Sub
     ' =========================================================
     ' أداة شريط التحكم بشبكة الفئات (الأعمدة والصفوف) وحفظ الإعدادات
@@ -780,9 +811,9 @@ Public Class frmPOS
             pillBgColor = Color.FromArgb(16, 185, 129) ' أخضر زمردي جذاب للأصناف السريعة
         Else
             If prod.DefaultPrice > 0 Then
-                priceText = "من " & prod.DefaultPrice.ToString("N2") & " ج.م ⚙"
+                priceText = "يبدأ من " & prod.DefaultPrice.ToString("N2") & " ج.م"
             Else
-                priceText = "خيارات ⚙"
+                priceText = "+ خيارات"
             End If
             pillBgColor = Color.FromArgb(37, 99, 235) ' أزرق ملكي للأصناف ذات الخيارات المتعددة
         End If
@@ -982,9 +1013,9 @@ Public Class frmPOS
         If finalGrandTotal < 0 Then finalGrandTotal = 0
 
         If CurrentReservationDeposit > 0 Then
-            lblGrandTotal.Text = $"{finalGrandTotal:N2} EGP (عربون: -{CurrentReservationDeposit:N2})"
+            lblGrandTotal.Text = $"{finalGrandTotal:N2} ج.م (عربون: -{CurrentReservationDeposit:N2})"
         Else
-            lblGrandTotal.Text = finalGrandTotal.ToString("N2") & " EGP"
+            lblGrandTotal.Text = finalGrandTotal.ToString("N2") & " ج.م"
         End If
     End Sub
 

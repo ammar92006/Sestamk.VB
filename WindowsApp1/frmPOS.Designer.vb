@@ -164,86 +164,90 @@ Partial Class frmPOS
         '
         'lblDateTime
         '
+        Me.lblDateTime.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.lblDateTime.BackColor = System.Drawing.Color.Transparent
-        Me.lblDateTime.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblDateTime.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblDateTime.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.lblDateTime.ForeColor = System.Drawing.Color.White
-        Me.lblDateTime.Location = New System.Drawing.Point(261, 15)
+        Me.lblDateTime.Location = New System.Drawing.Point(145, 17)
         Me.lblDateTime.Name = "lblDateTime"
-        Me.lblDateTime.Size = New System.Drawing.Size(260, 36)
+        Me.lblDateTime.Size = New System.Drawing.Size(220, 36)
         Me.lblDateTime.TabIndex = 5594
-        Me.lblDateTime.Text = "-------------"
+        Me.lblDateTime.Text = ""
         Me.lblDateTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label10
         '
+        Me.Label10.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label10.BackColor = System.Drawing.Color.Transparent
-        Me.Label10.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label10.ForeColor = System.Drawing.Color.White
-        Me.Label10.Location = New System.Drawing.Point(527, 15)
+        Me.Label10.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
+        Me.Label10.Location = New System.Drawing.Point(368, 17)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(144, 36)
+        Me.Label10.Size = New System.Drawing.Size(95, 36)
         Me.Label10.TabIndex = 5593
-        Me.Label10.Text = "الوقت والتاريخ"
+        Me.Label10.Text = "الوقت :"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblUser_fullName
         '
+        Me.lblUser_fullName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblUser_fullName.BackColor = System.Drawing.Color.Transparent
-        Me.lblUser_fullName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblUser_fullName.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblUser_fullName.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.lblUser_fullName.ForeColor = System.Drawing.Color.White
-        Me.lblUser_fullName.Location = New System.Drawing.Point(797, 15)
+        Me.lblUser_fullName.Location = New System.Drawing.Point(870, 17)
         Me.lblUser_fullName.Name = "lblUser_fullName"
-        Me.lblUser_fullName.Size = New System.Drawing.Size(186, 36)
+        Me.lblUser_fullName.Size = New System.Drawing.Size(160, 36)
         Me.lblUser_fullName.TabIndex = 5592
-        Me.lblUser_fullName.Text = "-------------"
+        Me.lblUser_fullName.Text = "الكاشير"
         Me.lblUser_fullName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label8
         '
+        Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label8.BackColor = System.Drawing.Color.Transparent
-        Me.Label8.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label8.ForeColor = System.Drawing.Color.White
-        Me.Label8.Location = New System.Drawing.Point(989, 15)
+        Me.Label8.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
+        Me.Label8.Location = New System.Drawing.Point(1035, 17)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(144, 36)
+        Me.Label8.Size = New System.Drawing.Size(90, 36)
         Me.Label8.TabIndex = 5591
-        Me.Label8.Text = "المستخدم"
+        Me.Label8.Text = "المستخدم :"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblCurrentShift
         '
+        Me.lblCurrentShift.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblCurrentShift.BackColor = System.Drawing.Color.Transparent
-        Me.lblCurrentShift.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblCurrentShift.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCurrentShift.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.lblCurrentShift.ForeColor = System.Drawing.Color.White
-        Me.lblCurrentShift.Location = New System.Drawing.Point(1137, 15)
+        Me.lblCurrentShift.Location = New System.Drawing.Point(1140, 17)
         Me.lblCurrentShift.Name = "lblCurrentShift"
-        Me.lblCurrentShift.Size = New System.Drawing.Size(144, 36)
+        Me.lblCurrentShift.Size = New System.Drawing.Size(140, 36)
         Me.lblCurrentShift.TabIndex = 5590
-        Me.lblCurrentShift.Text = "-------------"
+        Me.lblCurrentShift.Text = "الوردية الحالية"
         Me.lblCurrentShift.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label4.ForeColor = System.Drawing.Color.White
-        Me.Label4.Location = New System.Drawing.Point(1287, 15)
+        Me.Label4.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
+        Me.Label4.Location = New System.Drawing.Point(1285, 17)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(144, 36)
+        Me.Label4.Size = New System.Drawing.Size(110, 36)
         Me.Label4.TabIndex = 5589
-        Me.Label4.Text = "الوردية الحالية"
+        Me.Label4.Text = "الوردية :"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btn_min
         '
+        Me.btn_min.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
         Me.btn_min.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
-        Me.btn_min.Location = New System.Drawing.Point(103, 17)
+        Me.btn_min.Location = New System.Drawing.Point(98, 17)
         Me.btn_min.Name = "btn_min"
         Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btn_min.Size = New System.Drawing.Size(38, 36)
@@ -251,11 +255,12 @@ Partial Class frmPOS
         '
         'btn_max
         '
+        Me.btn_max.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
         Me.btn_max.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
-        Me.btn_max.Location = New System.Drawing.Point(59, 17)
+        Me.btn_max.Location = New System.Drawing.Point(56, 17)
         Me.btn_max.Name = "btn_max"
         Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btn_max.Size = New System.Drawing.Size(38, 36)
@@ -263,11 +268,12 @@ Partial Class frmPOS
         '
         'btn_close
         '
+        Me.btn_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
         Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
-        Me.btn_close.Location = New System.Drawing.Point(15, 17)
+        Me.btn_close.Location = New System.Drawing.Point(14, 17)
         Me.btn_close.Name = "btn_close"
         Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
@@ -275,16 +281,16 @@ Partial Class frmPOS
         '
         'Guna2HtmlLabel1
         '
-        Me.Guna2HtmlLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Guna2HtmlLabel1.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.Guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
+        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
         Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.White
-        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(718, 12)
+        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(660, 16)
         Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(53, 39)
+        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(95, 32)
         Me.Guna2HtmlLabel1.TabIndex = 0
-        Me.Guna2HtmlLabel1.Text = "البيع"
-        Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
+        Me.Guna2HtmlLabel1.Text = "نقطة البيع"
+        Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel2
         '
@@ -369,21 +375,22 @@ Partial Class frmPOS
         '
         'btnclear
         '
+        Me.btnclear.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnclear.BorderRadius = 8
         Me.btnclear.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnclear.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnclear.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnclear.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnclear.FillColor = System.Drawing.Color.Crimson
-        Me.btnclear.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnclear.FillColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.btnclear.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnclear.ForeColor = System.Drawing.Color.White
         Me.btnclear.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnclear.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnclear.Location = New System.Drawing.Point(12, 773)
+        Me.btnclear.ImageSize = New System.Drawing.Size(20, 20)
+        Me.btnclear.Location = New System.Drawing.Point(12, 774)
         Me.btnclear.Name = "btnclear"
-        Me.btnclear.Size = New System.Drawing.Size(169, 45)
+        Me.btnclear.Size = New System.Drawing.Size(138, 44)
         Me.btnclear.TabIndex = 13
-        Me.btnclear.Text = "تفريغ"
+        Me.btnclear.Text = "تفريغ الكل"
         '
         'Guna2Panel21
         '
@@ -394,7 +401,7 @@ Partial Class frmPOS
         Me.Guna2Panel21.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel21.Location = New System.Drawing.Point(0, 664)
         Me.Guna2Panel21.Name = "Guna2Panel21"
-        Me.Guna2Panel21.Size = New System.Drawing.Size(600, 55)
+        Me.Guna2Panel21.Size = New System.Drawing.Size(600, 50)
         Me.Guna2Panel21.TabIndex = 12
         '
         'btnSelectCustomer
@@ -405,29 +412,29 @@ Partial Class frmPOS
         Me.btnSelectCustomer.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnSelectCustomer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnSelectCustomer.FillColor = System.Drawing.Color.LightSlateGray
-        Me.btnSelectCustomer.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnSelectCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnSelectCustomer.ForeColor = System.Drawing.Color.White
-        Me.btnSelectCustomer.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnSelectCustomer.Location = New System.Drawing.Point(15, 5)
+        Me.btnSelectCustomer.ImageSize = New System.Drawing.Size(20, 20)
+        Me.btnSelectCustomer.Location = New System.Drawing.Point(15, 6)
         Me.btnSelectCustomer.Name = "btnSelectCustomer"
-        Me.btnSelectCustomer.Size = New System.Drawing.Size(186, 45)
+        Me.btnSelectCustomer.Size = New System.Drawing.Size(150, 38)
         Me.btnSelectCustomer.TabIndex = 5594
-        Me.btnSelectCustomer.Text = "تحديد"
+        Me.btnSelectCustomer.Text = "تحديد عميل"
         '
         'Guna2Panel22
         '
         Me.Guna2Panel22.Controls.Add(Me.txtCustomer)
         Me.Guna2Panel22.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Guna2Panel22.Location = New System.Drawing.Point(209, 0)
+        Me.Guna2Panel22.Location = New System.Drawing.Point(175, 0)
         Me.Guna2Panel22.Name = "Guna2Panel22"
-        Me.Guna2Panel22.Size = New System.Drawing.Size(266, 55)
+        Me.Guna2Panel22.Size = New System.Drawing.Size(325, 50)
         Me.Guna2Panel22.TabIndex = 5593
         '
         'txtCustomer
         '
         Me.txtCustomer.BorderColor = System.Drawing.Color.Silver
         Me.txtCustomer.BorderRadius = 8
-        Me.txtCustomer.BorderThickness = 3
+        Me.txtCustomer.BorderThickness = 1
         Me.txtCustomer.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.txtCustomer.DefaultText = ""
         Me.txtCustomer.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
@@ -436,121 +443,125 @@ Partial Class frmPOS
         Me.txtCustomer.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
         Me.txtCustomer.FillColor = System.Drawing.Color.Gray
         Me.txtCustomer.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomer.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.txtCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtCustomer.ForeColor = System.Drawing.Color.White
         Me.txtCustomer.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomer.Location = New System.Drawing.Point(13, 6)
-        Me.txtCustomer.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
+        Me.txtCustomer.Location = New System.Drawing.Point(8, 6)
+        Me.txtCustomer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtCustomer.Name = "txtCustomer"
         Me.txtCustomer.PlaceholderText = ""
         Me.txtCustomer.SelectedText = ""
-        Me.txtCustomer.Size = New System.Drawing.Size(247, 43)
+        Me.txtCustomer.Size = New System.Drawing.Size(310, 38)
         Me.txtCustomer.TabIndex = 0
         Me.txtCustomer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label6
         '
         Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label6.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.Label6.ForeColor = System.Drawing.Color.White
-        Me.Label6.Location = New System.Drawing.Point(475, 0)
+        Me.Label6.Location = New System.Drawing.Point(500, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(125, 55)
+        Me.Label6.Size = New System.Drawing.Size(100, 50)
         Me.Label6.TabIndex = 5592
-        Me.Label6.Text = "العميل"
+        Me.Label6.Text = "العميل :"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btnPendingInvoices
         '
+        Me.btnPendingInvoices.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPendingInvoices.BorderRadius = 8
         Me.btnPendingInvoices.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnPendingInvoices.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnPendingInvoices.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnPendingInvoices.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnPendingInvoices.FillColor = System.Drawing.Color.DarkSlateGray
-        Me.btnPendingInvoices.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPendingInvoices.FillColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+        Me.btnPendingInvoices.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnPendingInvoices.ForeColor = System.Drawing.Color.White
         Me.btnPendingInvoices.Image = Global.WindowsApp1.My.Resources.Resources.pause
-        Me.btnPendingInvoices.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnPendingInvoices.Location = New System.Drawing.Point(187, 773)
+        Me.btnPendingInvoices.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btnPendingInvoices.Location = New System.Drawing.Point(304, 774)
         Me.btnPendingInvoices.Name = "btnPendingInvoices"
-        Me.btnPendingInvoices.Size = New System.Drawing.Size(200, 45)
+        Me.btnPendingInvoices.Size = New System.Drawing.Size(138, 44)
         Me.btnPendingInvoices.TabIndex = 11
-        Me.btnPendingInvoices.Text = "الفواتير المعلقة"
+        Me.btnPendingInvoices.Text = "المعلقة"
         '
         'btntables
         '
+        Me.btntables.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btntables.BorderRadius = 8
         Me.btntables.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btntables.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btntables.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btntables.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btntables.FillColor = System.Drawing.Color.DarkSlateGray
-        Me.btntables.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btntables.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
+        Me.btntables.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btntables.ForeColor = System.Drawing.Color.White
         Me.btntables.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
-        Me.btntables.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btntables.Location = New System.Drawing.Point(394, 773)
+        Me.btntables.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btntables.Location = New System.Drawing.Point(450, 774)
         Me.btntables.Name = "btntables"
-        Me.btntables.Size = New System.Drawing.Size(200, 45)
+        Me.btntables.Size = New System.Drawing.Size(138, 44)
         Me.btntables.TabIndex = 10
         Me.btntables.Text = "الطاولات"
         '
         'btnDeleteRow
         '
+        Me.btnDeleteRow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnDeleteRow.BorderRadius = 8
         Me.btnDeleteRow.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnDeleteRow.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnDeleteRow.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnDeleteRow.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnDeleteRow.FillColor = System.Drawing.Color.Crimson
-        Me.btnDeleteRow.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDeleteRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnDeleteRow.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnDeleteRow.ForeColor = System.Drawing.Color.White
         Me.btnDeleteRow.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnDeleteRow.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnDeleteRow.Location = New System.Drawing.Point(12, 722)
+        Me.btnDeleteRow.ImageSize = New System.Drawing.Size(20, 20)
+        Me.btnDeleteRow.Location = New System.Drawing.Point(158, 774)
         Me.btnDeleteRow.Name = "btnDeleteRow"
-        Me.btnDeleteRow.Size = New System.Drawing.Size(169, 45)
+        Me.btnDeleteRow.Size = New System.Drawing.Size(138, 44)
         Me.btnDeleteRow.TabIndex = 9
-        Me.btnDeleteRow.Text = "حذف"
+        Me.btnDeleteRow.Text = "حذف صنف"
         '
         'btnHoldInvoice
         '
-        Me.btnHoldInvoice.BorderRadius = 8
+        Me.btnHoldInvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnHoldInvoice.BorderRadius = 10
         Me.btnHoldInvoice.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnHoldInvoice.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnHoldInvoice.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnHoldInvoice.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnHoldInvoice.FillColor = System.Drawing.Color.PowderBlue
-        Me.btnHoldInvoice.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnHoldInvoice.FillColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(158, Byte), Integer), CType(CType(11, Byte), Integer))
+        Me.btnHoldInvoice.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
         Me.btnHoldInvoice.ForeColor = System.Drawing.Color.White
         Me.btnHoldInvoice.Image = Global.WindowsApp1.My.Resources.Resources.hold
-        Me.btnHoldInvoice.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnHoldInvoice.Location = New System.Drawing.Point(187, 722)
+        Me.btnHoldInvoice.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnHoldInvoice.Location = New System.Drawing.Point(12, 718)
         Me.btnHoldInvoice.Name = "btnHoldInvoice"
-        Me.btnHoldInvoice.Size = New System.Drawing.Size(200, 45)
+        Me.btnHoldInvoice.Size = New System.Drawing.Size(180, 50)
         Me.btnHoldInvoice.TabIndex = 8
-        Me.btnHoldInvoice.Text = "تعليق"
+        Me.btnHoldInvoice.Text = "تعليق [F5]"
         '
         'btnPay
         '
-        Me.btnPay.BorderRadius = 8
+        Me.btnPay.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPay.BorderRadius = 10
         Me.btnPay.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnPay.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnPay.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnPay.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnPay.FillColor = System.Drawing.Color.LightGreen
-        Me.btnPay.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPay.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.btnPay.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.btnPay.ForeColor = System.Drawing.Color.White
         Me.btnPay.Image = Global.WindowsApp1.My.Resources.Resources.payment
-        Me.btnPay.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnPay.Location = New System.Drawing.Point(393, 722)
+        Me.btnPay.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnPay.Location = New System.Drawing.Point(202, 718)
         Me.btnPay.Name = "btnPay"
-        Me.btnPay.Size = New System.Drawing.Size(200, 45)
+        Me.btnPay.Size = New System.Drawing.Size(386, 50)
         Me.btnPay.TabIndex = 7
-        Me.btnPay.Text = "دفع"
+        Me.btnPay.Text = "دفع الحساب  [F12]"
         '
         'Guna2Panel20
         '
@@ -558,7 +569,7 @@ Partial Class frmPOS
         Me.Guna2Panel20.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel20.Location = New System.Drawing.Point(0, 618)
         Me.Guna2Panel20.Name = "Guna2Panel20"
-        Me.Guna2Panel20.Size = New System.Drawing.Size(600, 46)
+        Me.Guna2Panel20.Size = New System.Drawing.Size(600, 52)
         Me.Guna2Panel20.TabIndex = 6
         '
         'Guna2Panel24
@@ -568,7 +579,7 @@ Partial Class frmPOS
         Me.Guna2Panel24.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Guna2Panel24.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel24.Name = "Guna2Panel24"
-        Me.Guna2Panel24.Size = New System.Drawing.Size(600, 46)
+        Me.Guna2Panel24.Size = New System.Drawing.Size(600, 52)
         Me.Guna2Panel24.TabIndex = 1
         '
         'Guna2Panel26
@@ -578,36 +589,33 @@ Partial Class frmPOS
         Me.Guna2Panel26.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Guna2Panel26.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel26.Name = "Guna2Panel26"
-        Me.Guna2Panel26.Size = New System.Drawing.Size(600, 46)
+        Me.Guna2Panel26.Size = New System.Drawing.Size(600, 52)
         Me.Guna2Panel26.TabIndex = 6
         '
         'Label25
         '
         Me.Label25.BackColor = System.Drawing.Color.Transparent
-        Me.Label25.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label25.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label25.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.Label25.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
         Me.Label25.ForeColor = System.Drawing.Color.White
-        Me.Label25.Location = New System.Drawing.Point(311, 0)
+        Me.Label25.Location = New System.Drawing.Point(350, 0)
         Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(289, 46)
+        Me.Label25.Size = New System.Drawing.Size(250, 52)
         Me.Label25.TabIndex = 5591
-        Me.Label25.Text = "الاجمالي"
+        Me.Label25.Text = "الإجمالي النهائي"
         Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblGrandTotal
         '
         Me.lblGrandTotal.BackColor = System.Drawing.Color.Transparent
-        Me.lblGrandTotal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblGrandTotal.Dock = System.Windows.Forms.DockStyle.Left
         Me.lblGrandTotal.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
-        Me.lblGrandTotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(46, Byte), Integer), CType(CType(204, Byte), Integer), CType(CType(113, Byte), Integer))
-        Me.lblGrandTotal.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.lblGrandTotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
         Me.lblGrandTotal.Location = New System.Drawing.Point(0, 0)
         Me.lblGrandTotal.Name = "lblGrandTotal"
-        Me.lblGrandTotal.Size = New System.Drawing.Size(311, 46)
+        Me.lblGrandTotal.Size = New System.Drawing.Size(350, 52)
         Me.lblGrandTotal.TabIndex = 5592
-        Me.lblGrandTotal.Text = "-------------"
+        Me.lblGrandTotal.Text = "0.00 ج.م"
         Me.lblGrandTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel13
@@ -622,7 +630,7 @@ Partial Class frmPOS
         '
         'Guna2Panel15
         '
-        Me.Guna2Panel15.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+        Me.Guna2Panel15.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.Guna2Panel15.Controls.Add(Me.Guna2Panel19)
         Me.Guna2Panel15.Controls.Add(Me.Guna2Panel18)
         Me.Guna2Panel15.Dock = System.Windows.Forms.DockStyle.Fill
@@ -644,29 +652,27 @@ Partial Class frmPOS
         'Label17
         '
         Me.Label17.BackColor = System.Drawing.Color.Transparent
-        Me.Label17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label17.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label17.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label17.ForeColor = System.Drawing.Color.White
+        Me.Label17.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.Label17.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.Label17.Location = New System.Drawing.Point(192, 0)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(145, 32)
         Me.Label17.TabIndex = 5591
-        Me.Label17.Text = "الضريبة"
+        Me.Label17.Text = "الضريبة :"
         Me.Label17.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblTax
         '
         Me.lblTax.BackColor = System.Drawing.Color.Transparent
-        Me.lblTax.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblTax.Dock = System.Windows.Forms.DockStyle.Left
-        Me.lblTax.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblTax.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblTax.ForeColor = System.Drawing.Color.White
         Me.lblTax.Location = New System.Drawing.Point(0, 0)
         Me.lblTax.Name = "lblTax"
         Me.lblTax.Size = New System.Drawing.Size(192, 32)
         Me.lblTax.TabIndex = 5592
-        Me.lblTax.Text = "-------------"
+        Me.lblTax.Text = "0.00 ج.م"
         Me.lblTax.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel18
@@ -682,34 +688,32 @@ Partial Class frmPOS
         'Label15
         '
         Me.Label15.BackColor = System.Drawing.Color.Transparent
-        Me.Label15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label15.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label15.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label15.ForeColor = System.Drawing.Color.White
+        Me.Label15.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.Label15.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.Label15.Location = New System.Drawing.Point(192, 0)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(145, 32)
         Me.Label15.TabIndex = 5591
-        Me.Label15.Text = "خدمة الصالة"
+        Me.Label15.Text = "خدمة الصالة :"
         Me.Label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblDineInFee
         '
         Me.lblDineInFee.BackColor = System.Drawing.Color.Transparent
-        Me.lblDineInFee.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblDineInFee.Dock = System.Windows.Forms.DockStyle.Left
-        Me.lblDineInFee.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblDineInFee.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblDineInFee.ForeColor = System.Drawing.Color.White
         Me.lblDineInFee.Location = New System.Drawing.Point(0, 0)
         Me.lblDineInFee.Name = "lblDineInFee"
         Me.lblDineInFee.Size = New System.Drawing.Size(192, 32)
         Me.lblDineInFee.TabIndex = 5592
-        Me.lblDineInFee.Text = "-------------"
+        Me.lblDineInFee.Text = "0.00 ج.م"
         Me.lblDineInFee.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel14
         '
-        Me.Guna2Panel14.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+        Me.Guna2Panel14.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.Guna2Panel14.Controls.Add(Me.Guna2Panel17)
         Me.Guna2Panel14.Controls.Add(Me.Guna2Panel16)
         Me.Guna2Panel14.Dock = System.Windows.Forms.DockStyle.Right
@@ -731,29 +735,27 @@ Partial Class frmPOS
         'Label13
         '
         Me.Label13.BackColor = System.Drawing.Color.Transparent
-        Me.Label13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label13.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label13.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label13.ForeColor = System.Drawing.Color.White
+        Me.Label13.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.Label13.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.Label13.Location = New System.Drawing.Point(132, 0)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(131, 32)
         Me.Label13.TabIndex = 5591
-        Me.Label13.Text = "الدليفري"
+        Me.Label13.Text = "الدليفري :"
         Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblDeliveryFee
         '
         Me.lblDeliveryFee.BackColor = System.Drawing.Color.Transparent
-        Me.lblDeliveryFee.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblDeliveryFee.Dock = System.Windows.Forms.DockStyle.Left
-        Me.lblDeliveryFee.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblDeliveryFee.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblDeliveryFee.ForeColor = System.Drawing.Color.White
         Me.lblDeliveryFee.Location = New System.Drawing.Point(0, 0)
         Me.lblDeliveryFee.Name = "lblDeliveryFee"
         Me.lblDeliveryFee.Size = New System.Drawing.Size(132, 32)
         Me.lblDeliveryFee.TabIndex = 5592
-        Me.lblDeliveryFee.Text = "-------------"
+        Me.lblDeliveryFee.Text = "0.00 ج.م"
         Me.lblDeliveryFee.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel16
@@ -769,29 +771,27 @@ Partial Class frmPOS
         'Label12
         '
         Me.Label12.BackColor = System.Drawing.Color.Transparent
-        Me.Label12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.Label12.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label12.ForeColor = System.Drawing.Color.White
+        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.Label12.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.Label12.Location = New System.Drawing.Point(132, 0)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(131, 32)
         Me.Label12.TabIndex = 5591
-        Me.Label12.Text = "الصافي"
+        Me.Label12.Text = "الصافي :"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblSubTotal
         '
         Me.lblSubTotal.BackColor = System.Drawing.Color.Transparent
-        Me.lblSubTotal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblSubTotal.Dock = System.Windows.Forms.DockStyle.Left
-        Me.lblSubTotal.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSubTotal.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblSubTotal.ForeColor = System.Drawing.Color.White
         Me.lblSubTotal.Location = New System.Drawing.Point(0, 0)
         Me.lblSubTotal.Name = "lblSubTotal"
         Me.lblSubTotal.Size = New System.Drawing.Size(132, 32)
         Me.lblSubTotal.TabIndex = 5592
-        Me.lblSubTotal.Text = "-------------"
+        Me.lblSubTotal.Text = "0.00 ج.م"
         Me.lblSubTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel11
@@ -803,68 +803,68 @@ Partial Class frmPOS
         Me.Guna2Panel11.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel11.Location = New System.Drawing.Point(0, 388)
         Me.Guna2Panel11.Name = "Guna2Panel11"
-        Me.Guna2Panel11.Size = New System.Drawing.Size(600, 164)
+        Me.Guna2Panel11.Size = New System.Drawing.Size(600, 100)
         Me.Guna2Panel11.TabIndex = 4
         '
         'btnDelivery
         '
-        Me.btnDelivery.BorderRadius = 8
+        Me.btnDelivery.BorderRadius = 10
         Me.btnDelivery.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
         Me.btnDelivery.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnDelivery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnDelivery.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnDelivery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnDelivery.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDelivery.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnDelivery.ForeColor = System.Drawing.Color.White
         Me.btnDelivery.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike
-        Me.btnDelivery.ImageOffset = New System.Drawing.Point(20, -18)
-        Me.btnDelivery.ImageSize = New System.Drawing.Size(64, 64)
-        Me.btnDelivery.Location = New System.Drawing.Point(3, 53)
+        Me.btnDelivery.ImageOffset = New System.Drawing.Point(6, 0)
+        Me.btnDelivery.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnDelivery.Location = New System.Drawing.Point(10, 38)
         Me.btnDelivery.Name = "btnDelivery"
-        Me.btnDelivery.Size = New System.Drawing.Size(189, 104)
+        Me.btnDelivery.Size = New System.Drawing.Size(186, 54)
         Me.btnDelivery.TabIndex = 6
         Me.btnDelivery.Text = "دليفري"
-        Me.btnDelivery.TextOffset = New System.Drawing.Point(-15, 30)
+        Me.btnDelivery.TextOffset = New System.Drawing.Point(-4, 0)
         '
         'btnDineIn
         '
-        Me.btnDineIn.BorderRadius = 8
+        Me.btnDineIn.BorderRadius = 10
         Me.btnDineIn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
         Me.btnDineIn.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnDineIn.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnDineIn.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnDineIn.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnDineIn.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDineIn.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnDineIn.ForeColor = System.Drawing.Color.White
         Me.btnDineIn.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
-        Me.btnDineIn.ImageOffset = New System.Drawing.Point(13, -18)
-        Me.btnDineIn.ImageSize = New System.Drawing.Size(64, 64)
-        Me.btnDineIn.Location = New System.Drawing.Point(204, 53)
+        Me.btnDineIn.ImageOffset = New System.Drawing.Point(6, 0)
+        Me.btnDineIn.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnDineIn.Location = New System.Drawing.Point(207, 38)
         Me.btnDineIn.Name = "btnDineIn"
-        Me.btnDineIn.Size = New System.Drawing.Size(189, 104)
+        Me.btnDineIn.Size = New System.Drawing.Size(186, 54)
         Me.btnDineIn.TabIndex = 5
         Me.btnDineIn.Text = "صالة"
-        Me.btnDineIn.TextOffset = New System.Drawing.Point(-15, 30)
+        Me.btnDineIn.TextOffset = New System.Drawing.Point(-4, 0)
         '
         'btnTakeaway
         '
-        Me.btnTakeaway.BorderRadius = 8
+        Me.btnTakeaway.BorderRadius = 10
         Me.btnTakeaway.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
         Me.btnTakeaway.DisabledState.BorderColor = System.Drawing.Color.DarkGray
         Me.btnTakeaway.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnTakeaway.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnTakeaway.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnTakeaway.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.btnTakeaway.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnTakeaway.ForeColor = System.Drawing.Color.White
         Me.btnTakeaway.Image = Global.WindowsApp1.My.Resources.Resources.take_away
-        Me.btnTakeaway.ImageOffset = New System.Drawing.Point(20, -18)
-        Me.btnTakeaway.ImageSize = New System.Drawing.Size(64, 64)
-        Me.btnTakeaway.Location = New System.Drawing.Point(405, 53)
+        Me.btnTakeaway.ImageOffset = New System.Drawing.Point(6, 0)
+        Me.btnTakeaway.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnTakeaway.Location = New System.Drawing.Point(404, 38)
         Me.btnTakeaway.Name = "btnTakeaway"
-        Me.btnTakeaway.Size = New System.Drawing.Size(189, 104)
+        Me.btnTakeaway.Size = New System.Drawing.Size(186, 54)
         Me.btnTakeaway.TabIndex = 4
         Me.btnTakeaway.Text = "تيك اوي"
-        Me.btnTakeaway.TextOffset = New System.Drawing.Point(-15, 30)
+        Me.btnTakeaway.TextOffset = New System.Drawing.Point(-4, 0)
         '
         'Guna2Panel12
         '
@@ -873,20 +873,20 @@ Partial Class frmPOS
         Me.Guna2Panel12.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel12.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel12.Name = "Guna2Panel12"
-        Me.Guna2Panel12.Size = New System.Drawing.Size(600, 50)
+        Me.Guna2Panel12.Size = New System.Drawing.Size(600, 32)
         Me.Guna2Panel12.TabIndex = 3
         '
         'lblOrderTypeStatus
         '
         Me.lblOrderTypeStatus.BackColor = System.Drawing.Color.Transparent
         Me.lblOrderTypeStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblOrderTypeStatus.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.lblOrderTypeStatus.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.lblOrderTypeStatus.ForeColor = System.Drawing.Color.White
         Me.lblOrderTypeStatus.Location = New System.Drawing.Point(0, 0)
         Me.lblOrderTypeStatus.Name = "lblOrderTypeStatus"
-        Me.lblOrderTypeStatus.Size = New System.Drawing.Size(600, 50)
+        Me.lblOrderTypeStatus.Size = New System.Drawing.Size(600, 32)
         Me.lblOrderTypeStatus.TabIndex = 5588
-        Me.lblOrderTypeStatus.Text = "نوع الطلب"
+        Me.lblOrderTypeStatus.Text = "  نوع الطلب"
         Me.lblOrderTypeStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Guna2Panel10
@@ -894,9 +894,9 @@ Partial Class frmPOS
         Me.Guna2Panel10.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.Guna2Panel10.Controls.Add(Me.dgvInvoice)
         Me.Guna2Panel10.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel10.Location = New System.Drawing.Point(0, 56)
+        Me.Guna2Panel10.Location = New System.Drawing.Point(0, 50)
         Me.Guna2Panel10.Name = "Guna2Panel10"
-        Me.Guna2Panel10.Size = New System.Drawing.Size(600, 332)
+        Me.Guna2Panel10.Size = New System.Drawing.Size(600, 338)
         Me.Guna2Panel10.TabIndex = 3
         '
         'dgvInvoice
@@ -912,18 +912,18 @@ Partial Class frmPOS
         Me.dgvInvoice.BackgroundColor = System.Drawing.Color.Silver
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         DataGridViewCellStyle8.ForeColor = System.Drawing.Color.White
         DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
-        Me.dgvInvoice.ColumnHeadersHeight = 4
+        Me.dgvInvoice.ColumnHeadersHeight = 38
         Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
         Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID})
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle9.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Regular)
         DataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
         DataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
@@ -937,10 +937,10 @@ Partial Class frmPOS
         Me.dgvInvoice.ReadOnly = True
         Me.dgvInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvInvoice.RowHeadersVisible = False
-        Me.dgvInvoice.RowTemplate.Height = 40
+        Me.dgvInvoice.RowTemplate.Height = 36
         Me.dgvInvoice.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.dgvInvoice.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvInvoice.Size = New System.Drawing.Size(600, 332)
+        Me.dgvInvoice.Size = New System.Drawing.Size(600, 338)
         Me.dgvInvoice.TabIndex = 5611
         '
         'colIndex
@@ -962,25 +962,27 @@ Partial Class frmPOS
         Me.colProductName.Name = "colProductName"
         Me.colProductName.ReadOnly = True
         Me.colProductName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colProductName.Width = 100
+        Me.colProductName.Width = 120
         '
         'colSize
         '
+        DataGridViewCellStyle_Center.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         Me.colSize.DefaultCellStyle = DataGridViewCellStyle_Center
         Me.colSize.HeaderText = "الحجم"
         Me.colSize.Name = "colSize"
         Me.colSize.ReadOnly = True
         Me.colSize.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colSize.Width = 90
+        Me.colSize.Width = 75
         '
         'colAddons
         '
+        DataGridViewCellStyle_Right.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         Me.colAddons.DefaultCellStyle = DataGridViewCellStyle_Right
         Me.colAddons.HeaderText = "الإضافات"
         Me.colAddons.Name = "colAddons"
         Me.colAddons.ReadOnly = True
         Me.colAddons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colAddons.Width = 130
+        Me.colAddons.Width = 110
         '
         'colUnitPrice
         '
@@ -991,34 +993,38 @@ Partial Class frmPOS
         Me.colUnitPrice.Name = "colUnitPrice"
         Me.colUnitPrice.ReadOnly = True
         Me.colUnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colUnitPrice.Width = 80
+        Me.colUnitPrice.Width = 75
         '
         'colQuantity
         '
+        DataGridViewCellStyle_Center.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
         Me.colQuantity.DefaultCellStyle = DataGridViewCellStyle_Center
         Me.colQuantity.HeaderText = "الكمية"
         Me.colQuantity.Name = "colQuantity"
         Me.colQuantity.ReadOnly = True
         Me.colQuantity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colQuantity.Width = 80
+        Me.colQuantity.Width = 65
         '
         'colTotalPrice
         '
+        DataGridViewCellStyle_Money.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle_Money.Format = "N2"
         Me.colTotalPrice.DefaultCellStyle = DataGridViewCellStyle_Money
         Me.colTotalPrice.HeaderText = "الإجمالي"
         Me.colTotalPrice.Name = "colTotalPrice"
         Me.colTotalPrice.ReadOnly = True
         Me.colTotalPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colTotalPrice.Width = 100
+        Me.colTotalPrice.Width = 85
         '
         'colNotes
         '
+        DataGridViewCellStyle_Right.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         Me.colNotes.DefaultCellStyle = DataGridViewCellStyle_Right
         Me.colNotes.HeaderText = "ملاحظات"
         Me.colNotes.Name = "colNotes"
         Me.colNotes.ReadOnly = True
         Me.colNotes.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colNotes.Width = 100
+        Me.colNotes.Width = 90
         '
         'colProductID
         '
@@ -1029,11 +1035,11 @@ Partial Class frmPOS
         '
         Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
-        Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dgvInvoice.ThemeStyle.HeaderStyle.Height = 4
+        Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.dgvInvoice.ThemeStyle.HeaderStyle.Height = 38
         Me.dgvInvoice.ThemeStyle.ReadOnly = True
-        Me.dgvInvoice.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dgvInvoice.ThemeStyle.RowsStyle.Height = 40
+        Me.dgvInvoice.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Regular)
+        Me.dgvInvoice.ThemeStyle.RowsStyle.Height = 36
         '
         'Guna2Panel9
         '
@@ -1044,18 +1050,17 @@ Partial Class frmPOS
         Me.Guna2Panel9.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel9.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel9.Name = "Guna2Panel9"
-        Me.Guna2Panel9.Size = New System.Drawing.Size(600, 56)
+        Me.Guna2Panel9.Size = New System.Drawing.Size(600, 50)
         Me.Guna2Panel9.TabIndex = 2
         '
         'lblInvoiceNumber
         '
         Me.lblInvoiceNumber.BackColor = System.Drawing.Color.Transparent
-        Me.lblInvoiceNumber.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblInvoiceNumber.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblInvoiceNumber.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
         Me.lblInvoiceNumber.ForeColor = System.Drawing.Color.White
-        Me.lblInvoiceNumber.Location = New System.Drawing.Point(12, 10)
+        Me.lblInvoiceNumber.Location = New System.Drawing.Point(12, 8)
         Me.lblInvoiceNumber.Name = "lblInvoiceNumber"
-        Me.lblInvoiceNumber.Size = New System.Drawing.Size(94, 36)
+        Me.lblInvoiceNumber.Size = New System.Drawing.Size(100, 34)
         Me.lblInvoiceNumber.TabIndex = 5634
         Me.lblInvoiceNumber.Text = "0"
         Me.lblInvoiceNumber.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -1063,25 +1068,25 @@ Partial Class frmPOS
         'Label2
         '
         Me.Label2.BackColor = System.Drawing.Color.Transparent
-        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label2.ForeColor = System.Drawing.Color.White
-        Me.Label2.Location = New System.Drawing.Point(112, 10)
+        Me.Label2.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
+        Me.Label2.Location = New System.Drawing.Point(115, 8)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(130, 36)
+        Me.Label2.Size = New System.Drawing.Size(105, 34)
         Me.Label2.TabIndex = 5589
-        Me.Label2.Text = "رقم الفاتورة"
+        Me.Label2.Text = "رقم الفاتورة :"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label1
         '
         Me.Label1.BackColor = System.Drawing.Color.Transparent
-        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.Label1.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
         Me.Label1.ForeColor = System.Drawing.Color.White
-        Me.Label1.Location = New System.Drawing.Point(318, 8)
+        Me.Label1.Location = New System.Drawing.Point(440, 8)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(130, 36)
+        Me.Label1.Size = New System.Drawing.Size(145, 34)
         Me.Label1.TabIndex = 5588
-        Me.Label1.Text = "الاصناف"
+        Me.Label1.Text = "سلة المبيعات"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel1
