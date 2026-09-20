@@ -1216,13 +1216,13 @@ Public Class frmPOS
     Public Sub UpdateHoldButtonText()
         Select Case CurrentOrderType
             Case OrderType.DineIn
-                btnHoldInvoice.Text = "🍳 إرسال للمطبخ [F5]"
+                btnHoldInvoice.Text = " إرسال للمطبخ [F5]"
                 btnHoldInvoice.FillColor = Color.FromArgb(79, 70, 229) ' Royal Indigo
             Case OrderType.Delivery
-                btnHoldInvoice.Text = "🛵 إرسال للطيار والمطبخ [F5]"
+                btnHoldInvoice.Text = " إرسال للطيار والمطبخ [F5]"
                 btnHoldInvoice.FillColor = Color.FromArgb(249, 115, 22) ' Vibrant Orange
             Case OrderType.Takeaway
-                btnHoldInvoice.Text = "🥡 إرسال للمطبخ (دفع لاحق) [F5]"
+                btnHoldInvoice.Text = " إرسال للمطبخ (دفع لاحق) [F5]"
                 btnHoldInvoice.FillColor = Color.FromArgb(13, 148, 136) ' Teal
         End Select
     End Sub
