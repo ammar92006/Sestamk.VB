@@ -276,33 +276,33 @@ Namespace Global.WindowsApp1
         Me.lblLegNormal.Location = New System.Drawing.Point(3, 8)
         Me.lblLegNormal.Margin = New System.Windows.Forms.Padding(3, 8, 8, 0)
         Me.lblLegNormal.Name = "lblLegNormal"
-        Me.lblLegNormal.Size = New System.Drawing.Size(78, 15)
+        Me.lblLegNormal.Size = New System.Drawing.Size(105, 15)
         Me.lblLegNormal.TabIndex = 0
-        Me.lblLegNormal.Text = "🟢 عادي < 5د"
+        Me.lblLegNormal.Text = "🟢 في الوقت المحدد"
         '
         'lblLegWarning
         '
         Me.lblLegWarning.AutoSize = True
         Me.lblLegWarning.Font = New System.Drawing.Font("Segoe UI", 8.5!, System.Drawing.FontStyle.Bold)
         Me.lblLegWarning.ForeColor = System.Drawing.Color.FromArgb(CType(CType(251, Byte), Integer), CType(CType(191, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.lblLegWarning.Location = New System.Drawing.Point(92, 8)
+        Me.lblLegWarning.Location = New System.Drawing.Point(119, 8)
         Me.lblLegWarning.Margin = New System.Windows.Forms.Padding(3, 8, 8, 0)
         Me.lblLegWarning.Name = "lblLegWarning"
-        Me.lblLegWarning.Size = New System.Drawing.Size(78, 15)
+        Me.lblLegWarning.Size = New System.Drawing.Size(125, 15)
         Me.lblLegWarning.TabIndex = 1
-        Me.lblLegWarning.Text = "🟠 انتظار 5-12د"
+        Me.lblLegWarning.Text = "🟠 اقتراب المهلة (>75%)"
         '
         'lblLegDelayed
         '
         Me.lblLegDelayed.AutoSize = True
         Me.lblLegDelayed.Font = New System.Drawing.Font("Segoe UI", 8.5!, System.Drawing.FontStyle.Bold)
         Me.lblLegDelayed.ForeColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(113, Byte), Integer), CType(CType(113, Byte), Integer))
-        Me.lblLegDelayed.Location = New System.Drawing.Point(181, 8)
+        Me.lblLegDelayed.Location = New System.Drawing.Point(255, 8)
         Me.lblLegDelayed.Margin = New System.Windows.Forms.Padding(3, 8, 8, 0)
         Me.lblLegDelayed.Name = "lblLegDelayed"
-        Me.lblLegDelayed.Size = New System.Drawing.Size(78, 15)
+        Me.lblLegDelayed.Size = New System.Drawing.Size(105, 15)
         Me.lblLegDelayed.TabIndex = 2
-        Me.lblLegDelayed.Text = "🔴 متأخر > 12د"
+        Me.lblLegDelayed.Text = "🔴 متأخر عن الوقت"
         '
         'pnlFilters
         '

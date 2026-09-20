@@ -1611,10 +1611,12 @@ ORDER BY ShiftID DESC;"
                 If orders.Count > 0 Then
                     Dim idList As String = String.Join(",", orders.Select(Function(x) x.KitchenOrderID))
                     Dim sqlDetails As String = $"
-                    SELECT DetailID, KitchenOrderID, ProductID, ProductName, SizeName, AddonsText, Quantity, Notes, IsCompleted, StationName
-                    FROM KitchenOrderDetails 
-                    WHERE KitchenOrderID IN ({idList})
-                    ORDER BY DetailID ASC;"
+                    SELECT d.DetailID, d.KitchenOrderID, d.ProductID, d.ProductName, d.SizeName, d.AddonsText, d.Quantity, d.Notes, d.IsCompleted, d.StationName,
+                           p.PreparationTime
+                    FROM KitchenOrderDetails d
+                    LEFT JOIN Products p ON p.Product_ID = d.ProductID
+                    WHERE d.KitchenOrderID IN ({idList})
+                    ORDER BY d.DetailID ASC;"
 
                     Using cmdDet As New SqlCommand(sqlDetails, con)
                         Using rdrDet As SqlDataReader = cmdDet.ExecuteReader()
@@ -1634,6 +1636,20 @@ ORDER BY ShiftID DESC;"
                                         .IsCompleted = Convert.ToBoolean(rdrDet("IsCompleted")),
                                         .StationName = If(IsDBNull(rdrDet("StationName")), "", rdrDet("StationName").ToString())
                                     }
+
+                                    If Not IsDBNull(rdrDet("PreparationTime")) Then
+                                        Dim val = rdrDet("PreparationTime")
+                                        If TypeOf val Is TimeSpan Then
+                                            item.PreparationTime = DirectCast(val, TimeSpan)
+                                        ElseIf TypeOf val Is DateTime Then
+                                            item.PreparationTime = DirectCast(val, DateTime).TimeOfDay
+                                        Else
+                                            Dim tsParsed As TimeSpan
+                                            If TimeSpan.TryParse(val.ToString(), tsParsed) Then
+                                                item.PreparationTime = tsParsed
+                                            End If
+                                        End If
+                                    End If
 
                                     If String.IsNullOrEmpty(stationFilter) OrElse stationFilter = "الكل" OrElse item.StationName = stationFilter Then
                                         parent.Items.Add(item)
@@ -1735,6 +1751,56 @@ ORDER BY ShiftID DESC;"
                         End While
                     End Using
                 End Using
+
+                If orders.Count > 0 Then
+                    Dim idList As String = String.Join(",", orders.Select(Function(x) x.KitchenOrderID))
+                    Dim sqlDetails As String = $"
+                    SELECT d.DetailID, d.KitchenOrderID, d.ProductID, d.ProductName, d.SizeName, d.AddonsText, d.Quantity, d.Notes, d.IsCompleted, d.StationName,
+                           p.PreparationTime
+                    FROM KitchenOrderDetails d
+                    LEFT JOIN Products p ON p.Product_ID = d.ProductID
+                    WHERE d.KitchenOrderID IN ({idList})
+                    ORDER BY d.DetailID ASC;"
+
+                    Using cmdDet As New SqlCommand(sqlDetails, con)
+                        Using rdrDet As SqlDataReader = cmdDet.ExecuteReader()
+                            While rdrDet.Read()
+                                Dim kId As Integer = Convert.ToInt32(rdrDet("KitchenOrderID"))
+                                Dim parent = orders.FirstOrDefault(Function(x) x.KitchenOrderID = kId)
+                                If parent IsNot Nothing Then
+                                    Dim item As New KitchenOrderItemModel With {
+                                        .DetailID = Convert.ToInt32(rdrDet("DetailID")),
+                                        .KitchenOrderID = kId,
+                                        .ProductID = Convert.ToInt32(rdrDet("ProductID")),
+                                        .ProductName = rdrDet("ProductName").ToString(),
+                                        .SizeName = If(IsDBNull(rdrDet("SizeName")), "", rdrDet("SizeName").ToString()),
+                                        .AddonsText = If(IsDBNull(rdrDet("AddonsText")), "", rdrDet("AddonsText").ToString()),
+                                        .Quantity = Convert.ToInt32(rdrDet("Quantity")),
+                                        .Notes = If(IsDBNull(rdrDet("Notes")), "", rdrDet("Notes").ToString()),
+                                        .IsCompleted = Convert.ToBoolean(rdrDet("IsCompleted")),
+                                        .StationName = If(IsDBNull(rdrDet("StationName")), "", rdrDet("StationName").ToString())
+                                    }
+
+                                    If Not IsDBNull(rdrDet("PreparationTime")) Then
+                                        Dim val = rdrDet("PreparationTime")
+                                        If TypeOf val Is TimeSpan Then
+                                            item.PreparationTime = DirectCast(val, TimeSpan)
+                                        ElseIf TypeOf val Is DateTime Then
+                                            item.PreparationTime = DirectCast(val, DateTime).TimeOfDay
+                                        Else
+                                            Dim tsParsed As TimeSpan
+                                            If TimeSpan.TryParse(val.ToString(), tsParsed) Then
+                                                item.PreparationTime = tsParsed
+                                            End If
+                                        End If
+                                    End If
+
+                                    parent.Items.Add(item)
+                                End If
+                            End While
+                        End Using
+                    End Using
+                End If
             End Using
         Catch ex As Exception
             Logger.LogError("GetRecentBumpedOrders", ex)

@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 
 Namespace Global.WindowsApp1
@@ -54,6 +54,55 @@ Namespace Global.WindowsApp1
                 End If
             End Get
         End Property
+
+        ' حساب وقت التحضير المتوقع للأوردر بالكامل (أقصى وقت بين أصنافه أو 10 دقائق افتراضياً)
+        Public ReadOnly Property EstimatedPrepMinutes As Integer
+            Get
+                Dim maxMins As Integer = 0
+                If Items IsNot Nothing AndAlso Items.Count > 0 Then
+                    For Each itm In Items
+                        If itm.PreparationTime.HasValue Then
+                            Dim m As Integer = CInt(Math.Ceiling(itm.PreparationTime.Value.TotalMinutes))
+                            If m > maxMins Then maxMins = m
+                        End If
+                    Next
+                End If
+                Return If(maxMins > 0, maxMins, 10)
+            End Get
+        End Property
+
+        Public ReadOnly Property HasCustomPrepTime As Boolean
+            Get
+                Return Items IsNot Nothing AndAlso Items.Any(Function(x) x.PreparationTime.HasValue AndAlso x.PreparationTime.Value.TotalMinutes > 0)
+            End Get
+        End Property
+
+        Public ReadOnly Property EstimatedPrepFormatted As String
+            Get
+                Return $"{EstimatedPrepMinutes} د"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsOverdue As Boolean
+            Get
+                Return ElapsedSeconds > (EstimatedPrepMinutes * 60)
+            End Get
+        End Property
+
+        Public ReadOnly Property OverdueMinutes As Integer
+            Get
+                Dim diffSec = ElapsedSeconds - (EstimatedPrepMinutes * 60)
+                Return If(diffSec > 0, CInt(Math.Ceiling(diffSec / 60.0)), 0)
+            End Get
+        End Property
+
+        Public ReadOnly Property PrepProgressRatio As Double
+            Get
+                Dim totalEstSec = EstimatedPrepMinutes * 60.0
+                If totalEstSec <= 0 Then Return 1.0
+                Return Math.Min(2.0, ElapsedSeconds / totalEstSec)
+            End Get
+        End Property
     End Class
 
     Public Class KitchenOrderItemModel
@@ -67,5 +116,15 @@ Namespace Global.WindowsApp1
         Public Property Notes As String
         Public Property IsCompleted As Boolean = False
         Public Property StationName As String
+        Public Property PreparationTime As TimeSpan?
+
+        Public ReadOnly Property PrepMinutes As Integer
+            Get
+                If PreparationTime.HasValue AndAlso PreparationTime.Value.TotalMinutes > 0 Then
+                    Return CInt(Math.Ceiling(PreparationTime.Value.TotalMinutes))
+                End If
+                Return 0
+            End Get
+        End Property
     End Class
 End Namespace

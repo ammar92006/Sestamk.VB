@@ -189,7 +189,7 @@ Namespace Global.WindowsApp1
                         Dim card = CreateOrderCard(order, isHistory:=False, isDark:=isDark)
                         _displayedOrders(order.KitchenOrderID) = card
                         flowOrders.Controls.Add(card)
-                        If order.ElapsedSeconds >= 720 Then
+                        If order.IsOverdue Then
                             delayedCount += 1
                         End If
                     Next
@@ -267,7 +267,7 @@ Namespace Global.WindowsApp1
                 lblEmptyNotice.Visible = False
                 lblActiveCountBadge.Text = _displayedOrders.Count & " طلبات نشطة"
 
-                Dim delayedCount = _displayedOrders.Values.Where(Function(c) c.Order.ElapsedSeconds >= 720).Count()
+                Dim delayedCount = _displayedOrders.Values.Where(Function(c) c.Order.IsOverdue).Count()
                 If delayedCount > 0 Then
                     lblDelayedBadge.Text = delayedCount & " متأخرة"
                     lblDelayedBadge.Visible = True
@@ -287,7 +287,7 @@ Namespace Global.WindowsApp1
             Dim delayedCount As Integer = 0
             For Each kvp In _displayedOrders
                 kvp.Value.UpdateTimerUI()
-                If kvp.Value.Order.ElapsedSeconds >= 720 Then
+                If kvp.Value.Order.IsOverdue Then
                     delayedCount += 1
                 End If
             Next
@@ -426,13 +426,24 @@ Namespace Global.WindowsApp1
         Public Event OrderBumped(orderId As Integer)
         Public Event OrderRecalled(orderId As Integer)
 
+        ' عناصر الهيدر العلوي
+        Private pnlTopSection As Panel
+        Private pnlTypeBanner As Panel
+        Private lblTypeBadge As Label
+        Private lblTablePill As Label
+        Private lblCustomer As Label
+
+        ' تفاصيل الطلب والتوقيت
         Private pnlHeader As Panel
         Private pnlHeaderRow1 As Panel
         Private pnlHeaderRow2 As Panel
         Private lblOrderNum As Label
-        Private lblOrderType As Label
+        Private lblExpectedTime As Label
         Private lblTimer As Label
         Private lblServerTime As Label
+        Private lblOverdueStatus As Label
+
+        ' قائمة الأصناف
         Private pnlItemsList As Panel
         Private pnlBottom As Panel
         Private btnAction As Button
@@ -456,18 +467,95 @@ Namespace Global.WindowsApp1
         End Sub
 
         Private Sub InitializeCard()
-            Me.Width = 320
+            Me.Width = 330
             Me.Margin = New Padding(8)
             Me.RightToLeft = RightToLeft.Yes
 
-            ' 1. هيدر البطاقة (صفين غير متداخلين نهائياً)
-            pnlHeader = New Panel With {
+            ' ─────────────────────────────────────────────────────────
+            ' 1. الحاوية العلوية (Top Section: شريط نوع الطلب + هيدر التوقيت)
+            ' ─────────────────────────────────────────────────────────
+            pnlTopSection = New Panel With {
                 .Dock = DockStyle.Top,
-                .Height = 58,
+                .Height = 84,
+                .BackColor = Color.Transparent
+            }
+
+            ' أ) شريط نوع الطلب والوجهة (Type & Destination Banner)
+            pnlTypeBanner = New Panel With {
+                .Dock = DockStyle.Top,
+                .Height = 34,
                 .Padding = New Padding(8, 4, 8, 4)
             }
 
-            ' الصف الأول من الهيدر (رقم الطلب يمين، العداد يسار)
+            ' تحديد لون وهوية شريط نوع الطلب
+            Select Case Order.OrderType
+                Case 2 ' صالة (Dine-In)
+                    pnlTypeBanner.BackColor = Color.FromArgb(79, 70, 229) ' Royal Indigo
+                Case 1 ' تيك أوي (Takeaway)
+                    pnlTypeBanner.BackColor = Color.FromArgb(13, 148, 136) ' Teal / Emerald
+                Case 3 ' دليفري (Delivery)
+                    pnlTypeBanner.BackColor = Color.FromArgb(234, 88, 12) ' Warm Orange
+                Case Else
+                    pnlTypeBanner.BackColor = Color.FromArgb(71, 85, 105)
+            End Select
+
+            ' اسم العميل (على اليسار) إن وجد
+            lblCustomer = New Label With {
+                .Dock = DockStyle.Left,
+                .AutoSize = False,
+                .Width = 140,
+                .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
+                .ForeColor = Color.FromArgb(248, 250, 252),
+                .TextAlign = ContentAlignment.MiddleLeft,
+                .AutoEllipsis = True
+            }
+            If Not String.IsNullOrWhiteSpace(Order.CustomerName) AndAlso Order.CustomerName.Trim() <> "عميل نقدي" Then
+                lblCustomer.Text = $"👤 {Order.CustomerName.Trim()}"
+            Else
+                lblCustomer.Text = ""
+            End If
+            pnlTypeBanner.Controls.Add(lblCustomer)
+
+            ' شارة الطاولة لعميل الصالة
+            lblTablePill = New Label With {
+                .Dock = DockStyle.Right,
+                .AutoSize = True,
+                .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
+                .ForeColor = Color.FromArgb(254, 240, 138), ' Yellow / Gold highlight
+                .TextAlign = ContentAlignment.MiddleRight
+            }
+            If Order.OrderType = 2 AndAlso Not String.IsNullOrWhiteSpace(Order.TableName) Then
+                lblTablePill.Text = $" | طاولة: {Order.TableName.Trim()}"
+            Else
+                lblTablePill.Text = ""
+            End If
+            pnlTypeBanner.Controls.Add(lblTablePill)
+
+            ' نوع الطلب (على اليمين)
+            lblTypeBadge = New Label With {
+                .Dock = DockStyle.Right,
+                .AutoSize = True,
+                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
+                .ForeColor = Color.White,
+                .TextAlign = ContentAlignment.MiddleRight
+            }
+            Select Case Order.OrderType
+                Case 2 : lblTypeBadge.Text = "🍽️ صالة"
+                Case 1 : lblTypeBadge.Text = "🛍️ سفري (تيك أوي)"
+                Case 3 : lblTypeBadge.Text = "🛵 دليفري (توصيل)"
+                Case Else : lblTypeBadge.Text = "طلب محلي"
+            End Select
+            pnlTypeBanner.Controls.Add(lblTypeBadge)
+
+            pnlTopSection.Controls.Add(pnlTypeBanner)
+
+            ' ب) هيدر رقم الطلب والعداد والوقت المتوقع
+            pnlHeader = New Panel With {
+                .Dock = DockStyle.Fill,
+                .Padding = New Padding(8, 4, 8, 4)
+            }
+
+            ' الصف الأول من الهيدر (رقم الطلب يمين، العداد والوقت المتوقع يسار)
             pnlHeaderRow1 = New Panel With {
                 .Dock = DockStyle.Top,
                 .Height = 26,
@@ -476,19 +564,30 @@ Namespace Global.WindowsApp1
 
             lblTimer = New Label With {
                 .Dock = DockStyle.Left,
-                .Width = 75,
-                .Text = If(_isHistory, "منجز", Order.ElapsedFormatted),
-                .Font = New Font("Segoe UI", 11.0F, FontStyle.Bold),
+                .Width = 80,
+                .Text = If(_isHistory, "منجز ✓", Order.ElapsedFormatted),
+                .Font = New Font("Segoe UI", 10.5F, FontStyle.Bold),
                 .ForeColor = Color.White,
                 .BackColor = Color.FromArgb(45, 0, 0, 0),
                 .TextAlign = ContentAlignment.MiddleCenter
             }
             pnlHeaderRow1.Controls.Add(lblTimer)
 
+            lblExpectedTime = New Label With {
+                .Dock = DockStyle.Left,
+                .Width = 72,
+                .Text = $"⏱️ {Order.EstimatedPrepFormatted}",
+                .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
+                .ForeColor = Color.FromArgb(226, 232, 240),
+                .BackColor = Color.FromArgb(30, 0, 0, 0),
+                .TextAlign = ContentAlignment.MiddleCenter
+            }
+            pnlHeaderRow1.Controls.Add(lblExpectedTime)
+
             lblOrderNum = New Label With {
                 .Dock = DockStyle.Fill,
                 .Text = $"طلب #{Order.OrderNumber}",
-                .Font = New Font("Segoe UI", 11.0F, FontStyle.Bold),
+                .Font = New Font("Segoe UI", 11.5F, FontStyle.Bold),
                 .ForeColor = Color.White,
                 .TextAlign = ContentAlignment.MiddleRight,
                 .AutoEllipsis = True
@@ -496,37 +595,42 @@ Namespace Global.WindowsApp1
             pnlHeaderRow1.Controls.Add(lblOrderNum)
             pnlHeader.Controls.Add(pnlHeaderRow1)
 
-            ' الصف الثاني من الهيدر (نوع الطلب يمين، الكاشير والتوقيت يسار)
+            ' الصف الثاني من الهيدر (حالة التأخير يسار، الكاشير ووقت التسجيل يمين)
             pnlHeaderRow2 = New Panel With {
                 .Dock = DockStyle.Bottom,
-                .Height = 24,
+                .Height = 20,
                 .BackColor = Color.Transparent
             }
 
-            Dim cashierText = If(String.IsNullOrEmpty(Order.ServerName), Order.CreatedAt.ToString("HH:mm"), $"{Order.ServerName} | {Order.CreatedAt:HH:mm}")
-            lblServerTime = New Label With {
+            lblOverdueStatus = New Label With {
                 .Dock = DockStyle.Left,
-                .Width = 115,
+                .Width = 110,
+                .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
+                .ForeColor = Color.FromArgb(239, 68, 68),
+                .TextAlign = ContentAlignment.MiddleLeft,
+                .AutoEllipsis = True,
+                .Visible = False
+            }
+            pnlHeaderRow2.Controls.Add(lblOverdueStatus)
+
+            Dim cashierText = If(String.IsNullOrEmpty(Order.ServerName), $"{Order.CreatedAt:HH:mm}", $"{Order.CreatedAt:HH:mm} | {Order.ServerName}")
+            lblServerTime = New Label With {
+                .Dock = DockStyle.Fill,
                 .Text = cashierText,
                 .Font = New Font("Segoe UI", 8.5F, FontStyle.Regular),
-                .ForeColor = Color.FromArgb(226, 232, 240),
-                .TextAlign = ContentAlignment.MiddleLeft,
-                .AutoEllipsis = True
-            }
-            pnlHeaderRow2.Controls.Add(lblServerTime)
-
-            lblOrderType = New Label With {
-                .Dock = DockStyle.Fill,
-                .Text = Order.OrderTypeDisplay,
-                .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
-                .ForeColor = Color.White,
+                .ForeColor = Color.FromArgb(203, 213, 225),
                 .TextAlign = ContentAlignment.MiddleRight,
                 .AutoEllipsis = True
             }
-            pnlHeaderRow2.Controls.Add(lblOrderType)
+            pnlHeaderRow2.Controls.Add(lblServerTime)
             pnlHeader.Controls.Add(pnlHeaderRow2)
 
-            ' 2. قائمة الأصناف
+            pnlTopSection.Controls.Add(pnlHeader)
+            pnlTypeBanner.BringToFront()
+
+            ' ─────────────────────────────────────────────────────────
+            ' 2. قائمة الأصناف (Items List)
+            ' ─────────────────────────────────────────────────────────
             pnlItemsList = New Panel With {
                 .Dock = DockStyle.Top,
                 .AutoSize = True,
@@ -539,7 +643,7 @@ Namespace Global.WindowsApp1
             For Each item In Order.Items
                 Dim currentItem = item
                 Dim pnlRow As New Panel With {
-                    .Width = 304,
+                    .Width = 314,
                     .Location = New Point(8, yPos),
                     .Margin = New Padding(0, 0, 0, 4)
                 }
@@ -548,7 +652,7 @@ Namespace Global.WindowsApp1
                 Dim chkDone As New CheckBox With {
                     .Checked = currentItem.IsCompleted,
                     .Size = New Size(22, 22),
-                    .Location = New Point(6, 6),
+                    .Location = New Point(6, 5),
                     .Cursor = Cursors.Hand
                 }
                 pnlRow.Controls.Add(chkDone)
@@ -559,16 +663,21 @@ Namespace Global.WindowsApp1
                     .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
                     .TextAlign = ContentAlignment.MiddleCenter,
                     .Size = New Size(34, 24),
-                    .Location = New Point(264, 4)
+                    .Location = New Point(274, 4)
                 }
                 pnlRow.Controls.Add(lblQty)
 
-                ' اسم الصنف (بين الشارة ومربع الاختيار)
+                ' اسم الصنف مع وقت تحضيره الفردي إن وجد
+                Dim displayName As String = currentItem.ProductName
+                If currentItem.PrepMinutes > 0 Then
+                    displayName &= $" (⏱️ {currentItem.PrepMinutes}د)"
+                End If
+
                 Dim lblItemName As New Label With {
-                    .Text = currentItem.ProductName,
+                    .Text = displayName,
                     .Font = If(currentItem.IsCompleted, New Font("Segoe UI", 9.5F, FontStyle.Strikeout), New Font("Segoe UI", 9.5F, FontStyle.Bold)),
-                    .Location = New Point(34, 4),
-                    .Size = New Size(224, 24),
+                    .Location = New Point(32, 4),
+                    .Size = New Size(238, 24),
                     .TextAlign = ContentAlignment.MiddleRight,
                     .AutoEllipsis = True
                 }
@@ -583,8 +692,8 @@ Namespace Global.WindowsApp1
                         .Text = "الحجم: " & currentItem.SizeName.Trim(),
                         .Font = New Font("Segoe UI", 8.5F, FontStyle.Regular),
                         .ForeColor = Color.FromArgb(100, 116, 139),
-                        .Location = New Point(34, subY),
-                        .Size = New Size(224, 18),
+                        .Location = New Point(32, subY),
+                        .Size = New Size(238, 18),
                         .TextAlign = ContentAlignment.MiddleRight,
                         .AutoEllipsis = True
                     }
@@ -599,8 +708,8 @@ Namespace Global.WindowsApp1
                         .Text = "+ " & currentItem.AddonsText.Trim(),
                         .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
                         .ForeColor = Color.FromArgb(217, 119, 6),
-                        .Location = New Point(34, subY),
-                        .Size = New Size(224, 18),
+                        .Location = New Point(32, subY),
+                        .Size = New Size(238, 18),
                         .TextAlign = ContentAlignment.MiddleRight,
                         .AutoEllipsis = True
                     }
@@ -608,15 +717,15 @@ Namespace Global.WindowsApp1
                     subY += 18
                 End If
 
-                ' الملاحظات الخاصة
+                ' الملاحظات الخاصة بالصنف
                 Dim hasNotes = Not String.IsNullOrWhiteSpace(currentItem.Notes) AndAlso currentItem.Notes.Trim() <> "-"
                 If hasNotes Then
                     Dim lblNotes As New Label With {
                         .Text = "ملاحظة: " & currentItem.Notes.Trim(),
                         .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
                         .ForeColor = Color.FromArgb(220, 38, 38),
-                        .Location = New Point(34, subY),
-                        .Size = New Size(224, 18),
+                        .Location = New Point(32, subY),
+                        .Size = New Size(238, 18),
                         .TextAlign = ContentAlignment.MiddleRight,
                         .AutoEllipsis = True
                     }
@@ -650,13 +759,13 @@ Namespace Global.WindowsApp1
             ' ملاحظات الطلب العامة
             If Not String.IsNullOrEmpty(Order.Notes) Then
                 Dim pnlNotes As New Panel With {
-                    .Width = 304,
+                    .Width = 314,
                     .Location = New Point(8, yPos),
                     .BackColor = If(_isDark, Color.FromArgb(39, 32, 20), Color.FromArgb(254, 243, 199)),
                     .Padding = New Padding(6)
                 }
                 Dim lblOrderNotes As New Label With {
-                    .Text = "ملاحظة: " & Order.Notes,
+                    .Text = "📌 ملاحظة: " & Order.Notes,
                     .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
                     .ForeColor = If(_isDark, Color.FromArgb(252, 211, 77), Color.FromArgb(180, 83, 9)),
                     .AutoSize = True,
@@ -670,7 +779,9 @@ Namespace Global.WindowsApp1
 
             pnlItemsList.Height = yPos + 6
 
-            ' 3. أزرار التحكم بالبطاقة في الأسفل
+            ' ─────────────────────────────────────────────────────────
+            ' 3. أزرار التحكم بالبطاقة في الأسفل (Bump / Recall)
+            ' ─────────────────────────────────────────────────────────
             pnlBottom = New Panel With {
                 .Dock = DockStyle.Bottom,
                 .Height = 46,
@@ -679,7 +790,7 @@ Namespace Global.WindowsApp1
 
             If _isHistory Then
                 btnAction = New Button With {
-                    .Text = "استرجاع للتحضير (Recall)",
+                    .Text = "↩ استرجاع للتحضير (Recall)",
                     .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
                     .ForeColor = Color.White,
                     .BackColor = Color.FromArgb(180, 83, 9),
@@ -696,7 +807,7 @@ Namespace Global.WindowsApp1
                 pnlBottom.Controls.Add(btnAction)
             Else
                 btnAction = New Button With {
-                    .Text = "تسليم الطلب (Bump)",
+                    .Text = "✓ إتمام وتسليم الطلب (Bump)",
                     .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
                     .ForeColor = Color.White,
                     .BackColor = Color.FromArgb(5, 150, 105),
@@ -713,18 +824,17 @@ Namespace Global.WindowsApp1
                 pnlBottom.Controls.Add(btnAction)
             End If
 
-            ' 4. إضافة عناصر البطاقة وضمان الترتيب الصحيح لرسو العناصر (Docking Order)
+            ' 4. إضافة الحاويات للبطاقة بالترتيب الرأسي السليم
             Me.Controls.Add(pnlItemsList)
             Me.Controls.Add(pnlBottom)
-            Me.Controls.Add(pnlHeader)
+            Me.Controls.Add(pnlTopSection)
 
-            ' إرسال الهيدر إلى الخلف ليكون في أعلى الترتيب الرأسي دائماً
-            pnlHeader.SendToBack()
+            pnlTopSection.SendToBack()
             pnlBottom.SendToBack()
 
             ApplyTheme(_isDark)
             UpdateHeaderColor()
-            Me.Height = pnlHeader.Height + pnlItemsList.Height + pnlBottom.Height + 6
+            Me.Height = pnlTopSection.Height + pnlItemsList.Height + pnlBottom.Height + 6
         End Sub
 
         Private Sub UpdateRowCompletedUI(wrapper As ItemRowWrapper)
@@ -779,26 +889,52 @@ Namespace Global.WindowsApp1
 
         Public Sub UpdateTimerUI()
             If _isHistory Then Return
-            lblTimer.Text = Order.ElapsedFormatted
             UpdateHeaderColor()
         End Sub
 
         Private Sub UpdateHeaderColor()
             If _isHistory Then
-                pnlHeader.BackColor = Color.FromArgb(75, 85, 99)
+                pnlHeader.BackColor = If(_isDark, Color.FromArgb(45, 55, 72), Color.FromArgb(241, 245, 249))
+                lblTimer.BackColor = Color.FromArgb(75, 85, 99)
+                lblTimer.ForeColor = Color.White
+                lblTimer.Text = "منجز ✓"
+                lblExpectedTime.Text = $"⏱️ {Order.EstimatedPrepFormatted}"
+                lblOverdueStatus.Visible = False
                 Return
             End If
 
-            Dim totalSec = Order.ElapsedSeconds
-            If totalSec < 300 Then
-                ' 🟢 أقل من 5 دقائق: أخضر
-                pnlHeader.BackColor = Color.FromArgb(22, 163, 74)
-            ElseIf totalSec < 720 Then
-                ' 🟠 من 5 إلى 12 دقيقة: كهرماني/برتقالي
-                pnlHeader.BackColor = Color.FromArgb(217, 119, 6)
+            lblExpectedTime.Text = $"⏱️ {Order.EstimatedPrepFormatted}"
+
+            If Order.IsOverdue Then
+                ' 🔴 متأخر عن وقت التحضير المتوقع
+                lblTimer.BackColor = Color.FromArgb(220, 38, 38)
+                lblTimer.ForeColor = Color.White
+                lblTimer.Text = $"{Order.ElapsedFormatted} ⚠️"
+                pnlHeader.BackColor = If(_isDark, Color.FromArgb(69, 10, 10), Color.FromArgb(254, 226, 226))
+                lblOrderNum.ForeColor = If(_isDark, Color.FromArgb(254, 202, 202), Color.FromArgb(185, 28, 28))
+                lblOverdueStatus.Text = $"متأخر (+{Order.OverdueMinutes}د)"
+                lblOverdueStatus.ForeColor = Color.FromArgb(239, 68, 68)
+                lblOverdueStatus.Visible = True
+            ElseIf Order.PrepProgressRatio >= 0.75 Then
+                ' 🟠 اقتراب مهلة التحضير (>75%)
+                lblTimer.BackColor = Color.FromArgb(217, 119, 6)
+                lblTimer.ForeColor = Color.White
+                lblTimer.Text = Order.ElapsedFormatted
+                pnlHeader.BackColor = If(_isDark, Color.FromArgb(67, 34, 4), Color.FromArgb(254, 243, 199))
+                lblOrderNum.ForeColor = If(_isDark, Color.FromArgb(253, 230, 138), Color.FromArgb(180, 83, 9))
+                lblOverdueStatus.Text = "اقتراب المهلة"
+                lblOverdueStatus.ForeColor = Color.FromArgb(245, 158, 11)
+                lblOverdueStatus.Visible = True
             Else
-                ' 🔴 أكثر من 12 دقيقة: أحمر
-                pnlHeader.BackColor = Color.FromArgb(220, 38, 38)
+                ' 🟢 في الوقت الطبيعي المتوقع
+                lblTimer.BackColor = Color.FromArgb(5, 150, 105)
+                lblTimer.ForeColor = Color.White
+                lblTimer.Text = Order.ElapsedFormatted
+                pnlHeader.BackColor = If(_isDark, Color.FromArgb(6, 44, 34), Color.FromArgb(209, 250, 229))
+                lblOrderNum.ForeColor = If(_isDark, Color.FromArgb(167, 243, 208), Color.FromArgb(6, 95, 70))
+                lblOverdueStatus.Text = "في الموعد"
+                lblOverdueStatus.ForeColor = Color.FromArgb(16, 185, 129)
+                lblOverdueStatus.Visible = False
             End If
         End Sub
 

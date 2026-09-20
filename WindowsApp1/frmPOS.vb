@@ -196,8 +196,8 @@ Public Class frmPOS
                 ' 8. أزرار الإجراءات السفلية
                 btnPay.FillColor = Color.FromArgb(16, 185, 129)
                 btnPay.ForeColor = Color.White
-                btnHoldInvoice.FillColor = Color.FromArgb(245, 158, 11)
                 btnHoldInvoice.ForeColor = Color.White
+                UpdateHoldButtonText()
                 btntables.FillColor = Color.FromArgb(99, 102, 241)
                 btntables.ForeColor = Color.White
                 btnPendingInvoices.FillColor = Color.FromArgb(59, 130, 246)
@@ -279,6 +279,7 @@ Public Class frmPOS
                     CurrentOrderType = OrderType.Takeaway
                     lblOrderTypeStatus.Text = "نوع الطلب: تيك أوي"
             End Select
+            UpdateHoldButtonText()
 
             ' =========================================================
             ' 2. تعيين العميل الافتراضي
@@ -1063,13 +1064,13 @@ Public Class frmPOS
     ' =========================================================
     Private Sub btnHoldInvoice_Click(sender As Object, e As EventArgs) Handles btnHoldInvoice.Click
         If dgvInvoice.Rows.Count = 0 Then
-            MessageBox.Show("لا يمكن تعليق فاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("لا يمكن تعليق أو إرسال فاتورة فارغة للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         ' للطلبات الدليفري يجب تحديد العميل والطيار
         If CurrentOrderType = OrderType.Delivery Then
-            If CurrentCustomer Is Nothing Then
+            If CurrentCustomer Is Nothing AndAlso String.IsNullOrWhiteSpace(txtCustomer.Text) Then
                 MessageBox.Show("برجاء تحديد العميل أولاً لطلبات الدليفري قبل تعليق الفاتورة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 btnSelectCustomer.Focus()
                 Return
@@ -1078,6 +1079,13 @@ Public Class frmPOS
                 MessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
+        End If
+
+        ' لطلبات الصالة يجب تحديد الطاولة
+        If CurrentOrderType = OrderType.DineIn AndAlso Not SelectedTableID.HasValue Then
+            MessageBox.Show("برجاء اختيار الطاولة أولاً لطلب الصالة قبل إرساله للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            btnDineIn.PerformClick()
+            Return
         End If
 
         ' تجهيز قائمة أسطر الفاتورة لتحويلها لـ JSON احترافي
@@ -1098,7 +1106,7 @@ Public Class frmPOS
         Next
 
         Dim jsonItems As String = Newtonsoft.Json.JsonConvert.SerializeObject(itemsList)
-        Dim custName As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, "عميل نقدي")
+        Dim custName As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, If(Not String.IsNullOrWhiteSpace(txtCustomer.Text) AndAlso txtCustomer.Text.Trim() <> "عميل نقدي", txtCustomer.Text.Trim(), "عميل نقدي"))
         Dim custID As Integer? = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?))
 
         Dim pendingInv As New PendingInvoiceModel With {
@@ -1129,9 +1137,21 @@ Public Class frmPOS
                 _repo.UpdateTableStatus(SelectedTableID.Value, 2) ' 2 = مشغولة/حجز معلق
             End If
 
+            ' صياغة وصف نوع الطلب بوضوح للطباعة والمطبخ
+            Dim kotTypeDesc As String
+            If CurrentOrderType = OrderType.DineIn Then
+                kotTypeDesc = "صالة - طاولة: " & SelectedTableName
+                If custName <> "عميل نقدي" Then kotTypeDesc &= " | العميل: " & custName
+            ElseIf CurrentOrderType = OrderType.Delivery Then
+                kotTypeDesc = "دليفري | الطيار: " & SelectedDriverName
+                If custName <> "عميل نقدي" Then kotTypeDesc &= " | العميل: " & custName
+            Else
+                kotTypeDesc = "تيك أوي"
+                If custName <> "عميل نقدي" Then kotTypeDesc &= " | العميل: " & custName
+            End If
+
             ' طباعة بون المطبخ (Kitchen Order Ticket - KOT)
             Try
-                Dim kotTypeDesc As String = If(CurrentOrderType = OrderType.DineIn, "صالة - طاولة: " & SelectedTableName, If(CurrentOrderType = OrderType.Delivery, "دليفري | الطيار: " & SelectedDriverName, "تيك أوي"))
                 Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
                 RestaurantPrintManager.PrintKitchenTicket("طلب #" & pendingInv.PendingID, kotTypeDesc, SelectedTableName, staffName, itemsList)
             Catch exKot As Exception
@@ -1164,7 +1184,11 @@ Public Class frmPOS
                 Logger.LogError("btnHoldInvoice_Click - KDS", exKds)
             End Try
 
-            MessageBox.Show("تم تعليق الفاتورة وإرسال أمر التشغيل للمطبخ (KOT & KDS) بنجاح!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            If CurrentOrderType = OrderType.DineIn Then
+                MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وتسكينه على ({SelectedTableName}) بنجاح!", "إرسال للمطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Else
+                MessageBox.Show("تم تعليق الفاتورة وإرسال أمر التشغيل للمطبخ (KOT & KDS) بنجاح!", "تعليق الطلب", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
 
             ResetPOSForm()
             UpdateNextInvoiceNumber() ' تغيير وتحديث رقم الفاتورة القادمة
@@ -1183,6 +1207,19 @@ Public Class frmPOS
         Next
         Return total
     End Function
+
+    ' =========================================================
+    ' تحديث نص ولون زر التعليق/الإرسال للمطبخ بناءً على نوع الطلب
+    ' =========================================================
+    Public Sub UpdateHoldButtonText()
+        If CurrentOrderType = OrderType.DineIn Then
+            btnHoldInvoice.Text = "🍳 إرسال للمطبخ [F5]"
+            btnHoldInvoice.FillColor = Color.FromArgb(79, 70, 229) ' Royal Indigo
+        Else
+            btnHoldInvoice.Text = "تعليق الطلب [F5]"
+            btnHoldInvoice.FillColor = Color.FromArgb(245, 158, 11) ' Amber
+        End If
+    End Sub
 
     ' =========================================================
     ' استرجاع الفواتير المعلقة وإعادة فتح الطاولة والعميل
@@ -1288,6 +1325,7 @@ Public Class frmPOS
         CurrentOrderType = OrderType.Delivery
         SelectedTableID = Nothing
         SelectedTableName = ""
+        UpdateHoldButtonText()
         ' فتح فورم اختيار الطيار
         Using frmDriver As New FrmSelectDriver(_repo)
             If frmDriver.ShowDialog() = DialogResult.OK Then
@@ -1326,6 +1364,7 @@ Public Class frmPOS
         DeliveryFee = 0
         lblDeliveryFee.Text = "0.00"
         lblOrderTypeStatus.Text = "نوع الطلب: تيك أوي"
+        UpdateHoldButtonText()
         CalculatePOSGrandTotal()
     End Sub
 
@@ -1445,6 +1484,9 @@ Public Class frmPOS
                         CurrentReservationDeposit = 0
                     End If
 
+                    ' فحص ما إذا كان الطلب قد أُرسل بالفعل للمطبخ عبر التعليق المسبق
+                    Dim wasAlreadyHeld As Boolean = _currentPendingInvoiceID.HasValue
+
                     ' إغلاق الفاتورة المعلقة بعد الحفظ الناجح
                     If _currentPendingInvoiceID.HasValue Then
                         _repo.DeletePendingInvoice(_currentPendingInvoiceID.Value)
@@ -1452,7 +1494,7 @@ Public Class frmPOS
                     End If
 
                     invoice.InvoiceNumber = savedInvNum
-                    Dim custNameStr As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, "عميل نقدي")
+                    Dim custNameStr As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, If(Not String.IsNullOrWhiteSpace(txtCustomer.Text) AndAlso txtCustomer.Text.Trim() <> "عميل نقدي", txtCustomer.Text.Trim(), "عميل نقدي"))
 
                     ' 1. الطباعة التلقائية لإيصال العميل (GDI+ مع QR وفتح الدرج)
                     Try
@@ -1461,10 +1503,21 @@ Public Class frmPOS
                         Logger.LogError("btnPay_Click - PrintCustomerReceipt", printEx)
                     End Try
 
-                    ' 2. طباعة بون المطبخ (KOT) لطلبات التيك أوي والدليفري عند الدفع المباشر
-                    If CurrentOrderType <> OrderType.DineIn Then
+                    ' 2. طباعة بون المطبخ (KOT) وإرساله للـ KDS عند الدفع الفوري (إذا لم يكن قد أُرسل مسبقاً)
+                    If Not wasAlreadyHeld Then
+                        Dim orderDesc As String
+                        If CurrentOrderType = OrderType.DineIn Then
+                            orderDesc = "صالة - طاولة: " & SelectedTableName
+                            If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
+                        ElseIf CurrentOrderType = OrderType.Delivery Then
+                            orderDesc = "دليفري | الطيار: " & SelectedDriverName
+                            If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
+                        Else
+                            orderDesc = "تيك أوي"
+                            If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
+                        End If
+
                         Try
-                            Dim orderDesc As String = If(CurrentOrderType = OrderType.Delivery, "دليفري | الطيار: " & SelectedDriverName, "تيك أوي")
                             Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
                             RestaurantPrintManager.PrintKitchenTicket(savedInvNum, orderDesc, SelectedTableName, staffName, invoice.Details)
                         Catch exKot As Exception
@@ -1545,6 +1598,7 @@ Public Class frmPOS
         btnTakeaway.Checked = True
         CurrentOrderType = OrderType.Takeaway
         lblOrderTypeStatus.Text = "نوع الطلب: تيك أوي"
+        UpdateHoldButtonText()
 
         CalculatePOSGrandTotal()
     End Sub
@@ -1702,12 +1756,14 @@ Public Class frmPOS
         SelectedDriverName = ""
         DeliveryFee = 0
         lblDeliveryFee.Text = "0.00"
+        UpdateHoldButtonText()
 
         Using frmTables As New FrmSelectTable(_repo)
             If frmTables.ShowDialog() = DialogResult.OK Then
                 SelectedTableID = frmTables.SelectedTableID
                 SelectedTableName = frmTables.SelectedTableName
                 lblOrderTypeStatus.Text = "نوع الطلب: صالة | الطاولة: " & SelectedTableName
+                UpdateHoldButtonText()
 
                 ' إذا تم اختيار طاولة مشغولة، استرجاع طلبها تلقائياً
                 If frmTables.IsOccupiedSelected AndAlso SelectedTableID.HasValue Then
@@ -1742,6 +1798,9 @@ Public Class frmPOS
             If pendingItem IsNot Nothing Then
                 dgvInvoice.Rows.Clear()
                 _currentPendingInvoiceID = pendingItem.PendingID
+                CurrentOrderType = OrderType.DineIn
+                btnDineIn.Checked = True
+                UpdateHoldButtonText()
 
                 If pendingItem.CustomerID.HasValue AndAlso pendingItem.CustomerID.Value > 0 Then
                     CurrentCustomer = New CustomerModel With {

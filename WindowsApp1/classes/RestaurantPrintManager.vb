@@ -1,4 +1,4 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Windows.Forms
@@ -303,7 +303,7 @@ Public Class RestaurantPrintManager
 
                                              ' نوع الطلب والطاولة بشكل ضخم وواضح لطهاة المطبخ
                                              Dim tableOrType As String = orderTypeDesc
-                                             If Not String.IsNullOrWhiteSpace(tableName) Then
+                                             If Not String.IsNullOrWhiteSpace(tableName) AndAlso Not orderTypeDesc.Contains(tableName) Then
                                                  tableOrType &= " [ " & tableName & " ]"
                                              End If
                                              g.DrawString(tableOrType, fontOrderType, Brushes.Black, New RectangleF(0, yPos, pageWidth, 26), sfCenter)
