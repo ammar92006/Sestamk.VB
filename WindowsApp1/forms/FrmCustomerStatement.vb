@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Data
 Imports System.Drawing
 Imports System.Windows.Forms
@@ -32,19 +32,9 @@ Public Class FrmCustomerStatement
         cmbCustomers.SelectedIndex = -1
     End Sub
 
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر FrmCustomerStatement.Designer.vb
     Private Sub SetupGrid()
-        dgvStatement.Columns.Clear()
         dgvStatement.AutoGenerateColumns = False
-        dgvStatement.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvStatement.ReadOnly = True
-
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDate", .HeaderText = "التاريخ", .DataPropertyName = "TransactionDate", .Width = 140})
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colType", .HeaderText = "نوع الحركة", .DataPropertyName = "TransactionType", .Width = 130})
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDebit", .HeaderText = "مدين (عليه)", .DataPropertyName = "Debit", .Width = 110, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2", .ForeColor = Color.Red}})
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCredit", .HeaderText = "دائن (له/مسدد)", .DataPropertyName = "Credit", .Width = 110, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2", .ForeColor = Color.Green}})
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colBalance", .HeaderText = "الرصيد بعد الحركة", .DataPropertyName = "BalanceAfter", .Width = 120, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2", .Font = New Font("Segoe UI", 9, FontStyle.Bold)}})
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colNotes", .HeaderText = "ملاحظات", .DataPropertyName = "Notes", .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill})
-        dgvStatement.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colBranch", .HeaderText = "الفرع", .DataPropertyName = "BranchName", .Width = 110})
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click

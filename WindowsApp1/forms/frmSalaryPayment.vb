@@ -1,9 +1,9 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmSalaryPayment
     Private _activeShiftID As Integer? = ShiftSession.CurrentShift.ShiftID
     Private defaultTreasuryid As Integer
-    Private Async Sub frmSalaryPayment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub frmSalaryPayment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LoadMonths()
         InitDropdowns()
         'CheckActiveShift()

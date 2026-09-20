@@ -23,9 +23,9 @@ Public Class ProductUnits
     End Sub
 
     Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
-        If WindowState = WindowState.Normal Then
+        If WindowState = FormWindowState.Normal Then
             WindowState = FormWindowState.Maximized
-        ElseIf WindowState.Maximized Then
+        ElseIf WindowState = FormWindowState.Maximized Then
             WindowState = FormWindowState.Normal
         End If
     End Sub

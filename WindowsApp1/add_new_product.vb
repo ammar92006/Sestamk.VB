@@ -77,94 +77,12 @@ Public Class add_new_product
 
     End Sub
 
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر add_new_product.Designer.vb
     Private Sub datagridviewsetup()
         Main.datagridviewsetup(dgvUnits)
-        With dgvUnits
-
-
-            .Columns.Clear()
-
-            ' ---- الأعمدة العادية ----
-            .Columns.Add("ColUnitName", "اسم الوحدة")
-            .Columns.Add("ColUnitQuantity", "كمية الوحدة")
-            .Columns.Add("ColBarcode", "الباركود")
-            .Columns.Add("ColPurchasePrice", "سعر الشراء")
-            .Columns.Add("ColSalePrice", "سعر البيع")
-            .Columns.Add("ColNotes", "ملاحظات")
-
-            ' ---- عمود الزرار للحذف ----
-            Dim btnCol As New DataGridViewButtonColumn()
-            btnCol.HeaderText = "حذف"
-            btnCol.Text = "❌"
-            btnCol.Name = "ColDelete"
-            btnCol.UseColumnTextForButtonValue = True
-
-            ' اجعل عرض العمود أصغر ليتناسب مع زر الحذف
-            btnCol.FillWeight = 40
-
-            .Columns.Add(btnCol)
-
-            ' ---- ضبط AutoSizeColumnsMode بعد إضافة كل الأعمدة ----
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
-            '.Columns("Product_ID").Visible = False
-            '.Columns("BaseUnit_ID").Visible = False
-            '.Columns("Product_Image").Visible = False
-
-            ''' ✅ عناوين الأعمدة
-            '.Columns("Product_Code").HeaderText = "كود المنتج"
-            '.Columns("Product_Name").HeaderText = "اسم المنتج"
-            '.Columns("Category_Name").HeaderText = "القسم"
-            '.Columns("SuppliersName").HeaderText = "اسم المورد"
-            '.Columns("CompanyName").HeaderText = "اسم الشركة"
-            '.Columns("Product_Note").HeaderText = "الملاحظات"
-            '.Columns("Product_State").HeaderText = "حالة المنتج"
-            '.Columns("Unit_Name").HeaderText = "الوحدة الاساسية"
-
-            ''' الترتيب
-            '.Columns("Product_Code").DisplayIndex = 0
-            '.Columns("Product_Name").DisplayIndex = 1
-            '.Columns("Category_Name").DisplayIndex = 2
-            '.Columns("Unit_Name").DisplayIndex = 3
-
-            '.Columns("CompanyName").DisplayIndex = 4
-            '.Columns("SuppliersName").DisplayIndex = 5
-            '.Columns("Product_Note").DisplayIndex = 7
-            '.Columns("User_Barcode_path").DisplayIndex = 6
-            '.Columns("User_Stats").DisplayIndex = 7
-            '.Columns("Product_State").DisplayIndex = 8
-            '.Columns("Product_Name").Width = 300
-            '.Columns("IsActive").Width = 60
-
-
-            ' ✅ عرض الأعمدة بالتساوي
-            '.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
-            '' ✅ تحسين مظهر الصفوف
-            '.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245)
-            '.DefaultCellStyle.Font = New Font("Segoe UI", 14)
-            '.DefaultCellStyle.ForeColor = Color.Black
-            '.DefaultCellStyle.SelectionBackColor = Color.FromArgb(30, 144, 255)
-            '.DefaultCellStyle.SelectionForeColor = Color.White
-
-            '' ✅ تحسين عناوين الأعمدة
-            '.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 12, FontStyle.Bold)
-            '.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(51, 102, 153)
-            '.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            '.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            '.EnableHeadersVisualStyles = False   ' ← لازم False علشان التنسيق يبان فعلاً
-
-            '' ✅ حدود الصفوف والخلايا
-            '.GridColor = Color.LightGray
-            '.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            '.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-            '.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single
-
-            ' ✅ شكل جميل للصفوف
-            '.RowTemplate.Height = 100
-            .MultiSelect = False
-        End With
+        dgvUnits.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
     End Sub
+
     Private Sub LoadCategories()
         Try
             Dim cmd_LoadCategories As SqlCommand

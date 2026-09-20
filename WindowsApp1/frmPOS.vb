@@ -41,6 +41,7 @@ Public Class frmPOS
         End If
         EnableTouchScrolling(flpProducts)
         EnableTouchScrolling(flpCategories)
+        AddHandler flpProducts.Resize, Sub() UpdateProductButtonsLayout()
         SetupCategoryControlsToolbar()
         LoadCategories()
         datagridviewsetup(dgvInvoice)
@@ -195,6 +196,11 @@ Public Class frmPOS
                 ' 9. حاويات الأصناف والفئات
                 flpProducts.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
                 flpCategories.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
+                Dim bgSpacerColor As Color = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
+                Guna2Panel5.BackColor = bgSpacerColor
+                Guna2Panel6.BackColor = bgSpacerColor
+                Guna2Panel7.BackColor = bgSpacerColor
+                Guna2Panel8.BackColor = bgSpacerColor
 
                 ' 10. إعادة رسم الأصناف المفتوحة حالياً لتتوافق مع السمة (فقط إذا كانت الأقسام محملة بالفعل)
                 If _categoryButtons IsNot Nothing AndAlso _categoryButtons.Count > 0 Then
@@ -339,131 +345,12 @@ Public Class frmPOS
 
 
     End Function
+    ' =========================================================
+    ' إعدادات شبكة الفاتورة
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر frmPOS.Designer.vb
+    ' =========================================================
     Private Sub SetupInvoiceGrid()
-        ' ==========================================
-        ' 1. الخصائص العامة للجدول (UX & Behavior)
-        ' ==========================================
-        dgvInvoice.Columns.Clear()
         dgvInvoice.AutoGenerateColumns = False
-        dgvInvoice.AllowUserToAddRows = False
-        dgvInvoice.AllowUserToDeleteRows = False
-        dgvInvoice.AllowUserToResizeRows = False
-        dgvInvoice.ReadOnly = True
-        dgvInvoice.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvInvoice.MultiSelect = False
-        dgvInvoice.RowHeadersVisible = False
-
-        ' السماح بالـ Scroll أفقي ورأسي
-        dgvInvoice.ScrollBars = ScrollBars.Both
-
-        ' منع الـ DataGridView من توزيع الأعمدة تلقائياً على عرض الشاشة
-        dgvInvoice.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
-
-        ' جعل النص الطويل ينزل على أكثر من سطر
-        dgvInvoice.DefaultCellStyle.WrapMode = DataGridViewTriState.True
-
-        ' ضبط ارتفاع الصف تلقائياً حسب النص
-        dgvInvoice.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        ' ==========================================
-        ' 2. إنشاء الأعمدة وتحديد الترتيب والعرض
-        ' ==========================================
-
-        ' 1. مسلسل (#)
-        Dim colIndex As New DataGridViewTextBoxColumn With {
-        .Name = "colIndex",
-        .HeaderText = "#",
-        .Width = 35,
-        .SortMode = DataGridViewColumnSortMode.NotSortable,
-        .Visible = False
-    }
-        colIndex.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-        ' 2. اسم الصنف
-        Dim colProductName As New DataGridViewTextBoxColumn With {
-        .Name = "colProductName",
-        .HeaderText = "الصنف",
-        .Width = 100,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colProductName.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-
-        ' 3. الحجم
-        Dim colSize As New DataGridViewTextBoxColumn With {
-        .Name = "colSize",
-        .HeaderText = "الحجم",
-        .Width = 90,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colSize.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-        ' 4. الإضافات
-        Dim colAddons As New DataGridViewTextBoxColumn With {
-        .Name = "colAddons",
-        .HeaderText = "الإضافات",
-        .Width = 130,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colAddons.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-
-        ' 5. سعر القطعة
-        Dim colUnitPrice As New DataGridViewTextBoxColumn With {
-        .Name = "colUnitPrice",
-        .HeaderText = "السعر",
-        .Width = 80,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colUnitPrice.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        colUnitPrice.DefaultCellStyle.Format = "N2"
-
-        ' 6. الكمية
-        Dim colQuantity As New DataGridViewTextBoxColumn With {
-        .Name = "colQuantity",
-        .HeaderText = "الكمية",
-        .Width = 80,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colQuantity.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-        ' 7. السعر الإجمالي
-        Dim colTotalPrice As New DataGridViewTextBoxColumn With {
-        .Name = "colTotalPrice",
-        .HeaderText = "الإجمالي",
-        .Width = 100,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colTotalPrice.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        colTotalPrice.DefaultCellStyle.Format = "N2"
-
-        ' 8. ملاحظات
-        Dim colNotes As New DataGridViewTextBoxColumn With {
-        .Name = "colNotes",
-        .HeaderText = "ملاحظات",
-        .Width = 100,
-        .SortMode = DataGridViewColumnSortMode.NotSortable
-    }
-        colNotes.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-
-        ' 9. ProductID (مخفي للبرمجة والحفظ)
-        Dim colProductID As New DataGridViewTextBoxColumn With {
-        .Name = "colProductID",
-        .HeaderText = "ProductID",
-        .Visible = False
-    }
-
-        ' ==========================================
-        ' 3. إضافة الأعمدة إلى DataGridView بالترتيب
-        ' ==========================================
-        dgvInvoice.Columns.AddRange(New DataGridViewColumn() {
-        colIndex,
-        colProductName,
-        colSize,
-        colAddons,
-        colUnitPrice,
-        colQuantity,
-        colTotalPrice,
-        colNotes,
-        colProductID
-    })
     End Sub
     ' =========================================================
     ' أداة شريط التحكم بشبكة الفئات (الأعمدة والصفوف) وحفظ الإعدادات
@@ -773,12 +660,19 @@ Public Class frmPOS
                     Return
                 End If
 
+                Dim numCols As Integer = 5
+                Dim marginH As Integer = 6 ' 3 يمين + 3 يسار
+                Dim scrollW As Integer = If(flpProducts.VerticalScroll.Visible, 0, SystemInformation.VerticalScrollBarWidth)
+                Dim availW As Integer = flpProducts.ClientSize.Width - flpProducts.Padding.Horizontal - scrollW - 2
+                If availW < 300 Then availW = 820
+                Dim cardW As Integer = Math.Max(95, (availW - (numCols * marginH)) \ numCols)
+
                 For Each prod As ProductModel In products
                     Dim btn As New Guna.UI2.WinForms.Guna2Button With {
-                        .Width = 152,
+                        .Width = cardW,
                         .Height = 110,
                         .BorderRadius = 12,
-                        .Margin = New Padding(5),
+                        .Margin = New Padding(3, 4, 3, 4),
                         .Cursor = Cursors.Hand,
                         .Tag = prod,
                         .Animated = True,
@@ -800,12 +694,48 @@ Public Class frmPOS
 
                     flpProducts.Controls.Add(btn)
                 Next
+
+                UpdateProductButtonsLayout()
             Finally
                 flpProducts.ResumeLayout(True)
             End Try
         Catch ex As Exception
             Logger.LogError("LoadProducts", ex)
             MessageBox.Show("حدث خطأ أثناء تحميل الأصناف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' ضبط أبعاد وهوامش بطاقات الأصناف ديناميكياً لتوزيع 5 أعمدة بالضبط وبشكل جمالي متناسق بدون أي فراغات مهدرة
+    ''' </summary>
+    Private Sub UpdateProductButtonsLayout()
+        Try
+            If flpProducts Is Nothing OrElse flpProducts.Controls.Count = 0 Then Return
+
+            ' لو وُجد بانل فارغ "لا توجد أصناف"، نجعله يملأ العرض
+            For Each c As Control In flpProducts.Controls
+                If TypeOf c Is Guna.UI2.WinForms.Guna2Panel Then
+                    c.Width = Math.Max(320, flpProducts.ClientSize.Width - 20)
+                End If
+            Next
+
+            Dim numCols As Integer = 5
+            Dim marginH As Integer = 6 ' 3 يمين + 3 يسار
+            Dim scrollW As Integer = If(flpProducts.VerticalScroll.Visible, 0, SystemInformation.VerticalScrollBarWidth)
+            Dim availW As Integer = flpProducts.ClientSize.Width - flpProducts.Padding.Horizontal - scrollW - 2
+            If availW <= 100 Then Return
+
+            Dim cardW As Integer = Math.Max(95, (availW - (numCols * marginH)) \ numCols)
+
+            flpProducts.SuspendLayout()
+            For Each c As Control In flpProducts.Controls
+                If TypeOf c Is Guna.UI2.WinForms.Guna2Button Then
+                    If c.Width <> cardW Then c.Width = cardW
+                    c.Margin = New Padding(3, 4, 3, 4)
+                End If
+            Next
+            flpProducts.ResumeLayout(True)
+        Catch ex As Exception
         End Try
     End Sub
 
@@ -822,14 +752,15 @@ Public Class frmPOS
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
 
         ' 1. رسم اسم الصنف بأعلى البطاقة بمساحة كافية وخط واضح
-        Dim titleRect As New Rectangle(8, 12, btn.Width - 16, btn.Height - 50)
+        Dim titleRect As New Rectangle(6, 10, btn.Width - 12, btn.Height - 48)
         Using sf As New StringFormat()
             sf.Alignment = StringAlignment.Center
             sf.LineAlignment = StringAlignment.Center
             sf.Trimming = StringTrimming.EllipsisWord
             sf.FormatFlags = StringFormatFlags.NoClip
 
-            Using titleFont As New Font("Segoe UI", 11.0!, FontStyle.Bold)
+            Dim titleFontSize As Single = If(btn.Width < 125, 9.5!, 11.0!)
+            Using titleFont As New Font("Segoe UI", titleFontSize, FontStyle.Bold)
                 Dim titleBrush As Brush = If(isDark, Brushes.White, New SolidBrush(Color.FromArgb(15, 23, 42)))
                 Try
                     g.DrawString(prod.ProductNameAr, titleFont, titleBrush, titleRect, sf)
@@ -857,9 +788,10 @@ Public Class frmPOS
         End If
 
         ' 3. حساب أبعاد ورسم كبسولة السعر بالأسفل
-        Using badgeFont As New Font("Segoe UI", 9.5!, FontStyle.Bold)
+        Dim badgeFontSize As Single = If(btn.Width < 125, 8.5!, 9.5!)
+        Using badgeFont As New Font("Segoe UI", badgeFontSize, FontStyle.Bold)
             Dim textSize = g.MeasureString(priceText, badgeFont)
-            Dim pillW As Integer = Math.Min(btn.Width - 16, CInt(Math.Ceiling(textSize.Width)) + 18)
+            Dim pillW As Integer = Math.Min(btn.Width - 12, CInt(Math.Ceiling(textSize.Width)) + 14)
             Dim pillH As Integer = 25
             Dim pillX As Integer = (btn.Width - pillW) \ 2
             Dim pillY As Integer = btn.Height - pillH - 8

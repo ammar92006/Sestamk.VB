@@ -735,7 +735,7 @@ Public Class Sales_Returns
                 )
 
             Case Keys.F8
-                Dim invNum = InputBox("أدخل رقم فاتورة المبيعات الأصلية (مثال: INV-2026... أو رقم الفاتورة) لاسترجاع أصنافها:", "استدعاء فاتورة مبيعات")
+                Dim invNum = InputBox("أدخل رقم فاتورة المبيعات الأصلية (مثال: 1 أو رقم الفاتورة) لاسترجاع أصنافها:", "استدعاء فاتورة مبيعات")
                 If Not String.IsNullOrWhiteSpace(invNum) Then
                     LoadOriginalInvoiceForReturn(invNum)
                 End If

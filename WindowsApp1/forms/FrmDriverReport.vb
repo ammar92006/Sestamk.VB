@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Data
 Imports System.Drawing
 Imports System.Windows.Forms
@@ -49,21 +49,9 @@ Public Class FrmDriverReport
         cmbDrivers.SelectedIndex = 0
     End Sub
 
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر FrmDriverReport.Designer.vb
     Private Sub SetupGrid()
-        dgvDriverReport.Columns.Clear()
         dgvDriverReport.AutoGenerateColumns = False
-        dgvDriverReport.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvDriverReport.ReadOnly = True
-
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDate", .HeaderText = "التاريخ والوقت", .DataPropertyName = "TransactionDate", .Width = 140})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDriver", .HeaderText = "اسم الطيار", .DataPropertyName = "DriverName", .Width = 130})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colPhone", .HeaderText = "رقم الموبايل", .DataPropertyName = "Phone", .Width = 110})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colInvNum", .HeaderText = "رقم الفاتورة", .DataPropertyName = "InvoiceNumber", .Width = 130})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCustomer", .HeaderText = "العميل", .DataPropertyName = "CustomerName", .Width = 130})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colOrderTotal", .HeaderText = "قيمة الفاتورة", .DataPropertyName = "OrderTotal", .Width = 110, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2"}})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colFee", .HeaderText = "عمولة التوصيل", .DataPropertyName = "DeliveryFee", .Width = 100, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2", .ForeColor = Color.ForestGreen}})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colStatus", .HeaderText = "حالة التوريد", .DataPropertyName = "SettleStatus", .Width = 120, .DefaultCellStyle = New DataGridViewCellStyle With {.Font = New Font("Segoe UI", 9, FontStyle.Bold)}})
-        dgvDriverReport.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colShift", .HeaderText = "الوردية", .DataPropertyName = "ShiftNumber", .Width = 120})
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click

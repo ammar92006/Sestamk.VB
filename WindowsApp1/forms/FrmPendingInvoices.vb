@@ -20,18 +20,9 @@ Public Class FrmPendingInvoices
         Dim Drag0 As FormDragHelper = New FormDragHelper(Me, panelHeader)
     End Sub
 
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر FrmPendingInvoices.Designer.vb
     Private Sub SetupGrid()
-        dgvPending.Columns.Clear()
         dgvPending.AutoGenerateColumns = False
-        dgvPending.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvPending.MultiSelect = False
-        dgvPending.ReadOnly = True
-
-        dgvPending.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colNum", .HeaderText = "رقم المعلقة", .DataPropertyName = "PendingNumber", .Width = 120})
-        dgvPending.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDate", .HeaderText = "التاريخ", .DataPropertyName = "PendingDate", .Width = 130})
-        dgvPending.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCust", .HeaderText = "العميل", .DataPropertyName = "CustomerName", .Width = 120})
-        dgvPending.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colTable", .HeaderText = "الطاولة", .DataPropertyName = "TableName", .Width = 90})
-        dgvPending.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colTotal", .HeaderText = "الإجمالي", .DataPropertyName = "TotalAmount", .Width = 100})
     End Sub
 
     Private Sub LoadPendingInvoices()

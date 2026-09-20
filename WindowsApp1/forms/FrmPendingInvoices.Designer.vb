@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmPendingInvoices
     Inherits System.Windows.Forms.Form
 
@@ -29,6 +29,11 @@ Partial Class FrmPendingInvoices
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
         Me.dgvPending = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.colNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCust = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTable = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Guna2Panel2 = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnResume = New Guna.UI2.WinForms.Guna2Button()
         Me.btnDeletePending = New Guna.UI2.WinForms.Guna2Button()
@@ -76,6 +81,7 @@ Partial Class FrmPendingInvoices
         '
         Me.dgvPending.AllowUserToAddRows = False
         Me.dgvPending.AllowUserToDeleteRows = False
+        Me.dgvPending.AutoGenerateColumns = False
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
         Me.dgvPending.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvPending.BackgroundColor = System.Drawing.Color.Silver
@@ -89,6 +95,7 @@ Partial Class FrmPendingInvoices
         Me.dgvPending.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvPending.ColumnHeadersHeight = 4
         Me.dgvPending.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Me.dgvPending.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colNum, Me.colDate, Me.colCust, Me.colTable, Me.colTotal})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -100,13 +107,56 @@ Partial Class FrmPendingInvoices
         Me.dgvPending.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvPending.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvPending.Location = New System.Drawing.Point(0, 0)
+        Me.dgvPending.MultiSelect = False
         Me.dgvPending.Name = "dgvPending"
         Me.dgvPending.ReadOnly = True
         Me.dgvPending.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvPending.RowHeadersVisible = False
         Me.dgvPending.RowTemplate.Height = 40
+        Me.dgvPending.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvPending.Size = New System.Drawing.Size(1205, 615)
         Me.dgvPending.TabIndex = 5612
+        '
+        'colNum
+        '
+        Me.colNum.DataPropertyName = "PendingNumber"
+        Me.colNum.HeaderText = "رقم المعلقة"
+        Me.colNum.Name = "colNum"
+        Me.colNum.ReadOnly = True
+        Me.colNum.Width = 120
+        '
+        'colDate
+        '
+        Me.colDate.DataPropertyName = "PendingDate"
+        Me.colDate.HeaderText = "التاريخ"
+        Me.colDate.Name = "colDate"
+        Me.colDate.ReadOnly = True
+        Me.colDate.Width = 130
+        '
+        'colCust
+        '
+        Me.colCust.DataPropertyName = "CustomerName"
+        Me.colCust.HeaderText = "العميل"
+        Me.colCust.Name = "colCust"
+        Me.colCust.ReadOnly = True
+        Me.colCust.Width = 120
+        '
+        'colTable
+        '
+        Me.colTable.DataPropertyName = "TableName"
+        Me.colTable.HeaderText = "الطاولة"
+        Me.colTable.Name = "colTable"
+        Me.colTable.ReadOnly = True
+        Me.colTable.Width = 90
+        '
+        'colTotal
+        '
+        Me.colTotal.DataPropertyName = "TotalAmount"
+        Me.colTotal.HeaderText = "الإجمالي"
+        Me.colTotal.Name = "colTotal"
+        Me.colTotal.ReadOnly = True
+        Me.colTotal.Width = 100
+        '
         Me.dgvPending.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvPending.ThemeStyle.BackColor = System.Drawing.Color.Silver
         Me.dgvPending.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -200,6 +250,11 @@ Partial Class FrmPendingInvoices
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents dgvPending As Guna.UI2.WinForms.Guna2DataGridView
+    Friend WithEvents colNum As DataGridViewTextBoxColumn
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents colCust As DataGridViewTextBoxColumn
+    Friend WithEvents colTable As DataGridViewTextBoxColumn
+    Friend WithEvents colTotal As DataGridViewTextBoxColumn
     Friend WithEvents Guna2Panel2 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents btnResume As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnDeletePending As Guna.UI2.WinForms.Guna2Button

@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmShifts
 
@@ -656,10 +656,10 @@ Public Class frmShifts
     Public Sub PrintZReportForShift(shiftID As Integer, actualCash As Decimal, expectedCash As Decimal, diff As Decimal, closeNotes As String)
         Try
             Dim queryShift As String = "
-                SELECT S.*, W.WorkShiftName, ISNULL(U.UserFullName, N'كاشير') AS CashierName
+                SELECT S.*, W.WorkShiftName, ISNULL(U.User_Name, N'كاشير') AS CashierName
                 FROM Shifts S
                 LEFT JOIN WorkShifts W ON S.WorkShiftID = W.WorkShiftID
-                LEFT JOIN Users U ON S.UserID = U.UserID
+                LEFT JOIN Users_TBL U ON S.UserID = U.User_ID
                 WHERE S.ShiftID = @ShiftID;
             "
             Dim dtShift As DataTable = Nothing

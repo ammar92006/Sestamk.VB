@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class add_new_product
     Inherits System.Windows.Forms.Form
 
@@ -52,6 +52,13 @@ Partial Class add_new_product
         Me.Label8 = New System.Windows.Forms.Label()
         Me.txtUnitName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.dgvUnits = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.ColUnitName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColUnitQuantity = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColBarcode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColPurchasePrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColSalePrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColNotes = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ColDelete = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.txtProductNote = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.txtCompanyName = New Guna.UI2.WinForms.Guna2TextBox()
@@ -475,6 +482,7 @@ Partial Class add_new_product
         Me.dgvUnits.AllowUserToDeleteRows = False
         DataGridViewCellStyle4.BackColor = System.Drawing.Color.White
         Me.dgvUnits.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvUnits.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvUnits.BackgroundColor = System.Drawing.Color.Silver
         DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
@@ -486,6 +494,7 @@ Partial Class add_new_product
         Me.dgvUnits.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvUnits.ColumnHeadersHeight = 4
         Me.dgvUnits.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Me.dgvUnits.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ColUnitName, Me.ColUnitQuantity, Me.ColBarcode, Me.ColPurchasePrice, Me.ColSalePrice, Me.ColNotes, Me.ColDelete})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 22.0!, System.Drawing.FontStyle.Bold)
@@ -497,6 +506,51 @@ Partial Class add_new_product
         Me.dgvUnits.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvUnits.Location = New System.Drawing.Point(12, 567)
         Me.dgvUnits.Name = "dgvUnits"
+        '
+        'ColUnitName
+        '
+        Me.ColUnitName.HeaderText = "اسم الوحدة"
+        Me.ColUnitName.Name = "ColUnitName"
+        Me.ColUnitName.ReadOnly = True
+        '
+        'ColUnitQuantity
+        '
+        Me.ColUnitQuantity.HeaderText = "كمية الوحدة"
+        Me.ColUnitQuantity.Name = "ColUnitQuantity"
+        Me.ColUnitQuantity.ReadOnly = True
+        '
+        'ColBarcode
+        '
+        Me.ColBarcode.HeaderText = "الباركود"
+        Me.ColBarcode.Name = "ColBarcode"
+        Me.ColBarcode.ReadOnly = True
+        '
+        'ColPurchasePrice
+        '
+        Me.ColPurchasePrice.HeaderText = "سعر الشراء"
+        Me.ColPurchasePrice.Name = "ColPurchasePrice"
+        Me.ColPurchasePrice.ReadOnly = True
+        '
+        'ColSalePrice
+        '
+        Me.ColSalePrice.HeaderText = "سعر البيع"
+        Me.ColSalePrice.Name = "ColSalePrice"
+        Me.ColSalePrice.ReadOnly = True
+        '
+        'ColNotes
+        '
+        Me.ColNotes.HeaderText = "ملاحظات"
+        Me.ColNotes.Name = "ColNotes"
+        Me.ColNotes.ReadOnly = True
+        '
+        'ColDelete
+        '
+        Me.ColDelete.FillWeight = 40.0!
+        Me.ColDelete.HeaderText = "حذف"
+        Me.ColDelete.Name = "ColDelete"
+        Me.ColDelete.ReadOnly = True
+        Me.ColDelete.Text = "❌"
+        Me.ColDelete.UseColumnTextForButtonValue = True
         Me.dgvUnits.ReadOnly = True
         Me.dgvUnits.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvUnits.RowHeadersVisible = False
@@ -828,6 +882,13 @@ Partial Class add_new_product
     Friend WithEvents Label1 As Label
     Friend WithEvents txtProductCode As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents dgvUnits As Guna.UI2.WinForms.Guna2DataGridView
+    Friend WithEvents ColUnitName As DataGridViewTextBoxColumn
+    Friend WithEvents ColUnitQuantity As DataGridViewTextBoxColumn
+    Friend WithEvents ColBarcode As DataGridViewTextBoxColumn
+    Friend WithEvents ColPurchasePrice As DataGridViewTextBoxColumn
+    Friend WithEvents ColSalePrice As DataGridViewTextBoxColumn
+    Friend WithEvents ColNotes As DataGridViewTextBoxColumn
+    Friend WithEvents ColDelete As DataGridViewButtonColumn
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents btn_generate_barcode As DevExpress.XtraEditors.SimpleButton
     Friend WithEvents btn_scan_bar As DevExpress.XtraEditors.SimpleButton

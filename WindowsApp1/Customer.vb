@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports System.IO
 Imports Guna.UI2.WinForms
@@ -580,7 +580,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             Dim massege As String
             Dim name As String = row.Cells("CustomerName").Value.ToString()
             Dim Balance As Decimal = row.Cells("CurrentBalance").Value.ToString()
-            Dim word1 As String
+            Dim word1 As String = "لديك"
             If Decimal.TryParse(txtBalance.Text.Trim(), Balance) Then
 
                 If Balance < 0 Then

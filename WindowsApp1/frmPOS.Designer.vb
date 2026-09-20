@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmPOS
     Inherits System.Windows.Forms.Form
 
@@ -27,6 +27,9 @@ Partial Class frmPOS
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Center As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Right As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Money As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblDateTime = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -84,6 +87,15 @@ Partial Class frmPOS
         Me.lblOrderTypeStatus = New System.Windows.Forms.Label()
         Me.Guna2Panel10 = New Guna.UI2.WinForms.Guna2Panel()
         Me.dgvInvoice = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.colIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colProductName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colSize = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colAddons = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colUnitPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colQuantity = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTotalPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colNotes = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Guna2Panel9 = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblInvoiceNumber = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -295,7 +307,7 @@ Partial Class frmPOS
         Me.Guna2Panel8.Dock = System.Windows.Forms.DockStyle.Left
         Me.Guna2Panel8.Location = New System.Drawing.Point(0, 10)
         Me.Guna2Panel8.Name = "Guna2Panel8"
-        Me.Guna2Panel8.Size = New System.Drawing.Size(10, 810)
+        Me.Guna2Panel8.Size = New System.Drawing.Size(2, 810)
         Me.Guna2Panel8.TabIndex = 5
         '
         'Guna2Panel7
@@ -311,9 +323,9 @@ Partial Class frmPOS
         '
         Me.Guna2Panel6.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
         Me.Guna2Panel6.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Guna2Panel6.Location = New System.Drawing.Point(840, 10)
+        Me.Guna2Panel6.Location = New System.Drawing.Point(848, 10)
         Me.Guna2Panel6.Name = "Guna2Panel6"
-        Me.Guna2Panel6.Size = New System.Drawing.Size(10, 820)
+        Me.Guna2Panel6.Size = New System.Drawing.Size(2, 820)
         Me.Guna2Panel6.TabIndex = 3
         '
         'Guna2Panel5
@@ -329,10 +341,10 @@ Partial Class frmPOS
         '
         Me.flpProducts.AutoScroll = True
         Me.flpProducts.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpProducts.Location = New System.Drawing.Point(10, 10)
+        Me.flpProducts.Location = New System.Drawing.Point(2, 10)
         Me.flpProducts.Name = "flpProducts"
-        Me.flpProducts.Padding = New System.Windows.Forms.Padding(15)
-        Me.flpProducts.Size = New System.Drawing.Size(830, 595)
+        Me.flpProducts.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
+        Me.flpProducts.Size = New System.Drawing.Size(846, 595)
         Me.flpProducts.TabIndex = 1
         '
         'Guna2Panel3
@@ -891,6 +903,10 @@ Partial Class frmPOS
         '
         Me.dgvInvoice.AllowUserToAddRows = False
         Me.dgvInvoice.AllowUserToDeleteRows = False
+        Me.dgvInvoice.AllowUserToResizeRows = False
+        Me.dgvInvoice.AutoGenerateColumns = False
+        Me.dgvInvoice.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None
+        Me.dgvInvoice.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle7.BackColor = System.Drawing.Color.White
         Me.dgvInvoice.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvInvoice.BackgroundColor = System.Drawing.Color.Silver
@@ -904,24 +920,113 @@ Partial Class frmPOS
         Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
         Me.dgvInvoice.ColumnHeadersHeight = 4
         Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID})
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle9.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         DataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
         DataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvInvoice.DefaultCellStyle = DataGridViewCellStyle9
         Me.dgvInvoice.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvInvoice.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvInvoice.Location = New System.Drawing.Point(0, 0)
+        Me.dgvInvoice.MultiSelect = False
         Me.dgvInvoice.Name = "dgvInvoice"
         Me.dgvInvoice.ReadOnly = True
         Me.dgvInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvInvoice.RowHeadersVisible = False
         Me.dgvInvoice.RowTemplate.Height = 40
+        Me.dgvInvoice.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.dgvInvoice.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvInvoice.Size = New System.Drawing.Size(600, 332)
         Me.dgvInvoice.TabIndex = 5611
+        '
+        'colIndex
+        '
+        DataGridViewCellStyle_Center.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.colIndex.DefaultCellStyle = DataGridViewCellStyle_Center
+        Me.colIndex.HeaderText = "#"
+        Me.colIndex.Name = "colIndex"
+        Me.colIndex.ReadOnly = True
+        Me.colIndex.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colIndex.Visible = False
+        Me.colIndex.Width = 35
+        '
+        'colProductName
+        '
+        DataGridViewCellStyle_Right.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colProductName.DefaultCellStyle = DataGridViewCellStyle_Right
+        Me.colProductName.HeaderText = "الصنف"
+        Me.colProductName.Name = "colProductName"
+        Me.colProductName.ReadOnly = True
+        Me.colProductName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colProductName.Width = 100
+        '
+        'colSize
+        '
+        Me.colSize.DefaultCellStyle = DataGridViewCellStyle_Center
+        Me.colSize.HeaderText = "الحجم"
+        Me.colSize.Name = "colSize"
+        Me.colSize.ReadOnly = True
+        Me.colSize.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colSize.Width = 90
+        '
+        'colAddons
+        '
+        Me.colAddons.DefaultCellStyle = DataGridViewCellStyle_Right
+        Me.colAddons.HeaderText = "الإضافات"
+        Me.colAddons.Name = "colAddons"
+        Me.colAddons.ReadOnly = True
+        Me.colAddons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colAddons.Width = 130
+        '
+        'colUnitPrice
+        '
+        DataGridViewCellStyle_Money.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle_Money.Format = "N2"
+        Me.colUnitPrice.DefaultCellStyle = DataGridViewCellStyle_Money
+        Me.colUnitPrice.HeaderText = "السعر"
+        Me.colUnitPrice.Name = "colUnitPrice"
+        Me.colUnitPrice.ReadOnly = True
+        Me.colUnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colUnitPrice.Width = 80
+        '
+        'colQuantity
+        '
+        Me.colQuantity.DefaultCellStyle = DataGridViewCellStyle_Center
+        Me.colQuantity.HeaderText = "الكمية"
+        Me.colQuantity.Name = "colQuantity"
+        Me.colQuantity.ReadOnly = True
+        Me.colQuantity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colQuantity.Width = 80
+        '
+        'colTotalPrice
+        '
+        Me.colTotalPrice.DefaultCellStyle = DataGridViewCellStyle_Money
+        Me.colTotalPrice.HeaderText = "الإجمالي"
+        Me.colTotalPrice.Name = "colTotalPrice"
+        Me.colTotalPrice.ReadOnly = True
+        Me.colTotalPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colTotalPrice.Width = 100
+        '
+        'colNotes
+        '
+        Me.colNotes.DefaultCellStyle = DataGridViewCellStyle_Right
+        Me.colNotes.HeaderText = "ملاحظات"
+        Me.colNotes.Name = "colNotes"
+        Me.colNotes.ReadOnly = True
+        Me.colNotes.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colNotes.Width = 100
+        '
+        'colProductID
+        '
+        Me.colProductID.HeaderText = "ProductID"
+        Me.colProductID.Name = "colProductID"
+        Me.colProductID.ReadOnly = True
+        Me.colProductID.Visible = False
+        '
         Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
         Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1241,6 +1346,15 @@ Partial Class frmPOS
     Friend WithEvents Guna2Panel10 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2Panel11 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents dgvInvoice As Guna.UI2.WinForms.Guna2DataGridView
+    Friend WithEvents colIndex As DataGridViewTextBoxColumn
+    Friend WithEvents colProductName As DataGridViewTextBoxColumn
+    Friend WithEvents colSize As DataGridViewTextBoxColumn
+    Friend WithEvents colAddons As DataGridViewTextBoxColumn
+    Friend WithEvents colUnitPrice As DataGridViewTextBoxColumn
+    Friend WithEvents colQuantity As DataGridViewTextBoxColumn
+    Friend WithEvents colTotalPrice As DataGridViewTextBoxColumn
+    Friend WithEvents colNotes As DataGridViewTextBoxColumn
+    Friend WithEvents colProductID As DataGridViewTextBoxColumn
     Friend WithEvents btnAddCategoryForm As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnTakeaway As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2Panel12 As Guna.UI2.WinForms.Guna2Panel

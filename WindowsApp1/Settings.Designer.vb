@@ -28,6 +28,8 @@ Partial Class Settings
         Me.pnlSidebar = New Guna.UI2.WinForms.Guna2Panel()
         Me.pnlSidebarButtons = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnAbout = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnUpdatesSettings = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnActivationSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnNotificationsSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnDatabaseSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnReceiptSettings = New Guna.UI2.WinForms.Guna2Button()
@@ -149,6 +151,8 @@ Partial Class Settings
         '
         Me.pnlSidebarButtons.AutoScroll = True
         Me.pnlSidebarButtons.Controls.Add(Me.btnAbout)
+        Me.pnlSidebarButtons.Controls.Add(Me.btnUpdatesSettings)
+        Me.pnlSidebarButtons.Controls.Add(Me.btnActivationSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnNotificationsSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnDatabaseSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnReceiptSettings)
@@ -172,12 +176,53 @@ Partial Class Settings
         Me.btnAbout.FillColor = System.Drawing.Color.Empty
         Me.btnAbout.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnAbout.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-        Me.btnAbout.Location = New System.Drawing.Point(12, 430)
+        Me.btnAbout.Image = Global.WindowsApp1.My.Resources.Resources.information1
+        Me.btnAbout.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnAbout.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnAbout.Location = New System.Drawing.Point(12, 550)
         Me.btnAbout.Name = "btnAbout"
         Me.btnAbout.Size = New System.Drawing.Size(256, 54)
-        Me.btnAbout.TabIndex = 7
+        Me.btnAbout.TabIndex = 9
         Me.btnAbout.Text = "ℹ️  حول البرنامج"
         Me.btnAbout.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'btnUpdatesSettings
+        '
+        Me.btnUpdatesSettings.BorderRadius = 10
+        Me.btnUpdatesSettings.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
+        Me.btnUpdatesSettings.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.btnUpdatesSettings.CheckedState.ForeColor = System.Drawing.Color.White
+        Me.btnUpdatesSettings.FillColor = System.Drawing.Color.Empty
+        Me.btnUpdatesSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnUpdatesSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnUpdatesSettings.Image = Global.WindowsApp1.My.Resources.Resources.update
+        Me.btnUpdatesSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnUpdatesSettings.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnUpdatesSettings.Location = New System.Drawing.Point(12, 490)
+        Me.btnUpdatesSettings.Name = "btnUpdatesSettings"
+        Me.btnUpdatesSettings.Size = New System.Drawing.Size(256, 54)
+        Me.btnUpdatesSettings.TabIndex = 8
+        Me.btnUpdatesSettings.Text = "🔄  التحديثات والترقية"
+        Me.btnUpdatesSettings.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'btnActivationSettings
+        '
+        Me.btnActivationSettings.BorderRadius = 10
+        Me.btnActivationSettings.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
+        Me.btnActivationSettings.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.btnActivationSettings.CheckedState.ForeColor = System.Drawing.Color.White
+        Me.btnActivationSettings.FillColor = System.Drawing.Color.Empty
+        Me.btnActivationSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnActivationSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnActivationSettings.Image = Global.WindowsApp1.My.Resources.Resources.activation
+        Me.btnActivationSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnActivationSettings.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnActivationSettings.Location = New System.Drawing.Point(12, 430)
+        Me.btnActivationSettings.Name = "btnActivationSettings"
+        Me.btnActivationSettings.Size = New System.Drawing.Size(256, 54)
+        Me.btnActivationSettings.TabIndex = 7
+        Me.btnActivationSettings.Text = "🔐  إدارة التفعيل"
+        Me.btnActivationSettings.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'btnNotificationsSettings
         '
@@ -188,6 +233,9 @@ Partial Class Settings
         Me.btnNotificationsSettings.FillColor = System.Drawing.Color.Empty
         Me.btnNotificationsSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnNotificationsSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnNotificationsSettings.Image = Global.WindowsApp1.My.Resources.Resources.notification
+        Me.btnNotificationsSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnNotificationsSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnNotificationsSettings.Location = New System.Drawing.Point(12, 370)
         Me.btnNotificationsSettings.Name = "btnNotificationsSettings"
         Me.btnNotificationsSettings.Size = New System.Drawing.Size(256, 54)
@@ -204,6 +252,9 @@ Partial Class Settings
         Me.btnDatabaseSettings.FillColor = System.Drawing.Color.Empty
         Me.btnDatabaseSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnDatabaseSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnDatabaseSettings.Image = Global.WindowsApp1.My.Resources.Resources.database
+        Me.btnDatabaseSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnDatabaseSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnDatabaseSettings.Location = New System.Drawing.Point(12, 310)
         Me.btnDatabaseSettings.Name = "btnDatabaseSettings"
         Me.btnDatabaseSettings.Size = New System.Drawing.Size(256, 54)
@@ -220,6 +271,9 @@ Partial Class Settings
         Me.btnReceiptSettings.FillColor = System.Drawing.Color.Empty
         Me.btnReceiptSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnReceiptSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnReceiptSettings.Image = Global.WindowsApp1.My.Resources.Resources.invoice
+        Me.btnReceiptSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnReceiptSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnReceiptSettings.Location = New System.Drawing.Point(12, 250)
         Me.btnReceiptSettings.Name = "btnReceiptSettings"
         Me.btnReceiptSettings.Size = New System.Drawing.Size(256, 54)
@@ -236,6 +290,9 @@ Partial Class Settings
         Me.btnScannerSettings.FillColor = System.Drawing.Color.Empty
         Me.btnScannerSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnScannerSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnScannerSettings.Image = Global.WindowsApp1.My.Resources.Resources.barcode
+        Me.btnScannerSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnScannerSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnScannerSettings.Location = New System.Drawing.Point(12, 190)
         Me.btnScannerSettings.Name = "btnScannerSettings"
         Me.btnScannerSettings.Size = New System.Drawing.Size(256, 54)
@@ -252,6 +309,9 @@ Partial Class Settings
         Me.btnPrinterSettings.FillColor = System.Drawing.Color.Empty
         Me.btnPrinterSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnPrinterSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnPrinterSettings.Image = Global.WindowsApp1.My.Resources.Resources.print
+        Me.btnPrinterSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnPrinterSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnPrinterSettings.Location = New System.Drawing.Point(12, 130)
         Me.btnPrinterSettings.Name = "btnPrinterSettings"
         Me.btnPrinterSettings.Size = New System.Drawing.Size(256, 54)
@@ -268,6 +328,9 @@ Partial Class Settings
         Me.btnSalesSettings.FillColor = System.Drawing.Color.Empty
         Me.btnSalesSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnSalesSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnSalesSettings.Image = Global.WindowsApp1.My.Resources.Resources.discount__1_
+        Me.btnSalesSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnSalesSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnSalesSettings.Location = New System.Drawing.Point(12, 70)
         Me.btnSalesSettings.Name = "btnSalesSettings"
         Me.btnSalesSettings.Size = New System.Drawing.Size(256, 54)
@@ -279,12 +342,14 @@ Partial Class Settings
         '
         Me.btnSystemSettings.BorderRadius = 10
         Me.btnSystemSettings.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
-        Me.btnSystemSettings.Checked = True
         Me.btnSystemSettings.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
         Me.btnSystemSettings.CheckedState.ForeColor = System.Drawing.Color.White
-        Me.btnSystemSettings.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.btnSystemSettings.FillColor = System.Drawing.Color.Empty
         Me.btnSystemSettings.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnSystemSettings.ForeColor = System.Drawing.Color.White
+        Me.btnSystemSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnSystemSettings.Image = Global.WindowsApp1.My.Resources.Resources.settings__3_
+        Me.btnSystemSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnSystemSettings.ImageSize = New System.Drawing.Size(26, 26)
         Me.btnSystemSettings.Location = New System.Drawing.Point(12, 10)
         Me.btnSystemSettings.Name = "btnSystemSettings"
         Me.btnSystemSettings.Size = New System.Drawing.Size(256, 54)
@@ -380,6 +445,8 @@ Partial Class Settings
     Friend WithEvents btnReceiptSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnDatabaseSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnNotificationsSettings As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnActivationSettings As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnUpdatesSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnAbout As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents panelMain As Guna.UI2.WinForms.Guna2Panel
 End Class

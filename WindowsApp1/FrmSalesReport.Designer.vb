@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmSalesReport
     Inherits System.Windows.Forms.Form
 
@@ -25,6 +25,10 @@ Partial Class FrmSalesReport
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmSalesReport))
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Delivery As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Net As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Paid As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Rem As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
@@ -47,6 +51,20 @@ Partial Class FrmSalesReport
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
         Me.dgvSales = New System.Windows.Forms.DataGridView()
+        Me.colInvNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCustomer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTable = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDriver = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDeliveryFee = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colNet = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPaid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colRemaining = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPayType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colBranch = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colStore = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.lblTotalRemainingSum = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -324,19 +342,147 @@ Partial Class FrmSalesReport
         '
         'dgvSales
         '
+        Me.dgvSales.AllowUserToAddRows = False
+        Me.dgvSales.AllowUserToDeleteRows = False
         Me.dgvSales.AllowUserToResizeColumns = False
         Me.dgvSales.AllowUserToResizeRows = False
+        Me.dgvSales.AutoGenerateColumns = False
         DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(244, Byte), Integer), CType(CType(247, Byte), Integer))
         Me.dgvSales.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle3
         Me.dgvSales.BackgroundColor = System.Drawing.Color.White
         Me.dgvSales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvSales.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colInvNum, Me.colDate, Me.colType, Me.colCustomer, Me.colTable, Me.colDriver, Me.colDeliveryFee, Me.colNet, Me.colPaid, Me.colRemaining, Me.colPayType, Me.colShift, Me.colBranch, Me.colStore})
         Me.dgvSales.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvSales.Location = New System.Drawing.Point(0, 323)
+        Me.dgvSales.MultiSelect = False
         Me.dgvSales.Name = "dgvSales"
+        Me.dgvSales.ReadOnly = True
         Me.dgvSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvSales.RowTemplate.Height = 35
+        Me.dgvSales.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvSales.Size = New System.Drawing.Size(1331, 431)
         Me.dgvSales.TabIndex = 50
+        '
+        'colInvNum
+        '
+        Me.colInvNum.DataPropertyName = "InvoiceNumber"
+        Me.colInvNum.HeaderText = "رقم الفاتورة"
+        Me.colInvNum.Name = "colInvNum"
+        Me.colInvNum.ReadOnly = True
+        Me.colInvNum.Width = 130
+        '
+        'colDate
+        '
+        Me.colDate.DataPropertyName = "InvoiceDate"
+        Me.colDate.HeaderText = "التاريخ والوقت"
+        Me.colDate.Name = "colDate"
+        Me.colDate.ReadOnly = True
+        Me.colDate.Width = 140
+        '
+        'colType
+        '
+        Me.colType.DataPropertyName = "OrderTypeName"
+        Me.colType.HeaderText = "نوع الطلب"
+        Me.colType.Name = "colType"
+        Me.colType.ReadOnly = True
+        Me.colType.Width = 90
+        '
+        'colCustomer
+        '
+        Me.colCustomer.DataPropertyName = "CustomerName"
+        Me.colCustomer.HeaderText = "العميل"
+        Me.colCustomer.Name = "colCustomer"
+        Me.colCustomer.ReadOnly = True
+        Me.colCustomer.Width = 130
+        '
+        'colTable
+        '
+        Me.colTable.DataPropertyName = "TableName"
+        Me.colTable.HeaderText = "الطاولة"
+        Me.colTable.Name = "colTable"
+        Me.colTable.ReadOnly = True
+        Me.colTable.Width = 80
+        '
+        'colDriver
+        '
+        Me.colDriver.DataPropertyName = "DriverName"
+        Me.colDriver.HeaderText = "الطيار"
+        Me.colDriver.Name = "colDriver"
+        Me.colDriver.ReadOnly = True
+        Me.colDriver.Width = 110
+        '
+        'colDeliveryFee
+        '
+        DataGridViewCellStyle_Delivery.Format = "N2"
+        Me.colDeliveryFee.DefaultCellStyle = DataGridViewCellStyle_Delivery
+        Me.colDeliveryFee.DataPropertyName = "DeliveryFee"
+        Me.colDeliveryFee.HeaderText = "التوصيل"
+        Me.colDeliveryFee.Name = "colDeliveryFee"
+        Me.colDeliveryFee.ReadOnly = True
+        Me.colDeliveryFee.Width = 80
+        '
+        'colNet
+        '
+        DataGridViewCellStyle_Net.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle_Net.Format = "N2"
+        Me.colNet.DefaultCellStyle = DataGridViewCellStyle_Net
+        Me.colNet.DataPropertyName = "NetTotal"
+        Me.colNet.HeaderText = "الصافي"
+        Me.colNet.Name = "colNet"
+        Me.colNet.ReadOnly = True
+        Me.colNet.Width = 100
+        '
+        'colPaid
+        '
+        DataGridViewCellStyle_Paid.Format = "N2"
+        Me.colPaid.DefaultCellStyle = DataGridViewCellStyle_Paid
+        Me.colPaid.DataPropertyName = "PaidAmount"
+        Me.colPaid.HeaderText = "المدفوع"
+        Me.colPaid.Name = "colPaid"
+        Me.colPaid.ReadOnly = True
+        Me.colPaid.Width = 90
+        '
+        'colRemaining
+        '
+        DataGridViewCellStyle_Rem.Format = "N2"
+        Me.colRemaining.DefaultCellStyle = DataGridViewCellStyle_Rem
+        Me.colRemaining.DataPropertyName = "RemainingAmount"
+        Me.colRemaining.HeaderText = "المتبقي"
+        Me.colRemaining.Name = "colRemaining"
+        Me.colRemaining.ReadOnly = True
+        Me.colRemaining.Width = 90
+        '
+        'colPayType
+        '
+        Me.colPayType.DataPropertyName = "PaymentType"
+        Me.colPayType.HeaderText = "الدفع"
+        Me.colPayType.Name = "colPayType"
+        Me.colPayType.ReadOnly = True
+        Me.colPayType.Width = 80
+        '
+        'colShift
+        '
+        Me.colShift.DataPropertyName = "ShiftNumber"
+        Me.colShift.HeaderText = "الوردية"
+        Me.colShift.Name = "colShift"
+        Me.colShift.ReadOnly = True
+        Me.colShift.Width = 120
+        '
+        'colBranch
+        '
+        Me.colBranch.DataPropertyName = "BranchName"
+        Me.colBranch.HeaderText = "الفرع"
+        Me.colBranch.Name = "colBranch"
+        Me.colBranch.ReadOnly = True
+        Me.colBranch.Width = 110
+        '
+        'colStore
+        '
+        Me.colStore.DataPropertyName = "StoreName"
+        Me.colStore.HeaderText = "المخزن"
+        Me.colStore.Name = "colStore"
+        Me.colStore.ReadOnly = True
+        Me.colStore.Width = 110
         '
         'grpCustomerInfo
         '
@@ -426,6 +572,20 @@ Partial Class FrmSalesReport
     Friend WithEvents Label10 As Label
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents dgvSales As DataGridView
+    Friend WithEvents colInvNum As DataGridViewTextBoxColumn
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents colType As DataGridViewTextBoxColumn
+    Friend WithEvents colCustomer As DataGridViewTextBoxColumn
+    Friend WithEvents colTable As DataGridViewTextBoxColumn
+    Friend WithEvents colDriver As DataGridViewTextBoxColumn
+    Friend WithEvents colDeliveryFee As DataGridViewTextBoxColumn
+    Friend WithEvents colNet As DataGridViewTextBoxColumn
+    Friend WithEvents colPaid As DataGridViewTextBoxColumn
+    Friend WithEvents colRemaining As DataGridViewTextBoxColumn
+    Friend WithEvents colPayType As DataGridViewTextBoxColumn
+    Friend WithEvents colShift As DataGridViewTextBoxColumn
+    Friend WithEvents colBranch As DataGridViewTextBoxColumn
+    Friend WithEvents colStore As DataGridViewTextBoxColumn
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents lblTotalRemainingSum As Label
     Friend WithEvents Label6 As Label

@@ -1,15 +1,14 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Drawing
+Imports System.Drawing.Drawing2D
 Imports System.Linq
 Imports System.Media
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
-Imports Guna.UI2.WinForms
 
 Namespace Global.WindowsApp1
-    Public Class FrmKitchenDisplay
-        Inherits Form
+    Partial Class FrmKitchenDisplay
 
         Private ReadOnly _repo As POSRepository
         Private ReadOnly _displayedOrders As New Dictionary(Of Integer, OrderCardControl)()
@@ -17,251 +16,148 @@ Namespace Global.WindowsApp1
         Private _isHistoryMode As Boolean = False
         Private _currentOrderTypeFilter As Byte = 0 ' 0 = الكل
         Private _currentStationFilter As String = "الكل"
-
-        ' أدوات واجهة المستخدم
-        Private panelHeader As Panel
-        Private lblTitle As Label
-        Private lblActiveCountBadge As Label
-        Private pnlFilterContainer As Panel
-        Private flowOrders As FlowLayoutPanel
-        Private btnSoundToggle As Button
-        Private btnRefresh As Button
-        Private btnHistory As Button
-        Private btnFullscreen As Button
-        Private btnCloseForm As Button
-        Private cmbOrderType As ComboBox
-        Private cmbStation As ComboBox
-        Private lblEmptyNotice As Label
-
-        Private tmrSeconds As Timer
-        Private tmrPoll As Timer
         Private _isPolling As Boolean = False
 
         Public Sub New()
             _repo = New POSRepository(DBModule.ConnectionString)
-            InitializeComponentsCustom()
+            InitializeComponent()
+            SetupEventHandlers()
         End Sub
 
-        Private Sub InitializeComponentsCustom()
-            Me.Text = "شاشة المطبخ الذكية (KDS) - نظام إدارة المطاعم"
-            Me.ClientSize = New Size(1200, 750)
-            Me.MinimumSize = New Size(900, 600)
-            Me.StartPosition = FormStartPosition.CenterScreen
-            Me.FormBorderStyle = FormBorderStyle.None
-            Me.RightToLeft = RightToLeft.Yes
-            Me.RightToLeftLayout = True
-            Me.BackColor = Color.FromArgb(24, 26, 31)
-            Me.ForeColor = Color.White
-            Me.Font = New Font("Segoe UI", 10.0F, FontStyle.Regular)
-
-            ' 1. الهيدر العلوي
-            panelHeader = New Panel With {
-                .Dock = DockStyle.Top,
-                .Height = 70,
-                .BackColor = Color.FromArgb(32, 35, 42),
-                .Padding = New Padding(15, 10, 15, 10)
-            }
-
-            lblTitle = New Label With {
-                .Text = "🍳 شاشة المطبخ الرقمية (KDS)",
-                .Font = New Font("Segoe UI", 15.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(240, 243, 246),
-                .AutoSize = True,
-                .Location = New Point(15, 18)
-            }
-            panelHeader.Controls.Add(lblTitle)
-
-            lblActiveCountBadge = New Label With {
-                .Text = "0 طلبات قيد التحضير",
-                .Font = New Font("Segoe UI", 11.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(16, 185, 129),
-                .BackColor = Color.FromArgb(16, 45, 35),
-                .Padding = New Padding(8, 4, 8, 4),
-                .AutoSize = True,
-                .Location = New Point(320, 18)
-            }
-            panelHeader.Controls.Add(lblActiveCountBadge)
-
-            ' أزرار التحكم بالنافذة
-            btnCloseForm = New Button With {
-                .Text = "✕",
-                .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(220, 53, 69),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(40, 36),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(15, 17),
-                .Cursor = Cursors.Hand
-            }
-            btnCloseForm.FlatAppearance.BorderSize = 0
+        Private Sub SetupEventHandlers()
             AddHandler btnCloseForm.Click, Sub() Me.Close()
-            panelHeader.Controls.Add(btnCloseForm)
-
-            btnFullscreen = New Button With {
-                .Text = "⛶ ملء الشاشة",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(50, 55, 65),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(110, 36),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(65, 17),
-                .Cursor = Cursors.Hand
-            }
-            btnFullscreen.FlatAppearance.BorderSize = 0
             AddHandler btnFullscreen.Click, AddressOf ToggleFullscreen
-            panelHeader.Controls.Add(btnFullscreen)
-
-            btnHistory = New Button With {
-                .Text = "📜 المنتهية (Recall)",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(50, 55, 65),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(130, 36),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(185, 17),
-                .Cursor = Cursors.Hand
-            }
-            btnHistory.FlatAppearance.BorderSize = 0
             AddHandler btnHistory.Click, AddressOf ToggleHistoryMode
-            panelHeader.Controls.Add(btnHistory)
-
-            btnSoundToggle = New Button With {
-                .Text = "🔔 الصوت: مفعل",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(40, 70, 60),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(120, 36),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(325, 17),
-                .Cursor = Cursors.Hand
-            }
-            btnSoundToggle.FlatAppearance.BorderSize = 0
             AddHandler btnSoundToggle.Click, AddressOf ToggleSound
-            panelHeader.Controls.Add(btnSoundToggle)
-
-            btnRefresh = New Button With {
-                .Text = "🔄 تحديث",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(50, 55, 65),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(90, 36),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(455, 17),
-                .Cursor = Cursors.Hand
-            }
-            btnRefresh.FlatAppearance.BorderSize = 0
             AddHandler btnRefresh.Click, Async Sub() Await LoadActiveOrdersAsync()
-            panelHeader.Controls.Add(btnRefresh)
 
-            Me.Controls.Add(panelHeader)
-
-            ' 2. شريط الفلترة أسفل الهيدر
-            pnlFilterContainer = New Panel With {
-                .Dock = DockStyle.Top,
-                .Height = 46,
-                .BackColor = Color.FromArgb(26, 29, 35),
-                .Padding = New Padding(15, 6, 15, 6)
-            }
-
-            Dim lblFilterType As New Label With {
-                .Text = "تصفية بنوع الطلب:",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(170, 175, 185),
-                .AutoSize = True,
-                .Location = New Point(20, 12)
-            }
-            pnlFilterContainer.Controls.Add(lblFilterType)
-
-            cmbOrderType = New ComboBox With {
-                .DropDownStyle = ComboBoxStyle.DropDownList,
-                .Font = New Font("Segoe UI", 10.0F),
-                .BackColor = Color.FromArgb(40, 44, 52),
-                .ForeColor = Color.White,
-                .Location = New Point(140, 8),
-                .Width = 140
-            }
-            cmbOrderType.Items.AddRange(New Object() {"الكل", "صالة", "تيك أوي", "دليفري"})
-            cmbOrderType.SelectedIndex = 0
             AddHandler cmbOrderType.SelectedIndexChanged, Async Sub()
                                                               Select Case cmbOrderType.SelectedIndex
                                                                   Case 0 : _currentOrderTypeFilter = 0
                                                                   Case 1 : _currentOrderTypeFilter = 2 ' صالة
                                                                   Case 2 : _currentOrderTypeFilter = 1 ' تيك أوي
                                                                   Case 3 : _currentOrderTypeFilter = 3 ' دليفري
+                                                                  Case Else : _currentOrderTypeFilter = 0
                                                               End Select
                                                               Await LoadActiveOrdersAsync()
                                                           End Sub
-            pnlFilterContainer.Controls.Add(cmbOrderType)
 
-            Dim lblFilterStation As New Label With {
-                .Text = "المحطة / القسم:",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(170, 175, 185),
-                .AutoSize = True,
-                .Location = New Point(310, 12)
-            }
-            pnlFilterContainer.Controls.Add(lblFilterStation)
-
-            cmbStation = New ComboBox With {
-                .DropDownStyle = ComboBoxStyle.DropDownList,
-                .Font = New Font("Segoe UI", 10.0F),
-                .BackColor = Color.FromArgb(40, 44, 52),
-                .ForeColor = Color.White,
-                .Location = New Point(415, 8),
-                .Width = 160
-            }
-            cmbStation.Items.AddRange(New Object() {"الكل", "مطبخ", "شواية", "بيتزا", "مشروبات"})
-            cmbStation.SelectedIndex = 0
             AddHandler cmbStation.SelectedIndexChanged, Async Sub()
                                                             _currentStationFilter = cmbStation.Text
                                                             Await LoadActiveOrdersAsync()
                                                         End Sub
-            pnlFilterContainer.Controls.Add(cmbStation)
 
-            Me.Controls.Add(pnlFilterContainer)
-
-            ' 3. لوحة عرض بطاقات الطلبات FlowLayoutPanel
-            flowOrders = New FlowLayoutPanel With {
-                .Dock = DockStyle.Fill,
-                .AutoScroll = True,
-                .WrapContents = True,
-                .Padding = New Padding(15),
-                .BackColor = Color.FromArgb(20, 22, 26)
-            }
-            Me.Controls.Add(flowOrders)
-
-            ' رسالة الشاشة فارغة
-            lblEmptyNotice = New Label With {
-                .Text = "لا توجد طلبات نشطة في المطبخ حالياً ✅" & vbCrLf & "سيتم تحديث الشاشة تلقائياً فور تسجيل طلب جديد",
-                .Font = New Font("Segoe UI", 16.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(100, 110, 125),
-                .TextAlign = ContentAlignment.MiddleCenter,
-                .Dock = DockStyle.Fill,
-                .Visible = False
-            }
-            Me.Controls.Add(lblEmptyNotice)
-            lblEmptyNotice.BringToFront()
-
-            ' 4. تجهيز المؤقتات
-            tmrSeconds = New Timer With {.Interval = 1000}
             AddHandler tmrSeconds.Tick, AddressOf OnSecondsTick
-            tmrSeconds.Start()
-
-            tmrPoll = New Timer With {.Interval = 4000}
             AddHandler tmrPoll.Tick, Async Sub() Await PollNewOrdersAsync()
+
+            ' استماع لتغييرات الثيم الحية
+            AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
+
+            tmrSeconds.Start()
             tmrPoll.Start()
 
-            ' دعم السحب بالفأرة للهيدر
-            Dim drag As New FormDragHelper(Me, panelHeader)
+            ' دعم سحب النافذة عبر الهيدر
+            Try
+                Dim drag As New FormDragHelper(Me, panelHeader)
+            Catch
+            End Try
         End Sub
 
         Private Async Sub FrmKitchenDisplay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+            ApplyTheme()
+            UpdateClock()
             Await LoadActiveOrdersAsync()
+        End Sub
+
+        Private Sub OnThemeChanged(sender As Object, theme As AppTheme, palette As ThemePalette)
+            If Me.IsDisposed OrElse Not Me.IsHandleCreated Then Return
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(New MethodInvoker(AddressOf ApplyTheme))
+            Else
+                ApplyTheme()
+            End If
+        End Sub
+
+        ' =========================================================
+        ' تطبيق ثيم النظام (فاتح / داكن) بدقة وجمالية
+        ' =========================================================
+        Public Sub ApplyTheme()
+            Try
+                Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+                Dim pal = ThemeManager.Instance.CurrentPalette
+
+                If isDark Then
+                    ' الثيم الداكن (Dark Theme)
+                    Me.BackColor = Color.FromArgb(17, 24, 39)
+                    flowOrders.BackColor = Color.FromArgb(17, 24, 39)
+                    panelHeader.BackColor = Color.FromArgb(31, 41, 55)
+                    pnlFilterContainer.BackColor = Color.FromArgb(31, 41, 55)
+                    lblTitle.ForeColor = Color.White
+                    lblClock.ForeColor = Color.FromArgb(156, 163, 175)
+
+                    ' الأزرار العلوية
+                    Dim btnBg = Color.FromArgb(55, 65, 81)
+                    Dim btnFg = Color.White
+                    btnFullscreen.BackColor = btnBg : btnFullscreen.ForeColor = btnFg
+                    btnHistory.BackColor = If(_isHistoryMode, Color.FromArgb(180, 83, 9), btnBg) : btnHistory.ForeColor = btnFg
+                    btnSoundToggle.BackColor = If(_soundEnabled, btnBg, Color.FromArgb(120, 30, 30)) : btnSoundToggle.ForeColor = btnFg
+                    btnRefresh.BackColor = btnBg : btnRefresh.ForeColor = btnFg
+
+                    ' فلاتر البحث
+                    cmbOrderType.FillColor = Color.FromArgb(17, 24, 39)
+                    cmbOrderType.BorderColor = Color.FromArgb(75, 85, 99)
+                    cmbOrderType.ForeColor = Color.White
+                    cmbStation.FillColor = Color.FromArgb(17, 24, 39)
+                    cmbStation.BorderColor = Color.FromArgb(75, 85, 99)
+                    cmbStation.ForeColor = Color.White
+                    lblFilterType.ForeColor = Color.FromArgb(156, 163, 175)
+                    lblFilterStation.ForeColor = Color.FromArgb(156, 163, 175)
+
+                    lblEmptyNotice.ForeColor = Color.FromArgb(156, 163, 175)
+                Else
+                    ' الثيم الفاتح (Light Theme)
+                    Me.BackColor = Color.FromArgb(241, 245, 249)
+                    flowOrders.BackColor = Color.FromArgb(241, 245, 249)
+                    panelHeader.BackColor = Color.White
+                    pnlFilterContainer.BackColor = Color.White
+                    lblTitle.ForeColor = Color.FromArgb(15, 23, 42)
+                    lblClock.ForeColor = Color.FromArgb(71, 85, 105)
+
+                    ' الأزرار العلوية
+                    Dim btnBg = Color.FromArgb(241, 245, 249)
+                    Dim btnFg = Color.FromArgb(30, 41, 59)
+                    btnFullscreen.BackColor = btnBg : btnFullscreen.ForeColor = btnFg
+                    btnHistory.BackColor = If(_isHistoryMode, Color.FromArgb(217, 119, 6), btnBg) : btnHistory.ForeColor = If(_isHistoryMode, Color.White, btnFg)
+                    btnSoundToggle.BackColor = If(_soundEnabled, btnBg, Color.FromArgb(254, 226, 226)) : btnSoundToggle.ForeColor = If(_soundEnabled, btnFg, Color.FromArgb(185, 28, 28))
+                    btnRefresh.BackColor = btnBg : btnRefresh.ForeColor = btnFg
+
+                    ' فلاتر البحث
+                    cmbOrderType.FillColor = Color.FromArgb(248, 250, 252)
+                    cmbOrderType.BorderColor = Color.FromArgb(203, 213, 225)
+                    cmbOrderType.ForeColor = Color.FromArgb(15, 23, 42)
+                    cmbStation.FillColor = Color.FromArgb(248, 250, 252)
+                    cmbStation.BorderColor = Color.FromArgb(203, 213, 225)
+                    cmbStation.ForeColor = Color.FromArgb(15, 23, 42)
+                    lblFilterType.ForeColor = Color.FromArgb(71, 85, 105)
+                    lblFilterStation.ForeColor = Color.FromArgb(71, 85, 105)
+
+                    lblEmptyNotice.ForeColor = Color.FromArgb(100, 116, 139)
+                End If
+
+                ' تحديث كل البطاقات المعروضة
+                For Each card In _displayedOrders.Values
+                    card.ApplyTheme(isDark)
+                Next
+            Catch ex As Exception
+                Logger.LogError("FrmKitchenDisplay.ApplyTheme", ex)
+            End Try
+        End Sub
+
+        Private Sub UpdateClock()
+            Dim now = DateTime.Now
+            Dim ampm = If(now.Hour >= 12, "م", "ص")
+            Dim hour12 = now.ToString("hh")
+            lblClock.Text = $"{hour12}:{now:mm:ss} {ampm}"
         End Sub
 
         ' =========================================================
@@ -274,6 +170,7 @@ Namespace Global.WindowsApp1
             End If
 
             Try
+                Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
                 Dim orders = Await Task.Run(Function() _repo.GetActiveKitchenOrders(_currentOrderTypeFilter, _currentStationFilter))
                 flowOrders.SuspendLayout()
                 flowOrders.Controls.Clear()
@@ -281,20 +178,28 @@ Namespace Global.WindowsApp1
 
                 If orders Is Nothing OrElse orders.Count = 0 Then
                     lblEmptyNotice.Visible = True
-                    lblActiveCountBadge.Text = "0 طلبات قيد التحضير"
-                    lblActiveCountBadge.BackColor = Color.FromArgb(30, 35, 45)
-                    lblActiveCountBadge.ForeColor = Color.FromArgb(150, 160, 175)
+                    lblActiveCountBadge.Text = "0 طلبات نشطة"
+                    lblDelayedBadge.Visible = False
                 Else
                     lblEmptyNotice.Visible = False
-                    lblActiveCountBadge.Text = orders.Count & " طلبات قيد التحضير"
-                    lblActiveCountBadge.BackColor = Color.FromArgb(16, 45, 35)
-                    lblActiveCountBadge.ForeColor = Color.FromArgb(16, 185, 129)
+                    lblActiveCountBadge.Text = orders.Count & " طلبات نشطة"
 
+                    Dim delayedCount As Integer = 0
                     For Each order In orders
-                        Dim card = CreateOrderCard(order, isHistory:=False)
+                        Dim card = CreateOrderCard(order, isHistory:=False, isDark:=isDark)
                         _displayedOrders(order.KitchenOrderID) = card
                         flowOrders.Controls.Add(card)
+                        If order.ElapsedSeconds >= 720 Then
+                            delayedCount += 1
+                        End If
                     Next
+
+                    If delayedCount > 0 Then
+                        lblDelayedBadge.Text = delayedCount & " متأخرة"
+                        lblDelayedBadge.Visible = True
+                    Else
+                        lblDelayedBadge.Visible = False
+                    End If
                 End If
             Catch ex As Exception
                 Logger.LogError("LoadActiveOrdersAsync", ex)
@@ -310,6 +215,7 @@ Namespace Global.WindowsApp1
             If _isPolling OrElse _isHistoryMode Then Return
             _isPolling = True
             Try
+                Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
                 Dim latestOrders = Await Task.Run(Function() _repo.GetActiveKitchenOrders(_currentOrderTypeFilter, _currentStationFilter))
                 If latestOrders Is Nothing Then Return
 
@@ -332,7 +238,7 @@ Namespace Global.WindowsApp1
                 Dim hasNewOrder As Boolean = False
                 For Each order In latestOrders
                     If Not _displayedOrders.ContainsKey(order.KitchenOrderID) Then
-                        Dim newCard = CreateOrderCard(order, isHistory:=False)
+                        Dim newCard = CreateOrderCard(order, isHistory:=False, isDark:=isDark)
                         _displayedOrders(order.KitchenOrderID) = newCard
                         flowOrders.Controls.Add(newCard)
                         hasNewOrder = True
@@ -343,14 +249,8 @@ Namespace Global.WindowsApp1
                     PlayNotificationSound()
                 End If
 
-                ' تحديث شارة العدد
-                If _displayedOrders.Count = 0 Then
-                    lblEmptyNotice.Visible = True
-                    lblActiveCountBadge.Text = "0 طلبات قيد التحضير"
-                Else
-                    lblEmptyNotice.Visible = False
-                    lblActiveCountBadge.Text = _displayedOrders.Count & " طلبات قيد التحضير"
-                End If
+                ' تحديث شارات العدد
+                UpdateOrderBadges()
             Catch ex As Exception
                 Debug.WriteLine("PollNewOrdersAsync error: " & ex.Message)
             Finally
@@ -358,29 +258,60 @@ Namespace Global.WindowsApp1
             End Try
         End Function
 
+        Private Sub UpdateOrderBadges()
+            If _displayedOrders.Count = 0 Then
+                lblEmptyNotice.Visible = True
+                lblActiveCountBadge.Text = "0 طلبات نشطة"
+                lblDelayedBadge.Visible = False
+            Else
+                lblEmptyNotice.Visible = False
+                lblActiveCountBadge.Text = _displayedOrders.Count & " طلبات نشطة"
+
+                Dim delayedCount = _displayedOrders.Values.Where(Function(c) c.Order.ElapsedSeconds >= 720).Count()
+                If delayedCount > 0 Then
+                    lblDelayedBadge.Text = delayedCount & " متأخرة"
+                    lblDelayedBadge.Visible = True
+                Else
+                    lblDelayedBadge.Visible = False
+                End If
+            End If
+        End Sub
+
         ' =========================================================
-        ' مؤقت الثواني لتحديث العدادات الملونة
+        ' مؤقت الثواني لتحديث العدادات والساعة الحية
         ' =========================================================
         Private Sub OnSecondsTick(sender As Object, e As EventArgs)
+            UpdateClock()
             If _isHistoryMode Then Return
+
+            Dim delayedCount As Integer = 0
             For Each kvp In _displayedOrders
                 kvp.Value.UpdateTimerUI()
+                If kvp.Value.Order.ElapsedSeconds >= 720 Then
+                    delayedCount += 1
+                End If
             Next
+
+            If delayedCount > 0 Then
+                lblDelayedBadge.Text = delayedCount & " متأخرة"
+                lblDelayedBadge.Visible = True
+            Else
+                lblDelayedBadge.Visible = False
+            End If
         End Sub
 
         ' =========================================================
         ' إنشاء بطاقة الطلب (Order Card Control)
         ' =========================================================
-        Private Function CreateOrderCard(order As KitchenOrderModel, isHistory As Boolean) As OrderCardControl
-            Dim card As New OrderCardControl(order, _repo, isHistory)
+        Private Function CreateOrderCard(order As KitchenOrderModel, isHistory As Boolean, isDark As Boolean) As OrderCardControl
+            Dim card As New OrderCardControl(order, _repo, isHistory, isDark)
             AddHandler card.OrderBumped, Sub(orderId)
                                              If _displayedOrders.ContainsKey(orderId) Then
                                                  Dim c = _displayedOrders(orderId)
                                                  flowOrders.Controls.Remove(c)
                                                  c.Dispose()
                                                  _displayedOrders.Remove(orderId)
-                                                 lblActiveCountBadge.Text = _displayedOrders.Count & " طلبات قيد التحضير"
-                                                 If _displayedOrders.Count = 0 Then lblEmptyNotice.Visible = True
+                                                 UpdateOrderBadges()
                                              End If
                                          End Sub
             AddHandler card.OrderRecalled, Async Sub(orderId)
@@ -394,20 +325,23 @@ Namespace Global.WindowsApp1
         ' =========================================================
         Private Async Function LoadHistoryOrdersAsync() As Task
             Try
-                Dim orders = Await Task.Run(Function() _repo.GetRecentBumpedOrders(25))
+                Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+                Dim orders = Await Task.Run(Function() _repo.GetRecentBumpedOrders(30))
                 flowOrders.SuspendLayout()
                 flowOrders.Controls.Clear()
                 _displayedOrders.Clear()
 
                 If orders Is Nothing OrElse orders.Count = 0 Then
-                    lblEmptyNotice.Text = "لا توجد طلبات منتهية مؤخراً للاسترجاع"
+                    lblEmptyNotice.Text = "لا توجد طلبات منتهية مؤخراً في الأرشيف"
                     lblEmptyNotice.Visible = True
-                    lblActiveCountBadge.Text = "أرشيف الطلبات المنتهية"
+                    lblActiveCountBadge.Text = "أرشيف الطلبات"
+                    lblDelayedBadge.Visible = False
                 Else
                     lblEmptyNotice.Visible = False
-                    lblActiveCountBadge.Text = orders.Count & " طلبات منتهية"
+                    lblActiveCountBadge.Text = orders.Count & " طلبات مسلّمة"
+                    lblDelayedBadge.Visible = False
                     For Each order In orders
-                        Dim card = CreateOrderCard(order, isHistory:=True)
+                        Dim card = CreateOrderCard(order, isHistory:=True, isDark:=isDark)
                         flowOrders.Controls.Add(card)
                     Next
                 End If
@@ -420,40 +354,46 @@ Namespace Global.WindowsApp1
 
         Private Async Sub ToggleHistoryMode(sender As Object, e As EventArgs)
             _isHistoryMode = Not _isHistoryMode
+            Dim isDark = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
             If _isHistoryMode Then
-                btnHistory.Text = "⬅ العودة للنشطة"
-                btnHistory.BackColor = Color.FromArgb(180, 80, 30)
-                lblTitle.Text = "📜 أرشيف طلبات المطبخ المنتهية حديثاً"
+                btnHistory.Text = "العودة للنشطة"
+                btnHistory.BackColor = Color.FromArgb(180, 83, 9)
+                btnHistory.ForeColor = Color.White
+                lblTitle.Text = "أرشيف طلبات المطبخ المنتهية"
                 pnlFilterContainer.Visible = False
                 Await LoadHistoryOrdersAsync()
             Else
-                btnHistory.Text = "📜 المنتهية (Recall)"
-                btnHistory.BackColor = Color.FromArgb(50, 55, 65)
-                lblTitle.Text = "🍳 شاشة المطبخ الرقمية (KDS)"
+                btnHistory.Text = "الأرشيف (Recall)"
+                btnHistory.BackColor = If(isDark, Color.FromArgb(55, 65, 81), Color.FromArgb(241, 245, 249))
+                btnHistory.ForeColor = If(isDark, Color.White, Color.FromArgb(30, 41, 59))
+                lblTitle.Text = "شاشة المطبخ (KDS)"
                 pnlFilterContainer.Visible = True
-                lblEmptyNotice.Text = "لا توجد طلبات نشطة في المطبخ حالياً ✅" & vbCrLf & "سيتم تحديث الشاشة تلقائياً فور تسجيل طلب جديد"
+                lblEmptyNotice.Text = "لا توجد طلبات نشطة في المطبخ حالياً" & vbCrLf & "سيتم عرض الطلبات الجديدة تلقائياً فور تسجيلها من الكاشير"
                 Await LoadActiveOrdersAsync()
             End If
         End Sub
 
         Private Sub ToggleSound(sender As Object, e As EventArgs)
             _soundEnabled = Not _soundEnabled
+            Dim isDark = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
             If _soundEnabled Then
-                btnSoundToggle.Text = "🔔 الصوت: مفعل"
-                btnSoundToggle.BackColor = Color.FromArgb(40, 70, 60)
+                btnSoundToggle.Text = "🔔 الصوت"
+                btnSoundToggle.BackColor = If(isDark, Color.FromArgb(55, 65, 81), Color.FromArgb(241, 245, 249))
+                btnSoundToggle.ForeColor = If(isDark, Color.White, Color.FromArgb(30, 41, 59))
             Else
-                btnSoundToggle.Text = "🔕 الصوت: معطل"
-                btnSoundToggle.BackColor = Color.FromArgb(70, 45, 45)
+                btnSoundToggle.Text = "🔕 كتم الصوت"
+                btnSoundToggle.BackColor = If(isDark, Color.FromArgb(120, 30, 30), Color.FromArgb(254, 226, 226))
+                btnSoundToggle.ForeColor = If(isDark, Color.White, Color.FromArgb(185, 28, 28))
             End If
         End Sub
 
         Private Sub ToggleFullscreen(sender As Object, e As EventArgs)
-            If Me.WindowState = FormWindowState.Maximized AndAlso Me.FormBorderStyle = FormBorderStyle.None Then
+            If Me.WindowState = FormWindowState.Maximized Then
                 Me.WindowState = FormWindowState.Normal
-                btnFullscreen.Text = "⛶ ملء الشاشة"
+                btnFullscreen.Text = "⛶ تكبير"
             Else
                 Me.WindowState = FormWindowState.Maximized
-                btnFullscreen.Text = "🗗 تصغير"
+                btnFullscreen.Text = "🗗 استعادة"
             End If
         End Sub
 
@@ -467,12 +407,13 @@ Namespace Global.WindowsApp1
         Protected Overrides Sub OnFormClosing(e As FormClosingEventArgs)
             tmrSeconds.Stop()
             tmrPoll.Stop()
+            RemoveHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
             MyBase.OnFormClosing(e)
         End Sub
     End Class
 
     ' =========================================================
-    ' بطاقة الطلب التفاعلية داخل شاشة المطبخ (OrderCardControl)
+    ' بطاقة الطلب التفاعلية الاحترافية (OrderCardControl)
     ' =========================================================
     Public Class OrderCardControl
         Inherits Panel
@@ -480,198 +421,268 @@ Namespace Global.WindowsApp1
         Public ReadOnly Order As KitchenOrderModel
         Private ReadOnly _repo As POSRepository
         Private ReadOnly _isHistory As Boolean
+        Private _isDark As Boolean = True
 
         Public Event OrderBumped(orderId As Integer)
         Public Event OrderRecalled(orderId As Integer)
 
         Private pnlHeader As Panel
+        Private pnlHeaderRow1 As Panel
+        Private pnlHeaderRow2 As Panel
         Private lblOrderNum As Label
         Private lblOrderType As Label
         Private lblTimer As Label
-        Private lblServerName As Label
+        Private lblServerTime As Label
         Private pnlItemsList As Panel
+        Private pnlBottom As Panel
         Private btnAction As Button
-        Private btnStartPrep As Button
+        Private _itemRows As New List(Of ItemRowWrapper)()
 
-        Public Sub New(order As KitchenOrderModel, repo As POSRepository, isHistory As Boolean)
+        Private Class ItemRowWrapper
+            Public Property PanelRow As Panel
+            Public Property LblQty As Label
+            Public Property LblName As Label
+            Public Property ChkDone As CheckBox
+            Public Property Item As KitchenOrderItemModel
+        End Class
+
+        Public Sub New(order As KitchenOrderModel, repo As POSRepository, isHistory As Boolean, isDark As Boolean)
             Me.Order = order
             Me._repo = repo
             Me._isHistory = isHistory
+            Me._isDark = isDark
 
             InitializeCard()
         End Sub
 
         Private Sub InitializeCard()
             Me.Width = 320
-            Me.Margin = New Padding(10)
-            Me.BackColor = Color.FromArgb(32, 36, 43)
+            Me.Margin = New Padding(8)
             Me.RightToLeft = RightToLeft.Yes
 
-            ' 1. هيدر البطاقة
+            ' 1. هيدر البطاقة (صفين غير متداخلين نهائياً)
             pnlHeader = New Panel With {
                 .Dock = DockStyle.Top,
-                .Height = 65,
-                .Padding = New Padding(10, 6, 10, 6)
+                .Height = 58,
+                .Padding = New Padding(8, 4, 8, 4)
             }
 
-            lblOrderType = New Label With {
-                .Text = Order.OrderTypeDisplay,
-                .Font = New Font("Segoe UI", 10.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .AutoSize = True,
-                .Location = New Point(10, 8)
+            ' الصف الأول من الهيدر (رقم الطلب يمين، العداد يسار)
+            pnlHeaderRow1 = New Panel With {
+                .Dock = DockStyle.Top,
+                .Height = 26,
+                .BackColor = Color.Transparent
             }
-            pnlHeader.Controls.Add(lblOrderType)
 
             lblTimer = New Label With {
+                .Dock = DockStyle.Left,
+                .Width = 75,
                 .Text = If(_isHistory, "منجز", Order.ElapsedFormatted),
-                .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
+                .Font = New Font("Segoe UI", 11.0F, FontStyle.Bold),
                 .ForeColor = Color.White,
-                .AutoSize = True,
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(230, 8)
+                .BackColor = Color.FromArgb(45, 0, 0, 0),
+                .TextAlign = ContentAlignment.MiddleCenter
             }
-            pnlHeader.Controls.Add(lblTimer)
+            pnlHeaderRow1.Controls.Add(lblTimer)
 
             lblOrderNum = New Label With {
-                .Text = $"طلب: {Order.OrderNumber} | {Order.CreatedAt:HH:mm}",
-                .Font = New Font("Segoe UI", 8.5F, FontStyle.Regular),
-                .ForeColor = Color.FromArgb(220, 225, 230),
-                .AutoSize = True,
-                .Location = New Point(10, 36)
+                .Dock = DockStyle.Fill,
+                .Text = $"طلب #{Order.OrderNumber}",
+                .Font = New Font("Segoe UI", 11.0F, FontStyle.Bold),
+                .ForeColor = Color.White,
+                .TextAlign = ContentAlignment.MiddleRight,
+                .AutoEllipsis = True
             }
-            pnlHeader.Controls.Add(lblOrderNum)
+            pnlHeaderRow1.Controls.Add(lblOrderNum)
+            pnlHeader.Controls.Add(pnlHeaderRow1)
 
-            lblServerName = New Label With {
-                .Text = If(String.IsNullOrEmpty(Order.ServerName), "", "👤 " & Order.ServerName),
-                .Font = New Font("Segoe UI", 8.5F, FontStyle.Regular),
-                .ForeColor = Color.FromArgb(200, 210, 220),
-                .AutoSize = True,
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(180, 36)
+            ' الصف الثاني من الهيدر (نوع الطلب يمين، الكاشير والتوقيت يسار)
+            pnlHeaderRow2 = New Panel With {
+                .Dock = DockStyle.Bottom,
+                .Height = 24,
+                .BackColor = Color.Transparent
             }
-            pnlHeader.Controls.Add(lblServerName)
 
-            Me.Controls.Add(pnlHeader)
+            Dim cashierText = If(String.IsNullOrEmpty(Order.ServerName), Order.CreatedAt.ToString("HH:mm"), $"{Order.ServerName} | {Order.CreatedAt:HH:mm}")
+            lblServerTime = New Label With {
+                .Dock = DockStyle.Left,
+                .Width = 115,
+                .Text = cashierText,
+                .Font = New Font("Segoe UI", 8.5F, FontStyle.Regular),
+                .ForeColor = Color.FromArgb(226, 232, 240),
+                .TextAlign = ContentAlignment.MiddleLeft,
+                .AutoEllipsis = True
+            }
+            pnlHeaderRow2.Controls.Add(lblServerTime)
+
+            lblOrderType = New Label With {
+                .Dock = DockStyle.Fill,
+                .Text = Order.OrderTypeDisplay,
+                .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
+                .ForeColor = Color.White,
+                .TextAlign = ContentAlignment.MiddleRight,
+                .AutoEllipsis = True
+            }
+            pnlHeaderRow2.Controls.Add(lblOrderType)
+            pnlHeader.Controls.Add(pnlHeaderRow2)
 
             ' 2. قائمة الأصناف
             pnlItemsList = New Panel With {
                 .Dock = DockStyle.Top,
                 .AutoSize = True,
-                .Padding = New Padding(10, 8, 10, 8)
+                .Padding = New Padding(8, 6, 8, 6)
             }
 
-            Dim yPos As Integer = 8
+            Dim yPos As Integer = 6
+            _itemRows.Clear()
+
             For Each item In Order.Items
                 Dim currentItem = item
                 Dim pnlRow As New Panel With {
-                    .Width = 295,
+                    .Width = 304,
                     .Location = New Point(8, yPos),
-                    .BackColor = Color.FromArgb(38, 42, 50),
-                    .Padding = New Padding(6),
                     .Margin = New Padding(0, 0, 0, 4)
                 }
 
-                Dim chkItem As New CheckBox With {
-                    .Text = $"{currentItem.Quantity}x  {currentItem.ProductName}",
-                    .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
-                    .ForeColor = If(currentItem.IsCompleted, Color.Gray, Color.White),
+                ' مربع الاختيار لإتمام الصنف (على اليسار)
+                Dim chkDone As New CheckBox With {
                     .Checked = currentItem.IsCompleted,
-                    .AutoSize = True,
-                    .Location = New Point(6, 4),
+                    .Size = New Size(22, 22),
+                    .Location = New Point(6, 6),
                     .Cursor = Cursors.Hand
                 }
-                If currentItem.IsCompleted Then
-                    chkItem.Font = New Font("Segoe UI", 10.0F, FontStyle.Strikeout)
-                End If
+                pnlRow.Controls.Add(chkDone)
 
-                AddHandler chkItem.CheckedChanged, Sub()
-                                                       currentItem.IsCompleted = chkItem.Checked
-                                                       If chkItem.Checked Then
-                                                           chkItem.Font = New Font("Segoe UI", 10.0F, FontStyle.Strikeout)
-                                                           chkItem.ForeColor = Color.Gray
-                                                       Else
-                                                           chkItem.Font = New Font("Segoe UI", 10.0F, FontStyle.Bold)
-                                                           chkItem.ForeColor = Color.White
-                                                       End If
-                                                       Task.Run(Sub() _repo.ToggleKitchenItemStatus(currentItem.DetailID, chkItem.Checked))
-                                                   End Sub
-                pnlRow.Controls.Add(chkItem)
+                ' شارة الكمية (على اليمين 1x أو 2x)
+                Dim lblQty As New Label With {
+                    .Text = $"{currentItem.Quantity}x",
+                    .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
+                    .TextAlign = ContentAlignment.MiddleCenter,
+                    .Size = New Size(34, 24),
+                    .Location = New Point(264, 4)
+                }
+                pnlRow.Controls.Add(lblQty)
+
+                ' اسم الصنف (بين الشارة ومربع الاختيار)
+                Dim lblItemName As New Label With {
+                    .Text = currentItem.ProductName,
+                    .Font = If(currentItem.IsCompleted, New Font("Segoe UI", 9.5F, FontStyle.Strikeout), New Font("Segoe UI", 9.5F, FontStyle.Bold)),
+                    .Location = New Point(34, 4),
+                    .Size = New Size(224, 24),
+                    .TextAlign = ContentAlignment.MiddleRight,
+                    .AutoEllipsis = True
+                }
+                pnlRow.Controls.Add(lblItemName)
 
                 Dim subY As Integer = 28
-                ' الحجم
-                If Not String.IsNullOrEmpty(currentItem.SizeName) Then
+
+                ' الحجم (فقط إذا لم يكن فارغاً أو "-")
+                Dim hasSize = Not String.IsNullOrWhiteSpace(currentItem.SizeName) AndAlso currentItem.SizeName.Trim() <> "-"
+                If hasSize Then
                     Dim lblSize As New Label With {
-                        .Text = "الحجم: " & currentItem.SizeName,
-                        .Font = New Font("Segoe UI", 8.5F),
-                        .ForeColor = Color.FromArgb(160, 175, 195),
-                        .AutoSize = True,
-                        .Location = New Point(25, subY)
+                        .Text = "الحجم: " & currentItem.SizeName.Trim(),
+                        .Font = New Font("Segoe UI", 8.5F, FontStyle.Regular),
+                        .ForeColor = Color.FromArgb(100, 116, 139),
+                        .Location = New Point(34, subY),
+                        .Size = New Size(224, 18),
+                        .TextAlign = ContentAlignment.MiddleRight,
+                        .AutoEllipsis = True
                     }
                     pnlRow.Controls.Add(lblSize)
                     subY += 18
                 End If
 
-                ' الإضافات
-                If Not String.IsNullOrEmpty(currentItem.AddonsText) Then
+                ' الإضافات (فقط إذا لم تكن فارغة أو "-")
+                Dim hasAddons = Not String.IsNullOrWhiteSpace(currentItem.AddonsText) AndAlso currentItem.AddonsText.Trim() <> "-" AndAlso currentItem.AddonsText.Trim() <> "+"
+                If hasAddons Then
                     Dim lblAddons As New Label With {
-                        .Text = "+ " & currentItem.AddonsText,
+                        .Text = "+ " & currentItem.AddonsText.Trim(),
                         .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
-                        .ForeColor = Color.FromArgb(245, 158, 11),
-                        .AutoSize = True,
-                        .Location = New Point(25, subY)
+                        .ForeColor = Color.FromArgb(217, 119, 6),
+                        .Location = New Point(34, subY),
+                        .Size = New Size(224, 18),
+                        .TextAlign = ContentAlignment.MiddleRight,
+                        .AutoEllipsis = True
                     }
                     pnlRow.Controls.Add(lblAddons)
                     subY += 18
                 End If
 
-                ' الملاحظات الخاصة (بدون بصل، سبايسي)
-                If Not String.IsNullOrEmpty(currentItem.Notes) Then
-                    Dim lblNote As New Label With {
-                        .Text = "⚠️ " & currentItem.Notes,
+                ' الملاحظات الخاصة
+                Dim hasNotes = Not String.IsNullOrWhiteSpace(currentItem.Notes) AndAlso currentItem.Notes.Trim() <> "-"
+                If hasNotes Then
+                    Dim lblNotes As New Label With {
+                        .Text = "ملاحظة: " & currentItem.Notes.Trim(),
                         .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
-                        .ForeColor = Color.FromArgb(239, 68, 68),
-                        .AutoSize = True,
-                        .Location = New Point(25, subY)
+                        .ForeColor = Color.FromArgb(220, 38, 38),
+                        .Location = New Point(34, subY),
+                        .Size = New Size(224, 18),
+                        .TextAlign = ContentAlignment.MiddleRight,
+                        .AutoEllipsis = True
                     }
-                    pnlRow.Controls.Add(lblNote)
-                    subY += 20
+                    pnlRow.Controls.Add(lblNotes)
+                    subY += 19
                 End If
 
                 pnlRow.Height = subY + 6
+
+                ' حفظ المرجع لتحديث ألوان الثيم
+                Dim wrapper As New ItemRowWrapper With {
+                    .PanelRow = pnlRow,
+                    .LblQty = lblQty,
+                    .LblName = lblItemName,
+                    .ChkDone = chkDone,
+                    .Item = currentItem
+                }
+                _itemRows.Add(wrapper)
+
+                ' تفاعل النقر على مربع الإنجاز
+                AddHandler chkDone.CheckedChanged, Sub()
+                                                       currentItem.IsCompleted = chkDone.Checked
+                                                       UpdateRowCompletedUI(wrapper)
+                                                       Task.Run(Sub() _repo.ToggleKitchenItemStatus(currentItem.DetailID, chkDone.Checked))
+                                                   End Sub
+
                 pnlItemsList.Controls.Add(pnlRow)
-                yPos += pnlRow.Height + 5
+                yPos += pnlRow.Height + 4
             Next
 
             ' ملاحظات الطلب العامة
             If Not String.IsNullOrEmpty(Order.Notes) Then
+                Dim pnlNotes As New Panel With {
+                    .Width = 304,
+                    .Location = New Point(8, yPos),
+                    .BackColor = If(_isDark, Color.FromArgb(39, 32, 20), Color.FromArgb(254, 243, 199)),
+                    .Padding = New Padding(6)
+                }
                 Dim lblOrderNotes As New Label With {
                     .Text = "ملاحظة: " & Order.Notes,
-                    .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
-                    .ForeColor = Color.FromArgb(255, 215, 0),
+                    .Font = New Font("Segoe UI", 8.5F, FontStyle.Bold),
+                    .ForeColor = If(_isDark, Color.FromArgb(252, 211, 77), Color.FromArgb(180, 83, 9)),
                     .AutoSize = True,
-                    .Location = New Point(10, yPos)
+                    .Location = New Point(6, 4)
                 }
-                pnlItemsList.Controls.Add(lblOrderNotes)
-                yPos += 24
+                pnlNotes.Controls.Add(lblOrderNotes)
+                pnlNotes.Height = lblOrderNotes.Height + 10
+                pnlItemsList.Controls.Add(pnlNotes)
+                yPos += pnlNotes.Height + 4
             End If
 
-            pnlItemsList.Height = yPos + 10
-            Me.Controls.Add(pnlItemsList)
+            pnlItemsList.Height = yPos + 6
 
             ' 3. أزرار التحكم بالبطاقة في الأسفل
-            Dim pnlBottom As New Panel With {
+            pnlBottom = New Panel With {
                 .Dock = DockStyle.Bottom,
-                .Height = 48,
-                .Padding = New Padding(8, 4, 8, 6)
+                .Height = 46,
+                .Padding = New Padding(8, 5, 8, 5)
             }
 
             If _isHistory Then
                 btnAction = New Button With {
-                    .Text = "↩ استرجاع للمطبخ (Recall)",
-                    .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
+                    .Text = "استرجاع للتحضير (Recall)",
+                    .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
                     .ForeColor = Color.White,
-                    .BackColor = Color.FromArgb(217, 119, 6),
+                    .BackColor = Color.FromArgb(180, 83, 9),
                     .FlatStyle = FlatStyle.Flat,
                     .Dock = DockStyle.Fill,
                     .Cursor = Cursors.Hand
@@ -685,10 +696,10 @@ Namespace Global.WindowsApp1
                 pnlBottom.Controls.Add(btnAction)
             Else
                 btnAction = New Button With {
-                    .Text = "✓ تم التجهيز والتسليم (Bump)",
+                    .Text = "تسليم الطلب (Bump)",
                     .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
                     .ForeColor = Color.White,
-                    .BackColor = Color.FromArgb(16, 149, 105),
+                    .BackColor = Color.FromArgb(5, 150, 105),
                     .FlatStyle = FlatStyle.Flat,
                     .Dock = DockStyle.Fill,
                     .Cursor = Cursors.Hand
@@ -702,10 +713,68 @@ Namespace Global.WindowsApp1
                 pnlBottom.Controls.Add(btnAction)
             End If
 
+            ' 4. إضافة عناصر البطاقة وضمان الترتيب الصحيح لرسو العناصر (Docking Order)
+            Me.Controls.Add(pnlItemsList)
             Me.Controls.Add(pnlBottom)
+            Me.Controls.Add(pnlHeader)
+
+            ' إرسال الهيدر إلى الخلف ليكون في أعلى الترتيب الرأسي دائماً
+            pnlHeader.SendToBack()
+            pnlBottom.SendToBack()
+
+            ApplyTheme(_isDark)
+            UpdateHeaderColor()
+            Me.Height = pnlHeader.Height + pnlItemsList.Height + pnlBottom.Height + 6
+        End Sub
+
+        Private Sub UpdateRowCompletedUI(wrapper As ItemRowWrapper)
+            If wrapper.ChkDone.Checked Then
+                wrapper.LblName.Font = New Font("Segoe UI", 9.5F, FontStyle.Strikeout)
+                If _isDark Then
+                    wrapper.LblName.ForeColor = Color.FromArgb(100, 116, 139)
+                    wrapper.PanelRow.BackColor = Color.FromArgb(20, 24, 32)
+                    wrapper.LblQty.BackColor = Color.FromArgb(28, 34, 44)
+                    wrapper.LblQty.ForeColor = Color.FromArgb(148, 163, 184)
+                Else
+                    wrapper.LblName.ForeColor = Color.FromArgb(148, 163, 184)
+                    wrapper.PanelRow.BackColor = Color.FromArgb(241, 245, 249)
+                    wrapper.LblQty.BackColor = Color.FromArgb(226, 232, 240)
+                    wrapper.LblQty.ForeColor = Color.FromArgb(100, 116, 139)
+                End If
+            Else
+                wrapper.LblName.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold)
+                If _isDark Then
+                    wrapper.LblName.ForeColor = Color.White
+                    wrapper.PanelRow.BackColor = Color.FromArgb(34, 40, 52)
+                    wrapper.LblQty.BackColor = Color.FromArgb(51, 65, 85)
+                    wrapper.LblQty.ForeColor = Color.White
+                Else
+                    wrapper.LblName.ForeColor = Color.FromArgb(15, 23, 42)
+                    wrapper.PanelRow.BackColor = Color.White
+                    wrapper.LblQty.BackColor = Color.FromArgb(226, 232, 240)
+                    wrapper.LblQty.ForeColor = Color.FromArgb(15, 23, 42)
+                End If
+            End If
+        End Sub
+
+        Public Sub ApplyTheme(isDark As Boolean)
+            _isDark = isDark
+            If isDark Then
+                Me.BackColor = Color.FromArgb(31, 41, 55)
+                pnlItemsList.BackColor = Color.FromArgb(17, 24, 39)
+                pnlBottom.BackColor = Color.FromArgb(17, 24, 39)
+            Else
+                Me.BackColor = Color.White
+                pnlItemsList.BackColor = Color.FromArgb(248, 250, 252)
+                pnlBottom.BackColor = Color.FromArgb(248, 250, 252)
+            End If
+
+            For Each wrapper In _itemRows
+                UpdateRowCompletedUI(wrapper)
+            Next
 
             UpdateHeaderColor()
-            Me.Height = pnlHeader.Height + pnlItemsList.Height + pnlBottom.Height + 10
+            Me.Invalidate()
         End Sub
 
         Public Sub UpdateTimerUI()
@@ -716,21 +785,29 @@ Namespace Global.WindowsApp1
 
         Private Sub UpdateHeaderColor()
             If _isHistory Then
-                pnlHeader.BackColor = Color.FromArgb(55, 60, 70)
+                pnlHeader.BackColor = Color.FromArgb(75, 85, 99)
                 Return
             End If
 
             Dim totalSec = Order.ElapsedSeconds
             If totalSec < 300 Then
-                ' 🟢 أقل من 5 دقائق: أخضر (طلب جديد هادئ)
-                pnlHeader.BackColor = Color.FromArgb(16, 120, 85)
+                ' 🟢 أقل من 5 دقائق: أخضر
+                pnlHeader.BackColor = Color.FromArgb(22, 163, 74)
             ElseIf totalSec < 720 Then
-                ' 🟠 من 5 إلى 12 دقيقة: برتقالي (تحذير اقتراب التأخير)
-                pnlHeader.BackColor = Color.FromArgb(190, 110, 15)
+                ' 🟠 من 5 إلى 12 دقيقة: كهرماني/برتقالي
+                pnlHeader.BackColor = Color.FromArgb(217, 119, 6)
             Else
-                ' 🔴 أكثر من 12 دقيقة: أحمر (متأخر جداً)
-                pnlHeader.BackColor = Color.FromArgb(185, 28, 28)
+                ' 🔴 أكثر من 12 دقيقة: أحمر
+                pnlHeader.BackColor = Color.FromArgb(220, 38, 38)
             End If
+        End Sub
+
+        Protected Overrides Sub OnPaint(e As PaintEventArgs)
+            MyBase.OnPaint(e)
+            Dim borderColor = If(_isDark, Color.FromArgb(55, 65, 81), Color.FromArgb(203, 213, 225))
+            Using p As New Pen(borderColor, 1)
+                e.Graphics.DrawRectangle(p, 0, 0, Me.Width - 1, Me.Height - 1)
+            End Using
         End Sub
     End Class
 End Namespace

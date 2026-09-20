@@ -18,6 +18,10 @@ Public NotInheritable Class ThemeHelper
     ''' <summary>Apply theme to a Form and all its child controls.</summary>
     Public Shared Sub ApplyToForm(frm As Form, palette As ThemePalette)
         If frm Is Nothing OrElse frm.IsDisposed Then Return
+        If TypeOf frm Is FrmKitchenDisplay Then
+            DirectCast(frm, FrmKitchenDisplay).ApplyTheme()
+            Return
+        End If
 
         frm.SuspendLayout()
         Try
@@ -75,6 +79,14 @@ Public NotInheritable Class ThemeHelper
                 Return
             End If
 
+            ' Guard 5: Branding and side hero panels (e.g. pn_0 in Login) have custom gradients and styled labels
+            If cNameLower = "pn_0" Then
+                Return
+            End If
+            If ctrl.Parent IsNot Nothing AndAlso ctrl.Parent.Name.ToLower() = "pn_0" Then
+                Return
+            End If
+
             ' ── Dispatch by type (most specific first) ──────────────
 
             ' Guna2 Controls
@@ -104,6 +116,8 @@ Public NotInheritable Class ThemeHelper
                 ApplyGuna2HtmlLabel(DirectCast(ctrl, Guna2HtmlLabel), palette)
             ElseIf TypeOf ctrl Is Guna2PictureBox Then
                 DirectCast(ctrl, Guna2PictureBox).BackColor = Color.Transparent
+            ElseIf TypeOf ctrl Is Guna2ControlBox Then
+                ApplyGuna2ControlBox(DirectCast(ctrl, Guna2ControlBox), palette)
 
             ' DevExpress Controls
             ElseIf TypeOf ctrl Is DevExpress.XtraEditors.SimpleButton Then
@@ -254,8 +268,36 @@ Public NotInheritable Class ThemeHelper
             Return
         End If
 
+        ' Divider lines (thin panels used as horizontal or vertical separators)
+        If pnl.Height <= 3 OrElse pnl.Width <= 3 OrElse nameLower.Contains("line") OrElse nameLower.Contains("divider") OrElse nameLower.Contains("sep") Then
+            pnl.FillColor = palette.Divider
+            pnl.BackColor = Color.Transparent
+            Return
+        End If
+
         pnl.FillColor = palette.Surface
         pnl.BackColor = Color.Transparent
+        If pnl.BorderThickness > 0 Then
+            pnl.BorderColor = palette.CardBorder
+        End If
+    End Sub
+
+    ' ──────────────────────────────────────────────────────────
+    '  Guna2ControlBox helper
+    ' ──────────────────────────────────────────────────────────
+    Private Shared Sub ApplyGuna2ControlBox(box As Guna2ControlBox, palette As ThemePalette)
+        Try
+            box.FillColor = Color.Transparent
+            box.IconColor = palette.TextSecondary
+            If box.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.CloseBox Then
+                box.HoverState.FillColor = palette.Danger
+                box.HoverState.IconColor = Color.White
+            Else
+                box.HoverState.FillColor = palette.SurfaceSecondary
+                box.HoverState.IconColor = palette.TextPrimary
+            End If
+        Catch
+        End Try
     End Sub
 
     ' ──────────────────────────────────────────────────────────
@@ -305,6 +347,61 @@ Public NotInheritable Class ThemeHelper
             Dim targetFore As Color = palette.ButtonForeground
             Dim targetHover As Color
             Dim targetPressed As Color = palette.ButtonPressed
+
+            ' Window corner close buttons or buttons configured with transparent fill
+            If (nameLower = "btnclose" OrElse nameLower.Contains("close")) AndAlso (fillColor = Color.Empty OrElse fillColor = Color.Transparent OrElse btn.BorderRadius >= 15) Then
+                btn.FillColor = Color.Transparent
+                btn.ForeColor = palette.TextSecondary
+                Try
+                    btn.HoverState.FillColor = palette.Danger
+                    btn.HoverState.ForeColor = Color.White
+                Catch
+                End Try
+                Return
+            End If
+
+            ' ── Sidebar & Navigation Buttons Guard ─────────────────────
+            Dim isNavButton As Boolean = False
+            Dim curParent As Control = btn.Parent
+            While curParent IsNot Nothing
+                Dim pName As String = curParent.Name.ToLower()
+                If pName.Contains("sidebar") OrElse pName.Contains("nav") Then
+                    isNavButton = True
+                    Exit While
+                End If
+                curParent = curParent.Parent
+            End While
+
+            If isNavButton Then
+                btn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
+                btn.CheckedState.FillColor = palette.NavSelected
+                btn.CheckedState.ForeColor = palette.NavSelectedText
+                btn.HoverState.FillColor = palette.NavHover
+                btn.HoverState.ForeColor = Color.White
+                If btn.Checked Then
+                    btn.FillColor = palette.NavSelected
+                    btn.ForeColor = palette.NavSelectedText
+                Else
+                    btn.FillColor = Color.Transparent
+                    btn.ForeColor = palette.NavText
+                End If
+                Return
+            End If
+
+            ' ── Generic Toggle Buttons (e.g. Percentage unit toggle) ───
+            If btn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton Then
+                btn.CheckedState.FillColor = palette.Primary
+                btn.CheckedState.ForeColor = palette.TextOnPrimary
+                If Not btn.Checked Then
+                    btn.FillColor = palette.SurfaceSecondary
+                    btn.ForeColor = palette.TextSecondary
+                    btn.BorderColor = palette.Border
+                    btn.BorderThickness = 1
+                    btn.HoverState.FillColor = palette.ButtonSecondaryHover
+                    btn.HoverState.ForeColor = palette.TextPrimary
+                    Return
+                End If
+            End If
 
             ' Semantic Detection by Name/Text and existing FillColor
             If nameLower.Contains("close") OrElse nameLower.Contains("delete") OrElse nameLower.Contains("del") OrElse textLower.Contains("حذف") OrElse IsSemanticDanger(fillColor) Then
@@ -431,6 +528,16 @@ Public NotInheritable Class ThemeHelper
             End Try
             Try
                 cmb.HoverState.BorderColor = palette.InputHoverBorder
+            Catch
+            End Try
+
+            Try
+                If cmb.ItemsAppearance IsNot Nothing Then
+                    cmb.ItemsAppearance.BackColor = palette.InputBackground
+                    cmb.ItemsAppearance.ForeColor = palette.InputForeground
+                    cmb.ItemsAppearance.SelectedBackColor = palette.SelectionBackground
+                    cmb.ItemsAppearance.SelectedForeColor = palette.SelectionForeground
+                End If
             Catch
             End Try
 

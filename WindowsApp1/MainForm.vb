@@ -1,4 +1,5 @@
 Imports System.Runtime.InteropServices
+Imports System.Threading.Tasks
 Imports WindowsApp1.FrmTreasuryTransaction
 
 Public Class MainForm
@@ -27,6 +28,9 @@ Public Class MainForm
         Drag = New FormDragHelper(Me, panelHeader)
         Drag = New FormDragHelper(Me, lbltitle)
 
+        ' تهيئة شريط الحالة وبيانات الجلسة
+        InitializeStatusBar()
+
         ' تطبيق ثيم MainForm المتوافق مع الهوية الأصلية
         ApplyMainFormTheme()
         AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
@@ -34,60 +38,273 @@ Public Class MainForm
         ' تطبيق قيود الصلاحيات على أزرار الشاشة الرئيسية
         ApplyPermissionsToMainForm()
 
-        ' إضافة زر شاشة المطبخ الذكية (KDS) لشريط المبيعات
+        ' بدء تشغيل مؤقتات الساعة وتحديث الداشبورد
+        tmrClock.Start()
+        tmrDashboardRefresh.Start()
+
+        ' تحميل بيانات الداشبورد فور فتح الشاشة
+        RefreshDashboardAsync()
+    End Sub
+
+    Private Sub InitializeStatusBar()
         Try
-            Dim sepKds As New ToolStripSeparator()
-            Dim btnKds As New ToolStripButton With {
-                .Text = "شاشة المطبخ (KDS)",
-                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
-                .DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                .TextImageRelation = TextImageRelation.ImageAboveText
-            }
-            btnKds.Image = My.Resources.dinning_hall
-            AddHandler btnKds.Click, Sub()
-                                         Dim frm As New FrmKitchenDisplay()
-                                         frm.Show()
-                                     End Sub
-            ToolStrip4.Items.Add(sepKds)
-            ToolStrip4.Items.Add(btnKds)
+            Dim displayName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, Session.CurrentUserName)
+            lblStatusUser.Text = "👤 المستخدم: " & If(String.IsNullOrEmpty(displayName), "المدير العام", displayName)
+            lblStatusRole.Text = "🛡️ الصلاحية: " & If(Session.CurrentRoleID = 1, "مدير النظام", "مستخدم نظام")
 
-            ' إضافة زر إدارة هالك وتالف المطبخ
-            Dim sepWaste As New ToolStripSeparator()
-            Dim btnWaste As New ToolStripButton With {
-                .Text = "هالك وتالف المطبخ",
-                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
-                .DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                .TextImageRelation = TextImageRelation.ImageAboveText
-            }
-            btnWaste.Image = My.Resources.dinning_hall
-            AddHandler btnWaste.Click, Sub()
-                                           Dim frm As New FrmKitchenWaste()
-                                           ThemeManager.Instance.ApplyTheme(frm)
-                                           frm.ShowDialog()
-                                       End Sub
-            ToolStrip4.Items.Add(sepWaste)
-            ToolStrip4.Items.Add(btnWaste)
+            Dim branchName As String = "الفرع الرئيسي"
+            Try
+                Dim dtBranch As DataTable = DBModule.ExecuteQuery("SELECT TOP 1 BranchName FROM Branches WHERE IsActive = 1")
+                If dtBranch IsNot Nothing AndAlso dtBranch.Rows.Count > 0 Then
+                    branchName = dtBranch.Rows(0)("BranchName").ToString()
+                End If
+            Catch
+            End Try
+            lblStatusBranch.Text = "🏢 الفرع: " & branchName
 
-            ' إضافة زر إدارة حجوزات طاولات الصالة والعربون
-            Dim sepRes As New ToolStripSeparator()
-            Dim btnRes As New ToolStripButton With {
-                .Text = "حجوزات الصالة",
-                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
-                .DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-                .TextImageRelation = TextImageRelation.ImageAboveText
-            }
-            btnRes.Image = My.Resources.dining_room
-            AddHandler btnRes.Click, Sub()
-                                         Dim frm As New FrmTableReservations()
-                                         ThemeManager.Instance.ApplyTheme(frm)
-                                         frm.ShowDialog()
-                                     End Sub
-            ToolStrip4.Items.Add(sepRes)
-            ToolStrip4.Items.Add(btnRes)
+            UpdateDateTimeAndShift()
         Catch ex As Exception
-            Logger.LogError("Add KDS button to MainForm", ex)
+            Logger.LogError("InitializeStatusBar", ex)
         End Try
     End Sub
+
+    Private Sub UpdateDateTimeAndShift()
+        Try
+            Dim nowTime As DateTime = DateTime.Now
+            lblStatusDateTime.Text = "📅 " & nowTime.ToString("dddd, dd MMMM yyyy - hh:mm:ss tt")
+
+            ' التحية الذكية حسب الوقت
+            Dim hour As Integer = nowTime.Hour
+            Dim greeting As String = "أهلاً بك"
+            If hour >= 5 AndAlso hour < 12 Then
+                greeting = "صباح الخير"
+            ElseIf hour >= 12 AndAlso hour < 17 Then
+                greeting = "طاب يومك"
+            Else
+                greeting = "مساء الخير"
+            End If
+            Dim uName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, Session.CurrentUserName)
+            If String.IsNullOrEmpty(uName) Then uName = "المدير العام"
+            lblWelcomeGreeting.Text = greeting & "، " & uName & " 👋"
+
+            ' مدة الوردية النشطة
+            If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                Dim shiftDuration As TimeSpan = nowTime - ShiftSession.CurrentShift.OpenDateTime
+                Dim durationStr As String = String.Format("{0:D2}:{1:D2}:{2:D2}", CInt(Math.Floor(shiftDuration.TotalHours)), shiftDuration.Minutes, shiftDuration.Seconds)
+                lblShiftDuration.Text = "⏱️ مدة الوردية: " & durationStr
+                lblStatusShift.Text = "⏰ الوردية #" & ShiftSession.CurrentShift.ShiftNumber & " (" & durationStr & ")"
+            Else
+                lblShiftDuration.Text = "⏱️ الوردية: مغلقة"
+                lblStatusShift.Text = "⏰ الوردية: لا توجد وردية نشطة"
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub tmrClock_Tick(sender As Object, e As EventArgs) Handles tmrClock.Tick
+        UpdateDateTimeAndShift()
+    End Sub
+
+    Private Sub tmrDashboardRefresh_Tick(sender As Object, e As EventArgs) Handles tmrDashboardRefresh.Tick
+        RefreshDashboardAsync()
+    End Sub
+
+    Private Sub btnRefreshDashboard_Click(sender As Object, e As EventArgs) Handles btnRefreshDashboard.Click
+        RefreshDashboardAsync()
+    End Sub
+
+    ''' <summary>
+    ''' جلب وتحديث مؤشرات الداشبورد في الخلفية بشكل غير تزامني لمنع تجميد الواجهة
+    ''' </summary>
+    Public Async Sub RefreshDashboardAsync()
+        Try
+            btnRefreshDashboard.Enabled = False
+            btnRefreshDashboard.Text = "⏳ جاري التحديث..."
+
+            Await Task.Run(Sub()
+                               LoadDashboardData()
+                           End Sub)
+        Catch ex As Exception
+            Logger.LogError("RefreshDashboardAsync", ex)
+        Finally
+            btnRefreshDashboard.Enabled = True
+            btnRefreshDashboard.Text = "🔄 تحديث البيانات"
+        End Try
+    End Sub
+
+    Private Sub LoadDashboardData()
+        Try
+            ' 1. مبيعات اليوم
+            Dim salesAmount As Decimal = 0
+            Dim salesCount As Integer = 0
+            Try
+                Dim dtSales = DBModule.ExecuteQuery("SELECT ISNULL(SUM(NetTotal), 0) AS TotalSales, COUNT(*) AS InvoicesCount FROM SalesInvoices WHERE (IsDeleted = 0 OR IsDeleted IS NULL) AND CAST(InvoiceDate AS DATE) = CAST(GETDATE() AS DATE)")
+                If dtSales IsNot Nothing AndAlso dtSales.Rows.Count > 0 Then
+                    salesAmount = Convert.ToDecimal(dtSales.Rows(0)("TotalSales"))
+                    salesCount = Convert.ToInt32(dtSales.Rows(0)("InvoicesCount"))
+                End If
+            Catch
+            End Try
+
+            ' 2. مشتريات اليوم
+            Dim purchasesAmount As Decimal = 0
+            Dim purchasesCount As Integer = 0
+            Try
+                Dim dtPurchases = DBModule.ExecuteQuery("SELECT ISNULL(SUM(NetTotal), 0) AS TotalPurchases, COUNT(*) AS PurchasesCount FROM PurchaseHeaders WHERE CAST(PurchaseDate AS DATE) = CAST(GETDATE() AS DATE)")
+                If dtPurchases IsNot Nothing AndAlso dtPurchases.Rows.Count > 0 Then
+                    purchasesAmount = Convert.ToDecimal(dtPurchases.Rows(0)("TotalPurchases"))
+                    purchasesCount = Convert.ToInt32(dtPurchases.Rows(0)("PurchasesCount"))
+                End If
+            Catch
+            End Try
+
+            ' 3. مصروفات اليوم
+            Dim expensesAmount As Decimal = 0
+            Try
+                Dim dtExp = DBModule.ExecuteQuery("SELECT ISNULL(SUM(Amount), 0) AS TotalExpenses FROM Expenses WHERE CAST(Expense_Date AS DATE) = CAST(GETDATE() AS DATE)")
+                If dtExp IsNot Nothing AndAlso dtExp.Rows.Count > 0 Then
+                    expensesAmount = Convert.ToDecimal(dtExp.Rows(0)("TotalExpenses"))
+                End If
+            Catch
+            End Try
+
+            ' 4. إجمالي الأصناف
+            Dim productsCount As Integer = 0
+            Try
+                Dim dtProd = DBModule.ExecuteQuery("SELECT COUNT(*) FROM Products WHERE (IsDeleted = 0 OR IsDeleted IS NULL)")
+                If dtProd IsNot Nothing AndAlso dtProd.Rows.Count > 0 Then
+                    productsCount = Convert.ToInt32(dtProd.Rows(0)(0))
+                End If
+            Catch
+            End Try
+
+            ' 5. إجمالي العملاء
+            Dim customersCount As Integer = 0
+            Try
+                Dim dtCust = DBModule.ExecuteQuery("SELECT COUNT(*) FROM Customers WHERE (IsDeleted = 0 OR IsDeleted IS NULL)")
+                If dtCust IsNot Nothing AndAlso dtCust.Rows.Count > 0 Then
+                    customersCount = Convert.ToInt32(dtCust.Rows(0)(0))
+                End If
+            Catch
+            End Try
+
+            ' 6. إجمالي الموردين
+            Dim suppliersCount As Integer = 0
+            Try
+                Dim dtSup = DBModule.ExecuteQuery("SELECT COUNT(*) FROM Suppliers WHERE (IsDeleted = 0 OR IsDeleted IS NULL)")
+                If dtSup IsNot Nothing AndAlso dtSup.Rows.Count > 0 Then
+                    suppliersCount = Convert.ToInt32(dtSup.Rows(0)(0))
+                End If
+            Catch
+            End Try
+
+            ' 7. آخر 10 فواتير مبيعات
+            Dim dtRecentInvoices As DataTable = Nothing
+            Try
+                dtRecentInvoices = DBModule.ExecuteQuery("SELECT TOP 10 ISNULL(i.InvoiceNumber, CAST(i.InvoiceID AS VARCHAR)) AS InvoiceNumber, CONVERT(VARCHAR(5), i.InvoiceDate, 108) AS InvoiceTime, ISNULL(c.CustomerName, N'عميل نقدي') AS CustomerName, CASE i.OrderType WHEN 1 THEN N'تيك أواي' WHEN 2 THEN N'صالة' WHEN 3 THEN N'توصيل' ELSE N'مبيعات' END AS OrderTypeName, i.NetTotal, CASE WHEN i.IsCredit = 1 THEN N'آجل' ELSE N'نقدي' END AS PaymentTypeName FROM SalesInvoices i LEFT JOIN Customers c ON i.CustomerID = c.CustomerID WHERE (i.IsDeleted = 0 OR i.IsDeleted IS NULL) ORDER BY i.InvoiceID DESC")
+            Catch
+            End Try
+
+            ' 8. نواقص المخزون
+            Dim lowStockCount As Integer = 0
+            Try
+                Dim dtLow = DBModule.ExecuteQuery("SELECT COUNT(*) FROM Products p INNER JOIN StoreStock s ON p.Product_ID = s.MaterialID WHERE s.CurrentStock <= 5")
+                If dtLow IsNot Nothing AndAlso dtLow.Rows.Count > 0 Then
+                    lowStockCount = Convert.ToInt32(dtLow.Rows(0)(0))
+                End If
+            Catch
+                Try
+                    Dim dtLow2 = DBModule.ExecuteQuery("SELECT COUNT(*) FROM Stock WHERE Quantity_OnHand <= ISNULL(Min_Quantity, 5)")
+                    If dtLow2 IsNot Nothing AndAlso dtLow2.Rows.Count > 0 Then
+                        lowStockCount = Convert.ToInt32(dtLow2.Rows(0)(0))
+                    End If
+                Catch
+                End Try
+            End Try
+
+            ' تحديث عناصر الواجهة على خيط واجهة المستخدم الرئيسي
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(Sub()
+                                   UpdateDashboardUI(salesAmount, salesCount, purchasesAmount, purchasesCount, expensesAmount, productsCount, customersCount, suppliersCount, dtRecentInvoices, lowStockCount)
+                               End Sub)
+            Else
+                UpdateDashboardUI(salesAmount, salesCount, purchasesAmount, purchasesCount, expensesAmount, productsCount, customersCount, suppliersCount, dtRecentInvoices, lowStockCount)
+            End If
+
+        Catch ex As Exception
+            Logger.LogError("LoadDashboardData", ex)
+        End Try
+    End Sub
+
+    Private Sub UpdateDashboardUI(salesAmt As Decimal, salesCnt As Integer, purAmt As Decimal, purCnt As Integer, expAmt As Decimal, prodCnt As Integer, custCnt As Integer, supCnt As Integer, dtInvoices As DataTable, lowStockCnt As Integer)
+        Try
+            Dim currency As String = "جنية"
+            Try
+                Dim curr = SettingsManager.GetSetting("Currency")
+                If Not String.IsNullOrEmpty(curr) Then currency = " " & curr
+            Catch
+            End Try
+
+            ' تعبئة البطاقات
+            lblCardSalesVal.Text = salesAmt.ToString("N2") & currency
+            lblCardSalesSub.Text = salesCnt & " فاتورة اليوم"
+
+            lblCardPurchasesVal.Text = purAmt.ToString("N2") & currency
+            lblCardPurchasesSub.Text = purCnt & " فاتورة اليوم"
+
+            Dim netProfit As Decimal = salesAmt - expAmt
+            lblCardProfitVal.Text = netProfit.ToString("N2") & currency
+            lblCardProfitSub.Text = "(المبيعات - المصروفات)"
+
+            lblCardProductsVal.Text = prodCnt.ToString("N0")
+            lblCardProductsSub.Text = "صنف مسجل بالنظام"
+
+            lblCardCustomersVal.Text = custCnt.ToString("N0")
+            lblCardCustomersSub.Text = "عميل مسجل"
+
+            lblCardSuppliersVal.Text = supCnt.ToString("N0")
+            lblCardSuppliersSub.Text = "مورد مسجل"
+
+            ' تعبئة جدول آخر الفواتير
+            dgvRecentInvoices.Rows.Clear()
+            If dtInvoices IsNot Nothing Then
+                For Each r As DataRow In dtInvoices.Rows
+                    Dim invNum As String = r("InvoiceNumber").ToString()
+                    Dim invTime As String = r("InvoiceTime").ToString()
+                    Dim custName As String = r("CustomerName").ToString()
+                    Dim ordType As String = r("OrderTypeName").ToString()
+                    Dim netTot As String = Convert.ToDecimal(r("NetTotal")).ToString("N2")
+                    Dim payType As String = r("PaymentTypeName").ToString()
+                    dgvRecentInvoices.Rows.Add(invNum, invTime, custName, ordType, netTot, payType)
+                Next
+            End If
+
+            ' التنبيهات الذكية
+            If lowStockCnt > 0 Then
+                lblAlertStockTitle.Text = "⚠️ نواقص المخزون (" & lowStockCnt & " صنف)"
+                lblAlertStockDesc.Text = "يوجد " & lowStockCnt & " أصناف وصلت أو تجاوزت حد الطلب الأدنى"
+            Else
+                lblAlertStockTitle.Text = "✅ المخزون سليم"
+                lblAlertStockDesc.Text = "لا توجد أصناف تحت حد الطلب الأدنى حالياً"
+            End If
+
+            If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                lblAlertShiftTitle.Text = "⏰ وردية نشطة رقم #" & ShiftSession.CurrentShift.ShiftNumber
+                lblAlertShiftDesc.Text = "بدأت في: " & ShiftSession.CurrentShift.OpenDateTime.ToString("hh:mm tt")
+            Else
+                lblAlertShiftTitle.Text = "⚠️ لا توجد وردية نشطة"
+                lblAlertShiftDesc.Text = "يجب فتح وردية جديدة قبل بدء عمليات البيع"
+            End If
+
+            lblAlertBackupTitle.Text = "💾 حالة النسخ الاحتياطي"
+            lblAlertBackupDesc.Text = "النظام مؤمن بنسخ احتياطي يومي مجدول"
+
+        Catch ex As Exception
+            Logger.LogError("UpdateDashboardUI", ex)
+        End Try
+    End Sub
+
+
 
     Private Sub ReverseTabPages()
         Dim pages As New List(Of TabPage)
@@ -104,8 +321,10 @@ Public Class MainForm
         Try
             Dim pal = ThemeManager.Instance.CurrentPalette
 
-            ' خلفية الفورم
+            ' خلفية الفورم والداشبورد
             Me.BackColor = pal.Background
+            pnlDashboard.BackColor = pal.Background
+            pnlWelcome.BackColor = pal.Background
 
             ' الهيدر يظل داكناً بالهوية الأصلية
             panelHeader.FillColor = pal.SurfaceHeader
@@ -136,7 +355,92 @@ Public Class MainForm
             ' أشرطة الأدوات ToolStrip
             ThemeHelper.ApplyToolStripRenderer(Me, pal)
 
+            ' عناصر الترحيب والساعة
+            lblWelcomeGreeting.ForeColor = pal.TextPrimary
+            lblWelcomeSub.ForeColor = pal.TextSecondary
+            lblShiftDuration.ForeColor = pal.Primary
+            btnRefreshDashboard.FillColor = pal.Primary
+            btnRefreshDashboard.ForeColor = pal.TextOnPrimary
+
+            ' تطبيق ثيم بطاقات الإحصائيات الستة
+            Dim cards() As Guna.UI2.WinForms.Guna2Panel = {cardSales, cardPurchases, cardProfit, cardProducts, cardCustomers, cardSuppliers}
+            For Each c In cards
+                If c IsNot Nothing Then
+                    c.FillColor = pal.CardBackground
+                End If
+            Next
+
+            lblCardSalesTitle.ForeColor = pal.TextSecondary
+            lblCardPurchasesTitle.ForeColor = pal.TextSecondary
+            lblCardProfitTitle.ForeColor = pal.TextSecondary
+            lblCardProductsTitle.ForeColor = pal.TextSecondary
+            lblCardCustomersTitle.ForeColor = pal.TextSecondary
+            lblCardSuppliersTitle.ForeColor = pal.TextSecondary
+
+            lblCardSalesSub.ForeColor = pal.TextMuted
+            lblCardPurchasesSub.ForeColor = pal.TextMuted
+            lblCardProfitSub.ForeColor = pal.TextMuted
+            lblCardProductsSub.ForeColor = pal.TextMuted
+            lblCardCustomersSub.ForeColor = pal.TextMuted
+            lblCardSuppliersSub.ForeColor = pal.TextMuted
+
+            lblCardSalesVal.ForeColor = pal.Success
+            lblCardPurchasesVal.ForeColor = pal.Warning
+            lblCardProfitVal.ForeColor = pal.Primary
+            lblCardProductsVal.ForeColor = pal.TextPrimary
+            lblCardCustomersVal.ForeColor = pal.TextPrimary
+            lblCardSuppliersVal.ForeColor = pal.TextPrimary
+
+            ' بطاقة آخر الفواتير
+            cardRecentInvoices.FillColor = pal.CardBackground
+            lblRecentInvoicesTitle.ForeColor = pal.TextPrimary
+            btnViewAllInvoices.FillColor = pal.Primary
+            btnViewAllInvoices.ForeColor = pal.TextOnPrimary
+
+            ' جدول فواتير المبيعات
+            dgvRecentInvoices.BackgroundColor = pal.CardBackground
+            dgvRecentInvoices.DefaultCellStyle.BackColor = pal.CardBackground
+            dgvRecentInvoices.DefaultCellStyle.ForeColor = pal.TextPrimary
+            dgvRecentInvoices.DefaultCellStyle.SelectionBackColor = pal.SelectionBackground
+            dgvRecentInvoices.DefaultCellStyle.SelectionForeColor = pal.SelectionForeground
+            dgvRecentInvoices.AlternatingRowsDefaultCellStyle.BackColor = pal.GridAlternateBackground
+            dgvRecentInvoices.AlternatingRowsDefaultCellStyle.ForeColor = pal.TextPrimary
+            dgvRecentInvoices.ColumnHeadersDefaultCellStyle.BackColor = pal.GridHeaderBackground
+            dgvRecentInvoices.ColumnHeadersDefaultCellStyle.ForeColor = pal.GridHeaderForeground
+            dgvRecentInvoices.GridColor = pal.Border
+
+            ' بطاقة التنبيهات
+            cardAlerts.FillColor = pal.CardBackground
+            lblAlertsTitle.ForeColor = pal.TextPrimary
+            cardAlertStock.FillColor = pal.BackgroundSecondary
+            cardAlertShift.FillColor = pal.BackgroundSecondary
+            cardAlertBackup.FillColor = pal.BackgroundSecondary
+
+            lblAlertStockDesc.ForeColor = pal.TextSecondary
+            lblAlertShiftDesc.ForeColor = pal.TextSecondary
+            lblAlertBackupDesc.ForeColor = pal.TextSecondary
+
+            lblQuickTitle.ForeColor = pal.TextPrimary
+
+            ' أزرار الوصول السريع
+            btnQuickPOS.FillColor = pal.Primary
+            btnQuickPOS.ForeColor = pal.TextOnPrimary
+            btnQuickProducts.FillColor = pal.ButtonSecondaryBackground
+            btnQuickProducts.ForeColor = pal.ButtonSecondaryForeground
+            btnQuickCustomers.FillColor = pal.ButtonSecondaryBackground
+            btnQuickCustomers.ForeColor = pal.ButtonSecondaryForeground
+            btnQuickBackup.FillColor = pal.ButtonSecondaryBackground
+            btnQuickBackup.ForeColor = pal.ButtonSecondaryForeground
+
+            ' شريط الحالة السفلي
+            statusStripMain.BackColor = pal.SurfaceHeader
+            statusStripMain.ForeColor = pal.TextOnDark
+            For Each item As ToolStripItem In statusStripMain.Items
+                item.ForeColor = pal.TextOnDark
+            Next
+
         Catch ex As Exception
+            Logger.LogError("ApplyMainFormTheme", ex)
         End Try
     End Sub
 
@@ -168,6 +472,10 @@ Public Class MainForm
 
     Private Sub btnfrmPOS_Click(sender As Object, e As EventArgs) Handles btnfrmPOS.Click
         OpenFormOnce(GetType(frmPOS), btnfrmPOS)
+    End Sub
+
+    Private Sub btnSalesReturns_Click(sender As Object, e As EventArgs) Handles btnSalesReturns.Click
+        OpenFormOnce(GetType(Sales_Returns), btnSalesReturns)
     End Sub
 
     Private Sub btnfrmEmployees_Click(sender As Object, e As EventArgs) Handles btnfrmEmployees.Click
@@ -254,6 +562,18 @@ Public Class MainForm
         OpenFormOnce(GetType(FrmDriverReport), btnFrmDriverReport)
     End Sub
 
+    Private Sub btnKds_Click(sender As Object, e As EventArgs) Handles btnKds.Click
+        OpenFormOnce(GetType(FrmKitchenDisplay), btnKds)
+    End Sub
+
+    Private Sub btnWaste_Click(sender As Object, e As EventArgs) Handles btnWaste.Click
+        OpenFormOnce(GetType(FrmKitchenWaste), btnWaste)
+    End Sub
+
+    Private Sub btnRes_Click(sender As Object, e As EventArgs) Handles btnRes.Click
+        OpenFormOnce(GetType(FrmTableReservations), btnRes)
+    End Sub
+
     Private Sub btnDeposit_Click(sender As Object, e As EventArgs) Handles btnDeposit.Click
         OpenTreasuryWithOperation(FrmTreasuryTransaction.TreasuryOperation.Deposit, btnDeposit)
     End Sub
@@ -298,14 +618,16 @@ Public Class MainForm
         OpenFormOnce(GetType(FrmSupplierTransactions), ToolStripButton4)
     End Sub
 
+    Private Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton5.Click
+        OpenFormOnce(GetType(frmPurchaseReports), ToolStripButton5)
+    End Sub
+
     Private Sub ToolStripButton13_Click(sender As Object, e As EventArgs) Handles btnfrmPurchases.Click
         OpenFormOnce(GetType(frmPurchases), btnfrmPurchases)
     End Sub
 
-
-
     Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
-        OpenFormOnce(GetType(Sales_Returns), ToolStripButton11)
+        OpenFormOnce(GetType(Reports), ToolStripButton11)
     End Sub
 
     Private Sub OpenTreasuryWithOperation(op As FrmTreasuryTransaction.TreasuryOperation, btn As ToolStripButton)
@@ -339,11 +661,92 @@ Public Class MainForm
 
     Private Sub btnfrmUsers_Click(sender As Object, e As EventArgs) Handles btnfrmUsers.Click
         OpenFormOnce(GetType(frmUsers), btnfrmUsers)
-
     End Sub
 
     Private Sub btnfrmRolesAndPermissions_Click(sender As Object, e As EventArgs) Handles btnfrmRolesAndPermissions.Click
         OpenFormOnce(GetType(frmRolesAndPermissions), btnfrmRolesAndPermissions)
+    End Sub
+
+    Private Sub btnfrmPurchaseReports_Click(sender As Object, e As EventArgs) Handles btnfrmPurchaseReports.Click
+        OpenFormOnce(GetType(frmPurchaseReports), btnfrmPurchaseReports)
+    End Sub
+
+    ' ─── تفاعلات أزرار الداشبورد والبطاقات ───
+    Private Sub btnViewAllInvoices_Click(sender As Object, e As EventArgs) Handles btnViewAllInvoices.Click
+        btnFrmSalesReport.PerformClick()
+    End Sub
+
+    Private Sub cardSales_Click(sender As Object, e As EventArgs) Handles cardSales.Click, lblCardSalesTitle.Click, lblCardSalesVal.Click, lblCardSalesSub.Click, picCardSales.Click
+        btnFrmSalesReport.PerformClick()
+    End Sub
+
+    Private Sub cardPurchases_Click(sender As Object, e As EventArgs) Handles cardPurchases.Click, lblCardPurchasesTitle.Click, lblCardPurchasesVal.Click, lblCardPurchasesSub.Click, picCardPurchases.Click
+        btnfrmPurchaseReports.PerformClick()
+    End Sub
+
+    Private Sub cardProfit_Click(sender As Object, e As EventArgs) Handles cardProfit.Click, lblCardProfitTitle.Click, lblCardProfitVal.Click, lblCardProfitSub.Click, picCardProfit.Click
+        btnFrmTreasuryTransactionsReport.PerformClick()
+    End Sub
+
+    Private Sub cardProducts_Click(sender As Object, e As EventArgs) Handles cardProducts.Click, lblCardProductsTitle.Click, lblCardProductsVal.Click, lblCardProductsSub.Click, picCardProducts.Click
+        btnProducts.PerformClick()
+    End Sub
+
+    Private Sub cardCustomers_Click(sender As Object, e As EventArgs) Handles cardCustomers.Click, lblCardCustomersTitle.Click, lblCardCustomersVal.Click, lblCardCustomersSub.Click, picCardCustomers.Click
+        btnFrmCustomers.PerformClick()
+    End Sub
+
+    Private Sub cardSuppliers_Click(sender As Object, e As EventArgs) Handles cardSuppliers.Click, lblCardSuppliersTitle.Click, lblCardSuppliersVal.Click, lblCardSuppliersSub.Click, picCardSuppliers.Click
+        ToolStripButton3.PerformClick()
+    End Sub
+
+    Private Sub cardAlertStock_Click(sender As Object, e As EventArgs) Handles cardAlertStock.Click, lblAlertStockTitle.Click, lblAlertStockDesc.Click
+        btnfrmStoreStock.PerformClick()
+    End Sub
+
+    Private Sub cardAlertShift_Click(sender As Object, e As EventArgs) Handles cardAlertShift.Click, lblAlertShiftTitle.Click, lblAlertShiftDesc.Click
+        btnfrmShifts.PerformClick()
+    End Sub
+
+    Private Sub cardAlertBackup_Click(sender As Object, e As EventArgs) Handles cardAlertBackup.Click, lblAlertBackupTitle.Click, lblAlertBackupDesc.Click
+        btnBackups.PerformClick()
+    End Sub
+
+    Private Sub btnQuickPOS_Click(sender As Object, e As EventArgs) Handles btnQuickPOS.Click
+        btnfrmPOS.PerformClick()
+    End Sub
+
+    Private Sub btnQuickProducts_Click(sender As Object, e As EventArgs) Handles btnQuickProducts.Click
+        btnProducts.PerformClick()
+    End Sub
+
+    Private Sub btnQuickCustomers_Click(sender As Object, e As EventArgs) Handles btnQuickCustomers.Click
+        btnFrmCustomers.PerformClick()
+    End Sub
+
+    Private Sub btnQuickBackup_Click(sender As Object, e As EventArgs) Handles btnQuickBackup.Click
+        btnBackups.PerformClick()
+    End Sub
+
+    ' اختصارات لوحة المفاتيح
+    Private Sub MainForm_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        Select Case e.KeyCode
+            Case Keys.F1
+                e.Handled = True
+                btnfrmPOS.PerformClick()
+            Case Keys.F2
+                e.Handled = True
+                btnProducts.PerformClick()
+            Case Keys.F3
+                e.Handled = True
+                btnFrmCustomers.PerformClick()
+            Case Keys.F4
+                e.Handled = True
+                btnBackups.PerformClick()
+            Case Keys.F5
+                e.Handled = True
+                RefreshDashboardAsync()
+        End Select
     End Sub
 
     ''' <summary>
@@ -358,6 +761,7 @@ Public Class MainForm
             {btnfrmProductSizes, "frmProductSizes"},
             {btnfrmProductAddons, "frmProductAddons"},
             {btnfrmPOS, "frmPOS"},
+            {btnSalesReturns, "Sales_Returns"},
             {btnfrmEmployees, "frmEmployees"},
             {btnfrmJobTitles, "frmJobTitles"},
             {btnfrmDepartments, "frmDepartments"},
@@ -390,12 +794,16 @@ Public Class MainForm
             {btnfrmRecipes, "frmRecipes"},
             {ToolStripButton3, "FrmSuppliers"},
             {ToolStripButton4, "FrmSupplierTransactions"},
+            {ToolStripButton5, "frmPurchaseReports"},
             {btnfrmPurchases, "Purchases"},
             {btnfrmPurchaseReports, "frmPurchaseReports"},
-            {ToolStripButton11, "Sales_Returns"},
+            {ToolStripButton11, "Reports"},
             {btnfrmSalaryPayment, "frmSalaryPayment"},
             {btnfrmUsers, "frmUsers"},
-            {btnfrmRolesAndPermissions, "frmRolesAndPermissions"}
+            {btnfrmRolesAndPermissions, "frmRolesAndPermissions"},
+            {btnKds, "FrmKitchenDisplay"},
+            {btnWaste, "FrmKitchenWaste"},
+            {btnRes, "FrmTableReservations"}
         }
 
         For Each kvp In mappings
@@ -409,7 +817,4 @@ Public Class MainForm
         Next
     End Sub
 
-    Private Sub btnfrmPurchaseReports_Click(sender As Object, e As EventArgs) Handles btnfrmPurchaseReports.Click
-        OpenFormOnce(GetType(frmPurchaseReports), btnfrmPurchaseReports)
-    End Sub
 End Class

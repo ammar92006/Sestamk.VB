@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
@@ -27,9 +27,9 @@ Namespace UC_Settings
                 Dim dtOrderTypes As New DataTable()
                 dtOrderTypes.Columns.Add("TypeID", GetType(Integer))
                 dtOrderTypes.Columns.Add("TypeName", GetType(String))
-                dtOrderTypes.Rows.Add(1, "تيك أوي (سفري)")
+                dtOrderTypes.Rows.Add(1, "تيك أوي - سفري")
                 dtOrderTypes.Rows.Add(2, "صالة")
-                dtOrderTypes.Rows.Add(3, "دليفري (توصيل)")
+                dtOrderTypes.Rows.Add(3, "دليفري - توصيل")
 
                 cmbDefaultOrderType.DataSource = dtOrderTypes
                 cmbDefaultOrderType.DisplayMember = "TypeName"

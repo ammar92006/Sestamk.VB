@@ -922,7 +922,7 @@ Public Class Reports
         PrintInvoiceFromDBProfessional(CurrentIDV, copies)
     End Sub
 
-    Private Async Sub btn_edit_sale_Click(sender As Object, e As EventArgs) Handles btn_edit_sale.Click
+    Private Sub btn_edit_sale_Click(sender As Object, e As EventArgs) Handles btn_edit_sale.Click
 
         'Dim frm As Sales = Nothing
         'Dim invoiceID As Integer = txtInvID.Text.Trim

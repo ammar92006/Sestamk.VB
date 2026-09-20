@@ -47,6 +47,12 @@ Public NotInheritable Class ThemeManager
         End Get
     End Property
 
+    Public ReadOnly Property Palette As ThemePalette
+        Get
+            Return _currentPalette
+        End Get
+    End Property
+
     Public ReadOnly Property IsDark As Boolean
         Get
             Return _currentTheme = AppTheme.Dark

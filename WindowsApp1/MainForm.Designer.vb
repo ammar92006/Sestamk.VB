@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class MainForm
     Inherits System.Windows.Forms.Form
 
@@ -19,129 +19,246 @@ Partial Class MainForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(MainForm))
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lbltitle = New System.Windows.Forms.Label()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSalesReturns = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator50 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnKds = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator51 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnWaste = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator52 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnRes = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator53 = New System.Windows.Forms.ToolStripSeparator()
+        Me.statusStripMain = New System.Windows.Forms.StatusStrip()
+        Me.lblStatusUser = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.sepStatus1 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblStatusRole = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.sepStatus2 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblStatusBranch = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.sepStatus3 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblStatusShift = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.sepStatus4 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblStatusDateTime = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.sepStatus5 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblStatusDb = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.sepStatus6 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lblStatusVersion = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.pnlDashboard = New Guna.UI2.WinForms.Guna2Panel()
+        Me.tlpMainContent = New System.Windows.Forms.TableLayoutPanel()
+        Me.cardRecentInvoices = New Guna.UI2.WinForms.Guna2Panel()
+        Me.dgvRecentInvoices = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.colInvNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colInvTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colInvCustomer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colInvType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colInvTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colInvPayment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.pnlInvoicesHeader = New System.Windows.Forms.Panel()
+        Me.btnViewAllInvoices = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblRecentInvoicesTitle = New System.Windows.Forms.Label()
+        Me.cardAlerts = New Guna.UI2.WinForms.Guna2Panel()
+        Me.pnlAlertsContainer = New System.Windows.Forms.Panel()
+        Me.cardAlertBackup = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblAlertBackupDesc = New System.Windows.Forms.Label()
+        Me.lblAlertBackupTitle = New System.Windows.Forms.Label()
+        Me.cardAlertShift = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblAlertShiftDesc = New System.Windows.Forms.Label()
+        Me.lblAlertShiftTitle = New System.Windows.Forms.Label()
+        Me.cardAlertStock = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblAlertStockDesc = New System.Windows.Forms.Label()
+        Me.lblAlertStockTitle = New System.Windows.Forms.Label()
+        Me.pnlQuickButtons = New System.Windows.Forms.Panel()
+        Me.tlpQuickBtns = New System.Windows.Forms.TableLayoutPanel()
+        Me.btnQuickPOS = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnQuickProducts = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnQuickCustomers = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnQuickBackup = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblQuickTitle = New System.Windows.Forms.Label()
+        Me.pnlAlertsHeader = New System.Windows.Forms.Panel()
+        Me.lblAlertsTitle = New System.Windows.Forms.Label()
+        Me.tlpStats = New System.Windows.Forms.TableLayoutPanel()
+        Me.cardSales = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCardSalesSub = New System.Windows.Forms.Label()
+        Me.lblCardSalesVal = New System.Windows.Forms.Label()
+        Me.lblCardSalesTitle = New System.Windows.Forms.Label()
+        Me.picCardSales = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.cardPurchases = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCardPurchasesSub = New System.Windows.Forms.Label()
+        Me.lblCardPurchasesVal = New System.Windows.Forms.Label()
+        Me.lblCardPurchasesTitle = New System.Windows.Forms.Label()
+        Me.picCardPurchases = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.cardProfit = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCardProfitSub = New System.Windows.Forms.Label()
+        Me.lblCardProfitVal = New System.Windows.Forms.Label()
+        Me.lblCardProfitTitle = New System.Windows.Forms.Label()
+        Me.picCardProfit = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.cardProducts = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCardProductsSub = New System.Windows.Forms.Label()
+        Me.lblCardProductsVal = New System.Windows.Forms.Label()
+        Me.lblCardProductsTitle = New System.Windows.Forms.Label()
+        Me.picCardProducts = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.cardCustomers = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCardCustomersSub = New System.Windows.Forms.Label()
+        Me.lblCardCustomersVal = New System.Windows.Forms.Label()
+        Me.lblCardCustomersTitle = New System.Windows.Forms.Label()
+        Me.picCardCustomers = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.cardSuppliers = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCardSuppliersSub = New System.Windows.Forms.Label()
+        Me.lblCardSuppliersVal = New System.Windows.Forms.Label()
+        Me.lblCardSuppliersTitle = New System.Windows.Forms.Label()
+        Me.picCardSuppliers = New Guna.UI2.WinForms.Guna2PictureBox()
+        Me.pnlWelcome = New System.Windows.Forms.Panel()
+        Me.btnRefreshDashboard = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblShiftDuration = New System.Windows.Forms.Label()
+        Me.lblWelcomeSub = New System.Windows.Forms.Label()
+        Me.lblWelcomeGreeting = New System.Windows.Forms.Label()
+        Me.tmrClock = New System.Windows.Forms.Timer(Me.components)
+        Me.tmrDashboardRefresh = New System.Windows.Forms.Timer(Me.components)
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
+        Me.btnCategories = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnProducts = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmProductSizes = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmProductAddons = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmDeliveryAreas = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmDeliveryDrivers = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmShifts = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator36 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmBranches = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator37 = New System.Windows.Forms.ToolStripSeparator()
         Me.TabControl1 = New Guna.UI2.WinForms.Guna2TabControl()
         Me.tabsystem = New System.Windows.Forms.TabPage()
         Me.tabCustomers = New System.Windows.Forms.TabPage()
         Me.ToolStrip2 = New System.Windows.Forms.ToolStrip()
+        Me.btnFrmCustomers = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnFrmCustomerStatement = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator18 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator17 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabSuppliers = New System.Windows.Forms.TabPage()
         Me.ToolStrip3 = New System.Windows.Forms.ToolStrip()
+        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator11 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator12 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripButton5 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabSales = New System.Windows.Forms.TabPage()
         Me.ToolStrip4 = New System.Windows.Forms.ToolStrip()
+        Me.btnfrmPOS = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator14 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnFrmSalesReport = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnFrmDriverReport = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator16 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabPurchases = New System.Windows.Forms.TabPage()
         Me.ToolStrip5 = New System.Windows.Forms.ToolStrip()
+        Me.btnfrmPurchases = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator19 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmPurchaseReports = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator20 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabStorage = New System.Windows.Forms.TabPage()
         Me.ToolStrip6 = New System.Windows.Forms.ToolStrip()
+        Me.btnfrmTreasury = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator22 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnFrmTreasuryTransfer = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator24 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnFrmTreasuryTransactionsReport = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator33 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnDeposit = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator43 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnWithdraw = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator42 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabExpenses = New System.Windows.Forms.TabPage()
         Me.ToolStrip10 = New System.Windows.Forms.ToolStrip()
+        Me.btnform_Expenses = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator40 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnExpensesReportForm = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator41 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabemployees = New System.Windows.Forms.TabPage()
         Me.ToolStrip7 = New System.Windows.Forms.ToolStrip()
+        Me.btnfrmEmployees = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator25 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmJobTitles = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator26 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmDepartments = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator27 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmSalarySystems = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator28 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmSalaryPayment = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabUsers = New System.Windows.Forms.TabPage()
         Me.ToolStrip11 = New System.Windows.Forms.ToolStrip()
+        Me.btnfrmUsers = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmRolesAndPermissions = New System.Windows.Forms.ToolStripButton()
         Me.tabbackup = New System.Windows.Forms.TabPage()
         Me.ToolStrip8 = New System.Windows.Forms.ToolStrip()
+        Me.btnBackups = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator38 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabSettings = New System.Windows.Forms.TabPage()
         Me.ToolStripSet = New System.Windows.Forms.ToolStrip()
+        Me.btnSettings = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator29 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmColors = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator30 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmPrinters = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator31 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmRestaurantSections = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator32 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmRestaurantTables = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator35 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmUnits = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator23 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmStores = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator44 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmStoreStock = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator45 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmRawMaterials = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator47 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmRecipes = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator46 = New System.Windows.Forms.ToolStripSeparator()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
-        Me.ToolStripSeparator34 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStrip9 = New System.Windows.Forms.ToolStrip()
-        Me.btnCategories = New System.Windows.Forms.ToolStripButton()
-        Me.btnProducts = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmProductSizes = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmProductAddons = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmDeliveryAreas = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmDeliveryDrivers = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmShifts = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmBranches = New System.Windows.Forms.ToolStripButton()
-        Me.btnFrmCustomers = New System.Windows.Forms.ToolStripButton()
-        Me.btnFrmCustomerStatement = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton3 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton4 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton5 = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmPOS = New System.Windows.Forms.ToolStripButton()
-        Me.btnFrmSalesReport = New System.Windows.Forms.ToolStripButton()
-        Me.btnFrmDriverReport = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmPurchases = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmPurchaseReports = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmTreasury = New System.Windows.Forms.ToolStripButton()
-        Me.btnFrmTreasuryTransfer = New System.Windows.Forms.ToolStripButton()
-        Me.btnFrmTreasuryTransactionsReport = New System.Windows.Forms.ToolStripButton()
-        Me.btnDeposit = New System.Windows.Forms.ToolStripButton()
-        Me.btnWithdraw = New System.Windows.Forms.ToolStripButton()
-        Me.btnform_Expenses = New System.Windows.Forms.ToolStripButton()
-        Me.btnExpensesReportForm = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmEmployees = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmJobTitles = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmDepartments = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmSalarySystems = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmSalaryPayment = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton6 = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmUsers = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmRolesAndPermissions = New System.Windows.Forms.ToolStripButton()
-        Me.btnBackups = New System.Windows.Forms.ToolStripButton()
-        Me.btnSettings = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmColors = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmPrinters = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmRestaurantSections = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmRestaurantTables = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmUnits = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmStores = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmStoreStock = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmRawMaterials = New System.Windows.Forms.ToolStripButton()
-        Me.btnfrmRecipes = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton2 = New System.Windows.Forms.ToolStripButton()
         Me.panelHeader.SuspendLayout()
+        Me.statusStripMain.SuspendLayout()
+        Me.pnlDashboard.SuspendLayout()
+        Me.tlpMainContent.SuspendLayout()
+        Me.cardRecentInvoices.SuspendLayout()
+        CType(Me.dgvRecentInvoices, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnlInvoicesHeader.SuspendLayout()
+        Me.cardAlerts.SuspendLayout()
+        Me.pnlAlertsContainer.SuspendLayout()
+        Me.cardAlertBackup.SuspendLayout()
+        Me.cardAlertShift.SuspendLayout()
+        Me.cardAlertStock.SuspendLayout()
+        Me.pnlQuickButtons.SuspendLayout()
+        Me.tlpQuickBtns.SuspendLayout()
+        Me.pnlAlertsHeader.SuspendLayout()
+        Me.tlpStats.SuspendLayout()
+        Me.cardSales.SuspendLayout()
+        CType(Me.picCardSales, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cardPurchases.SuspendLayout()
+        CType(Me.picCardPurchases, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cardProfit.SuspendLayout()
+        CType(Me.picCardProfit, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cardProducts.SuspendLayout()
+        CType(Me.picCardProducts, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cardCustomers.SuspendLayout()
+        CType(Me.picCardCustomers, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cardSuppliers.SuspendLayout()
+        CType(Me.picCardSuppliers, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnlWelcome.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
         Me.TabControl1.SuspendLayout()
         Me.tabsystem.SuspendLayout()
@@ -230,6 +347,1005 @@ Partial Class MainForm
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 3
         '
+        'btnSalesReturns
+        '
+        Me.btnSalesReturns.AutoSize = False
+        Me.btnSalesReturns.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSalesReturns.ForeColor = System.Drawing.Color.Black
+        Me.btnSalesReturns.Image = Global.WindowsApp1.My.Resources.Resources.order
+        Me.btnSalesReturns.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnSalesReturns.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnSalesReturns.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnSalesReturns.Name = "btnSalesReturns"
+        Me.btnSalesReturns.Size = New System.Drawing.Size(150, 100)
+        Me.btnSalesReturns.Text = "مرتجع المبيعات"
+        Me.btnSalesReturns.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator50
+        '
+        Me.ToolStripSeparator50.AutoSize = False
+        Me.ToolStripSeparator50.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator50.Name = "ToolStripSeparator50"
+        Me.ToolStripSeparator50.Size = New System.Drawing.Size(10, 113)
+        '
+        'statusStripMain
+        '
+        Me.statusStripMain.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.statusStripMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.lblStatusUser, Me.sepStatus1, Me.lblStatusRole, Me.sepStatus2, Me.lblStatusBranch, Me.sepStatus3, Me.lblStatusShift, Me.sepStatus4, Me.lblStatusDateTime, Me.sepStatus5, Me.lblStatusDb, Me.sepStatus6, Me.lblStatusVersion})
+        Me.statusStripMain.Location = New System.Drawing.Point(0, 878)
+        Me.statusStripMain.Name = "statusStripMain"
+        Me.statusStripMain.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.statusStripMain.Size = New System.Drawing.Size(1434, 22)
+        Me.statusStripMain.TabIndex = 44
+        Me.statusStripMain.Text = "statusStripMain"
+        '
+        'lblStatusUser
+        '
+        Me.lblStatusUser.Name = "lblStatusUser"
+        Me.lblStatusUser.Size = New System.Drawing.Size(92, 17)
+        Me.lblStatusUser.Text = "👤 المستخدم: -"
+        '
+        'sepStatus1
+        '
+        Me.sepStatus1.ForeColor = System.Drawing.Color.Gray
+        Me.sepStatus1.Name = "sepStatus1"
+        Me.sepStatus1.Size = New System.Drawing.Size(11, 17)
+        Me.sepStatus1.Text = "|"
+        '
+        'lblStatusRole
+        '
+        Me.lblStatusRole.Name = "lblStatusRole"
+        Me.lblStatusRole.Size = New System.Drawing.Size(84, 17)
+        Me.lblStatusRole.Text = "🛡️ الصلاحية: -"
+        '
+        'sepStatus2
+        '
+        Me.sepStatus2.ForeColor = System.Drawing.Color.Gray
+        Me.sepStatus2.Name = "sepStatus2"
+        Me.sepStatus2.Size = New System.Drawing.Size(11, 17)
+        Me.sepStatus2.Text = "|"
+        '
+        'lblStatusBranch
+        '
+        Me.lblStatusBranch.Name = "lblStatusBranch"
+        Me.lblStatusBranch.Size = New System.Drawing.Size(69, 17)
+        Me.lblStatusBranch.Text = "🏢 الفرع: -"
+        '
+        'sepStatus3
+        '
+        Me.sepStatus3.ForeColor = System.Drawing.Color.Gray
+        Me.sepStatus3.Name = "sepStatus3"
+        Me.sepStatus3.Size = New System.Drawing.Size(11, 17)
+        Me.sepStatus3.Text = "|"
+        '
+        'lblStatusShift
+        '
+        Me.lblStatusShift.Name = "lblStatusShift"
+        Me.lblStatusShift.Size = New System.Drawing.Size(78, 17)
+        Me.lblStatusShift.Text = "⏰ الوردية: -"
+        '
+        'sepStatus4
+        '
+        Me.sepStatus4.ForeColor = System.Drawing.Color.Gray
+        Me.sepStatus4.Name = "sepStatus4"
+        Me.sepStatus4.Size = New System.Drawing.Size(11, 17)
+        Me.sepStatus4.Text = "|"
+        '
+        'lblStatusDateTime
+        '
+        Me.lblStatusDateTime.Name = "lblStatusDateTime"
+        Me.lblStatusDateTime.Size = New System.Drawing.Size(73, 17)
+        Me.lblStatusDateTime.Text = "📅 التاريخ: -"
+        '
+        'sepStatus5
+        '
+        Me.sepStatus5.ForeColor = System.Drawing.Color.Gray
+        Me.sepStatus5.Name = "sepStatus5"
+        Me.sepStatus5.Size = New System.Drawing.Size(11, 17)
+        Me.sepStatus5.Text = "|"
+        '
+        'lblStatusDb
+        '
+        Me.lblStatusDb.Name = "lblStatusDb"
+        Me.lblStatusDb.Size = New System.Drawing.Size(144, 17)
+        Me.lblStatusDb.Text = "🟢 قاعدة البيانات: متصل"
+        '
+        'sepStatus6
+        '
+        Me.sepStatus6.ForeColor = System.Drawing.Color.Gray
+        Me.sepStatus6.Name = "sepStatus6"
+        Me.sepStatus6.Size = New System.Drawing.Size(11, 17)
+        Me.sepStatus6.Text = "|"
+        '
+        'lblStatusVersion
+        '
+        Me.lblStatusVersion.Name = "lblStatusVersion"
+        Me.lblStatusVersion.Size = New System.Drawing.Size(41, 17)
+        Me.lblStatusVersion.Text = "v2.5.0"
+        '
+        'pnlDashboard
+        '
+        Me.pnlDashboard.AutoScroll = True
+        Me.pnlDashboard.Controls.Add(Me.tlpMainContent)
+        Me.pnlDashboard.Controls.Add(Me.tlpStats)
+        Me.pnlDashboard.Controls.Add(Me.pnlWelcome)
+        Me.pnlDashboard.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlDashboard.Location = New System.Drawing.Point(0, 317)
+        Me.pnlDashboard.Name = "pnlDashboard"
+        Me.pnlDashboard.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.pnlDashboard.Size = New System.Drawing.Size(1434, 561)
+        Me.pnlDashboard.TabIndex = 45
+        '
+        'tlpMainContent
+        '
+        Me.tlpMainContent.ColumnCount = 2
+        Me.tlpMainContent.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 62.0!))
+        Me.tlpMainContent.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.0!))
+        Me.tlpMainContent.Controls.Add(Me.cardRecentInvoices, 0, 0)
+        Me.tlpMainContent.Controls.Add(Me.cardAlerts, 1, 0)
+        Me.tlpMainContent.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tlpMainContent.Location = New System.Drawing.Point(0, 175)
+        Me.tlpMainContent.Name = "tlpMainContent"
+        Me.tlpMainContent.Padding = New System.Windows.Forms.Padding(10, 4, 10, 6)
+        Me.tlpMainContent.RowCount = 1
+        Me.tlpMainContent.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tlpMainContent.Size = New System.Drawing.Size(1434, 386)
+        Me.tlpMainContent.TabIndex = 2
+        '
+        'cardRecentInvoices
+        '
+        Me.cardRecentInvoices.BorderRadius = 12
+        Me.cardRecentInvoices.Controls.Add(Me.dgvRecentInvoices)
+        Me.cardRecentInvoices.Controls.Add(Me.pnlInvoicesHeader)
+        Me.cardRecentInvoices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardRecentInvoices.Location = New System.Drawing.Point(554, 7)
+        Me.cardRecentInvoices.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardRecentInvoices.Name = "cardRecentInvoices"
+        Me.cardRecentInvoices.Padding = New System.Windows.Forms.Padding(10)
+        Me.cardRecentInvoices.Size = New System.Drawing.Size(864, 370)
+        Me.cardRecentInvoices.TabIndex = 0
+        '
+        'dgvRecentInvoices
+        '
+        Me.dgvRecentInvoices.AllowUserToAddRows = False
+        Me.dgvRecentInvoices.AllowUserToDeleteRows = False
+        Me.dgvRecentInvoices.AllowUserToResizeRows = False
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvRecentInvoices.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        Me.dgvRecentInvoices.ColumnHeadersHeight = 32
+        Me.dgvRecentInvoices.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colInvNum, Me.colInvTime, Me.colInvCustomer, Me.colInvType, Me.colInvTotal, Me.colInvPayment})
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvRecentInvoices.DefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvRecentInvoices.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvRecentInvoices.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.dgvRecentInvoices.Location = New System.Drawing.Point(10, 46)
+        Me.dgvRecentInvoices.Name = "dgvRecentInvoices"
+        Me.dgvRecentInvoices.ReadOnly = True
+        Me.dgvRecentInvoices.RowHeadersVisible = False
+        Me.dgvRecentInvoices.RowTemplate.Height = 28
+        Me.dgvRecentInvoices.Size = New System.Drawing.Size(844, 314)
+        Me.dgvRecentInvoices.TabIndex = 1
+        Me.dgvRecentInvoices.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.dgvRecentInvoices.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvRecentInvoices.ThemeStyle.HeaderStyle.Height = 32
+        Me.dgvRecentInvoices.ThemeStyle.ReadOnly = True
+        Me.dgvRecentInvoices.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+        Me.dgvRecentInvoices.ThemeStyle.RowsStyle.Height = 28
+        '
+        'colInvNum
+        '
+        Me.colInvNum.HeaderText = "رقم الفاتورة"
+        Me.colInvNum.Name = "colInvNum"
+        Me.colInvNum.ReadOnly = True
+        '
+        'colInvTime
+        '
+        Me.colInvTime.HeaderText = "الوقت"
+        Me.colInvTime.Name = "colInvTime"
+        Me.colInvTime.ReadOnly = True
+        '
+        'colInvCustomer
+        '
+        Me.colInvCustomer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.colInvCustomer.HeaderText = "العميل"
+        Me.colInvCustomer.Name = "colInvCustomer"
+        Me.colInvCustomer.ReadOnly = True
+        '
+        'colInvType
+        '
+        Me.colInvType.HeaderText = "نوع الطلب"
+        Me.colInvType.Name = "colInvType"
+        Me.colInvType.ReadOnly = True
+        '
+        'colInvTotal
+        '
+        Me.colInvTotal.HeaderText = "المبلغ"
+        Me.colInvTotal.Name = "colInvTotal"
+        Me.colInvTotal.ReadOnly = True
+        '
+        'colInvPayment
+        '
+        Me.colInvPayment.HeaderText = "الدفع"
+        Me.colInvPayment.Name = "colInvPayment"
+        Me.colInvPayment.ReadOnly = True
+        '
+        'pnlInvoicesHeader
+        '
+        Me.pnlInvoicesHeader.Controls.Add(Me.btnViewAllInvoices)
+        Me.pnlInvoicesHeader.Controls.Add(Me.lblRecentInvoicesTitle)
+        Me.pnlInvoicesHeader.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlInvoicesHeader.Location = New System.Drawing.Point(10, 10)
+        Me.pnlInvoicesHeader.Name = "pnlInvoicesHeader"
+        Me.pnlInvoicesHeader.Size = New System.Drawing.Size(844, 36)
+        Me.pnlInvoicesHeader.TabIndex = 0
+        '
+        'btnViewAllInvoices
+        '
+        Me.btnViewAllInvoices.BorderRadius = 6
+        Me.btnViewAllInvoices.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnViewAllInvoices.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnViewAllInvoices.ForeColor = System.Drawing.Color.White
+        Me.btnViewAllInvoices.Location = New System.Drawing.Point(746, 3)
+        Me.btnViewAllInvoices.Name = "btnViewAllInvoices"
+        Me.btnViewAllInvoices.Size = New System.Drawing.Size(95, 28)
+        Me.btnViewAllInvoices.TabIndex = 1
+        Me.btnViewAllInvoices.Text = "عرض الكل "
+        '
+        'lblRecentInvoicesTitle
+        '
+        Me.lblRecentInvoicesTitle.AutoSize = True
+        Me.lblRecentInvoicesTitle.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblRecentInvoicesTitle.Location = New System.Drawing.Point(5, 6)
+        Me.lblRecentInvoicesTitle.Name = "lblRecentInvoicesTitle"
+        Me.lblRecentInvoicesTitle.Size = New System.Drawing.Size(155, 21)
+        Me.lblRecentInvoicesTitle.TabIndex = 0
+        Me.lblRecentInvoicesTitle.Text = "📋 آخر فواتير المبيعات"
+        '
+        'cardAlerts
+        '
+        Me.cardAlerts.BorderRadius = 12
+        Me.cardAlerts.Controls.Add(Me.pnlAlertsContainer)
+        Me.cardAlerts.Controls.Add(Me.pnlQuickButtons)
+        Me.cardAlerts.Controls.Add(Me.pnlAlertsHeader)
+        Me.cardAlerts.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardAlerts.Location = New System.Drawing.Point(16, 7)
+        Me.cardAlerts.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardAlerts.Name = "cardAlerts"
+        Me.cardAlerts.Padding = New System.Windows.Forms.Padding(10)
+        Me.cardAlerts.Size = New System.Drawing.Size(526, 370)
+        Me.cardAlerts.TabIndex = 1
+        '
+        'pnlAlertsContainer
+        '
+        Me.pnlAlertsContainer.AutoScroll = True
+        Me.pnlAlertsContainer.Controls.Add(Me.cardAlertBackup)
+        Me.pnlAlertsContainer.Controls.Add(Me.cardAlertShift)
+        Me.pnlAlertsContainer.Controls.Add(Me.cardAlertStock)
+        Me.pnlAlertsContainer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnlAlertsContainer.Location = New System.Drawing.Point(10, 46)
+        Me.pnlAlertsContainer.Name = "pnlAlertsContainer"
+        Me.pnlAlertsContainer.Padding = New System.Windows.Forms.Padding(0, 4, 0, 4)
+        Me.pnlAlertsContainer.Size = New System.Drawing.Size(506, 228)
+        Me.pnlAlertsContainer.TabIndex = 1
+        '
+        'cardAlertBackup
+        '
+        Me.cardAlertBackup.BorderRadius = 8
+        Me.cardAlertBackup.Controls.Add(Me.lblAlertBackupDesc)
+        Me.cardAlertBackup.Controls.Add(Me.lblAlertBackupTitle)
+        Me.cardAlertBackup.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardAlertBackup.Dock = System.Windows.Forms.DockStyle.Top
+        Me.cardAlertBackup.Location = New System.Drawing.Point(0, 124)
+        Me.cardAlertBackup.Margin = New System.Windows.Forms.Padding(0, 0, 0, 6)
+        Me.cardAlertBackup.Name = "cardAlertBackup"
+        Me.cardAlertBackup.Padding = New System.Windows.Forms.Padding(8, 4, 8, 4)
+        Me.cardAlertBackup.Size = New System.Drawing.Size(506, 60)
+        Me.cardAlertBackup.TabIndex = 2
+        '
+        'lblAlertBackupDesc
+        '
+        Me.lblAlertBackupDesc.AutoSize = True
+        Me.lblAlertBackupDesc.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertBackupDesc.ForeColor = System.Drawing.Color.Gray
+        Me.lblAlertBackupDesc.Location = New System.Drawing.Point(11, 28)
+        Me.lblAlertBackupDesc.Name = "lblAlertBackupDesc"
+        Me.lblAlertBackupDesc.Size = New System.Drawing.Size(78, 15)
+        Me.lblAlertBackupDesc.TabIndex = 1
+        Me.lblAlertBackupDesc.Text = "جاري الفحص..."
+        '
+        'lblAlertBackupTitle
+        '
+        Me.lblAlertBackupTitle.AutoSize = True
+        Me.lblAlertBackupTitle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertBackupTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(46, Byte), Integer), CType(CType(204, Byte), Integer), CType(CType(113, Byte), Integer))
+        Me.lblAlertBackupTitle.Location = New System.Drawing.Point(10, 6)
+        Me.lblAlertBackupTitle.Name = "lblAlertBackupTitle"
+        Me.lblAlertBackupTitle.Size = New System.Drawing.Size(153, 17)
+        Me.lblAlertBackupTitle.TabIndex = 0
+        Me.lblAlertBackupTitle.Text = "💾 النسخ الاحتياطي للنظام"
+        '
+        'cardAlertShift
+        '
+        Me.cardAlertShift.BorderRadius = 8
+        Me.cardAlertShift.Controls.Add(Me.lblAlertShiftDesc)
+        Me.cardAlertShift.Controls.Add(Me.lblAlertShiftTitle)
+        Me.cardAlertShift.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardAlertShift.Dock = System.Windows.Forms.DockStyle.Top
+        Me.cardAlertShift.Location = New System.Drawing.Point(0, 64)
+        Me.cardAlertShift.Margin = New System.Windows.Forms.Padding(0, 0, 0, 6)
+        Me.cardAlertShift.Name = "cardAlertShift"
+        Me.cardAlertShift.Padding = New System.Windows.Forms.Padding(8, 4, 8, 4)
+        Me.cardAlertShift.Size = New System.Drawing.Size(506, 60)
+        Me.cardAlertShift.TabIndex = 1
+        '
+        'lblAlertShiftDesc
+        '
+        Me.lblAlertShiftDesc.AutoSize = True
+        Me.lblAlertShiftDesc.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertShiftDesc.ForeColor = System.Drawing.Color.Gray
+        Me.lblAlertShiftDesc.Location = New System.Drawing.Point(11, 28)
+        Me.lblAlertShiftDesc.Name = "lblAlertShiftDesc"
+        Me.lblAlertShiftDesc.Size = New System.Drawing.Size(78, 15)
+        Me.lblAlertShiftDesc.TabIndex = 1
+        Me.lblAlertShiftDesc.Text = "جاري الفحص..."
+        '
+        'lblAlertShiftTitle
+        '
+        Me.lblAlertShiftTitle.AutoSize = True
+        Me.lblAlertShiftTitle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertShiftTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(152, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.lblAlertShiftTitle.Location = New System.Drawing.Point(10, 6)
+        Me.lblAlertShiftTitle.Name = "lblAlertShiftTitle"
+        Me.lblAlertShiftTitle.Size = New System.Drawing.Size(130, 17)
+        Me.lblAlertShiftTitle.TabIndex = 0
+        Me.lblAlertShiftTitle.Text = "⏰ حالة الوردية الحالية"
+        '
+        'cardAlertStock
+        '
+        Me.cardAlertStock.BorderRadius = 8
+        Me.cardAlertStock.Controls.Add(Me.lblAlertStockDesc)
+        Me.cardAlertStock.Controls.Add(Me.lblAlertStockTitle)
+        Me.cardAlertStock.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardAlertStock.Dock = System.Windows.Forms.DockStyle.Top
+        Me.cardAlertStock.Location = New System.Drawing.Point(0, 4)
+        Me.cardAlertStock.Margin = New System.Windows.Forms.Padding(0, 0, 0, 6)
+        Me.cardAlertStock.Name = "cardAlertStock"
+        Me.cardAlertStock.Padding = New System.Windows.Forms.Padding(8, 4, 8, 4)
+        Me.cardAlertStock.Size = New System.Drawing.Size(506, 60)
+        Me.cardAlertStock.TabIndex = 0
+        '
+        'lblAlertStockDesc
+        '
+        Me.lblAlertStockDesc.AutoSize = True
+        Me.lblAlertStockDesc.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertStockDesc.ForeColor = System.Drawing.Color.Gray
+        Me.lblAlertStockDesc.Location = New System.Drawing.Point(11, 28)
+        Me.lblAlertStockDesc.Name = "lblAlertStockDesc"
+        Me.lblAlertStockDesc.Size = New System.Drawing.Size(78, 15)
+        Me.lblAlertStockDesc.TabIndex = 1
+        Me.lblAlertStockDesc.Text = "جاري الفحص..."
+        '
+        'lblAlertStockTitle
+        '
+        Me.lblAlertStockTitle.AutoSize = True
+        Me.lblAlertStockTitle.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertStockTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(126, Byte), Integer), CType(CType(34, Byte), Integer))
+        Me.lblAlertStockTitle.Location = New System.Drawing.Point(10, 6)
+        Me.lblAlertStockTitle.Name = "lblAlertStockTitle"
+        Me.lblAlertStockTitle.Size = New System.Drawing.Size(116, 17)
+        Me.lblAlertStockTitle.TabIndex = 0
+        Me.lblAlertStockTitle.Text = "⚠️ نواقص المخزون"
+        '
+        'pnlQuickButtons
+        '
+        Me.pnlQuickButtons.Controls.Add(Me.tlpQuickBtns)
+        Me.pnlQuickButtons.Controls.Add(Me.lblQuickTitle)
+        Me.pnlQuickButtons.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.pnlQuickButtons.Location = New System.Drawing.Point(10, 274)
+        Me.pnlQuickButtons.Name = "pnlQuickButtons"
+        Me.pnlQuickButtons.Size = New System.Drawing.Size(506, 86)
+        Me.pnlQuickButtons.TabIndex = 2
+        '
+        'tlpQuickBtns
+        '
+        Me.tlpQuickBtns.ColumnCount = 4
+        Me.tlpQuickBtns.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.tlpQuickBtns.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.tlpQuickBtns.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.tlpQuickBtns.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.tlpQuickBtns.Controls.Add(Me.btnQuickPOS, 0, 0)
+        Me.tlpQuickBtns.Controls.Add(Me.btnQuickProducts, 1, 0)
+        Me.tlpQuickBtns.Controls.Add(Me.btnQuickCustomers, 2, 0)
+        Me.tlpQuickBtns.Controls.Add(Me.btnQuickBackup, 3, 0)
+        Me.tlpQuickBtns.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.tlpQuickBtns.Location = New System.Drawing.Point(0, 32)
+        Me.tlpQuickBtns.Name = "tlpQuickBtns"
+        Me.tlpQuickBtns.RowCount = 1
+        Me.tlpQuickBtns.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tlpQuickBtns.Size = New System.Drawing.Size(506, 54)
+        Me.tlpQuickBtns.TabIndex = 1
+        '
+        'btnQuickPOS
+        '
+        Me.btnQuickPOS.BorderRadius = 8
+        Me.btnQuickPOS.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnQuickPOS.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnQuickPOS.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnQuickPOS.ForeColor = System.Drawing.Color.White
+        Me.btnQuickPOS.Location = New System.Drawing.Point(383, 3)
+        Me.btnQuickPOS.Name = "btnQuickPOS"
+        Me.btnQuickPOS.Size = New System.Drawing.Size(120, 48)
+        Me.btnQuickPOS.TabIndex = 0
+        Me.btnQuickPOS.Text = "البيع (F1)"
+        '
+        'btnQuickProducts
+        '
+        Me.btnQuickProducts.BorderRadius = 8
+        Me.btnQuickProducts.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnQuickProducts.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnQuickProducts.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnQuickProducts.ForeColor = System.Drawing.Color.White
+        Me.btnQuickProducts.Location = New System.Drawing.Point(257, 3)
+        Me.btnQuickProducts.Name = "btnQuickProducts"
+        Me.btnQuickProducts.Size = New System.Drawing.Size(120, 48)
+        Me.btnQuickProducts.TabIndex = 1
+        Me.btnQuickProducts.Text = "الأصناف (F2)"
+        '
+        'btnQuickCustomers
+        '
+        Me.btnQuickCustomers.BorderRadius = 8
+        Me.btnQuickCustomers.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnQuickCustomers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnQuickCustomers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnQuickCustomers.ForeColor = System.Drawing.Color.White
+        Me.btnQuickCustomers.Location = New System.Drawing.Point(131, 3)
+        Me.btnQuickCustomers.Name = "btnQuickCustomers"
+        Me.btnQuickCustomers.Size = New System.Drawing.Size(120, 48)
+        Me.btnQuickCustomers.TabIndex = 2
+        Me.btnQuickCustomers.Text = "العملاء (F3)"
+        '
+        'btnQuickBackup
+        '
+        Me.btnQuickBackup.BorderRadius = 8
+        Me.btnQuickBackup.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnQuickBackup.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnQuickBackup.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnQuickBackup.ForeColor = System.Drawing.Color.White
+        Me.btnQuickBackup.Location = New System.Drawing.Point(3, 3)
+        Me.btnQuickBackup.Name = "btnQuickBackup"
+        Me.btnQuickBackup.Size = New System.Drawing.Size(122, 48)
+        Me.btnQuickBackup.TabIndex = 3
+        Me.btnQuickBackup.Text = "نسخ (F4)"
+        '
+        'lblQuickTitle
+        '
+        Me.lblQuickTitle.AutoSize = True
+        Me.lblQuickTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 9.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblQuickTitle.Location = New System.Drawing.Point(4, 6)
+        Me.lblQuickTitle.Name = "lblQuickTitle"
+        Me.lblQuickTitle.Size = New System.Drawing.Size(198, 17)
+        Me.lblQuickTitle.TabIndex = 0
+        Me.lblQuickTitle.Text = "⚡ وصول سريع للشاشات الرئيسية:"
+        '
+        'pnlAlertsHeader
+        '
+        Me.pnlAlertsHeader.Controls.Add(Me.lblAlertsTitle)
+        Me.pnlAlertsHeader.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlAlertsHeader.Location = New System.Drawing.Point(10, 10)
+        Me.pnlAlertsHeader.Name = "pnlAlertsHeader"
+        Me.pnlAlertsHeader.Size = New System.Drawing.Size(506, 36)
+        Me.pnlAlertsHeader.TabIndex = 0
+        '
+        'lblAlertsTitle
+        '
+        Me.lblAlertsTitle.AutoSize = True
+        Me.lblAlertsTitle.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblAlertsTitle.Location = New System.Drawing.Point(5, 6)
+        Me.lblAlertsTitle.Name = "lblAlertsTitle"
+        Me.lblAlertsTitle.Size = New System.Drawing.Size(195, 21)
+        Me.lblAlertsTitle.TabIndex = 0
+        Me.lblAlertsTitle.Text = "🔔 تنبيهات وإشعارات سريعة"
+        '
+        'tlpStats
+        '
+        Me.tlpStats.ColumnCount = 6
+        Me.tlpStats.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
+        Me.tlpStats.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
+        Me.tlpStats.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
+        Me.tlpStats.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
+        Me.tlpStats.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
+        Me.tlpStats.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.66667!))
+        Me.tlpStats.Controls.Add(Me.cardSales, 0, 0)
+        Me.tlpStats.Controls.Add(Me.cardPurchases, 1, 0)
+        Me.tlpStats.Controls.Add(Me.cardProfit, 2, 0)
+        Me.tlpStats.Controls.Add(Me.cardProducts, 3, 0)
+        Me.tlpStats.Controls.Add(Me.cardCustomers, 4, 0)
+        Me.tlpStats.Controls.Add(Me.cardSuppliers, 5, 0)
+        Me.tlpStats.Dock = System.Windows.Forms.DockStyle.Top
+        Me.tlpStats.Location = New System.Drawing.Point(0, 60)
+        Me.tlpStats.Name = "tlpStats"
+        Me.tlpStats.Padding = New System.Windows.Forms.Padding(10, 4, 10, 4)
+        Me.tlpStats.RowCount = 1
+        Me.tlpStats.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.tlpStats.Size = New System.Drawing.Size(1434, 115)
+        Me.tlpStats.TabIndex = 1
+        '
+        'cardSales
+        '
+        Me.cardSales.BorderRadius = 12
+        Me.cardSales.Controls.Add(Me.lblCardSalesSub)
+        Me.cardSales.Controls.Add(Me.lblCardSalesVal)
+        Me.cardSales.Controls.Add(Me.lblCardSalesTitle)
+        Me.cardSales.Controls.Add(Me.picCardSales)
+        Me.cardSales.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardSales.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardSales.Location = New System.Drawing.Point(1195, 7)
+        Me.cardSales.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardSales.Name = "cardSales"
+        Me.cardSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.cardSales.Size = New System.Drawing.Size(223, 101)
+        Me.cardSales.TabIndex = 0
+        '
+        'lblCardSalesSub
+        '
+        Me.lblCardSalesSub.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardSalesSub.AutoSize = True
+        Me.lblCardSalesSub.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardSalesSub.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblCardSalesSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblCardSalesSub.Location = New System.Drawing.Point(7, 75)
+        Me.lblCardSalesSub.Name = "lblCardSalesSub"
+        Me.lblCardSalesSub.Size = New System.Drawing.Size(45, 15)
+        Me.lblCardSalesSub.TabIndex = 3
+        Me.lblCardSalesSub.Text = "0 فاتورة"
+        '
+        'lblCardSalesVal
+        '
+        Me.lblCardSalesVal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardSalesVal.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardSalesVal.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardSalesVal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(46, Byte), Integer), CType(CType(204, Byte), Integer), CType(CType(113, Byte), Integer))
+        Me.lblCardSalesVal.Location = New System.Drawing.Point(5, 38)
+        Me.lblCardSalesVal.Name = "lblCardSalesVal"
+        Me.lblCardSalesVal.Size = New System.Drawing.Size(210, 26)
+        Me.lblCardSalesVal.TabIndex = 2
+        Me.lblCardSalesVal.Text = "0.00 ر.س"
+        Me.lblCardSalesVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'lblCardSalesTitle
+        '
+        Me.lblCardSalesTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardSalesTitle.AutoSize = True
+        Me.lblCardSalesTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardSalesTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardSalesTitle.Location = New System.Drawing.Point(9, 8)
+        Me.lblCardSalesTitle.Name = "lblCardSalesTitle"
+        Me.lblCardSalesTitle.Size = New System.Drawing.Size(85, 19)
+        Me.lblCardSalesTitle.TabIndex = 1
+        Me.lblCardSalesTitle.Text = "مبيعات اليوم"
+        '
+        'picCardSales
+        '
+        Me.picCardSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picCardSales.BackColor = System.Drawing.Color.Transparent
+        Me.picCardSales.Image = Global.WindowsApp1.My.Resources.Resources.market_analysis
+        Me.picCardSales.ImageRotate = 0!
+        Me.picCardSales.Location = New System.Drawing.Point(175, 10)
+        Me.picCardSales.Name = "picCardSales"
+        Me.picCardSales.Size = New System.Drawing.Size(38, 38)
+        Me.picCardSales.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picCardSales.TabIndex = 0
+        Me.picCardSales.TabStop = False
+        '
+        'cardPurchases
+        '
+        Me.cardPurchases.BorderRadius = 12
+        Me.cardPurchases.Controls.Add(Me.lblCardPurchasesSub)
+        Me.cardPurchases.Controls.Add(Me.lblCardPurchasesVal)
+        Me.cardPurchases.Controls.Add(Me.lblCardPurchasesTitle)
+        Me.cardPurchases.Controls.Add(Me.picCardPurchases)
+        Me.cardPurchases.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardPurchases.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardPurchases.Location = New System.Drawing.Point(960, 7)
+        Me.cardPurchases.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardPurchases.Name = "cardPurchases"
+        Me.cardPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.cardPurchases.Size = New System.Drawing.Size(223, 101)
+        Me.cardPurchases.TabIndex = 1
+        '
+        'lblCardPurchasesSub
+        '
+        Me.lblCardPurchasesSub.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardPurchasesSub.AutoSize = True
+        Me.lblCardPurchasesSub.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardPurchasesSub.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblCardPurchasesSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblCardPurchasesSub.Location = New System.Drawing.Point(7, 75)
+        Me.lblCardPurchasesSub.Name = "lblCardPurchasesSub"
+        Me.lblCardPurchasesSub.Size = New System.Drawing.Size(45, 15)
+        Me.lblCardPurchasesSub.TabIndex = 3
+        Me.lblCardPurchasesSub.Text = "0 فاتورة"
+        '
+        'lblCardPurchasesVal
+        '
+        Me.lblCardPurchasesVal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardPurchasesVal.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardPurchasesVal.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardPurchasesVal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(243, Byte), Integer), CType(CType(156, Byte), Integer), CType(CType(18, Byte), Integer))
+        Me.lblCardPurchasesVal.Location = New System.Drawing.Point(5, 38)
+        Me.lblCardPurchasesVal.Name = "lblCardPurchasesVal"
+        Me.lblCardPurchasesVal.Size = New System.Drawing.Size(210, 26)
+        Me.lblCardPurchasesVal.TabIndex = 2
+        Me.lblCardPurchasesVal.Text = "0.00 ر.س"
+        Me.lblCardPurchasesVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'lblCardPurchasesTitle
+        '
+        Me.lblCardPurchasesTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardPurchasesTitle.AutoSize = True
+        Me.lblCardPurchasesTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardPurchasesTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardPurchasesTitle.Location = New System.Drawing.Point(9, 8)
+        Me.lblCardPurchasesTitle.Name = "lblCardPurchasesTitle"
+        Me.lblCardPurchasesTitle.Size = New System.Drawing.Size(96, 19)
+        Me.lblCardPurchasesTitle.TabIndex = 1
+        Me.lblCardPurchasesTitle.Text = "مشتريات اليوم"
+        '
+        'picCardPurchases
+        '
+        Me.picCardPurchases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picCardPurchases.BackColor = System.Drawing.Color.Transparent
+        Me.picCardPurchases.Image = Global.WindowsApp1.My.Resources.Resources.purchaser
+        Me.picCardPurchases.ImageRotate = 0!
+        Me.picCardPurchases.Location = New System.Drawing.Point(175, 10)
+        Me.picCardPurchases.Name = "picCardPurchases"
+        Me.picCardPurchases.Size = New System.Drawing.Size(38, 38)
+        Me.picCardPurchases.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picCardPurchases.TabIndex = 0
+        Me.picCardPurchases.TabStop = False
+        '
+        'cardProfit
+        '
+        Me.cardProfit.BorderRadius = 12
+        Me.cardProfit.Controls.Add(Me.lblCardProfitSub)
+        Me.cardProfit.Controls.Add(Me.lblCardProfitVal)
+        Me.cardProfit.Controls.Add(Me.lblCardProfitTitle)
+        Me.cardProfit.Controls.Add(Me.picCardProfit)
+        Me.cardProfit.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardProfit.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardProfit.Location = New System.Drawing.Point(725, 7)
+        Me.cardProfit.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardProfit.Name = "cardProfit"
+        Me.cardProfit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.cardProfit.Size = New System.Drawing.Size(223, 101)
+        Me.cardProfit.TabIndex = 2
+        '
+        'lblCardProfitSub
+        '
+        Me.lblCardProfitSub.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardProfitSub.AutoSize = True
+        Me.lblCardProfitSub.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardProfitSub.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblCardProfitSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblCardProfitSub.Location = New System.Drawing.Point(7, 75)
+        Me.lblCardProfitSub.Name = "lblCardProfitSub"
+        Me.lblCardProfitSub.Size = New System.Drawing.Size(110, 15)
+        Me.lblCardProfitSub.TabIndex = 3
+        Me.lblCardProfitSub.Text = "(مبيعات - مصروفات)"
+        '
+        'lblCardProfitVal
+        '
+        Me.lblCardProfitVal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardProfitVal.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardProfitVal.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardProfitVal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(152, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.lblCardProfitVal.Location = New System.Drawing.Point(5, 38)
+        Me.lblCardProfitVal.Name = "lblCardProfitVal"
+        Me.lblCardProfitVal.Size = New System.Drawing.Size(210, 26)
+        Me.lblCardProfitVal.TabIndex = 2
+        Me.lblCardProfitVal.Text = "0.00 ر.س"
+        Me.lblCardProfitVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'lblCardProfitTitle
+        '
+        Me.lblCardProfitTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardProfitTitle.AutoSize = True
+        Me.lblCardProfitTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardProfitTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardProfitTitle.Location = New System.Drawing.Point(9, 8)
+        Me.lblCardProfitTitle.Name = "lblCardProfitTitle"
+        Me.lblCardProfitTitle.Size = New System.Drawing.Size(123, 19)
+        Me.lblCardProfitTitle.TabIndex = 1
+        Me.lblCardProfitTitle.Text = "صافي النقدية اليوم"
+        '
+        'picCardProfit
+        '
+        Me.picCardProfit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picCardProfit.BackColor = System.Drawing.Color.Transparent
+        Me.picCardProfit.Image = Global.WindowsApp1.My.Resources.Resources.financial
+        Me.picCardProfit.ImageRotate = 0!
+        Me.picCardProfit.Location = New System.Drawing.Point(175, 10)
+        Me.picCardProfit.Name = "picCardProfit"
+        Me.picCardProfit.Size = New System.Drawing.Size(38, 38)
+        Me.picCardProfit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picCardProfit.TabIndex = 0
+        Me.picCardProfit.TabStop = False
+        '
+        'cardProducts
+        '
+        Me.cardProducts.BorderRadius = 12
+        Me.cardProducts.Controls.Add(Me.lblCardProductsSub)
+        Me.cardProducts.Controls.Add(Me.lblCardProductsVal)
+        Me.cardProducts.Controls.Add(Me.lblCardProductsTitle)
+        Me.cardProducts.Controls.Add(Me.picCardProducts)
+        Me.cardProducts.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardProducts.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardProducts.Location = New System.Drawing.Point(490, 7)
+        Me.cardProducts.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardProducts.Name = "cardProducts"
+        Me.cardProducts.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.cardProducts.Size = New System.Drawing.Size(223, 101)
+        Me.cardProducts.TabIndex = 3
+        '
+        'lblCardProductsSub
+        '
+        Me.lblCardProductsSub.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardProductsSub.AutoSize = True
+        Me.lblCardProductsSub.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardProductsSub.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblCardProductsSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblCardProductsSub.Location = New System.Drawing.Point(7, 75)
+        Me.lblCardProductsSub.Name = "lblCardProductsSub"
+        Me.lblCardProductsSub.Size = New System.Drawing.Size(70, 15)
+        Me.lblCardProductsSub.TabIndex = 3
+        Me.lblCardProductsSub.Text = "صنف مسجل"
+        '
+        'lblCardProductsVal
+        '
+        Me.lblCardProductsVal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardProductsVal.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardProductsVal.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardProductsVal.Location = New System.Drawing.Point(5, 38)
+        Me.lblCardProductsVal.Name = "lblCardProductsVal"
+        Me.lblCardProductsVal.Size = New System.Drawing.Size(210, 26)
+        Me.lblCardProductsVal.TabIndex = 2
+        Me.lblCardProductsVal.Text = "0"
+        Me.lblCardProductsVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'lblCardProductsTitle
+        '
+        Me.lblCardProductsTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardProductsTitle.AutoSize = True
+        Me.lblCardProductsTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardProductsTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardProductsTitle.Location = New System.Drawing.Point(9, 8)
+        Me.lblCardProductsTitle.Name = "lblCardProductsTitle"
+        Me.lblCardProductsTitle.Size = New System.Drawing.Size(104, 19)
+        Me.lblCardProductsTitle.TabIndex = 1
+        Me.lblCardProductsTitle.Text = "إجمالي الأصناف"
+        '
+        'picCardProducts
+        '
+        Me.picCardProducts.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picCardProducts.BackColor = System.Drawing.Color.Transparent
+        Me.picCardProducts.Image = Global.WindowsApp1.My.Resources.Resources.product
+        Me.picCardProducts.ImageRotate = 0!
+        Me.picCardProducts.Location = New System.Drawing.Point(175, 10)
+        Me.picCardProducts.Name = "picCardProducts"
+        Me.picCardProducts.Size = New System.Drawing.Size(38, 38)
+        Me.picCardProducts.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picCardProducts.TabIndex = 0
+        Me.picCardProducts.TabStop = False
+        '
+        'cardCustomers
+        '
+        Me.cardCustomers.BorderRadius = 12
+        Me.cardCustomers.Controls.Add(Me.lblCardCustomersSub)
+        Me.cardCustomers.Controls.Add(Me.lblCardCustomersVal)
+        Me.cardCustomers.Controls.Add(Me.lblCardCustomersTitle)
+        Me.cardCustomers.Controls.Add(Me.picCardCustomers)
+        Me.cardCustomers.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardCustomers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardCustomers.Location = New System.Drawing.Point(255, 7)
+        Me.cardCustomers.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardCustomers.Name = "cardCustomers"
+        Me.cardCustomers.Size = New System.Drawing.Size(223, 101)
+        Me.cardCustomers.TabIndex = 4
+        '
+        'lblCardCustomersSub
+        '
+        Me.lblCardCustomersSub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardCustomersSub.AutoSize = True
+        Me.lblCardCustomersSub.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardCustomersSub.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblCardCustomersSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblCardCustomersSub.Location = New System.Drawing.Point(8, 73)
+        Me.lblCardCustomersSub.Name = "lblCardCustomersSub"
+        Me.lblCardCustomersSub.Size = New System.Drawing.Size(68, 15)
+        Me.lblCardCustomersSub.TabIndex = 3
+        Me.lblCardCustomersSub.Text = "عميل مسجل"
+        '
+        'lblCardCustomersVal
+        '
+        Me.lblCardCustomersVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardCustomersVal.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardCustomersVal.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardCustomersVal.Location = New System.Drawing.Point(6, 44)
+        Me.lblCardCustomersVal.Name = "lblCardCustomersVal"
+        Me.lblCardCustomersVal.Size = New System.Drawing.Size(209, 26)
+        Me.lblCardCustomersVal.TabIndex = 2
+        Me.lblCardCustomersVal.Text = "0"
+        '
+        'lblCardCustomersTitle
+        '
+        Me.lblCardCustomersTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardCustomersTitle.AutoSize = True
+        Me.lblCardCustomersTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardCustomersTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardCustomersTitle.Location = New System.Drawing.Point(10, 10)
+        Me.lblCardCustomersTitle.Name = "lblCardCustomersTitle"
+        Me.lblCardCustomersTitle.Size = New System.Drawing.Size(94, 19)
+        Me.lblCardCustomersTitle.TabIndex = 1
+        Me.lblCardCustomersTitle.Text = "إجمالي العملاء"
+        '
+        'picCardCustomers
+        '
+        Me.picCardCustomers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picCardCustomers.BackColor = System.Drawing.Color.Transparent
+        Me.picCardCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.picCardCustomers.ImageRotate = 0!
+        Me.picCardCustomers.Location = New System.Drawing.Point(175, 10)
+        Me.picCardCustomers.Name = "picCardCustomers"
+        Me.picCardCustomers.Size = New System.Drawing.Size(38, 38)
+        Me.picCardCustomers.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picCardCustomers.TabIndex = 0
+        Me.picCardCustomers.TabStop = False
+        '
+        'cardSuppliers
+        '
+        Me.cardSuppliers.BorderRadius = 12
+        Me.cardSuppliers.Controls.Add(Me.lblCardSuppliersSub)
+        Me.cardSuppliers.Controls.Add(Me.lblCardSuppliersVal)
+        Me.cardSuppliers.Controls.Add(Me.lblCardSuppliersTitle)
+        Me.cardSuppliers.Controls.Add(Me.picCardSuppliers)
+        Me.cardSuppliers.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.cardSuppliers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.cardSuppliers.Location = New System.Drawing.Point(16, 7)
+        Me.cardSuppliers.Margin = New System.Windows.Forms.Padding(6, 3, 6, 3)
+        Me.cardSuppliers.Name = "cardSuppliers"
+        Me.cardSuppliers.Size = New System.Drawing.Size(227, 101)
+        Me.cardSuppliers.TabIndex = 5
+        '
+        'lblCardSuppliersSub
+        '
+        Me.lblCardSuppliersSub.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardSuppliersSub.AutoSize = True
+        Me.lblCardSuppliersSub.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardSuppliersSub.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblCardSuppliersSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblCardSuppliersSub.Location = New System.Drawing.Point(8, 73)
+        Me.lblCardSuppliersSub.Name = "lblCardSuppliersSub"
+        Me.lblCardSuppliersSub.Size = New System.Drawing.Size(65, 15)
+        Me.lblCardSuppliersSub.TabIndex = 3
+        Me.lblCardSuppliersSub.Text = "مورد مسجل"
+        '
+        'lblCardSuppliersVal
+        '
+        Me.lblCardSuppliersVal.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardSuppliersVal.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardSuppliersVal.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardSuppliersVal.Location = New System.Drawing.Point(6, 44)
+        Me.lblCardSuppliersVal.Name = "lblCardSuppliersVal"
+        Me.lblCardSuppliersVal.Size = New System.Drawing.Size(213, 26)
+        Me.lblCardSuppliersVal.TabIndex = 2
+        Me.lblCardSuppliersVal.Text = "0"
+        '
+        'lblCardSuppliersTitle
+        '
+        Me.lblCardSuppliersTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblCardSuppliersTitle.AutoSize = True
+        Me.lblCardSuppliersTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCardSuppliersTitle.Font = New System.Drawing.Font("Segoe UI Semibold", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCardSuppliersTitle.Location = New System.Drawing.Point(10, 10)
+        Me.lblCardSuppliersTitle.Name = "lblCardSuppliersTitle"
+        Me.lblCardSuppliersTitle.Size = New System.Drawing.Size(104, 19)
+        Me.lblCardSuppliersTitle.TabIndex = 1
+        Me.lblCardSuppliersTitle.Text = "إجمالي الموردين"
+        '
+        'picCardSuppliers
+        '
+        Me.picCardSuppliers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.picCardSuppliers.BackColor = System.Drawing.Color.Transparent
+        Me.picCardSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.team
+        Me.picCardSuppliers.ImageRotate = 0!
+        Me.picCardSuppliers.Location = New System.Drawing.Point(179, 10)
+        Me.picCardSuppliers.Name = "picCardSuppliers"
+        Me.picCardSuppliers.Size = New System.Drawing.Size(38, 38)
+        Me.picCardSuppliers.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picCardSuppliers.TabIndex = 0
+        Me.picCardSuppliers.TabStop = False
+        '
+        'pnlWelcome
+        '
+        Me.pnlWelcome.Controls.Add(Me.btnRefreshDashboard)
+        Me.pnlWelcome.Controls.Add(Me.lblShiftDuration)
+        Me.pnlWelcome.Controls.Add(Me.lblWelcomeSub)
+        Me.pnlWelcome.Controls.Add(Me.lblWelcomeGreeting)
+        Me.pnlWelcome.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlWelcome.Location = New System.Drawing.Point(0, 0)
+        Me.pnlWelcome.Name = "pnlWelcome"
+        Me.pnlWelcome.Padding = New System.Windows.Forms.Padding(15, 8, 15, 6)
+        Me.pnlWelcome.Size = New System.Drawing.Size(1434, 60)
+        Me.pnlWelcome.TabIndex = 0
+        '
+        'btnRefreshDashboard
+        '
+        Me.btnRefreshDashboard.BorderRadius = 8
+        Me.btnRefreshDashboard.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnRefreshDashboard.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRefreshDashboard.ForeColor = System.Drawing.Color.White
+        Me.btnRefreshDashboard.Location = New System.Drawing.Point(18, 12)
+        Me.btnRefreshDashboard.Name = "btnRefreshDashboard"
+        Me.btnRefreshDashboard.Size = New System.Drawing.Size(140, 36)
+        Me.btnRefreshDashboard.TabIndex = 2
+        Me.btnRefreshDashboard.Text = "🔄 تحديث البيانات"
+        '
+        'lblShiftDuration
+        '
+        Me.lblShiftDuration.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblShiftDuration.ForeColor = System.Drawing.Color.FromArgb(CType(CType(41, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(185, Byte), Integer))
+        Me.lblShiftDuration.Location = New System.Drawing.Point(1238, 21)
+        Me.lblShiftDuration.Name = "lblShiftDuration"
+        Me.lblShiftDuration.Size = New System.Drawing.Size(161, 19)
+        Me.lblShiftDuration.TabIndex = 3
+        Me.lblShiftDuration.Text = "⏱️ مدة الوردية: 00:00:00"
+        '
+        'lblWelcomeSub
+        '
+        Me.lblWelcomeSub.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWelcomeSub.ForeColor = System.Drawing.Color.Gray
+        Me.lblWelcomeSub.Location = New System.Drawing.Point(967, 21)
+        Me.lblWelcomeSub.Name = "lblWelcomeSub"
+        Me.lblWelcomeSub.Size = New System.Drawing.Size(255, 17)
+        Me.lblWelcomeSub.TabIndex = 1
+        Me.lblWelcomeSub.Text = "لوحة التحكم السريعة ومؤشرات الأداء التشغيلية"
+        '
+        'lblWelcomeGreeting
+        '
+        Me.lblWelcomeGreeting.AutoSize = True
+        Me.lblWelcomeGreeting.Font = New System.Drawing.Font("Segoe UI", 13.5!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblWelcomeGreeting.Location = New System.Drawing.Point(15, 6)
+        Me.lblWelcomeGreeting.Name = "lblWelcomeGreeting"
+        Me.lblWelcomeGreeting.Size = New System.Drawing.Size(95, 25)
+        Me.lblWelcomeGreeting.TabIndex = 0
+        Me.lblWelcomeGreeting.Text = "أهلاً بك 👋"
+        '
+        'tmrClock
+        '
+        Me.tmrClock.Interval = 1000
+        '
+        'tmrDashboardRefresh
+        '
+        Me.tmrDashboardRefresh.Interval = 30000
+        '
         'ToolStrip1
         '
         Me.ToolStrip1.AutoSize = False
@@ -241,12 +1357,40 @@ Partial Class MainForm
         Me.ToolStrip1.TabIndex = 42
         Me.ToolStrip1.Text = "ToolStrip1"
         '
+        'btnCategories
+        '
+        Me.btnCategories.AutoSize = False
+        Me.btnCategories.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCategories.ForeColor = System.Drawing.Color.Black
+        Me.btnCategories.Image = Global.WindowsApp1.My.Resources.Resources.application
+        Me.btnCategories.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnCategories.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnCategories.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCategories.Name = "btnCategories"
+        Me.btnCategories.Size = New System.Drawing.Size(90, 100)
+        Me.btnCategories.Text = "الفئات"
+        Me.btnCategories.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.AutoSize = False
         Me.ToolStripSeparator1.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnProducts
+        '
+        Me.btnProducts.AutoSize = False
+        Me.btnProducts.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnProducts.ForeColor = System.Drawing.Color.Black
+        Me.btnProducts.Image = Global.WindowsApp1.My.Resources.Resources.order
+        Me.btnProducts.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnProducts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnProducts.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnProducts.Name = "btnProducts"
+        Me.btnProducts.Size = New System.Drawing.Size(90, 100)
+        Me.btnProducts.Text = "الاصناف"
+        Me.btnProducts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator9
         '
@@ -255,12 +1399,40 @@ Partial Class MainForm
         Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
         Me.ToolStripSeparator9.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmProductSizes
+        '
+        Me.btnfrmProductSizes.AutoSize = False
+        Me.btnfrmProductSizes.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmProductSizes.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmProductSizes.Image = Global.WindowsApp1.My.Resources.Resources.product
+        Me.btnfrmProductSizes.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmProductSizes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmProductSizes.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmProductSizes.Name = "btnfrmProductSizes"
+        Me.btnfrmProductSizes.Size = New System.Drawing.Size(120, 100)
+        Me.btnfrmProductSizes.Text = "احجام الاصناف"
+        Me.btnfrmProductSizes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator7
         '
         Me.ToolStripSeparator7.AutoSize = False
         Me.ToolStripSeparator7.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
         Me.ToolStripSeparator7.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnfrmProductAddons
+        '
+        Me.btnfrmProductAddons.AutoSize = False
+        Me.btnfrmProductAddons.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmProductAddons.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmProductAddons.Image = Global.WindowsApp1.My.Resources.Resources.diet
+        Me.btnfrmProductAddons.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmProductAddons.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmProductAddons.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmProductAddons.Name = "btnfrmProductAddons"
+        Me.btnfrmProductAddons.Size = New System.Drawing.Size(135, 100)
+        Me.btnfrmProductAddons.Text = "اضافات الاصناف"
+        Me.btnfrmProductAddons.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator5
         '
@@ -269,12 +1441,40 @@ Partial Class MainForm
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
         Me.ToolStripSeparator5.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmDeliveryAreas
+        '
+        Me.btnfrmDeliveryAreas.AutoSize = False
+        Me.btnfrmDeliveryAreas.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmDeliveryAreas.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmDeliveryAreas.Image = Global.WindowsApp1.My.Resources.Resources.location
+        Me.btnfrmDeliveryAreas.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmDeliveryAreas.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmDeliveryAreas.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmDeliveryAreas.Name = "btnfrmDeliveryAreas"
+        Me.btnfrmDeliveryAreas.Size = New System.Drawing.Size(130, 100)
+        Me.btnfrmDeliveryAreas.Text = "مناطق التوصيل"
+        Me.btnfrmDeliveryAreas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator4
         '
         Me.ToolStripSeparator4.AutoSize = False
         Me.ToolStripSeparator4.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
         Me.ToolStripSeparator4.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnfrmDeliveryDrivers
+        '
+        Me.btnfrmDeliveryDrivers.AutoSize = False
+        Me.btnfrmDeliveryDrivers.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmDeliveryDrivers.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmDeliveryDrivers.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike__1_
+        Me.btnfrmDeliveryDrivers.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmDeliveryDrivers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmDeliveryDrivers.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmDeliveryDrivers.Name = "btnfrmDeliveryDrivers"
+        Me.btnfrmDeliveryDrivers.Size = New System.Drawing.Size(150, 100)
+        Me.btnfrmDeliveryDrivers.Text = "طيارين الديليفري"
+        Me.btnfrmDeliveryDrivers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator3
         '
@@ -283,12 +1483,40 @@ Partial Class MainForm
         Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
         Me.ToolStripSeparator3.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmShifts
+        '
+        Me.btnfrmShifts.AutoSize = False
+        Me.btnfrmShifts.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmShifts.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmShifts.Image = Global.WindowsApp1.My.Resources.Resources.scheduling
+        Me.btnfrmShifts.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmShifts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmShifts.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmShifts.Name = "btnfrmShifts"
+        Me.btnfrmShifts.Size = New System.Drawing.Size(150, 100)
+        Me.btnfrmShifts.Text = "الورديات"
+        Me.btnfrmShifts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator36
         '
         Me.ToolStripSeparator36.AutoSize = False
         Me.ToolStripSeparator36.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator36.Name = "ToolStripSeparator36"
         Me.ToolStripSeparator36.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnfrmBranches
+        '
+        Me.btnfrmBranches.AutoSize = False
+        Me.btnfrmBranches.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmBranches.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmBranches.Image = Global.WindowsApp1.My.Resources.Resources.branch
+        Me.btnfrmBranches.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmBranches.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmBranches.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmBranches.Name = "btnfrmBranches"
+        Me.btnfrmBranches.Size = New System.Drawing.Size(150, 100)
+        Me.btnfrmBranches.Text = "الفروع"
+        Me.btnfrmBranches.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator37
         '
@@ -369,6 +1597,20 @@ Partial Class MainForm
         Me.ToolStrip2.TabIndex = 43
         Me.ToolStrip2.Text = "ToolStrip2"
         '
+        'btnFrmCustomers
+        '
+        Me.btnFrmCustomers.AutoSize = False
+        Me.btnFrmCustomers.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFrmCustomers.ForeColor = System.Drawing.Color.Black
+        Me.btnFrmCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.btnFrmCustomers.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnFrmCustomers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnFrmCustomers.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFrmCustomers.Name = "btnFrmCustomers"
+        Me.btnFrmCustomers.Size = New System.Drawing.Size(110, 100)
+        Me.btnFrmCustomers.Text = "ادارة العملاء"
+        Me.btnFrmCustomers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator2
         '
         Me.ToolStripSeparator2.AutoSize = False
@@ -376,12 +1618,40 @@ Partial Class MainForm
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(10, 113)
         '
+        'btnFrmCustomerStatement
+        '
+        Me.btnFrmCustomerStatement.AutoSize = False
+        Me.btnFrmCustomerStatement.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFrmCustomerStatement.ForeColor = System.Drawing.Color.Black
+        Me.btnFrmCustomerStatement.Image = Global.WindowsApp1.My.Resources.Resources.active_user
+        Me.btnFrmCustomerStatement.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnFrmCustomerStatement.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnFrmCustomerStatement.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFrmCustomerStatement.Name = "btnFrmCustomerStatement"
+        Me.btnFrmCustomerStatement.Size = New System.Drawing.Size(160, 100)
+        Me.btnFrmCustomerStatement.Text = "كشف حساب عميل"
+        Me.btnFrmCustomerStatement.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator18
         '
         Me.ToolStripSeparator18.AutoSize = False
         Me.ToolStripSeparator18.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator18.Name = "ToolStripSeparator18"
         Me.ToolStripSeparator18.Size = New System.Drawing.Size(10, 113)
+        '
+        'ToolStripButton11
+        '
+        Me.ToolStripButton11.AutoSize = False
+        Me.ToolStripButton11.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripButton11.ForeColor = System.Drawing.Color.Black
+        Me.ToolStripButton11.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.ToolStripButton11.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.ToolStripButton11.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.ToolStripButton11.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton11.Name = "ToolStripButton11"
+        Me.ToolStripButton11.Size = New System.Drawing.Size(110, 100)
+        Me.ToolStripButton11.Text = "تقارير العملاء"
+        Me.ToolStripButton11.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator17
         '
@@ -411,6 +1681,20 @@ Partial Class MainForm
         Me.ToolStrip3.TabIndex = 44
         Me.ToolStrip3.Text = "ToolStrip3"
         '
+        'ToolStripButton3
+        '
+        Me.ToolStripButton3.AutoSize = False
+        Me.ToolStripButton3.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripButton3.ForeColor = System.Drawing.Color.Black
+        Me.ToolStripButton3.Image = Global.WindowsApp1.My.Resources.Resources.team
+        Me.ToolStripButton3.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.ToolStripButton3.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton3.Name = "ToolStripButton3"
+        Me.ToolStripButton3.Size = New System.Drawing.Size(130, 100)
+        Me.ToolStripButton3.Text = "ادارة الموردين"
+        Me.ToolStripButton3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator11
         '
         Me.ToolStripSeparator11.AutoSize = False
@@ -418,12 +1702,40 @@ Partial Class MainForm
         Me.ToolStripSeparator11.Name = "ToolStripSeparator11"
         Me.ToolStripSeparator11.Size = New System.Drawing.Size(10, 113)
         '
+        'ToolStripButton4
+        '
+        Me.ToolStripButton4.AutoSize = False
+        Me.ToolStripButton4.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripButton4.ForeColor = System.Drawing.Color.Black
+        Me.ToolStripButton4.Image = Global.WindowsApp1.My.Resources.Resources.active_user
+        Me.ToolStripButton4.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.ToolStripButton4.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton4.Name = "ToolStripButton4"
+        Me.ToolStripButton4.Size = New System.Drawing.Size(160, 100)
+        Me.ToolStripButton4.Text = "كشف حساب مورد"
+        Me.ToolStripButton4.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator12
         '
         Me.ToolStripSeparator12.AutoSize = False
         Me.ToolStripSeparator12.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator12.Name = "ToolStripSeparator12"
         Me.ToolStripSeparator12.Size = New System.Drawing.Size(10, 113)
+        '
+        'ToolStripButton5
+        '
+        Me.ToolStripButton5.AutoSize = False
+        Me.ToolStripButton5.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ToolStripButton5.ForeColor = System.Drawing.Color.Black
+        Me.ToolStripButton5.Image = Global.WindowsApp1.My.Resources.Resources.purchaser
+        Me.ToolStripButton5.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.ToolStripButton5.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.ToolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton5.Name = "ToolStripButton5"
+        Me.ToolStripButton5.Size = New System.Drawing.Size(110, 100)
+        Me.ToolStripButton5.Text = "تقارير الموردين"
+        Me.ToolStripButton5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator13
         '
@@ -446,12 +1758,26 @@ Partial Class MainForm
         '
         Me.ToolStrip4.AutoSize = False
         Me.ToolStrip4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip4.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnfrmPOS, Me.ToolStripSeparator14, Me.btnFrmSalesReport, Me.ToolStripSeparator15, Me.btnFrmDriverReport, Me.ToolStripSeparator16})
+        Me.ToolStrip4.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnfrmPOS, Me.ToolStripSeparator14, Me.btnSalesReturns, Me.ToolStripSeparator50, Me.btnFrmSalesReport, Me.ToolStripSeparator15, Me.btnFrmDriverReport, Me.ToolStripSeparator16, Me.btnKds, Me.ToolStripSeparator51, Me.btnWaste, Me.ToolStripSeparator52, Me.btnRes, Me.ToolStripSeparator53})
         Me.ToolStrip4.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip4.Name = "ToolStrip4"
         Me.ToolStrip4.Size = New System.Drawing.Size(1426, 139)
         Me.ToolStrip4.TabIndex = 44
         Me.ToolStrip4.Text = "ToolStrip4"
+        '
+        'btnfrmPOS
+        '
+        Me.btnfrmPOS.AutoSize = False
+        Me.btnfrmPOS.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmPOS.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmPOS.Image = Global.WindowsApp1.My.Resources.Resources.shopping_cart2
+        Me.btnfrmPOS.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmPOS.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmPOS.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmPOS.Name = "btnfrmPOS"
+        Me.btnfrmPOS.Size = New System.Drawing.Size(110, 100)
+        Me.btnfrmPOS.Text = "البيع"
+        Me.btnfrmPOS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator14
         '
@@ -460,6 +1786,20 @@ Partial Class MainForm
         Me.ToolStripSeparator14.Name = "ToolStripSeparator14"
         Me.ToolStripSeparator14.Size = New System.Drawing.Size(10, 113)
         '
+        'btnFrmSalesReport
+        '
+        Me.btnFrmSalesReport.AutoSize = False
+        Me.btnFrmSalesReport.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFrmSalesReport.ForeColor = System.Drawing.Color.Black
+        Me.btnFrmSalesReport.Image = Global.WindowsApp1.My.Resources.Resources.market_analysis
+        Me.btnFrmSalesReport.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnFrmSalesReport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnFrmSalesReport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFrmSalesReport.Name = "btnFrmSalesReport"
+        Me.btnFrmSalesReport.Size = New System.Drawing.Size(120, 100)
+        Me.btnFrmSalesReport.Text = "تقارير البيع"
+        Me.btnFrmSalesReport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator15
         '
         Me.ToolStripSeparator15.AutoSize = False
@@ -467,12 +1807,89 @@ Partial Class MainForm
         Me.ToolStripSeparator15.Name = "ToolStripSeparator15"
         Me.ToolStripSeparator15.Size = New System.Drawing.Size(10, 113)
         '
+        'btnFrmDriverReport
+        '
+        Me.btnFrmDriverReport.AutoSize = False
+        Me.btnFrmDriverReport.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFrmDriverReport.ForeColor = System.Drawing.Color.Black
+        Me.btnFrmDriverReport.Image = Global.WindowsApp1.My.Resources.Resources.report
+        Me.btnFrmDriverReport.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnFrmDriverReport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnFrmDriverReport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFrmDriverReport.Name = "btnFrmDriverReport"
+        Me.btnFrmDriverReport.Size = New System.Drawing.Size(200, 100)
+        Me.btnFrmDriverReport.Text = "تقارير طيارين الديلفيري"
+        Me.btnFrmDriverReport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator16
         '
         Me.ToolStripSeparator16.AutoSize = False
         Me.ToolStripSeparator16.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator16.Name = "ToolStripSeparator16"
         Me.ToolStripSeparator16.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnKds
+        '
+        Me.btnKds.AutoSize = False
+        Me.btnKds.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnKds.ForeColor = System.Drawing.Color.Black
+        Me.btnKds.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
+        Me.btnKds.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnKds.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnKds.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnKds.Name = "btnKds"
+        Me.btnKds.Size = New System.Drawing.Size(160, 100)
+        Me.btnKds.Text = "شاشة المطبخ (KDS)"
+        Me.btnKds.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator51
+        '
+        Me.ToolStripSeparator51.AutoSize = False
+        Me.ToolStripSeparator51.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator51.Name = "ToolStripSeparator51"
+        Me.ToolStripSeparator51.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnWaste
+        '
+        Me.btnWaste.AutoSize = False
+        Me.btnWaste.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnWaste.ForeColor = System.Drawing.Color.Black
+        Me.btnWaste.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
+        Me.btnWaste.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnWaste.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnWaste.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnWaste.Name = "btnWaste"
+        Me.btnWaste.Size = New System.Drawing.Size(150, 100)
+        Me.btnWaste.Text = "هالك وتالف المطبخ"
+        Me.btnWaste.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator52
+        '
+        Me.ToolStripSeparator52.AutoSize = False
+        Me.ToolStripSeparator52.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator52.Name = "ToolStripSeparator52"
+        Me.ToolStripSeparator52.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnRes
+        '
+        Me.btnRes.AutoSize = False
+        Me.btnRes.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnRes.ForeColor = System.Drawing.Color.Black
+        Me.btnRes.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
+        Me.btnRes.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnRes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnRes.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnRes.Name = "btnRes"
+        Me.btnRes.Size = New System.Drawing.Size(140, 100)
+        Me.btnRes.Text = "حجوزات الصالة"
+        Me.btnRes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator53
+        '
+        Me.ToolStripSeparator53.AutoSize = False
+        Me.ToolStripSeparator53.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator53.Name = "ToolStripSeparator53"
+        Me.ToolStripSeparator53.Size = New System.Drawing.Size(10, 113)
         '
         'tabPurchases
         '
@@ -495,12 +1912,40 @@ Partial Class MainForm
         Me.ToolStrip5.TabIndex = 44
         Me.ToolStrip5.Text = "ToolStrip5"
         '
+        'btnfrmPurchases
+        '
+        Me.btnfrmPurchases.AutoSize = False
+        Me.btnfrmPurchases.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmPurchases.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping_cart__1_
+        Me.btnfrmPurchases.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmPurchases.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmPurchases.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmPurchases.Name = "btnfrmPurchases"
+        Me.btnfrmPurchases.Size = New System.Drawing.Size(200, 100)
+        Me.btnfrmPurchases.Text = "فاتورة المشتريات"
+        Me.btnfrmPurchases.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator19
         '
         Me.ToolStripSeparator19.AutoSize = False
         Me.ToolStripSeparator19.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator19.Name = "ToolStripSeparator19"
         Me.ToolStripSeparator19.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnfrmPurchaseReports
+        '
+        Me.btnfrmPurchaseReports.AutoSize = False
+        Me.btnfrmPurchaseReports.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmPurchaseReports.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmPurchaseReports.Image = Global.WindowsApp1.My.Resources.Resources.purchaser
+        Me.btnfrmPurchaseReports.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmPurchaseReports.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmPurchaseReports.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmPurchaseReports.Name = "btnfrmPurchaseReports"
+        Me.btnfrmPurchaseReports.Size = New System.Drawing.Size(200, 100)
+        Me.btnfrmPurchaseReports.Text = "تقارير المشتريات"
+        Me.btnfrmPurchaseReports.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator20
         '
@@ -530,12 +1975,40 @@ Partial Class MainForm
         Me.ToolStrip6.TabIndex = 44
         Me.ToolStrip6.Text = "ToolStrip6"
         '
+        'btnfrmTreasury
+        '
+        Me.btnfrmTreasury.AutoSize = False
+        Me.btnfrmTreasury.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmTreasury.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmTreasury.Image = Global.WindowsApp1.My.Resources.Resources.financial
+        Me.btnfrmTreasury.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmTreasury.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmTreasury.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmTreasury.Name = "btnfrmTreasury"
+        Me.btnfrmTreasury.Size = New System.Drawing.Size(110, 100)
+        Me.btnfrmTreasury.Text = "ادارة الخزن"
+        Me.btnfrmTreasury.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator22
         '
         Me.ToolStripSeparator22.AutoSize = False
         Me.ToolStripSeparator22.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator22.Name = "ToolStripSeparator22"
         Me.ToolStripSeparator22.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnFrmTreasuryTransfer
+        '
+        Me.btnFrmTreasuryTransfer.AutoSize = False
+        Me.btnFrmTreasuryTransfer.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFrmTreasuryTransfer.ForeColor = System.Drawing.Color.Black
+        Me.btnFrmTreasuryTransfer.Image = Global.WindowsApp1.My.Resources.Resources.exchange__1_
+        Me.btnFrmTreasuryTransfer.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnFrmTreasuryTransfer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnFrmTreasuryTransfer.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFrmTreasuryTransfer.Name = "btnFrmTreasuryTransfer"
+        Me.btnFrmTreasuryTransfer.Size = New System.Drawing.Size(150, 100)
+        Me.btnFrmTreasuryTransfer.Text = "تحويل بين الخزن"
+        Me.btnFrmTreasuryTransfer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator24
         '
@@ -544,6 +2017,20 @@ Partial Class MainForm
         Me.ToolStripSeparator24.Name = "ToolStripSeparator24"
         Me.ToolStripSeparator24.Size = New System.Drawing.Size(10, 113)
         '
+        'btnFrmTreasuryTransactionsReport
+        '
+        Me.btnFrmTreasuryTransactionsReport.AutoSize = False
+        Me.btnFrmTreasuryTransactionsReport.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnFrmTreasuryTransactionsReport.ForeColor = System.Drawing.Color.Black
+        Me.btnFrmTreasuryTransactionsReport.Image = Global.WindowsApp1.My.Resources.Resources.web
+        Me.btnFrmTreasuryTransactionsReport.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnFrmTreasuryTransactionsReport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnFrmTreasuryTransactionsReport.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFrmTreasuryTransactionsReport.Name = "btnFrmTreasuryTransactionsReport"
+        Me.btnFrmTreasuryTransactionsReport.Size = New System.Drawing.Size(150, 100)
+        Me.btnFrmTreasuryTransactionsReport.Text = "تقارير حركة الخزن"
+        Me.btnFrmTreasuryTransactionsReport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator33
         '
         Me.ToolStripSeparator33.AutoSize = False
@@ -551,12 +2038,40 @@ Partial Class MainForm
         Me.ToolStripSeparator33.Name = "ToolStripSeparator33"
         Me.ToolStripSeparator33.Size = New System.Drawing.Size(10, 113)
         '
+        'btnDeposit
+        '
+        Me.btnDeposit.AutoSize = False
+        Me.btnDeposit.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnDeposit.ForeColor = System.Drawing.Color.Black
+        Me.btnDeposit.Image = Global.WindowsApp1.My.Resources.Resources.treasury
+        Me.btnDeposit.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnDeposit.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnDeposit.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnDeposit.Name = "btnDeposit"
+        Me.btnDeposit.Size = New System.Drawing.Size(120, 100)
+        Me.btnDeposit.Text = "ايداع"
+        Me.btnDeposit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator43
         '
         Me.ToolStripSeparator43.AutoSize = False
         Me.ToolStripSeparator43.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator43.Name = "ToolStripSeparator43"
         Me.ToolStripSeparator43.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnWithdraw
+        '
+        Me.btnWithdraw.AutoSize = False
+        Me.btnWithdraw.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnWithdraw.ForeColor = System.Drawing.Color.Black
+        Me.btnWithdraw.Image = Global.WindowsApp1.My.Resources.Resources.treasury
+        Me.btnWithdraw.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnWithdraw.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnWithdraw.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnWithdraw.Name = "btnWithdraw"
+        Me.btnWithdraw.Size = New System.Drawing.Size(120, 100)
+        Me.btnWithdraw.Text = "سحب"
+        Me.btnWithdraw.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator42
         '
@@ -586,12 +2101,40 @@ Partial Class MainForm
         Me.ToolStrip10.TabIndex = 48
         Me.ToolStrip10.Text = "ToolStrip10"
         '
+        'btnform_Expenses
+        '
+        Me.btnform_Expenses.AutoSize = False
+        Me.btnform_Expenses.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnform_Expenses.ForeColor = System.Drawing.Color.Black
+        Me.btnform_Expenses.Image = Global.WindowsApp1.My.Resources.Resources.backup
+        Me.btnform_Expenses.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnform_Expenses.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnform_Expenses.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnform_Expenses.Name = "btnform_Expenses"
+        Me.btnform_Expenses.Size = New System.Drawing.Size(120, 100)
+        Me.btnform_Expenses.Text = "المصروفات"
+        Me.btnform_Expenses.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator40
         '
         Me.ToolStripSeparator40.AutoSize = False
         Me.ToolStripSeparator40.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator40.Name = "ToolStripSeparator40"
         Me.ToolStripSeparator40.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnExpensesReportForm
+        '
+        Me.btnExpensesReportForm.AutoSize = False
+        Me.btnExpensesReportForm.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnExpensesReportForm.ForeColor = System.Drawing.Color.Black
+        Me.btnExpensesReportForm.Image = Global.WindowsApp1.My.Resources.Resources.color_palette
+        Me.btnExpensesReportForm.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnExpensesReportForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnExpensesReportForm.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnExpensesReportForm.Name = "btnExpensesReportForm"
+        Me.btnExpensesReportForm.Size = New System.Drawing.Size(150, 100)
+        Me.btnExpensesReportForm.Text = "تقارير المصروفات"
+        Me.btnExpensesReportForm.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator41
         '
@@ -614,12 +2157,26 @@ Partial Class MainForm
         '
         Me.ToolStrip7.AutoSize = False
         Me.ToolStrip7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip7.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnfrmEmployees, Me.ToolStripSeparator25, Me.btnfrmJobTitles, Me.ToolStripSeparator26, Me.btnfrmDepartments, Me.ToolStripSeparator27, Me.btnfrmSalarySystems, Me.ToolStripSeparator28, Me.btnfrmSalaryPayment, Me.ToolStripSeparator8, Me.ToolStripButton6, Me.ToolStripSeparator6})
+        Me.ToolStrip7.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnfrmEmployees, Me.ToolStripSeparator25, Me.btnfrmJobTitles, Me.ToolStripSeparator26, Me.btnfrmDepartments, Me.ToolStripSeparator27, Me.btnfrmSalarySystems, Me.ToolStripSeparator28, Me.btnfrmSalaryPayment, Me.ToolStripSeparator8})
         Me.ToolStrip7.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip7.Name = "ToolStrip7"
         Me.ToolStrip7.Size = New System.Drawing.Size(1426, 139)
         Me.ToolStrip7.TabIndex = 45
         Me.ToolStrip7.Text = "ToolStrip7"
+        '
+        'btnfrmEmployees
+        '
+        Me.btnfrmEmployees.AutoSize = False
+        Me.btnfrmEmployees.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmEmployees.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmEmployees.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.btnfrmEmployees.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmEmployees.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmEmployees.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmEmployees.Name = "btnfrmEmployees"
+        Me.btnfrmEmployees.Size = New System.Drawing.Size(150, 100)
+        Me.btnfrmEmployees.Text = "ادارة الموظفين"
+        Me.btnfrmEmployees.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator25
         '
@@ -628,12 +2185,40 @@ Partial Class MainForm
         Me.ToolStripSeparator25.Name = "ToolStripSeparator25"
         Me.ToolStripSeparator25.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmJobTitles
+        '
+        Me.btnfrmJobTitles.AutoSize = False
+        Me.btnfrmJobTitles.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmJobTitles.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmJobTitles.Image = Global.WindowsApp1.My.Resources.Resources.artist
+        Me.btnfrmJobTitles.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmJobTitles.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmJobTitles.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmJobTitles.Name = "btnfrmJobTitles"
+        Me.btnfrmJobTitles.Size = New System.Drawing.Size(160, 100)
+        Me.btnfrmJobTitles.Text = "المسميات الوظيفية"
+        Me.btnfrmJobTitles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator26
         '
         Me.ToolStripSeparator26.AutoSize = False
         Me.ToolStripSeparator26.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator26.Name = "ToolStripSeparator26"
         Me.ToolStripSeparator26.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnfrmDepartments
+        '
+        Me.btnfrmDepartments.AutoSize = False
+        Me.btnfrmDepartments.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmDepartments.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmDepartments.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.btnfrmDepartments.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmDepartments.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmDepartments.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmDepartments.Name = "btnfrmDepartments"
+        Me.btnfrmDepartments.Size = New System.Drawing.Size(110, 100)
+        Me.btnfrmDepartments.Text = "الاقسام"
+        Me.btnfrmDepartments.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator27
         '
@@ -642,6 +2227,20 @@ Partial Class MainForm
         Me.ToolStripSeparator27.Name = "ToolStripSeparator27"
         Me.ToolStripSeparator27.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmSalarySystems
+        '
+        Me.btnfrmSalarySystems.AutoSize = False
+        Me.btnfrmSalarySystems.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmSalarySystems.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmSalarySystems.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.btnfrmSalarySystems.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmSalarySystems.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmSalarySystems.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmSalarySystems.Name = "btnfrmSalarySystems"
+        Me.btnfrmSalarySystems.Size = New System.Drawing.Size(110, 100)
+        Me.btnfrmSalarySystems.Text = "انظمة الرواتب"
+        Me.btnfrmSalarySystems.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator28
         '
         Me.ToolStripSeparator28.AutoSize = False
@@ -649,19 +2248,26 @@ Partial Class MainForm
         Me.ToolStripSeparator28.Name = "ToolStripSeparator28"
         Me.ToolStripSeparator28.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmSalaryPayment
+        '
+        Me.btnfrmSalaryPayment.AutoSize = False
+        Me.btnfrmSalaryPayment.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmSalaryPayment.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmSalaryPayment.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.btnfrmSalaryPayment.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmSalaryPayment.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmSalaryPayment.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmSalaryPayment.Name = "btnfrmSalaryPayment"
+        Me.btnfrmSalaryPayment.Size = New System.Drawing.Size(110, 100)
+        Me.btnfrmSalaryPayment.Text = "صرف مرتب"
+        Me.btnfrmSalaryPayment.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator8
         '
         Me.ToolStripSeparator8.AutoSize = False
         Me.ToolStripSeparator8.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
         Me.ToolStripSeparator8.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator6
-        '
-        Me.ToolStripSeparator6.AutoSize = False
-        Me.ToolStripSeparator6.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator6.Name = "ToolStripSeparator6"
-        Me.ToolStripSeparator6.Size = New System.Drawing.Size(10, 113)
         '
         'tabUsers
         '
@@ -684,12 +2290,40 @@ Partial Class MainForm
         Me.ToolStrip11.TabIndex = 46
         Me.ToolStrip11.Text = "ToolStrip11"
         '
+        'btnfrmUsers
+        '
+        Me.btnfrmUsers.AutoSize = False
+        Me.btnfrmUsers.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmUsers.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmUsers.Image = Global.WindowsApp1.My.Resources.Resources.client
+        Me.btnfrmUsers.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmUsers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmUsers.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmUsers.Name = "btnfrmUsers"
+        Me.btnfrmUsers.Size = New System.Drawing.Size(150, 100)
+        Me.btnfrmUsers.Text = "ادارة المستخدمين"
+        Me.btnfrmUsers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
         'ToolStripSeparator10
         '
         Me.ToolStripSeparator10.AutoSize = False
         Me.ToolStripSeparator10.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
         Me.ToolStripSeparator10.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnfrmRolesAndPermissions
+        '
+        Me.btnfrmRolesAndPermissions.AutoSize = False
+        Me.btnfrmRolesAndPermissions.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmRolesAndPermissions.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmRolesAndPermissions.Image = Global.WindowsApp1.My.Resources.Resources.artist
+        Me.btnfrmRolesAndPermissions.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmRolesAndPermissions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmRolesAndPermissions.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmRolesAndPermissions.Name = "btnfrmRolesAndPermissions"
+        Me.btnfrmRolesAndPermissions.Size = New System.Drawing.Size(160, 100)
+        Me.btnfrmRolesAndPermissions.Text = "الأدوار والصلاحيات"
+        Me.btnfrmRolesAndPermissions.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'tabbackup
         '
@@ -711,6 +2345,20 @@ Partial Class MainForm
         Me.ToolStrip8.Size = New System.Drawing.Size(1426, 139)
         Me.ToolStrip8.TabIndex = 47
         Me.ToolStrip8.Text = "ToolStrip8"
+        '
+        'btnBackups
+        '
+        Me.btnBackups.AutoSize = False
+        Me.btnBackups.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnBackups.ForeColor = System.Drawing.Color.Black
+        Me.btnBackups.Image = Global.WindowsApp1.My.Resources.Resources.backup
+        Me.btnBackups.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnBackups.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnBackups.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnBackups.Name = "btnBackups"
+        Me.btnBackups.Size = New System.Drawing.Size(150, 100)
+        Me.btnBackups.Text = "النسخ الاحتياطية"
+        Me.btnBackups.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripSeparator38
         '
@@ -740,589 +2388,6 @@ Partial Class MainForm
         Me.ToolStripSet.TabIndex = 46
         Me.ToolStripSet.Text = "ToolStrip8"
         '
-        'ToolStripSeparator29
-        '
-        Me.ToolStripSeparator29.AutoSize = False
-        Me.ToolStripSeparator29.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator29.Name = "ToolStripSeparator29"
-        Me.ToolStripSeparator29.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator30
-        '
-        Me.ToolStripSeparator30.AutoSize = False
-        Me.ToolStripSeparator30.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator30.Name = "ToolStripSeparator30"
-        Me.ToolStripSeparator30.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator31
-        '
-        Me.ToolStripSeparator31.AutoSize = False
-        Me.ToolStripSeparator31.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator31.Name = "ToolStripSeparator31"
-        Me.ToolStripSeparator31.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator32
-        '
-        Me.ToolStripSeparator32.AutoSize = False
-        Me.ToolStripSeparator32.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator32.Name = "ToolStripSeparator32"
-        Me.ToolStripSeparator32.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator35
-        '
-        Me.ToolStripSeparator35.AutoSize = False
-        Me.ToolStripSeparator35.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator35.Name = "ToolStripSeparator35"
-        Me.ToolStripSeparator35.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator23
-        '
-        Me.ToolStripSeparator23.AutoSize = False
-        Me.ToolStripSeparator23.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator23.Name = "ToolStripSeparator23"
-        Me.ToolStripSeparator23.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator44
-        '
-        Me.ToolStripSeparator44.AutoSize = False
-        Me.ToolStripSeparator44.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator44.Name = "ToolStripSeparator44"
-        Me.ToolStripSeparator44.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator45
-        '
-        Me.ToolStripSeparator45.AutoSize = False
-        Me.ToolStripSeparator45.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator45.Name = "ToolStripSeparator45"
-        Me.ToolStripSeparator45.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator47
-        '
-        Me.ToolStripSeparator47.AutoSize = False
-        Me.ToolStripSeparator47.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator47.Name = "ToolStripSeparator47"
-        Me.ToolStripSeparator47.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStripSeparator46
-        '
-        Me.ToolStripSeparator46.AutoSize = False
-        Me.ToolStripSeparator46.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator46.Name = "ToolStripSeparator46"
-        Me.ToolStripSeparator46.Size = New System.Drawing.Size(10, 113)
-        '
-        'Guna2BorderlessForm1
-        '
-        Me.Guna2BorderlessForm1.BorderRadius = 8
-        Me.Guna2BorderlessForm1.ContainerControl = Me
-        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
-        '
-        'ToolStripSeparator34
-        '
-        Me.ToolStripSeparator34.AutoSize = False
-        Me.ToolStripSeparator34.ForeColor = System.Drawing.SystemColors.ControlDarkDark
-        Me.ToolStripSeparator34.Name = "ToolStripSeparator34"
-        Me.ToolStripSeparator34.Size = New System.Drawing.Size(10, 113)
-        '
-        'ToolStrip9
-        '
-        Me.ToolStrip9.AutoSize = False
-        Me.ToolStrip9.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip9.Location = New System.Drawing.Point(0, 0)
-        Me.ToolStrip9.Name = "ToolStrip9"
-        Me.ToolStrip9.Size = New System.Drawing.Size(100, 25)
-        Me.ToolStrip9.TabIndex = 0
-        '
-        'btnCategories
-        '
-        Me.btnCategories.AutoSize = False
-        Me.btnCategories.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCategories.ForeColor = System.Drawing.Color.Black
-        Me.btnCategories.Image = Global.WindowsApp1.My.Resources.Resources.application
-        Me.btnCategories.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnCategories.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnCategories.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnCategories.Name = "btnCategories"
-        Me.btnCategories.Size = New System.Drawing.Size(90, 100)
-        Me.btnCategories.Text = "الفئات"
-        Me.btnCategories.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnProducts
-        '
-        Me.btnProducts.AutoSize = False
-        Me.btnProducts.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnProducts.ForeColor = System.Drawing.Color.Black
-        Me.btnProducts.Image = Global.WindowsApp1.My.Resources.Resources.order
-        Me.btnProducts.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnProducts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnProducts.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnProducts.Name = "btnProducts"
-        Me.btnProducts.Size = New System.Drawing.Size(90, 100)
-        Me.btnProducts.Text = "الاصناف"
-        Me.btnProducts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmProductSizes
-        '
-        Me.btnfrmProductSizes.AutoSize = False
-        Me.btnfrmProductSizes.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmProductSizes.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmProductSizes.Image = Global.WindowsApp1.My.Resources.Resources.product
-        Me.btnfrmProductSizes.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmProductSizes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmProductSizes.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmProductSizes.Name = "btnfrmProductSizes"
-        Me.btnfrmProductSizes.Size = New System.Drawing.Size(120, 100)
-        Me.btnfrmProductSizes.Text = "احجام الاصناف"
-        Me.btnfrmProductSizes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmProductAddons
-        '
-        Me.btnfrmProductAddons.AutoSize = False
-        Me.btnfrmProductAddons.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmProductAddons.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmProductAddons.Image = Global.WindowsApp1.My.Resources.Resources.diet
-        Me.btnfrmProductAddons.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmProductAddons.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmProductAddons.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmProductAddons.Name = "btnfrmProductAddons"
-        Me.btnfrmProductAddons.Size = New System.Drawing.Size(135, 100)
-        Me.btnfrmProductAddons.Text = "اضافات الاصناف"
-        Me.btnfrmProductAddons.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmDeliveryAreas
-        '
-        Me.btnfrmDeliveryAreas.AutoSize = False
-        Me.btnfrmDeliveryAreas.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmDeliveryAreas.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmDeliveryAreas.Image = Global.WindowsApp1.My.Resources.Resources.location
-        Me.btnfrmDeliveryAreas.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmDeliveryAreas.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmDeliveryAreas.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmDeliveryAreas.Name = "btnfrmDeliveryAreas"
-        Me.btnfrmDeliveryAreas.Size = New System.Drawing.Size(130, 100)
-        Me.btnfrmDeliveryAreas.Text = "مناطق التوصيل"
-        Me.btnfrmDeliveryAreas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmDeliveryDrivers
-        '
-        Me.btnfrmDeliveryDrivers.AutoSize = False
-        Me.btnfrmDeliveryDrivers.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmDeliveryDrivers.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmDeliveryDrivers.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike__1_
-        Me.btnfrmDeliveryDrivers.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmDeliveryDrivers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmDeliveryDrivers.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmDeliveryDrivers.Name = "btnfrmDeliveryDrivers"
-        Me.btnfrmDeliveryDrivers.Size = New System.Drawing.Size(150, 100)
-        Me.btnfrmDeliveryDrivers.Text = "طيارين الديليفري"
-        Me.btnfrmDeliveryDrivers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmShifts
-        '
-        Me.btnfrmShifts.AutoSize = False
-        Me.btnfrmShifts.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmShifts.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmShifts.Image = Global.WindowsApp1.My.Resources.Resources.scheduling
-        Me.btnfrmShifts.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmShifts.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmShifts.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmShifts.Name = "btnfrmShifts"
-        Me.btnfrmShifts.Size = New System.Drawing.Size(150, 100)
-        Me.btnfrmShifts.Text = "الورديات"
-        Me.btnfrmShifts.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmBranches
-        '
-        Me.btnfrmBranches.AutoSize = False
-        Me.btnfrmBranches.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmBranches.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmBranches.Image = Global.WindowsApp1.My.Resources.Resources.branch
-        Me.btnfrmBranches.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmBranches.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmBranches.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmBranches.Name = "btnfrmBranches"
-        Me.btnfrmBranches.Size = New System.Drawing.Size(150, 100)
-        Me.btnfrmBranches.Text = "الفروع"
-        Me.btnfrmBranches.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnFrmCustomers
-        '
-        Me.btnFrmCustomers.AutoSize = False
-        Me.btnFrmCustomers.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFrmCustomers.ForeColor = System.Drawing.Color.Black
-        Me.btnFrmCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnFrmCustomers.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnFrmCustomers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnFrmCustomers.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFrmCustomers.Name = "btnFrmCustomers"
-        Me.btnFrmCustomers.Size = New System.Drawing.Size(110, 100)
-        Me.btnFrmCustomers.Text = "ادارة العملاء"
-        Me.btnFrmCustomers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnFrmCustomerStatement
-        '
-        Me.btnFrmCustomerStatement.AutoSize = False
-        Me.btnFrmCustomerStatement.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFrmCustomerStatement.ForeColor = System.Drawing.Color.Black
-        Me.btnFrmCustomerStatement.Image = Global.WindowsApp1.My.Resources.Resources.active_user
-        Me.btnFrmCustomerStatement.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnFrmCustomerStatement.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnFrmCustomerStatement.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFrmCustomerStatement.Name = "btnFrmCustomerStatement"
-        Me.btnFrmCustomerStatement.Size = New System.Drawing.Size(160, 100)
-        Me.btnFrmCustomerStatement.Text = "كشف حساب عميل"
-        Me.btnFrmCustomerStatement.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'ToolStripButton11
-        '
-        Me.ToolStripButton11.AutoSize = False
-        Me.ToolStripButton11.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton11.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton11.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.ToolStripButton11.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton11.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton11.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton11.Name = "ToolStripButton11"
-        Me.ToolStripButton11.Size = New System.Drawing.Size(110, 100)
-        Me.ToolStripButton11.Text = "تقارير العملاء"
-        Me.ToolStripButton11.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'ToolStripButton3
-        '
-        Me.ToolStripButton3.AutoSize = False
-        Me.ToolStripButton3.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton3.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton3.Image = Global.WindowsApp1.My.Resources.Resources.team
-        Me.ToolStripButton3.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton3.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.Size = New System.Drawing.Size(130, 100)
-        Me.ToolStripButton3.Text = "ادارة الموردين"
-        Me.ToolStripButton3.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'ToolStripButton4
-        '
-        Me.ToolStripButton4.AutoSize = False
-        Me.ToolStripButton4.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton4.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton4.Image = Global.WindowsApp1.My.Resources.Resources.active_user
-        Me.ToolStripButton4.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton4.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton4.Name = "ToolStripButton4"
-        Me.ToolStripButton4.Size = New System.Drawing.Size(160, 100)
-        Me.ToolStripButton4.Text = "كشف حساب عميل"
-        Me.ToolStripButton4.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'ToolStripButton5
-        '
-        Me.ToolStripButton5.AutoSize = False
-        Me.ToolStripButton5.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton5.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton5.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.ToolStripButton5.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton5.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton5.Name = "ToolStripButton5"
-        Me.ToolStripButton5.Size = New System.Drawing.Size(110, 100)
-        Me.ToolStripButton5.Text = "تقارير العملاء"
-        Me.ToolStripButton5.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmPOS
-        '
-        Me.btnfrmPOS.AutoSize = False
-        Me.btnfrmPOS.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmPOS.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmPOS.Image = Global.WindowsApp1.My.Resources.Resources.shopping_cart2
-        Me.btnfrmPOS.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmPOS.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmPOS.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmPOS.Name = "btnfrmPOS"
-        Me.btnfrmPOS.Size = New System.Drawing.Size(110, 100)
-        Me.btnfrmPOS.Text = "البيع"
-        Me.btnfrmPOS.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnFrmSalesReport
-        '
-        Me.btnFrmSalesReport.AutoSize = False
-        Me.btnFrmSalesReport.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFrmSalesReport.ForeColor = System.Drawing.Color.Black
-        Me.btnFrmSalesReport.Image = Global.WindowsApp1.My.Resources.Resources.market_analysis
-        Me.btnFrmSalesReport.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnFrmSalesReport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnFrmSalesReport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFrmSalesReport.Name = "btnFrmSalesReport"
-        Me.btnFrmSalesReport.Size = New System.Drawing.Size(120, 100)
-        Me.btnFrmSalesReport.Text = "تقارير البيع"
-        Me.btnFrmSalesReport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnFrmDriverReport
-        '
-        Me.btnFrmDriverReport.AutoSize = False
-        Me.btnFrmDriverReport.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFrmDriverReport.ForeColor = System.Drawing.Color.Black
-        Me.btnFrmDriverReport.Image = Global.WindowsApp1.My.Resources.Resources.report
-        Me.btnFrmDriverReport.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnFrmDriverReport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnFrmDriverReport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFrmDriverReport.Name = "btnFrmDriverReport"
-        Me.btnFrmDriverReport.Size = New System.Drawing.Size(200, 100)
-        Me.btnFrmDriverReport.Text = "تقارير طيارين الديلفيري"
-        Me.btnFrmDriverReport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmPurchases
-        '
-        Me.btnfrmPurchases.AutoSize = False
-        Me.btnfrmPurchases.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmPurchases.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping_cart__1_
-        Me.btnfrmPurchases.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmPurchases.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmPurchases.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmPurchases.Name = "btnfrmPurchases"
-        Me.btnfrmPurchases.Size = New System.Drawing.Size(200, 100)
-        Me.btnfrmPurchases.Text = "فاتورة المشتريات"
-        Me.btnfrmPurchases.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmPurchaseReports
-        '
-        Me.btnfrmPurchaseReports.AutoSize = False
-        Me.btnfrmPurchaseReports.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmPurchaseReports.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmPurchaseReports.Image = Global.WindowsApp1.My.Resources.Resources.purchaser
-        Me.btnfrmPurchaseReports.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmPurchaseReports.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmPurchaseReports.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmPurchaseReports.Name = "btnfrmPurchaseReports"
-        Me.btnfrmPurchaseReports.Size = New System.Drawing.Size(200, 100)
-        Me.btnfrmPurchaseReports.Text = "تقارير المشتريات"
-        Me.btnfrmPurchaseReports.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmTreasury
-        '
-        Me.btnfrmTreasury.AutoSize = False
-        Me.btnfrmTreasury.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmTreasury.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmTreasury.Image = Global.WindowsApp1.My.Resources.Resources.financial
-        Me.btnfrmTreasury.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmTreasury.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmTreasury.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmTreasury.Name = "btnfrmTreasury"
-        Me.btnfrmTreasury.Size = New System.Drawing.Size(110, 100)
-        Me.btnfrmTreasury.Text = "ادارة الخزن"
-        Me.btnfrmTreasury.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnFrmTreasuryTransfer
-        '
-        Me.btnFrmTreasuryTransfer.AutoSize = False
-        Me.btnFrmTreasuryTransfer.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFrmTreasuryTransfer.ForeColor = System.Drawing.Color.Black
-        Me.btnFrmTreasuryTransfer.Image = Global.WindowsApp1.My.Resources.Resources.exchange__1_
-        Me.btnFrmTreasuryTransfer.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnFrmTreasuryTransfer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnFrmTreasuryTransfer.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFrmTreasuryTransfer.Name = "btnFrmTreasuryTransfer"
-        Me.btnFrmTreasuryTransfer.Size = New System.Drawing.Size(150, 100)
-        Me.btnFrmTreasuryTransfer.Text = "تحويل بين الخزن"
-        Me.btnFrmTreasuryTransfer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnFrmTreasuryTransactionsReport
-        '
-        Me.btnFrmTreasuryTransactionsReport.AutoSize = False
-        Me.btnFrmTreasuryTransactionsReport.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnFrmTreasuryTransactionsReport.ForeColor = System.Drawing.Color.Black
-        Me.btnFrmTreasuryTransactionsReport.Image = Global.WindowsApp1.My.Resources.Resources.web
-        Me.btnFrmTreasuryTransactionsReport.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnFrmTreasuryTransactionsReport.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnFrmTreasuryTransactionsReport.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFrmTreasuryTransactionsReport.Name = "btnFrmTreasuryTransactionsReport"
-        Me.btnFrmTreasuryTransactionsReport.Size = New System.Drawing.Size(150, 100)
-        Me.btnFrmTreasuryTransactionsReport.Text = "تقارير حركة الخزن"
-        Me.btnFrmTreasuryTransactionsReport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnDeposit
-        '
-        Me.btnDeposit.AutoSize = False
-        Me.btnDeposit.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDeposit.ForeColor = System.Drawing.Color.Black
-        Me.btnDeposit.Image = Global.WindowsApp1.My.Resources.Resources.treasury
-        Me.btnDeposit.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnDeposit.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnDeposit.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnDeposit.Name = "btnDeposit"
-        Me.btnDeposit.Size = New System.Drawing.Size(120, 100)
-        Me.btnDeposit.Text = "ايداع"
-        Me.btnDeposit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnWithdraw
-        '
-        Me.btnWithdraw.AutoSize = False
-        Me.btnWithdraw.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnWithdraw.ForeColor = System.Drawing.Color.Black
-        Me.btnWithdraw.Image = Global.WindowsApp1.My.Resources.Resources.treasury
-        Me.btnWithdraw.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnWithdraw.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnWithdraw.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnWithdraw.Name = "btnWithdraw"
-        Me.btnWithdraw.Size = New System.Drawing.Size(120, 100)
-        Me.btnWithdraw.Text = "سحب"
-        Me.btnWithdraw.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnform_Expenses
-        '
-        Me.btnform_Expenses.AutoSize = False
-        Me.btnform_Expenses.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnform_Expenses.ForeColor = System.Drawing.Color.Black
-        Me.btnform_Expenses.Image = Global.WindowsApp1.My.Resources.Resources.backup
-        Me.btnform_Expenses.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnform_Expenses.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnform_Expenses.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnform_Expenses.Name = "btnform_Expenses"
-        Me.btnform_Expenses.Size = New System.Drawing.Size(120, 100)
-        Me.btnform_Expenses.Text = "المصروفات"
-        Me.btnform_Expenses.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnExpensesReportForm
-        '
-        Me.btnExpensesReportForm.AutoSize = False
-        Me.btnExpensesReportForm.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnExpensesReportForm.ForeColor = System.Drawing.Color.Black
-        Me.btnExpensesReportForm.Image = Global.WindowsApp1.My.Resources.Resources.color_palette
-        Me.btnExpensesReportForm.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnExpensesReportForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnExpensesReportForm.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnExpensesReportForm.Name = "btnExpensesReportForm"
-        Me.btnExpensesReportForm.Size = New System.Drawing.Size(150, 100)
-        Me.btnExpensesReportForm.Text = "تقارير المصروفات"
-        Me.btnExpensesReportForm.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmEmployees
-        '
-        Me.btnfrmEmployees.AutoSize = False
-        Me.btnfrmEmployees.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmEmployees.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmEmployees.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnfrmEmployees.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmEmployees.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmEmployees.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmEmployees.Name = "btnfrmEmployees"
-        Me.btnfrmEmployees.Size = New System.Drawing.Size(150, 100)
-        Me.btnfrmEmployees.Text = "ادارة الموظفين"
-        Me.btnfrmEmployees.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmJobTitles
-        '
-        Me.btnfrmJobTitles.AutoSize = False
-        Me.btnfrmJobTitles.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmJobTitles.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmJobTitles.Image = Global.WindowsApp1.My.Resources.Resources.artist
-        Me.btnfrmJobTitles.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmJobTitles.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmJobTitles.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmJobTitles.Name = "btnfrmJobTitles"
-        Me.btnfrmJobTitles.Size = New System.Drawing.Size(160, 100)
-        Me.btnfrmJobTitles.Text = "المسميات الوظيفية"
-        Me.btnfrmJobTitles.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmDepartments
-        '
-        Me.btnfrmDepartments.AutoSize = False
-        Me.btnfrmDepartments.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmDepartments.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmDepartments.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnfrmDepartments.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmDepartments.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmDepartments.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmDepartments.Name = "btnfrmDepartments"
-        Me.btnfrmDepartments.Size = New System.Drawing.Size(110, 100)
-        Me.btnfrmDepartments.Text = "الاقسام"
-        Me.btnfrmDepartments.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmSalarySystems
-        '
-        Me.btnfrmSalarySystems.AutoSize = False
-        Me.btnfrmSalarySystems.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmSalarySystems.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmSalarySystems.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnfrmSalarySystems.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmSalarySystems.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmSalarySystems.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmSalarySystems.Name = "btnfrmSalarySystems"
-        Me.btnfrmSalarySystems.Size = New System.Drawing.Size(110, 100)
-        Me.btnfrmSalarySystems.Text = "انظمة الرواتب"
-        Me.btnfrmSalarySystems.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmSalaryPayment
-        '
-        Me.btnfrmSalaryPayment.AutoSize = False
-        Me.btnfrmSalaryPayment.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmSalaryPayment.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmSalaryPayment.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnfrmSalaryPayment.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmSalaryPayment.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmSalaryPayment.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmSalaryPayment.Name = "btnfrmSalaryPayment"
-        Me.btnfrmSalaryPayment.Size = New System.Drawing.Size(110, 100)
-        Me.btnfrmSalaryPayment.Text = "صرف مرتب"
-        Me.btnfrmSalaryPayment.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'ToolStripButton6
-        '
-        Me.ToolStripButton6.AutoSize = False
-        Me.ToolStripButton6.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton6.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton6.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.ToolStripButton6.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton6.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton6.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton6.Name = "ToolStripButton6"
-        Me.ToolStripButton6.Size = New System.Drawing.Size(110, 100)
-        Me.ToolStripButton6.Text = "انظمة الرواتب"
-        Me.ToolStripButton6.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmUsers
-        '
-        Me.btnfrmUsers.AutoSize = False
-        Me.btnfrmUsers.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmUsers.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmUsers.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnfrmUsers.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmUsers.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmUsers.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmUsers.Name = "btnfrmUsers"
-        Me.btnfrmUsers.Size = New System.Drawing.Size(150, 100)
-        Me.btnfrmUsers.Text = "ادارة المستخدمين"
-        Me.btnfrmUsers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnfrmRolesAndPermissions
-        '
-        Me.btnfrmRolesAndPermissions.AutoSize = False
-        Me.btnfrmRolesAndPermissions.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnfrmRolesAndPermissions.ForeColor = System.Drawing.Color.Black
-        Me.btnfrmRolesAndPermissions.Image = Global.WindowsApp1.My.Resources.Resources.artist
-        Me.btnfrmRolesAndPermissions.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnfrmRolesAndPermissions.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnfrmRolesAndPermissions.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnfrmRolesAndPermissions.Name = "btnfrmRolesAndPermissions"
-        Me.btnfrmRolesAndPermissions.Size = New System.Drawing.Size(160, 100)
-        Me.btnfrmRolesAndPermissions.Text = "الأدوار والصلاحيات"
-        Me.btnfrmRolesAndPermissions.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
-        'btnBackups
-        '
-        Me.btnBackups.AutoSize = False
-        Me.btnBackups.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnBackups.ForeColor = System.Drawing.Color.Black
-        Me.btnBackups.Image = Global.WindowsApp1.My.Resources.Resources.backup
-        Me.btnBackups.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.btnBackups.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.btnBackups.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnBackups.Name = "btnBackups"
-        Me.btnBackups.Size = New System.Drawing.Size(150, 100)
-        Me.btnBackups.Text = "النسخ الاحتياطية"
-        Me.btnBackups.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
-        '
         'btnSettings
         '
         Me.btnSettings.AutoSize = False
@@ -1336,6 +2401,13 @@ Partial Class MainForm
         Me.btnSettings.Size = New System.Drawing.Size(150, 100)
         Me.btnSettings.Text = "اعدادات البرنامج"
         Me.btnSettings.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator29
+        '
+        Me.ToolStripSeparator29.AutoSize = False
+        Me.ToolStripSeparator29.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator29.Name = "ToolStripSeparator29"
+        Me.ToolStripSeparator29.Size = New System.Drawing.Size(10, 113)
         '
         'btnfrmColors
         '
@@ -1351,6 +2423,13 @@ Partial Class MainForm
         Me.btnfrmColors.Text = "الالوان"
         Me.btnfrmColors.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
+        'ToolStripSeparator30
+        '
+        Me.ToolStripSeparator30.AutoSize = False
+        Me.ToolStripSeparator30.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator30.Name = "ToolStripSeparator30"
+        Me.ToolStripSeparator30.Size = New System.Drawing.Size(10, 113)
+        '
         'btnfrmPrinters
         '
         Me.btnfrmPrinters.AutoSize = False
@@ -1364,6 +2443,13 @@ Partial Class MainForm
         Me.btnfrmPrinters.Size = New System.Drawing.Size(110, 100)
         Me.btnfrmPrinters.Text = "الطابعات"
         Me.btnfrmPrinters.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator31
+        '
+        Me.ToolStripSeparator31.AutoSize = False
+        Me.ToolStripSeparator31.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator31.Name = "ToolStripSeparator31"
+        Me.ToolStripSeparator31.Size = New System.Drawing.Size(10, 113)
         '
         'btnfrmRestaurantSections
         '
@@ -1379,6 +2465,13 @@ Partial Class MainForm
         Me.btnfrmRestaurantSections.Text = "اقسام المطعم"
         Me.btnfrmRestaurantSections.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
+        'ToolStripSeparator32
+        '
+        Me.ToolStripSeparator32.AutoSize = False
+        Me.ToolStripSeparator32.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator32.Name = "ToolStripSeparator32"
+        Me.ToolStripSeparator32.Size = New System.Drawing.Size(10, 113)
+        '
         'btnfrmRestaurantTables
         '
         Me.btnfrmRestaurantTables.AutoSize = False
@@ -1392,6 +2485,13 @@ Partial Class MainForm
         Me.btnfrmRestaurantTables.Size = New System.Drawing.Size(130, 100)
         Me.btnfrmRestaurantTables.Text = "طاولات المطعم"
         Me.btnfrmRestaurantTables.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator35
+        '
+        Me.ToolStripSeparator35.AutoSize = False
+        Me.ToolStripSeparator35.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator35.Name = "ToolStripSeparator35"
+        Me.ToolStripSeparator35.Size = New System.Drawing.Size(10, 113)
         '
         'btnfrmUnits
         '
@@ -1407,6 +2507,13 @@ Partial Class MainForm
         Me.btnfrmUnits.Text = "إدارة الوحدات"
         Me.btnfrmUnits.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
+        'ToolStripSeparator23
+        '
+        Me.ToolStripSeparator23.AutoSize = False
+        Me.ToolStripSeparator23.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator23.Name = "ToolStripSeparator23"
+        Me.ToolStripSeparator23.Size = New System.Drawing.Size(10, 113)
+        '
         'btnfrmStores
         '
         Me.btnfrmStores.AutoSize = False
@@ -1420,6 +2527,13 @@ Partial Class MainForm
         Me.btnfrmStores.Size = New System.Drawing.Size(130, 100)
         Me.btnfrmStores.Text = "إدارة المخازن"
         Me.btnfrmStores.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator44
+        '
+        Me.ToolStripSeparator44.AutoSize = False
+        Me.ToolStripSeparator44.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator44.Name = "ToolStripSeparator44"
+        Me.ToolStripSeparator44.Size = New System.Drawing.Size(10, 113)
         '
         'btnfrmStoreStock
         '
@@ -1435,6 +2549,13 @@ Partial Class MainForm
         Me.btnfrmStoreStock.Text = "المخزون"
         Me.btnfrmStoreStock.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
+        'ToolStripSeparator45
+        '
+        Me.ToolStripSeparator45.AutoSize = False
+        Me.ToolStripSeparator45.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator45.Name = "ToolStripSeparator45"
+        Me.ToolStripSeparator45.Size = New System.Drawing.Size(10, 113)
+        '
         'btnfrmRawMaterials
         '
         Me.btnfrmRawMaterials.AutoSize = False
@@ -1448,6 +2569,13 @@ Partial Class MainForm
         Me.btnfrmRawMaterials.Size = New System.Drawing.Size(100, 100)
         Me.btnfrmRawMaterials.Text = "الخامات"
         Me.btnfrmRawMaterials.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparator47
+        '
+        Me.ToolStripSeparator47.AutoSize = False
+        Me.ToolStripSeparator47.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator47.Name = "ToolStripSeparator47"
+        Me.ToolStripSeparator47.Size = New System.Drawing.Size(10, 113)
         '
         'btnfrmRecipes
         '
@@ -1463,33 +2591,18 @@ Partial Class MainForm
         Me.btnfrmRecipes.Text = "الريسيبي"
         Me.btnfrmRecipes.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
-        'ToolStripButton1
+        'ToolStripSeparator46
         '
-        Me.ToolStripButton1.AutoSize = False
-        Me.ToolStripButton1.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton1.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton1.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.ToolStripButton1.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton1.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(110, 100)
-        Me.ToolStripButton1.Text = "ادارة العملاء"
-        Me.ToolStripButton1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.ToolStripSeparator46.AutoSize = False
+        Me.ToolStripSeparator46.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparator46.Name = "ToolStripSeparator46"
+        Me.ToolStripSeparator46.Size = New System.Drawing.Size(10, 113)
         '
-        'ToolStripButton2
+        'Guna2BorderlessForm1
         '
-        Me.ToolStripButton2.AutoSize = False
-        Me.ToolStripButton2.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ToolStripButton2.ForeColor = System.Drawing.Color.Black
-        Me.ToolStripButton2.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.ToolStripButton2.ImageAlign = System.Drawing.ContentAlignment.TopCenter
-        Me.ToolStripButton2.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.ToolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton2.Name = "ToolStripButton2"
-        Me.ToolStripButton2.Size = New System.Drawing.Size(150, 100)
-        Me.ToolStripButton2.Text = "اعدادات البرنامج"
-        Me.ToolStripButton2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
         '
         'MainForm
         '
@@ -1497,18 +2610,64 @@ Partial Class MainForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1434, 900)
+        Me.Controls.Add(Me.pnlDashboard)
+        Me.Controls.Add(Me.statusStripMain)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.panelHeader)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.75!)
         Me.ForeColor = System.Drawing.Color.White
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
+        Me.MinimumSize = New System.Drawing.Size(1200, 720)
         Me.Name = "MainForm"
         Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.RightToLeftLayout = True
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
+        Me.statusStripMain.ResumeLayout(False)
+        Me.statusStripMain.PerformLayout()
+        Me.pnlDashboard.ResumeLayout(False)
+        Me.tlpMainContent.ResumeLayout(False)
+        Me.cardRecentInvoices.ResumeLayout(False)
+        CType(Me.dgvRecentInvoices, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnlInvoicesHeader.ResumeLayout(False)
+        Me.pnlInvoicesHeader.PerformLayout()
+        Me.cardAlerts.ResumeLayout(False)
+        Me.pnlAlertsContainer.ResumeLayout(False)
+        Me.cardAlertBackup.ResumeLayout(False)
+        Me.cardAlertBackup.PerformLayout()
+        Me.cardAlertShift.ResumeLayout(False)
+        Me.cardAlertShift.PerformLayout()
+        Me.cardAlertStock.ResumeLayout(False)
+        Me.cardAlertStock.PerformLayout()
+        Me.pnlQuickButtons.ResumeLayout(False)
+        Me.pnlQuickButtons.PerformLayout()
+        Me.tlpQuickBtns.ResumeLayout(False)
+        Me.pnlAlertsHeader.ResumeLayout(False)
+        Me.pnlAlertsHeader.PerformLayout()
+        Me.tlpStats.ResumeLayout(False)
+        Me.cardSales.ResumeLayout(False)
+        Me.cardSales.PerformLayout()
+        CType(Me.picCardSales, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cardPurchases.ResumeLayout(False)
+        Me.cardPurchases.PerformLayout()
+        CType(Me.picCardPurchases, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cardProfit.ResumeLayout(False)
+        Me.cardProfit.PerformLayout()
+        CType(Me.picCardProfit, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cardProducts.ResumeLayout(False)
+        Me.cardProducts.PerformLayout()
+        CType(Me.picCardProducts, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cardCustomers.ResumeLayout(False)
+        Me.cardCustomers.PerformLayout()
+        CType(Me.picCardCustomers, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cardSuppliers.ResumeLayout(False)
+        Me.cardSuppliers.PerformLayout()
+        CType(Me.picCardSuppliers, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnlWelcome.ResumeLayout(False)
+        Me.pnlWelcome.PerformLayout()
         Me.ToolStrip1.ResumeLayout(False)
         Me.ToolStrip1.PerformLayout()
         Me.TabControl1.ResumeLayout(False)
@@ -1544,6 +2703,7 @@ Partial Class MainForm
         Me.ToolStripSet.ResumeLayout(False)
         Me.ToolStripSet.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -1569,7 +2729,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents btnfrmDeliveryDrivers As ToolStripButton
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
-    Friend WithEvents ToolStripButton1 As ToolStripButton
     Friend WithEvents ToolStrip2 As ToolStrip
     Friend WithEvents btnFrmCustomers As ToolStripButton
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
@@ -1622,9 +2781,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator33 As ToolStripSeparator
     Friend WithEvents btnfrmRestaurantTables As ToolStripButton
     Friend WithEvents ToolStripSeparator35 As ToolStripSeparator
-    Friend WithEvents ToolStripSeparator34 As ToolStripSeparator
-    Friend WithEvents ToolStrip9 As ToolStrip
-    Friend WithEvents ToolStripButton2 As ToolStripButton
     Friend WithEvents btnfrmShifts As ToolStripButton
     Friend WithEvents ToolStripSeparator36 As ToolStripSeparator
     Friend WithEvents btnfrmBranches As ToolStripButton
@@ -1660,8 +2816,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator38 As ToolStripSeparator
     Friend WithEvents btnfrmSalaryPayment As ToolStripButton
     Friend WithEvents ToolStripSeparator8 As ToolStripSeparator
-    Friend WithEvents ToolStripButton6 As ToolStripButton
-    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents tabUsers As TabPage
     Friend WithEvents ToolStrip11 As ToolStrip
     Friend WithEvents btnfrmUsers As ToolStripButton
@@ -1669,4 +2823,97 @@ Partial Class MainForm
     Friend WithEvents btnfrmRolesAndPermissions As ToolStripButton
     Friend WithEvents btnfrmPurchaseReports As ToolStripButton
     Friend WithEvents ToolStripSeparator20 As ToolStripSeparator
+    Friend WithEvents btnSalesReturns As ToolStripButton
+    Friend WithEvents ToolStripSeparator50 As ToolStripSeparator
+    Friend WithEvents btnKds As ToolStripButton
+    Friend WithEvents ToolStripSeparator51 As ToolStripSeparator
+    Friend WithEvents btnWaste As ToolStripButton
+    Friend WithEvents ToolStripSeparator52 As ToolStripSeparator
+    Friend WithEvents btnRes As ToolStripButton
+    Friend WithEvents ToolStripSeparator53 As ToolStripSeparator
+    Friend WithEvents statusStripMain As StatusStrip
+    Friend WithEvents lblStatusUser As ToolStripStatusLabel
+    Friend WithEvents sepStatus1 As ToolStripStatusLabel
+    Friend WithEvents lblStatusRole As ToolStripStatusLabel
+    Friend WithEvents sepStatus2 As ToolStripStatusLabel
+    Friend WithEvents lblStatusBranch As ToolStripStatusLabel
+    Friend WithEvents sepStatus3 As ToolStripStatusLabel
+    Friend WithEvents lblStatusShift As ToolStripStatusLabel
+    Friend WithEvents sepStatus4 As ToolStripStatusLabel
+    Friend WithEvents lblStatusDateTime As ToolStripStatusLabel
+    Friend WithEvents sepStatus5 As ToolStripStatusLabel
+    Friend WithEvents lblStatusDb As ToolStripStatusLabel
+    Friend WithEvents sepStatus6 As ToolStripStatusLabel
+    Friend WithEvents lblStatusVersion As ToolStripStatusLabel
+    Friend WithEvents pnlDashboard As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents pnlWelcome As Panel
+    Friend WithEvents lblWelcomeGreeting As Label
+    Friend WithEvents lblWelcomeSub As Label
+    Friend WithEvents btnRefreshDashboard As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblShiftDuration As Label
+    Friend WithEvents tlpStats As TableLayoutPanel
+    Friend WithEvents cardSales As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCardSalesTitle As Label
+    Friend WithEvents lblCardSalesVal As Label
+    Friend WithEvents lblCardSalesSub As Label
+    Friend WithEvents picCardSales As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents cardPurchases As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCardPurchasesTitle As Label
+    Friend WithEvents lblCardPurchasesVal As Label
+    Friend WithEvents lblCardPurchasesSub As Label
+    Friend WithEvents picCardPurchases As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents cardProfit As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCardProfitTitle As Label
+    Friend WithEvents lblCardProfitVal As Label
+    Friend WithEvents lblCardProfitSub As Label
+    Friend WithEvents picCardProfit As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents cardProducts As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCardProductsTitle As Label
+    Friend WithEvents lblCardProductsVal As Label
+    Friend WithEvents lblCardProductsSub As Label
+    Friend WithEvents picCardProducts As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents cardCustomers As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCardCustomersTitle As Label
+    Friend WithEvents lblCardCustomersVal As Label
+    Friend WithEvents lblCardCustomersSub As Label
+    Friend WithEvents picCardCustomers As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents cardSuppliers As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCardSuppliersTitle As Label
+    Friend WithEvents lblCardSuppliersVal As Label
+    Friend WithEvents lblCardSuppliersSub As Label
+    Friend WithEvents picCardSuppliers As Guna.UI2.WinForms.Guna2PictureBox
+    Friend WithEvents tlpMainContent As TableLayoutPanel
+    Friend WithEvents cardRecentInvoices As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents pnlInvoicesHeader As Panel
+    Friend WithEvents lblRecentInvoicesTitle As Label
+    Friend WithEvents btnViewAllInvoices As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents dgvRecentInvoices As Guna.UI2.WinForms.Guna2DataGridView
+    Friend WithEvents colInvNum As DataGridViewTextBoxColumn
+    Friend WithEvents colInvTime As DataGridViewTextBoxColumn
+    Friend WithEvents colInvCustomer As DataGridViewTextBoxColumn
+    Friend WithEvents colInvType As DataGridViewTextBoxColumn
+    Friend WithEvents colInvTotal As DataGridViewTextBoxColumn
+    Friend WithEvents colInvPayment As DataGridViewTextBoxColumn
+    Friend WithEvents cardAlerts As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents pnlAlertsHeader As Panel
+    Friend WithEvents lblAlertsTitle As Label
+    Friend WithEvents pnlAlertsContainer As Panel
+    Friend WithEvents cardAlertStock As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblAlertStockTitle As Label
+    Friend WithEvents lblAlertStockDesc As Label
+    Friend WithEvents cardAlertShift As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblAlertShiftTitle As Label
+    Friend WithEvents lblAlertShiftDesc As Label
+    Friend WithEvents cardAlertBackup As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblAlertBackupTitle As Label
+    Friend WithEvents lblAlertBackupDesc As Label
+    Friend WithEvents pnlQuickButtons As Panel
+    Friend WithEvents lblQuickTitle As Label
+    Friend WithEvents tlpQuickBtns As TableLayoutPanel
+    Friend WithEvents btnQuickPOS As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnQuickProducts As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnQuickCustomers As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnQuickBackup As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents tmrClock As Timer
+    Friend WithEvents tmrDashboardRefresh As Timer
 End Class

@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmSelectCustomer
     Inherits System.Windows.Forms.Form
 
@@ -34,6 +34,10 @@ Partial Class FrmSelectCustomer
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.Guna2Panel3 = New Guna.UI2.WinForms.Guna2Panel()
         Me.dgvCustomers = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.colAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Guna2Panel4 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
@@ -140,6 +144,9 @@ Partial Class FrmSelectCustomer
         '
         'dgvCustomers
         '
+        Me.dgvCustomers.AllowUserToAddRows = False
+        Me.dgvCustomers.AllowUserToDeleteRows = False
+        Me.dgvCustomers.AutoGenerateColumns = False
         DataGridViewCellStyle4.BackColor = System.Drawing.Color.White
         Me.dgvCustomers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle4
         DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
@@ -152,6 +159,7 @@ Partial Class FrmSelectCustomer
         Me.dgvCustomers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvCustomers.ColumnHeadersHeight = 4
         Me.dgvCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Me.dgvCustomers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colAddress, Me.colPhone, Me.colName, Me.colCode})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -163,11 +171,48 @@ Partial Class FrmSelectCustomer
         Me.dgvCustomers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvCustomers.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.dgvCustomers.Location = New System.Drawing.Point(0, 0)
+        Me.dgvCustomers.MultiSelect = False
         Me.dgvCustomers.Name = "dgvCustomers"
+        Me.dgvCustomers.ReadOnly = True
+        Me.dgvCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvCustomers.RowHeadersVisible = False
         Me.dgvCustomers.RowTemplate.Height = 40
+        Me.dgvCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvCustomers.Size = New System.Drawing.Size(866, 447)
         Me.dgvCustomers.TabIndex = 0
+        '
+        'colAddress
+        '
+        Me.colAddress.DataPropertyName = "Address"
+        Me.colAddress.HeaderText = "العنوان"
+        Me.colAddress.Name = "colAddress"
+        Me.colAddress.ReadOnly = True
+        Me.colAddress.Width = 150
+        '
+        'colPhone
+        '
+        Me.colPhone.DataPropertyName = "Phone1"
+        Me.colPhone.HeaderText = "رقم الموبايل"
+        Me.colPhone.Name = "colPhone"
+        Me.colPhone.ReadOnly = True
+        Me.colPhone.Width = 120
+        '
+        'colName
+        '
+        Me.colName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.colName.DataPropertyName = "CustomerName"
+        Me.colName.HeaderText = "اسم العميل"
+        Me.colName.Name = "colName"
+        Me.colName.ReadOnly = True
+        '
+        'colCode
+        '
+        Me.colCode.DataPropertyName = "CustomerCode"
+        Me.colCode.HeaderText = "الكود"
+        Me.colCode.Name = "colCode"
+        Me.colCode.ReadOnly = True
+        Me.colCode.Width = 80
+        '
         Me.dgvCustomers.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvCustomers.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dgvCustomers.ThemeStyle.HeaderStyle.Height = 4
@@ -253,6 +298,10 @@ Partial Class FrmSelectCustomer
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents dgvCustomers As Guna.UI2.WinForms.Guna2DataGridView
+    Friend WithEvents colAddress As DataGridViewTextBoxColumn
+    Friend WithEvents colPhone As DataGridViewTextBoxColumn
+    Friend WithEvents colName As DataGridViewTextBoxColumn
+    Friend WithEvents colCode As DataGridViewTextBoxColumn
     Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents btnAddNew As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnSelect As Guna.UI2.WinForms.Guna2Button

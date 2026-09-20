@@ -9,6 +9,7 @@ Public Class Login
     Private x As Integer, y As Integer
     Private newpoint As Point
 
+
     ' ──────────────────────────────────────────────────────────
     ' الدوال المساعدة (Helpers)
     ' ──────────────────────────────────────────────────────────
@@ -167,27 +168,38 @@ Public Class Login
     ' أحداث النافذة وعناصر التحكم (Form Events)
     ' ──────────────────────────────────────────────────────────
 
-    Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Enabled = False
+        Dim license = Await LicenseBootstrapper.CheckAsync()
+        If Not license.IsValid Then
+            Using activation As New FormActivation()
+                If activation.ShowDialog(Me) <> DialogResult.OK Then
+                    Application.Exit()
+                    Return
+                End If
+            End Using
+        ElseIf license.IsOffline AndAlso Not String.IsNullOrWhiteSpace(license.Message) Then
+            MessageBox.Show(license.Message, "وضع عدم الاتصال", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End If
+        Me.Enabled = True
+
         Try
             FillUsersComboBox()
         Catch ex As Exception
             Logger.LogError("Login_Load.FillUsers", ex)
         End Try
 
-        ' ── تطبيق السمة الحالية وضبط زر التبديل ──
+
+        ' ── تطبيق السمة الحالية وضبط كافة العناصر بدقة ──
         ThemeManager.Instance.ApplyTheme(Me)
-        UpdateThemeToggleButton()
+        ApplyLoginCustomTheme(ThemeManager.Instance.CurrentPalette)
 
         AddHandler ThemeManager.Instance.ThemeChanged, Sub(s, theme, palette)
-                                                           UpdateThemeToggleButton()
-                                                           pn_0.Invalidate()
+                                                           ApplyLoginCustomTheme(palette)
                                                        End Sub
 
         ' تفعيل سحب النافذة عبر اللوحة اليسرى واللوحة الرئيسية
         Dim drag0 As New FormDragHelper(Me, pn_0)
-
-        ' ── تحسين اللوحة الجانبية: إضافة نصوص ترحيبية ──
-        SetupSidePanelLabels()
 
         ' ── تأثير Fade-in عند فتح النافذة ──
         Me.Opacity = 0
@@ -243,33 +255,112 @@ Public Class Login
         ThemeManager.Instance.ToggleTheme()
     End Sub
 
+    ''' <summary>
+    ''' تطبيق التنسيقات والألوان الخاصة بفورم تسجيل الدخول لضمان أعلى درجات التناسق والوضوح
+    ''' </summary>
+    Private Sub ApplyLoginCustomTheme(palette As ThemePalette)
+        If palette Is Nothing Then Return
+
+        ' 1. تحديث نصوص وألوان اللوحة الترحيبية
+        UpdateSidePanelTheme(palette)
+
+        ' 2. ضبط زر تبديل الثيم
+        UpdateThemeToggleButton()
+
+        ' 3. ضمان شفافية اللوحة الترحيبية لرسم التدرج المخصص بسلاسة
+        pn_0.FillColor = Color.Transparent
+        pn_0.Invalidate()
+
+        ' 4. ضبط الخط الفاصل ليكون مرئياً وواضحاً في السمتين
+        Guna2Panel1.FillColor = palette.Divider
+
+        ' 5. زر الإغلاق: شفاف مع تأثير تحويم أحمر احترافي
+        btnclose.FillColor = Color.Transparent
+        btnclose.ForeColor = If(ThemeManager.Instance.IsDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139))
+        btnclose.HoverState.FillColor = palette.Danger
+        btnclose.HoverState.ForeColor = Color.White
+
+        ' 6. زر الدعم الفني: زر ثانوي أنيق مع هوية بصرية واضحة
+        If ThemeManager.Instance.IsDark Then
+            btnsup.ForeColor = Color.FromArgb(96, 165, 250)
+            btnsup.BorderColor = Color.FromArgb(51, 65, 85)
+            btnsup.HoverState.BorderColor = Color.FromArgb(96, 165, 250)
+            btnsup.HoverState.FillColor = Color.FromArgb(30, 41, 59)
+        Else
+            btnsup.ForeColor = Color.FromArgb(37, 99, 175)
+            btnsup.BorderColor = Color.FromArgb(203, 213, 225)
+            btnsup.HoverState.BorderColor = Color.FromArgb(37, 99, 175)
+            btnsup.HoverState.FillColor = Color.FromArgb(239, 246, 255)
+        End If
+
+        ' 7. التسلسل الهرمي للنصوص التوضيحية
+        Label2.ForeColor = palette.TextSecondary
+        Label1.ForeColor = palette.TextSecondary
+        Label4.ForeColor = palette.TextMuted
+        lblusername.ForeColor = palette.TextPrimary
+        lblpassword.ForeColor = palette.TextPrimary
+
+        ' 8. مربع اختيار إظهار كلمة المرور
+        CheckBox1.ForeColor = palette.TextSecondary
+        CheckBox1.CheckedState.FillColor = palette.Primary
+        CheckBox1.UncheckedState.FillColor = palette.InputBackground
+        CheckBox1.UncheckedState.BorderColor = palette.InputBorder
+    End Sub
+
+    Private Sub UpdateSidePanelTheme(palette As ThemePalette)
+        If lblWelcome Is Nothing Then Return
+
+        If ThemeManager.Instance.IsDark Then
+            lblWelcome.ForeColor = Color.White
+            lblBrand.ForeColor = Color.FromArgb(203, 213, 225)
+            lblDesc.ForeColor = Color.FromArgb(148, 163, 184)
+            lblSideCopyright.ForeColor = Color.FromArgb(100, 116, 139)
+        Else
+            lblWelcome.ForeColor = Color.White
+            lblBrand.ForeColor = Color.FromArgb(224, 236, 248)
+            lblDesc.ForeColor = Color.FromArgb(190, 215, 240)
+            lblSideCopyright.ForeColor = Color.FromArgb(160, 195, 230)
+        End If
+    End Sub
+
     Private Sub UpdateThemeToggleButton()
-        If ThemeManager.Instance.CurrentTheme = AppTheme.Dark Then
+        If ThemeManager.Instance.IsDark Then
             btnThemeToggle.Text = "☀️"
             btnThemeToggle.ForeColor = Color.FromArgb(250, 204, 21)
-            btnThemeToggle.HoverState.FillColor = Color.FromArgb(40, 50, 70)
+            btnThemeToggle.FillColor = Color.FromArgb(30, 41, 59)
+            btnThemeToggle.BorderColor = Color.FromArgb(51, 65, 85)
+            btnThemeToggle.BorderThickness = 1
+            btnThemeToggle.HoverState.FillColor = Color.FromArgb(51, 65, 85)
         Else
             btnThemeToggle.Text = "🌙"
             btnThemeToggle.ForeColor = Color.FromArgb(71, 85, 105)
+            btnThemeToggle.FillColor = Color.FromArgb(241, 245, 249)
+            btnThemeToggle.BorderColor = Color.FromArgb(226, 232, 240)
+            btnThemeToggle.BorderThickness = 1
             btnThemeToggle.HoverState.FillColor = Color.FromArgb(226, 232, 240)
         End If
     End Sub
 
     ''' <summary>
-    ''' رسم التدرج اللوني على اللوحة الجانبية
+    ''' رسم التدرج اللوني والخط الفاصل الأنيق على اللوحة الجانبية
     ''' </summary>
     Private Sub pn_0_Paint(sender As Object, e As PaintEventArgs) Handles pn_0.Paint
         Dim panel = DirectCast(sender, Control)
         Dim topColor As Color
         Dim bottomColor As Color
+        Dim dividerColor As Color
 
-        If ThemeManager.Instance.CurrentTheme = AppTheme.Dark Then
+        If ThemeManager.Instance.IsDark Then
             topColor = Color.FromArgb(15, 23, 42)
             bottomColor = Color.FromArgb(30, 41, 59)
+            dividerColor = Color.FromArgb(59, 130, 246)
         Else
             topColor = Color.FromArgb(12, 40, 100)
             bottomColor = Color.FromArgb(35, 100, 190)
+            dividerColor = Color.FromArgb(96, 165, 250)
         End If
+
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias
 
         Using brush As New LinearGradientBrush(
             panel.ClientRectangle,
@@ -278,78 +369,16 @@ Public Class Login
             LinearGradientMode.Vertical)
             e.Graphics.FillRectangle(brush, panel.ClientRectangle)
         End Using
+
+        ' رسم خط فاصل عصري مضيء بالمنتصف
+        Using pen As New Pen(dividerColor, 2)
+            Dim lineW As Integer = 240
+            Dim x1 As Integer = (panel.Width - lineW) \ 2
+            Dim x2 As Integer = x1 + lineW
+            e.Graphics.DrawLine(pen, x1, 480, x2, 480)
+        End Using
     End Sub
 
-    ''' <summary>
-    ''' إعداد نصوص ترحيبية على اللوحة الجانبية
-    ''' </summary>
-    Private Sub SetupSidePanelLabels()
-        ' العنوان الرئيسي
-        Dim lblWelcome As New Label() With {
-            .Text = "مرحباً بك",
-            .Font = New Font("Segoe UI", 28, FontStyle.Bold),
-            .ForeColor = Color.White,
-            .BackColor = Color.Transparent,
-            .AutoSize = False,
-            .Size = New Size(400, 55),
-            .Location = New Point(80, 250),
-            .TextAlign = ContentAlignment.MiddleCenter
-        }
-        pn_0.Controls.Add(lblWelcome)
-
-        ' العنوان الفرعي
-        Dim lblBrand As New Label() With {
-            .Text = "في نظام سستامك",
-            .Font = New Font("Segoe UI", 22, FontStyle.Regular),
-            .ForeColor = Color.FromArgb(200, 210, 230),
-            .BackColor = Color.Transparent,
-            .AutoSize = False,
-            .Size = New Size(400, 45),
-            .Location = New Point(80, 310),
-            .TextAlign = ContentAlignment.MiddleCenter
-        }
-        pn_0.Controls.Add(lblBrand)
-
-        ' الوصف
-        Dim lblDesc As New Label() With {
-            .Text = "نظام متكامل لإدارة نقاط البيع والمطاعم" & vbCrLf &
-                    "بأحدث التقنيات وأسهل الطرق",
-            .Font = New Font("Segoe UI", 12, FontStyle.Regular),
-            .ForeColor = Color.FromArgb(160, 180, 210),
-            .BackColor = Color.Transparent,
-            .AutoSize = False,
-            .Size = New Size(400, 60),
-            .Location = New Point(80, 390),
-            .TextAlign = ContentAlignment.MiddleCenter
-        }
-        pn_0.Controls.Add(lblDesc)
-
-        ' خط فاصل مزخرف
-        Dim lblLine As New Label() With {
-            .Text = "━━━━━━━━━━━━━━━━━━━━━",
-            .Font = New Font("Segoe UI", 10, FontStyle.Regular),
-            .ForeColor = Color.FromArgb(80, 120, 180),
-            .BackColor = Color.Transparent,
-            .AutoSize = False,
-            .Size = New Size(400, 20),
-            .Location = New Point(80, 470),
-            .TextAlign = ContentAlignment.MiddleCenter
-        }
-        pn_0.Controls.Add(lblLine)
-
-        ' حقوق النشر في اللوحة الجانبية
-        Dim lblSideCopyright As New Label() With {
-            .Text = "Sestamk © 2026",
-            .Font = New Font("Segoe UI", 10, FontStyle.Regular),
-            .ForeColor = Color.FromArgb(100, 140, 190),
-            .BackColor = Color.Transparent,
-            .AutoSize = False,
-            .Size = New Size(400, 25),
-            .Location = New Point(80, 740),
-            .TextAlign = ContentAlignment.MiddleCenter
-        }
-        pn_0.Controls.Add(lblSideCopyright)
-    End Sub
 
     Private Sub Login_MouseDown(sender As Object, e As MouseEventArgs) Handles Me.MouseDown, pn_main.MouseDown
         x = Control.MousePosition.X - Me.Location.X

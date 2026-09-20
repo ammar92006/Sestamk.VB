@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Data
 Imports System.Drawing
 Imports System.Windows.Forms
@@ -28,26 +28,9 @@ Public Class FrmSalesReport
         Drag = New FormDragHelper(Me, panelHeader)
     End Sub
 
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر FrmSalesReport.Designer.vb
     Private Sub SetupGrid()
-        dgvSales.Columns.Clear()
         dgvSales.AutoGenerateColumns = False
-        dgvSales.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvSales.ReadOnly = True
-
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colInvNum", .HeaderText = "رقم الفاتورة", .DataPropertyName = "InvoiceNumber", .Width = 130})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDate", .HeaderText = "التاريخ والوقت", .DataPropertyName = "InvoiceDate", .Width = 140})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colType", .HeaderText = "نوع الطلب", .DataPropertyName = "OrderTypeName", .Width = 90})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCustomer", .HeaderText = "العميل", .DataPropertyName = "CustomerName", .Width = 130})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colTable", .HeaderText = "الطاولة", .DataPropertyName = "TableName", .Width = 80})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDriver", .HeaderText = "الطيار", .DataPropertyName = "DriverName", .Width = 110})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colDeliveryFee", .HeaderText = "التوصيل", .DataPropertyName = "DeliveryFee", .Width = 80, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2"}})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colNet", .HeaderText = "الصافي", .DataPropertyName = "NetTotal", .Width = 100, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2", .Font = New Font("Segoe UI", 9, FontStyle.Bold)}})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colPaid", .HeaderText = "المدفوع", .DataPropertyName = "PaidAmount", .Width = 90, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2"}})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colRemaining", .HeaderText = "المتبقي", .DataPropertyName = "RemainingAmount", .Width = 90, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2"}})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colPayType", .HeaderText = "الدفع", .DataPropertyName = "PaymentType", .Width = 80})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colShift", .HeaderText = "الوردية", .DataPropertyName = "ShiftNumber", .Width = 120})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colBranch", .HeaderText = "الفرع", .DataPropertyName = "BranchName", .Width = 110})
-        dgvSales.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colStore", .HeaderText = "المخزن", .DataPropertyName = "StoreName", .Width = 110})
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click

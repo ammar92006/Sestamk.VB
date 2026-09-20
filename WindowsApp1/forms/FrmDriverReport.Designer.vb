@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmDriverReport
     Inherits System.Windows.Forms.Form
 
@@ -24,9 +24,21 @@ Partial Class FrmDriverReport
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Total As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Fee As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Status As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmDriverReport))
         Me.Label6 = New System.Windows.Forms.Label()
         Me.dgvDriverReport = New System.Windows.Forms.DataGridView()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDriver = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPhone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colInvNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCustomer = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colOrderTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colFee = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colStatus = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colShift = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblNetDueToRestaurant = New System.Windows.Forms.Label()
         Me.lblTotalDeliveryFees = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -73,19 +85,105 @@ Partial Class FrmDriverReport
         '
         'dgvDriverReport
         '
+        Me.dgvDriverReport.AllowUserToAddRows = False
+        Me.dgvDriverReport.AllowUserToDeleteRows = False
         Me.dgvDriverReport.AllowUserToResizeColumns = False
         Me.dgvDriverReport.AllowUserToResizeRows = False
+        Me.dgvDriverReport.AutoGenerateColumns = False
         DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(244, Byte), Integer), CType(CType(247, Byte), Integer))
         Me.dgvDriverReport.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvDriverReport.BackgroundColor = System.Drawing.Color.White
         Me.dgvDriverReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDriverReport.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colDate, Me.colDriver, Me.colPhone, Me.colInvNum, Me.colCustomer, Me.colOrderTotal, Me.colFee, Me.colStatus, Me.colShift})
         Me.dgvDriverReport.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDriverReport.Location = New System.Drawing.Point(0, 323)
+        Me.dgvDriverReport.MultiSelect = False
         Me.dgvDriverReport.Name = "dgvDriverReport"
+        Me.dgvDriverReport.ReadOnly = True
         Me.dgvDriverReport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvDriverReport.RowTemplate.Height = 35
+        Me.dgvDriverReport.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvDriverReport.Size = New System.Drawing.Size(1331, 431)
         Me.dgvDriverReport.TabIndex = 53
+        '
+        'colDate
+        '
+        Me.colDate.DataPropertyName = "TransactionDate"
+        Me.colDate.HeaderText = "التاريخ والوقت"
+        Me.colDate.Name = "colDate"
+        Me.colDate.ReadOnly = True
+        Me.colDate.Width = 140
+        '
+        'colDriver
+        '
+        Me.colDriver.DataPropertyName = "DriverName"
+        Me.colDriver.HeaderText = "اسم الطيار"
+        Me.colDriver.Name = "colDriver"
+        Me.colDriver.ReadOnly = True
+        Me.colDriver.Width = 130
+        '
+        'colPhone
+        '
+        Me.colPhone.DataPropertyName = "Phone"
+        Me.colPhone.HeaderText = "رقم الموبايل"
+        Me.colPhone.Name = "colPhone"
+        Me.colPhone.ReadOnly = True
+        Me.colPhone.Width = 110
+        '
+        'colInvNum
+        '
+        Me.colInvNum.DataPropertyName = "InvoiceNumber"
+        Me.colInvNum.HeaderText = "رقم الفاتورة"
+        Me.colInvNum.Name = "colInvNum"
+        Me.colInvNum.ReadOnly = True
+        Me.colInvNum.Width = 130
+        '
+        'colCustomer
+        '
+        Me.colCustomer.DataPropertyName = "CustomerName"
+        Me.colCustomer.HeaderText = "العميل"
+        Me.colCustomer.Name = "colCustomer"
+        Me.colCustomer.ReadOnly = True
+        Me.colCustomer.Width = 130
+        '
+        'colOrderTotal
+        '
+        DataGridViewCellStyle_Total.Format = "N2"
+        Me.colOrderTotal.DefaultCellStyle = DataGridViewCellStyle_Total
+        Me.colOrderTotal.DataPropertyName = "OrderTotal"
+        Me.colOrderTotal.HeaderText = "قيمة الفاتورة"
+        Me.colOrderTotal.Name = "colOrderTotal"
+        Me.colOrderTotal.ReadOnly = True
+        Me.colOrderTotal.Width = 110
+        '
+        'colFee
+        '
+        DataGridViewCellStyle_Fee.Format = "N2"
+        DataGridViewCellStyle_Fee.ForeColor = System.Drawing.Color.ForestGreen
+        Me.colFee.DefaultCellStyle = DataGridViewCellStyle_Fee
+        Me.colFee.DataPropertyName = "DeliveryFee"
+        Me.colFee.HeaderText = "عمولة التوصيل"
+        Me.colFee.Name = "colFee"
+        Me.colFee.ReadOnly = True
+        Me.colFee.Width = 100
+        '
+        'colStatus
+        '
+        DataGridViewCellStyle_Status.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.colStatus.DefaultCellStyle = DataGridViewCellStyle_Status
+        Me.colStatus.DataPropertyName = "SettleStatus"
+        Me.colStatus.HeaderText = "حالة التوريد"
+        Me.colStatus.Name = "colStatus"
+        Me.colStatus.ReadOnly = True
+        Me.colStatus.Width = 120
+        '
+        'colShift
+        '
+        Me.colShift.DataPropertyName = "ShiftNumber"
+        Me.colShift.HeaderText = "الوردية"
+        Me.colShift.Name = "colShift"
+        Me.colShift.ReadOnly = True
+        Me.colShift.Width = 120
         '
         'lblNetDueToRestaurant
         '
@@ -465,6 +563,15 @@ Partial Class FrmDriverReport
 
     Friend WithEvents Label6 As Label
     Friend WithEvents dgvDriverReport As DataGridView
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents colDriver As DataGridViewTextBoxColumn
+    Friend WithEvents colPhone As DataGridViewTextBoxColumn
+    Friend WithEvents colInvNum As DataGridViewTextBoxColumn
+    Friend WithEvents colCustomer As DataGridViewTextBoxColumn
+    Friend WithEvents colOrderTotal As DataGridViewTextBoxColumn
+    Friend WithEvents colFee As DataGridViewTextBoxColumn
+    Friend WithEvents colStatus As DataGridViewTextBoxColumn
+    Friend WithEvents colShift As DataGridViewTextBoxColumn
     Friend WithEvents lblNetDueToRestaurant As Label
     Friend WithEvents lblTotalDeliveryFees As Label
     Friend WithEvents Label7 As Label

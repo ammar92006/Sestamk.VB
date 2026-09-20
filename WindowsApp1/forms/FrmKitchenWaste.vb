@@ -6,392 +6,41 @@ Imports System.Threading.Tasks
 Imports System.Windows.Forms
 
 Namespace Global.WindowsApp1
-    Public Class FrmKitchenWaste
-        Inherits Form
+    Partial Class FrmKitchenWaste
 
         Private ReadOnly _repo As POSRepository
         Private _currentItems As New List(Of KitchenWasteDetailModel)()
         Private _dtMaterials As DataTable
 
-        ' عناصر واجهة المستخدم
-        Private panelHeader As Panel
-        Private lblTitle As Label
-        Private btnCloseForm As Button
-        Private tabControl As TabControl
-        Private tabNewWaste As TabPage
-        Private tabWasteHistory As TabPage
-
-        ' عناصر تبويب تسجيل الهالك
-        Private dtpDate As DateTimePicker
-        Private cmbStores As ComboBox
-        Private cmbWasteType As ComboBox
-        Private cmbMaterials As ComboBox
-        Private txtQuantity As TextBox
-        Private txtUnitCost As TextBox
-        Private lblAvailableStock As Label
-        Private lblUnitDisplay As Label
-        Private lblLineTotalCost As Label
-        Private txtResponsibleStaff As TextBox
-        Private txtReason As TextBox
-        Private btnAddItem As Button
-        Private dgvCurrentItems As DataGridView
-        Private lblTicketTotal As Label
-        Private btnSaveWasteTicket As Button
-        Private btnClearCurrent As Button
-
-        ' عناصر تبويب سجل وتقارير الهالك
-        Private dtpFrom As DateTimePicker
-        Private dtpTo As DateTimePicker
-        Private cmbHistoryStore As ComboBox
-        Private cmbHistoryType As ComboBox
-        Private btnFilterHistory As Button
-        Private dgvHistory As DataGridView
-        Private lblHistoryTotalLoss As Label
-
         Public Sub New()
             _repo = New POSRepository(DBModule.ConnectionString)
-            InitializeComponentsCustom()
+            InitializeComponent()
+            SetupEventHandlers()
         End Sub
 
-        Private Sub InitializeComponentsCustom()
-            Me.Text = "إدارة الهالك والتالف في المطبخ (Kitchen Waste Control)"
-            Me.ClientSize = New Size(1150, 720)
-            Me.MinimumSize = New Size(950, 600)
-            Me.StartPosition = FormStartPosition.CenterScreen
-            Me.FormBorderStyle = FormBorderStyle.None
-            Me.RightToLeft = RightToLeft.Yes
-            Me.RightToLeftLayout = True
-            Me.BackColor = Color.FromArgb(245, 247, 250)
-            Me.Font = New Font("Segoe UI", 9.5F, FontStyle.Regular)
-
-            ' 1. الهيدر
-            panelHeader = New Panel With {
-                .Dock = DockStyle.Top,
-                .Height = 55,
-                .BackColor = Color.FromArgb(33, 42, 57),
-                .Padding = New Padding(15, 0, 15, 0)
-            }
-
-            lblTitle = New Label With {
-                .Text = "🗑️ إدارة الهالك والتالف في المطبخ (Kitchen Waste Control)",
-                .Font = New Font("Segoe UI", 13.0F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .AutoSize = True,
-                .Location = New Point(15, 14)
-            }
-            panelHeader.Controls.Add(lblTitle)
-
-            btnCloseForm = New Button With {
-                .Text = "✕",
-                .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(220, 53, 69),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(40, 34),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(15, 10),
-                .Cursor = Cursors.Hand
-            }
-            btnCloseForm.FlatAppearance.BorderSize = 0
+        Private Sub SetupEventHandlers()
             AddHandler btnCloseForm.Click, Sub() Me.Close()
-            panelHeader.Controls.Add(btnCloseForm)
-            Me.Controls.Add(panelHeader)
-
-            ' 2. التبويبات
-            tabControl = New TabControl With {
-                .Dock = DockStyle.Fill,
-                .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
-                .Padding = New Point(15, 6)
-            }
-
-            tabNewWaste = New TabPage("تسجيل إذن هالك وتالف جديد")
-            tabWasteHistory = New TabPage("سجل وتقارير خسائر الهالك")
-            tabControl.TabPages.Add(tabNewWaste)
-            tabControl.TabPages.Add(tabWasteHistory)
-            Me.Controls.Add(tabControl)
-
-            SetupNewWasteTab()
-            SetupWasteHistoryTab()
-
-            Dim drag As New FormDragHelper(Me, panelHeader)
-        End Sub
-
-        ' =========================================================
-        ' إعداد تبويب تسجيل إذن هالك جديد
-        ' =========================================================
-        Private Sub SetupNewWasteTab()
-            tabNewWaste.BackColor = Color.White
-            tabNewWaste.Padding = New Padding(15)
-
-            ' لوحة البيانات الأساسية
-            Dim pnlInputs As New Panel With {
-                .Dock = DockStyle.Top,
-                .Height = 180,
-                .BackColor = Color.FromArgb(248, 250, 252),
-                .BorderStyle = BorderStyle.FixedSingle,
-                .Padding = New Padding(10)
-            }
-
-            Dim MakeLabel = Function(text As String, x As Integer, y As Integer) As Label
-                                Dim lbl As New Label With {
-                                    .Text = text,
-                                    .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
-                                    .ForeColor = Color.FromArgb(50, 60, 75),
-                                    .AutoSize = True,
-                                    .Location = New Point(x, y)
-                                }
-                                pnlInputs.Controls.Add(lbl)
-                                Return lbl
-                            End Function
-
-            ' السطر 1
-            MakeLabel("تاريخ الهالك:", 20, 15)
-            dtpDate = New DateTimePicker With {.Location = New Point(105, 12), .Width = 140, .Format = DateTimePickerFormat.Short}
-            pnlInputs.Controls.Add(dtpDate)
-
-            MakeLabel("المخزن:", 265, 15)
-            cmbStores = New ComboBox With {.Location = New Point(325, 12), .Width = 160, .DropDownStyle = ComboBoxStyle.DropDownList}
             AddHandler cmbStores.SelectedIndexChanged, Sub() LoadMaterialsList()
-            pnlInputs.Controls.Add(cmbStores)
-
-            MakeLabel("نوع وتصنيف الهالك:", 505, 15)
-            cmbWasteType = New ComboBox With {.Location = New Point(635, 12), .Width = 200, .DropDownStyle = ComboBoxStyle.DropDownList}
-            cmbWasteType.Items.AddRange(New Object() {"خامة تالفة / تالف إعداد", "سوء إعداد / خطأ طهي", "انتهاء صلاحية", "وجبة تالفة"})
-            cmbWasteType.SelectedIndex = 0
-            pnlInputs.Controls.Add(cmbWasteType)
-
-            ' السطر 2: اختيار الخامة والكمية والتكلفة
-            MakeLabel("الخامة المهدورة:", 20, 58)
-            cmbMaterials = New ComboBox With {.Location = New Point(105, 55), .Width = 280, .DropDownStyle = ComboBoxStyle.DropDownList}
             AddHandler cmbMaterials.SelectedIndexChanged, AddressOf OnMaterialSelected
-            pnlInputs.Controls.Add(cmbMaterials)
-
-            lblAvailableStock = New Label With {
-                .Text = "الرصيد: 0.00",
-                .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(70, 80, 95),
-                .AutoSize = True,
-                .Location = New Point(400, 58)
-            }
-            pnlInputs.Controls.Add(lblAvailableStock)
-
-            MakeLabel("الكمية التالفة:", 520, 58)
-            txtQuantity = New TextBox With {.Location = New Point(605, 55), .Width = 80, .Text = "1"}
             AddHandler txtQuantity.TextChanged, AddressOf RecalculateLineTotal
-            pnlInputs.Controls.Add(txtQuantity)
-
-            lblUnitDisplay = New Label With {.Text = "الوحدة", .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold), .ForeColor = Color.Gray, .AutoSize = True, .Location = New Point(690, 58)}
-            pnlInputs.Controls.Add(lblUnitDisplay)
-
-            MakeLabel("تكلفة الوحدة:", 750, 58)
-            txtUnitCost = New TextBox With {.Location = New Point(830, 55), .Width = 80, .Text = "0.00"}
             AddHandler txtUnitCost.TextChanged, AddressOf RecalculateLineTotal
-            pnlInputs.Controls.Add(txtUnitCost)
-
-            lblLineTotalCost = New Label With {
-                .Text = "الخسارة: 0.00 ج",
-                .Font = New Font("Segoe UI", 10.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(220, 38, 38),
-                .AutoSize = True,
-                .Location = New Point(930, 57)
-            }
-            pnlInputs.Controls.Add(lblLineTotalCost)
-
-            ' السطر 3: الموظف والسبب وزر الإضافة
-            MakeLabel("الموظف المسؤول:", 20, 102)
-            txtResponsibleStaff = New TextBox With {.Location = New Point(125, 99), .Width = 200}
-            pnlInputs.Controls.Add(txtResponsibleStaff)
-
-            MakeLabel("سبب التلف / الملاحظات:", 345, 102)
-            txtReason = New TextBox With {.Location = New Point(490, 99), .Width = 380}
-            pnlInputs.Controls.Add(txtReason)
-
-            btnAddItem = New Button With {
-                .Text = "➕ إضافة للقائمة",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(16, 149, 105),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(140, 34),
-                .Location = New Point(890, 96),
-                .Cursor = Cursors.Hand
-            }
-            btnAddItem.FlatAppearance.BorderSize = 0
             AddHandler btnAddItem.Click, AddressOf OnAddItemClick
-            pnlInputs.Controls.Add(btnAddItem)
-
-            tabNewWaste.Controls.Add(pnlInputs)
-
-            ' شريط الإجمالي وأزرار الحفظ في الأسفل
-            Dim pnlBottom As New Panel With {
-                .Dock = DockStyle.Bottom,
-                .Height = 60,
-                .BackColor = Color.FromArgb(241, 245, 249),
-                .Padding = New Padding(15, 10, 15, 10)
-            }
-
-            lblTicketTotal = New Label With {
-                .Text = "إجمالي الخسائر المالية للتذكرة: 0.00 ج",
-                .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(185, 28, 28),
-                .AutoSize = True,
-                .Location = New Point(20, 18)
-            }
-            pnlBottom.Controls.Add(lblTicketTotal)
-
-            btnSaveWasteTicket = New Button With {
-                .Text = "💾 ترحيل وحفظ إذن الهالك وخصم المخزن",
-                .Font = New Font("Segoe UI", 11.0F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(220, 38, 38),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(300, 40),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(20, 10),
-                .Cursor = Cursors.Hand
-            }
-            btnSaveWasteTicket.FlatAppearance.BorderSize = 0
             AddHandler btnSaveWasteTicket.Click, Async Sub() Await SaveWasteTicketAsync()
-            pnlBottom.Controls.Add(btnSaveWasteTicket)
-
-            btnClearCurrent = New Button With {
-                .Text = "تفريغ القائمة",
-                .Font = New Font("Segoe UI", 10.0F),
-                .ForeColor = Color.FromArgb(70, 80, 95),
-                .BackColor = Color.White,
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(110, 40),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                .Location = New Point(330, 10),
-                .Cursor = Cursors.Hand
-            }
             AddHandler btnClearCurrent.Click, Sub()
                                                   _currentItems.Clear()
                                                   RefreshCurrentGrid()
                                               End Sub
-            pnlBottom.Controls.Add(btnClearCurrent)
+            AddHandler btnFilterHistory.Click, Sub() LoadWasteHistory()
 
-            tabNewWaste.Controls.Add(pnlBottom)
-
-            ' جدول الأصناف الحالية
-            dgvCurrentItems = New DataGridView With {
-                .Dock = DockStyle.Fill,
-                .BackgroundColor = Color.White,
-                .AllowUserToAddRows = False,
-                .ReadOnly = True,
-                .SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                .RowTemplate = New DataGridViewRow With {.Height = 32}
-            }
-            tabNewWaste.Controls.Add(dgvCurrentItems)
-            dgvCurrentItems.BringToFront()
-
-            SetupCurrentGridColumns()
-        End Sub
-
-        Private Sub SetupCurrentGridColumns()
-            dgvCurrentItems.Columns.Clear()
-            dgvCurrentItems.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colName", .HeaderText = "الخامة المهدورة", .Width = 250})
-            dgvCurrentItems.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colQty", .HeaderText = "الكمية التالفة", .Width = 110, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "0.####"}})
-            dgvCurrentItems.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colUnit", .HeaderText = "الوحدة", .Width = 90})
-            dgvCurrentItems.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCost", .HeaderText = "تكلفة الوحدة", .Width = 120, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2"}})
-            dgvCurrentItems.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colTotal", .HeaderText = "إجمالي الخسارة", .Width = 130, .DefaultCellStyle = New DataGridViewCellStyle With {.Format = "N2", .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold), .ForeColor = Color.DarkRed}})
-            dgvCurrentItems.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colNotes", .HeaderText = "ملاحظات", .Width = 250})
-
-            Dim btnCol As New DataGridViewButtonColumn With {
-                .Name = "colDelete",
-                .HeaderText = "حذف",
-                .Text = "🗑️",
-                .UseColumnTextForButtonValue = True,
-                .Width = 60
-            }
-            dgvCurrentItems.Columns.Add(btnCol)
             ThemeHelper.ApplyDataGridViewTheme(dgvCurrentItems, ThemeManager.Instance.CurrentPalette)
-
             AddHandler dgvCurrentItems.CellContentClick, Sub(s, e)
                                                              If e.RowIndex >= 0 AndAlso e.ColumnIndex = dgvCurrentItems.Columns("colDelete").Index Then
                                                                  _currentItems.RemoveAt(e.RowIndex)
                                                                  RefreshCurrentGrid()
                                                              End If
                                                          End Sub
-        End Sub
 
-        ' =========================================================
-        ' إعداد تبويب سجل وتقارير الهالك
-        ' =========================================================
-        Private Sub SetupWasteHistoryTab()
-            tabWasteHistory.BackColor = Color.White
-            tabWasteHistory.Padding = New Padding(15)
-
-            Dim pnlFilter As New Panel With {
-                .Dock = DockStyle.Top,
-                .Height = 60,
-                .BackColor = Color.FromArgb(248, 250, 252),
-                .BorderStyle = BorderStyle.FixedSingle,
-                .Padding = New Padding(10)
-            }
-
-            Dim lblFrom As New Label With {.Text = "من تاريخ:", .AutoSize = True, .Location = New Point(15, 18), .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)}
-            pnlFilter.Controls.Add(lblFrom)
-            dtpFrom = New DateTimePicker With {.Location = New Point(80, 15), .Width = 130, .Format = DateTimePickerFormat.Short, .Value = DateTime.Now.Date.AddDays(-7)}
-            pnlFilter.Controls.Add(dtpFrom)
-
-            Dim lblTo As New Label With {.Text = "إلى تاريخ:", .AutoSize = True, .Location = New Point(225, 18), .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)}
-            pnlFilter.Controls.Add(lblTo)
-            dtpTo = New DateTimePicker With {.Location = New Point(290, 15), .Width = 130, .Format = DateTimePickerFormat.Short, .Value = DateTime.Now}
-            pnlFilter.Controls.Add(dtpTo)
-
-            Dim lblType As New Label With {.Text = "نوع الهالك:", .AutoSize = True, .Location = New Point(435, 18), .Font = New Font("Segoe UI", 9.0F, FontStyle.Bold)}
-            pnlFilter.Controls.Add(lblType)
-            cmbHistoryType = New ComboBox With {.Location = New Point(510, 15), .Width = 160, .DropDownStyle = ComboBoxStyle.DropDownList}
-            cmbHistoryType.Items.AddRange(New Object() {"كل الأنواع", "خامة تالفة / تالف إعداد", "سوء إعداد / خطأ طهي", "انتهاء صلاحية", "وجبة تالفة"})
-            cmbHistoryType.SelectedIndex = 0
-            pnlFilter.Controls.Add(cmbHistoryType)
-
-            btnFilterHistory = New Button With {
-                .Text = "🔍 بحث وفلترة",
-                .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
-                .ForeColor = Color.White,
-                .BackColor = Color.FromArgb(33, 42, 57),
-                .FlatStyle = FlatStyle.Flat,
-                .Size = New Size(110, 32),
-                .Location = New Point(690, 14),
-                .Cursor = Cursors.Hand
-            }
-            btnFilterHistory.FlatAppearance.BorderSize = 0
-            AddHandler btnFilterHistory.Click, Sub() LoadWasteHistory()
-            pnlFilter.Controls.Add(btnFilterHistory)
-
-            tabWasteHistory.Controls.Add(pnlFilter)
-
-            ' شريط الإجمالي في الأسفل
-            Dim pnlHistBottom As New Panel With {
-                .Dock = DockStyle.Bottom,
-                .Height = 50,
-                .BackColor = Color.FromArgb(241, 245, 249),
-                .Padding = New Padding(15, 12, 15, 12)
-            }
-
-            lblHistoryTotalLoss = New Label With {
-                .Text = "إجمالي الخسائر المالية للهالك خلال الفترة: 0.00 ج",
-                .Font = New Font("Segoe UI", 12.0F, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(185, 28, 28),
-                .AutoSize = True,
-                .Location = New Point(20, 12)
-            }
-            pnlHistBottom.Controls.Add(lblHistoryTotalLoss)
-            tabWasteHistory.Controls.Add(pnlHistBottom)
-
-            ' جدول السجل
-            dgvHistory = New DataGridView With {
-                .Dock = DockStyle.Fill,
-                .BackgroundColor = Color.White,
-                .AllowUserToAddRows = False,
-                .ReadOnly = True,
-                .SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-                .RowTemplate = New DataGridViewRow With {.Height = 32}
-            }
-            tabWasteHistory.Controls.Add(dgvHistory)
-            dgvHistory.BringToFront()
+            Dim drag As New FormDragHelper(Me, panelHeader)
         End Sub
 
         Private Sub FrmKitchenWaste_Load(sender As Object, e As EventArgs) Handles MyBase.Load

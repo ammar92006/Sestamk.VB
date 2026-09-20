@@ -41,6 +41,8 @@ Namespace My
             ' 1) تجرّب الإعدادات المحفوظة. 2) تكتشف خوادم SQL المثبتة وتجرّبها.
             ' بدون أي رسالة مزعجة للمستخدم في الحالة الطبيعية.
             If DBModule.TryAutoConnect() Then
+                ' مزامنة إعداد التشغيل التلقائي مع إقلاع النظام
+                StartupManager.SyncStartupSetting()
                 ' تحميل بيانات المدير المهيّأة لهذا النشاط
                 Settingsall.LoadAdminCredentials()
                 ' معالج أول تشغيل (يظهر مرة واحدة فقط لكل نشاط)

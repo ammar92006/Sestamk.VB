@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmCustomerStatement
     Inherits System.Windows.Forms.Form
 
@@ -24,8 +24,18 @@ Partial Class FrmCustomerStatement
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Debit As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Credit As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle_Balance As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FrmCustomerStatement))
         Me.dgvStatement = New System.Windows.Forms.DataGridView()
+        Me.colDate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colDebit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCredit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colNotes = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colBranch = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.lblFinalBalance = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -63,19 +73,91 @@ Partial Class FrmCustomerStatement
         '
         'dgvStatement
         '
+        Me.dgvStatement.AllowUserToAddRows = False
+        Me.dgvStatement.AllowUserToDeleteRows = False
         Me.dgvStatement.AllowUserToResizeColumns = False
         Me.dgvStatement.AllowUserToResizeRows = False
+        Me.dgvStatement.AutoGenerateColumns = False
         DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(244, Byte), Integer), CType(CType(247, Byte), Integer))
         Me.dgvStatement.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvStatement.BackgroundColor = System.Drawing.Color.White
         Me.dgvStatement.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvStatement.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colDate, Me.colType, Me.colDebit, Me.colCredit, Me.colBalance, Me.colNotes, Me.colBranch})
         Me.dgvStatement.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvStatement.Location = New System.Drawing.Point(0, 358)
+        Me.dgvStatement.MultiSelect = False
         Me.dgvStatement.Name = "dgvStatement"
+        Me.dgvStatement.ReadOnly = True
         Me.dgvStatement.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvStatement.RowTemplate.Height = 35
+        Me.dgvStatement.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvStatement.Size = New System.Drawing.Size(1331, 396)
         Me.dgvStatement.TabIndex = 47
+        '
+        'colDate
+        '
+        Me.colDate.DataPropertyName = "TransactionDate"
+        Me.colDate.HeaderText = "التاريخ"
+        Me.colDate.Name = "colDate"
+        Me.colDate.ReadOnly = True
+        Me.colDate.Width = 140
+        '
+        'colType
+        '
+        Me.colType.DataPropertyName = "TransactionType"
+        Me.colType.HeaderText = "نوع الحركة"
+        Me.colType.Name = "colType"
+        Me.colType.ReadOnly = True
+        Me.colType.Width = 130
+        '
+        'colDebit
+        '
+        DataGridViewCellStyle_Debit.Format = "N2"
+        DataGridViewCellStyle_Debit.ForeColor = System.Drawing.Color.Red
+        Me.colDebit.DefaultCellStyle = DataGridViewCellStyle_Debit
+        Me.colDebit.DataPropertyName = "Debit"
+        Me.colDebit.HeaderText = "مدين (عليه)"
+        Me.colDebit.Name = "colDebit"
+        Me.colDebit.ReadOnly = True
+        Me.colDebit.Width = 110
+        '
+        'colCredit
+        '
+        DataGridViewCellStyle_Credit.Format = "N2"
+        DataGridViewCellStyle_Credit.ForeColor = System.Drawing.Color.Green
+        Me.colCredit.DefaultCellStyle = DataGridViewCellStyle_Credit
+        Me.colCredit.DataPropertyName = "Credit"
+        Me.colCredit.HeaderText = "دائن (له/مسدد)"
+        Me.colCredit.Name = "colCredit"
+        Me.colCredit.ReadOnly = True
+        Me.colCredit.Width = 110
+        '
+        'colBalance
+        '
+        DataGridViewCellStyle_Balance.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle_Balance.Format = "N2"
+        Me.colBalance.DefaultCellStyle = DataGridViewCellStyle_Balance
+        Me.colBalance.DataPropertyName = "BalanceAfter"
+        Me.colBalance.HeaderText = "الرصيد بعد الحركة"
+        Me.colBalance.Name = "colBalance"
+        Me.colBalance.ReadOnly = True
+        Me.colBalance.Width = 120
+        '
+        'colNotes
+        '
+        Me.colNotes.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.colNotes.DataPropertyName = "Notes"
+        Me.colNotes.HeaderText = "ملاحظات"
+        Me.colNotes.Name = "colNotes"
+        Me.colNotes.ReadOnly = True
+        '
+        'colBranch
+        '
+        Me.colBranch.DataPropertyName = "BranchName"
+        Me.colBranch.HeaderText = "الفرع"
+        Me.colBranch.Name = "colBranch"
+        Me.colBranch.ReadOnly = True
+        Me.colBranch.Width = 110
         '
         'grpCustomerInfo
         '
@@ -515,6 +597,13 @@ Partial Class FrmCustomerStatement
     End Sub
 
     Friend WithEvents dgvStatement As DataGridView
+    Friend WithEvents colDate As DataGridViewTextBoxColumn
+    Friend WithEvents colType As DataGridViewTextBoxColumn
+    Friend WithEvents colDebit As DataGridViewTextBoxColumn
+    Friend WithEvents colCredit As DataGridViewTextBoxColumn
+    Friend WithEvents colBalance As DataGridViewTextBoxColumn
+    Friend WithEvents colNotes As DataGridViewTextBoxColumn
+    Friend WithEvents colBranch As DataGridViewTextBoxColumn
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents lblTotalDebit As Label
     Friend WithEvents Label10 As Label

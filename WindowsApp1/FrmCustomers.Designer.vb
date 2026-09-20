@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmCustomers
     Inherits System.Windows.Forms.Form
 
@@ -47,6 +47,14 @@ Partial Class FrmCustomers
         Me.btnUpdate = New Guna.UI2.WinForms.Guna2Button()
         Me.btnAdd = New Guna.UI2.WinForms.Guna2Button()
         Me.dgvCustomers = New System.Windows.Forms.DataGridView()
+        Me.colID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colCurrentBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPhone1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colPhone2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colAddress = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colIsActive = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.txtDiscountPercent = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -401,19 +409,90 @@ Partial Class FrmCustomers
         '
         'dgvCustomers
         '
+        Me.dgvCustomers.AllowUserToAddRows = False
+        Me.dgvCustomers.AllowUserToDeleteRows = False
         Me.dgvCustomers.AllowUserToResizeColumns = False
         Me.dgvCustomers.AllowUserToResizeRows = False
+        Me.dgvCustomers.AutoGenerateColumns = False
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(244, Byte), Integer), CType(CType(247, Byte), Integer))
         Me.dgvCustomers.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvCustomers.BackgroundColor = System.Drawing.Color.White
         Me.dgvCustomers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvCustomers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colID, Me.colCode, Me.colName, Me.colCurrentBalance, Me.colPhone1, Me.colPhone2, Me.colAddress, Me.colIsActive})
         Me.dgvCustomers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvCustomers.Location = New System.Drawing.Point(0, 383)
+        Me.dgvCustomers.MultiSelect = False
         Me.dgvCustomers.Name = "dgvCustomers"
+        Me.dgvCustomers.ReadOnly = True
         Me.dgvCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvCustomers.RowTemplate.Height = 35
+        Me.dgvCustomers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvCustomers.Size = New System.Drawing.Size(1380, 436)
         Me.dgvCustomers.TabIndex = 47
+        '
+        'colID
+        '
+        Me.colID.DataPropertyName = "CustomerID"
+        Me.colID.HeaderText = "ID"
+        Me.colID.Name = "colID"
+        Me.colID.ReadOnly = True
+        Me.colID.Visible = False
+        '
+        'colCode
+        '
+        Me.colCode.DataPropertyName = "CustomerCode"
+        Me.colCode.HeaderText = "الكود"
+        Me.colCode.Name = "colCode"
+        Me.colCode.ReadOnly = True
+        Me.colCode.Width = 80
+        '
+        'colName
+        '
+        Me.colName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.colName.DataPropertyName = "CustomerName"
+        Me.colName.HeaderText = "اسم العميل"
+        Me.colName.Name = "colName"
+        Me.colName.ReadOnly = True
+        '
+        'colCurrentBalance
+        '
+        Me.colCurrentBalance.DataPropertyName = "CurrentBalance"
+        Me.colCurrentBalance.HeaderText = "رصيد العميل"
+        Me.colCurrentBalance.Name = "colCurrentBalance"
+        Me.colCurrentBalance.ReadOnly = True
+        Me.colCurrentBalance.Width = 80
+        '
+        'colPhone1
+        '
+        Me.colPhone1.DataPropertyName = "Phone1"
+        Me.colPhone1.HeaderText = "رقم الموبايل"
+        Me.colPhone1.Name = "colPhone1"
+        Me.colPhone1.ReadOnly = True
+        Me.colPhone1.Width = 110
+        '
+        'colPhone2
+        '
+        Me.colPhone2.DataPropertyName = "Phone2"
+        Me.colPhone2.HeaderText = "هاتف إضافي"
+        Me.colPhone2.Name = "colPhone2"
+        Me.colPhone2.ReadOnly = True
+        Me.colPhone2.Width = 110
+        '
+        'colAddress
+        '
+        Me.colAddress.DataPropertyName = "Address"
+        Me.colAddress.HeaderText = "العنوان"
+        Me.colAddress.Name = "colAddress"
+        Me.colAddress.ReadOnly = True
+        Me.colAddress.Width = 150
+        '
+        'colIsActive
+        '
+        Me.colIsActive.DataPropertyName = "IsActive"
+        Me.colIsActive.HeaderText = "نشط"
+        Me.colIsActive.Name = "colIsActive"
+        Me.colIsActive.ReadOnly = True
+        Me.colIsActive.Width = 60
         '
         'grpCustomerInfo
         '
@@ -863,6 +942,14 @@ Partial Class FrmCustomers
     Friend WithEvents btnUpdate As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnAdd As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents dgvCustomers As DataGridView
+    Friend WithEvents colID As DataGridViewTextBoxColumn
+    Friend WithEvents colCode As DataGridViewTextBoxColumn
+    Friend WithEvents colName As DataGridViewTextBoxColumn
+    Friend WithEvents colCurrentBalance As DataGridViewTextBoxColumn
+    Friend WithEvents colPhone1 As DataGridViewTextBoxColumn
+    Friend WithEvents colPhone2 As DataGridViewTextBoxColumn
+    Friend WithEvents colAddress As DataGridViewTextBoxColumn
+    Friend WithEvents colIsActive As DataGridViewCheckBoxColumn
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents lblCurrentBalance As Label
     Friend WithEvents Label12 As Label

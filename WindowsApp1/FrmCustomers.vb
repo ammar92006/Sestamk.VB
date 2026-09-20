@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Windows.Forms
@@ -49,25 +49,10 @@ Public Class FrmCustomers
 
     ' =========================================================
     ' 1. إعدادات الشبكة (DataGridView Setup)
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر FrmCustomers.Designer.vb
     ' =========================================================
     Private Sub SetupGrid()
-        dgvCustomers.Columns.Clear()
         dgvCustomers.AutoGenerateColumns = False
-        dgvCustomers.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvCustomers.MultiSelect = False
-        dgvCustomers.ReadOnly = True
-
-        Dim colID As New DataGridViewTextBoxColumn With {.Name = "colID", .HeaderText = "ID", .DataPropertyName = "CustomerID"}
-        dgvCustomers.Columns.Add(colID)
-        colID.Visible = False
-
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCode", .HeaderText = "الكود", .DataPropertyName = "CustomerCode", .Width = 80})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colName", .HeaderText = "اسم العميل", .DataPropertyName = "CustomerName", .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCurrentBalance", .HeaderText = "رصيد العميل", .DataPropertyName = "CurrentBalance", .Width = 80})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colPhone1", .HeaderText = "رقم الموبايل", .DataPropertyName = "Phone1", .Width = 110})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colPhone2", .HeaderText = "هاتف إضافي", .DataPropertyName = "Phone2", .Width = 110})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colAddress", .HeaderText = "العنوان", .DataPropertyName = "Address", .Width = 150})
-        dgvCustomers.Columns.Add(New DataGridViewCheckBoxColumn With {.Name = "colIsActive", .HeaderText = "نشط", .DataPropertyName = "IsActive", .Width = 60})
     End Sub
 
     ' تحميل قائمة المناطق

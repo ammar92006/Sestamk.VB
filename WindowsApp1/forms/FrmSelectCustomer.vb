@@ -26,17 +26,9 @@ Public Class FrmSelectCustomer
         Dim drag2 As New FormDragHelper(Me, Guna2HtmlLabel1)
     End Sub
 
+    ' تم نقل تعريف وتنسيق الأعمدة إلى الديزاينر FrmSelectCustomer.Designer.vb
     Private Sub SetupGrid()
-        dgvCustomers.Columns.Clear()
         dgvCustomers.AutoGenerateColumns = False
-        dgvCustomers.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvCustomers.MultiSelect = False
-        dgvCustomers.ReadOnly = True
-
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colAddress", .HeaderText = "العنوان", .DataPropertyName = "Address", .Width = 150})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colPhone", .HeaderText = "رقم الموبايل", .DataPropertyName = "Phone1", .Width = 120})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colName", .HeaderText = "اسم العميل", .DataPropertyName = "CustomerName", .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill})
-        dgvCustomers.Columns.Add(New DataGridViewTextBoxColumn With {.Name = "colCode", .HeaderText = "الكود", .DataPropertyName = "CustomerCode", .Width = 80})
     End Sub
 
     Private Sub LoadCustomers()

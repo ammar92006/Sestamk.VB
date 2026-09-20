@@ -136,7 +136,7 @@ Namespace UC_Settings
             Me.lblCardLanguageTitle.Name = "lblCardLanguageTitle"
             Me.lblCardLanguageTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardLanguageTitle.TabIndex = 0
-            Me.lblCardLanguageTitle.Text = "🌐 اللغة والمظهر والعملة"
+            Me.lblCardLanguageTitle.Text = "اللغة والمظهر والعملة"
             Me.lblCardLanguageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblLanguage
@@ -194,7 +194,7 @@ Namespace UC_Settings
             Me.cmbCurrency.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.cmbCurrency.ForeColor = System.Drawing.Color.White
             Me.cmbCurrency.ItemHeight = 34
-            Me.cmbCurrency.Items.AddRange(New Object() {"ج.م (جنيه مصري)", "ر.س (ريال سعودي)", "$ (دولار أمريكي)", "د.إ (درهم إماراتي)"})
+            Me.cmbCurrency.Items.AddRange(New Object() {"جنيه مصري - ج.م", "ريال سعودي - ر.س", "دولار أمريكي - $", "درهم إماراتي - د.إ"})
             Me.cmbCurrency.Location = New System.Drawing.Point(190, 60)
             Me.cmbCurrency.Name = "cmbCurrency"
             Me.cmbCurrency.Size = New System.Drawing.Size(270, 40)
@@ -288,7 +288,7 @@ Namespace UC_Settings
             Me.lblCardBackupTitle.Name = "lblCardBackupTitle"
             Me.lblCardBackupTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardBackupTitle.TabIndex = 0
-            Me.lblCardBackupTitle.Text = "🚀 بدء التشغيل والأمان"
+            Me.lblCardBackupTitle.Text = "بدء التشغيل والأمان"
             Me.lblCardBackupTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblAutoBackup
@@ -398,7 +398,7 @@ Namespace UC_Settings
             Me.lblCardAutoLogoutTitle.Name = "lblCardAutoLogoutTitle"
             Me.lblCardAutoLogoutTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardAutoLogoutTitle.TabIndex = 0
-            Me.lblCardAutoLogoutTitle.Text = "⏱️ القفل التلقائي للجلسة"
+            Me.lblCardAutoLogoutTitle.Text = "القفل التلقائي للجلسة"
             Me.lblCardAutoLogoutTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblAutoLogout
@@ -483,7 +483,7 @@ Namespace UC_Settings
             Me.lblCardPathTitle.Name = "lblCardPathTitle"
             Me.lblCardPathTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardPathTitle.TabIndex = 0
-            Me.lblCardPathTitle.Text = "📁 مسار النسخ الاحتياطي"
+            Me.lblCardPathTitle.Text = "مسار النسخ الاحتياطي"
             Me.lblCardPathTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblBackupPath

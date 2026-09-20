@@ -1,4 +1,4 @@
-﻿
+
 Imports System
 Imports System.Collections.Generic
 Imports System.Data.SqlClient
@@ -675,8 +675,6 @@ ORDER BY ShiftID DESC;"
     ' 1. حفظ الفاتورة المكتملة بالتفاصيل والـ Transaction والربط بالخزينة
     ' ==========================================
     Public Async Function SaveInvoiceAsync(inv As InvoiceModel) As Task(Of String)
-        Dim generatedNumber As String = "INV-" & DateTime.Now.ToString("yyyyMMdd-HHmmssfff")
-
         Dim sqlInvoice As String = "
         INSERT INTO SalesInvoices 
         (InvoiceNumber, InvoiceDate, OrderType, ShiftID, UserID, CustomerID, TableID, DriverID,
@@ -697,6 +695,18 @@ ORDER BY ShiftID DESC;"
             Dim trans As SqlTransaction = con.BeginTransaction()
 
             Try
+                ' توليد رقم فاتورة متسلسل تصاعدي يبدأ من 1 (1, 2, 3...)
+                Dim nextInvNum As Integer = 1
+                Dim sqlSeq As String = "SELECT ISNULL(MAX(TRY_CAST(InvoiceNumber AS INT)), 0) + 1 FROM SalesInvoices WITH (UPDLOCK, HOLDLOCK);"
+                Using cmdSeq As New SqlCommand(sqlSeq, con, trans)
+                    Dim objSeq = Await cmdSeq.ExecuteScalarAsync()
+                    If objSeq IsNot Nothing AndAlso Not IsDBNull(objSeq) Then
+                        nextInvNum = Convert.ToInt32(objSeq)
+                    End If
+                End Using
+                Dim generatedNumber As String = nextInvNum.ToString()
+                inv.InvoiceNumber = generatedNumber
+
                 Dim newInvoiceID As Integer = 0
 
                 ' أ) حفظ رأس الفاتورة
@@ -953,12 +963,15 @@ ORDER BY ShiftID DESC;"
     ' 1. دالة جلب رقم الفاتورة التالي
     Public Function GetNextInvoiceNumber() As String
         Dim nextID As Integer = 1
-        Dim sql As String = "SELECT ISNULL(MAX(InvoiceID), 0) + 1 FROM SalesInvoices;"
+        Dim sql As String = "SELECT ISNULL(MAX(TRY_CAST(InvoiceNumber AS INT)), 0) + 1 FROM SalesInvoices;"
 
         Using con As New SqlConnection(_ConnectionString)
             Using cmd As New SqlCommand(sql, con)
                 con.Open()
-                nextID = Convert.ToInt32(cmd.ExecuteScalar())
+                Dim obj = cmd.ExecuteScalar()
+                If obj IsNot Nothing AndAlso Not IsDBNull(obj) Then
+                    nextID = Convert.ToInt32(obj)
+                End If
             End Using
         End Using
 
@@ -1404,7 +1417,7 @@ ORDER BY ShiftID DESC;"
     ' جلب رقم آخر فاتورة مبيعات تم حفظها في النظام
     ' =========================================================
     Public Function GetLastSavedInvoiceNumber() As String
-        Dim sql As String = "SELECT TOP 1 InvoiceNumber FROM SalesInvoices WHERE (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY InvoiceID DESC;"
+        Dim sql As String = "SELECT TOP 1 InvoiceNumber FROM SalesInvoices WHERE (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY TRY_CAST(InvoiceNumber AS INT) DESC, InvoiceID DESC;"
         Try
             Using con As New SqlConnection(_ConnectionString)
                 Using cmd As New SqlCommand(sql, con)

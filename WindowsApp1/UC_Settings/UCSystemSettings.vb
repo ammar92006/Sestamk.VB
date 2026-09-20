@@ -34,12 +34,13 @@ Namespace UC_Settings
                 Dim lang = SettingsManager.GetSettingOrDefault(SettingsKeys.SystemLanguage, "العربية")
                 cmbLanguage.Text = lang
 
-                Dim curr = SettingsManager.GetSettingOrDefault(SettingsKeys.CurrencyName, "ج.م (جنيه مصري)")
+                Dim curr = SettingsManager.GetSettingOrDefault(SettingsKeys.CurrencyName, "جنيه مصري - ج.م")
+                If curr = "ج.م (جنيه مصري)" Then curr = "جنيه مصري - ج.م"
                 cmbCurrency.Text = curr
 
                 ' النسخ الاحتياطي وبدء التشغيل
                 tglAutoBackup.Checked = SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoBackup, False)
-                tglRunAtStartup.Checked = SettingsManager.GetBoolSetting(SettingsKeys.SystemRunAtStartup, False)
+                tglRunAtStartup.Checked = StartupManager.IsRunAtStartupEnabled() OrElse SettingsManager.GetBoolSetting(SettingsKeys.SystemRunAtStartup, False)
                 txtMaxLoginAttempts.Text = SettingsManager.GetIntSetting(SettingsKeys.LoginMaxAttempts, 5).ToString()
 
                 ' القفل التلقائي
@@ -92,7 +93,12 @@ Namespace UC_Settings
                 SettingsManager.SaveSetting(SettingsKeys.Currency, symbol)
 
                 SettingsManager.SaveSetting(SettingsKeys.SystemAutoBackup, tglAutoBackup.Checked.ToString().ToLower())
-                SettingsManager.SaveSetting(SettingsKeys.SystemRunAtStartup, tglRunAtStartup.Checked.ToString().ToLower())
+                
+                ' تطبيق بدء التشغيل التلقائي مع الويندوز وحفظه
+                Dim runAtStartup = tglRunAtStartup.Checked
+                StartupManager.SetRunAtStartup(runAtStartup)
+                SettingsManager.SaveSetting(SettingsKeys.SystemRunAtStartup, runAtStartup.ToString().ToLower())
+                
                 SettingsManager.SaveSetting(SettingsKeys.LoginMaxAttempts, attempts.ToString())
                 SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutEnabled, tglAutoLogout.Checked.ToString().ToLower())
                 SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutTimer, CInt(numAutoLogoutMinutes.Value).ToString())

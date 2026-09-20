@@ -1,4 +1,4 @@
-﻿Namespace UC_Settings
+Namespace UC_Settings
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
     Partial Class UCSalesSettings
         Inherits System.Windows.Forms.UserControl
@@ -77,6 +77,7 @@
             'pnlMain
             '
             Me.pnlMain.AutoScroll = True
+            Me.pnlMain.AutoScrollMinSize = New System.Drawing.Size(0, 1030)
             Me.pnlMain.BackColor = System.Drawing.Color.FromArgb(CType(CType(13, Byte), Integer), CType(CType(15, Byte), Integer), CType(CType(20, Byte), Integer))
             Me.pnlMain.Controls.Add(Me.lblTitle)
             Me.pnlMain.Controls.Add(Me.lblSubtitle)
@@ -149,7 +150,7 @@
             Me.lblCardOrderTypesTitle.Name = "lblCardOrderTypesTitle"
             Me.lblCardOrderTypesTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardOrderTypesTitle.TabIndex = 0
-            Me.lblCardOrderTypesTitle.Text = "📋 أنواع الطلبات"
+            Me.lblCardOrderTypesTitle.Text = "أنواع الطلبات"
             Me.lblCardOrderTypesTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblDineIn
@@ -295,11 +296,11 @@
             Me.lblCardTaxDiscountTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblCardTaxDiscountTitle.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
             Me.lblCardTaxDiscountTitle.ForeColor = System.Drawing.Color.White
-            Me.lblCardTaxDiscountTitle.Location = New System.Drawing.Point(820, 15)
+            Me.lblCardTaxDiscountTitle.Location = New System.Drawing.Point(750, 15)
             Me.lblCardTaxDiscountTitle.Name = "lblCardTaxDiscountTitle"
-            Me.lblCardTaxDiscountTitle.Size = New System.Drawing.Size(330, 28)
+            Me.lblCardTaxDiscountTitle.Size = New System.Drawing.Size(400, 28)
             Me.lblCardTaxDiscountTitle.TabIndex = 0
-            Me.lblCardTaxDiscountTitle.Text = "💰 الضرائب والخصومات ورسوم الخدمة"
+            Me.lblCardTaxDiscountTitle.Text = "الضرائب والخصومات ورسوم الخدمة"
             Me.lblCardTaxDiscountTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblEnableTax
@@ -307,9 +308,9 @@
             Me.lblEnableTax.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblEnableTax.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblEnableTax.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblEnableTax.Location = New System.Drawing.Point(990, 60)
+            Me.lblEnableTax.Location = New System.Drawing.Point(950, 60)
             Me.lblEnableTax.Name = "lblEnableTax"
-            Me.lblEnableTax.Size = New System.Drawing.Size(160, 30)
+            Me.lblEnableTax.Size = New System.Drawing.Size(200, 30)
             Me.lblEnableTax.TabIndex = 1
             Me.lblEnableTax.Text = "تفعيل ضريبة القيمة المضافة:"
             Me.lblEnableTax.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -322,7 +323,7 @@
             Me.tglEnableTax.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.tglEnableTax.CheckedState.InnerBorderColor = System.Drawing.Color.White
             Me.tglEnableTax.CheckedState.InnerColor = System.Drawing.Color.White
-            Me.tglEnableTax.Location = New System.Drawing.Point(910, 62)
+            Me.tglEnableTax.Location = New System.Drawing.Point(870, 62)
             Me.tglEnableTax.Name = "tglEnableTax"
             Me.tglEnableTax.Size = New System.Drawing.Size(65, 26)
             Me.tglEnableTax.TabIndex = 2
@@ -334,7 +335,7 @@
             Me.lblTaxPercent.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblTaxPercent.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblTaxPercent.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblTaxPercent.Location = New System.Drawing.Point(710, 60)
+            Me.lblTaxPercent.Location = New System.Drawing.Point(680, 60)
             Me.lblTaxPercent.Name = "lblTaxPercent"
             Me.lblTaxPercent.Size = New System.Drawing.Size(170, 30)
             Me.lblTaxPercent.TabIndex = 3
@@ -349,7 +350,7 @@
             Me.txtTaxPercent.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtTaxPercent.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtTaxPercent.ForeColor = System.Drawing.Color.White
-            Me.txtTaxPercent.Location = New System.Drawing.Point(540, 56)
+            Me.txtTaxPercent.Location = New System.Drawing.Point(510, 56)
             Me.txtTaxPercent.Name = "txtTaxPercent"
             Me.txtTaxPercent.Size = New System.Drawing.Size(155, 38)
             Me.txtTaxPercent.TabIndex = 4
@@ -361,9 +362,9 @@
             Me.lblEnableDiscount.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblEnableDiscount.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblEnableDiscount.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblEnableDiscount.Location = New System.Drawing.Point(990, 115)
+            Me.lblEnableDiscount.Location = New System.Drawing.Point(950, 115)
             Me.lblEnableDiscount.Name = "lblEnableDiscount"
-            Me.lblEnableDiscount.Size = New System.Drawing.Size(160, 30)
+            Me.lblEnableDiscount.Size = New System.Drawing.Size(200, 30)
             Me.lblEnableDiscount.TabIndex = 5
             Me.lblEnableDiscount.Text = "إتاحة الخصم على الفاتورة:"
             Me.lblEnableDiscount.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -376,7 +377,7 @@
             Me.tglEnableDiscount.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.tglEnableDiscount.CheckedState.InnerBorderColor = System.Drawing.Color.White
             Me.tglEnableDiscount.CheckedState.InnerColor = System.Drawing.Color.White
-            Me.tglEnableDiscount.Location = New System.Drawing.Point(910, 117)
+            Me.tglEnableDiscount.Location = New System.Drawing.Point(870, 117)
             Me.tglEnableDiscount.Name = "tglEnableDiscount"
             Me.tglEnableDiscount.Size = New System.Drawing.Size(65, 26)
             Me.tglEnableDiscount.TabIndex = 6
@@ -388,7 +389,7 @@
             Me.lblDiscountPercent.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblDiscountPercent.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblDiscountPercent.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblDiscountPercent.Location = New System.Drawing.Point(710, 115)
+            Me.lblDiscountPercent.Location = New System.Drawing.Point(680, 115)
             Me.lblDiscountPercent.Name = "lblDiscountPercent"
             Me.lblDiscountPercent.Size = New System.Drawing.Size(170, 30)
             Me.lblDiscountPercent.TabIndex = 7
@@ -403,7 +404,7 @@
             Me.txtDiscountPercent.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtDiscountPercent.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtDiscountPercent.ForeColor = System.Drawing.Color.White
-            Me.txtDiscountPercent.Location = New System.Drawing.Point(540, 111)
+            Me.txtDiscountPercent.Location = New System.Drawing.Point(510, 111)
             Me.txtDiscountPercent.Name = "txtDiscountPercent"
             Me.txtDiscountPercent.Size = New System.Drawing.Size(155, 38)
             Me.txtDiscountPercent.TabIndex = 8
@@ -514,7 +515,7 @@
             Me.lblCardDefaultsTitle.Name = "lblCardDefaultsTitle"
             Me.lblCardDefaultsTitle.Size = New System.Drawing.Size(330, 28)
             Me.lblCardDefaultsTitle.TabIndex = 0
-            Me.lblCardDefaultsTitle.Text = "🏢 الخيارات الافتراضية للفروع والمخازن"
+            Me.lblCardDefaultsTitle.Text = "الخيارات الافتراضية للفروع والمخازن"
             Me.lblCardDefaultsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblBranches
@@ -690,7 +691,7 @@
             Me.lblCardPaymentTitle.Name = "lblCardPaymentTitle"
             Me.lblCardPaymentTitle.Size = New System.Drawing.Size(330, 28)
             Me.lblCardPaymentTitle.TabIndex = 0
-            Me.lblCardPaymentTitle.Text = "💳 طرق الدفع المتاحة"
+            Me.lblCardPaymentTitle.Text = "طرق الدفع المتاحة"
             Me.lblCardPaymentTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'chkPaymentCash
@@ -708,7 +709,7 @@
             Me.chkPaymentCash.Name = "chkPaymentCash"
             Me.chkPaymentCash.Size = New System.Drawing.Size(180, 34)
             Me.chkPaymentCash.TabIndex = 1
-            Me.chkPaymentCash.Text = "نقدي (كاش)"
+            Me.chkPaymentCash.Text = "نقدي - كاش"
             Me.chkPaymentCash.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
             Me.chkPaymentCash.UncheckedState.BorderRadius = 4
             Me.chkPaymentCash.UncheckedState.BorderThickness = 1

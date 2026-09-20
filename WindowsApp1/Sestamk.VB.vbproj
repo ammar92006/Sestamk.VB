@@ -89,6 +89,7 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+
   <ItemGroup>
     <Reference Include="System.Configuration">
       <Private>True</Private>
@@ -111,10 +112,7 @@
     <Reference Include="DevExpress.Drawing.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Drawing.25.1.7\lib\net462\DevExpress.Drawing.v25.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Images.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\DevExpress.Images.v25.1.dll</HintPath>
-    </Reference>
+
     <Reference Include="DevExpress.Office.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Office.Core.25.1.7\lib\net462\DevExpress.Office.v25.1.Core.dll</HintPath>
     </Reference>
@@ -163,18 +161,7 @@
     <Reference Include="DevExpress.XtraPrinting.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Win.Printing.25.1.7\lib\net462\DevExpress.XtraPrinting.v25.1.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.XtraScheduler.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\DevExpress.XtraScheduler.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraScheduler.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\DevExpress.XtraScheduler.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraScheduler.v25.1.Core.Desktop, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\DevExpress.XtraScheduler.v25.1.Core.Desktop.dll</HintPath>
-    </Reference>
+
     <Reference Include="DevExpress.XtraTreeList.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Win.TreeList.25.1.7\lib\net462\DevExpress.XtraTreeList.v25.1.dll</HintPath>
     </Reference>
@@ -255,10 +242,7 @@
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
-    <Reference Include="SQLABC_ModernUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\SQLABC_ModernUI.dll</HintPath>
-    </Reference>
+
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
     </Reference>
@@ -280,6 +264,7 @@
       <HintPath>..\packages\System.IO.Pipelines.5.0.2\lib\net461\System.IO.Pipelines.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
+
     <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
     </Reference>
@@ -453,6 +438,14 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CheckActivation.vb" />
+    <Compile Include="Services\Licensing\LicenseServices.vb" />
+    <Compile Include="Services\Updates\UpdateCoordinator.vb" />
+    <Compile Include="Forms\FormUpdateNotifier.Designer.vb">
+      <DependentUpon>FormUpdateNotifier.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormUpdateNotifier.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="chkpassword.Designer.vb">
       <DependentUpon>chkpassword.vb</DependentUpon>
     </Compile>
@@ -599,14 +592,26 @@
     <Compile Include="forms\FrmSelectTable.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmKitchenDisplay.Designer.vb">
+      <DependentUpon>FrmKitchenDisplay.vb</DependentUpon>
+    </Compile>
     <Compile Include="forms\FrmKitchenDisplay.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmKitchenWaste.Designer.vb">
+      <DependentUpon>FrmKitchenWaste.vb</DependentUpon>
     </Compile>
     <Compile Include="forms\FrmKitchenWaste.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmTableReservations.Designer.vb">
+      <DependentUpon>FrmTableReservations.vb</DependentUpon>
+    </Compile>
     <Compile Include="forms\FrmTableReservations.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmSplitBill.Designer.vb">
+      <DependentUpon>FrmSplitBill.vb</DependentUpon>
     </Compile>
     <Compile Include="forms\FrmSplitBill.vb">
       <SubType>Form</SubType>
@@ -852,9 +857,13 @@
     <Compile Include="Services\TreasuryService.vb" />
     <Compile Include="Session.vb" />
     <Compile Include="SettingsKeys.vb" />
+    <Compile Include="StartupManager.vb" />
     <Compile Include="LayoutHelper.vb" />
     <Compile Include="Logger.vb" />
     <Compile Include="Notify.vb" />
+    <Compile Include="FirstRunSetup.Designer.vb">
+      <DependentUpon>FirstRunSetup.vb</DependentUpon>
+    </Compile>
     <Compile Include="FirstRunSetup.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -905,6 +914,18 @@
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
     </Compile>
     <Compile Include="UC_Settings\UCNotificationsSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCActivationSettings.Designer.vb">
+      <DependentUpon>UCActivationSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCActivationSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCUpdatesSettings.Designer.vb">
+      <DependentUpon>UCUpdatesSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCUpdatesSettings.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UC_Settings\UCAbout.Designer.vb">

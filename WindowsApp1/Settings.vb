@@ -23,13 +23,18 @@ Public Class Settings
 
         AddHandler ThemeManager.Instance.ThemeChanged, Sub(s, theme, palette)
                                                            UpdateThemeToggleButton()
+                                                           ThemeManager.Instance.ApplyTheme(Me)
                                                            For Each uc In controlsCache.Values
                                                                ThemeManager.Instance.ApplyToControl(uc)
                                                            Next
+                                                           Dim currentActive = GetCurrentActiveButton()
+                                                           If currentActive IsNot Nothing Then
+                                                               SetActiveButton(currentActive)
+                                                           End If
                                                        End Sub
 
-        LoadButtonIcons()
-
+        Dim Drag As FormDragHelper
+        Drag = New FormDragHelper(Me, pnlTopBar)
         ' تحميل الصفحة الافتراضية
         If _selectedSectionIndex = 1 OrElse _selectedSectionIndex = 5 Then
             btnDatabaseSettings.PerformClick()
@@ -43,61 +48,23 @@ Public Class Settings
     End Sub
 
     Private Sub UpdateThemeToggleButton()
-        If ThemeManager.Instance.CurrentTheme = AppTheme.Dark Then
+        Dim isDark = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+        btnThemeToggle.BorderRadius = 16
+        btnThemeToggle.BorderThickness = 1
+
+        If isDark Then
             btnThemeToggle.Text = "☀️ وضع فاتح"
-            btnThemeToggle.ForeColor = Color.FromArgb(250, 204, 21)
+            btnThemeToggle.ForeColor = Color.FromArgb(254, 240, 138)
+            btnThemeToggle.FillColor = Color.FromArgb(30, 41, 59)
+            btnThemeToggle.BorderColor = Color.FromArgb(71, 85, 105)
+            btnThemeToggle.HoverState.FillColor = Color.FromArgb(51, 65, 85)
         Else
             btnThemeToggle.Text = "🌙 وضع داكن"
-            btnThemeToggle.ForeColor = Color.FromArgb(71, 85, 105)
+            btnThemeToggle.ForeColor = Color.FromArgb(51, 65, 85)
+            btnThemeToggle.FillColor = Color.FromArgb(241, 245, 249)
+            btnThemeToggle.BorderColor = Color.FromArgb(203, 213, 225)
+            btnThemeToggle.HoverState.FillColor = Color.FromArgb(226, 232, 240)
         End If
-    End Sub
-
-    Private Sub LoadButtonIcons()
-        Try
-            Dim baseDir = AppDomain.CurrentDomain.BaseDirectory
-            Dim candidates = New String() {
-                System.IO.Path.Combine(baseDir, "Resources"),
-                System.IO.Path.Combine(baseDir, "..", "..", "Resources"),
-                System.IO.Path.GetFullPath(System.IO.Path.Combine(Application.StartupPath, "Resources"))
-            }
-
-            Dim resDir As String = Nothing
-            For Each candidate In candidates
-                If System.IO.Directory.Exists(candidate) Then
-                    resDir = candidate
-                    Exit For
-                End If
-            Next
-
-            If Not String.IsNullOrEmpty(resDir) Then
-                SetButtonIcon(btnSystemSettings, resDir, "settings__3_.png")
-                SetButtonIcon(btnSalesSettings, resDir, "discount__1_.png")
-                SetButtonIcon(btnPrinterSettings, resDir, "print.png")
-                SetButtonIcon(btnScannerSettings, resDir, "barcode.png")
-                SetButtonIcon(btnReceiptSettings, resDir, "invoice.png")
-                SetButtonIcon(btnDatabaseSettings, resDir, "database.png")
-                SetButtonIcon(btnNotificationsSettings, resDir, "notification.png")
-                SetButtonIcon(btnAbout, resDir, "information1.png")
-            End If
-        Catch ex As Exception
-            Debug.WriteLine("LoadButtonIcons error: " & ex.Message)
-        End Try
-    End Sub
-
-    Private Sub SetButtonIcon(btn As Guna2Button, dir As String, filename As String)
-        Try
-            Dim path = System.IO.Path.Combine(dir, filename)
-            If System.IO.File.Exists(path) Then
-                Using fs As New System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read)
-                    Using img As Image = Image.FromStream(fs)
-                        btn.Image = New Bitmap(img)
-                        btn.ImageSize = New Size(26, 26)
-                        btn.ImageAlign = HorizontalAlignment.Left
-                    End Using
-                End Using
-            End If
-        Catch
-        End Try
     End Sub
 
     ''' <summary>
@@ -135,6 +102,22 @@ Public Class Settings
         End Try
     End Sub
 
+    Private Function GetCurrentActiveButton() As Guna2Button
+        Select Case _selectedSectionIndex
+            Case 0 : Return btnSystemSettings
+            Case 1 : Return btnSalesSettings
+            Case 2 : Return btnPrinterSettings
+            Case 3 : Return btnScannerSettings
+            Case 4 : Return btnReceiptSettings
+            Case 5 : Return btnDatabaseSettings
+            Case 6 : Return btnNotificationsSettings
+            Case 7 : Return btnActivationSettings
+            Case 8 : Return btnUpdatesSettings
+            Case 9 : Return btnAbout
+            Case Else : Return btnSystemSettings
+        End Select
+    End Function
+
     ''' <summary>
     ''' ضبط حالة الأزرار الجانبية لتأكيد تمييز الزر النشط فقط
     ''' </summary>
@@ -147,11 +130,22 @@ Public Class Settings
             btnReceiptSettings,
             btnDatabaseSettings,
             btnNotificationsSettings,
+            btnActivationSettings,
+            btnUpdatesSettings,
             btnAbout
         }
 
+        Dim palette = ThemeManager.Instance.CurrentPalette
         For Each btn In buttons
-            btn.Checked = (btn Is activeBtn)
+            Dim isActive As Boolean = (btn Is activeBtn)
+            btn.Checked = isActive
+            If isActive Then
+                btn.FillColor = palette.NavSelected
+                btn.ForeColor = palette.NavSelectedText
+            Else
+                btn.FillColor = Color.Transparent
+                btn.ForeColor = palette.NavText
+            End If
         Next
     End Sub
 
@@ -197,9 +191,21 @@ Public Class Settings
         LoadUserControl("NotificationsSettings", Function() New UCNotificationsSettings())
     End Sub
 
+    Private Sub btnActivationSettings_Click(sender As Object, e As EventArgs) Handles btnActivationSettings.Click
+        SetActiveButton(btnActivationSettings)
+        _selectedSectionIndex = 7
+        LoadUserControl("ActivationSettings", Function() New UCActivationSettings())
+    End Sub
+
+    Private Sub btnUpdatesSettings_Click(sender As Object, e As EventArgs) Handles btnUpdatesSettings.Click
+        SetActiveButton(btnUpdatesSettings)
+        _selectedSectionIndex = 8
+        LoadUserControl("UpdatesSettings", Function() New UCUpdatesSettings())
+    End Sub
+
     Private Sub btnAbout_Click(sender As Object, e As EventArgs) Handles btnAbout.Click
         SetActiveButton(btnAbout)
-        _selectedSectionIndex = 7
+        _selectedSectionIndex = 9
         LoadUserControl("About", Function() New UCAbout())
     End Sub
 

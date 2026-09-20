@@ -1,4 +1,4 @@
-﻿'Imports System.Data.SqlClient
+'Imports System.Data.SqlClient
 
 'Public Class frmRecipes
 '    Private _selectedRecipeID As Integer? = Nothing
@@ -2175,7 +2175,7 @@ Public Class frmRecipes
                     MessageBoxIcon.Warning
                 )
 
-                Exit Function
+                Return False
 
             End If
 
@@ -2197,7 +2197,7 @@ Public Class frmRecipes
                     MessageBoxIcon.Warning
                 )
 
-                Exit Function
+                Return False
 
             End If
 

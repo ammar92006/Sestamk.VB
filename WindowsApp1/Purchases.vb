@@ -3,7 +3,6 @@ Imports System.IO
 Imports DevExpress.Utils.Html.Internal
 Imports DocumentFormat.OpenXml.ExtendedProperties
 Imports System.Windows.Forms
-Imports DevExpress.XtraScheduler.Commands
 
 Public Class Purchases
     Dim x, y As Integer
