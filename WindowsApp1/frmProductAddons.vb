@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmProductAddons
 
@@ -7,7 +7,7 @@ Public Class frmProductAddons
     ' 1. ملء القوائم المنسدلة
     Private Sub FillDropdowns()
         Try
-            Dim dtProducts As DataTable = DBModule.ExecuteQuery("SELECT Product_ID, ProductNameAr FROM Products WHERE IsDeleted = 0 OR IsDeleted IS NULL AND IsActive = 0")
+            Dim dtProducts As DataTable = DBModule.ExecuteQuery("SELECT Product_ID, ProductNameAr FROM Products WHERE (IsDeleted = 0 OR IsDeleted IS NULL) AND (IsActive = 1 OR IsActive IS NULL) ORDER BY ProductNameAr")
             If dtProducts IsNot Nothing Then
                 cmbProduct.DataSource = dtProducts
                 cmbProduct.DisplayMember = "ProductNameAr"
@@ -15,7 +15,7 @@ Public Class frmProductAddons
                 cmbProduct.SelectedIndex = -1
             End If
 
-            Dim dtAddons As DataTable = DBModule.ExecuteQuery("SELECT AddonID, AddonNameAr FROM Addons WHERE IsDeleted = 0 OR IsDeleted IS NULL AND IsActive = 0")
+            Dim dtAddons As DataTable = DBModule.ExecuteQuery("SELECT AddonID, AddonNameAr FROM Addons WHERE (IsDeleted = 0 OR IsDeleted IS NULL) AND (IsActive = 1 OR IsActive IS NULL) ORDER BY AddonNameAr")
             If dtAddons IsNot Nothing Then
                 cmbAddon.DataSource = dtAddons
                 cmbAddon.DisplayMember = "AddonNameAr"

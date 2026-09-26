@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmProductSizes
 
@@ -12,7 +12,7 @@ Public Class frmProductSizes
             _isLoading = True
 
             ' جلب الأصناف
-            Dim dtProducts As DataTable = DBModule.ExecuteQuery("SELECT Product_ID, ProductNameAr FROM Products WHERE IsDeleted = 0 OR IsDeleted IS NULL AND IsActive = 0")
+            Dim dtProducts As DataTable = DBModule.ExecuteQuery("SELECT Product_ID, ProductNameAr FROM Products WHERE (IsDeleted = 0 OR IsDeleted IS NULL) AND (IsActive = 1 OR IsActive IS NULL) ORDER BY ProductNameAr")
             If dtProducts IsNot Nothing Then
                 cmbProduct.DataSource = dtProducts
                 cmbProduct.DisplayMember = "ProductNameAr"
@@ -21,7 +21,7 @@ Public Class frmProductSizes
             End If
 
             ' جلب الأحجام العامة
-            Dim dtSizes As DataTable = DBModule.ExecuteQuery("SELECT SizeID, SizeNameAr FROM Sizes WHERE IsDeleted = 0 OR IsDeleted IS NULL AND IsActive = 0")
+            Dim dtSizes As DataTable = DBModule.ExecuteQuery("SELECT SizeID, SizeNameAr FROM Sizes WHERE (IsDeleted = 0 OR IsDeleted IS NULL) AND (IsActive = 1 OR IsActive IS NULL) ORDER BY SizeNameAr")
             If dtSizes IsNot Nothing Then
                 cmbSize.DataSource = dtSizes
                 cmbSize.DisplayMember = "SizeNameAr"
