@@ -91,6 +91,12 @@ Namespace UC_Settings
 
                 Services.Cloud.CloudSyncConfig.Save(config)
 
+                If config.IsSyncEnabled Then
+                    Services.Cloud.CloudSyncService.Instance.StartBackgroundSync()
+                Else
+                    Services.Cloud.CloudSyncService.Instance.StopBackgroundSync()
+                End If
+
                 Notify.Toast("تم حفظ إعدادات المزامنة السحابية بنجاح ✅", Notify.ToastType.Success)
             Catch ex As Exception
                 MessageBox.Show("خطأ أثناء حفظ الإعدادات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -251,13 +257,21 @@ Namespace UC_Settings
             lblSyncStatus.ForeColor = Drawing.Color.FromArgb(255, 183, 77)
 
             Try
-                ' سيتم ربطه بـ CloudSyncService لاحقاً
-                ' Await CloudSyncService.Instance.TriggerManualSyncAsync()
-                Await Task.Delay(1000).ConfigureAwait(True)
+                Dim result = Await Services.Cloud.CloudSyncService.Instance.TriggerSyncAsync().ConfigureAwait(True)
 
                 RefreshSyncStatus()
                 LoadSyncLog()
-                Notify.Toast("تمت المزامنة اليدوية بنجاح ✅", Notify.ToastType.Success)
+
+                If result.Status = SyncStatus.Success Then
+                    Notify.Toast($"تمت المزامنة بنجاح ✅ (مرسل: {result.TotalPushed}، مستلم: {result.TotalPulled})", Notify.ToastType.Success)
+                ElseIf result.Status = SyncStatus.PartialSuccess Then
+                    Notify.Toast($"اكتملت المزامنة مع تنبيهات ⚠️ (مرسل: {result.TotalPushed}، مستلم: {result.TotalPulled})", Notify.ToastType.Warning)
+                ElseIf result.Status = SyncStatus.Offline Then
+                    MessageBox.Show("لا يوجد اتصال بالإنترنت حالياً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Else
+                    Dim err = If(result.Errors.Count > 0, String.Join(Environment.NewLine, result.Errors), "فشلت المزامنة.")
+                    MessageBox.Show(err, "خطأ في المزامنة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                End If
             Catch ex As Exception
                 MessageBox.Show("خطأ أثناء المزامنة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally

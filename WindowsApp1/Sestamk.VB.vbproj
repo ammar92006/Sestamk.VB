@@ -888,6 +888,11 @@
     <Compile Include="Services\Cloud\NetworkMonitor.vb" />
     <Compile Include="Services\Cloud\SyncableTableRegistry.vb" />
     <Compile Include="Services\Cloud\SqlDialectTranslator.vb" />
+    <Compile Include="Services\Cloud\ConflictResolver.vb" />
+    <Compile Include="Services\Cloud\TursoSchemaBuilder.vb" />
+    <Compile Include="Services\Cloud\SyncPushHandler.vb" />
+    <Compile Include="Services\Cloud\SyncPullHandler.vb" />
+    <Compile Include="Services\Cloud\CloudSyncService.vb" />
     <Compile Include="moduls\Data\SyncModels.vb" />
     <Compile Include="Session.vb" />
     <Compile Include="SettingsKeys.vb" />

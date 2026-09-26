@@ -91,10 +91,41 @@ Namespace Services.Cloud
             Dim colDefs As New List(Of String)()
             
             For Each col In columns
-                Dim colName As String = col.ColumnName
-                Dim colType As String = col.DataType
-                Dim isNullable As Boolean = col.IsNullable
-                Dim isPrimaryKey As Boolean = col.IsPrimaryKey
+                Dim colName As String = ""
+                Try
+                    colName = Convert.ToString(col.Name)
+                Catch
+                End Try
+                If String.IsNullOrEmpty(colName) Then
+                    Try
+                        colName = Convert.ToString(col.ColumnName)
+                    Catch
+                    End Try
+                End If
+
+                Dim colType As String = ""
+                Try
+                    colType = Convert.ToString(col.SqlType)
+                Catch
+                End Try
+                If String.IsNullOrEmpty(colType) Then
+                    Try
+                        colType = Convert.ToString(col.DataType)
+                    Catch
+                    End Try
+                End If
+
+                Dim isNullable As Boolean = True
+                Try
+                    isNullable = CBool(col.IsNullable)
+                Catch
+                End Try
+
+                Dim isPrimaryKey As Boolean = False
+                Try
+                    isPrimaryKey = CBool(col.IsPrimaryKey)
+                Catch
+                End Try
                 
                 Dim defaultVal As String = String.Empty
                 Try
