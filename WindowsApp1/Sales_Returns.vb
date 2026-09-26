@@ -542,8 +542,8 @@ Public Class Sales_Returns
                             cmdDet.ExecuteNonQuery()
                         End Using
 
-                        ' إعادة خامات ومخزون الصنف إن تم تحديد ذلك
-                        If shouldRestoreStock Then
+                        ' إعادة خامات ومخزون الصنف إن تم تحديد ذلك وميزة الخامات مفعلة
+                        If shouldRestoreStock AndAlso SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True) Then
                             Try
                                 InventoryDeductionManager.RestoreItemRecipe(conn, trans, currentStoreID, pID, Nothing, Nothing, rQty, returnNumber)
                             Catch exStock As Exception

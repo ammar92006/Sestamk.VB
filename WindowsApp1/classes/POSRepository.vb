@@ -752,10 +752,13 @@ ORDER BY ShiftID DESC;"
                         Await cmdDet.ExecuteNonQueryAsync()
                     End Using
 
-                    ' خصم المخزون حسب الريسيبي إن كان هناك مخزن محدد
+                    ' خصم المخزون حسب الريسيبي إن كان هناك مخزن محدد وميزة خصم الخامات مفعلة
                     If inv.StoreID.HasValue AndAlso inv.StoreID.Value > 0 Then
                         Try
-                            InventoryDeductionManager.DeductItemRecipe(con, trans, inv.StoreID.Value, dt.ProductID, Nothing, Nothing, dt.Quantity, generatedNumber)
+                            Dim shouldDeduct As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True)
+                            If shouldDeduct Then
+                                InventoryDeductionManager.DeductItemRecipe(con, trans, inv.StoreID.Value, dt.ProductID, Nothing, Nothing, dt.Quantity, generatedNumber)
+                            End If
                         Catch exStock As Exception
                             Debug.WriteLine("Inventory deduction error: " & exStock.Message)
                         End Try

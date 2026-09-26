@@ -255,7 +255,7 @@ Public Class Products
 
         If dgvProducts.Columns.Contains("Category_NameAr") Then
             With dgvProducts.Columns("Category_NameAr")
-                .HeaderText = "القسم / الفئة"
+                .HeaderText = "الفئة"
                 .Width = 130
             End With
         End If
@@ -345,11 +345,11 @@ Public Class Products
             If dgvProducts.Columns(e.ColumnIndex).Name = "SaleMode" AndAlso e.Value IsNot Nothing Then
                 Dim valStr As String = e.Value.ToString()
                 If valStr.Contains("مباشر") Then
-                    e.Value = "⚡ مباشر"
+                    e.Value = "مباشر"
                     e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129)
                     e.CellStyle.Font = New Font(dgvProducts.Font.FontFamily, 10.0!, FontStyle.Bold)
                 Else
-                    e.Value = "📏 متعدد الأحجام"
+                    e.Value = "متعدد الأحجام"
                     e.CellStyle.ForeColor = Color.FromArgb(99, 102, 241)
                     e.CellStyle.Font = New Font(dgvProducts.Font.FontFamily, 10.0!, FontStyle.Bold)
                 End If
@@ -392,7 +392,7 @@ Public Class Products
             If minQty > 0 AndAlso qty <= minQty Then lowStockCount += 1
         Next
 
-        lblTotalProducts.Text = $"📦 إجمالي الأصناف: {totalCount:N0}"
+        lblTotalProducts.Text = $"إجمالي الأصناف: {totalCount:N0}"
         lblActiveProducts.Text = $"✔ الأصناف النشطة: {activeCount:N0}"
         lblLowStockProducts.Text = $"⚠️ نواقص وتحت الطلب: {lowStockCount:N0}"
     End Sub
@@ -758,9 +758,13 @@ Public Class Products
 
     Private Function GetNextProductCode() As String
         Try
-            Return Main.GetNextCode("Products", "ProductCode").ToString()
+            Dim obj = DBModule.ExecuteScalar("SELECT ISNULL(MAX(TRY_CONVERT(INT, ProductCode)), 0) + 1 FROM Products WHERE (IsDeleted = 0 OR IsDeleted IS NULL)")
+            If obj IsNot Nothing AndAlso Not Convert.IsDBNull(obj) Then
+                Return obj.ToString()
+            End If
+            Return "1"
         Catch
-            Return "PROD-001"
+            Return "1"
         End Try
     End Function
 
@@ -876,15 +880,28 @@ Public Class Products
         End If
     End Sub
 
-    Private Sub btnSetupSizesQuick_Click(sender As Object, e As EventArgs) Handles btnSetupSizesQuick.Click
-        Dim frm As New frmProductSizes()
-        If dgvProducts.SelectedRows.Count > 0 Then
-            Dim selectedID As Integer = Convert.ToInt32(dgvProducts.SelectedRows(0).Cells("Product_ID").Value)
-            frm.cmbProduct.SelectedValue = selectedID
-        End If
+    Private Function GetSelectedProductID() As Integer
+        Try
+            If dgvProducts.SelectedRows.Count > 0 Then
+                Dim val = dgvProducts.SelectedRows(0).Cells("Product_ID").Value
+                If val IsNot Nothing AndAlso Not Convert.IsDBNull(val) Then
+                    Return Convert.ToInt32(val)
+                End If
+            End If
+        Catch
+        End Try
+        Return 0
+    End Function
+
+    Private Sub OpenProductSizes(selectedID As Integer)
+        Dim frm As New frmProductSizes(selectedID)
         frm.StartPosition = FormStartPosition.CenterParent
         frm.ShowDialog(Me)
         LoadProductsGrid()
+    End Sub
+
+    Private Sub btnSetupSizesQuick_Click(sender As Object, e As EventArgs) Handles btnSetupSizesQuick.Click
+        OpenProductSizes(GetSelectedProductID())
     End Sub
 
     Private Sub btnDiscountType_Click(sender As Object, e As EventArgs) Handles btnDiscountType.Click
@@ -927,13 +944,7 @@ Public Class Products
     End Sub
 
     Private Sub btnManageSizes_Click(sender As Object, e As EventArgs) Handles btnManageSizes.Click
-        Dim frm As New frmProductSizes()
-        If dgvProducts.SelectedRows.Count > 0 Then
-            Dim selectedID As Integer = Convert.ToInt32(dgvProducts.SelectedRows(0).Cells("Product_ID").Value)
-            frm.cmbProduct.SelectedValue = selectedID
-        End If
-        frm.ShowDialog()
-        LoadProductsGrid()
+        OpenProductSizes(GetSelectedProductID())
     End Sub
 
     Private Sub btnManageAddons_Click(sender As Object, e As EventArgs) Handles btnManageAddons.Click

@@ -293,18 +293,8 @@ Public Class Login
                                    End Sub
         fadeTimer.Start()
 
-        ' ── تذكر آخر مستخدم سجل دخوله ──
-        Try
-            Dim lastUser As String = SettingsManager.GetSetting("LastLoggedInUser")
-            If Not String.IsNullOrEmpty(lastUser) Then
-                cmbUsername.Text = lastUser
-                txtpassword.Focus()
-            Else
-                cmbUsername.Focus()
-            End If
-        Catch
-            cmbUsername.Focus()
-        End Try
+        ' ── تذكر آخر مستخدم سجل دخوله وتحديد التركيز ──
+        SelectLastUserAndFocusPassword()
 
         ' ── النسخ الاحتياطي التلقائي وفق إعدادات النظام بدون حجب واجهة المستخدم ──
         Dim bgBackup = Task.Run(Sub()
@@ -374,6 +364,50 @@ Public Class Login
             Label4.Text = "جميع الحقوق محفوظة © سستمك 2026"
             btnTogglePassword.BringToFront()
         Catch
+        End Try
+    End Sub
+
+    Private Sub Login_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        SelectLastUserAndFocusPassword()
+    End Sub
+
+    Private Sub SelectLastUserAndFocusPassword()
+        Try
+            Dim lastUser As String = SettingsManager.GetSetting("LastLoggedInUser")
+            If String.IsNullOrWhiteSpace(lastUser) Then
+                ' احتياطي: جلب آخر مستخدم مسجل من قاعدة البيانات
+                Try
+                    Using cn As SqlConnection = DBModule.NewConn()
+                        Using cmd As New SqlCommand("SELECT TOP 1 Login_Username FROM Login_Info_TBL WHERE (Login_Note LIKE N'%ناجح%' OR Login_Note IS NULL) AND Login_Username IS NOT NULL AND Login_Username <> '' ORDER BY ID DESC", cn)
+                            Dim res = cmd.ExecuteScalar()
+                            If res IsNot Nothing AndAlso Not Convert.IsDBNull(res) Then
+                                lastUser = res.ToString().Trim()
+                            End If
+                        End Using
+                    End Using
+                Catch
+                End Try
+            End If
+
+            If Not String.IsNullOrWhiteSpace(lastUser) Then
+                Dim idx As Integer = cmbUsername.FindStringExact(lastUser)
+                If idx >= 0 Then
+                    cmbUsername.SelectedIndex = idx
+                Else
+                    cmbUsername.Text = lastUser
+                End If
+            End If
+
+            Me.BeginInvoke(Sub()
+                               If cmbUsername.SelectedIndex >= 0 Then
+                                   txtpassword.Focus()
+                                   txtpassword.SelectAll()
+                               Else
+                                   cmbUsername.Focus()
+                               End If
+                           End Sub)
+        Catch ex As Exception
+            Logger.LogError("SelectLastUserAndFocusPassword", ex)
         End Try
     End Sub
 

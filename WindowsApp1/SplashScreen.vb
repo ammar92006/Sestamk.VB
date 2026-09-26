@@ -36,6 +36,17 @@ Public Class SplashScreen
 
         lblPercent.Text = "0%"
 
+        Try
+            Dim ver As String = Application.ProductVersion
+            Dim verParts = ver.Split("."c)
+            If verParts.Length >= 3 Then
+                ver = $"{verParts(0)}.{verParts(1)}.{verParts(2)}"
+            End If
+            lblVersion.Text = $"الإصدار V {ver} • {DateTime.Now.Year}"
+        Catch
+            lblVersion.Text = $"الإصدار V {Application.ProductVersion} • {DateTime.Now.Year}"
+        End Try
+
         Me.StartPosition = FormStartPosition.CenterScreen
         Me.FormBorderStyle = FormBorderStyle.None
 

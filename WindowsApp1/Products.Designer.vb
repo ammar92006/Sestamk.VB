@@ -18,19 +18,24 @@ Partial Class Products
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Products))
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.dgvProducts = New System.Windows.Forms.DataGridView()
         Me.lstSuggestions = New System.Windows.Forms.ListBox()
+        Me.dgvProducts = New System.Windows.Forms.DataGridView()
         Me.pnlSearch = New Guna.UI2.WinForms.Guna2Panel()
         Me.cmbStockFilter = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.cmbFilterCategory = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.cmbSearchField = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.grpProductInfo = New Guna.UI2.WinForms.Guna2GroupBox()
+        Me.pnlDirectMode = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnSetupSizesQuick = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblDirectStatus = New System.Windows.Forms.Label()
+        Me.lblDirectTitle = New System.Windows.Forms.Label()
+        Me.tgIsDirect = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.pnlActions = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnClear = New Guna.UI2.WinForms.Guna2Button()
         Me.btnDelete = New Guna.UI2.WinForms.Guna2Button()
@@ -48,11 +53,6 @@ Partial Class Products
         Me.Label8 = New System.Windows.Forms.Label()
         Me.lblProfitMargin = New System.Windows.Forms.Label()
         Me.txtMinQuantity = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.pnlDirectMode = New Guna.UI2.WinForms.Guna2Panel()
-        Me.tgIsDirect = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.lblDirectTitle = New System.Windows.Forms.Label()
-        Me.lblDirectStatus = New System.Windows.Forms.Label()
-        Me.btnSetupSizesQuick = New Guna.UI2.WinForms.Guna2Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.txtQuantity = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -99,8 +99,8 @@ Partial Class Products
         CType(Me.dgvProducts, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlSearch.SuspendLayout()
         Me.grpProductInfo.SuspendLayout()
-        Me.pnlActions.SuspendLayout()
         Me.pnlDirectMode.SuspendLayout()
+        Me.pnlActions.SuspendLayout()
         CType(Me.picProduct, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlStats.SuspendLayout()
         Me.panelHeader.SuspendLayout()
@@ -121,35 +121,47 @@ Partial Class Products
         Me.Panel1.Size = New System.Drawing.Size(1600, 950)
         Me.Panel1.TabIndex = 0
         '
+        'lstSuggestions
+        '
+        Me.lstSuggestions.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.lstSuggestions.FormattingEnabled = True
+        Me.lstSuggestions.ItemHeight = 20
+        Me.lstSuggestions.Location = New System.Drawing.Point(1090, 560)
+        Me.lstSuggestions.Name = "lstSuggestions"
+        Me.lstSuggestions.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lstSuggestions.Size = New System.Drawing.Size(490, 104)
+        Me.lstSuggestions.TabIndex = 135
+        Me.lstSuggestions.Visible = False
+        '
         'dgvProducts
         '
         Me.dgvProducts.AllowUserToAddRows = False
         Me.dgvProducts.AllowUserToDeleteRows = False
         Me.dgvProducts.AllowUserToResizeRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(252, Byte), Integer))
-        Me.dgvProducts.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.dgvProducts.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvProducts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvProducts.BackgroundColor = System.Drawing.Color.White
         Me.dgvProducts.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvProducts.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvProducts.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
         Me.dgvProducts.ColumnHeadersHeight = 42
         Me.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 10.5!)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvProducts.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle9.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 10.5!)
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvProducts.DefaultCellStyle = DataGridViewCellStyle9
         Me.dgvProducts.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvProducts.EnableHeadersVisualStyles = False
         Me.dgvProducts.GridColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
@@ -163,18 +175,6 @@ Partial Class Products
         Me.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvProducts.Size = New System.Drawing.Size(1600, 385)
         Me.dgvProducts.TabIndex = 129
-        '
-        'lstSuggestions
-        '
-        Me.lstSuggestions.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-        Me.lstSuggestions.FormattingEnabled = True
-        Me.lstSuggestions.ItemHeight = 20
-        Me.lstSuggestions.Location = New System.Drawing.Point(1090, 560)
-        Me.lstSuggestions.Name = "lstSuggestions"
-        Me.lstSuggestions.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lstSuggestions.Size = New System.Drawing.Size(490, 104)
-        Me.lstSuggestions.TabIndex = 135
-        Me.lstSuggestions.Visible = False
         '
         'pnlSearch
         '
@@ -195,7 +195,6 @@ Partial Class Products
         '
         'cmbStockFilter
         '
-        Me.cmbStockFilter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbStockFilter.BackColor = System.Drawing.Color.Transparent
         Me.cmbStockFilter.BorderColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.cmbStockFilter.BorderRadius = 6
@@ -215,7 +214,6 @@ Partial Class Products
         '
         'cmbFilterCategory
         '
-        Me.cmbFilterCategory.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.cmbFilterCategory.BackColor = System.Drawing.Color.Transparent
         Me.cmbFilterCategory.BorderColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.cmbFilterCategory.BorderRadius = 6
@@ -263,7 +261,7 @@ Partial Class Products
         Me.txtSearch.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtSearch.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
         Me.txtSearch.Location = New System.Drawing.Point(1090, 8)
-        Me.txtSearch.Margin = New System.Windows.Forms.Padding(4)
+        Me.txtSearch.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.PlaceholderText = "🔍 بحث فوري بالاسم، الكود، الباركود، الفئة..."
         Me.txtSearch.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -319,7 +317,6 @@ Partial Class Products
         Me.grpProductInfo.Controls.Add(Me.picProduct)
         Me.grpProductInfo.CustomBorderColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.grpProductInfo.Dock = System.Windows.Forms.DockStyle.Top
-        Me.grpProductInfo.FillColor = System.Drawing.Color.White
         Me.grpProductInfo.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.grpProductInfo.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.grpProductInfo.Location = New System.Drawing.Point(0, 95)
@@ -349,6 +346,44 @@ Partial Class Products
         Me.pnlDirectMode.Size = New System.Drawing.Size(1576, 46)
         Me.pnlDirectMode.TabIndex = 5626
         '
+        'btnSetupSizesQuick
+        '
+        Me.btnSetupSizesQuick.BorderRadius = 6
+        Me.btnSetupSizesQuick.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
+        Me.btnSetupSizesQuick.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.btnSetupSizesQuick.ForeColor = System.Drawing.Color.White
+        Me.btnSetupSizesQuick.Location = New System.Drawing.Point(12, 7)
+        Me.btnSetupSizesQuick.Name = "btnSetupSizesQuick"
+        Me.btnSetupSizesQuick.Size = New System.Drawing.Size(171, 32)
+        Me.btnSetupSizesQuick.TabIndex = 3
+        Me.btnSetupSizesQuick.Text = "إدارة أحجام الصنف"
+        Me.btnSetupSizesQuick.Visible = False
+        '
+        'lblDirectStatus
+        '
+        Me.lblDirectStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblDirectStatus.AutoSize = True
+        Me.lblDirectStatus.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblDirectStatus.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblDirectStatus.Location = New System.Drawing.Point(620, 14)
+        Me.lblDirectStatus.Name = "lblDirectStatus"
+        Me.lblDirectStatus.Size = New System.Drawing.Size(535, 19)
+        Me.lblDirectStatus.TabIndex = 2
+        Me.lblDirectStatus.Text = "الصنف المباشر: يُضاف إلى فاتورة المبيعات فوراً بنقرة واحدة (بدون شاشة أحجام أو خي" &
+    "ارات)"
+        '
+        'lblDirectTitle
+        '
+        Me.lblDirectTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblDirectTitle.AutoSize = True
+        Me.lblDirectTitle.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+        Me.lblDirectTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.lblDirectTitle.Location = New System.Drawing.Point(1375, 13)
+        Me.lblDirectTitle.Name = "lblDirectTitle"
+        Me.lblDirectTitle.Size = New System.Drawing.Size(117, 19)
+        Me.lblDirectTitle.TabIndex = 1
+        Me.lblDirectTitle.Text = "هل الصنف مباشر؟"
+        '
         'tgIsDirect
         '
         Me.tgIsDirect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -365,44 +400,6 @@ Partial Class Products
         Me.tgIsDirect.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
         Me.tgIsDirect.UncheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.tgIsDirect.UncheckedState.InnerColor = System.Drawing.Color.White
-        '
-        'lblDirectTitle
-        '
-        Me.lblDirectTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblDirectTitle.AutoSize = True
-        Me.lblDirectTitle.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
-        Me.lblDirectTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.lblDirectTitle.Location = New System.Drawing.Point(1375, 13)
-        Me.lblDirectTitle.Name = "lblDirectTitle"
-        Me.lblDirectTitle.Size = New System.Drawing.Size(115, 19)
-        Me.lblDirectTitle.TabIndex = 1
-        Me.lblDirectTitle.Text = "هل الصنف مباشر؟"
-        '
-        'lblDirectStatus
-        '
-        Me.lblDirectStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblDirectStatus.AutoSize = True
-        Me.lblDirectStatus.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.lblDirectStatus.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
-        Me.lblDirectStatus.Location = New System.Drawing.Point(620, 14)
-        Me.lblDirectStatus.Name = "lblDirectStatus"
-        Me.lblDirectStatus.Size = New System.Drawing.Size(535, 19)
-        Me.lblDirectStatus.TabIndex = 2
-        Me.lblDirectStatus.Text = "⚡ صنف مباشر: يُضاف إلى فاتورة المبيعات فوراً بنقرة واحدة (بدون شاشة أحجام أو خيارات)"
-        '
-        'btnSetupSizesQuick
-        '
-        Me.btnSetupSizesQuick.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnSetupSizesQuick.BorderRadius = 6
-        Me.btnSetupSizesQuick.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
-        Me.btnSetupSizesQuick.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnSetupSizesQuick.ForeColor = System.Drawing.Color.White
-        Me.btnSetupSizesQuick.Location = New System.Drawing.Point(12, 7)
-        Me.btnSetupSizesQuick.Name = "btnSetupSizesQuick"
-        Me.btnSetupSizesQuick.Size = New System.Drawing.Size(140, 32)
-        Me.btnSetupSizesQuick.TabIndex = 3
-        Me.btnSetupSizesQuick.Text = "📏 إدارة أحجام الصنف"
-        Me.btnSetupSizesQuick.Visible = False
         '
         'pnlActions
         '
@@ -429,9 +426,9 @@ Partial Class Products
         Me.btnClear.FillColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
         Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
         Me.btnClear.ForeColor = System.Drawing.Color.White
-        Me.btnClear.Location = New System.Drawing.Point(920, 7)
+        Me.btnClear.Location = New System.Drawing.Point(648, 7)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(150, 38)
+        Me.btnClear.Size = New System.Drawing.Size(214, 38)
         Me.btnClear.TabIndex = 3
         Me.btnClear.Text = "🧹 تفريغ الحقول (Esc)"
         '
@@ -442,9 +439,9 @@ Partial Class Products
         Me.btnDelete.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.btnDelete.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
         Me.btnDelete.ForeColor = System.Drawing.Color.White
-        Me.btnDelete.Location = New System.Drawing.Point(1080, 7)
+        Me.btnDelete.Location = New System.Drawing.Point(878, 7)
         Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(150, 38)
+        Me.btnDelete.Size = New System.Drawing.Size(214, 38)
         Me.btnDelete.TabIndex = 2
         Me.btnDelete.Text = "🗑️ حذف الصنف (F3)"
         '
@@ -455,9 +452,9 @@ Partial Class Products
         Me.btnEdit.FillColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
         Me.btnEdit.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
         Me.btnEdit.ForeColor = System.Drawing.Color.White
-        Me.btnEdit.Location = New System.Drawing.Point(1240, 7)
+        Me.btnEdit.Location = New System.Drawing.Point(1108, 7)
         Me.btnEdit.Name = "btnEdit"
-        Me.btnEdit.Size = New System.Drawing.Size(150, 38)
+        Me.btnEdit.Size = New System.Drawing.Size(214, 38)
         Me.btnEdit.TabIndex = 1
         Me.btnEdit.Text = "✏️ حفظ التعديل (F2)"
         '
@@ -468,9 +465,9 @@ Partial Class Products
         Me.btnAdd.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
         Me.btnAdd.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Bold)
         Me.btnAdd.ForeColor = System.Drawing.Color.White
-        Me.btnAdd.Location = New System.Drawing.Point(1400, 7)
+        Me.btnAdd.Location = New System.Drawing.Point(1338, 7)
         Me.btnAdd.Name = "btnAdd"
-        Me.btnAdd.Size = New System.Drawing.Size(165, 38)
+        Me.btnAdd.Size = New System.Drawing.Size(214, 38)
         Me.btnAdd.TabIndex = 0
         Me.btnAdd.Text = "➕ إضافة صنف جديد (F1)"
         '
@@ -482,7 +479,7 @@ Partial Class Products
         Me.lblStatus.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
         Me.lblStatus.Location = New System.Drawing.Point(620, 240)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(39, 19)
+        Me.lblStatus.Size = New System.Drawing.Size(38, 19)
         Me.lblStatus.TabIndex = 5625
         Me.lblStatus.Text = "نشط"
         '
@@ -514,6 +511,8 @@ Partial Class Products
         Me.dtpPrepTime.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.dtpPrepTime.Format = System.Windows.Forms.DateTimePickerFormat.Time
         Me.dtpPrepTime.Location = New System.Drawing.Point(740, 233)
+        Me.dtpPrepTime.MaxDate = New Date(9998, 12, 31, 0, 0, 0, 0)
+        Me.dtpPrepTime.MinDate = New Date(1753, 1, 1, 0, 0, 0, 0)
         Me.dtpPrepTime.Name = "dtpPrepTime"
         Me.dtpPrepTime.Size = New System.Drawing.Size(125, 34)
         Me.dtpPrepTime.TabIndex = 130
@@ -528,7 +527,7 @@ Partial Class Products
         Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label10.Location = New System.Drawing.Point(785, 209)
         Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(83, 19)
+        Me.Label10.Size = New System.Drawing.Size(87, 19)
         Me.Label10.TabIndex = 5624
         Me.Label10.Text = "وقت التحضير"
         '
@@ -558,6 +557,7 @@ Partial Class Products
         Me.txtTax.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtTax.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtTax.Location = New System.Drawing.Point(928, 233)
+        Me.txtTax.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtTax.Name = "txtTax"
         Me.txtTax.PlaceholderText = "0"
         Me.txtTax.SelectedText = ""
@@ -573,7 +573,7 @@ Partial Class Products
         Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label9.Location = New System.Drawing.Point(950, 209)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(56, 19)
+        Me.Label9.Size = New System.Drawing.Size(55, 19)
         Me.Label9.TabIndex = 5623
         Me.Label9.Text = "الضريبة"
         '
@@ -603,6 +603,7 @@ Partial Class Products
         Me.txtDiscount.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtDiscount.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtDiscount.Location = New System.Drawing.Point(1063, 233)
+        Me.txtDiscount.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtDiscount.Name = "txtDiscount"
         Me.txtDiscount.PlaceholderText = "0"
         Me.txtDiscount.SelectedText = ""
@@ -618,7 +619,7 @@ Partial Class Products
         Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label8.Location = New System.Drawing.Point(1090, 209)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(51, 19)
+        Me.Label8.Size = New System.Drawing.Size(48, 19)
         Me.Label8.TabIndex = 5622
         Me.Label8.Text = "الخصم"
         '
@@ -645,6 +646,7 @@ Partial Class Products
         Me.txtMinQuantity.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtMinQuantity.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtMinQuantity.Location = New System.Drawing.Point(1150, 233)
+        Me.txtMinQuantity.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtMinQuantity.Name = "txtMinQuantity"
         Me.txtMinQuantity.PlaceholderText = "0"
         Me.txtMinQuantity.SelectedText = ""
@@ -660,7 +662,7 @@ Partial Class Products
         Me.Label14.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label14.Location = New System.Drawing.Point(1185, 209)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(69, 19)
+        Me.Label14.Size = New System.Drawing.Size(67, 19)
         Me.Label14.TabIndex = 5620
         Me.Label14.Text = "حد الطلب"
         '
@@ -675,6 +677,7 @@ Partial Class Products
         Me.txtQuantity.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtQuantity.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtQuantity.Location = New System.Drawing.Point(1260, 233)
+        Me.txtQuantity.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtQuantity.Name = "txtQuantity"
         Me.txtQuantity.PlaceholderText = "0"
         Me.txtQuantity.SelectedText = ""
@@ -690,7 +693,7 @@ Partial Class Products
         Me.Label13.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label13.Location = New System.Drawing.Point(1265, 209)
         Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(99, 19)
+        Me.Label13.Size = New System.Drawing.Size(97, 19)
         Me.Label13.TabIndex = 5619
         Me.Label13.Text = "الكمية المتوفرة"
         '
@@ -705,6 +708,7 @@ Partial Class Products
         Me.txtCostPrice.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtCostPrice.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtCostPrice.Location = New System.Drawing.Point(1370, 233)
+        Me.txtCostPrice.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtCostPrice.Name = "txtCostPrice"
         Me.txtCostPrice.PlaceholderText = "0.00"
         Me.txtCostPrice.SelectedText = ""
@@ -720,7 +724,7 @@ Partial Class Products
         Me.Label12.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label12.Location = New System.Drawing.Point(1390, 209)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(84, 19)
+        Me.Label12.Size = New System.Drawing.Size(79, 19)
         Me.Label12.TabIndex = 5618
         Me.Label12.Text = "سعر التكلفة"
         '
@@ -735,6 +739,7 @@ Partial Class Products
         Me.txtSalePrice.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtSalePrice.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtSalePrice.Location = New System.Drawing.Point(1480, 233)
+        Me.txtSalePrice.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtSalePrice.Name = "txtSalePrice"
         Me.txtSalePrice.PlaceholderText = "0.00"
         Me.txtSalePrice.SelectedText = ""
@@ -750,7 +755,7 @@ Partial Class Products
         Me.Label11.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label11.Location = New System.Drawing.Point(1510, 209)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(74, 19)
+        Me.Label11.Size = New System.Drawing.Size(76, 19)
         Me.Label11.TabIndex = 5617
         Me.Label11.Text = "سعر البيع *"
         '
@@ -761,6 +766,7 @@ Partial Class Products
         Me.cmbUnit.BorderColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.cmbUnit.BorderRadius = 6
         Me.cmbUnit.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbUnit.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
         Me.cmbUnit.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
         Me.cmbUnit.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
@@ -780,7 +786,7 @@ Partial Class Products
         Me.Label15.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label15.Location = New System.Drawing.Point(705, 139)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(49, 19)
+        Me.Label15.Size = New System.Drawing.Size(47, 19)
         Me.Label15.TabIndex = 5616
         Me.Label15.Text = "الوحدة"
         '
@@ -823,7 +829,7 @@ Partial Class Products
         Me.Label7.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label7.Location = New System.Drawing.Point(905, 139)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(84, 19)
+        Me.Label7.Size = New System.Drawing.Size(89, 19)
         Me.Label7.TabIndex = 5611
         Me.Label7.Text = "القسم/الفئة *"
         '
@@ -838,6 +844,7 @@ Partial Class Products
         Me.txtProductNameEn.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtProductNameEn.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtProductNameEn.Location = New System.Drawing.Point(995, 163)
+        Me.txtProductNameEn.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtProductNameEn.Name = "txtProductNameEn"
         Me.txtProductNameEn.PlaceholderText = "Product Name (En)"
         Me.txtProductNameEn.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -868,6 +875,7 @@ Partial Class Products
         Me.txtProductNameAr.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtProductNameAr.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtProductNameAr.Location = New System.Drawing.Point(1205, 163)
+        Me.txtProductNameAr.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtProductNameAr.Name = "txtProductNameAr"
         Me.txtProductNameAr.PlaceholderText = "اسم الصنف بالعربي"
         Me.txtProductNameAr.SelectedText = ""
@@ -882,14 +890,14 @@ Partial Class Products
         Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label2.Location = New System.Drawing.Point(1495, 139)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(89, 19)
+        Me.Label2.Size = New System.Drawing.Size(87, 19)
         Me.Label2.TabIndex = 5609
         Me.Label2.Text = "الاسم عربي *"
         '
         'btnGenBarcode
         '
         Me.btnGenBarcode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnGenBarcode.BorderRadius = 6
+        Me.btnGenBarcode.BorderRadius = 8
         Me.btnGenBarcode.FillColor = System.Drawing.Color.FromArgb(CType(CType(241, Byte), Integer), CType(CType(245, Byte), Integer), CType(CType(249, Byte), Integer))
         Me.btnGenBarcode.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
         Me.btnGenBarcode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
@@ -910,6 +918,7 @@ Partial Class Products
         Me.txtBarcode.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtBarcode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtBarcode.Location = New System.Drawing.Point(1185, 93)
+        Me.txtBarcode.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtBarcode.Name = "txtBarcode"
         Me.txtBarcode.PlaceholderText = "امسح أو اكتب الباركود"
         Me.txtBarcode.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -926,7 +935,7 @@ Partial Class Products
         Me.Label16.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label16.Location = New System.Drawing.Point(1335, 69)
         Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(54, 19)
+        Me.Label16.Size = New System.Drawing.Size(53, 19)
         Me.Label16.TabIndex = 5607
         Me.Label16.Text = "الباركود"
         '
@@ -941,9 +950,10 @@ Partial Class Products
         Me.txtProductCode.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtProductCode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtProductCode.Location = New System.Drawing.Point(1395, 93)
+        Me.txtProductCode.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtProductCode.Name = "txtProductCode"
         Me.txtProductCode.PlaceholderText = "تلقائي"
-        Me.txtProductCode.ReadOnly = True
+        Me.txtProductCode.ReadOnly = False
         Me.txtProductCode.SelectedText = ""
         Me.txtProductCode.Size = New System.Drawing.Size(185, 34)
         Me.txtProductCode.TabIndex = 0
@@ -957,7 +967,7 @@ Partial Class Products
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
         Me.Label1.Location = New System.Drawing.Point(1510, 69)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(74, 19)
+        Me.Label1.Size = New System.Drawing.Size(76, 19)
         Me.Label1.TabIndex = 5606
         Me.Label1.Text = "كود الصنف"
         '
@@ -974,7 +984,7 @@ Partial Class Products
         Me.txtNotes.Location = New System.Drawing.Point(215, 195)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
-        Me.txtNotes.PlaceholderText = "ملاحظات إضافية..."
+        Me.txtNotes.PlaceholderText = "....ملاحظات إضافية"
         Me.txtNotes.SelectedText = ""
         Me.txtNotes.Size = New System.Drawing.Size(390, 72)
         Me.txtNotes.TabIndex = 13
@@ -985,9 +995,9 @@ Partial Class Products
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.Label6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
-        Me.Label6.Location = New System.Drawing.Point(545, 172)
+        Me.Label6.Location = New System.Drawing.Point(533, 172)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(65, 19)
+        Me.Label6.Size = New System.Drawing.Size(72, 19)
         Me.Label6.TabIndex = 5605
         Me.Label6.Text = "الملاحظات"
         '
@@ -1004,7 +1014,7 @@ Partial Class Products
         Me.txtDescription.Location = New System.Drawing.Point(215, 93)
         Me.txtDescription.Multiline = True
         Me.txtDescription.Name = "txtDescription"
-        Me.txtDescription.PlaceholderText = "وصف مختصر لمكونات أو تفاصيل الصنف..."
+        Me.txtDescription.PlaceholderText = "....وصف مختصر لمكونات أو تفاصيل الصنف"
         Me.txtDescription.SelectedText = ""
         Me.txtDescription.Size = New System.Drawing.Size(390, 72)
         Me.txtDescription.TabIndex = 12
@@ -1015,7 +1025,7 @@ Partial Class Products
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
-        Me.Label4.Location = New System.Drawing.Point(555, 69)
+        Me.Label4.Location = New System.Drawing.Point(552, 69)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(53, 19)
         Me.Label4.TabIndex = 5604
@@ -1031,7 +1041,7 @@ Partial Class Products
         Me.btnDeleteImage.Name = "btnDeleteImage"
         Me.btnDeleteImage.Size = New System.Drawing.Size(85, 34)
         Me.btnDeleteImage.TabIndex = 5603
-        Me.btnDeleteImage.Text = "🗑️ إزالة"
+        Me.btnDeleteImage.Text = "حذف"
         '
         'btnSelectImage
         '
@@ -1043,7 +1053,7 @@ Partial Class Products
         Me.btnSelectImage.Name = "btnSelectImage"
         Me.btnSelectImage.Size = New System.Drawing.Size(90, 34)
         Me.btnSelectImage.TabIndex = 5602
-        Me.btnSelectImage.Text = "📷 صورة"
+        Me.btnSelectImage.Text = " صورة"
         '
         'picProduct
         '
@@ -1135,7 +1145,7 @@ Partial Class Products
         Me.lblLowStockProducts.Size = New System.Drawing.Size(200, 26)
         Me.lblLowStockProducts.TabIndex = 2
         Me.lblLowStockProducts.Text = "⚠️ نواقص وتحت الطلب: 0"
-        Me.lblLowStockProducts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblLowStockProducts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblActiveProducts
         '
@@ -1147,7 +1157,7 @@ Partial Class Products
         Me.lblActiveProducts.Size = New System.Drawing.Size(180, 26)
         Me.lblActiveProducts.TabIndex = 1
         Me.lblActiveProducts.Text = "✅ الأصناف النشطة: 0"
-        Me.lblActiveProducts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblActiveProducts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'lblTotalProducts
         '
@@ -1159,7 +1169,7 @@ Partial Class Products
         Me.lblTotalProducts.Size = New System.Drawing.Size(220, 26)
         Me.lblTotalProducts.TabIndex = 0
         Me.lblTotalProducts.Text = "📦 إجمالي الأصناف: 0"
-        Me.lblTotalProducts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.lblTotalProducts.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'panelHeader
         '
@@ -1181,12 +1191,12 @@ Partial Class Products
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTime.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Bold)
         Me.lblTime.ForeColor = System.Drawing.Color.White
-        Me.lblTime.Location = New System.Drawing.Point(140, 9)
+        Me.lblTime.Location = New System.Drawing.Point(1451, 9)
         Me.lblTime.Name = "lblTime"
         Me.lblTime.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTime.Size = New System.Drawing.Size(1440, 30)
+        Me.lblTime.Size = New System.Drawing.Size(129, 30)
         Me.lblTime.TabIndex = 7
-        Me.lblTime.Text = "📦 دليل وإدارة الأصناف والمنتجات"
+        Me.lblTime.Text = "إدارة الأصناف"
         Me.lblTime.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'btn_min
@@ -1252,9 +1262,9 @@ Partial Class Products
         Me.pnlSearch.ResumeLayout(False)
         Me.grpProductInfo.ResumeLayout(False)
         Me.grpProductInfo.PerformLayout()
-        Me.pnlActions.ResumeLayout(False)
         Me.pnlDirectMode.ResumeLayout(False)
         Me.pnlDirectMode.PerformLayout()
+        Me.pnlActions.ResumeLayout(False)
         CType(Me.picProduct, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlStats.ResumeLayout(False)
         Me.panelHeader.ResumeLayout(False)

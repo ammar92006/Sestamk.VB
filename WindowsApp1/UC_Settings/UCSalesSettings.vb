@@ -154,6 +154,9 @@ Namespace UC_Settings
                     If Integer.TryParse(defaultTr, tid) Then cmbTreasury.SelectedValue = tid
                 End If
 
+                ' الخيارات الافتراضية
+                tglDeductIngredients.Checked = SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True)
+
                 ' طرق الدفع
                 chkPaymentCash.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PaymentCash, True)
                 chkPaymentVisa.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PaymentVisa, True)
@@ -205,6 +208,9 @@ Namespace UC_Settings
                     SettingsManager.SaveSetting(SettingsKeys.DefaultTreasuryID, cmbTreasury.SelectedValue.ToString())
                 End If
 
+                ' حفظ خيار خصم الخامات من المخزن
+                SettingsManager.SaveSetting(SettingsKeys.SalesDeductIngredients, tglDeductIngredients.Checked.ToString().ToLower())
+
                 ' حفظ طرق الدفع
                 SettingsManager.SaveSetting(SettingsKeys.PaymentCash, chkPaymentCash.Checked.ToString().ToLower())
                 SettingsManager.SaveSetting(SettingsKeys.PaymentVisa, chkPaymentVisa.Checked.ToString().ToLower())
@@ -233,6 +239,7 @@ Namespace UC_Settings
                 txtDineInServiceFee.Text = "0"
                 btnIsDineInServiceFeePercent.Checked = False
                 txtInvoiceItemsPerPage.Text = "25"
+                tglDeductIngredients.Checked = True
                 chkPaymentCash.Checked = True
                 chkPaymentVisa.Checked = True
                 chkPaymentMaster.Checked = True

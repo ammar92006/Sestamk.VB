@@ -58,6 +58,8 @@ Namespace UC_Settings
             Me.cmbDefaultCustomer = New Guna.UI2.WinForms.Guna2ComboBox()
             Me.lblDriver = New System.Windows.Forms.Label()
             Me.cmbDefaultDriver = New Guna.UI2.WinForms.Guna2ComboBox()
+            Me.lblDeductIngredients = New System.Windows.Forms.Label()
+            Me.tglDeductIngredients = New Guna.UI2.WinForms.Guna2ToggleSwitch()
             Me.cardPayment = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblCardPaymentTitle = New System.Windows.Forms.Label()
             Me.chkPaymentCash = New Guna.UI2.WinForms.Guna2CheckBox()
@@ -500,6 +502,8 @@ Namespace UC_Settings
             Me.cardDefaults.Controls.Add(Me.cmbDefaultCustomer)
             Me.cardDefaults.Controls.Add(Me.lblDriver)
             Me.cardDefaults.Controls.Add(Me.cmbDefaultDriver)
+            Me.cardDefaults.Controls.Add(Me.lblDeductIngredients)
+            Me.cardDefaults.Controls.Add(Me.tglDeductIngredients)
             Me.cardDefaults.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardDefaults.Location = New System.Drawing.Point(30, 530)
             Me.cardDefaults.Name = "cardDefaults"
@@ -662,6 +666,33 @@ Namespace UC_Settings
             Me.cmbDefaultDriver.Name = "cmbDefaultDriver"
             Me.cmbDefaultDriver.Size = New System.Drawing.Size(315, 40)
             Me.cmbDefaultDriver.TabIndex = 10
+            '
+            'lblDeductIngredients
+            '
+            Me.lblDeductIngredients.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDeductIngredients.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblDeductIngredients.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblDeductIngredients.Location = New System.Drawing.Point(210, 170)
+            Me.lblDeductIngredients.Name = "lblDeductIngredients"
+            Me.lblDeductIngredients.Size = New System.Drawing.Size(260, 30)
+            Me.lblDeductIngredients.TabIndex = 11
+            Me.lblDeductIngredients.Text = "خصم الخامات من المخزن عند البيع:"
+            Me.lblDeductIngredients.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'tglDeductIngredients
+            '
+            Me.tglDeductIngredients.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.tglDeductIngredients.Checked = True
+            Me.tglDeductIngredients.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglDeductIngredients.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglDeductIngredients.CheckedState.InnerBorderColor = System.Drawing.Color.White
+            Me.tglDeductIngredients.CheckedState.InnerColor = System.Drawing.Color.White
+            Me.tglDeductIngredients.Location = New System.Drawing.Point(135, 172)
+            Me.tglDeductIngredients.Name = "tglDeductIngredients"
+            Me.tglDeductIngredients.Size = New System.Drawing.Size(65, 26)
+            Me.tglDeductIngredients.TabIndex = 12
+            Me.tglDeductIngredients.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
+            Me.tglDeductIngredients.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             '
             'cardPayment
             '
@@ -878,6 +909,8 @@ Namespace UC_Settings
         Friend WithEvents cmbDefaultCustomer As Guna.UI2.WinForms.Guna2ComboBox
         Friend WithEvents lblDriver As System.Windows.Forms.Label
         Friend WithEvents cmbDefaultDriver As Guna.UI2.WinForms.Guna2ComboBox
+        Friend WithEvents lblDeductIngredients As System.Windows.Forms.Label
+        Friend WithEvents tglDeductIngredients As Guna.UI2.WinForms.Guna2ToggleSwitch
         Friend WithEvents cardPayment As Guna.UI2.WinForms.Guna2Panel
         Friend WithEvents lblCardPaymentTitle As System.Windows.Forms.Label
         Friend WithEvents chkPaymentCash As Guna.UI2.WinForms.Guna2CheckBox

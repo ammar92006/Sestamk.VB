@@ -69,6 +69,7 @@ Public Module SettingsKeys
     Public Const SalesEnableDineIn As String = "Sales_EnableDineIn"
     Public Const SalesEnableTakeaway As String = "Sales_EnableTakeaway"
     Public Const SalesEnableDelivery As String = "Sales_EnableDelivery"
+    Public Const SalesDeductIngredients As String = "Sales_DeductIngredients"
     Public Const EnableTax As String = "EnableTax"
     Public Const TaxPercent As String = "TaxPercent"
     Public Const EnableDiscount As String = "EnableDiscount"

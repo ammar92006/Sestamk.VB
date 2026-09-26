@@ -2,6 +2,19 @@ Imports System.Data.SqlClient
 
 Public Class frmProductSizes
 
+    Public Property InitialProductID As Integer? = Nothing
+
+    Public Sub New()
+        InitializeComponent()
+    End Sub
+
+    Public Sub New(productID As Integer)
+        InitializeComponent()
+        If productID > 0 Then
+            InitialProductID = productID
+        End If
+    End Sub
+
     Private _cachedProductSizes As DataTable = Nothing
     ' علم لمنع الأحداث المتسلسلة أثناء تحميل البيانات
     Private _isLoading As Boolean = False
@@ -213,8 +226,15 @@ Public Class frmProductSizes
     Private Sub frmProductSizes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         FillDropdowns()
 
-        ' تحميل جميع الأحجام لكل الأصناف في الجريد فيو افتراضياً عند فتح الشاشة
-        LoadProductSizesGrid()
+        ' تحميل الأحجام: إما مخصصة للصنف المحدد أو لجميع الأصناف
+        If InitialProductID.HasValue AndAlso InitialProductID.Value > 0 Then
+            _isLoading = True
+            cmbProduct.SelectedValue = InitialProductID.Value
+            _isLoading = False
+            LoadProductSizesGrid(InitialProductID.Value)
+        Else
+            LoadProductSizesGrid()
+        End If
 
         datagridviewsetup(dgvProductSizes)
         Dim Drag As FormDragHelper
