@@ -173,7 +173,8 @@ Public Class POSRepository
                     p.PreparationTime, p.Notes, p.Category_ID, p.IsDiscountPercent, p.IsTaxPercent,
                     (SELECT COUNT(*) FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0) AS SizesCount,
                     (SELECT COUNT(*) FROM ProductAddons pa WHERE pa.ProductID = p.Product_ID AND pa.IsActive = 1 AND pa.IsDeleted = 0) AS AddonsCount,
-                    ISNULL((SELECT TOP 1 ps.SalePrice FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0 ORDER BY ps.IsDefault DESC, ps.SortOrder, ps.ProductSizeID), 0) AS DefaultPrice
+                    ISNULL((SELECT TOP 1 ps.SalePrice FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0 ORDER BY ps.IsDefault DESC, ps.SortOrder, ps.ProductSizeID), ISNULL(p.SalePrice, ISNULL(p.BasePrice, 0))) AS DefaultPrice,
+                    ISNULL(p.IsDirect, 1) AS IsDirect
                 FROM Products p
                 WHERE (@CategoryID <= 0 OR p.Category_ID = @CategoryID) AND p.IsActive = 1 AND p.IsDeleted = 0
                 ORDER BY p.ProductNameAr;"
@@ -207,6 +208,7 @@ Public Class POSRepository
                             prod.DefaultPrice = Convert.ToDecimal(rdr("DefaultPrice"))
                             prod.BasePrice = prod.DefaultPrice
                         End If
+                        If Not IsDBNull(rdr("IsDirect")) Then prod.IsDirect = Convert.ToBoolean(rdr("IsDirect"))
 
                         list.Add(prod)
                     End While

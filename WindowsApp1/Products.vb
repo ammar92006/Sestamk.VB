@@ -136,6 +136,7 @@ Public Class Products
                     ISNULL(P.Notes, '') AS Notes, 
                     P.Image, 
                     ISNULL(P.IsActive, 1) AS IsActive,
+                    ISNULL(P.IsDirect, 1) AS IsDirect,
                     P.Category_ID
                 FROM Products P 
                 LEFT JOIN Categories Cat ON P.Category_ID = Cat.Category_ID 
@@ -195,7 +196,7 @@ Public Class Products
             End If
         End If
 
-        ' ج) فلتر حالة المخزون
+        ' ج) فلتر حالة المخزون ونظام البيع
         Select Case cmbStockFilter.SelectedIndex
             Case 1 ' المتوفر فقط
                 filterExpr.Add("Quantity > 0")
@@ -203,6 +204,10 @@ Public Class Products
                 filterExpr.Add("Quantity <= MinQuantity")
             Case 3 ' غير النشطة
                 filterExpr.Add("IsActive = 0")
+            Case 4 ' الأصناف المباشرة فقط
+                filterExpr.Add("IsDirect = 1")
+            Case 5 ' أصناف متعددة الأحجام
+                filterExpr.Add("IsDirect = 0")
         End Select
 
         Dim dv As New DataView(_cachedProducts)
@@ -314,6 +319,13 @@ Public Class Products
             End With
         End If
 
+        If dgvProducts.Columns.Contains("IsDirect") Then
+            With dgvProducts.Columns("IsDirect")
+                .HeaderText = "نظام البيع"
+                .Width = 110
+            End With
+        End If
+
         If dgvProducts.Columns.Contains("IsActive") Then
             With dgvProducts.Columns("IsActive")
                 .HeaderText = "نشط"
@@ -322,12 +334,24 @@ Public Class Products
         End If
     End Sub
 
-    ' تلوين صفوف النواقص تلقائياً
+    ' تلوين صفوف النواقص وتنسيق نوع البيع تلقائياً
     Private Sub dgvProducts_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvProducts.CellFormatting
         If e.RowIndex < 0 OrElse e.RowIndex >= dgvProducts.Rows.Count Then Exit Sub
         Dim row As DataGridViewRow = dgvProducts.Rows(e.RowIndex)
 
         Try
+            If dgvProducts.Columns(e.ColumnIndex).Name = "IsDirect" AndAlso e.Value IsNot Nothing Then
+                Dim isDirect As Boolean = Convert.ToBoolean(e.Value)
+                If isDirect Then
+                    e.Value = "⚡ مباشر"
+                    e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129)
+                Else
+                    e.Value = "📏 متعدد الأحجام"
+                    e.CellStyle.ForeColor = Color.FromArgb(99, 102, 241)
+                End If
+                e.FormattingApplied = True
+            End If
+
             Dim qty As Decimal = Convert.ToDecimal(If(row.Cells("Quantity").Value, 0))
             Dim minQty As Decimal = Convert.ToDecimal(If(row.Cells("MinQuantity").Value, 0))
             Dim isActive As Boolean = Convert.ToBoolean(If(row.Cells("IsActive").Value, True))
@@ -422,6 +446,11 @@ Public Class Products
             lblStatus.Text = If(tgStatus.Checked, "نشط", "معطل")
             lblStatus.ForeColor = If(tgStatus.Checked, Color.FromArgb(16, 185, 129), Color.FromArgb(239, 68, 68))
 
+            ' نظام البيع (صنف مباشر أم بأحجام)
+            Dim isDirectVal As Boolean = If(IsDBNull(row.Cells("IsDirect").Value), True, Convert.ToBoolean(row.Cells("IsDirect").Value))
+            tgIsDirect.Checked = isDirectVal
+            UpdateDirectModeDisplay(isDirectVal)
+
             ' الوصف والملاحظات
             txtDescription.Text = row.Cells("Description").Value?.ToString()
             txtNotes.Text = row.Cells("Notes").Value?.ToString()
@@ -497,13 +526,13 @@ Public Class Products
                 (ProductCode, Barcode, ProductNameAr, ProductNameEn, ProductName, 
                  SalePrice, CostPrice, BasePrice, Quantity, MinQuantity, Unit, 
                  Category_ID, CategoryID, Description, DiscountPercent, IsDiscountPercent, 
-                 TaxPercent, IsTaxPercent, PreparationTime, IsActive, IsDeleted, 
+                 TaxPercent, IsTaxPercent, PreparationTime, IsActive, IsDirect, IsDeleted, 
                  Notes, Image, CreatedAt, updated_at) 
                 VALUES 
                 (@ProductCode, @Barcode, @ProductNameAr, @ProductNameEn, @ProductNameAr, 
                  @SalePrice, @CostPrice, @SalePrice, @Quantity, @MinQuantity, @Unit, 
                  @Category_ID, @Category_ID, @Description, @DiscountPercent, @IsDiscountPercent, 
-                 @TaxPercent, @IsTaxPercent, @PreparationTime, @IsActive, 0, 
+                 @TaxPercent, @IsTaxPercent, @PreparationTime, @IsActive, @IsDirect, 0, 
                  @Notes, @Image, GETDATE(), SYSUTCDATETIME());"
 
             Using conn As New SqlConnection(DBModule.ConnectionString)
@@ -525,6 +554,7 @@ Public Class Products
                     cmd.Parameters.AddWithValue("@IsTaxPercent", btnTaxType.Checked)
                     cmd.Parameters.AddWithValue("@PreparationTime", dtpPrepTime.Value.TimeOfDay)
                     cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
+                    cmd.Parameters.AddWithValue("@IsDirect", tgIsDirect.Checked)
                     cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                     cmd.Parameters.AddWithValue("@Image", If(String.IsNullOrEmpty(imgBase64), DBNull.Value, imgBase64))
 
@@ -576,7 +606,7 @@ Public Class Products
                     ProductCode = @ProductCode, 
                     Barcode = @Barcode, 
                     ProductNameAr = @ProductNameAr, 
-                    ProductName = @ProductNameAr,
+                    ProductName = @ProductNameAr, 
                     ProductNameEn = @ProductNameEn, 
                     SalePrice = @SalePrice, 
                     BasePrice = @SalePrice,
@@ -593,6 +623,7 @@ Public Class Products
                     IsTaxPercent = @IsTaxPercent, 
                     PreparationTime = @PreparationTime, 
                     IsActive = @IsActive, 
+                    IsDirect = @IsDirect,
                     Notes = @Notes, 
                     Image = @Image, 
                     updated_at = SYSUTCDATETIME() 
@@ -618,6 +649,7 @@ Public Class Products
                     cmd.Parameters.AddWithValue("@IsTaxPercent", btnTaxType.Checked)
                     cmd.Parameters.AddWithValue("@PreparationTime", dtpPrepTime.Value.TimeOfDay)
                     cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
+                    cmd.Parameters.AddWithValue("@IsDirect", tgIsDirect.Checked)
                     cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                     cmd.Parameters.AddWithValue("@Image", If(String.IsNullOrEmpty(imgBase64), DBNull.Value, imgBase64))
 
@@ -691,6 +723,8 @@ Public Class Products
             tgStatus.Checked = True
             lblStatus.Text = "نشط"
             lblStatus.ForeColor = Color.FromArgb(16, 185, 129)
+            tgIsDirect.Checked = True
+            UpdateDirectModeDisplay(True)
             txtDescription.Clear()
             txtNotes.Clear()
             picProduct.Image = Nothing
@@ -816,6 +850,33 @@ Public Class Products
         lblStatus.ForeColor = If(tgStatus.Checked, Color.FromArgb(16, 185, 129), Color.FromArgb(239, 68, 68))
     End Sub
 
+    Private Sub tgIsDirect_CheckedChanged(sender As Object, e As EventArgs) Handles tgIsDirect.CheckedChanged
+        UpdateDirectModeDisplay(tgIsDirect.Checked)
+    End Sub
+
+    Private Sub UpdateDirectModeDisplay(isDirect As Boolean)
+        If isDirect Then
+            lblDirectStatus.Text = "⚡ صنف مباشر: يُضاف إلى فاتورة المبيعات فوراً بنقرة واحدة (بدون شاشة أحجام أو خيارات)"
+            lblDirectStatus.ForeColor = Color.FromArgb(16, 185, 129)
+            btnSetupSizesQuick.Visible = False
+        Else
+            lblDirectStatus.Text = "📏 صنف متعدد الأحجام / خيارات: تفتح نافذة اختيار الحجم والإضافات عند النقر عليه في المبيعات"
+            lblDirectStatus.ForeColor = Color.FromArgb(99, 102, 241)
+            btnSetupSizesQuick.Visible = True
+        End If
+    End Sub
+
+    Private Sub btnSetupSizesQuick_Click(sender As Object, e As EventArgs) Handles btnSetupSizesQuick.Click
+        Dim frm As New frmProductSizes()
+        If dgvProducts.SelectedRows.Count > 0 Then
+            Dim selectedID As Integer = Convert.ToInt32(dgvProducts.SelectedRows(0).Cells("Product_ID").Value)
+            frm.cmbProduct.SelectedValue = selectedID
+        End If
+        frm.StartPosition = FormStartPosition.CenterParent
+        frm.ShowDialog(Me)
+        LoadProductsGrid()
+    End Sub
+
     Private Sub btnDiscountType_Click(sender As Object, e As EventArgs) Handles btnDiscountType.Click
         btnDiscountType.Text = If(btnDiscountType.Checked, "%", "ج.م")
     End Sub
@@ -892,12 +953,12 @@ Public Class Products
 
                         ' العنوان الرئيسي
                         ws.Cell(1, 1).Value = "دليل وقائمة الأصناف والمنتجات"
-                        ws.Range(1, 1, 1, 10).Merge().Style.Font.SetBold().Font.SetFontSize(16).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                        ws.Range(1, 1, 1, 11).Merge().Style.Font.SetBold().Font.SetFontSize(16).Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
                         ws.Cell(2, 1).Value = $"تاريخ التصدير: {DateTime.Now:yyyy-MM-dd HH:mm}"
-                        ws.Range(2, 1, 2, 10).Merge().Style.Font.SetItalic().Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
+                        ws.Range(2, 1, 2, 11).Merge().Style.Font.SetItalic().Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center)
 
                         ' العناوين
-                        Dim headers() As String = {"كود الصنف", "الباركود", "اسم الصنف", "القسم / الفئة", "سعر البيع", "سعر التكلفة", "الكمية الحالية", "حد الطلب", "الوحدة", "الحالة"}
+                        Dim headers() As String = {"كود الصنف", "الباركود", "اسم الصنف", "القسم / الفئة", "نظام البيع", "سعر البيع", "سعر التكلفة", "الكمية الحالية", "حد الطلب", "الوحدة", "الحالة"}
                         For c = 0 To headers.Length - 1
                             ws.Cell(4, c + 1).Value = headers(c)
                             ws.Cell(4, c + 1).Style.Font.SetBold().Fill.SetBackgroundColor(XLColor.FromHtml("#1e293b")).Font.SetFontColor(XLColor.White)
@@ -911,18 +972,19 @@ Public Class Products
                             ws.Cell(rowNum, 2).Value = dgvRow.Cells("Barcode").Value?.ToString()
                             ws.Cell(rowNum, 3).Value = dgvRow.Cells("ProductNameAr").Value?.ToString()
                             ws.Cell(rowNum, 4).Value = dgvRow.Cells("Category_NameAr").Value?.ToString()
-                            ws.Cell(rowNum, 5).Value = Convert.ToDecimal(If(dgvRow.Cells("SalePrice").Value, 0))
-                            ws.Cell(rowNum, 6).Value = Convert.ToDecimal(If(dgvRow.Cells("CostPrice").Value, 0))
-                            ws.Cell(rowNum, 7).Value = Convert.ToDecimal(If(dgvRow.Cells("Quantity").Value, 0))
-                            ws.Cell(rowNum, 8).Value = Convert.ToDecimal(If(dgvRow.Cells("MinQuantity").Value, 0))
-                            ws.Cell(rowNum, 9).Value = dgvRow.Cells("Unit").Value?.ToString()
-                            ws.Cell(rowNum, 10).Value = If(Convert.ToBoolean(If(dgvRow.Cells("IsActive").Value, True)), "نشط", "معطل")
+                            ws.Cell(rowNum, 5).Value = If(Convert.ToBoolean(If(dgvRow.Cells("IsDirect").Value, True)), "مباشر", "متعدد الأحجام")
+                            ws.Cell(rowNum, 6).Value = Convert.ToDecimal(If(dgvRow.Cells("SalePrice").Value, 0))
+                            ws.Cell(rowNum, 7).Value = Convert.ToDecimal(If(dgvRow.Cells("CostPrice").Value, 0))
+                            ws.Cell(rowNum, 8).Value = Convert.ToDecimal(If(dgvRow.Cells("Quantity").Value, 0))
+                            ws.Cell(rowNum, 9).Value = Convert.ToDecimal(If(dgvRow.Cells("MinQuantity").Value, 0))
+                            ws.Cell(rowNum, 10).Value = dgvRow.Cells("Unit").Value?.ToString()
+                            ws.Cell(rowNum, 11).Value = If(Convert.ToBoolean(If(dgvRow.Cells("IsActive").Value, True)), "نشط", "معطل")
 
                             ' تنسيق العملات والكميات
-                            ws.Cell(rowNum, 5).Style.NumberFormat.Format = "#,##0.00"
                             ws.Cell(rowNum, 6).Style.NumberFormat.Format = "#,##0.00"
-                            ws.Cell(rowNum, 7).Style.NumberFormat.Format = "#,##0"
+                            ws.Cell(rowNum, 7).Style.NumberFormat.Format = "#,##0.00"
                             ws.Cell(rowNum, 8).Style.NumberFormat.Format = "#,##0"
+                            ws.Cell(rowNum, 9).Style.NumberFormat.Format = "#,##0"
 
                             rowNum += 1
                         Next

@@ -747,6 +747,7 @@ Namespace Services
                 t.AddColumn("CreatedAt", "DATETIME", False, "getdate()", False, False)
                 t.AddColumn("BasePrice", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("Partner_ID", "INT", True, Nothing, False, False)
+                t.AddColumn("IsDirect", "BIT", True, "1", False, False)
                 list.Add(t)
 
                 ' 39. PurchaseDetails (تفاصيل فواتير المشتريات)

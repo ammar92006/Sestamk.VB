@@ -48,6 +48,11 @@ Partial Class Products
         Me.Label8 = New System.Windows.Forms.Label()
         Me.lblProfitMargin = New System.Windows.Forms.Label()
         Me.txtMinQuantity = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.pnlDirectMode = New Guna.UI2.WinForms.Guna2Panel()
+        Me.tgIsDirect = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+        Me.lblDirectTitle = New System.Windows.Forms.Label()
+        Me.lblDirectStatus = New System.Windows.Forms.Label()
+        Me.btnSetupSizesQuick = New Guna.UI2.WinForms.Guna2Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.txtQuantity = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -95,6 +100,7 @@ Partial Class Products
         Me.pnlSearch.SuspendLayout()
         Me.grpProductInfo.SuspendLayout()
         Me.pnlActions.SuspendLayout()
+        Me.pnlDirectMode.SuspendLayout()
         CType(Me.picProduct, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlStats.SuspendLayout()
         Me.panelHeader.SuspendLayout()
@@ -200,7 +206,7 @@ Partial Class Products
         Me.cmbStockFilter.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.cmbStockFilter.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.cmbStockFilter.ItemHeight = 30
-        Me.cmbStockFilter.Items.AddRange(New Object() {"جميع حالات المخزون", "المتوفر فقط (>0)", "تحت حد الطلب / نواقص", "الأصناف غير النشطة"})
+        Me.cmbStockFilter.Items.AddRange(New Object() {"جميع حالات المخزون", "المتوفر فقط (>0)", "تحت حد الطلب / نواقص", "الأصناف غير النشطة", "الأصناف المباشرة فقط ⚡", "أصناف متعددة الأحجام 📏"})
         Me.cmbStockFilter.Location = New System.Drawing.Point(20, 8)
         Me.cmbStockFilter.Name = "cmbStockFilter"
         Me.cmbStockFilter.Size = New System.Drawing.Size(220, 36)
@@ -269,6 +275,7 @@ Partial Class Products
         '
         Me.grpProductInfo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.grpProductInfo.BorderRadius = 8
+        Me.grpProductInfo.Controls.Add(Me.pnlDirectMode)
         Me.grpProductInfo.Controls.Add(Me.pnlActions)
         Me.grpProductInfo.Controls.Add(Me.lblStatus)
         Me.grpProductInfo.Controls.Add(Me.tgStatus)
@@ -322,6 +329,80 @@ Partial Class Products
         Me.grpProductInfo.TabIndex = 128
         Me.grpProductInfo.Text = "بيانات الصنف والأسعار والمخزون"
         Me.grpProductInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'pnlDirectMode
+        '
+        Me.pnlDirectMode.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlDirectMode.BackColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.pnlDirectMode.BorderColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.pnlDirectMode.BorderRadius = 8
+        Me.pnlDirectMode.BorderThickness = 1
+        Me.pnlDirectMode.Controls.Add(Me.btnSetupSizesQuick)
+        Me.pnlDirectMode.Controls.Add(Me.lblDirectStatus)
+        Me.pnlDirectMode.Controls.Add(Me.lblDirectTitle)
+        Me.pnlDirectMode.Controls.Add(Me.tgIsDirect)
+        Me.pnlDirectMode.FillColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.pnlDirectMode.Location = New System.Drawing.Point(215, 298)
+        Me.pnlDirectMode.Name = "pnlDirectMode"
+        Me.pnlDirectMode.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.pnlDirectMode.Size = New System.Drawing.Size(1365, 48)
+        Me.pnlDirectMode.TabIndex = 5626
+        '
+        'tgIsDirect
+        '
+        Me.tgIsDirect.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tgIsDirect.Checked = True
+        Me.tgIsDirect.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.tgIsDirect.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.tgIsDirect.CheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.tgIsDirect.CheckedState.InnerColor = System.Drawing.Color.White
+        Me.tgIsDirect.Location = New System.Drawing.Point(1295, 11)
+        Me.tgIsDirect.Name = "tgIsDirect"
+        Me.tgIsDirect.Size = New System.Drawing.Size(55, 26)
+        Me.tgIsDirect.TabIndex = 0
+        Me.tgIsDirect.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
+        Me.tgIsDirect.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
+        Me.tgIsDirect.UncheckedState.InnerBorderColor = System.Drawing.Color.White
+        Me.tgIsDirect.UncheckedState.InnerColor = System.Drawing.Color.White
+        '
+        'lblDirectTitle
+        '
+        Me.lblDirectTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblDirectTitle.AutoSize = True
+        Me.lblDirectTitle.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+        Me.lblDirectTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.lblDirectTitle.Location = New System.Drawing.Point(1170, 14)
+        Me.lblDirectTitle.Name = "lblDirectTitle"
+        Me.lblDirectTitle.Size = New System.Drawing.Size(115, 19)
+        Me.lblDirectTitle.TabIndex = 1
+        Me.lblDirectTitle.Text = "هل الصنف مباشر؟"
+        '
+        'lblDirectStatus
+        '
+        Me.lblDirectStatus.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblDirectStatus.AutoSize = True
+        Me.lblDirectStatus.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblDirectStatus.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblDirectStatus.Location = New System.Drawing.Point(400, 15)
+        Me.lblDirectStatus.Name = "lblDirectStatus"
+        Me.lblDirectStatus.Size = New System.Drawing.Size(535, 19)
+        Me.lblDirectStatus.TabIndex = 2
+        Me.lblDirectStatus.Text = "⚡ صنف مباشر: يُضاف إلى فاتورة المبيعات فوراً بنقرة واحدة (بدون شاشة أحجام أو خيارات)"
+        '
+        'btnSetupSizesQuick
+        '
+        Me.btnSetupSizesQuick.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnSetupSizesQuick.BorderRadius = 6
+        Me.btnSetupSizesQuick.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
+        Me.btnSetupSizesQuick.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.btnSetupSizesQuick.ForeColor = System.Drawing.Color.White
+        Me.btnSetupSizesQuick.Location = New System.Drawing.Point(12, 8)
+        Me.btnSetupSizesQuick.Name = "btnSetupSizesQuick"
+        Me.btnSetupSizesQuick.Size = New System.Drawing.Size(140, 32)
+        Me.btnSetupSizesQuick.TabIndex = 3
+        Me.btnSetupSizesQuick.Text = "📏 إدارة أحجام الصنف"
+        Me.btnSetupSizesQuick.Visible = False
         '
         'pnlActions
         '
@@ -1172,6 +1253,8 @@ Partial Class Products
         Me.grpProductInfo.ResumeLayout(False)
         Me.grpProductInfo.PerformLayout()
         Me.pnlActions.ResumeLayout(False)
+        Me.pnlDirectMode.ResumeLayout(False)
+        Me.pnlDirectMode.PerformLayout()
         CType(Me.picProduct, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlStats.ResumeLayout(False)
         Me.panelHeader.ResumeLayout(False)
@@ -1247,4 +1330,9 @@ Partial Class Products
     Friend WithEvents pnlSearch As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents cmbStockFilter As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents cmbFilterCategory As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents pnlDirectMode As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents tgIsDirect As Guna.UI2.WinForms.Guna2ToggleSwitch
+    Friend WithEvents lblDirectTitle As Label
+    Friend WithEvents lblDirectStatus As Label
+    Friend WithEvents btnSetupSizesQuick As Guna.UI2.WinForms.Guna2Button
 End Class

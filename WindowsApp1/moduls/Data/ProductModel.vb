@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 
 Public Class ProductModel
     Public Property Product_ID As Integer
@@ -22,9 +22,13 @@ Public Class ProductModel
     Public Property SizesCount As Integer = 0
     Public Property AddonsCount As Integer = 0
     Public Property DefaultPrice As Decimal = 0
+    Public Property IsDirect As Boolean? = True
 
     Public ReadOnly Property IsDirectItem As Boolean
         Get
+            If IsDirect.HasValue Then
+                Return IsDirect.Value
+            End If
             Return SizesCount <= 1 AndAlso AddonsCount = 0
         End Get
     End Property
