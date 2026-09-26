@@ -2134,6 +2134,14 @@ Public Class frmPOS
                     noteText &= $" | [تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} {CurrencySymbol}]"
                 End If
 
+                Dim splitTreasuryID As Integer? = Nothing
+                If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso ShiftSession.CurrentShift.TreasuryID.HasValue AndAlso ShiftSession.CurrentShift.TreasuryID.Value > 0 Then
+                    splitTreasuryID = ShiftSession.CurrentShift.TreasuryID.Value
+                Else
+                    Dim defT = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+                    If defT > 0 Then splitTreasuryID = defT
+                End If
+
                 Dim invoice As New InvoiceModel With {
                     .OrderType = CByte(CurrentOrderType),
                     .ShiftID = shiftIdVal,
@@ -2150,6 +2158,7 @@ Public Class frmPOS
                     .PaidAmount = netToSplit,
                     .RemainingAmount = 0,
                     .IsCredit = False,
+                    .TreasuryID = splitTreasuryID,
                     .Notes = noteText
                 }
 

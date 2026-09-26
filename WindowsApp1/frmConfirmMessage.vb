@@ -1,203 +1,216 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
+Imports System.Drawing
+Imports System.Windows.Forms
 
 Public Class frmConfirmMessage
-    Dim x, y As Integer
-    Dim newpoint As New Point
-    Public CustomerName As String
-    Public BalanceBefore As Decimal
-    Public AmountPaid As Decimal
-    Public BalanceAfter As Decimal
-    Public Notes As String
-    Public TargetTreasuryID As Integer
-    Public EnteredPassword As String = ""
+
+    Public Property CustomerID As Integer = 0
+    Public Property CustomerCode As String = ""
+    Public Property CustomerName As String = ""
+    Public Property BalanceBefore As Decimal = 0
+    Public Property AmountPaid As Decimal = 0
+    Public Property BalanceAfter As Decimal = 0
+    Public Property TargetTreasuryID As Integer = 0
+    Public Property TreasuryName As String = ""
+    Public Property Notes As String = ""
+    Public Property EnteredPassword As String = ""
 
     Private Sub frmConfirmMessage_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-        ' عرض اسم العميل
-        txtCustomerName.Text = CustomerName
-
-        ' عرض الرصيد قبل (دائن/مدين)
-        If BalanceBefore < 0 Then
-            txtBalanceBefore.Text = "مديون " & Math.Abs(BalanceBefore)
-        Else
-            txtBalanceBefore.Text = "دائن " & BalanceBefore
-        End If
-
-        ' المبلغ المدفوع
-        txtAmountPaid.Text = AmountPaid.ToString() & " جنيه"
-
-        ' الرصيد بعد العملية
-        If BalanceAfter < 0 Then
-            txtBalanceAfter.Text = "مديون " & Math.Abs(BalanceAfter)
-        Else
-            txtBalanceAfter.Text = "دائن " & BalanceAfter
-        End If
-
-        txtNotes.Text = Notes
-    End Sub
-
-    'Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-    '    EnteredPassword = txtPassword.Text
-    '    ' التحقق من كلمة السر
-    '    If txtPassword.Text <> CurrentUserPassword Then
-    '        MsgBox("كلمة السر غير صحيحة!", MsgBoxStyle.Critical)
-    '        Exit Sub
-    '    End If
-
-    '    '------------------------------
-    '    ' حفظ بيانات العملية في قاعدة البيانات
-    '    '------------------------------
-    '    SavePaymentToDatabase(CustomerName, BalanceBefore, AmountPaid, BalanceAfter, Notes)
-
-    '    MsgBox("تم تسجيل عملية الدفع بنجاح!", MsgBoxStyle.Information)
-
-    '    Me.DialogResult = DialogResult.OK
-    '    Me.Close()
-    'End Sub
-
-
-
-    Private Async Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
-        EnteredPassword = txtPassword.Text
-        ' التحقق من كلمة السر
-        If txtPassword.Text <> CurrentUserPassword Then
-            MsgBox("كلمة السر غير صحيحة!", MsgBoxStyle.Critical)
-            Exit Sub
-        End If
-
-        ' تعطيل الزر مؤقتاً لمنع النقرات المتكررة
-        btnOK.Enabled = False
-
         Try
-            '------------------------------
-            ' حفظ بيانات العملية في قاعدة البيانات متضمناً حركة الخزنة
-            '------------------------------
-            Await SavePaymentToDatabaseAsync(CustomerName, BalanceBefore, AmountPaid, BalanceAfter, Notes, TargetTreasuryID)
+            Dim drag As New FormDragHelper(Me, pnlHeader)
 
-            MsgBox("تم تسجيل عملية الدفع وتحديث حساب الخزنة بنجاح!", MsgBoxStyle.Information)
+            lblCustomerName.Text = If(String.IsNullOrWhiteSpace(CustomerName), "عميل غير محدد", CustomerName)
+            If Not String.IsNullOrWhiteSpace(CustomerCode) Then
+                lblCustomerName.Text &= $" ({CustomerCode})"
+            End If
 
-            Me.DialogResult = DialogResult.OK
-            Me.Close()
+            If BalanceBefore < 0 Then
+                lblBalanceBefore.Text = $"{Math.Abs(BalanceBefore):N2} ج.م (مدين - عليه)"
+                lblBalanceBefore.ForeColor = Color.FromArgb(231, 76, 60)
+            ElseIf BalanceBefore > 0 Then
+                lblBalanceBefore.Text = $"{BalanceBefore:N2} ج.م (دائن - له)"
+                lblBalanceBefore.ForeColor = Color.FromArgb(39, 174, 96)
+            Else
+                lblBalanceBefore.Text = "0.00 ج.م (متزن)"
+                lblBalanceBefore.ForeColor = Color.Black
+            End If
+
+            lblAmountPaid.Text = $"{AmountPaid:N2} ج.م"
+
+            If BalanceAfter < 0 Then
+                lblBalanceAfter.Text = $"{Math.Abs(BalanceAfter):N2} ج.م (مدين - عليه)"
+                lblBalanceAfter.ForeColor = Color.FromArgb(231, 76, 60)
+            ElseIf BalanceAfter > 0 Then
+                lblBalanceAfter.Text = $"{BalanceAfter:N2} ج.م (دائن - له)"
+                lblBalanceAfter.ForeColor = Color.FromArgb(39, 174, 96)
+            Else
+                lblBalanceAfter.Text = "0.00 ج.م (خالص تماماً)"
+                lblBalanceAfter.ForeColor = Color.FromArgb(39, 174, 96)
+            End If
+
+            If Not String.IsNullOrWhiteSpace(TreasuryName) Then
+                lblTreasury.Text = TreasuryName
+            ElseIf TargetTreasuryID > 0 Then
+                lblTreasury.Text = $"خزينة رقم #{TargetTreasuryID}"
+            Else
+                lblTreasury.Text = "الخزينة الافتراضية"
+            End If
+
+            txtNotes.Text = Notes
+
+            If String.IsNullOrEmpty(Session.CurrentUserPassword) Then
+                lblPasswordTitle.Visible = False
+                txtPassword.Visible = False
+            End If
+
         Catch ex As Exception
-            MsgBox("فشلت العملية: " & ex.Message, MsgBoxStyle.Critical)
-        Finally
-            btnOK.Enabled = True
+            MessageBox.Show("خطأ أثناء تحميل بيانات السند: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
-    Private Async Function SavePaymentToDatabaseAsync(client As String, oldB As Decimal, pay As Decimal, newB As Decimal, notes As String, treasuryID As Integer) As Task
+    Private Async Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+        EnteredPassword = txtPassword.Text.Trim()
 
-        ' الاستعلامات الخاصة بالعميل
-        Dim sqlLog As String = "INSERT INTO CustomerBalanceLog (CustomerID, CustomerCode, CustomerName, OldBalance, PaidAmount, NewBalance, Notes, UserName, ActionDate) " &
-                           "VALUES (@CustomerID, @CustomerCode, @CustomerName, @OldBalance, @PaidAmount, @NewBalance, @Notes, @UserName, GETDATE())"
+        ' التحقق من كلمة السر إذا كان للمستخدم كلمة سر مسجلة
+        If Not String.IsNullOrEmpty(Session.CurrentUserPassword) AndAlso txtPassword.Visible Then
+            If EnteredPassword <> Session.CurrentUserPassword Then
+                MessageBox.Show("كلمة المرور غير صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                txtPassword.Focus()
+                txtPassword.SelectAll()
+                Exit Sub
+            End If
+        End If
 
-        Dim sqlUpdateCustomer As String = "UPDATE Customers SET CurrentBalance = @CurrentBalance WHERE CustomerName = @CustomerName"
+        btnOK.Enabled = False
+        btnCancel.Enabled = False
 
-        ' نقوم بفتح الاتصال وبدء المعاملة (Transaction)
-        Connect() ' استدعاء دالة الاتصال الخاصة بك لفح لـ Conn
+        Try
+            Dim finalNotes As String = txtNotes.Text.Trim()
+            Await SavePaymentToDatabaseAsync(CustomerID, CustomerCode, CustomerName, BalanceBefore, AmountPaid, BalanceAfter, finalNotes, TargetTreasuryID)
 
-        Using trans As SqlTransaction = Conn.BeginTransaction()
-            Try
-                ' 1. حفظ السجل في الـ Log الخاص بالعملاء
-                Using cmdLog As New SqlCommand(sqlLog, Conn, trans)
-                    cmdLog.Parameters.AddWithValue("@CustomerID", "")
-                    cmdLog.Parameters.AddWithValue("@CustomerCode", "")
-                    cmdLog.Parameters.AddWithValue("@CustomerName", client)
-                    cmdLog.Parameters.AddWithValue("@OldBalance", oldB)
-                    cmdLog.Parameters.AddWithValue("@PaidAmount", pay)
-                    cmdLog.Parameters.AddWithValue("@NewBalance", newB)
-                    cmdLog.Parameters.AddWithValue("@Notes", notes)
-                    cmdLog.Parameters.AddWithValue("@UserName", Convert.ToString(Session.CurrentUserName))
+            MessageBox.Show("✅ تم تسجيل سند القبض وإيداع المبلغ في الخزينة وتحديث كشف حساب العميل بنجاح!", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Me.DialogResult = DialogResult.OK
+            Me.Close()
 
-                    cmdLog.ExecuteNonQuery()
-                End Using
+        Catch ex As Exception
+            MessageBox.Show("فشلت عملية حفظ سند القبض: " & ex.Message, "خطأ في الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            btnOK.Enabled = True
+            btnCancel.Enabled = True
+        End Try
+    End Sub
 
-                ' 2. تحديث الرصيد في جدول العملاء
-                Using cmdCust As New SqlCommand(sqlUpdateCustomer, Conn, trans)
-                    cmdCust.Parameters.AddWithValue("@CurrentBalance", newB)
-                    cmdCust.Parameters.AddWithValue("@CustomerName", client)
+    Private Async Function SavePaymentToDatabaseAsync(custID As Integer, code As String, client As String, oldB As Decimal, pay As Decimal, newB As Decimal, notesText As String, treasuryID As Integer) As Task
+        Using cn As New SqlConnection(DBModule.ConnectionString)
+            Await cn.OpenAsync()
 
-                    cmdCust.ExecuteNonQuery()
-                End Using
+            Using trans As SqlTransaction = cn.BeginTransaction()
+                Try
+                    Dim currentUserID As Integer = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1)
+                    Dim currentUserName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, "المستخدم")
 
-                ' 3. تسجيل حركة إيداع المال في الخزنة المحددة وتحديث رصيدها تلقائياً
-                Await TreasuryService.AddTransactionAsync(
-                treasuryID:=treasuryID,
-                transactionType:=TreasuryTransactionTypes.CustomerReceipt, ' القيمة 4 من الـ Enum الخاص بك لـ سند قبض عميل
-                amount:=pay,
-                isDeposit:=True, ' حركة إيداع مال بالخزنة
-                referenceID:=0,
-                referenceNo:="سند قبض",
-                notes:="سند قبض من العميل: " & client & " - " & notes,
-                userID:=Session.CurrentUserID,
-                cn:=Conn,
-                trans:=trans
-            )
+                    ' 1. تسجيل السجل في CustomerTransactions لظهوره في كشف الحساب
+                    Dim receiptRefNo As String = $"REC-{DateTime.Now:yyyyMMdd}-{DateTime.Now:HHmmss}"
+                    Dim sqlCustTrans As String = "
+                        INSERT INTO CustomerTransactions 
+                        (CustomerID, TransactionType, ReferenceType, ReferenceID, ReferenceNumber, Amount, BalanceBefore, BalanceAfter, Description, CreatedBy, CreatedDate)
+                        VALUES 
+                        (@CustID, N'سند قبض', N'سداد رصيد', 0, @RefNo, @Amount, @BalBefore, @BalAfter, @Desc, @CreatedBy, GETDATE());
+                    "
+                    Using cmdTrans As New SqlCommand(sqlCustTrans, cn, trans)
+                        cmdTrans.Parameters.AddWithValue("@CustID", custID)
+                        cmdTrans.Parameters.AddWithValue("@RefNo", receiptRefNo)
+                        cmdTrans.Parameters.AddWithValue("@Amount", pay)
+                        cmdTrans.Parameters.AddWithValue("@BalBefore", oldB)
+                        cmdTrans.Parameters.AddWithValue("@BalAfter", newB)
+                        cmdTrans.Parameters.AddWithValue("@Desc", If(String.IsNullOrWhiteSpace(notesText), $"سند قبض نقدي من العميل {client}", notesText))
+                        cmdTrans.Parameters.AddWithValue("@CreatedBy", currentUserID)
+                        cmdTrans.ExecuteNonQuery()
+                    End Using
 
-                ' إذا تمت جميع الخطوات بنجاح تام، نثبت المعاملة في قاعدة البيانات
-                trans.Commit()
+                    ' 2. تسجيل السجل في CustomerBalanceLog (للسجل التاريخي)
+                    Dim sqlLog As String = "
+                        INSERT INTO CustomerBalanceLog 
+                        (CustomerID, CustomerCode, CustomerName, OldBalance, PaidAmount, NewBalance, Notes, UserName, ActionDate)
+                        VALUES 
+                        (@CustomerID, @CustomerCode, @CustomerName, @OldBalance, @PaidAmount, @NewBalance, @Notes, @UserName, GETDATE());
+                    "
+                    Using cmdLog As New SqlCommand(sqlLog, cn, trans)
+                        cmdLog.Parameters.AddWithValue("@CustomerID", custID.ToString())
+                        cmdLog.Parameters.AddWithValue("@CustomerCode", code)
+                        cmdLog.Parameters.AddWithValue("@CustomerName", client)
+                        cmdLog.Parameters.AddWithValue("@OldBalance", oldB)
+                        cmdLog.Parameters.AddWithValue("@PaidAmount", pay)
+                        cmdLog.Parameters.AddWithValue("@NewBalance", newB)
+                        cmdLog.Parameters.AddWithValue("@Notes", notesText)
+                        cmdLog.Parameters.AddWithValue("@UserName", currentUserName)
+                        cmdLog.ExecuteNonQuery()
+                    End Using
 
-            Catch ex As Exception
-                ' في حال حدوث أي خطأ، نتراجع عن كل الخطوات السابقة كأن شيئاً لم يكن
-                trans.Rollback()
-                Throw New Exception(ex.Message)
-            End Try
+                    ' 3. تحديث الرصيد في جدول Customers بالـ CustomerID
+                    Dim sqlUpdateCustomer As String = "UPDATE Customers SET CurrentBalance = @CurrentBalance, UpdatedAt = GETDATE() WHERE CustomerID = @CustomerID;"
+                    Using cmdCust As New SqlCommand(sqlUpdateCustomer, cn, trans)
+                        cmdCust.Parameters.AddWithValue("@CurrentBalance", newB)
+                        cmdCust.Parameters.AddWithValue("@CustomerID", custID)
+                        cmdCust.ExecuteNonQuery()
+                    End Using
+
+                    ' 4. تسجيل حركة إيداع الخزينة
+                    If treasuryID > 0 AndAlso pay > 0 Then
+                        Await TreasuryService.AddTransactionAsync(
+                            treasuryID:=treasuryID,
+                            transactionType:=TreasuryTransactionTypes.CustomerReceipt,
+                            amount:=pay,
+                            isDeposit:=True,
+                            referenceID:=0,
+                            referenceNo:=receiptRefNo,
+                            notes:=$"سند قبض من العميل: {client} - {notesText}",
+                            userID:=currentUserID,
+                            cn:=cn,
+                            trans:=trans
+                        )
+                    End If
+
+                    ' 5. تحديث نقديات الوردية الحالية إن وجدت
+                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso pay > 0 Then
+                        Dim currentShiftID = ShiftSession.CurrentShift.ShiftID
+                        Dim sqlShift As String = "UPDATE Shifts SET TotalSales = ISNULL(TotalSales, 0) + @Pay WHERE ShiftID = @ShiftID;"
+                        Using cmdShift As New SqlCommand(sqlShift, cn, trans)
+                            cmdShift.Parameters.AddWithValue("@Pay", pay)
+                            cmdShift.Parameters.AddWithValue("@ShiftID", currentShiftID)
+                            cmdShift.ExecuteNonQuery()
+                        End Using
+                        ShiftSession.CurrentShift.TotalSales += pay
+                    End If
+
+                    trans.Commit()
+
+                Catch ex As Exception
+                    Try
+                        trans.Rollback()
+                    Catch
+                    End Try
+                    Throw
+                End Try
+            End Using
         End Using
     End Function
 
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
-        x = Control.MousePosition.X - Me.Location.X
-        y = Control.MousePosition.Y - Me.Location.Y
-    End Sub
-
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove
-        If e.Button = MouseButtons.Left Then
-            newpoint = Control.MousePosition
-            newpoint.X -= x
-            newpoint.Y -= y
-            Me.Location = newpoint
-        End If
-    End Sub
-
-    Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
-        Close()
-    End Sub
-
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
+    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click, btnClose.Click
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-
-
-    Private Sub SavePaymentToDatabase(client As String, oldB As Decimal, pay As Decimal, newB As Decimal, notes As String)
-
-        Dim sql As String =
-        "INSERT INTO CustomerBalanceLog (CustomerID, CustomerCode, CustomerName, OldBalance,PaidAmount,NewBalance, Notes,UserName, ActionDate)
-         VALUES (@CustomerID, @CustomerCode, @CustomerName, @OldBalance,@PaidAmount,@NewBalance, @Notes,@UserName, GETDATE())"
-        Connect()
-
-        Using cmd As New SqlCommand(sql, Conn)
-            cmd.Parameters.AddWithValue("@CustomerID", "")
-            cmd.Parameters.AddWithValue("@CustomerCode", "")
-            cmd.Parameters.AddWithValue("@CustomerName", client)
-            cmd.Parameters.AddWithValue("@OldBalance", oldB)
-            cmd.Parameters.AddWithValue("@PaidAmount", pay)
-            cmd.Parameters.AddWithValue("@NewBalance", newB)
-            cmd.Parameters.AddWithValue("@Notes", notes)
-            cmd.Parameters.AddWithValue("@UserName", Convert.ToString(Session.CurrentUserName))
-            cmd.ExecuteNonQuery()
-        End Using
-
-        ' تحديث الرصيد في جدول العملاء
-        Dim sql2 As String = "UPDATE Customers SET CurrentBalance = @CurrentBalance WHERE CustomerName = @CustomerName"
-
-        Using cmd2 As New SqlCommand(sql2, Conn)
-            cmd2.Parameters.AddWithValue("@CurrentBalance", newB)
-            cmd2.Parameters.AddWithValue("@CustomerName", client)
-            cmd2.ExecuteNonQuery()
-        End Using
-
-    End Sub
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+        If keyData = Keys.Escape Then
+            Me.DialogResult = DialogResult.Cancel
+            Me.Close()
+            Return True
+        ElseIf keyData = Keys.Enter AndAlso Not txtNotes.Focused Then
+            btnOK.PerformClick()
+            Return True
+        End If
+        Return MyBase.ProcessCmdKey(msg, keyData)
+    End Function
 
 End Class

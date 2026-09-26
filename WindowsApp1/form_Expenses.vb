@@ -111,8 +111,10 @@ Public Class form_Expenses
             Return
         End If
 
-        Dim query As String = "INSERT INTO Expenses (Expense_Date, Category, Amount, Payment_Method, Payee, Payment_Status, Notes, Created_By, TreasuryID) " &
-                         "VALUES (@Date, @Category, @Amount, @Method, @Payee, @Status, @Notes, @User, @TreasuryID)"
+        Dim currentShiftID As Integer? = If(ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, CType(Nothing, Integer?))
+
+        Dim query As String = "INSERT INTO Expenses (Expense_Date, Category, Amount, Payment_Method, Payee, Payment_Status, Notes, Created_By, TreasuryID, ShiftID, UserID) " &
+                         "VALUES (@Date, @Category, @Amount, @Method, @Payee, @Status, @Notes, @User, @TreasuryID, @ShiftID, @UserID)"
 
         ' استخدام Using لضمان إغلاق الاتصال وتحرير الموارد
         Using NewConn As New SqlConnection(ConnectionString)
@@ -138,6 +140,8 @@ Public Class form_Expenses
                         .AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text))
                         .AddWithValue("@User", If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "Unknown"))
                         .AddWithValue("@TreasuryID", Convert.ToInt32(cmbTreasury.SelectedValue))
+                        .AddWithValue("@ShiftID", If(currentShiftID.HasValue, currentShiftID.Value, CType(DBNull.Value, Object)))
+                        .AddWithValue("@UserID", If(Session.CurrentUserID > 0, Session.CurrentUserID, CType(DBNull.Value, Object)))
                     End With
 
                     Try
@@ -161,7 +165,21 @@ Public Class form_Expenses
                         trans:=trans
                     )
 
-                        ' إذا نجحت العمليتان وتأكدنا من أن رصيد الخزنة لم يصبح سالباً، نقوم بالتثبيت النهائي
+                        ' ثالثاً: تحديث إجمالي مصروفات الوردية الحالية في قاعدة البيانات والذاكرة
+                        If currentShiftID.HasValue AndAlso expenseAmount > 0 Then
+                            Dim queryShiftExp As String = "UPDATE Shifts SET TotalExpenses = ISNULL(TotalExpenses, 0) + @Exp WHERE ShiftID = @ShiftID;"
+                            Using cmdShift As New SqlCommand(queryShiftExp, NewConn, trans)
+                                cmdShift.Parameters.AddWithValue("@Exp", expenseAmount)
+                                cmdShift.Parameters.AddWithValue("@ShiftID", currentShiftID.Value)
+                                Await cmdShift.ExecuteNonQueryAsync()
+                            End Using
+
+                            If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso ShiftSession.CurrentShift.ShiftID = currentShiftID.Value Then
+                                ShiftSession.CurrentShift.TotalExpenses += expenseAmount
+                            End If
+                        End If
+
+                        ' إذا نجحت العمليات نقوم بالتثبيت النهائي
                         trans.Commit()
 
                         MessageBox.Show("تم حفظ بيانات المصروف وخصمه من الخزنة بنجاح", "تأكيد الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)

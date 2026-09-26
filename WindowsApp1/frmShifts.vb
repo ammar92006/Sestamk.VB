@@ -350,6 +350,7 @@ Public Class frmShifts
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
+                    InitializeShiftSession()
                     MessageBox.Show("تم فتح الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     txtOpeningCash.Clear()
                     LoadShiftsGridAndActiveStatus()
@@ -422,6 +423,7 @@ Public Class frmShifts
 
                         conn.Open()
                         cmd.ExecuteNonQuery()
+                        ShiftSession.ClearSession()
                         MessageBox.Show("تم إغلاق الوردية المالية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' طباعة تقرير تقفيل الوردية الحراري (Z-Report) تلقائياً

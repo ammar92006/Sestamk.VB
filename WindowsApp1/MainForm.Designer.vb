@@ -150,6 +150,7 @@ Partial Class MainForm
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnFrmCustomerStatement = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator18 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnCustomerBalanceDownload = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator17 = New System.Windows.Forms.ToolStripSeparator()
         Me.tabSuppliers = New System.Windows.Forms.TabPage()
@@ -1668,7 +1669,7 @@ Partial Class MainForm
         '
         Me.ToolStrip2.AutoSize = False
         Me.ToolStrip2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnFrmCustomers, Me.ToolStripSeparator2, Me.btnFrmCustomerStatement, Me.ToolStripSeparator18, Me.ToolStripButton11, Me.ToolStripSeparator17})
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnFrmCustomers, Me.ToolStripSeparator2, Me.btnFrmCustomerStatement, Me.ToolStripSeparator18, Me.btnCustomerBalanceDownload, Me.ToolStripSeparator17, Me.ToolStripButton11})
         Me.ToolStrip2.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip2.Name = "ToolStrip2"
         Me.ToolStrip2.Size = New System.Drawing.Size(1420, 133)
@@ -1716,6 +1717,20 @@ Partial Class MainForm
         Me.ToolStripSeparator18.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator18.Name = "ToolStripSeparator18"
         Me.ToolStripSeparator18.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnCustomerBalanceDownload
+        '
+        Me.btnCustomerBalanceDownload.AutoSize = False
+        Me.btnCustomerBalanceDownload.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCustomerBalanceDownload.ForeColor = System.Drawing.Color.Black
+        Me.btnCustomerBalanceDownload.Image = Global.WindowsApp1.My.Resources.Resources.active_user
+        Me.btnCustomerBalanceDownload.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnCustomerBalanceDownload.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnCustomerBalanceDownload.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCustomerBalanceDownload.Name = "btnCustomerBalanceDownload"
+        Me.btnCustomerBalanceDownload.Size = New System.Drawing.Size(160, 100)
+        Me.btnCustomerBalanceDownload.Text = "سداد رصيد عميل"
+        Me.btnCustomerBalanceDownload.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         '
         'ToolStripButton11
         '
@@ -2814,6 +2829,7 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents btnFrmCustomerStatement As ToolStripButton
     Friend WithEvents ToolStripSeparator18 As ToolStripSeparator
+    Friend WithEvents btnCustomerBalanceDownload As ToolStripButton
     Friend WithEvents ToolStripButton11 As ToolStripButton
     Friend WithEvents ToolStripSeparator17 As ToolStripSeparator
     Friend WithEvents tabSuppliers As TabPage

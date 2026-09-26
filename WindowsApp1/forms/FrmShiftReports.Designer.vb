@@ -156,6 +156,7 @@ Partial Class FrmShiftReports
         Me.grpFilters.Controls.Add(Me.btnSearch)
         Me.grpFilters.Controls.Add(Me.btnRefresh)
         Me.grpFilters.Controls.Add(Me.btnExportExcel)
+        Me.grpFilters.Controls.Add(Me.btnExportPdf)
         Me.grpFilters.Controls.Add(Me.btnPrint)
         Me.grpFilters.Dock = System.Windows.Forms.DockStyle.Top
         Me.grpFilters.FillColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(250, Byte), Integer))
@@ -414,6 +415,19 @@ Partial Class FrmShiftReports
         Me.btnPrint.Size = New System.Drawing.Size(195, 42)
         Me.btnPrint.TabIndex = 10
         Me.btnPrint.Text = "🖨️ طباعة التقرير"
+        '
+        'btnExportPdf
+        '
+        Me.btnExportPdf.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnExportPdf.BorderRadius = 6
+        Me.btnExportPdf.FillColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(57, Byte), Integer), CType(CType(43, Byte), Integer))
+        Me.btnExportPdf.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnExportPdf.ForeColor = System.Drawing.Color.White
+        Me.btnExportPdf.Location = New System.Drawing.Point(270, 148)
+        Me.btnExportPdf.Name = "btnExportPdf"
+        Me.btnExportPdf.Size = New System.Drawing.Size(195, 42)
+        Me.btnExportPdf.TabIndex = 11
+        Me.btnExportPdf.Text = "📄 تصدير إلى PDF"
         '
         'pnlKPIs
         '
@@ -699,6 +713,7 @@ Partial Class FrmShiftReports
     Friend WithEvents btnSearch As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnRefresh As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnExportExcel As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnExportPdf As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnPrint As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents pnlKPIs As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents lblTotalSalesSum As Label

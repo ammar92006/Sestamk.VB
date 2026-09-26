@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmDeliveryDrivers
 
@@ -231,7 +231,7 @@ Public Class frmDeliveryDrivers
 
         Dim query As String = "UPDATE DeliveryDrivers SET DriverCode=@Code, DriverName=@Name, Phone=@Phone, NationalID=@NationalID, " &
                               "EmployeeID=@EmployeeID, LicenseNumber=@LicenseNumber, VehicleType=@VehicleType, " &
-                              "VehiclePlateNumber=@PlateNumber, IsPercentage=@IsPercentage, DeliveryFeeValue=@FeeValue,AreaID=@AreaID " &
+                              "VehiclePlateNumber=@PlateNumber, IsPercentage=@IsPercentage, DeliveryFeeValue=@FeeValue, AreaID=@AreaID, " &
                               "Notes=@Notes, IsActive=@IsActive WHERE DriverID=@DriverID"
 
         Using conn As New SqlConnection(DBModule.ConnectionString)

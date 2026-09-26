@@ -693,6 +693,10 @@ Public Class MainForm
         OpenFormOnce(GetType(FrmCustomerStatement), btnFrmCustomerStatement)
     End Sub
 
+    Private Sub btnCustomerBalanceDownload_Click(sender As Object, e As EventArgs) Handles btnCustomerBalanceDownload.Click
+        OpenFormOnce(GetType(Customer_Balance_Download), btnCustomerBalanceDownload)
+    End Sub
+
     Private Sub btnFrmSalesReport_Click(sender As Object, e As EventArgs) Handles btnFrmSalesReport.Click
         OpenFormOnce(GetType(FrmSalesReport), btnFrmSalesReport)
     End Sub
@@ -1004,6 +1008,7 @@ Public Class MainForm
             {btnSettings, "Settings"},
             {btnBackups, "Backup"},
             {btnFrmCustomerStatement, "FrmCustomerStatement"},
+            {btnCustomerBalanceDownload, "Customer_Balance_Download"},
             {btnFrmSalesReport, "FrmSalesReport"},
             {btnFrmDriverReport, "FrmDriverReport"},
             {btnDeposit, "FrmTreasuryTransaction"},

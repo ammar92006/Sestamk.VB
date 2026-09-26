@@ -1,538 +1,444 @@
+Imports System
+Imports System.Data
 Imports System.Data.SqlClient
+Imports System.Drawing
+Imports System.IO
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
 Imports ClosedXML.Excel
 Imports Guna.UI2.WinForms
 
 Public Class Customer_Balance_Download
-    Dim x, y As Integer
-    Dim newpoint As New Point
-    Private defaultTreasuryid As Integer = -1
 
-    Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
-        If WindowState = FormWindowState.Maximized Then
-            WindowState = FormWindowState.Normal
-        ElseIf WindowState = FormWindowState.Normal Then
-            WindowState = FormWindowState.Maximized
-        End If
-    End Sub
+    Private _rawCustomersTable As DataTable = Nothing
+    Private _selectedCustomerID As Integer = 0
+    Private _selectedCustomerCode As String = ""
+    Private _selectedCustomerName As String = ""
+    Private _selectedCustomerBalance As Decimal = 0
+    Private _selectedCustomerCreditLimit As Decimal = 0
 
-    Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
-        Close()
-    End Sub
-    Private Sub btn_min_Click(sender As Object, e As EventArgs) Handles btn_min.Click
-        WindowState = FormWindowState.Minimized
-    End Sub
-
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
-        x = Control.MousePosition.X - Me.Location.X
-        y = Control.MousePosition.Y - Me.Location.Y
+    Public Sub New()
+        InitializeComponent()
     End Sub
 
     Private Async Sub Customer_Balance_Download_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        cmbSearchField.Items.Add("كود العميل")
-        cmbSearchField.Items.Add("اسم العميل")
-        cmbSearchField.Items.Add("رقم الهاتف")
-        cmbSearchField.Items.Add("العنوان")
-        cmbSearchField.Items.Add("الحالة")
-        cmbSearchField.Items.Add("الملاحظات")
-        cmbSearchField.SelectedIndex = 1
-        Me.KeyPreview = True
-        LoadCustomers()
-        datagridviewsetup()
-        Await LoadTreasuriesAsync()
+        Try
+            Dim drag As New FormDragHelper(Me, panelHeader)
+
+            ' تطبيق الثيم العام
+            ThemeManager.Instance.ApplyTheme(Me)
+            ThemeHelper.ApplyDataGridViewTheme(dgvCustomers, ThemeManager.Instance.CurrentPalette)
+
+            ' إعداد فلاتر البحث
+            cmbFilterType.Items.Clear()
+            cmbFilterType.Items.Add("جميع العملاء")
+            cmbFilterType.Items.Add("العملاء المدينون فقط (عليهم مديونية)")
+            cmbFilterType.Items.Add("العملاء الدائنون فقط (لهم رصيد)")
+            cmbFilterType.SelectedIndex = 0
+
+            Await LoadTreasuriesAsync()
+            LoadCustomers()
+
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء فتح شاشة سداد الأرصدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
+    ' =========================================================
+    ' تحميل الخزائن المتاحة
+    ' =========================================================
     Private Async Function LoadTreasuriesAsync() As Task
-
         Try
-
             Dim dt As New DataTable()
-
             Using cn As SqlConnection = Await NewConnAsync()
-
-                Const sql As String =
-                    "
-                    SELECT
-                    TreasuryID,
-                    TreasuryNameAr
-                    FROM Treasury
-                    WHERE IsActive = 1
-                    AND IsDeleted = 0
-                    "
-
+                Const sql As String = "SELECT TreasuryID, TreasuryNameAr FROM Treasury WHERE IsActive = 1 AND IsDeleted = 0 ORDER BY TreasuryID;"
                 Using da As New SqlDataAdapter(sql, cn)
-
                     Await Task.Run(Sub() da.Fill(dt))
-
                 End Using
-
             End Using
+
             cmbTreasury.DataSource = dt
             cmbTreasury.DisplayMember = "TreasuryNameAr"
             cmbTreasury.ValueMember = "TreasuryID"
-            defaultTreasuryid = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
-            If defaultTreasuryid > 0 Then
-                cmbTreasury.SelectedValue = defaultTreasuryid
+
+            Dim defTreasuryID As Integer = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+            If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso ShiftSession.CurrentShift.TreasuryID.HasValue AndAlso ShiftSession.CurrentShift.TreasuryID.Value > 0 Then
+                cmbTreasury.SelectedValue = ShiftSession.CurrentShift.TreasuryID.Value
+            ElseIf defTreasuryID > 0 Then
+                cmbTreasury.SelectedValue = defTreasuryID
             ElseIf cmbTreasury.Items.Count > 0 Then
                 cmbTreasury.SelectedIndex = 0
             End If
 
         Catch ex As Exception
-
-            MessageBox.Show(ex.Message)
-
+            MessageBox.Show("خطأ أثناء تحميل بيانات الخزينة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
-
     End Function
-    Private Sub LoadCustomers(Optional filter As String = "", Optional field As String = "")
-        Using Conn
-            Dim query As String = "SELECT CustomerID, CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes , CreatedAt , UpdatedAt FROM Customers"
-            Connect()
-            txtCustomerCode.Clear()
-            txtCustomerName.Clear()
-            nudCreditLimit.Value = 0
-            txtBalance.Clear()
 
-            If filter <> "" Then
-                Dim columnName As String = ""
-                Select Case field
-                    Case "كود العميل"
-                        columnName = "CustomerCode"
-                    Case "اسم العميل"
-                        columnName = "CustomerName"
-                    Case "رقم الهاتف"
-                        columnName = "PhoneNumber"
-                    Case "العنوان"
-                        columnName = "Address"
-                    Case "الحالة"
-                        columnName = "IsActive"
-                    Case "الملاحظات"
-                        columnName = "Notes"
-                    Case "تاريخ الاضافة"
-                        columnName = "CreatedAt"
-                    Case "تاريخ اخر تحديث"
-                        columnName = "UpdatedAt"
-                End Select
+    ' =========================================================
+    ' تحميل العملاء وحساب المؤشرات
+    ' =========================================================
+    Private Sub LoadCustomers()
+        Try
+            Using conn As New SqlConnection(DBModule.ConnectionString)
+                Const sql As String = "
+                    SELECT 
+                        CustomerID,
+                        CustomerCode,
+                        CustomerName,
+                        PhoneNumber,
+                        Address,
+                        CreditLimit,
+                        CurrentBalance,
+                        IsActive,
+                        Notes,
+                        CreatedAt
+                    FROM Customers
+                    ORDER BY CASE WHEN CurrentBalance < 0 THEN 0 ELSE 1 END, ABS(CurrentBalance) DESC, CustomerName;"
 
-                If columnName <> "" Then
-                    query &= $" WHERE {columnName} LIKE @filter"
-                End If
-            End If
+                Using da As New SqlDataAdapter(sql, conn)
+                    _rawCustomersTable = New DataTable()
+                    da.Fill(_rawCustomersTable)
+                    ApplyFilter()
+                End Using
+            End Using
 
-            Dim cmd As New SqlCommand(query, Conn)
-            If filter <> "" Then cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
-
-            Dim da As New SqlDataAdapter(cmd)
-            Dim dt As New DataTable()
-            da.Fill(dt)
-            dgvCustomers.DataSource = dt
-            Disconnect()
-        End Using
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء تحميل العملاء: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
+    Private Sub ApplyFilter()
+        If _rawCustomersTable Is Nothing Then Exit Sub
 
-    Private Sub datagridviewsetup()
-        With dgvCustomers
-            dgvCustomers.ReadOnly = True
-            dgvCustomers.AllowUserToAddRows = False
-            dgvCustomers.AllowUserToDeleteRows = False
-            dgvCustomers.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            dgvCustomers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            dgvCustomers.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(45, 45, 48)
-            dgvCustomers.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            dgvCustomers.AlternatingRowsDefaultCellStyle.BackColor = Color.AliceBlue
-            dgvCustomers.DefaultCellStyle.SelectionBackColor = Color.RoyalBlue
+        Dim filterQuery As String = ""
+        Dim keyword As String = txtSearch.Text.Trim().Replace("'", "''")
 
-            '---------------------------
-            ' إعداد العنوان (Header)
-            '---------------------------
-            .EnableHeadersVisualStyles = False
-            .ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(40, 40, 43)
-            .ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            .ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 14, FontStyle.Bold)
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersHeight = 60
-            .ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None
-
-            '---------------------------
-            ' إعداد الصفوف (Rows)
-            '---------------------------
-            .DefaultCellStyle.BackColor = Color.FromArgb(50, 50, 55)
-            .DefaultCellStyle.ForeColor = Color.White
-            .DefaultCellStyle.SelectionBackColor = Color.FromArgb(70, 130, 180) ' لون أزرق أنيق عند التحديد
-            .DefaultCellStyle.SelectionForeColor = Color.White
-            .DefaultCellStyle.Font = New Font("Segoe UI", 11, FontStyle.Regular)
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .DefaultCellStyle.Padding = New Padding(5, 5, 5, 5)
-            '.RowTemplate.Height = 60
-
-            '---------------------------
-            ' الصفوف المتبادلة
-            '---------------------------
-            .AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(60, 60, 65)
-
-            '---------------------------
-            ' شكل الشبكة
-            '---------------------------
-            .GridColor = Color.FromArgb(80, 80, 80)
-            .CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-
-            '---------------------------
-            ' الإعدادات العامة
-            '---------------------------
-            .BackgroundColor = Color.FromArgb(30, 30, 35)
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-            .RowHeadersVisible = False
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .ReadOnly = True
-            .AllowUserToAddRows = False
-            .AllowUserToResizeRows = True
-            .AllowUserToDeleteRows = False
-            .AllowUserToResizeColumns = False
-
-            ' ✅ ضبط النص في المنتصف داخل الخلايا
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-
-            ' ✅ إظهار عناوين الأعمدة (لو كانت مخفية)
-            .ColumnHeadersVisible = True
-
-
-            '.Columns("BaseUnit_ID").Visible = False
-            .Columns("CustomerID").Visible = False
-
-            ' ✅ عناوين الأعمدة
-            .Columns("CustomerCode").HeaderText = "كود العميل"
-            .Columns("CustomerName").HeaderText = "اسم العميل"
-            .Columns("PhoneNumber").HeaderText = "رقم الهاتف"
-            .Columns("Address").HeaderText = "العنوان"
-            .Columns("CreditLimit").HeaderText = "حد الائتمان"
-            .Columns("CurrentBalance").HeaderText = "الرصيد الحالي"
-            .Columns("IsActive").HeaderText = "الحالة"
-            .Columns("Notes").HeaderText = "الملاحظات"
-            .Columns("CreatedAt").HeaderText = "تاريخ الاضافة"
-            .Columns("UpdatedAt").HeaderText = "تاريخ اخر تحديث"
-
-            '' الترتيب
-            '.Columns("Product_ID").DisplayIndex = 0
-            '.Columns("Product_Code").DisplayIndex = 1
-            '.Columns("Product_Name").DisplayIndex = 2
-            '.Columns("Unit_Name").DisplayIndex = 3
-            '.Columns("Category_Name").DisplayIndex = 4
-            '.Columns("Partner_Name").DisplayIndex = 5
-            '.Columns("CompanyName").DisplayIndex = 6
-            '.Columns("Product_Note").DisplayIndex = 7
-            '.Columns("Product_State").DisplayIndex = 8
-            .Columns("CustomerName").Width = 300
-            .Columns("IsActive").Width = 60
-
-
-            ' ✅ عرض الأعمدة بالتساوي
-            .AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
-            '' ✅ تحسين مظهر الصفوف
-            '.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(245, 245, 245)
-            '.DefaultCellStyle.Font = New Font("Segoe UI", 14)
-            '.DefaultCellStyle.ForeColor = Color.Black
-            '.DefaultCellStyle.SelectionBackColor = Color.FromArgb(30, 144, 255)
-            '.DefaultCellStyle.SelectionForeColor = Color.White
-
-            '' ✅ تحسين عناوين الأعمدة
-            '.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 12, FontStyle.Bold)
-            '.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(51, 102, 153)
-            '.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            '.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            '.EnableHeadersVisualStyles = False   ' ← لازم False علشان التنسيق يبان فعلاً
-
-            '' ✅ حدود الصفوف والخلايا
-            '.GridColor = Color.LightGray
-            '.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            '.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal
-            '.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single
-
-            ' ✅ شكل جميل للصفوف
-            '.RowTemplate.Height = 100
-            .MultiSelect = False
-        End With
-    End Sub
-    Private Function GetSuggestions(field As String, keyword As String) As List(Of String)
-        Dim suggestions As New List(Of String)()
-
-        Dim columnName As String = ""
-        Select Case field
-            Case "كود العميل"
-                columnName = "CustomerCode"
-            Case "اسم العميل"
-                columnName = "CustomerName"
-            Case "رقم الهاتف"
-                columnName = "PhoneNumber"
-            Case "العنوان"
-                columnName = "Address"
-            Case "الحالة"
-                columnName = "IsActive"
-            Case "الملاحظات"
-                columnName = "Notes"
-        End Select
-
-        Using Conn
-            Connect()
-            Dim query As String = $"SELECT {columnName} FROM Customers WHERE {columnName} LIKE @keyword"
-            Dim cmd As New SqlCommand(query, Conn)
-            cmd.Parameters.AddWithValue("@keyword", "%" & keyword & "%")
-
-            Dim reader = cmd.ExecuteReader()
-            While reader.Read()
-                suggestions.Add(reader(columnName).ToString())
-            End While
-        End Using
-        Disconnect()
-        Return suggestions
-    End Function
-    Private Sub lstSuggestions_Click(sender As Object, e As EventArgs) Handles lstSuggestions.Click
-        'If lstSuggestions.SelectedItem IsNot Nothing Then
-        '    txtSearch.Text = lstSuggestions.SelectedItem.ToString()
-        '    lstSuggestions.Visible = False
-        '    LoadCustomers(txtSearch.Text)
-        'End If
-
-        If lstSuggestions.SelectedItem IsNot Nothing Then
-            txtSearch.Text = lstSuggestions.SelectedItem.ToString()
-            lstSuggestions.Visible = False
-            'LoadCustomers(txtSearch.Text)
-            Dim keyword As String = txtSearch.Text.Trim()
-            Dim field As String = cmbSearchField.SelectedItem.ToString()
-            LoadCustomers(keyword, field)
-
-            If dgvCustomers.Rows.GetRowCount(DataGridViewElementStates.Visible) = 1 Then
-
-                Dim visibleRow As DataGridViewRow =
-                    dgvCustomers.Rows.Cast(Of DataGridViewRow)().
-                    First(Function(r) r.Visible)
-
-                Dim visibleCell As DataGridViewCell =
-                    visibleRow.Cells.Cast(Of DataGridViewCell)().
-                    First(Function(c) c.Visible)
-
-                dgvCustomers.ClearSelection()
-                visibleRow.Selected = True
-                dgvCustomers.CurrentCell = visibleCell
-
-                SelectCustomer(visibleRow.Index)
-
-            End If
-
-
-
-
+        If Not String.IsNullOrEmpty(keyword) Then
+            filterQuery = $"(CustomerName LIKE '%{keyword}%' OR CustomerCode LIKE '%{keyword}%' OR PhoneNumber LIKE '%{keyword}%' OR Address LIKE '%{keyword}%')"
         End If
 
-    End Sub
-    Private Sub SelectCustomer(rowIndex As Integer)
+        Select Case cmbFilterType.SelectedIndex
+            Case 1 ' المدينون فقط (عليهم دين: رصيد سالب)
+                Dim cond = "CurrentBalance < 0"
+                filterQuery = If(String.IsNullOrEmpty(filterQuery), cond, $"{filterQuery} AND {cond}")
+            Case 2 ' الدائنون فقط (لهم رصيد: موجب)
+                Dim cond = "CurrentBalance > 0"
+                filterQuery = If(String.IsNullOrEmpty(filterQuery), cond, $"{filterQuery} AND {cond}")
+        End Select
 
+        Dim dv As New DataView(_rawCustomersTable)
+        dv.RowFilter = filterQuery
+        dgvCustomers.DataSource = dv
+
+        SetupGridColumns()
+        UpdateKpis(dv)
+
+        If dgvCustomers.Rows.Count > 0 Then
+            dgvCustomers.Rows(0).Selected = True
+            SelectCustomerRow(0)
+        Else
+            ClearSelectedCustomer()
+        End If
+    End Sub
+
+    Private Sub SetupGridColumns()
+        If dgvCustomers.Columns.Count = 0 Then Exit Sub
+
+        If dgvCustomers.Columns.Contains("CustomerID") Then dgvCustomers.Columns("CustomerID").Visible = False
+        If dgvCustomers.Columns.Contains("IsActive") Then dgvCustomers.Columns("IsActive").Visible = False
+        If dgvCustomers.Columns.Contains("Notes") Then dgvCustomers.Columns("Notes").Visible = False
+        If dgvCustomers.Columns.Contains("CreatedAt") Then dgvCustomers.Columns("CreatedAt").Visible = False
+
+        If dgvCustomers.Columns.Contains("CustomerCode") Then
+            dgvCustomers.Columns("CustomerCode").HeaderText = "كود العميل"
+            dgvCustomers.Columns("CustomerCode").Width = 100
+        End If
+
+        If dgvCustomers.Columns.Contains("CustomerName") Then
+            dgvCustomers.Columns("CustomerName").HeaderText = "اسم العميل"
+            dgvCustomers.Columns("CustomerName").Width = 220
+        End If
+
+        If dgvCustomers.Columns.Contains("PhoneNumber") Then
+            dgvCustomers.Columns("PhoneNumber").HeaderText = "رقم الهاتف"
+            dgvCustomers.Columns("PhoneNumber").Width = 120
+        End If
+
+        If dgvCustomers.Columns.Contains("Address") Then
+            dgvCustomers.Columns("Address").HeaderText = "العنوان"
+            dgvCustomers.Columns("Address").Width = 160
+        End If
+
+        If dgvCustomers.Columns.Contains("CreditLimit") Then
+            dgvCustomers.Columns("CreditLimit").HeaderText = "حد الائتمان"
+            dgvCustomers.Columns("CreditLimit").DefaultCellStyle.Format = "N2"
+            dgvCustomers.Columns("CreditLimit").Width = 110
+        End If
+
+        If dgvCustomers.Columns.Contains("CurrentBalance") Then
+            dgvCustomers.Columns("CurrentBalance").HeaderText = "الرصيد الحالي"
+            dgvCustomers.Columns("CurrentBalance").DefaultCellStyle.Format = "N2"
+            dgvCustomers.Columns("CurrentBalance").Width = 130
+        End If
+    End Sub
+
+    Private Sub UpdateKpis(dv As DataView)
+        Dim totalDebt As Decimal = 0
+        For Each r As DataRowView In dv
+            Dim bal As Decimal = Convert.ToDecimal(r("CurrentBalance"))
+            If bal < 0 Then
+                totalDebt += Math.Abs(bal)
+            End If
+        Next
+        lblTotalDebtKpi.Text = $"{totalDebt:N2} ج.م"
+    End Sub
+
+    Private Sub dgvCustomers_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvCustomers.CellFormatting
+        If dgvCustomers.Columns(e.ColumnIndex).Name = "CurrentBalance" AndAlso e.Value IsNot Nothing Then
+            Dim bal As Decimal = 0
+            If Decimal.TryParse(e.Value.ToString(), bal) Then
+                If bal < 0 Then
+                    e.CellStyle.ForeColor = Color.FromArgb(231, 76, 60) ' أحمر للمدين
+                    e.CellStyle.Font = New Font(dgvCustomers.Font, FontStyle.Bold)
+                ElseIf bal > 0 Then
+                    e.CellStyle.ForeColor = Color.FromArgb(39, 174, 96) ' أخضر للدائن
+                    e.CellStyle.Font = New Font(dgvCustomers.Font, FontStyle.Bold)
+                Else
+                    e.CellStyle.ForeColor = Color.FromArgb(100, 110, 120)
+                End If
+            End If
+        End If
+    End Sub
+
+    Private Sub dgvCustomers_SelectionChanged(sender As Object, e As EventArgs) Handles dgvCustomers.SelectionChanged
+        If dgvCustomers.SelectedRows.Count > 0 Then
+            SelectCustomerRow(dgvCustomers.SelectedRows(0).Index)
+        End If
+    End Sub
+
+    Private Sub SelectCustomerRow(rowIndex As Integer)
         If rowIndex < 0 OrElse rowIndex >= dgvCustomers.Rows.Count Then Exit Sub
 
         Dim row As DataGridViewRow = dgvCustomers.Rows(rowIndex)
-        txtCustomerCode.Text = row.Cells("CustomerCode").Value.ToString()
-        txtCustomerName.Text = row.Cells("CustomerName").Value.ToString()
-        nudCreditLimit.Value = Convert.ToDecimal(row.Cells("CreditLimit").Value)
-        txtBalance.Text = row.Cells("CurrentBalance").Value.ToString()
+        _selectedCustomerID = Convert.ToInt32(row.Cells("CustomerID").Value)
+        _selectedCustomerCode = row.Cells("CustomerCode").Value?.ToString()
+        _selectedCustomerName = row.Cells("CustomerName").Value?.ToString()
+        _selectedCustomerBalance = Convert.ToDecimal(row.Cells("CurrentBalance").Value)
+        _selectedCustomerCreditLimit = Convert.ToDecimal(row.Cells("CreditLimit").Value)
 
-    End Sub
-    Private Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
-        Dim keyword As String = txtSearch.Text.Trim()
-        lstSuggestions.Items.Clear()
+        Dim phone As String = row.Cells("PhoneNumber").Value?.ToString()
 
-        If keyword.Length < 1 Then
-            lstSuggestions.Visible = False
-            LoadCustomers() ' عرض الكل لو البحث فاضي
-            Exit Sub
-        End If
+        lblCustomerName.Text = _selectedCustomerName
+        lblCustomerPhone.Text = $"الكود: {_selectedCustomerCode}  |  الهاتف: {If(String.IsNullOrEmpty(phone), "---", phone)}"
+        lblCreditLimitDisplay.Text = $"سقف الائتمان المسموح: {_selectedCustomerCreditLimit:N2} ج.م"
 
-        Dim field As String = cmbSearchField.SelectedItem.ToString()
-        Dim suggestions = GetSuggestions(field, keyword)
-
-        If suggestions.Count > 0 Then
-            lstSuggestions.Items.AddRange(suggestions.ToArray())
-            lstSuggestions.Visible = True
+        If _selectedCustomerBalance < 0 Then
+            lblBalanceDisplay.Text = $"{Math.Abs(_selectedCustomerBalance):N2} ج.م (مدين)"
+            lblBalanceDisplay.ForeColor = Color.FromArgb(231, 76, 60)
+            btnPayFullDebt.Visible = True
+        ElseIf _selectedCustomerBalance > 0 Then
+            lblBalanceDisplay.Text = $"{_selectedCustomerBalance:N2} ج.م (دائن)"
+            lblBalanceDisplay.ForeColor = Color.FromArgb(39, 174, 96)
+            btnPayFullDebt.Visible = False
         Else
-            lstSuggestions.Visible = False
+            lblBalanceDisplay.Text = "0.00 ج.م (متزن)"
+            lblBalanceDisplay.ForeColor = Color.FromArgb(100, 110, 120)
+            btnPayFullDebt.Visible = False
         End If
 
-        LoadCustomers(keyword, field)
+        txtAmountPaid.Clear()
+        txtNotes.Clear()
     End Sub
 
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove
-        If e.Button = MouseButtons.Left Then
-            newpoint = Control.MousePosition
-            newpoint.X -= x
-            newpoint.Y -= y
-            Me.Location = newpoint
+    Private Sub ClearSelectedCustomer()
+        _selectedCustomerID = 0
+        _selectedCustomerCode = ""
+        _selectedCustomerName = ""
+        _selectedCustomerBalance = 0
+        _selectedCustomerCreditLimit = 0
+
+        lblCustomerName.Text = "يرجى تحديد عميل من الجدول"
+        lblCustomerPhone.Text = "الهاتف: ---  |  الكود: ---"
+        lblBalanceDisplay.Text = "0.00 ج.م"
+        lblBalanceDisplay.ForeColor = Color.Black
+        lblCreditLimitDisplay.Text = "سقف الائتمان: 0.00 ج.م"
+        btnPayFullDebt.Visible = False
+        txtAmountPaid.Clear()
+        txtNotes.Clear()
+    End Sub
+
+    ' سداد كامل الدين بنقرة واحدة
+    Private Sub btnPayFullDebt_Click(sender As Object, e As EventArgs) Handles btnPayFullDebt.Click
+        If _selectedCustomerBalance < 0 Then
+            txtAmountPaid.Text = Math.Abs(_selectedCustomerBalance).ToString("N2")
+            txtAmountPaid.Focus()
         End If
     End Sub
 
-    Private Sub dgvCustomers_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCustomers.CellClick
-        If e.RowIndex >= 0 Then
-            Dim row As DataGridViewRow = dgvCustomers.Rows(e.RowIndex)
-            txtCustomerCode.Text = row.Cells("CustomerCode").Value.ToString()
-            txtCustomerName.Text = row.Cells("CustomerName").Value.ToString()
-            nudCreditLimit.Value = Convert.ToDecimal(row.Cells("CreditLimit").Value)
-            txtBalance.Text = row.Cells("CurrentBalance").Value.ToString()
-        End If
-    End Sub
-
-    Private Sub txtBalance_TextChanged(sender As Object, e As EventArgs) Handles txtBalance.TextChanged
-        SplitBalance(txtBalance, txtDebit, txtCredit)
-    End Sub
-
-    'Private Sub btnDoPayment_Click(sender As Object, e As EventArgs) Handles btnDoPayment.Click
-    '    If txtAmountPaid.Text = "" Then
-    '        MsgBox("من فضلك قم بادخال قيمه الدفع")
-    '        Exit Sub
-    '    End If
-    '    If txtCustomerCode.Text = "" Or txtBalance.Text = "" Then
-    '        MsgBox("برجاء اختيار العميل")
-    '        Exit Sub
-    '    End If
-    '    '------------------------------
-    '    ' 1️⃣ جمع البيانات من الفورم
-    '    '------------------------------
-    '    Dim clientName As String = txtCustomerName.Text
-    '    Dim balance As Decimal = CDec(txtBalance.Text) ' موجب أو سالب
-    '    Dim payAmount As Decimal = CDec(txtAmountPaid.Text)
-    '    Dim notes As String = txtNotes.Text
-
-    '    ' فحص البيانات
-    '    If clientName = "" Then
-    '        MsgBox("من فضلك اختر العميل.", MsgBoxStyle.Exclamation)
-    '        Exit Sub
-    '    End If
-
-    '    'If payAmount <= 0 Then
-    '    '    MsgBox("قيمة الدفع يجب أن تكون أكبر من صفر.", MsgBoxStyle.Exclamation)
-    '    '    Exit Sub
-    '    'End If
-
-    '    '------------------------------
-    '    ' 2️⃣ حساب الرصيد الجديد
-    '    '------------------------------
-    '    Dim newBalance As Decimal = balance + payAmount  ' الدفع يقلل الدين (الدين سالب)
-
-    '    '------------------------------
-    '    ' 3️⃣ فتح فورم التأكيد مع تمرير البيانات
-    '    '------------------------------
-    '    Dim frm As New frmConfirmMessage()
-
-    '    frm.CustomerName = clientName
-    '    frm.BalanceBefore = balance
-    '    frm.AmountPaid = payAmount
-    '    frm.BalanceAfter = newBalance
-    '    frm.Notes = notes
-
-    '    If frm.ShowDialog() = DialogResult.OK Then
-
-    '        txtCustomerCode.Text = ""
-    '        txtCustomerName.Text = ""
-    '        nudCreditLimit.Text = "0"
-    '        txtBalance.Text = ""
-    '        txtAmountPaid.Text = ""
-    '        txtNotes.Text = ""
-    '        LoadCustomers()
-    '        dgvCustomers.ClearSelection()
-    '    End If
-    'End Sub
-
-
-
+    ' تنفيذ عملية السداد وفتح فورم التأكيد
     Private Sub btnDoPayment_Click(sender As Object, e As EventArgs) Handles btnDoPayment.Click
-        If txtAmountPaid.Text = "" Then
-            MsgBox("من فضلك قم بادخال قيمه الدفع")
-            Exit Sub
-        End If
-        If txtCustomerCode.Text = "" Or txtBalance.Text = "" Then
-            MsgBox("برجاء اختيار العميل")
+        If _selectedCustomerID <= 0 Then
+            MessageBox.Show("يرجى اختيار العميل من القائمة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        ' 🛑 الجديد: التحقق من اختيار الخزنة
+        Dim payAmount As Decimal = 0
+        If Not Decimal.TryParse(txtAmountPaid.Text.Trim(), payAmount) OrElse payAmount <= 0 Then
+            MessageBox.Show("يرجى إدخال مبلغ سداد صحيح أكبر من الصفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtAmountPaid.Focus()
+            Exit Sub
+        End If
+
         If cmbTreasury.SelectedValue Is Nothing Then
-            MsgBox("من فضلك اختر الخزنة التي سيتم إيداع المبلغ فيها.")
-            Exit Sub
-        End If
-        Dim selectedTreasuryID As Integer = Convert.ToInt32(cmbTreasury.SelectedValue)
-
-        '------------------------------
-        ' 1️⃣ جمع البيانات من الفورم
-        '------------------------------
-        Dim clientName As String = txtCustomerName.Text
-        Dim balance As Decimal = CDec(txtBalance.Text)
-        Dim payAmount As Decimal = CDec(txtAmountPaid.Text)
-        Dim notes As String = txtNotes.Text
-
-        If clientName = "" Then
-            MsgBox("من فضلك اختر العميل.", MsgBoxStyle.Exclamation)
+            MessageBox.Show("يرجى اختيار الخزينة التي سيتم إيداع المبلغ فيها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cmbTreasury.Focus()
             Exit Sub
         End If
 
-        '------------------------------
-        ' 2️⃣ حساب الرصيد الجديد
-        '------------------------------
-        Dim newBalance As Decimal = balance + payAmount
+        Dim targetTreasuryID As Integer = Convert.ToInt32(cmbTreasury.SelectedValue)
+        Dim treasuryName As String = cmbTreasury.Text
 
-        '------------------------------
-        ' 3️⃣ فتح فورم التأكيد مع تمرير البيانات
-        '------------------------------
-        Dim frm As New frmConfirmMessage()
+        ' حساب الرصيد الجديد:
+        ' إذا كان الرصيد سالباً (-500) وسدد 200 => يصبح -300
+        ' إذا سدد 500 => يصبح 0
+        Dim newBalance As Decimal = _selectedCustomerBalance + payAmount
 
-        frm.CustomerName = clientName
-        frm.BalanceBefore = balance
-        frm.AmountPaid = payAmount
-        frm.BalanceAfter = newBalance
-        frm.Notes = notes
-        frm.TargetTreasuryID = selectedTreasuryID ' ⬅️ تمرير معرف الخزنة لفورم التأكيد
+        Using frmConfirm As New frmConfirmMessage()
+            frmConfirm.CustomerID = _selectedCustomerID
+            frmConfirm.CustomerCode = _selectedCustomerCode
+            frmConfirm.CustomerName = _selectedCustomerName
+            frmConfirm.BalanceBefore = _selectedCustomerBalance
+            frmConfirm.AmountPaid = payAmount
+            frmConfirm.BalanceAfter = newBalance
+            frmConfirm.TargetTreasuryID = targetTreasuryID
+            frmConfirm.TreasuryName = treasuryName
+            frmConfirm.Notes = txtNotes.Text.Trim()
 
-        If frm.ShowDialog() = DialogResult.OK Then
-            ' تنظيف الأدوات بعد النجاح
-            txtCustomerCode.Text = ""
-            txtCustomerName.Text = ""
-            nudCreditLimit.Text = "0"
-            txtBalance.Text = ""
-            txtAmountPaid.Text = ""
-            txtNotes.Text = ""
-            cmbTreasury.SelectedIndex = -1 ' تصفير الخزنة
-            LoadCustomers()
-            dgvCustomers.ClearSelection()
-        End If
+            If frmConfirm.ShowDialog(Me) = DialogResult.OK Then
+                LoadCustomers()
+            End If
+        End Using
     End Sub
 
+    ' فتح كشف حساب العميل مباشرة
+    Private Sub btnOpenStatement_Click(sender As Object, e As EventArgs) Handles btnOpenStatement.Click
+        If _selectedCustomerID <= 0 Then
+            MessageBox.Show("يرجى اختيار العميل أولاً لعرض كشف حسابه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
 
-    Private Sub SplitBalance(ByVal txtBalance As Guna2TextBox, ByVal txtDebit As Guna2TextBox, ByVal txtCredit As Guna2TextBox)
+        Try
+            Dim frmStatement As New FrmCustomerStatement()
+            frmStatement.Show()
+            If frmStatement.cmbCustomers.Items.Count > 0 Then
+                frmStatement.cmbCustomers.SelectedValue = _selectedCustomerID
+                frmStatement.btnSearch.PerformClick()
+            End If
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء فتح كشف الحساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
 
-        Dim balance As Decimal
+    ' تصدير إلى ملف إكسيل
+    Private Sub btnExportExcel_Click(sender As Object, e As EventArgs) Handles btnExportExcel.Click
+        If dgvCustomers.Rows.Count = 0 Then
+            MessageBox.Show("لا توجد بيانات عملاء لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
 
-        ' نحاول نحول القيمة لرقم
-        If Decimal.TryParse(txtBalance.Text.Trim(), balance) Then
+        Try
+            Dim sfd As New SaveFileDialog()
+            sfd.Filter = "ملف إكسيل Excel (*.xlsx)|*.xlsx"
+            sfd.FileName = $"أرصدة_العملاء_{DateTime.Now:yyyyMMdd_HHmm}.xlsx"
 
-            If balance < 0 Then
-                ' لو رصيد سالب → يروح للمدين
-                txtDebit.Text = Math.Abs(balance).ToString()
-                txtCredit.Text = "0"
+            If sfd.ShowDialog() = DialogResult.OK Then
+                Using wb As New XLWorkbook()
+                    Dim dtExport As New DataTable("CustomerBalances")
+                    dtExport.Columns.Add("كود العميل")
+                    dtExport.Columns.Add("اسم العميل")
+                    dtExport.Columns.Add("رقم الهاتف")
+                    dtExport.Columns.Add("العنوان")
+                    dtExport.Columns.Add("حد الائتمان")
+                    dtExport.Columns.Add("الرصيد الحالي")
+                    dtExport.Columns.Add("حالة الحساب")
 
-            ElseIf balance > 0 Then
-                ' لو رصيد موجب → يروح للدائن
-                txtDebit.Text = "0"
-                txtCredit.Text = balance.ToString()
+                    For Each row As DataGridViewRow In dgvCustomers.Rows
+                        Dim bal As Decimal = Convert.ToDecimal(row.Cells("CurrentBalance").Value)
+                        Dim statusStr As String = If(bal < 0, "مدين", If(bal > 0, "دائن", "متزن"))
+                        dtExport.Rows.Add(
+                            row.Cells("CustomerCode").Value?.ToString(),
+                            row.Cells("CustomerName").Value?.ToString(),
+                            row.Cells("PhoneNumber").Value?.ToString(),
+                            row.Cells("Address").Value?.ToString(),
+                            Convert.ToDecimal(row.Cells("CreditLimit").Value).ToString("N2"),
+                            bal.ToString("N2"),
+                            statusStr
+                        )
+                    Next
 
-            Else
-                ' لو صفر
-                txtDebit.Text = "0"
-                txtCredit.Text = "0"
+                    Dim ws = wb.Worksheets.Add("أرصدة العملاء")
+                    ws.RightToLeft = True
+                    ws.Cell(1, 1).Value = "تقرير أرصدة ومديونيات العملاء"
+                    ws.Cell(1, 1).Style.Font.Bold = True
+                    ws.Cell(1, 1).Style.Font.FontSize = 14
+                    ws.Cell(2, 1).Value = $"تاريخ التصدير: {DateTime.Now:yyyy/MM/dd HH:mm}"
+
+                    Dim table = ws.Cell(4, 1).InsertTable(dtExport, "CustomerBalances", True)
+                    table.Theme = XLTableTheme.TableStyleMedium9
+                    ws.Columns().AdjustToContents()
+
+                    wb.SaveAs(sfd.FileName)
+                End Using
+
+                MessageBox.Show("✅ تم تصدير بيانات وأرصدة العملاء إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Process.Start("explorer.exe", Path.GetDirectoryName(sfd.FileName))
             End If
 
-        Else
-            ' لو المستخدم كتب حاجة مش رقم
-            txtDebit.Text = "0"
-            txtCredit.Text = "0"
-        End If
-
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء تصدير ملف الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
+
+    Private Sub txtSearch_TextChanged(sender As Object, e As EventArgs) Handles txtSearch.TextChanged
+        ApplyFilter()
+    End Sub
+
+    Private Sub cmbFilterType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFilterType.SelectedIndexChanged
+        ApplyFilter()
+    End Sub
+
+    Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
+        txtSearch.Clear()
+        cmbFilterType.SelectedIndex = 0
+        LoadCustomers()
+    End Sub
+
+    ' أزرار الهيدر
+    Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
+        Me.Close()
+    End Sub
+
+    Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
+        FormHelper.ToggleMaximize(Me)
+    End Sub
+
+    Private Sub btn_min_Click(sender As Object, e As EventArgs) Handles btn_min.Click
+        FormHelper.Minimiz(Me)
+    End Sub
+
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+        If keyData = Keys.Escape Then
+            Me.Close()
+            Return True
+        ElseIf keyData = Keys.F10 Then
+            btnDoPayment.PerformClick()
+            Return True
+        ElseIf keyData = Keys.F5 Then
+            btnRefresh.PerformClick()
+            Return True
+        End If
+        Return MyBase.ProcessCmdKey(msg, keyData)
+    End Function
+
 End Class

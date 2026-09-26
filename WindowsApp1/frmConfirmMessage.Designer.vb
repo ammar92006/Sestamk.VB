@@ -1,8 +1,7 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmConfirmMessage
     Inherits System.Windows.Forms.Form
 
-    'Form overrides dispose to clean up the component list.
     <System.Diagnostics.DebuggerNonUserCode()> _
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
@@ -14,358 +13,338 @@ Partial Class frmConfirmMessage
         End Try
     End Sub
 
-    'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
 
-    'NOTE: The following procedure is required by the Windows Form Designer
-    'It can be modified using the Windows Form Designer.  
-    'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmConfirmMessage))
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.btnCancel = New System.Windows.Forms.Button()
-        Me.btnOK = New System.Windows.Forms.Button()
-        Me.Guna2HtmlLabel3 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.txtCustomerName = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.Guna2HtmlLabel6 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.txtBalanceBefore = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.txtAmountPaid = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.Guna2HtmlLabel2 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.txtBalanceAfter = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.Guna2HtmlLabel9 = New Guna.UI2.WinForms.Guna2HtmlLabel()
+        Me.pnlHeader = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblTitle = New System.Windows.Forms.Label()
+        Me.btnClose = New DevExpress.XtraEditors.SimpleButton()
+        Me.pnlCard = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblCustomerName = New System.Windows.Forms.Label()
+        Me.lblCustomerTitle = New System.Windows.Forms.Label()
+        Me.lblBalanceBefore = New System.Windows.Forms.Label()
+        Me.lblBalanceBeforeTitle = New System.Windows.Forms.Label()
+        Me.lblAmountPaid = New System.Windows.Forms.Label()
+        Me.lblAmountPaidTitle = New System.Windows.Forms.Label()
+        Me.lblBalanceAfter = New System.Windows.Forms.Label()
+        Me.lblBalanceAfterTitle = New System.Windows.Forms.Label()
+        Me.lblTreasury = New System.Windows.Forms.Label()
+        Me.lblTreasuryTitle = New System.Windows.Forms.Label()
+        Me.lblNotesTitle = New System.Windows.Forms.Label()
         Me.txtNotes = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.txtPassword = New System.Windows.Forms.TextBox()
-        Me.Guna2HtmlLabel4 = New Guna.UI2.WinForms.Guna2HtmlLabel()
-        Me.pn_title_page = New System.Windows.Forms.Label()
-        Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
+        Me.lblPasswordTitle = New System.Windows.Forms.Label()
+        Me.txtPassword = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.pnlBottom = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnOK = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnCancel = New Guna.UI2.WinForms.Guna2Button()
+        Me.pnlHeader.SuspendLayout()
+        Me.pnlCard.SuspendLayout()
+        Me.pnlBottom.SuspendLayout()
         Me.SuspendLayout()
         '
-        'Panel1
+        'pnlHeader
         '
-        Me.Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.Panel1.Controls.Add(Me.pn_title_page)
-        Me.Panel1.Controls.Add(Me.btn_close)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(800, 53)
-        Me.Panel1.TabIndex = 0
+        Me.pnlHeader.BackColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.pnlHeader.Controls.Add(Me.lblTitle)
+        Me.pnlHeader.Controls.Add(Me.btnClose)
+        Me.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlHeader.Location = New System.Drawing.Point(0, 0)
+        Me.pnlHeader.Name = "pnlHeader"
+        Me.pnlHeader.Size = New System.Drawing.Size(560, 50)
+        Me.pnlHeader.TabIndex = 0
         '
-        'btn_close
+        'lblTitle
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
-        Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
-        Me.btn_close.Location = New System.Drawing.Point(12, 9)
-        Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btn_close.Size = New System.Drawing.Size(38, 36)
-        Me.btn_close.TabIndex = 4
+        Me.lblTitle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblTitle.ForeColor = System.Drawing.Color.White
+        Me.lblTitle.Location = New System.Drawing.Point(50, 10)
+        Me.lblTitle.Name = "lblTitle"
+        Me.lblTitle.Size = New System.Drawing.Size(495, 30)
+        Me.lblTitle.TabIndex = 0
+        Me.lblTitle.Text = "تأكيد سند قبض / تنزيل رصيد عميل"
+        Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Panel2
+        'btnClose
         '
-        Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
-        Me.Panel2.Controls.Add(Me.btnCancel)
-        Me.Panel2.Controls.Add(Me.btnOK)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 397)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(800, 53)
-        Me.Panel2.TabIndex = 1
+        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnClose.Appearance.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnClose.Appearance.ForeColor = System.Drawing.Color.White
+        Me.btnClose.Appearance.Options.UseFont = True
+        Me.btnClose.Appearance.Options.UseForeColor = True
+        Me.btnClose.Location = New System.Drawing.Point(10, 8)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btnClose.Size = New System.Drawing.Size(35, 34)
+        Me.btnClose.TabIndex = 1
+        Me.btnClose.Text = "✕"
         '
-        'btnCancel
+        'pnlCard
         '
-        Me.btnCancel.Font = New System.Drawing.Font("LBC", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnCancel.Location = New System.Drawing.Point(143, 4)
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(212, 44)
-        Me.btnCancel.TabIndex = 1
-        Me.btnCancel.Text = "إلغاء"
-        Me.btnCancel.UseVisualStyleBackColor = True
+        Me.pnlCard.BorderColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(230, Byte), Integer))
+        Me.pnlCard.BorderRadius = 10
+        Me.pnlCard.BorderThickness = 1
+        Me.pnlCard.Controls.Add(Me.lblCustomerName)
+        Me.pnlCard.Controls.Add(Me.lblCustomerTitle)
+        Me.pnlCard.Controls.Add(Me.lblBalanceBefore)
+        Me.pnlCard.Controls.Add(Me.lblBalanceBeforeTitle)
+        Me.pnlCard.Controls.Add(Me.lblAmountPaid)
+        Me.pnlCard.Controls.Add(Me.lblAmountPaidTitle)
+        Me.pnlCard.Controls.Add(Me.lblBalanceAfter)
+        Me.pnlCard.Controls.Add(Me.lblBalanceAfterTitle)
+        Me.pnlCard.Controls.Add(Me.lblTreasury)
+        Me.pnlCard.Controls.Add(Me.lblTreasuryTitle)
+        Me.pnlCard.Controls.Add(Me.lblNotesTitle)
+        Me.pnlCard.Controls.Add(Me.txtNotes)
+        Me.pnlCard.Controls.Add(Me.lblPasswordTitle)
+        Me.pnlCard.Controls.Add(Me.txtPassword)
+        Me.pnlCard.FillColor = System.Drawing.Color.White
+        Me.pnlCard.Location = New System.Drawing.Point(20, 65)
+        Me.pnlCard.Name = "pnlCard"
+        Me.pnlCard.Size = New System.Drawing.Size(520, 395)
+        Me.pnlCard.TabIndex = 1
         '
-        'btnOK
+        'lblCustomerTitle
         '
-        Me.btnOK.Font = New System.Drawing.Font("LBC", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnOK.Location = New System.Drawing.Point(450, 4)
-        Me.btnOK.Name = "btnOK"
-        Me.btnOK.Size = New System.Drawing.Size(212, 44)
-        Me.btnOK.TabIndex = 0
-        Me.btnOK.Text = "موافق"
-        Me.btnOK.UseVisualStyleBackColor = True
+        Me.lblCustomerTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCustomerTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(120, Byte), Integer))
+        Me.lblCustomerTitle.Location = New System.Drawing.Point(370, 15)
+        Me.lblCustomerTitle.Name = "lblCustomerTitle"
+        Me.lblCustomerTitle.Size = New System.Drawing.Size(130, 25)
+        Me.lblCustomerTitle.TabIndex = 0
+        Me.lblCustomerTitle.Text = "العميل:"
+        Me.lblCustomerTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Guna2HtmlLabel3
+        'lblCustomerName
         '
-        Me.Guna2HtmlLabel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel3.AutoSize = False
-        Me.Guna2HtmlLabel3.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel3.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel3.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel3.Location = New System.Drawing.Point(12, 59)
-        Me.Guna2HtmlLabel3.Name = "Guna2HtmlLabel3"
-        Me.Guna2HtmlLabel3.Size = New System.Drawing.Size(317, 36)
-        Me.Guna2HtmlLabel3.TabIndex = 69
-        Me.Guna2HtmlLabel3.Text = "العميل اسم"
-        Me.Guna2HtmlLabel3.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        Me.lblCustomerName.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.lblCustomerName.ForeColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.lblCustomerName.Location = New System.Drawing.Point(20, 15)
+        Me.lblCustomerName.Name = "lblCustomerName"
+        Me.lblCustomerName.Size = New System.Drawing.Size(345, 25)
+        Me.lblCustomerName.TabIndex = 1
+        Me.lblCustomerName.Text = "اسم العميل"
+        Me.lblCustomerName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'txtCustomerName
+        'lblBalanceBeforeTitle
         '
-        Me.txtCustomerName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtCustomerName.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtCustomerName.DefaultText = ""
-        Me.txtCustomerName.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtCustomerName.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtCustomerName.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtCustomerName.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtCustomerName.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomerName.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtCustomerName.ForeColor = System.Drawing.Color.Black
-        Me.txtCustomerName.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomerName.Location = New System.Drawing.Point(12, 100)
-        Me.txtCustomerName.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
-        Me.txtCustomerName.Name = "txtCustomerName"
-        Me.txtCustomerName.PlaceholderText = ""
-        Me.txtCustomerName.SelectedText = ""
-        Me.txtCustomerName.Size = New System.Drawing.Size(386, 45)
-        Me.txtCustomerName.TabIndex = 68
-        Me.txtCustomerName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.lblBalanceBeforeTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblBalanceBeforeTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(120, Byte), Integer))
+        Me.lblBalanceBeforeTitle.Location = New System.Drawing.Point(370, 55)
+        Me.lblBalanceBeforeTitle.Name = "lblBalanceBeforeTitle"
+        Me.lblBalanceBeforeTitle.Size = New System.Drawing.Size(130, 25)
+        Me.lblBalanceBeforeTitle.TabIndex = 2
+        Me.lblBalanceBeforeTitle.Text = "الرصيد السابق:"
+        Me.lblBalanceBeforeTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Guna2HtmlLabel6
+        'lblBalanceBefore
         '
-        Me.Guna2HtmlLabel6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel6.AutoSize = False
-        Me.Guna2HtmlLabel6.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel6.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel6.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel6.Location = New System.Drawing.Point(12, 154)
-        Me.Guna2HtmlLabel6.Name = "Guna2HtmlLabel6"
-        Me.Guna2HtmlLabel6.Size = New System.Drawing.Size(206, 36)
-        Me.Guna2HtmlLabel6.TabIndex = 71
-        Me.Guna2HtmlLabel6.Text = "قبل الرصيد"
-        Me.Guna2HtmlLabel6.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        Me.lblBalanceBefore.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblBalanceBefore.ForeColor = System.Drawing.Color.Black
+        Me.lblBalanceBefore.Location = New System.Drawing.Point(20, 55)
+        Me.lblBalanceBefore.Name = "lblBalanceBefore"
+        Me.lblBalanceBefore.Size = New System.Drawing.Size(345, 25)
+        Me.lblBalanceBefore.TabIndex = 3
+        Me.lblBalanceBefore.Text = "0.00"
+        Me.lblBalanceBefore.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'txtBalanceBefore
+        'lblAmountPaidTitle
         '
-        Me.txtBalanceBefore.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtBalanceBefore.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtBalanceBefore.DefaultText = ""
-        Me.txtBalanceBefore.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtBalanceBefore.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtBalanceBefore.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtBalanceBefore.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtBalanceBefore.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtBalanceBefore.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtBalanceBefore.ForeColor = System.Drawing.Color.Black
-        Me.txtBalanceBefore.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtBalanceBefore.Location = New System.Drawing.Point(15, 199)
-        Me.txtBalanceBefore.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
-        Me.txtBalanceBefore.Name = "txtBalanceBefore"
-        Me.txtBalanceBefore.PlaceholderText = ""
-        Me.txtBalanceBefore.SelectedText = ""
-        Me.txtBalanceBefore.Size = New System.Drawing.Size(383, 45)
-        Me.txtBalanceBefore.TabIndex = 70
-        Me.txtBalanceBefore.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.lblAmountPaidTitle.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+        Me.lblAmountPaidTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(39, Byte), Integer), CType(CType(174, Byte), Integer), CType(CType(96, Byte), Integer))
+        Me.lblAmountPaidTitle.Location = New System.Drawing.Point(370, 95)
+        Me.lblAmountPaidTitle.Name = "lblAmountPaidTitle"
+        Me.lblAmountPaidTitle.Size = New System.Drawing.Size(130, 30)
+        Me.lblAmountPaidTitle.TabIndex = 4
+        Me.lblAmountPaidTitle.Text = "المبلغ المحصل:"
+        Me.lblAmountPaidTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Guna2HtmlLabel1
+        'lblAmountPaid
         '
-        Me.Guna2HtmlLabel1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel1.AutoSize = False
-        Me.Guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(9, 253)
-        Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
-        Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(206, 36)
-        Me.Guna2HtmlLabel1.TabIndex = 73
-        Me.Guna2HtmlLabel1.Text = "المدفوع"
-        Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        Me.lblAmountPaid.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.lblAmountPaid.ForeColor = System.Drawing.Color.FromArgb(CType(CType(39, Byte), Integer), CType(CType(174, Byte), Integer), CType(CType(96, Byte), Integer))
+        Me.lblAmountPaid.Location = New System.Drawing.Point(20, 95)
+        Me.lblAmountPaid.Name = "lblAmountPaid"
+        Me.lblAmountPaid.Size = New System.Drawing.Size(345, 30)
+        Me.lblAmountPaid.TabIndex = 5
+        Me.lblAmountPaid.Text = "0.00 ج.م"
+        Me.lblAmountPaid.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'txtAmountPaid
+        'lblBalanceAfterTitle
         '
-        Me.txtAmountPaid.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtAmountPaid.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtAmountPaid.DefaultText = ""
-        Me.txtAmountPaid.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtAmountPaid.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtAmountPaid.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtAmountPaid.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtAmountPaid.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtAmountPaid.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtAmountPaid.ForeColor = System.Drawing.Color.Black
-        Me.txtAmountPaid.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtAmountPaid.Location = New System.Drawing.Point(12, 298)
-        Me.txtAmountPaid.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
-        Me.txtAmountPaid.Name = "txtAmountPaid"
-        Me.txtAmountPaid.PlaceholderText = ""
-        Me.txtAmountPaid.SelectedText = ""
-        Me.txtAmountPaid.Size = New System.Drawing.Size(383, 45)
-        Me.txtAmountPaid.TabIndex = 72
-        Me.txtAmountPaid.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.lblBalanceAfterTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblBalanceAfterTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(120, Byte), Integer))
+        Me.lblBalanceAfterTitle.Location = New System.Drawing.Point(370, 140)
+        Me.lblBalanceAfterTitle.Name = "lblBalanceAfterTitle"
+        Me.lblBalanceAfterTitle.Size = New System.Drawing.Size(130, 25)
+        Me.lblBalanceAfterTitle.TabIndex = 6
+        Me.lblBalanceAfterTitle.Text = "الرصيد بعد السداد:"
+        Me.lblBalanceAfterTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Guna2HtmlLabel2
+        'lblBalanceAfter
         '
-        Me.Guna2HtmlLabel2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel2.AutoSize = False
-        Me.Guna2HtmlLabel2.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel2.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel2.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel2.Location = New System.Drawing.Point(407, 154)
-        Me.Guna2HtmlLabel2.Name = "Guna2HtmlLabel2"
-        Me.Guna2HtmlLabel2.Size = New System.Drawing.Size(206, 36)
-        Me.Guna2HtmlLabel2.TabIndex = 75
-        Me.Guna2HtmlLabel2.Text = "بعد الرصيد"
-        Me.Guna2HtmlLabel2.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        Me.lblBalanceAfter.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblBalanceAfter.ForeColor = System.Drawing.Color.Black
+        Me.lblBalanceAfter.Location = New System.Drawing.Point(20, 140)
+        Me.lblBalanceAfter.Name = "lblBalanceAfter"
+        Me.lblBalanceAfter.Size = New System.Drawing.Size(345, 25)
+        Me.lblBalanceAfter.TabIndex = 7
+        Me.lblBalanceAfter.Text = "0.00"
+        Me.lblBalanceAfter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'txtBalanceAfter
+        'lblTreasuryTitle
         '
-        Me.txtBalanceAfter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtBalanceAfter.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtBalanceAfter.DefaultText = ""
-        Me.txtBalanceAfter.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtBalanceAfter.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtBalanceAfter.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtBalanceAfter.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtBalanceAfter.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtBalanceAfter.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtBalanceAfter.ForeColor = System.Drawing.Color.Black
-        Me.txtBalanceAfter.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtBalanceAfter.Location = New System.Drawing.Point(410, 199)
-        Me.txtBalanceAfter.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
-        Me.txtBalanceAfter.Name = "txtBalanceAfter"
-        Me.txtBalanceAfter.PlaceholderText = ""
-        Me.txtBalanceAfter.SelectedText = ""
-        Me.txtBalanceAfter.Size = New System.Drawing.Size(383, 45)
-        Me.txtBalanceAfter.TabIndex = 74
-        Me.txtBalanceAfter.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.lblTreasuryTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblTreasuryTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(120, Byte), Integer))
+        Me.lblTreasuryTitle.Location = New System.Drawing.Point(370, 180)
+        Me.lblTreasuryTitle.Name = "lblTreasuryTitle"
+        Me.lblTreasuryTitle.Size = New System.Drawing.Size(130, 25)
+        Me.lblTreasuryTitle.TabIndex = 8
+        Me.lblTreasuryTitle.Text = "الخزينة المودع بها:"
+        Me.lblTreasuryTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'Guna2HtmlLabel9
+        'lblTreasury
         '
-        Me.Guna2HtmlLabel9.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel9.AutoSize = False
-        Me.Guna2HtmlLabel9.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel9.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel9.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel9.Location = New System.Drawing.Point(410, 253)
-        Me.Guna2HtmlLabel9.Name = "Guna2HtmlLabel9"
-        Me.Guna2HtmlLabel9.Size = New System.Drawing.Size(286, 36)
-        Me.Guna2HtmlLabel9.TabIndex = 77
-        Me.Guna2HtmlLabel9.Text = "الملاحظات"
-        Me.Guna2HtmlLabel9.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        Me.lblTreasury.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+        Me.lblTreasury.ForeColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.lblTreasury.Location = New System.Drawing.Point(20, 180)
+        Me.lblTreasury.Name = "lblTreasury"
+        Me.lblTreasury.Size = New System.Drawing.Size(345, 25)
+        Me.lblTreasury.TabIndex = 9
+        Me.lblTreasury.Text = "الخزينة الرئيسية"
+        Me.lblTreasury.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblNotesTitle
+        '
+        Me.lblNotesTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblNotesTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(120, Byte), Integer))
+        Me.lblNotesTitle.Location = New System.Drawing.Point(370, 220)
+        Me.lblNotesTitle.Name = "lblNotesTitle"
+        Me.lblNotesTitle.Size = New System.Drawing.Size(130, 25)
+        Me.lblNotesTitle.TabIndex = 10
+        Me.lblNotesTitle.Text = "ملاحظات العملية:"
+        Me.lblNotesTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtNotes
         '
-        Me.txtNotes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtNotes.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtNotes.DefaultText = ""
-        Me.txtNotes.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtNotes.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtNotes.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtNotes.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtNotes.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtNotes.ForeColor = System.Drawing.Color.Black
-        Me.txtNotes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtNotes.Location = New System.Drawing.Point(410, 298)
-        Me.txtNotes.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
+        Me.txtNotes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(205, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.txtNotes.BorderRadius = 6
+        Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.txtNotes.Location = New System.Drawing.Point(20, 220)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
-        Me.txtNotes.PlaceholderText = ""
+        Me.txtNotes.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
+        Me.txtNotes.PlaceholderText = "ملاحظات السند (اختياري)..."
         Me.txtNotes.SelectedText = ""
-        Me.txtNotes.Size = New System.Drawing.Size(375, 90)
-        Me.txtNotes.TabIndex = 76
+        Me.txtNotes.Size = New System.Drawing.Size(345, 60)
+        Me.txtNotes.TabIndex = 11
+        Me.txtNotes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'lblPasswordTitle
+        '
+        Me.lblPasswordTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblPasswordTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(110, Byte), Integer), CType(CType(120, Byte), Integer))
+        Me.lblPasswordTitle.Location = New System.Drawing.Point(370, 300)
+        Me.lblPasswordTitle.Name = "lblPasswordTitle"
+        Me.lblPasswordTitle.Size = New System.Drawing.Size(130, 25)
+        Me.lblPasswordTitle.TabIndex = 12
+        Me.lblPasswordTitle.Text = "تأكيد كلمة المرور:"
+        Me.lblPasswordTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtPassword
         '
-        Me.txtPassword.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtPassword.Location = New System.Drawing.Point(407, 100)
+        Me.txtPassword.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(205, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.txtPassword.BorderRadius = 6
+        Me.txtPassword.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.txtPassword.Location = New System.Drawing.Point(20, 295)
         Me.txtPassword.Name = "txtPassword"
-        Me.txtPassword.Size = New System.Drawing.Size(386, 38)
-        Me.txtPassword.TabIndex = 78
-        Me.txtPassword.UseSystemPasswordChar = True
+        Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
+        Me.txtPassword.PlaceholderText = "كلمة مرور المستخدم الحالي..."
+        Me.txtPassword.SelectedText = ""
+        Me.txtPassword.Size = New System.Drawing.Size(345, 36)
+        Me.txtPassword.TabIndex = 13
+        Me.txtPassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'Guna2HtmlLabel4
+        'pnlBottom
         '
-        Me.Guna2HtmlLabel4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Guna2HtmlLabel4.AutoSize = False
-        Me.Guna2HtmlLabel4.BackColor = System.Drawing.Color.Transparent
-        Me.Guna2HtmlLabel4.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Guna2HtmlLabel4.ForeColor = System.Drawing.Color.Black
-        Me.Guna2HtmlLabel4.Location = New System.Drawing.Point(407, 58)
-        Me.Guna2HtmlLabel4.Name = "Guna2HtmlLabel4"
-        Me.Guna2HtmlLabel4.Size = New System.Drawing.Size(317, 36)
-        Me.Guna2HtmlLabel4.TabIndex = 79
-        Me.Guna2HtmlLabel4.Text = "الباسورد"
-        Me.Guna2HtmlLabel4.TextAlignment = System.Drawing.ContentAlignment.BottomRight
+        Me.pnlBottom.BackColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(247, Byte), Integer), CType(CType(250, Byte), Integer))
+        Me.pnlBottom.Controls.Add(Me.btnOK)
+        Me.pnlBottom.Controls.Add(Me.btnCancel)
+        Me.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.pnlBottom.Location = New System.Drawing.Point(0, 480)
+        Me.pnlBottom.Name = "pnlBottom"
+        Me.pnlBottom.Size = New System.Drawing.Size(560, 65)
+        Me.pnlBottom.TabIndex = 2
         '
-        'pn_title_page
+        'btnOK
         '
-        Me.pn_title_page.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pn_title_page.AutoSize = True
-        Me.pn_title_page.Font = New System.Drawing.Font("LBC", 30.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.pn_title_page.ForeColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
-        Me.pn_title_page.Location = New System.Drawing.Point(297, 2)
-        Me.pn_title_page.Name = "pn_title_page"
-        Me.pn_title_page.Size = New System.Drawing.Size(238, 51)
-        Me.pn_title_page.TabIndex = 5
-        Me.pn_title_page.Text = "تأكيد العملية"
-        Me.pn_title_page.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.btnOK.BorderRadius = 8
+        Me.btnOK.FillColor = System.Drawing.Color.FromArgb(CType(CType(39, Byte), Integer), CType(CType(174, Byte), Integer), CType(CType(96, Byte), Integer))
+        Me.btnOK.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.btnOK.ForeColor = System.Drawing.Color.White
+        Me.btnOK.Location = New System.Drawing.Point(290, 12)
+        Me.btnOK.Name = "btnOK"
+        Me.btnOK.Size = New System.Drawing.Size(240, 42)
+        Me.btnOK.TabIndex = 0
+        Me.btnOK.Text = "✔ تأكيد وحفظ السند"
+        '
+        'btnCancel
+        '
+        Me.btnCancel.BorderRadius = 8
+        Me.btnCancel.FillColor = System.Drawing.Color.FromArgb(CType(CType(149, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(166, Byte), Integer))
+        Me.btnCancel.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.btnCancel.ForeColor = System.Drawing.Color.White
+        Me.btnCancel.Location = New System.Drawing.Point(30, 12)
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(240, 42)
+        Me.btnCancel.TabIndex = 1
+        Me.btnCancel.Text = "✕ إلغاء"
         '
         'frmConfirmMessage
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
-        Me.Controls.Add(Me.Guna2HtmlLabel4)
-        Me.Controls.Add(Me.txtPassword)
-        Me.Controls.Add(Me.Guna2HtmlLabel9)
-        Me.Controls.Add(Me.txtNotes)
-        Me.Controls.Add(Me.Guna2HtmlLabel2)
-        Me.Controls.Add(Me.txtBalanceAfter)
-        Me.Controls.Add(Me.Guna2HtmlLabel1)
-        Me.Controls.Add(Me.txtAmountPaid)
-        Me.Controls.Add(Me.Guna2HtmlLabel6)
-        Me.Controls.Add(Me.txtBalanceBefore)
-        Me.Controls.Add(Me.Guna2HtmlLabel3)
-        Me.Controls.Add(Me.txtCustomerName)
-        Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.Panel1)
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(240, Byte), Integer), CType(CType(242, Byte), Integer), CType(CType(245, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(560, 545)
+        Me.Controls.Add(Me.pnlCard)
+        Me.Controls.Add(Me.pnlHeader)
+        Me.Controls.Add(Me.pnlBottom)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.KeyPreview = True
         Me.Name = "frmConfirmMessage"
         Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.RightToLeftLayout = True
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "frmConfirmMessage"
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
-        Me.Panel2.ResumeLayout(False)
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.Text = "تأكيد سند قبض عميل"
+        Me.pnlHeader.ResumeLayout(False)
+        Me.pnlCard.ResumeLayout(False)
+        Me.pnlBottom.ResumeLayout(False)
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents Guna2HtmlLabel3 As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents txtCustomerName As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents Guna2HtmlLabel6 As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents txtBalanceBefore As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents txtAmountPaid As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents Guna2HtmlLabel2 As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents txtBalanceAfter As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btnCancel As Button
-    Friend WithEvents btnOK As Button
-    Friend WithEvents Guna2HtmlLabel9 As Guna.UI2.WinForms.Guna2HtmlLabel
+    Friend WithEvents pnlHeader As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblTitle As System.Windows.Forms.Label
+    Friend WithEvents btnClose As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents pnlCard As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblCustomerTitle As System.Windows.Forms.Label
+    Friend WithEvents lblCustomerName As System.Windows.Forms.Label
+    Friend WithEvents lblBalanceBeforeTitle As System.Windows.Forms.Label
+    Friend WithEvents lblBalanceBefore As System.Windows.Forms.Label
+    Friend WithEvents lblAmountPaidTitle As System.Windows.Forms.Label
+    Friend WithEvents lblAmountPaid As System.Windows.Forms.Label
+    Friend WithEvents lblBalanceAfterTitle As System.Windows.Forms.Label
+    Friend WithEvents lblBalanceAfter As System.Windows.Forms.Label
+    Friend WithEvents lblTreasuryTitle As System.Windows.Forms.Label
+    Friend WithEvents lblTreasury As System.Windows.Forms.Label
+    Friend WithEvents lblNotesTitle As System.Windows.Forms.Label
     Friend WithEvents txtNotes As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents txtPassword As TextBox
-    Friend WithEvents Guna2HtmlLabel4 As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents pn_title_page As Label
+    Friend WithEvents lblPasswordTitle As System.Windows.Forms.Label
+    Friend WithEvents txtPassword As Guna.UI2.WinForms.Guna2TextBox
+    Friend WithEvents pnlBottom As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents btnOK As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnCancel As Guna.UI2.WinForms.Guna2Button
+
 End Class

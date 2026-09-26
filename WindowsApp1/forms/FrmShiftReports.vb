@@ -10,6 +10,8 @@ Public Class FrmShiftReports
 
     Private _rawTable As DataTable = Nothing
     Private _isLoading As Boolean = False
+    Private _currentPrintRowIndex As Integer = 0
+    Private _currentPrintPageNumber As Integer = 0
 
     Public Sub New()
         InitializeComponent()
@@ -690,7 +692,7 @@ Public Class FrmShiftReports
         End Try
     End Sub
 
-    ' طباعة التقرير
+    ' طباعة التقرير مع دعم تعدد الصفحات بالكامل
     Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
         Try
             If dgvReport.Rows.Count = 0 Then
@@ -698,8 +700,11 @@ Public Class FrmShiftReports
                 Exit Sub
             End If
 
-            ' عرض معاينة الطباعة أو التقرير الحراري
             Dim doc As New Printing.PrintDocument()
+            AddHandler doc.BeginPrint, Sub(s, ev)
+                                           _currentPrintRowIndex = 0
+                                           _currentPrintPageNumber = 0
+                                       End Sub
             AddHandler doc.PrintPage, AddressOf PrintDocument_PrintPage
 
             Dim prevDlg As New PrintPreviewDialog()
@@ -712,41 +717,102 @@ Public Class FrmShiftReports
         End Try
     End Sub
 
+    ' تصدير إلى PDF بتنسيق راقٍ ومباشر
+    Private Sub btnExportPdf_Click(sender As Object, e As EventArgs) Handles btnExportPdf.Click
+        If dgvReport.Rows.Count = 0 Then
+            MessageBox.Show("لا توجد بيانات معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+
+        Try
+            Dim sfd As New SaveFileDialog()
+            sfd.Filter = "ملف PDF (*.pdf)|*.pdf"
+            sfd.FileName = $"تقرير_الورديات_{DateTime.Now:yyyyMMdd_HHmm}.pdf"
+
+            If sfd.ShowDialog() = DialogResult.OK Then
+                Dim doc As New Printing.PrintDocument()
+                Dim isPdfPrinterFound As Boolean = False
+
+                For Each printer As String In Printing.PrinterSettings.InstalledPrinters
+                    If printer.IndexOf("Print to PDF", StringComparison.OrdinalIgnoreCase) >= 0 Then
+                        doc.PrinterSettings.PrinterName = printer
+                        isPdfPrinterFound = True
+                        Exit For
+                    End If
+                Next
+
+                If Not isPdfPrinterFound Then
+                    MessageBox.Show("طابعة 'Microsoft Print to PDF' غير محددة كطابعة افتراضية. سيتم فتح نافذة اختيار الطابعة لحفظ الملف كـ PDF.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Using printDlg As New PrintDialog()
+                        printDlg.Document = doc
+                        If printDlg.ShowDialog() <> DialogResult.OK Then Exit Sub
+                    End Using
+                End If
+
+                doc.PrinterSettings.PrintToFile = True
+                doc.PrinterSettings.PrintFileName = sfd.FileName
+
+                AddHandler doc.BeginPrint, Sub(s, ev)
+                                               _currentPrintRowIndex = 0
+                                               _currentPrintPageNumber = 0
+                                           End Sub
+                AddHandler doc.PrintPage, AddressOf PrintDocument_PrintPage
+
+                doc.Print()
+
+                MessageBox.Show("✅ تم تصدير تقرير الوردية إلى PDF بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                If File.Exists(sfd.FileName) Then
+                    Dim folderPath As String = Path.GetDirectoryName(sfd.FileName)
+                    Process.Start("explorer.exe", folderPath)
+                End If
+            End If
+
+        Catch ex As Exception
+            MessageBox.Show("حدث خطأ أثناء تصدير ملف الـ PDF: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
     Private Sub PrintDocument_PrintPage(sender As Object, e As Printing.PrintPageEventArgs)
         Dim g As Graphics = e.Graphics
-        Dim fontTitle As New Font("Segoe UI", 16, FontStyle.Bold)
+        Dim fontTitle As New Font("Segoe UI", 15, FontStyle.Bold)
         Dim fontHeader As New Font("Segoe UI", 10, FontStyle.Bold)
         Dim fontBody As New Font("Segoe UI", 9, FontStyle.Regular)
+        Dim fontFooter As New Font("Segoe UI", 8, FontStyle.Italic)
         Dim sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center}
         Dim sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center}
 
+        _currentPrintPageNumber += 1
         Dim y As Single = 40
         Dim pageWidth As Single = e.MarginBounds.Width
         Dim leftMargin As Single = e.MarginBounds.Left
 
-        ' عنوان التقرير
-        g.DrawString("نظام سستمك لإدارة نقاط البيع والمطاعم", fontHeader, Brushes.Gray, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
-        y += 30
-        g.DrawString(Me.Text & " (" & cmbReportMode.Text & ")", fontTitle, Brushes.Black, New RectangleF(leftMargin, y, pageWidth, 35), sfCenter)
-        y += 40
+        ' رأس الصفحة الأولى فقط
+        If _currentPrintPageNumber = 1 Then
+            g.DrawString("نظام سستمك لإدارة نقاط البيع والمطاعم", fontHeader, Brushes.Gray, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
+            y += 30
+            g.DrawString(Me.Text & " (" & cmbReportMode.Text & ")", fontTitle, Brushes.Black, New RectangleF(leftMargin, y, pageWidth, 35), sfCenter)
+            y += 40
 
-        ' الفترة
-        Dim periodText As String = $"الفترة من: {dtpFrom.Value:yyyy/MM/dd}  إلى: {dtpTo.Value:yyyy/MM/dd}  | تاريخ الطباعة: {DateTime.Now:yyyy/MM/dd HH:mm}"
-        g.DrawString(periodText, fontBody, Brushes.DarkSlateGray, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
-        y += 35
+            Dim periodText As String = $"الفترة من: {dtpFrom.Value:yyyy/MM/dd}  إلى: {dtpTo.Value:yyyy/MM/dd}  | تاريخ الطباعة: {DateTime.Now:yyyy/MM/dd HH:mm}"
+            g.DrawString(periodText, fontBody, Brushes.DarkSlateGray, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
+            y += 35
 
-        ' خط فاصل
-        g.DrawLine(Pens.Gray, leftMargin, y, leftMargin + pageWidth, y)
-        y += 10
+            g.DrawLine(Pens.Gray, leftMargin, y, leftMargin + pageWidth, y)
+            y += 10
 
-        ' ملخص المؤشرات
-        Dim kpiText As String = $"إجمالي المبيعات: {lblTotalSalesSum.Text}  |  المصروفات: {lblTotalExpensesSum.Text}  |  الصافي: {lblNetIncomeSum.Text}  |  السجلات: {lblRecordsCount.Text}"
-        g.DrawString(kpiText, fontHeader, Brushes.Black, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
-        y += 35
-        g.DrawLine(Pens.Gray, leftMargin, y, leftMargin + pageWidth, y)
-        y += 15
+            Dim kpiText As String = $"إجمالي المبيعات: {lblTotalSalesSum.Text}  |  المصروفات: {lblTotalExpensesSum.Text}  |  الصافي: {lblNetIncomeSum.Text}  |  السجلات: {lblRecordsCount.Text}"
+            g.DrawString(kpiText, fontHeader, Brushes.Black, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
+            y += 35
+            g.DrawLine(Pens.Gray, leftMargin, y, leftMargin + pageWidth, y)
+            y += 15
+        Else
+            g.DrawString(Me.Text & " - " & cmbReportMode.Text & $" (صفحة {_currentPrintPageNumber})", fontHeader, Brushes.DarkSlateGray, New RectangleF(leftMargin, y, pageWidth, 25), sfCenter)
+            y += 30
+            g.DrawLine(Pens.Gray, leftMargin, y, leftMargin + pageWidth, y)
+            y += 10
+        End If
 
-        ' رسم رأس الجدول (أهم 5 أعمدة ظاهرة)
+        ' تحديد الأعمدة المرئية للطباعة
         Dim visibleCols As New List(Of DataGridViewColumn)()
         For Each col As DataGridViewColumn In dgvReport.Columns
             If col.Visible AndAlso visibleCols.Count < 6 Then visibleCols.Add(col)
@@ -766,10 +832,15 @@ Public Class FrmShiftReports
             Next
             y += 28
 
-            ' رسم صفوف الجدول (حتى 25 سطر في الصفحة)
-            Dim rowsToPrint = Math.Min(dgvReport.Rows.Count, 25)
-            For rIdx As Integer = 0 To rowsToPrint - 1
-                Dim row = dgvReport.Rows(rIdx)
+            ' رسم صفوف الجدول للصفحة الحالية
+            Dim bottomMargin As Single = e.MarginBounds.Bottom - 35
+            While _currentPrintRowIndex < dgvReport.Rows.Count
+                If y + 24 > bottomMargin Then
+                    e.HasMorePages = True
+                    Exit Sub
+                End If
+
+                Dim row = dgvReport.Rows(_currentPrintRowIndex)
                 curX = leftMargin
                 For i As Integer = visibleCols.Count - 1 To 0 Step -1
                     Dim col = visibleCols(i)
@@ -779,8 +850,13 @@ Public Class FrmShiftReports
                     curX += colW
                 Next
                 y += 24
-            Next
+                _currentPrintRowIndex += 1
+            End While
         End If
+
+        ' تذييل الصفحة ورقمها
+        Dim footerY As Single = e.MarginBounds.Bottom - 20
+        g.DrawString($"صفحة {_currentPrintPageNumber}  |  نظام سستمك", fontFooter, Brushes.Gray, New RectangleF(leftMargin, footerY, pageWidth, 20), sfCenter)
 
         e.HasMorePages = False
     End Sub
