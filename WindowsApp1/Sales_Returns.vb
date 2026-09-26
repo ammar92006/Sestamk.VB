@@ -597,19 +597,18 @@ Public Class Sales_Returns
                         ' تسجيل حركة كشف حساب العميل
                         Dim sqlCustTrans As String = "
                             INSERT INTO CustomerTransactions 
-                            (CustomerID, TransactionType, ReferenceType, ReferenceID, ReferenceNumber, Amount, BalanceBefore, BalanceAfter, Description, CreatedBy, CreatedDate)
+                            (TransactionDate, CustomerID, InvoiceID, BranchID, TransactionType, Debit, Credit, BalanceAfter, Notes, ShiftID, UserID, CreatedAt)
                             VALUES 
-                            (@CID, N'مرتجع مبيعات', N'مرتجع فاتورة', @RefID, @RefNo, @Amount, @BalBefore, @BalAfter, @Desc, @CreatedBy, GETDATE());
+                            (GETDATE(), @CID, @InvoiceID, 1, N'مرتجع مبيعات', 0, @Credit, @BalanceAfter, @Notes, @ShiftID, @UserID, GETDATE());
                         "
                         Using cmdTrans As New SqlCommand(sqlCustTrans, conn, trans)
                             cmdTrans.Parameters.AddWithValue("@CID", _currentCustomerID.Value)
-                            cmdTrans.Parameters.AddWithValue("@RefID", newInvoiceID)
-                            cmdTrans.Parameters.AddWithValue("@RefNo", returnNumber)
-                            cmdTrans.Parameters.AddWithValue("@Amount", netRefund)
-                            cmdTrans.Parameters.AddWithValue("@BalBefore", _currentCustomerBalance)
-                            cmdTrans.Parameters.AddWithValue("@BalAfter", newBalance)
-                            cmdTrans.Parameters.AddWithValue("@Desc", $"إضافة مرتجع مبيعات للفاتورة #{origInvNum}")
-                            cmdTrans.Parameters.AddWithValue("@CreatedBy", currentUserID)
+                            cmdTrans.Parameters.AddWithValue("@InvoiceID", newInvoiceID)
+                            cmdTrans.Parameters.AddWithValue("@Credit", netRefund)
+                            cmdTrans.Parameters.AddWithValue("@BalanceAfter", newBalance)
+                            cmdTrans.Parameters.AddWithValue("@Notes", $"مرتجع مبيعات للفاتورة #{origInvNum} ({returnNumber})")
+                            cmdTrans.Parameters.AddWithValue("@ShiftID", currentShiftID)
+                            cmdTrans.Parameters.AddWithValue("@UserID", currentUserID)
                             cmdTrans.ExecuteNonQuery()
                         End Using
                     End If

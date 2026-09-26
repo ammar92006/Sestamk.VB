@@ -111,20 +111,20 @@ Public Class frmConfirmMessage
 
                     ' 1. تسجيل السجل في CustomerTransactions لظهوره في كشف الحساب
                     Dim receiptRefNo As String = $"REC-{DateTime.Now:yyyyMMdd}-{DateTime.Now:HHmmss}"
+                    Dim currentShiftID As Object = If(ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, CType(DBNull.Value, Object))
                     Dim sqlCustTrans As String = "
                         INSERT INTO CustomerTransactions 
-                        (CustomerID, TransactionType, ReferenceType, ReferenceID, ReferenceNumber, Amount, BalanceBefore, BalanceAfter, Description, CreatedBy, CreatedDate)
+                        (TransactionDate, CustomerID, InvoiceID, BranchID, TransactionType, Debit, Credit, BalanceAfter, Notes, ShiftID, UserID, CreatedAt)
                         VALUES 
-                        (@CustID, N'سند قبض', N'سداد رصيد', 0, @RefNo, @Amount, @BalBefore, @BalAfter, @Desc, @CreatedBy, GETDATE());
+                        (GETDATE(), @CustomerID, NULL, 1, N'سند قبض', 0, @Credit, @BalanceAfter, @Notes, @ShiftID, @UserID, GETDATE());
                     "
                     Using cmdTrans As New SqlCommand(sqlCustTrans, cn, trans)
-                        cmdTrans.Parameters.AddWithValue("@CustID", custID)
-                        cmdTrans.Parameters.AddWithValue("@RefNo", receiptRefNo)
-                        cmdTrans.Parameters.AddWithValue("@Amount", pay)
-                        cmdTrans.Parameters.AddWithValue("@BalBefore", oldB)
-                        cmdTrans.Parameters.AddWithValue("@BalAfter", newB)
-                        cmdTrans.Parameters.AddWithValue("@Desc", If(String.IsNullOrWhiteSpace(notesText), $"سند قبض نقدي من العميل {client}", notesText))
-                        cmdTrans.Parameters.AddWithValue("@CreatedBy", currentUserID)
+                        cmdTrans.Parameters.AddWithValue("@CustomerID", custID)
+                        cmdTrans.Parameters.AddWithValue("@Credit", pay)
+                        cmdTrans.Parameters.AddWithValue("@BalanceAfter", newB)
+                        cmdTrans.Parameters.AddWithValue("@Notes", If(String.IsNullOrWhiteSpace(notesText), $"سند قبض نقدي ({receiptRefNo})", $"{notesText} ({receiptRefNo})"))
+                        cmdTrans.Parameters.AddWithValue("@ShiftID", currentShiftID)
+                        cmdTrans.Parameters.AddWithValue("@UserID", currentUserID)
                         cmdTrans.ExecuteNonQuery()
                     End Using
 
@@ -173,11 +173,11 @@ Public Class frmConfirmMessage
 
                     ' 5. تحديث نقديات الوردية الحالية إن وجدت
                     If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso pay > 0 Then
-                        Dim currentShiftID = ShiftSession.CurrentShift.ShiftID
+                        Dim activeShiftID As Integer = ShiftSession.CurrentShift.ShiftID
                         Dim sqlShift As String = "UPDATE Shifts SET TotalSales = ISNULL(TotalSales, 0) + @Pay WHERE ShiftID = @ShiftID;"
                         Using cmdShift As New SqlCommand(sqlShift, cn, trans)
                             cmdShift.Parameters.AddWithValue("@Pay", pay)
-                            cmdShift.Parameters.AddWithValue("@ShiftID", currentShiftID)
+                            cmdShift.Parameters.AddWithValue("@ShiftID", activeShiftID)
                             cmdShift.ExecuteNonQuery()
                         End Using
                         ShiftSession.CurrentShift.TotalSales += pay
