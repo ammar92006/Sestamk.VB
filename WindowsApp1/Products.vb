@@ -137,6 +137,7 @@ Public Class Products
                     P.Image, 
                     ISNULL(P.IsActive, 1) AS IsActive,
                     ISNULL(P.IsDirect, 1) AS IsDirect,
+                    CASE WHEN ISNULL(P.IsDirect, 1) = 1 THEN N'مباشر' ELSE N'متعدد الأحجام' END AS SaleMode,
                     P.Category_ID
                 FROM Products P 
                 LEFT JOIN Categories Cat ON P.Category_ID = Cat.Category_ID 
@@ -225,7 +226,7 @@ Public Class Products
         If dgvProducts.Columns.Count = 0 Then Exit Sub
 
         ' إخفاء الأعمدة الفنية
-        Dim hiddenCols() As String = {"Product_ID", "Category_ID", "Image", "IsDiscountPercent", "IsTaxPercent", "Description", "Notes"}
+        Dim hiddenCols() As String = {"Product_ID", "Category_ID", "Image", "IsDiscountPercent", "IsTaxPercent", "Description", "Notes", "IsDirect"}
         For Each col In hiddenCols
             If dgvProducts.Columns.Contains(col) Then dgvProducts.Columns(col).Visible = False
         Next
@@ -319,10 +320,11 @@ Public Class Products
             End With
         End If
 
-        If dgvProducts.Columns.Contains("IsDirect") Then
-            With dgvProducts.Columns("IsDirect")
+        If dgvProducts.Columns.Contains("SaleMode") Then
+            With dgvProducts.Columns("SaleMode")
                 .HeaderText = "نظام البيع"
-                .Width = 110
+                .Width = 120
+                .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
             End With
         End If
 
@@ -340,14 +342,16 @@ Public Class Products
         Dim row As DataGridViewRow = dgvProducts.Rows(e.RowIndex)
 
         Try
-            If dgvProducts.Columns(e.ColumnIndex).Name = "IsDirect" AndAlso e.Value IsNot Nothing Then
-                Dim isDirect As Boolean = Convert.ToBoolean(e.Value)
-                If isDirect Then
+            If dgvProducts.Columns(e.ColumnIndex).Name = "SaleMode" AndAlso e.Value IsNot Nothing Then
+                Dim valStr As String = e.Value.ToString()
+                If valStr.Contains("مباشر") Then
                     e.Value = "⚡ مباشر"
                     e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129)
+                    e.CellStyle.Font = New Font(dgvProducts.Font.FontFamily, 10.0!, FontStyle.Bold)
                 Else
                     e.Value = "📏 متعدد الأحجام"
                     e.CellStyle.ForeColor = Color.FromArgb(99, 102, 241)
+                    e.CellStyle.Font = New Font(dgvProducts.Font.FontFamily, 10.0!, FontStyle.Bold)
                 End If
                 e.FormattingApplied = True
             End If
@@ -364,6 +368,12 @@ Public Class Products
             End If
         Catch
         End Try
+    End Sub
+
+    ' منع ظهور رسائل الأخطاء الافتراضية للجدول
+    Private Sub dgvProducts_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvProducts.DataError
+        e.ThrowException = False
+        e.Cancel = False
     End Sub
 
     Private Sub UpdateKpis(dt As DataTable)
@@ -383,7 +393,7 @@ Public Class Products
         Next
 
         lblTotalProducts.Text = $"📦 إجمالي الأصناف: {totalCount:N0}"
-        lblActiveProducts.Text = $"✅ الأصناف النشطة: {activeCount:N0}"
+        lblActiveProducts.Text = $"✔ الأصناف النشطة: {activeCount:N0}"
         lblLowStockProducts.Text = $"⚠️ نواقص وتحت الطلب: {lowStockCount:N0}"
     End Sub
 

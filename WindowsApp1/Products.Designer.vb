@@ -343,10 +343,10 @@ Partial Class Products
         Me.pnlDirectMode.Controls.Add(Me.lblDirectTitle)
         Me.pnlDirectMode.Controls.Add(Me.tgIsDirect)
         Me.pnlDirectMode.FillColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(250, Byte), Integer), CType(CType(252, Byte), Integer))
-        Me.pnlDirectMode.Location = New System.Drawing.Point(215, 298)
+        Me.pnlDirectMode.Location = New System.Drawing.Point(12, 302)
         Me.pnlDirectMode.Name = "pnlDirectMode"
         Me.pnlDirectMode.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlDirectMode.Size = New System.Drawing.Size(1365, 48)
+        Me.pnlDirectMode.Size = New System.Drawing.Size(1576, 46)
         Me.pnlDirectMode.TabIndex = 5626
         '
         'tgIsDirect
@@ -357,7 +357,7 @@ Partial Class Products
         Me.tgIsDirect.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
         Me.tgIsDirect.CheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.tgIsDirect.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.tgIsDirect.Location = New System.Drawing.Point(1295, 11)
+        Me.tgIsDirect.Location = New System.Drawing.Point(1505, 10)
         Me.tgIsDirect.Name = "tgIsDirect"
         Me.tgIsDirect.Size = New System.Drawing.Size(55, 26)
         Me.tgIsDirect.TabIndex = 0
@@ -372,7 +372,7 @@ Partial Class Products
         Me.lblDirectTitle.AutoSize = True
         Me.lblDirectTitle.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         Me.lblDirectTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.lblDirectTitle.Location = New System.Drawing.Point(1170, 14)
+        Me.lblDirectTitle.Location = New System.Drawing.Point(1375, 13)
         Me.lblDirectTitle.Name = "lblDirectTitle"
         Me.lblDirectTitle.Size = New System.Drawing.Size(115, 19)
         Me.lblDirectTitle.TabIndex = 1
@@ -384,7 +384,7 @@ Partial Class Products
         Me.lblDirectStatus.AutoSize = True
         Me.lblDirectStatus.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lblDirectStatus.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
-        Me.lblDirectStatus.Location = New System.Drawing.Point(400, 15)
+        Me.lblDirectStatus.Location = New System.Drawing.Point(620, 14)
         Me.lblDirectStatus.Name = "lblDirectStatus"
         Me.lblDirectStatus.Size = New System.Drawing.Size(535, 19)
         Me.lblDirectStatus.TabIndex = 2
@@ -397,7 +397,7 @@ Partial Class Products
         Me.btnSetupSizesQuick.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
         Me.btnSetupSizesQuick.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
         Me.btnSetupSizesQuick.ForeColor = System.Drawing.Color.White
-        Me.btnSetupSizesQuick.Location = New System.Drawing.Point(12, 8)
+        Me.btnSetupSizesQuick.Location = New System.Drawing.Point(12, 7)
         Me.btnSetupSizesQuick.Name = "btnSetupSizesQuick"
         Me.btnSetupSizesQuick.Size = New System.Drawing.Size(140, 32)
         Me.btnSetupSizesQuick.TabIndex = 3
