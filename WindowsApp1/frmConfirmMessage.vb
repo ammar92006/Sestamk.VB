@@ -136,7 +136,7 @@ Public Class frmConfirmMessage
                         (@CustomerID, @CustomerCode, @CustomerName, @OldBalance, @PaidAmount, @NewBalance, @Notes, @UserName, GETDATE());
                     "
                     Using cmdLog As New SqlCommand(sqlLog, cn, trans)
-                        cmdLog.Parameters.AddWithValue("@CustomerID", custID.ToString())
+                        cmdLog.Parameters.AddWithValue("@CustomerID", custID)
                         cmdLog.Parameters.AddWithValue("@CustomerCode", code)
                         cmdLog.Parameters.AddWithValue("@CustomerName", client)
                         cmdLog.Parameters.AddWithValue("@OldBalance", oldB)
@@ -148,7 +148,7 @@ Public Class frmConfirmMessage
                     End Using
 
                     ' 3. تحديث الرصيد في جدول Customers بالـ CustomerID
-                    Dim sqlUpdateCustomer As String = "UPDATE Customers SET CurrentBalance = @CurrentBalance, UpdatedAt = GETDATE() WHERE CustomerID = @CustomerID;"
+                    Dim sqlUpdateCustomer As String = "UPDATE Customers SET CurrentBalance = @CurrentBalance, LastTransactionDate = GETDATE(), updated_at = SYSUTCDATETIME() WHERE CustomerID = @CustomerID;"
                     Using cmdCust As New SqlCommand(sqlUpdateCustomer, cn, trans)
                         cmdCust.Parameters.AddWithValue("@CurrentBalance", newB)
                         cmdCust.Parameters.AddWithValue("@CustomerID", custID)

@@ -587,7 +587,7 @@ Public Class Sales_Returns
                         Dim newBalance As Decimal = _currentCustomerBalance + netRefund
 
                         ' تحديث رصيد العميل
-                        Dim sqlCust As String = "UPDATE Customers SET CurrentBalance = @NewBal, UpdatedAt = GETDATE() WHERE CustomerID = @CID;"
+                        Dim sqlCust As String = "UPDATE Customers SET CurrentBalance = @NewBal, LastTransactionDate = GETDATE(), updated_at = SYSUTCDATETIME() WHERE CustomerID = @CID;"
                         Using cmdCust As New SqlCommand(sqlCust, conn, trans)
                             cmdCust.Parameters.AddWithValue("@NewBal", newBalance)
                             cmdCust.Parameters.AddWithValue("@CID", _currentCustomerID.Value)

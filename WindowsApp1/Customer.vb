@@ -275,7 +275,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
     Private Sub LoadCustomers(Optional filter As String = "", Optional field As String = "")
         Using Conn
-            Dim query As String = "SELECT CustomerID, CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes , CreatedAt , UpdatedAt FROM Customers"
+            Dim query As String = "SELECT CustomerID, CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes , CreatedAt , updated_at AS UpdatedAt FROM Customers"
             Connect()
             txtCustomerCode.Clear()
             txtCustomerName.Clear()
@@ -307,7 +307,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                     Case "تاريخ الاضافة"
                         columnName = "CreatedAt"
                     Case "تاريخ اخر تحديث"
-                        columnName = "UpdatedAt"
+                        columnName = "updated_at"
                 End Select
 
                 If columnName <> "" Then
@@ -705,7 +705,8 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 CurrentBalance=@CurrentBalance,
                 IsActive=@Active, 
                 Notes=@Notes, 
-                UpdatedAt=GETDATE()
+                updated_at=SYSUTCDATETIME(),
+                LastTransactionDate=GETDATE()
             WHERE CustomerID=@ID"
 
                 Using cmd As New SqlCommand(query, Conn)
@@ -760,7 +761,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                        CASE WHEN IsActive = 1 THEN N'نشط' ELSE N'غير نشط' END AS [الحالة],
                        Notes AS [ملاحظات],
                        CreatedAt AS [تاريخ الإنشاء],
-                       UpdatedAt AS [آخر تحديث]
+                       updated_at AS [آخر تحديث]
                 FROM Customers", Conn)
                 Dim da As New SqlDataAdapter(cmd)
                 da.Fill(dt)
@@ -887,8 +888,8 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
                 For Each row As DataRow In dt.Rows
                     Dim cmd As New SqlCommand("
-                    INSERT INTO Customers (CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes, CreatedAt, UpdatedAt)
-                    VALUES (@Code, @Name, @Phone, @Address, @Credit, @Balance, @Active, @Notes, GETDATE(), GETDATE())", Conn)
+                    INSERT INTO Customers (CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes, CreatedAt, updated_at)
+                    VALUES (@Code, @Name, @Phone, @Address, @Credit, @Balance, @Active, @Notes, GETDATE(), SYSUTCDATETIME())", Conn)
 
                     cmd.Parameters.AddWithValue("@Code", row("كود العميل"))
                     cmd.Parameters.AddWithValue("@Name", row("اسم العميل"))
