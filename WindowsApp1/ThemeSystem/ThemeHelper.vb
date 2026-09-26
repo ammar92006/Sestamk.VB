@@ -22,6 +22,9 @@ Public NotInheritable Class ThemeHelper
             DirectCast(frm, FrmKitchenDisplay).ApplyTheme()
             Return
         End If
+        If TypeOf frm Is SplashScreen Then
+            Return
+        End If
 
         frm.SuspendLayout()
         Try

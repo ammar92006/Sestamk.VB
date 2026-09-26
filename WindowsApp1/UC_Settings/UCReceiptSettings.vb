@@ -1,4 +1,4 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.IO
 Imports System.Windows.Forms
 
@@ -46,8 +46,12 @@ Namespace UC_Settings
                         cmbFontSize.SelectedIndex = 1
                 End Select
 
-                Dim styleVal = SettingsManager.GetSettingOrDefault(SettingsKeys.ReceiptStyle, "Classic")
-                If styleVal.ToLower() = "grid" Then
+                Dim styleVal = SettingsManager.GetSettingOrDefault(SettingsKeys.ReceiptStyle, "")
+                If String.IsNullOrWhiteSpace(styleVal) Then
+                    Dim oldPrintStyle = SettingsManager.GetSettingOrDefault(SettingsKeys.PrintStyle, "1")
+                    styleVal = If(oldPrintStyle = "2", "Grid", "Classic")
+                End If
+                If styleVal.Equals("Grid", StringComparison.OrdinalIgnoreCase) OrElse styleVal = "2" Then
                     cmbReceiptStyle.SelectedIndex = 1
                 Else
                     cmbReceiptStyle.SelectedIndex = 0
@@ -96,41 +100,51 @@ Namespace UC_Settings
             End Try
         End Sub
 
-        Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-            Try
-                ' حفظ بيانات المحل بالتوافق بين VB و C#
-                SettingsManager.SaveSettingDual(SettingsKeys.ShopName, SettingsKeys.StoreName, txtShopName.Text.Trim())
-                SettingsManager.SaveSettingDual(SettingsKeys.ShopPhone, SettingsKeys.StorePhone, txtShopPhone.Text.Trim())
-                SettingsManager.SaveSettingDual(SettingsKeys.ShopPhone2, SettingsKeys.StorePhone2, txtShopPhone2.Text.Trim())
-                SettingsManager.SaveSettingDual(SettingsKeys.ShopAddress, SettingsKeys.StoreAddress, txtShopAddress.Text.Trim())
-                SettingsManager.SaveSetting(SettingsKeys.TaxNumber, txtShopTax.Text.Trim())
+        ''' <summary>
+        ''' حفظ الإعدادات في قاعدة البيانات
+        ''' </summary>
+        Private Sub SaveSettingsInternal(Optional showToast As Boolean = True)
+            ' حفظ بيانات المحل بالتوافق بين VB و C#
+            SettingsManager.SaveSettingDual(SettingsKeys.ShopName, SettingsKeys.StoreName, txtShopName.Text.Trim())
+            SettingsManager.SaveSettingDual(SettingsKeys.ShopPhone, SettingsKeys.StorePhone, txtShopPhone.Text.Trim())
+            SettingsManager.SaveSettingDual(SettingsKeys.ShopPhone2, SettingsKeys.StorePhone2, txtShopPhone2.Text.Trim())
+            SettingsManager.SaveSettingDual(SettingsKeys.ShopAddress, SettingsKeys.StoreAddress, txtShopAddress.Text.Trim())
+            SettingsManager.SaveSetting(SettingsKeys.TaxNumber, txtShopTax.Text.Trim())
 
-                ' حفظ الشعار
-                SettingsManager.SaveSettingDual(SettingsKeys.LogoPath, SettingsKeys.ReceiptLogoPath, txtLogoPath.Text.Trim())
-                SettingsManager.SaveSettingDual(SettingsKeys.ShowLogo, SettingsKeys.PrintLogo, tglShowLogo.Checked.ToString().ToLower())
+            ' حفظ الشعار
+            SettingsManager.SaveSettingDual(SettingsKeys.LogoPath, SettingsKeys.ReceiptLogoPath, txtLogoPath.Text.Trim())
+            SettingsManager.SaveSettingDual(SettingsKeys.ShowLogo, SettingsKeys.PrintLogo, tglShowLogo.Checked.ToString().ToLower())
 
-                ' حجم الخط
-                Dim fontSizes = New String() {"7", "8.5", "10", "12"}
-                Dim selectedFontSize = fontSizes(Math.Max(0, Math.Min(cmbFontSize.SelectedIndex, fontSizes.Length - 1)))
-                SettingsManager.SaveSetting(SettingsKeys.ReceiptFontSize, selectedFontSize)
+            ' حجم الخط
+            Dim fontSizes = New String() {"7", "8.5", "10", "12"}
+            Dim selectedFontSize = fontSizes(Math.Max(0, Math.Min(cmbFontSize.SelectedIndex, fontSizes.Length - 1)))
+            SettingsManager.SaveSetting(SettingsKeys.ReceiptFontSize, selectedFontSize)
 
-                ' نمط الفاتورة
-                Dim style = If(cmbReceiptStyle.SelectedIndex = 1, "Grid", "Classic")
-                SettingsManager.SaveSetting(SettingsKeys.ReceiptStyle, style)
+            ' نمط الفاتورة والتوافق مع PrintStyle (1=Classic, 2=Grid)
+            Dim isGrid = (cmbReceiptStyle.SelectedIndex = 1)
+            SettingsManager.SaveSetting(SettingsKeys.ReceiptStyle, If(isGrid, "Grid", "Classic"))
+            SettingsManager.SaveSetting(SettingsKeys.PrintStyle, If(isGrid, "2", "1"))
 
-                SettingsManager.SaveSetting(SettingsKeys.ShowTax, tglShowTax.Checked.ToString().ToLower())
-                SettingsManager.SaveSetting(SettingsKeys.ShowDiscount, tglShowDiscount.Checked.ToString().ToLower())
-                SettingsManager.SaveSetting(SettingsKeys.ShowCashier, tglShowCashier.Checked.ToString().ToLower())
+            SettingsManager.SaveSetting(SettingsKeys.ShowTax, tglShowTax.Checked.ToString().ToLower())
+            SettingsManager.SaveSetting(SettingsKeys.ShowDiscount, tglShowDiscount.Checked.ToString().ToLower())
+            SettingsManager.SaveSetting(SettingsKeys.ShowCashier, tglShowCashier.Checked.ToString().ToLower())
 
-                ' نصوص التذييل
-                SettingsManager.SaveSettingDual(SettingsKeys.FooterText, SettingsKeys.ReceiptFooter, txtFooterText.Text.Trim())
-                SettingsManager.SaveSetting(SettingsKeys.DeliveryText, txtDeliveryText.Text.Trim())
+            ' نصوص التذييل
+            SettingsManager.SaveSettingDual(SettingsKeys.FooterText, SettingsKeys.ReceiptFooter, txtFooterText.Text.Trim())
+            SettingsManager.SaveSetting(SettingsKeys.DeliveryText, txtDeliveryText.Text.Trim())
 
+            If showToast Then
                 Try
                     Notify.Toast("تم حفظ إعدادات الفاتورة بنجاح ✅", Notify.ToastType.Success)
                 Catch
                     MessageBox.Show("✅ تم حفظ إعدادات الفاتورة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
+            End If
+        End Sub
+
+        Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+            Try
+                SaveSettingsInternal(showToast:=True)
             Catch ex As Exception
                 MessageBox.Show("خطأ في حفظ إعدادات الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
@@ -147,6 +161,66 @@ Namespace UC_Settings
                 txtFooterText.Text = "شكراً لزيارتكم - نتمنى لكم يوماً سعيداً"
                 txtDeliveryText.Text = "يوجد توصيل للمنازل"
             End If
+        End Sub
+
+        Private Sub btnTestReceipt_Click(sender As Object, e As EventArgs) Handles btnTestReceipt.Click
+            Try
+                ' تطبيق الإعدادات الحالية لتعكس المعاينة فوراً ما اختاره المستخدم
+                SaveSettingsInternal(showToast:=False)
+
+                ' إنشاء فاتورة تجريبية لاختبار التصميم
+                Dim testInv As New InvoiceModel() With {
+                    .InvoiceID = 9999,
+                    .InvoiceNumber = "DEMO-1001",
+                    .InvoiceDate = DateTime.Now,
+                    .OrderType = 2,
+                    .TotalBeforeDiscount = 385D,
+                    .DiscountAmount = If(tglShowDiscount.Checked, 25D, 0D),
+                    .DeliveryFee = 0D,
+                    .NetTotal = If(tglShowDiscount.Checked, 360D, 385D),
+                    .PaidAmount = 400D,
+                    .RemainingAmount = If(tglShowDiscount.Checked, 40D, 15D)
+                }
+
+                testInv.Details.Add(New InvoiceDetailModel With {
+                    .ProductName = "بيتزا سوبر سوبريم",
+                    .SizeName = "كبير",
+                    .UnitPrice = 145D,
+                    .Quantity = 1,
+                    .TotalPrice = 145D,
+                    .AddonsText = "موتزاريلا إضافية"
+                })
+
+                testInv.Details.Add(New InvoiceDetailModel With {
+                    .ProductName = "برجر كلاسيك دوبل",
+                    .SizeName = "عادي",
+                    .UnitPrice = 90D,
+                    .Quantity = 2,
+                    .TotalPrice = 180D,
+                    .Notes = "بدون صوص حار"
+                })
+
+                testInv.Details.Add(New InvoiceDetailModel With {
+                    .ProductName = "بطاطس فارم فريتس",
+                    .SizeName = "عادي",
+                    .UnitPrice = 30D,
+                    .Quantity = 2,
+                    .TotalPrice = 60D
+                })
+
+                ' فتح شاشة المعاينة الحية للفاتورة مباشرة
+                RestaurantPrintManager.PrintCustomerReceipt(
+                    inv:=testInv,
+                    customerName:="عميل تجريبي",
+                    tableName:="طاولة 4",
+                    driverName:="",
+                    isReprint:=False,
+                    customPrinterName:="",
+                    forcePreview:=True
+                )
+            Catch ex As Exception
+                MessageBox.Show("خطأ أثناء تجربة طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
         End Sub
 
         Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click

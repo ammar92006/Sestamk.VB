@@ -1,4 +1,4 @@
-﻿''' <summary>
+''' <summary>
 ''' مفاتيح الإعدادات الموحّدة (تُخزّن في جدول AppSettings عبر SettingsManager).
 ''' استخدام ثوابت بدل النصوص المباشرة يمنع الأخطاء الإملائية ويوحّد المصدر.
 ''' </summary>
@@ -25,10 +25,12 @@ Public Module SettingsKeys
 
     ' ── الطباعة ──
     Public Const ThermalPrinterName As String = "ThermalPrinterName"
+    Public Const KitchenPrinterName As String = "KitchenPrinterName"
     Public Const NormalPrinterName As String = "NormalPrinterName"
     Public Const PrintStyle As String = "PrintStyle"
     Public Const PrintLogo As String = "PrintLogo"
     Public Const PrintBarcode As String = "PrintBarcode"
+    Public Const InvoiceBarcodeType As String = "InvoiceBarcodeType"
     Public Const PrintPreview As String = "PrintPreview"
 
     ' ── طابعة الباركود ──

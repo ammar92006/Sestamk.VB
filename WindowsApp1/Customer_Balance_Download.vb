@@ -1,11 +1,11 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports Guna.UI2.WinForms
 
 Public Class Customer_Balance_Download
     Dim x, y As Integer
     Dim newpoint As New Point
-    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+    Private defaultTreasuryid As Integer = -1
 
     Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
         If WindowState = FormWindowState.Maximized Then
@@ -69,8 +69,12 @@ Public Class Customer_Balance_Download
             cmbTreasury.DataSource = dt
             cmbTreasury.DisplayMember = "TreasuryNameAr"
             cmbTreasury.ValueMember = "TreasuryID"
-            defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
-            cmbTreasury.SelectedIndex = defaultTreasuryid
+            defaultTreasuryid = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+            If defaultTreasuryid > 0 Then
+                cmbTreasury.SelectedValue = defaultTreasuryid
+            ElseIf cmbTreasury.Items.Count > 0 Then
+                cmbTreasury.SelectedIndex = 0
+            End If
 
         Catch ex As Exception
 

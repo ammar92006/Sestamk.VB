@@ -210,7 +210,7 @@ Public Class frmPrinters
             printLogo:=True,
             printBarcode:=True,
             openDrawer:=False,
-            usePreview:=False
+            usePreview:=SettingsManager.GetBoolSetting(SettingsKeys.PrintPreview, False)
         )
     End Sub
 End Class

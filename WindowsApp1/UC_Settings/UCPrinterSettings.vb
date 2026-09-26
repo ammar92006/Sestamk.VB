@@ -22,11 +22,15 @@ Namespace UC_Settings
         Private Sub LoadPrintersList()
             Try
                 cmbThermalPrinter.Items.Clear()
+                cmbKitchenPrinter.Items.Clear()
                 cmbNormalPrinter.Items.Clear()
+                cmbBarcodePrinter.Items.Clear()
 
                 For Each printerName As String In PrinterSettings.InstalledPrinters
                     cmbThermalPrinter.Items.Add(printerName)
+                    cmbKitchenPrinter.Items.Add(printerName)
                     cmbNormalPrinter.Items.Add(printerName)
+                    cmbBarcodePrinter.Items.Add(printerName)
                 Next
             Catch ex As Exception
                 Debug.WriteLine("LoadPrintersList error: " & ex.Message)
@@ -46,10 +50,23 @@ Namespace UC_Settings
             Try
                 ' الطابعات المحفوظة (دعم المفاتيح المتوافقة مع نسختي VB و C#)
                 Dim savedThermal = SettingsManager.GetSettingDual(SettingsKeys.ThermalPrinterName, SettingsKeys.DefaultPrinterName, "")
+                Dim savedKitchen = SettingsManager.GetSettingOrDefault(SettingsKeys.KitchenPrinterName, "")
                 Dim savedNormal = SettingsManager.GetSettingOrDefault(SettingsKeys.NormalPrinterName, "")
+                Dim savedBarcode = SettingsManager.GetSettingOrDefault(SettingsKeys.BarcodePrinterName, "")
 
-                If Not String.IsNullOrEmpty(savedThermal) Then cmbThermalPrinter.Text = savedThermal
-                If Not String.IsNullOrEmpty(savedNormal) Then cmbNormalPrinter.Text = savedNormal
+                ' في حال لم تكن هناك طابعة محددة مسبقاً، نختار طابعة النظام الافتراضية
+                If String.IsNullOrEmpty(savedThermal) Then
+                    Try
+                        Dim ps As New PrinterSettings()
+                        savedThermal = ps.PrinterName
+                    Catch
+                    End Try
+                End If
+
+                SelectComboValue(cmbThermalPrinter, savedThermal)
+                SelectComboValue(cmbKitchenPrinter, savedKitchen)
+                SelectComboValue(cmbNormalPrinter, savedNormal)
+                SelectComboValue(cmbBarcodePrinter, savedBarcode)
 
                 ' مقاس الورق
                 Dim paperSize = SettingsManager.GetSettingOrDefault(SettingsKeys.PrinterPaperSize, "80mm")
@@ -62,17 +79,12 @@ Namespace UC_Settings
                         rbSize80.Checked = True
                 End Select
 
-                ' نمط الطباعة
-                Dim styleVal = SettingsManager.GetSettingOrDefault(SettingsKeys.PrintStyle, "1")
-                If styleVal = "2" Then
-                    rbStyleAdvanced.Checked = True
-                Else
-                    rbStyleSimple.Checked = True
-                End If
-
                 ' خيارات الطباعة
                 chkPrintLogo.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PrintLogo, True)
                 chkPrintBarcode.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PrintBarcode, True)
+                Dim barcodeType = SettingsManager.GetSettingOrDefault(SettingsKeys.InvoiceBarcodeType, "2D")
+                cmbBarcodeType.SelectedIndex = If(barcodeType.Equals("1D", StringComparison.OrdinalIgnoreCase), 1, 0)
+                cmbBarcodeType.Visible = chkPrintBarcode.Checked
                 chkPrintPreview.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PrintPreview, False)
                 tglAutoPrint.Checked = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, True)
                 tglOpenDrawer.Checked = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterOpenCashDrawer, SettingsKeys.OpenDrawerOnPayment, True)
@@ -82,11 +94,27 @@ Namespace UC_Settings
             End Try
         End Sub
 
+        Private Sub chkPrintBarcode_CheckedChanged(sender As Object, e As EventArgs) Handles chkPrintBarcode.CheckedChanged
+            cmbBarcodeType.Visible = chkPrintBarcode.Checked
+        End Sub
+
+        Private Sub SelectComboValue(cmb As Guna.UI2.WinForms.Guna2ComboBox, value As String)
+            If String.IsNullOrWhiteSpace(value) Then Return
+            Dim idx = cmb.FindStringExact(value)
+            If idx >= 0 Then
+                cmb.SelectedIndex = idx
+            Else
+                cmb.Text = value
+            End If
+        End Sub
+
         Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
             Try
                 ' حفظ اسم الطابعة بالتوافق مع نسختي البرنامج
                 SettingsManager.SaveSettingDual(SettingsKeys.ThermalPrinterName, SettingsKeys.DefaultPrinterName, cmbThermalPrinter.Text.Trim())
+                SettingsManager.SaveSetting(SettingsKeys.KitchenPrinterName, cmbKitchenPrinter.Text.Trim())
                 SettingsManager.SaveSetting(SettingsKeys.NormalPrinterName, cmbNormalPrinter.Text.Trim())
+                SettingsManager.SaveSetting(SettingsKeys.BarcodePrinterName, cmbBarcodePrinter.Text.Trim())
 
                 ' حفظ مقاس الورق
                 Dim paperSize As String = "80mm"
@@ -97,12 +125,10 @@ Namespace UC_Settings
                 End If
                 SettingsManager.SaveSetting(SettingsKeys.PrinterPaperSize, paperSize)
 
-                ' حفظ نمط الطباعة
-                SettingsManager.SaveSetting(SettingsKeys.PrintStyle, If(rbStyleAdvanced.Checked, "2", "1"))
-
                 ' حفظ خيارات الطباعة
                 SettingsManager.SaveSetting(SettingsKeys.PrintLogo, chkPrintLogo.Checked.ToString().ToLower())
                 SettingsManager.SaveSetting(SettingsKeys.PrintBarcode, chkPrintBarcode.Checked.ToString().ToLower())
+                SettingsManager.SaveSetting(SettingsKeys.InvoiceBarcodeType, If(cmbBarcodeType.SelectedIndex = 1, "1D", "2D"))
                 SettingsManager.SaveSetting(SettingsKeys.PrintPreview, chkPrintPreview.Checked.ToString().ToLower())
                 SettingsManager.SaveSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, tglAutoPrint.Checked.ToString().ToLower())
                 SettingsManager.SaveSettingDual(SettingsKeys.PrinterOpenCashDrawer, SettingsKeys.OpenDrawerOnPayment, tglOpenDrawer.Checked.ToString().ToLower())
@@ -113,9 +139,9 @@ Namespace UC_Settings
                 End If
 
                 Try
-                    Notify.Toast("تم حفظ إعدادات الطابعة بنجاح ✅", Notify.ToastType.Success)
+                    Notify.Toast("تم حفظ إعدادات الطابعة والطباعة بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات الطابعة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    MessageBox.Show("✅ تم حفظ إعدادات الطابعة والطباعة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
                 MessageBox.Show("خطأ في حفظ إعدادات الطابعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -128,7 +154,7 @@ Namespace UC_Settings
                 Return
             End If
 
-            Dim paperSize As String = If(rbSize58.Checked, "58mm", "80mm")
+            Dim paperSize As String = If(rbSize58.Checked, "58mm", If(rbSizeA4.Checked, "A4", "80mm"))
             ThermalTestReceiptHelper.PrintTestReceipt(
                 printerName:=cmbThermalPrinter.Text.Trim(),
                 paperSize:=paperSize,
@@ -139,13 +165,61 @@ Namespace UC_Settings
             )
         End Sub
 
+        Private Sub btnTestKitchen_Click(sender As Object, e As EventArgs) Handles btnTestKitchen.Click
+            Dim kitchenPrn As String = cmbKitchenPrinter.Text.Trim()
+            If String.IsNullOrWhiteSpace(kitchenPrn) AndAlso Not chkPrintPreview.Checked Then
+                MessageBox.Show("يرجى اختيار طابعة المطبخ أولاً أو تفعيل المعاينة قبل الطباعة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return
+            End If
+
+            Try
+                Dim testItems As New List(Of InvoiceDetailModel) From {
+                    New InvoiceDetailModel With {.ProductName = "برجر كلاسيك دوبل", .SizeName = "كبير", .Quantity = 2, .AddonsText = "جبنة شيدر إضافية", .Notes = "بدون بصل"},
+                    New InvoiceDetailModel With {.ProductName = "بيتزا رانش دجاج", .SizeName = "وسط", .Quantity = 1, .Notes = "تسوية مقرمشة"},
+                    New InvoiceDetailModel With {.ProductName = "بطاطس محمرة كرسبي", .Quantity = 2}
+                }
+
+                RestaurantPrintManager.PrintKitchenTicket(
+                    orderNumber:="تجربة-01",
+                    orderTypeDesc:="صالة - طاولة 5",
+                    tableName:="طاولة 5",
+                    staffName:="كاشير تجريبي",
+                    items:=testItems,
+                    ticketTitle:="بون اختبار طابعة المطبخ",
+                    customPrinterName:=kitchenPrn,
+                    forcePreview:=chkPrintPreview.Checked
+                )
+
+                If Not chkPrintPreview.Checked Then
+                    Try
+                        Notify.Toast("تم إرسال بون الاختبار لطابعة المطبخ بنجاح 🍳", Notify.ToastType.Success)
+                    Catch
+                        MessageBox.Show("✅ تم إرسال بون الاختبار لطابعة المطبخ بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Try
+                End If
+            Catch ex As Exception
+                MessageBox.Show("خطأ أثناء طباعة تجربة المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
             If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الطابعة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                Try
+                    Dim ps As New PrinterSettings()
+                    SelectComboValue(cmbThermalPrinter, ps.PrinterName)
+                Catch
+                End Try
+                cmbKitchenPrinter.SelectedIndex = -1
+                cmbKitchenPrinter.Text = ""
+                cmbNormalPrinter.SelectedIndex = -1
+                cmbNormalPrinter.Text = ""
+                cmbBarcodePrinter.SelectedIndex = -1
+                cmbBarcodePrinter.Text = ""
                 rbSize80.Checked = True
-                rbStyleSimple.Checked = True
                 chkPrintLogo.Checked = True
                 chkPrintBarcode.Checked = True
+                cmbBarcodeType.SelectedIndex = 0
+                cmbBarcodeType.Visible = True
                 chkPrintPreview.Checked = False
                 tglAutoPrint.Checked = True
                 tglOpenDrawer.Checked = True

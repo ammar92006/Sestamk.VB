@@ -96,7 +96,7 @@ Partial Class FrmProductOptions
         Me.Label3.Location = New System.Drawing.Point(0, 65)
         Me.Label3.Name = "Label3"
         Me.Label3.Padding = New System.Windows.Forms.Padding(0, 0, 16, 0)
-        Me.Label3.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.Label3.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.Label3.Size = New System.Drawing.Size(700, 36)
         Me.Label3.TabIndex = 5588
         Me.Label3.Text = "الأحجام"
@@ -109,7 +109,7 @@ Partial Class FrmProductOptions
         Me.Guna2Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel1.Location = New System.Drawing.Point(0, 101)
         Me.Guna2Panel1.Name = "Guna2Panel1"
-        Me.Guna2Panel1.Size = New System.Drawing.Size(700, 145)
+        Me.Guna2Panel1.Size = New System.Drawing.Size(700, 78)
         Me.Guna2Panel1.TabIndex = 5590
         '
         'flpSizes
@@ -121,7 +121,7 @@ Partial Class FrmProductOptions
         Me.flpSizes.Name = "flpSizes"
         Me.flpSizes.Padding = New System.Windows.Forms.Padding(10)
         Me.flpSizes.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpSizes.Size = New System.Drawing.Size(700, 145)
+        Me.flpSizes.Size = New System.Drawing.Size(700, 78)
         Me.flpSizes.TabIndex = 0
         '
         'Label1
@@ -130,10 +130,10 @@ Partial Class FrmProductOptions
         Me.Label1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(0, 246)
+        Me.Label1.Location = New System.Drawing.Point(0, 179)
         Me.Label1.Name = "Label1"
         Me.Label1.Padding = New System.Windows.Forms.Padding(0, 0, 16, 0)
-        Me.Label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.Label1.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.Label1.Size = New System.Drawing.Size(700, 36)
         Me.Label1.TabIndex = 5589
         Me.Label1.Text = "الإضافات (اختياري)"
@@ -143,10 +143,10 @@ Partial Class FrmProductOptions
         '
         Me.Guna2Panel2.BackColor = System.Drawing.Color.Transparent
         Me.Guna2Panel2.Controls.Add(Me.flpAddons)
-        Me.Guna2Panel2.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel2.Location = New System.Drawing.Point(0, 282)
+        Me.Guna2Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Guna2Panel2.Location = New System.Drawing.Point(0, 215)
         Me.Guna2Panel2.Name = "Guna2Panel2"
-        Me.Guna2Panel2.Size = New System.Drawing.Size(700, 210)
+        Me.Guna2Panel2.Size = New System.Drawing.Size(700, 290)
         Me.Guna2Panel2.TabIndex = 5591
         '
         'flpAddons
@@ -158,7 +158,7 @@ Partial Class FrmProductOptions
         Me.flpAddons.Name = "flpAddons"
         Me.flpAddons.Padding = New System.Windows.Forms.Padding(10)
         Me.flpAddons.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpAddons.Size = New System.Drawing.Size(700, 210)
+        Me.flpAddons.Size = New System.Drawing.Size(700, 290)
         Me.flpAddons.TabIndex = 0
         '
         'Guna2Panel3
@@ -171,11 +171,11 @@ Partial Class FrmProductOptions
         Me.Guna2Panel3.Controls.Add(Me.lblTotalPrice)
         Me.Guna2Panel3.Controls.Add(Me.Label5)
         Me.Guna2Panel3.Controls.Add(Me.btnAdd)
-        Me.Guna2Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Guna2Panel3.Location = New System.Drawing.Point(0, 492)
+        Me.Guna2Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel3.Location = New System.Drawing.Point(0, 505)
         Me.Guna2Panel3.Name = "Guna2Panel3"
         Me.Guna2Panel3.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Guna2Panel3.Size = New System.Drawing.Size(700, 108)
+        Me.Guna2Panel3.Size = New System.Drawing.Size(700, 95)
         Me.Guna2Panel3.TabIndex = 5592
         '
         'btnMinus

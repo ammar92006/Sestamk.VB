@@ -139,18 +139,23 @@ Module Main
     End Sub
 
     Public Sub InitializeShiftSession()
-        Dim repo As New POSRepository(DBModule.ConnectionString)
+        Try
+            Dim repo As New POSRepository(DBModule.ConnectionString)
 
-        ' 1. البحث عن الوردية المفتوحة حالياً في الداتا بيز
-        Dim activeShift As ShiftModel = repo.GetActiveShift()
+            ' 1. البحث عن الوردية المفتوحة حالياً في الداتا بيز
+            Dim activeShift As ShiftModel = repo.GetActiveShift()
 
-        If activeShift IsNot Nothing Then
-            ' توجد وردية مفتوحة بالفعل -> إسنادها للـ Cache فوراً
-            ShiftSession.CurrentShift = activeShift
-        Else
-            ' لا توجد وردية مفتوحة -> تفريغ الـ Session
+            If activeShift IsNot Nothing Then
+                ' توجد وردية مفتوحة بالفعل -> إسنادها للـ Cache فوراً
+                ShiftSession.CurrentShift = activeShift
+            Else
+                ' لا توجد وردية مفتوحة -> تفريغ الـ Session
+                ShiftSession.ClearSession()
+            End If
+        Catch ex As Exception
+            Logger.LogError("InitializeShiftSession", ex)
             ShiftSession.ClearSession()
-        End If
+        End Try
     End Sub
 
     Public Function GetNextCode(tableName As String, codeColumn As String) As Integer

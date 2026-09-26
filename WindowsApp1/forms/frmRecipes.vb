@@ -2142,7 +2142,7 @@ Public Class frmRecipes
                 MessageBoxIcon.Warning
             )
 
-            Exit Function
+            Return False
 
         End If
 
@@ -2155,7 +2155,7 @@ Public Class frmRecipes
                 MessageBoxIcon.Warning
             )
 
-            Exit Function
+            Return False
 
         End If
 

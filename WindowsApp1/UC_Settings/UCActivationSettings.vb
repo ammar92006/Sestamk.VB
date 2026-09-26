@@ -144,7 +144,7 @@ Namespace UC_Settings
             btnRefresh.Enabled = False
             btnRefresh.Text = "جاري الفحص..."
             Try
-                Dim result = Await LicenseBootstrapper.CheckAsync()
+                Dim result = Await LicenseBootstrapper.CheckAsync(forceOnlineCheck:=True)
                 LoadLicenseData()
                 If result.IsValid Then
                     Try

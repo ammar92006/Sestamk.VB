@@ -872,7 +872,7 @@ ORDER BY ShiftID DESC;"
     End Function
 
     Public Function SaveInvoice(inv As InvoiceModel) As String
-        Return SaveInvoiceAsync(inv).GetAwaiter().GetResult()
+        Return Task.Run(Function() SaveInvoiceAsync(inv)).GetAwaiter().GetResult()
     End Function
 
     ' ==========================================

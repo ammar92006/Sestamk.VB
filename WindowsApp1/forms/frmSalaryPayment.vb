@@ -11,10 +11,11 @@ Public Class frmSalaryPayment
         Dim Drag As New FormDragHelper(Me, panelHeader)
         datagridviewsetup(dgvSalaries)
 
-        Dim defaultIdSetting = SettingsManager.GetSetting("defaultTreasuryid")
-        defaultTreasuryid = If(IsNumeric(defaultIdSetting), Convert.ToInt32(defaultIdSetting), -1)
-        If defaultTreasuryid >= 0 AndAlso defaultTreasuryid < cmbTreasury.Items.Count Then
-            cmbTreasury.SelectedIndex = defaultTreasuryid
+        defaultTreasuryid = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+        If defaultTreasuryid > 0 Then
+            cmbTreasury.SelectedValue = defaultTreasuryid
+        ElseIf cmbTreasury.Items.Count > 0 Then
+            cmbTreasury.SelectedIndex = 0
         End If
     End Sub
 

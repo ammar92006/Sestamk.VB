@@ -5,7 +5,7 @@ Public Class FrmTreasuryTransactionsReport
         Close()
     End Sub
 
-    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+    Private defaultTreasuryid As Integer = -1
     Private _x, _y As Integer
     Private _newPoint As New Point
     Private Async Sub FrmTreasuryTransactionsReport_Load(sender As Object, e As EventArgs) Handles MyBase.Load

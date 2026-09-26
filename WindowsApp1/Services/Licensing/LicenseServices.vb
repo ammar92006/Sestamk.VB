@@ -22,12 +22,23 @@ Public NotInheritable Class HardwareFingerprint
     Private Sub New()
     End Sub
 
+    Private Shared _cachedHwid As String = Nothing
+    Private Shared _cachedOsInfo As String = Nothing
+    Private Shared _cachedProcessorName As String = Nothing
+    Private Shared _cachedRamGb As Integer = -1
+
     ' Matches Sestamk_App: SHA256(MachineGuid|CpuId|MotherboardSerial).
     Public Shared Function GetCurrent() As String
-        Dim raw = GetMachineGuid() & "|" & GetWmiValue("Win32_Processor", "ProcessorId") & "|" & GetWmiValue("Win32_BaseBoard", "SerialNumber")
-        Using sha As SHA256 = SHA256.Create()
-            Return BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(raw))).Replace("-", String.Empty)
-        End Using
+        If Not String.IsNullOrEmpty(_cachedHwid) Then Return _cachedHwid
+        Try
+            Dim raw = GetMachineGuid() & "|" & GetWmiValue("Win32_Processor", "ProcessorId") & "|" & GetWmiValue("Win32_BaseBoard", "SerialNumber")
+            Using sha As SHA256 = SHA256.Create()
+                _cachedHwid = BitConverter.ToString(sha.ComputeHash(Encoding.UTF8.GetBytes(raw))).Replace("-", String.Empty)
+            End Using
+        Catch
+            _cachedHwid = "UNKNOWN_HWID"
+        End Try
+        Return _cachedHwid
     End Function
 
     Private Shared Function GetMachineGuid() As String
@@ -53,27 +64,40 @@ Public NotInheritable Class HardwareFingerprint
     End Function
 
     Public Shared Function GetOSInfo() As String
+        If Not String.IsNullOrEmpty(_cachedOsInfo) Then Return _cachedOsInfo
         Dim val = GetWmiValue("Win32_OperatingSystem", "Caption")
-        If Not String.IsNullOrEmpty(val) AndAlso val <> "UNKNOWN" Then Return val
-        Return Environment.OSVersion.VersionString
+        If Not String.IsNullOrEmpty(val) AndAlso val <> "UNKNOWN" Then
+            _cachedOsInfo = val
+        Else
+            _cachedOsInfo = Environment.OSVersion.VersionString
+        End If
+        Return _cachedOsInfo
     End Function
 
     Public Shared Function GetProcessorName() As String
+        If Not String.IsNullOrEmpty(_cachedProcessorName) Then Return _cachedProcessorName
         Dim val = GetWmiValue("Win32_Processor", "Name")
-        If Not String.IsNullOrEmpty(val) AndAlso val <> "UNKNOWN" Then Return val
-        Return "Unknown CPU"
+        If Not String.IsNullOrEmpty(val) AndAlso val <> "UNKNOWN" Then
+            _cachedProcessorName = val
+        Else
+            _cachedProcessorName = "Unknown CPU"
+        End If
+        Return _cachedProcessorName
     End Function
 
     Public Shared Function GetRamGB() As Integer
+        If _cachedRamGb >= 0 Then Return _cachedRamGb
         Try
             Using searcher As New ManagementObjectSearcher("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem")
                 For Each item As ManagementObject In searcher.Get()
                     Dim bytes = Convert.ToInt64(item("TotalPhysicalMemory"))
-                    Return CInt(bytes \ (1024L * 1024L * 1024L))
+                    _cachedRamGb = CInt(bytes \ (1024L * 1024L * 1024L))
+                    Return _cachedRamGb
                 Next
             End Using
         Catch
         End Try
+        _cachedRamGb = 0
         Return 0
     End Function
 End Class
@@ -136,6 +160,8 @@ Public Class LicenseCheckResult
 End Class
 
 Public NotInheritable Class LicenseBootstrapper
+    Public Shared Event LicenseInvalidated(message As String)
+
     Shared Sub New()
         Try
             ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol Or SecurityProtocolType.Tls12 Or SecurityProtocolType.Tls11
@@ -146,11 +172,35 @@ Public NotInheritable Class LicenseBootstrapper
     Private Sub New()
     End Sub
 
-    Public Shared Async Function CheckAsync() As Task(Of LicenseCheckResult)
+    Public Shared Async Function CheckAsync(Optional forceOnlineCheck As Boolean = False) As Task(Of LicenseCheckResult)
         Dim cache = LicenseCache.Load()
         If cache Is Nothing OrElse String.IsNullOrWhiteSpace(Convert.ToString(cache("saved_serial"))) Then
             Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يرجى تفعيل البرنامج أولاً."}
         End If
+
+        ' تسريع فوري: إذا كان الكاش المحلي صالحاً، يتم قبول الترخيص فوراً في 0ms بدون تجميد الشاشة
+        If Not forceOnlineCheck AndAlso LicenseCache.IsOfflineAllowed(cache) Then
+            Dim savedSerial = Convert.ToString(cache("saved_serial"))
+            Dim bgLicenseCheck = Task.Run(Async Function()
+                         Try
+                             Dim bgResponse = Await RequestAsync(savedSerial)
+                             If IsServerValid(bgResponse) Then
+                                 bgResponse("saved_serial") = savedSerial
+                                 LicenseCache.Save(bgResponse)
+                             Else
+                                 ' تم إيقاف أو إلغاء الترخيص على السيرفر
+                                 LicenseCache.Delete()
+                                 Dim revokedMsg = ReadMessage(bgResponse, "تم إيقاف أو انتهاء ترخيص البرنامج من السيرفر.")
+                                 RaiseEvent LicenseInvalidated(revokedMsg)
+                             End If
+                         Catch
+                             ' في حال انقطاع الاتصال أثناء الفحص الخلفي الصامت يستمر العمل بالكاش المسموح
+                         End Try
+                     End Function)
+
+            Return New LicenseCheckResult With {.IsValid = True, .Payload = cache, .IsOffline = False}
+        End If
+
         Try
             Dim response = Await RequestAsync(Convert.ToString(cache("saved_serial")))
             If IsServerValid(response) Then
@@ -159,7 +209,9 @@ Public NotInheritable Class LicenseBootstrapper
                 Return New LicenseCheckResult With {.IsValid = True, .Payload = response}
             End If
             LicenseCache.Delete()
-            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = ReadMessage(response, "تم إيقاف أو انتهاء الترخيص.")}
+            Dim failMsg = ReadMessage(response, "تم إيقاف أو انتهاء الترخيص.")
+            RaiseEvent LicenseInvalidated(failMsg)
+            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = failMsg}
         Catch ex As HttpRequestException
             If LicenseCache.IsOfflineAllowed(cache) Then Return New LicenseCheckResult With {.IsValid = True, .IsOffline = True, .Payload = cache, .Message = "تعمل النسخة مؤقتاً دون اتصال بالإنترنت."}
             Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يلزم الاتصال بالإنترنت للتحقق من الترخيص."}

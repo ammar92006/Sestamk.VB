@@ -101,7 +101,8 @@ Public Class ExpensesReportForm
             total += Convert.ToDecimal(row("المبلغ"))
         Next
 
-        lblTotalAmount.Text = total.ToString("N2") & " ج.م"
+        Dim curSymbol = SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
+        lblTotalAmount.Text = total.ToString("N2") & " " & curSymbol
         lblOperationCount.Text = count.ToString()
     End Sub
 

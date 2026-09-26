@@ -1,4 +1,4 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.IO
 Imports System.Text
 Imports ZXing
@@ -47,6 +47,29 @@ Public Module QRCodeHelper
                     .Width = width,
                     .Margin = 1,
                     .CharacterSet = "UTF-8"
+                }
+            }
+
+            Return writer.Write(content)
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' توليد صورة Bitmap لباركود خطي أحادي الأبعاد 1D (Code 128)
+    ''' </summary>
+    Public Function GenerateBarcode1D(content As String, Optional width As Integer = 200, Optional height As Integer = 50) As Bitmap
+        Try
+            If String.IsNullOrWhiteSpace(content) Then Return Nothing
+
+            Dim writer As New BarcodeWriter With {
+                .Format = BarcodeFormat.CODE_128,
+                .Options = New ZXing.Common.EncodingOptions With {
+                    .Height = height,
+                    .Width = width,
+                    .Margin = 2,
+                    .PureBarcode = False
                 }
             }
 

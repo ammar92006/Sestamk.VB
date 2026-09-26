@@ -4,6 +4,19 @@ Imports WindowsApp1.FrmTreasuryTransaction
 
 Public Class MainForm
 
+    <StructLayout(LayoutKind.Sequential)>
+    Private Structure LASTINPUTINFO
+        Public cbSize As UInteger
+        Public dwTime As UInteger
+    End Structure
+
+    <DllImport("user32.dll")>
+    Private Shared Function GetLastInputInfo(ByRef plii As LASTINPUTINFO) As Boolean
+    End Function
+
+    Private _isLoggingOut As Boolean = False
+    Private _inactivityCounter As Integer = 0
+
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
         Application.Exit()
     End Sub
@@ -41,6 +54,14 @@ Public Class MainForm
         ' بدء تشغيل مؤقتات الساعة وتحديث الداشبورد
         tmrClock.Start()
         tmrDashboardRefresh.Start()
+
+        ' إعداد التلميح لأزرار الهيدر
+        Try
+            Dim tip As New ToolTip()
+            tip.SetToolTip(btnLogout, "تسجيل الخروج من النظام وإغلاق كافة الشاشات المفتوحة (Ctrl+Q)")
+            tip.SetToolTip(btnSupport, "فتح صفحة الدعم الفني على موقع سستمك الرسمي (https://sestamk.site.je/contact)")
+        Catch
+        End Try
 
         ' تحميل بيانات الداشبورد فور فتح الشاشة
         RefreshDashboardAsync()
@@ -103,6 +124,44 @@ Public Class MainForm
 
     Private Sub tmrClock_Tick(sender As Object, e As EventArgs) Handles tmrClock.Tick
         UpdateDateTimeAndShift()
+
+        ' فحص خمول المستخدم كل 5 ثوانٍ
+        _inactivityCounter += 1
+        If _inactivityCounter >= 5 Then
+            _inactivityCounter = 0
+            CheckUserInactivity()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' فحص خمول المستخدم وقفل الشاشة تلقائياً حسب إعدادات النظام
+    ''' </summary>
+    Private Sub CheckUserInactivity()
+        Try
+            If _isLoggingOut Then Return
+
+            Dim isEnabled As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoLogoutEnabled, False)
+            If Not isEnabled Then Return
+
+            Dim timeoutMinutes As Integer = SettingsManager.GetIntSetting(SettingsKeys.SystemAutoLogoutTimer, 15)
+            If timeoutMinutes <= 0 Then Return
+
+            Dim lii As New LASTINPUTINFO()
+            lii.cbSize = CUInt(Marshal.SizeOf(GetType(LASTINPUTINFO)))
+
+            If GetLastInputInfo(lii) Then
+                Dim currentTicks As UInteger = CUInt(Environment.TickCount)
+                Dim idleTicks As UInteger = currentTicks - lii.dwTime
+                Dim timeoutMs As UInteger = CUInt(timeoutMinutes) * 60UI * 1000UI
+
+                If idleTicks >= timeoutMs Then
+                    _isLoggingOut = True
+                    PerformLogout(isAuto:=True)
+                End If
+            End If
+        Catch ex As Exception
+            Logger.LogError("CheckUserInactivity", ex)
+        End Try
     End Sub
 
     Private Sub tmrDashboardRefresh_Tick(sender As Object, e As EventArgs) Handles tmrDashboardRefresh.Tick
@@ -361,12 +420,18 @@ Public Class MainForm
             lblShiftDuration.ForeColor = pal.Primary
             btnRefreshDashboard.FillColor = pal.Primary
             btnRefreshDashboard.ForeColor = pal.TextOnPrimary
+            btnRefreshDashboard.BorderRadius = 8
+            btnRefreshDashboard.BorderThickness = 1
+            btnRefreshDashboard.BorderColor = pal.PrimaryHover
 
-            ' تطبيق ثيم بطاقات الإحصائيات الستة
+            ' تطبيق ثيم بطاقات الإحصائيات الستة مع إطار عصري ومحدد
             Dim cards() As Guna.UI2.WinForms.Guna2Panel = {cardSales, cardPurchases, cardProfit, cardProducts, cardCustomers, cardSuppliers}
             For Each c In cards
                 If c IsNot Nothing Then
                     c.FillColor = pal.CardBackground
+                    c.BorderRadius = 12
+                    c.BorderThickness = 1
+                    c.BorderColor = pal.Border
                 End If
             Next
 
@@ -391,11 +456,17 @@ Public Class MainForm
             lblCardCustomersVal.ForeColor = pal.TextPrimary
             lblCardSuppliersVal.ForeColor = pal.TextPrimary
 
-            ' بطاقة آخر الفواتير
+            ' بطاقة آخر الفواتير بإطار عصري
             cardRecentInvoices.FillColor = pal.CardBackground
+            cardRecentInvoices.BorderRadius = 12
+            cardRecentInvoices.BorderThickness = 1
+            cardRecentInvoices.BorderColor = pal.Border
             lblRecentInvoicesTitle.ForeColor = pal.TextPrimary
             btnViewAllInvoices.FillColor = pal.Primary
             btnViewAllInvoices.ForeColor = pal.TextOnPrimary
+            btnViewAllInvoices.BorderRadius = 6
+            btnViewAllInvoices.BorderThickness = 1
+            btnViewAllInvoices.BorderColor = pal.PrimaryHover
 
             ' جدول فواتير المبيعات
             dgvRecentInvoices.BackgroundColor = pal.CardBackground
@@ -409,12 +480,22 @@ Public Class MainForm
             dgvRecentInvoices.ColumnHeadersDefaultCellStyle.ForeColor = pal.GridHeaderForeground
             dgvRecentInvoices.GridColor = pal.Border
 
-            ' بطاقة التنبيهات
+            ' بطاقة التنبيهات وإشعارات النظام بإطار عصري
             cardAlerts.FillColor = pal.CardBackground
+            cardAlerts.BorderRadius = 12
+            cardAlerts.BorderThickness = 1
+            cardAlerts.BorderColor = pal.Border
             lblAlertsTitle.ForeColor = pal.TextPrimary
-            cardAlertStock.FillColor = pal.BackgroundSecondary
-            cardAlertShift.FillColor = pal.BackgroundSecondary
-            cardAlertBackup.FillColor = pal.BackgroundSecondary
+
+            Dim alertCards() As Guna.UI2.WinForms.Guna2Panel = {cardAlertStock, cardAlertShift, cardAlertBackup}
+            For Each ac In alertCards
+                If ac IsNot Nothing Then
+                    ac.FillColor = pal.BackgroundSecondary
+                    ac.BorderRadius = 8
+                    ac.BorderThickness = 1
+                    ac.BorderColor = pal.Border
+                End If
+            Next
 
             lblAlertStockDesc.ForeColor = pal.TextSecondary
             lblAlertShiftDesc.ForeColor = pal.TextSecondary
@@ -422,15 +503,65 @@ Public Class MainForm
 
             lblQuickTitle.ForeColor = pal.TextPrimary
 
-            ' أزرار الوصول السريع
+            ' أزرار الوصول السريع بإطارات أنيقة
             btnQuickPOS.FillColor = pal.Primary
             btnQuickPOS.ForeColor = pal.TextOnPrimary
-            btnQuickProducts.FillColor = pal.ButtonSecondaryBackground
-            btnQuickProducts.ForeColor = pal.ButtonSecondaryForeground
-            btnQuickCustomers.FillColor = pal.ButtonSecondaryBackground
-            btnQuickCustomers.ForeColor = pal.ButtonSecondaryForeground
-            btnQuickBackup.FillColor = pal.ButtonSecondaryBackground
-            btnQuickBackup.ForeColor = pal.ButtonSecondaryForeground
+            btnQuickPOS.BorderRadius = 8
+            btnQuickPOS.BorderThickness = 1
+            btnQuickPOS.BorderColor = pal.PrimaryHover
+
+            Dim quickBtns() As Guna.UI2.WinForms.Guna2Button = {btnQuickProducts, btnQuickCustomers, btnQuickBackup}
+            For Each qb In quickBtns
+                If qb IsNot Nothing Then
+                    qb.FillColor = pal.ButtonSecondaryBackground
+                    qb.ForeColor = pal.ButtonSecondaryForeground
+                    qb.BorderRadius = 8
+                    qb.BorderThickness = 1
+                    qb.BorderColor = pal.Border
+                End If
+            Next
+
+            ' زر تسجيل الخروج الاحترافي في الهيدر
+            If btnLogout IsNot Nothing Then
+                btnLogout.BorderRadius = 8
+                btnLogout.BorderThickness = 1
+                If ThemeManager.Instance.IsDark Then
+                    btnLogout.FillColor = Color.FromArgb(45, 25, 30)
+                    btnLogout.ForeColor = Color.FromArgb(254, 202, 202)
+                    btnLogout.BorderColor = Color.FromArgb(239, 68, 68)
+                    btnLogout.HoverState.FillColor = Color.FromArgb(220, 38, 38)
+                    btnLogout.HoverState.ForeColor = Color.White
+                    btnLogout.HoverState.BorderColor = Color.FromArgb(220, 38, 38)
+                Else
+                    btnLogout.FillColor = Color.FromArgb(254, 242, 242)
+                    btnLogout.ForeColor = Color.FromArgb(185, 28, 28)
+                    btnLogout.BorderColor = Color.FromArgb(248, 113, 113)
+                    btnLogout.HoverState.FillColor = Color.FromArgb(220, 38, 38)
+                    btnLogout.HoverState.ForeColor = Color.White
+                    btnLogout.HoverState.BorderColor = Color.FromArgb(220, 38, 38)
+                End If
+            End If
+
+            ' زر الدعم الفني في الهيدر
+            If btnSupport IsNot Nothing Then
+                btnSupport.BorderRadius = 8
+                btnSupport.BorderThickness = 1
+                If ThemeManager.Instance.IsDark Then
+                    btnSupport.FillColor = Color.FromArgb(24, 38, 62)
+                    btnSupport.ForeColor = Color.FromArgb(191, 219, 254)
+                    btnSupport.BorderColor = Color.FromArgb(59, 130, 246)
+                    btnSupport.HoverState.FillColor = Color.FromArgb(37, 99, 235)
+                    btnSupport.HoverState.ForeColor = Color.White
+                    btnSupport.HoverState.BorderColor = Color.FromArgb(37, 99, 235)
+                Else
+                    btnSupport.FillColor = Color.FromArgb(239, 246, 255)
+                    btnSupport.ForeColor = Color.FromArgb(29, 78, 216)
+                    btnSupport.BorderColor = Color.FromArgb(147, 197, 253)
+                    btnSupport.HoverState.FillColor = Color.FromArgb(37, 99, 235)
+                    btnSupport.HoverState.ForeColor = Color.White
+                    btnSupport.HoverState.BorderColor = Color.FromArgb(37, 99, 235)
+                End If
+            End If
 
             ' شريط الحالة السفلي
             statusStripMain.BackColor = pal.SurfaceHeader
@@ -468,6 +599,10 @@ Public Class MainForm
 
     Private Sub btnfrmProductAddons_Click(sender As Object, e As EventArgs) Handles btnfrmProductAddons.Click
         OpenFormOnce(GetType(frmProductAddons), btnfrmProductAddons)
+    End Sub
+
+    Private Sub btnfrmKitchenComments_Click(sender As Object, e As EventArgs) Handles btnfrmKitchenComments.Click
+        OpenFormOnce(GetType(frmKitchenComments), btnfrmKitchenComments)
     End Sub
 
     Private Sub btnfrmPOS_Click(sender As Object, e As EventArgs) Handles btnfrmPOS.Click
@@ -532,6 +667,10 @@ Public Class MainForm
 
     Private Sub btnfrmShifts_Click(sender As Object, e As EventArgs) Handles btnfrmShifts.Click
         OpenFormOnce(GetType(frmShifts), btnfrmShifts)
+    End Sub
+
+    Private Sub btnShiftReports_Click(sender As Object, e As EventArgs) Handles btnShiftReports.Click
+        OpenFormOnce(GetType(FrmShiftReports), btnShiftReports)
     End Sub
 
     Private Sub btnfrmBranches_Click(sender As Object, e As EventArgs) Handles btnfrmBranches.Click
@@ -728,8 +867,90 @@ Public Class MainForm
         btnBackups.PerformClick()
     End Sub
 
+    Private Sub btnLogout_Click(sender As Object, e As EventArgs) Handles btnLogout.Click
+        PerformLogout()
+    End Sub
+
+    Private Sub btnSupport_Click(sender As Object, e As EventArgs) Handles btnSupport.Click
+        WebLinks.OpenContact()
+    End Sub
+
+    ''' <summary>
+    ''' تسجيل خروج فوري واحترافي: إغلاق كافة الشاشات المفتوحة والعودة لشاشة تسجيل الدخول مباشرة
+    ''' </summary>
+    Public Sub PerformLogout(Optional isAuto As Boolean = False)
+        Try
+            _isLoggingOut = True
+
+            ' 1. إيقاف مؤقتات الداشبورد والساعة
+            tmrClock.Stop()
+            tmrDashboardRefresh.Stop()
+
+            ' 2. تنظيف بيانات الجلسة بالكامل
+            Session.Clear()
+            usernamelogin = String.Empty
+            passwordlogin = String.Empty
+            useridlogin = 0
+
+            ' 3. البحث عن فورم تسجيل الدخول الأصلي في الذاكرة
+            Dim loginInstance As Login = Nothing
+            For Each frm As Form In Application.OpenForms
+                If TypeOf frm Is Login Then
+                    loginInstance = CType(frm, Login)
+                    Exit For
+                End If
+            Next
+
+            ' 4. تجميع كافة النوافذ المفتوحة عدا شاشة تسجيل الدخول لإغلاقها
+            Dim formsToClose As New List(Of Form)()
+            For Each frm As Form In Application.OpenForms
+                If frm IsNot loginInstance Then
+                    formsToClose.Add(frm)
+                End If
+            Next
+
+            For Each frm In formsToClose
+                Try
+                    frm.Close()
+                Catch ex As Exception
+                    Logger.LogError("PerformLogout.CloseForm", ex)
+                End Try
+            Next
+
+            ' 5. إعادة إظهار وتنشيط شاشة تسجيل الدخول
+            If loginInstance IsNot Nothing AndAlso Not loginInstance.IsDisposed Then
+                loginInstance.ResetForLogout()
+            Else
+                Dim newLogin As New Login()
+                newLogin.Show()
+            End If
+
+            If isAuto Then
+                Try
+                    Notify.Toast("تم قفل الشاشة تلقائياً لعدم النشاط 🔒", Notify.ToastType.Warning)
+                Catch
+                End Try
+            Else
+                Notify.Toast("تم تسجيل الخروج بنجاح 👋", Notify.ToastType.Info)
+            End If
+
+        Catch ex As Exception
+            Logger.LogError("PerformLogout", ex)
+            MessageBox.Show("حدث خطأ أثناء محاولة تسجيل الخروج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            _isLoggingOut = False
+        End Try
+    End Sub
+
     ' اختصارات لوحة المفاتيح
     Private Sub MainForm_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        ' اختصار تسجيل الخروج السريع Ctrl + Q
+        If e.Control AndAlso e.KeyCode = Keys.Q Then
+            e.Handled = True
+            PerformLogout()
+            Return
+        End If
+
         Select Case e.KeyCode
             Case Keys.F1
                 e.Handled = True
@@ -760,6 +981,7 @@ Public Class MainForm
             {btnProducts, "Products"},
             {btnfrmProductSizes, "frmProductSizes"},
             {btnfrmProductAddons, "frmProductAddons"},
+            {btnfrmKitchenComments, "frmKitchenComments"},
             {btnfrmPOS, "frmPOS"},
             {btnSalesReturns, "Sales_Returns"},
             {btnfrmEmployees, "frmEmployees"},
@@ -776,6 +998,7 @@ Public Class MainForm
             {btnfrmRestaurantSections, "frmRestaurantSections"},
             {btnfrmRestaurantTables, "frmRestaurantTables"},
             {btnfrmShifts, "frmShifts"},
+            {btnShiftReports, "FrmShiftReports"},
             {btnfrmBranches, "frmBranches"},
             {btnFrmCustomers, "FrmCustomers"},
             {btnSettings, "Settings"},

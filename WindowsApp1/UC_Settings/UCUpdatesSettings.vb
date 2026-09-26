@@ -70,6 +70,16 @@ Namespace UC_Settings
                     Dim json = Await response.Content.ReadAsStringAsync()
                     Dim updatesArray = JArray.Parse(json)
 
+                    If updatesArray.Count = 0 AndAlso Not String.Equals(channel, "beta", StringComparison.OrdinalIgnoreCase) Then
+                        ' جلب التحديثات النشطة المتاحة لضمان عدم بقاء الشاشة فارغة
+                        Dim fallbackUrl = LicenseSettings.SupabaseUrl.TrimEnd("/"c) & "/rest/v1/updates?is_active=eq.true&select=*&order=release_date.desc"
+                        Dim fallbackResp = Await client.GetAsync(fallbackUrl)
+                        If fallbackResp.IsSuccessStatusCode Then
+                            Dim fallbackJson = Await fallbackResp.Content.ReadAsStringAsync()
+                            updatesArray = JArray.Parse(fallbackJson)
+                        End If
+                    End If
+
                     flpUpdateHistory.SuspendLayout()
                     flpUpdateHistory.Controls.Clear()
 
@@ -216,32 +226,30 @@ Namespace UC_Settings
                         client.Timeout = TimeSpan.FromSeconds(15)
                         Dim manifestJson = Await client.GetStringAsync(_latestManifestUrl)
                         Dim parsed = JObject.Parse(manifestJson)
-                        Dim manifestVersion = Convert.ToString(parsed("version"))
+                        Dim manifest = UpdateCoordinator.ParseManifest(parsed)
 
-                        Dim curVer As Version = Nothing
-                        Dim manVer As Version = Nothing
-                        Dim isNewer = False
+                        If manifest IsNot Nothing Then
+                            Dim curVer As Version = Nothing
+                            Dim manVer As Version = Nothing
+                            Dim isNewer = False
 
-                        If Version.TryParse(Application.ProductVersion, curVer) AndAlso Version.TryParse(manifestVersion, manVer) Then
-                            isNewer = (manVer > curVer)
-                        Else
-                            isNewer = Not String.Equals(Application.ProductVersion, manifestVersion, StringComparison.OrdinalIgnoreCase)
-                        End If
+                            If Version.TryParse(Application.ProductVersion, curVer) AndAlso Version.TryParse(manifest.Version, manVer) Then
+                                isNewer = (manVer > curVer)
+                            Else
+                                isNewer = Not String.Equals(Application.ProductVersion, manifest.Version, StringComparison.OrdinalIgnoreCase)
+                            End If
 
-                        If isNewer Then
-                            Dim manifest As New VbUpdateManifest With {
-                                .Product = Convert.ToString(parsed("product")),
-                                .Version = manifestVersion,
-                                .Channel = Convert.ToString(parsed("channel")),
-                                .Mandatory = Convert.ToBoolean(parsed("mandatory")),
-                                .Notes = Convert.ToString(parsed("notes")),
-                                .PackageUrl = Convert.ToString(parsed.SelectToken("package.url")),
-                                .PackageSha256 = Convert.ToString(parsed.SelectToken("package.sha256")),
-                                .PackageSize = CLng(Val(Convert.ToString(parsed.SelectToken("package.size"))))
-                            }
-                            Using notifier As New FormUpdateNotifier(manifest)
-                                notifier.ShowDialog(Me.FindForm())
-                            End Using
+                            If isNewer Then
+                                Using notifier As New FormUpdateNotifier(manifest)
+                                    notifier.ShowDialog(Me.FindForm())
+                                End Using
+                            Else
+                                Try
+                                    Notify.Toast("أنت تستخدم أحدث إصدار حالياً ✅", Notify.ToastType.Success)
+                                Catch
+                                    MessageBox.Show("أنت تستخدم أحدث إصدار متاح حالياً.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                End Try
+                            End If
                         Else
                             Try
                                 Notify.Toast("أنت تستخدم أحدث إصدار حالياً ✅", Notify.ToastType.Success)

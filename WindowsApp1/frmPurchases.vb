@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmPurchases
     Private _dtItems As New DataTable()
@@ -171,8 +171,12 @@ Public Class frmPurchases
         cmbTreasury.DisplayMember = "TreasuryNameAr"
         cmbTreasury.ValueMember = "TreasuryID"
 
-        defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
-        cmbTreasury.SelectedIndex = defaultTreasuryid
+        defaultTreasuryid = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+        If defaultTreasuryid > 0 Then
+            cmbTreasury.SelectedValue = defaultTreasuryid
+        ElseIf cmbTreasury.Items.Count > 0 Then
+            cmbTreasury.SelectedIndex = 0
+        End If
         ' 5. الفروع
         Dim dtBranches As DataTable = DBModule.ExecuteQuery("SELECT BranchID, BranchName FROM Branches WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY BranchName;")
         cmbBranches.DataSource = dtBranches

@@ -35,8 +35,13 @@ Public Class Settings
 
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, pnlTopBar)
+
+        If _databaseSettingsOnly Then
+            ApplyDatabaseSettingsOnlyMode()
+        End If
+
         ' تحميل الصفحة الافتراضية
-        If _selectedSectionIndex = 1 OrElse _selectedSectionIndex = 5 Then
+        If _databaseSettingsOnly OrElse _selectedSectionIndex = 1 OrElse _selectedSectionIndex = 5 Then
             btnDatabaseSettings.PerformClick()
         Else
             btnSystemSettings.PerformClick()
@@ -110,10 +115,11 @@ Public Class Settings
             Case 3 : Return btnScannerSettings
             Case 4 : Return btnReceiptSettings
             Case 5 : Return btnDatabaseSettings
-            Case 6 : Return btnNotificationsSettings
-            Case 7 : Return btnActivationSettings
-            Case 8 : Return btnUpdatesSettings
-            Case 9 : Return btnAbout
+            Case 6 : Return btnDataExportSettings
+            Case 7 : Return btnNotificationsSettings
+            Case 8 : Return btnActivationSettings
+            Case 9 : Return btnUpdatesSettings
+            Case 10 : Return btnAbout
             Case Else : Return btnSystemSettings
         End Select
     End Function
@@ -129,6 +135,7 @@ Public Class Settings
             btnScannerSettings,
             btnReceiptSettings,
             btnDatabaseSettings,
+            btnDataExportSettings,
             btnNotificationsSettings,
             btnActivationSettings,
             btnUpdatesSettings,
@@ -185,29 +192,104 @@ Public Class Settings
         LoadUserControl("DatabaseSettings", Function() New UCDatabaseSettings())
     End Sub
 
+    Private Sub btnDataExportSettings_Click(sender As Object, e As EventArgs) Handles btnDataExportSettings.Click
+        SetActiveButton(btnDataExportSettings)
+        _selectedSectionIndex = 6
+        LoadUserControl("DataExportSettings", Function() New UCDataExportSettings())
+    End Sub
+
     Private Sub btnNotificationsSettings_Click(sender As Object, e As EventArgs) Handles btnNotificationsSettings.Click
         SetActiveButton(btnNotificationsSettings)
-        _selectedSectionIndex = 6
+        _selectedSectionIndex = 7
         LoadUserControl("NotificationsSettings", Function() New UCNotificationsSettings())
     End Sub
 
     Private Sub btnActivationSettings_Click(sender As Object, e As EventArgs) Handles btnActivationSettings.Click
         SetActiveButton(btnActivationSettings)
-        _selectedSectionIndex = 7
+        _selectedSectionIndex = 8
         LoadUserControl("ActivationSettings", Function() New UCActivationSettings())
     End Sub
 
     Private Sub btnUpdatesSettings_Click(sender As Object, e As EventArgs) Handles btnUpdatesSettings.Click
         SetActiveButton(btnUpdatesSettings)
-        _selectedSectionIndex = 8
+        _selectedSectionIndex = 9
         LoadUserControl("UpdatesSettings", Function() New UCUpdatesSettings())
     End Sub
 
     Private Sub btnAbout_Click(sender As Object, e As EventArgs) Handles btnAbout.Click
         SetActiveButton(btnAbout)
-        _selectedSectionIndex = 9
+        _selectedSectionIndex = 10
         LoadUserControl("About", Function() New UCAbout())
     End Sub
+
+    ' ─────────────────────────────────────────────────────────────
+    ' نمط قفل إعدادات قاعدة البيانات (Database Settings Only Mode)
+    ' ─────────────────────────────────────────────────────────────
+
+    Private _databaseSettingsOnly As Boolean = False
+
+    ''' <summary>
+    ''' تفعيل نمط القفل على إعدادات قاعدة البيانات فقط مع إخفاء باقي أقسام النظام
+    ''' لمنع التلاعب بالإعدادات قبل تسجيل الدخول.
+    ''' </summary>
+    Public Property DatabaseSettingsOnly As Boolean
+        Get
+            Return _databaseSettingsOnly
+        End Get
+        Set(value As Boolean)
+            _databaseSettingsOnly = value
+            If value Then
+                ApplyDatabaseSettingsOnlyMode()
+            End If
+        End Set
+    End Property
+
+    ''' <summary>
+    ''' تطبيق القفل على قسم قاعدة البيانات وإخفاء الأزرار الأخرى
+    ''' </summary>
+    Public Sub ApplyDatabaseSettingsOnlyMode()
+        Try
+            btnSystemSettings.Visible = False
+            btnSalesSettings.Visible = False
+            btnPrinterSettings.Visible = False
+            btnScannerSettings.Visible = False
+            btnReceiptSettings.Visible = False
+            btnDataExportSettings.Visible = False
+            btnNotificationsSettings.Visible = False
+            btnActivationSettings.Visible = False
+            btnUpdatesSettings.Visible = False
+            btnAbout.Visible = True
+
+            lblSettingsTitle.Text = "إعدادات قاعدة البيانات"
+            lblSettingsSubtitle.Text = "تهيئة وضبط اتصال الخادم وقاعدة البيانات"
+
+            _selectedSectionIndex = 5
+            If IsHandleCreated Then
+                btnDatabaseSettings.PerformClick()
+            End If
+        Catch ex As Exception
+            Debug.WriteLine("ApplyDatabaseSettingsOnlyMode error: " & ex.Message)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' دالة مساعدة ثابتة لفتح فورم الإعدادات موجهاً ومقفولاً على قسم قاعدة البيانات
+    ''' </summary>
+    Public Shared Function OpenDatabaseSettings(Optional owner As Form = Nothing, Optional databaseOnly As Boolean = True) As DialogResult
+        Using frm As New Settings()
+            frm.DatabaseSettingsOnly = databaseOnly
+            frm.SelectedSectionIndex = 5
+            AddHandler frm.Shown, Sub(s, ev)
+                                      If databaseOnly Then frm.ApplyDatabaseSettingsOnlyMode()
+                                      frm.btnDatabaseSettings.PerformClick()
+                                  End Sub
+            If owner IsNot Nothing Then
+                Return frm.ShowDialog(owner)
+            Else
+                Return frm.ShowDialog()
+            End If
+        End Using
+    End Function
 
     ' ─────────────────────────────────────────────────────────────
     ' التوافق مع الكود الخارجي (مثل ApplicationEvents.vb)

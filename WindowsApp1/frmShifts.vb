@@ -20,6 +20,38 @@ Public Class frmShifts
         End Try
     End Sub
 
+    ' تعبئة قائمة المستخدمين لمسؤول الفتح ومسؤول الإغلاق
+    Private Sub FillUsersDropdowns()
+        Try
+            Dim dtOpen As DataTable = DBModule.ExecuteQuery("SELECT User_ID, User_Name, User_username FROM Users_TBL WHERE (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY User_Name")
+            If dtOpen IsNot Nothing Then
+                cmbOpenUser.DataSource = dtOpen
+                cmbOpenUser.DisplayMember = "User_Name"
+                cmbOpenUser.ValueMember = "User_ID"
+            End If
+
+            Dim dtClose As DataTable = DBModule.ExecuteQuery("SELECT User_ID, User_Name, User_username FROM Users_TBL WHERE (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY User_Name")
+            If dtClose IsNot Nothing Then
+                cmbCloseUser.DataSource = dtClose
+                cmbCloseUser.DisplayMember = "User_Name"
+                cmbCloseUser.ValueMember = "User_ID"
+            End If
+
+            SetDefaultUserSelections()
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub SetDefaultUserSelections()
+        Dim currentUserId As Integer = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1)
+        If cmbOpenUser.DataSource IsNot Nothing AndAlso cmbOpenUser.Items.Count > 0 Then
+            cmbOpenUser.SelectedValue = currentUserId
+        End If
+        If cmbCloseUser.DataSource IsNot Nothing AndAlso cmbCloseUser.Items.Count > 0 Then
+            cmbCloseUser.SelectedValue = currentUserId
+        End If
+    End Sub
+
     ' 2. زر الـ + الصغير لفتح فورم الورديات المرجعية فرعياً وتحديث الكومبو بوكس بعدها
     Private Sub btnAddWorkShiftForm_Click(sender As Object, e As EventArgs) Handles btnAddWorkShiftForm.Click
         Dim frm As New frmWorkShifts()
@@ -47,12 +79,20 @@ Public Class frmShifts
                 Dim expected As Decimal = Convert.ToDecimal(row("OpeningCash")) + Convert.ToDecimal(row("TotalSales")) + Convert.ToDecimal(row("TotalIncomes")) - Convert.ToDecimal(row("TotalExpenses")) - Convert.ToDecimal(row("TotalRefunds"))
                 lblExpectedCash.Text = expected.ToString("N2")
 
+                ' تحديد المستخدم الذي بدأ الوردية تلقائياً
+                If Not IsDBNull(row("UserID")) Then
+                    cmbOpenUser.SelectedValue = row("UserID")
+                End If
+                ' وتحديد المستخدم الذي ينهي الوردية بالمستخدم الحالي المسجل
+                If Session.CurrentUserID > 0 Then
+                    cmbCloseUser.SelectedValue = Session.CurrentUserID
+                End If
+
                 ' تفعيل زر الإغلاق وتعطيل الفتح وتحديث عنوان الشاشة ببيان الوردية الشغالة
                 btnOpenShift.Enabled = False
                 btnCloseShift.Enabled = True
                 btnSuspendShift.Enabled = True ' إمكانية التعليق متاحة
                 btnResumeShift.Enabled = False
-                'Guna2HtmlLabel1.Text = "الورديات (الوردية الحالية: 🟢 مفتوحة)"
                 If Not IsDBNull(row("WorkShiftID")) Then cmbWorkShift.SelectedValue = row("WorkShiftID")
             Else
                 _activeShiftID = Nothing
@@ -61,16 +101,21 @@ Public Class frmShifts
                 btnCloseShift.Enabled = False
                 btnSuspendShift.Enabled = False
                 btnResumeShift.Enabled = True ' إمكانية استكمال وردية معلقة من الجدول متاحة
-                'Guna2HtmlLabel1.Text = "الورديات (لا توجد وردية مفتوحة)"
+                SetDefaultUserSelections()
             End If
 
-            ' تحميل سجل الورديات في الجريد فيو مع بيان حالة الوردية (شغالة / معلقة / مقفولة)
-            Dim query As String = "SELECT S.ShiftID, S.ShiftNumber, S.WorkShiftID, W.WorkShiftName, S.OpenDateTime, S.CloseDateTime, " &
+            ' تحميل سجل الورديات في الجريد فيو مع بيان حالة الوردية وبيانات المستخدمين
+            Dim query As String = "SELECT S.ShiftID, S.ShiftNumber, S.WorkShiftID, W.WorkShiftName, " &
+                                  "S.UserID, U1.User_Name AS OpenUserName, " &
+                                  "S.ClosedByUserID, U2.User_Name AS CloseUserName, " &
+                                  "S.OpenDateTime, S.CloseDateTime, " &
                                   "S.OpeningCash, S.ClosingCash, S.ExpectedCash, S.CashDifference, S.Status, " &
                                   "CASE WHEN S.Status = 1 THEN N' نشطة' WHEN S.Status = 3 THEN N' معلقة' ELSE N' مغلقة' END AS StatusName, " &
                                   "S.Notes, ISNULL(S.TotalSales, 0) AS TotalSales, ISNULL(S.TotalExpenses, 0) AS TotalExpenses, ISNULL(S.TotalIncomes, 0) AS TotalIncomes " &
                                   "FROM Shifts S " &
                                   "LEFT JOIN WorkShifts W ON S.WorkShiftID = W.WorkShiftID " &
+                                  "LEFT JOIN Users_TBL U1 ON S.UserID = U1.User_ID " &
+                                  "LEFT JOIN Users_TBL U2 ON S.ClosedByUserID = U2.User_ID " &
                                   "WHERE S.IsDeleted = 0 OR S.IsDeleted IS NULL ORDER BY S.ShiftID DESC"
 
             _cachedShifts = DBModule.ExecuteQuery(query)
@@ -80,6 +125,8 @@ Public Class frmShifts
                 ' إخفاء الأعمدة غير المطلوبة
                 If dgvShiftsHistory.Columns.Contains("ShiftID") Then dgvShiftsHistory.Columns("ShiftID").Visible = False
                 If dgvShiftsHistory.Columns.Contains("WorkShiftID") Then dgvShiftsHistory.Columns("WorkShiftID").Visible = False
+                If dgvShiftsHistory.Columns.Contains("UserID") Then dgvShiftsHistory.Columns("UserID").Visible = False
+                If dgvShiftsHistory.Columns.Contains("ClosedByUserID") Then dgvShiftsHistory.Columns("ClosedByUserID").Visible = False
                 If dgvShiftsHistory.Columns.Contains("Status") Then dgvShiftsHistory.Columns("Status").Visible = False
                 If dgvShiftsHistory.Columns.Contains("Notes") Then dgvShiftsHistory.Columns("Notes").Visible = False
                 If dgvShiftsHistory.Columns.Contains("TotalSales") Then dgvShiftsHistory.Columns("TotalSales").Visible = False
@@ -93,35 +140,43 @@ Public Class frmShifts
                 End If
                 If dgvShiftsHistory.Columns.Contains("StatusName") Then
                     dgvShiftsHistory.Columns("StatusName").HeaderText = "حالة الوردية"
-                    dgvShiftsHistory.Columns("StatusName").FillWeight = 85
+                    dgvShiftsHistory.Columns("StatusName").FillWeight = 80
                 End If
                 If dgvShiftsHistory.Columns.Contains("WorkShiftName") Then
                     dgvShiftsHistory.Columns("WorkShiftName").HeaderText = "نوع الوردية"
-                    dgvShiftsHistory.Columns("WorkShiftName").FillWeight = 85
+                    dgvShiftsHistory.Columns("WorkShiftName").FillWeight = 80
+                End If
+                If dgvShiftsHistory.Columns.Contains("OpenUserName") Then
+                    dgvShiftsHistory.Columns("OpenUserName").HeaderText = "مسؤول الفتح"
+                    dgvShiftsHistory.Columns("OpenUserName").FillWeight = 85
+                End If
+                If dgvShiftsHistory.Columns.Contains("CloseUserName") Then
+                    dgvShiftsHistory.Columns("CloseUserName").HeaderText = "مسؤول الإغلاق"
+                    dgvShiftsHistory.Columns("CloseUserName").FillWeight = 85
                 End If
                 If dgvShiftsHistory.Columns.Contains("OpenDateTime") Then
                     dgvShiftsHistory.Columns("OpenDateTime").HeaderText = "تاريخ الفتح"
-                    dgvShiftsHistory.Columns("OpenDateTime").FillWeight = 110
+                    dgvShiftsHistory.Columns("OpenDateTime").FillWeight = 100
                 End If
                 If dgvShiftsHistory.Columns.Contains("CloseDateTime") Then
                     dgvShiftsHistory.Columns("CloseDateTime").HeaderText = "تاريخ الإغلاق"
-                    dgvShiftsHistory.Columns("CloseDateTime").FillWeight = 110
+                    dgvShiftsHistory.Columns("CloseDateTime").FillWeight = 100
                 End If
                 If dgvShiftsHistory.Columns.Contains("OpeningCash") Then
                     dgvShiftsHistory.Columns("OpeningCash").HeaderText = "العهدة"
-                    dgvShiftsHistory.Columns("OpeningCash").FillWeight = 75
+                    dgvShiftsHistory.Columns("OpeningCash").FillWeight = 70
                 End If
                 If dgvShiftsHistory.Columns.Contains("ClosingCash") Then
                     dgvShiftsHistory.Columns("ClosingCash").HeaderText = "الجرد الفعلي"
-                    dgvShiftsHistory.Columns("ClosingCash").FillWeight = 80
+                    dgvShiftsHistory.Columns("ClosingCash").FillWeight = 75
                 End If
                 If dgvShiftsHistory.Columns.Contains("ExpectedCash") Then
                     dgvShiftsHistory.Columns("ExpectedCash").HeaderText = "المفترض"
-                    dgvShiftsHistory.Columns("ExpectedCash").FillWeight = 80
+                    dgvShiftsHistory.Columns("ExpectedCash").FillWeight = 75
                 End If
                 If dgvShiftsHistory.Columns.Contains("CashDifference") Then
                     dgvShiftsHistory.Columns("CashDifference").HeaderText = "العجز/الزيادة"
-                    dgvShiftsHistory.Columns("CashDifference").FillWeight = 85
+                    dgvShiftsHistory.Columns("CashDifference").FillWeight = 80
                 End If
             End If
 
@@ -158,6 +213,7 @@ Public Class frmShifts
         cmbSearchField.SelectedIndex = 0
 
         FillWorkShiftsDropdown()
+        FillUsersDropdowns()
         LoadShiftsGridAndActiveStatus()
         datagridviewsetup(dgvShiftsHistory)
         SetupShiftsContextMenu()
@@ -198,6 +254,22 @@ Public Class frmShifts
                 Dim openingVal As Decimal = Convert.ToDecimal(row.Cells("OpeningCash").Value)
                 txtOpeningCash.Text = openingVal.ToString("0.00")
                 lblOpeningCash.Text = openingVal.ToString("N2")
+            End If
+
+            ' المستخدم الذي بدأ الوردية
+            If dgvShiftsHistory.Columns.Contains("UserID") AndAlso Not IsDBNull(row.Cells("UserID").Value) Then
+                cmbOpenUser.SelectedValue = row.Cells("UserID").Value
+            End If
+
+            ' المستخدم الذي أنهى الوردية
+            If dgvShiftsHistory.Columns.Contains("ClosedByUserID") AndAlso Not IsDBNull(row.Cells("ClosedByUserID").Value) Then
+                cmbCloseUser.SelectedValue = row.Cells("ClosedByUserID").Value
+            Else
+                If _activeShiftID.HasValue AndAlso Convert.ToInt32(row.Cells("ShiftID").Value) = _activeShiftID.Value Then
+                    If Session.CurrentUserID > 0 Then cmbCloseUser.SelectedValue = Session.CurrentUserID
+                Else
+                    cmbCloseUser.SelectedIndex = -1
+                End If
             End If
 
             ' النقدية المجرودة فعلياً
@@ -263,7 +335,7 @@ Public Class frmShifts
         Decimal.TryParse(txtOpeningCash.Text.Trim(), openingFloat)
 
         Dim shiftNum As String = "SH-" & DateTime.Now.ToString("yyyyMMdd-HHmmss")
-        Dim currentUserID As Integer = 1 ' معرّف المستخدم الحالي
+        Dim openUserID As Integer = If(cmbOpenUser.SelectedValue IsNot Nothing AndAlso Not IsDBNull(cmbOpenUser.SelectedValue), Convert.ToInt32(cmbOpenUser.SelectedValue), If(Session.CurrentUserID > 0, Session.CurrentUserID, 1))
 
         Dim query As String = "INSERT INTO Shifts (ShiftNumber, WorkShiftID, UserID, OpenDateTime, OpeningCash, Status, IsActive, IsDeleted) " &
                               "VALUES (@ShiftNum, @WorkShiftID, @UserID, GETDATE(), @OpeningCash, 1, 1, 0)"
@@ -272,7 +344,7 @@ Public Class frmShifts
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@ShiftNum", shiftNum)
                 cmd.Parameters.AddWithValue("@WorkShiftID", cmbWorkShift.SelectedValue)
-                cmd.Parameters.AddWithValue("@UserID", currentUserID)
+                cmd.Parameters.AddWithValue("@UserID", openUserID)
                 cmd.Parameters.AddWithValue("@OpeningCash", openingFloat)
 
                 Try
@@ -324,7 +396,7 @@ Public Class frmShifts
         Dim actualCash As Decimal = Convert.ToDecimal(txtClosingCash.Text.Trim())
         Dim expectedCash As Decimal = Convert.ToDecimal(lblExpectedCash.Text)
         Dim diff As Decimal = actualCash - expectedCash
-        Dim currentUserID As Integer = 1
+        Dim currentUserID As Integer = If(cmbCloseUser.SelectedValue IsNot Nothing AndAlso Not IsDBNull(cmbCloseUser.SelectedValue), Convert.ToInt32(cmbCloseUser.SelectedValue), If(Session.CurrentUserID > 0, Session.CurrentUserID, 1))
 
         If MessageBox.Show($"هل أنت متأكد من إغلاق الوردية؟" & vbCrLf &
                             $"المبلغ المفترض: {expectedCash:N2}" & vbCrLf &
@@ -502,6 +574,7 @@ Public Class frmShifts
         txtSearch.Clear()
         lstSuggestions.Visible = False
         cmbWorkShift.SelectedIndex = -1
+        SetDefaultUserSelections()
         ResetKPICards()
         If dgvShiftsHistory.Rows.Count > 0 Then dgvShiftsHistory.ClearSelection()
     End Sub

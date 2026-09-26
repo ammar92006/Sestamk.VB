@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports System.IO.Ports
 Imports System.Management
@@ -11,6 +11,37 @@ Public Class AppSettings
 End Class
 
 Public Module SettingsManager
+
+    Private ReadOnly _cache As New System.Collections.Concurrent.ConcurrentDictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+    Private _cacheLoaded As Boolean = False
+    Private ReadOnly _cacheLock As New Object()
+    Private _tableChecked As Boolean = False
+
+    ''' <summary>تحميل جميع الإعدادات دفعة واحدة في الذاكرة لتسريع التطبيق</summary>
+    Public Sub LoadAllSettings()
+        Try
+            SyncLock _cacheLock
+                Using cn As New SqlConnection(ConnectionString)
+                    cn.Open()
+                    If Not _tableChecked Then
+                        EnsureSettingsTable(cn)
+                        _tableChecked = True
+                    End If
+                    Using cmd As New SqlCommand("SELECT SettingKey, SettingValue FROM AppSettings", cn)
+                        Using dr As SqlDataReader = cmd.ExecuteReader()
+                            While dr.Read()
+                                Dim k = dr("SettingKey").ToString()
+                                Dim v = If(dr.IsDBNull(dr.GetOrdinal("SettingValue")), "", dr("SettingValue").ToString())
+                                _cache(k) = v
+                            End While
+                        End Using
+                    End Using
+                End Using
+                _cacheLoaded = True
+            End SyncLock
+        Catch ex As Exception
+        End Try
+    End Sub
 
     Private Sub EnsureSettingsTable(cn As SqlConnection)
         Try
@@ -25,20 +56,40 @@ Public Module SettingsManager
                 cmd.ExecuteNonQuery()
             End Using
         Catch ex As Exception
-            ' Log or ignore if table already exists
         End Try
     End Sub
 
-    ' 🟢 قراءة الإعداد
+    ' 🟢 قراءة الإعداد (مسترجع فوراً من الذاكرة Cache)
     Public Function GetSetting(key As String) As String
+        If String.IsNullOrEmpty(key) Then Return Nothing
+
+        If _cache.ContainsKey(key) Then
+            Return _cache(key)
+        End If
+
+        If Not _cacheLoaded Then
+            LoadAllSettings()
+            If _cache.ContainsKey(key) Then
+                Return _cache(key)
+            End If
+        End If
+
         Try
             Using cn As New SqlConnection(ConnectionString)
                 cn.Open()
-                EnsureSettingsTable(cn)
-                Dim cmd As New SqlCommand("SELECT SettingValue FROM AppSettings WHERE SettingKey = @key", cn)
-                cmd.Parameters.AddWithValue("@key", key)
-                Dim result = cmd.ExecuteScalar()
-                Return If(result IsNot Nothing, result.ToString(), Nothing)
+                If Not _tableChecked Then
+                    EnsureSettingsTable(cn)
+                    _tableChecked = True
+                End If
+                Using cmd As New SqlCommand("SELECT SettingValue FROM AppSettings WHERE SettingKey = @key", cn)
+                    cmd.Parameters.AddWithValue("@key", key)
+                    Dim result = cmd.ExecuteScalar()
+                    Dim val = If(result IsNot Nothing AndAlso Not Convert.IsDBNull(result), result.ToString(), Nothing)
+                    If val IsNot Nothing Then
+                        _cache(key) = val
+                    End If
+                    Return val
+                End Using
             End Using
         Catch ex As Exception
             Return Nothing
@@ -86,24 +137,33 @@ Public Module SettingsManager
         Return defaultValue
     End Function
 
-    ' 🟡 حفظ أو تحديث الإعداد
+    ' 🟡 حفظ أو تحديث الإعداد في الذاكرة وفي قاعدة البيانات
     Public Sub SaveSetting(key As String, value As String)
-        Try
-            Using cn As New SqlConnection(ConnectionString)
-                cn.Open()
-                EnsureSettingsTable(cn)
-                Dim cmd As New SqlCommand("
-                    IF EXISTS (SELECT 1 FROM AppSettings WHERE SettingKey = @key)
-                        UPDATE AppSettings SET SettingValue = @value WHERE SettingKey = @key
-                    ELSE
-                        INSERT INTO AppSettings (SettingKey, SettingValue) VALUES (@key, @value)", cn)
-                cmd.Parameters.AddWithValue("@key", key)
-                cmd.Parameters.AddWithValue("@value", If(value, ""))
-                cmd.ExecuteNonQuery()
-            End Using
-        Catch ex As Exception
-            ' تجاهل أو تسجيل الخطأ
-        End Try
+        If String.IsNullOrEmpty(key) Then Return
+        Dim safeVal = If(value, "")
+        _cache(key) = safeVal
+
+        Task.Run(Sub()
+                     Try
+                         Using cn As New SqlConnection(ConnectionString)
+                             cn.Open()
+                             If Not _tableChecked Then
+                                 EnsureSettingsTable(cn)
+                                 _tableChecked = True
+                             End If
+                             Using cmd As New SqlCommand("
+                                 IF EXISTS (SELECT 1 FROM AppSettings WHERE SettingKey = @key)
+                                     UPDATE AppSettings SET SettingValue = @value WHERE SettingKey = @key
+                                 ELSE
+                                     INSERT INTO AppSettings (SettingKey, SettingValue) VALUES (@key, @value)", cn)
+                                 cmd.Parameters.AddWithValue("@key", key)
+                                 cmd.Parameters.AddWithValue("@value", safeVal)
+                                 cmd.ExecuteNonQuery()
+                             End Using
+                         End Using
+                     Catch ex As Exception
+                     End Try
+                 End Sub)
     End Sub
 
     ' 🟡 حفظ الإعداد بمفتاحين متطابقين لمزامنة التوافق

@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Web.UI.WebControls
@@ -1101,14 +1101,18 @@ Public Class Users
             Dim fullName As String = txtUser_Name.Text.Trim()
             Dim barcodeValue As String = $"{username}:{password}"
 
-            ' الفوتر (النص الذي يظهر أسفل)
-            Dim footerText As String = "ماركت الحمد والرضا - 01095032689"
+            ' الفوتر (النص الذي يظهر أسفل من الإعدادات)
+            Dim shopName = SettingsManager.GetSettingDual(SettingsKeys.ShopName, SettingsKeys.StoreName, "سستمك")
+            Dim shopPhone = SettingsManager.GetSettingDual(SettingsKeys.ShopPhone, SettingsKeys.StorePhone, "")
+            Dim footerText As String = If(Not String.IsNullOrWhiteSpace(shopPhone), $"{shopName} - {shopPhone}", shopName)
 
             ' ==============================
             ' 3) إعداد الطباعة (يقرأ اسم طابعة الباركود من الإعدادات)
             ' ==============================
-            Dim barcodePrinterName As String = SettingsManager.GetSetting("BarcodePrinterName")
-            If String.IsNullOrEmpty(barcodePrinterName) Then barcodePrinterName = "Xprinter XP-233B"
+            Dim barcodePrinterName As String = SettingsManager.GetSetting(SettingsKeys.BarcodePrinterName)
+            If String.IsNullOrEmpty(barcodePrinterName) Then
+                barcodePrinterName = SettingsManager.GetSettingDual(SettingsKeys.ThermalPrinterName, SettingsKeys.DefaultPrinterName, "")
+            End If
 
             Dim pd As New PrintDocument()
             pd.PrinterSettings = New PrinterSettings With {

@@ -117,6 +117,7 @@ Partial Class frmPOS
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.Guna2Panel23 = New Guna.UI2.WinForms.Guna2Panel()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
@@ -140,6 +141,7 @@ Partial Class frmPOS
         Me.Guna2Panel10.SuspendLayout()
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Guna2Panel9.SuspendLayout()
+        Me.Guna2Panel23.SuspendLayout()
         Me.SuspendLayout()
         '
         'panelHeader
@@ -535,18 +537,13 @@ Partial Class frmPOS
         '
         'Guna2Panel3
         '
-        Me.Guna2Panel3.Controls.Add(Me.btnclear)
-        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel21)
-        Me.Guna2Panel3.Controls.Add(Me.btnPendingInvoices)
-        Me.Guna2Panel3.Controls.Add(Me.btntables)
-        Me.Guna2Panel3.Controls.Add(Me.btnDeleteRow)
-        Me.Guna2Panel3.Controls.Add(Me.btnHoldInvoice)
-        Me.Guna2Panel3.Controls.Add(Me.btnPay)
-        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel20)
-        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel13)
-        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel11)
         Me.Guna2Panel3.Controls.Add(Me.Guna2Panel10)
+        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel11)
+        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel13)
+        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel20)
+        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel21)
         Me.Guna2Panel3.Controls.Add(Me.Guna2Panel9)
+        Me.Guna2Panel3.Controls.Add(Me.Guna2Panel23)
         Me.Guna2Panel3.Dock = System.Windows.Forms.DockStyle.Right
         Me.Guna2Panel3.Location = New System.Drawing.Point(850, 70)
         Me.Guna2Panel3.Name = "Guna2Panel3"
@@ -565,7 +562,7 @@ Partial Class frmPOS
         Me.btnclear.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnclear.ForeColor = System.Drawing.Color.White
         Me.btnclear.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnclear.Location = New System.Drawing.Point(12, 774)
+        Me.btnclear.Location = New System.Drawing.Point(5, 67)
         Me.btnclear.Name = "btnclear"
         Me.btnclear.Size = New System.Drawing.Size(138, 44)
         Me.btnclear.TabIndex = 13
@@ -577,8 +574,8 @@ Partial Class frmPOS
         Me.Guna2Panel21.Controls.Add(Me.btnSelectCustomer)
         Me.Guna2Panel21.Controls.Add(Me.Guna2Panel22)
         Me.Guna2Panel21.Controls.Add(Me.Label6)
-        Me.Guna2Panel21.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel21.Location = New System.Drawing.Point(0, 606)
+        Me.Guna2Panel21.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel21.Location = New System.Drawing.Point(0, 640)
         Me.Guna2Panel21.Name = "Guna2Panel21"
         Me.Guna2Panel21.Size = New System.Drawing.Size(600, 50)
         Me.Guna2Panel21.TabIndex = 12
@@ -658,7 +655,7 @@ Partial Class frmPOS
         Me.btnPendingInvoices.ForeColor = System.Drawing.Color.White
         Me.btnPendingInvoices.Image = Global.WindowsApp1.My.Resources.Resources.pause
         Me.btnPendingInvoices.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btnPendingInvoices.Location = New System.Drawing.Point(304, 774)
+        Me.btnPendingInvoices.Location = New System.Drawing.Point(308, 67)
         Me.btnPendingInvoices.Name = "btnPendingInvoices"
         Me.btnPendingInvoices.Size = New System.Drawing.Size(138, 44)
         Me.btnPendingInvoices.TabIndex = 11
@@ -677,7 +674,7 @@ Partial Class frmPOS
         Me.btntables.ForeColor = System.Drawing.Color.White
         Me.btntables.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
         Me.btntables.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btntables.Location = New System.Drawing.Point(450, 774)
+        Me.btntables.Location = New System.Drawing.Point(454, 67)
         Me.btntables.Name = "btntables"
         Me.btntables.Size = New System.Drawing.Size(138, 44)
         Me.btntables.TabIndex = 10
@@ -695,7 +692,7 @@ Partial Class frmPOS
         Me.btnDeleteRow.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnDeleteRow.ForeColor = System.Drawing.Color.White
         Me.btnDeleteRow.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnDeleteRow.Location = New System.Drawing.Point(158, 774)
+        Me.btnDeleteRow.Location = New System.Drawing.Point(151, 67)
         Me.btnDeleteRow.Name = "btnDeleteRow"
         Me.btnDeleteRow.Size = New System.Drawing.Size(138, 44)
         Me.btnDeleteRow.TabIndex = 9
@@ -714,7 +711,7 @@ Partial Class frmPOS
         Me.btnHoldInvoice.ForeColor = System.Drawing.Color.White
         Me.btnHoldInvoice.Image = Global.WindowsApp1.My.Resources.Resources.hold
         Me.btnHoldInvoice.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnHoldInvoice.Location = New System.Drawing.Point(12, 718)
+        Me.btnHoldInvoice.Location = New System.Drawing.Point(5, 11)
         Me.btnHoldInvoice.Name = "btnHoldInvoice"
         Me.btnHoldInvoice.Size = New System.Drawing.Size(180, 50)
         Me.btnHoldInvoice.TabIndex = 8
@@ -733,7 +730,7 @@ Partial Class frmPOS
         Me.btnPay.ForeColor = System.Drawing.Color.White
         Me.btnPay.Image = Global.WindowsApp1.My.Resources.Resources.payment
         Me.btnPay.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnPay.Location = New System.Drawing.Point(202, 718)
+        Me.btnPay.Location = New System.Drawing.Point(206, 11)
         Me.btnPay.Name = "btnPay"
         Me.btnPay.Size = New System.Drawing.Size(386, 50)
         Me.btnPay.TabIndex = 7
@@ -742,8 +739,8 @@ Partial Class frmPOS
         'Guna2Panel20
         '
         Me.Guna2Panel20.Controls.Add(Me.Guna2Panel24)
-        Me.Guna2Panel20.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel20.Location = New System.Drawing.Point(0, 554)
+        Me.Guna2Panel20.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel20.Location = New System.Drawing.Point(0, 588)
         Me.Guna2Panel20.Name = "Guna2Panel20"
         Me.Guna2Panel20.Size = New System.Drawing.Size(600, 52)
         Me.Guna2Panel20.TabIndex = 6
@@ -798,8 +795,8 @@ Partial Class frmPOS
         '
         Me.Guna2Panel13.Controls.Add(Me.Guna2Panel15)
         Me.Guna2Panel13.Controls.Add(Me.Guna2Panel14)
-        Me.Guna2Panel13.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel13.Location = New System.Drawing.Point(0, 488)
+        Me.Guna2Panel13.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel13.Location = New System.Drawing.Point(0, 522)
         Me.Guna2Panel13.Name = "Guna2Panel13"
         Me.Guna2Panel13.Size = New System.Drawing.Size(600, 66)
         Me.Guna2Panel13.TabIndex = 5
@@ -976,8 +973,8 @@ Partial Class frmPOS
         Me.Guna2Panel11.Controls.Add(Me.btnDineIn)
         Me.Guna2Panel11.Controls.Add(Me.btnTakeaway)
         Me.Guna2Panel11.Controls.Add(Me.Guna2Panel12)
-        Me.Guna2Panel11.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel11.Location = New System.Drawing.Point(0, 388)
+        Me.Guna2Panel11.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel11.Location = New System.Drawing.Point(0, 422)
         Me.Guna2Panel11.Name = "Guna2Panel11"
         Me.Guna2Panel11.Size = New System.Drawing.Size(600, 100)
         Me.Guna2Panel11.TabIndex = 4
@@ -1063,10 +1060,10 @@ Partial Class frmPOS
         '
         Me.Guna2Panel10.BackColor = System.Drawing.SystemColors.ControlLightLight
         Me.Guna2Panel10.Controls.Add(Me.dgvInvoice)
-        Me.Guna2Panel10.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Guna2Panel10.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Guna2Panel10.Location = New System.Drawing.Point(0, 50)
         Me.Guna2Panel10.Name = "Guna2Panel10"
-        Me.Guna2Panel10.Size = New System.Drawing.Size(600, 338)
+        Me.Guna2Panel10.Size = New System.Drawing.Size(600, 372)
         Me.Guna2Panel10.TabIndex = 3
         '
         'dgvInvoice
@@ -1107,7 +1104,7 @@ Partial Class frmPOS
         Me.dgvInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvInvoice.RowHeadersVisible = False
         Me.dgvInvoice.RowTemplate.Height = 36
-        Me.dgvInvoice.Size = New System.Drawing.Size(600, 338)
+        Me.dgvInvoice.Size = New System.Drawing.Size(600, 372)
         Me.dgvInvoice.TabIndex = 5611
         Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
         Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
@@ -1188,11 +1185,11 @@ Partial Class frmPOS
         'colNotes
         '
         Me.colNotes.DefaultCellStyle = DataGridViewCellStyle4
-        Me.colNotes.HeaderText = "ملاحظات"
+        Me.colNotes.HeaderText = "ملاحظات المطبخ 📝"
         Me.colNotes.Name = "colNotes"
         Me.colNotes.ReadOnly = True
         Me.colNotes.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colNotes.Width = 90
+        Me.colNotes.Width = 135
         '
         'colProductID
         '
@@ -1260,6 +1257,20 @@ Partial Class frmPOS
         '
         Me.Timer1.Interval = 1000
         '
+        'Guna2Panel23
+        '
+        Me.Guna2Panel23.Controls.Add(Me.btnclear)
+        Me.Guna2Panel23.Controls.Add(Me.btnPay)
+        Me.Guna2Panel23.Controls.Add(Me.btnHoldInvoice)
+        Me.Guna2Panel23.Controls.Add(Me.btnPendingInvoices)
+        Me.Guna2Panel23.Controls.Add(Me.btnDeleteRow)
+        Me.Guna2Panel23.Controls.Add(Me.btntables)
+        Me.Guna2Panel23.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel23.Location = New System.Drawing.Point(0, 690)
+        Me.Guna2Panel23.Name = "Guna2Panel23"
+        Me.Guna2Panel23.Size = New System.Drawing.Size(600, 140)
+        Me.Guna2Panel23.TabIndex = 14
+        '
         'frmPOS
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -1298,6 +1309,7 @@ Partial Class frmPOS
         Me.Guna2Panel10.ResumeLayout(False)
         CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Guna2Panel9.ResumeLayout(False)
+        Me.Guna2Panel23.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1389,4 +1401,5 @@ Partial Class frmPOS
     Friend WithEvents btnDecRow As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblRowValue As Label
     Friend WithEvents btnIncRow As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents Guna2Panel23 As Guna.UI2.WinForms.Guna2Panel
 End Class

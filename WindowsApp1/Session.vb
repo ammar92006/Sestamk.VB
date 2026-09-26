@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Windows.Forms
 
@@ -57,7 +57,10 @@ Public Module Session
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الصلاحيات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Logger.LogError("Session.LoadPermissions", ex)
+            If roleId <> 1 Then
+                MessageBox.Show("خطأ في تحميل الصلاحيات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
             Permissions = New DataTable()
         End Try
     End Sub
@@ -110,8 +113,10 @@ Public Module Session
                 Return "frmShifts"
             Case "frmmaterialunits"
                 Return "frmRawMaterials"
-            Case "frmpendinginvoices", "frmheldinvoices"
+            Case "frmpendinginvoices", "frmheldinvoices", "frmselectkitchencomment"
                 Return "frmPOS"
+            Case "kitchencomments"
+                Return "frmKitchenComments"
             Case Else
                 Return formName
         End Select

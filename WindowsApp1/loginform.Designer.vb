@@ -26,16 +26,32 @@ Partial Class Login
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Login))
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.BackgroundActivationTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.tmrLockoutCountdown = New System.Windows.Forms.Timer(Me.components)
+        Me.pnlLockout = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblLockoutTimer = New System.Windows.Forms.Label()
         Me.pn_0 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.lblWelcome = New System.Windows.Forms.Label()
-        Me.lblBrand = New System.Windows.Forms.Label()
-        Me.lblDesc = New System.Windows.Forms.Label()
         Me.lblSideCopyright = New System.Windows.Forms.Label()
+        Me.pnlFeature3 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblFeatureDesc3 = New System.Windows.Forms.Label()
+        Me.lblFeatureTitle3 = New System.Windows.Forms.Label()
+        Me.pnlFeature2 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblFeatureDesc2 = New System.Windows.Forms.Label()
+        Me.lblFeatureTitle2 = New System.Windows.Forms.Label()
+        Me.pnlFeature1 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblFeatureDesc1 = New System.Windows.Forms.Label()
+        Me.lblFeatureTitle1 = New System.Windows.Forms.Label()
+        Me.lblDesc = New System.Windows.Forms.Label()
+        Me.lblVersionBadge = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblBrand = New System.Windows.Forms.Label()
+        Me.lblWelcome = New System.Windows.Forms.Label()
         Me.pn_main = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnTogglePassword = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2PictureBox1 = New Guna.UI2.WinForms.Guna2PictureBox()
         Me.cmbUsername = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.btnclose = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnMinimize = New Guna.UI2.WinForms.Guna2Button()
         Me.btnThemeToggle = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnDbSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.btnsup = New Guna.UI2.WinForms.Guna2Button()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -43,11 +59,14 @@ Partial Class Login
         Me.btnlogin = New Guna.UI2.WinForms.Guna2Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtpassword = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.CheckBox1 = New Guna.UI2.WinForms.Guna2CheckBox()
         Me.lblusername = New System.Windows.Forms.Label()
         Me.lblpassword = New System.Windows.Forms.Label()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
+        Me.pnlLockout.SuspendLayout()
         Me.pn_0.SuspendLayout()
+        Me.pnlFeature3.SuspendLayout()
+        Me.pnlFeature2.SuspendLayout()
+        Me.pnlFeature1.SuspendLayout()
         Me.pn_main.SuspendLayout()
         CType(Me.Guna2PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -55,11 +74,46 @@ Partial Class Login
         'BackgroundActivationTimer
         '
         '
+        'tmrLockoutCountdown
+        '
+        Me.tmrLockoutCountdown.Interval = 1000
+        '
+        'pnlLockout
+        '
+        Me.pnlLockout.BackColor = System.Drawing.Color.Transparent
+        Me.pnlLockout.BorderColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.pnlLockout.BorderRadius = 10
+        Me.pnlLockout.BorderThickness = 1
+        Me.pnlLockout.Controls.Add(Me.lblLockoutTimer)
+        Me.pnlLockout.FillColor = System.Drawing.Color.FromArgb(CType(CType(254, Byte), Integer), CType(CType(242, Byte), Integer), CType(CType(242, Byte), Integer))
+        Me.pnlLockout.Location = New System.Drawing.Point(135, 515)
+        Me.pnlLockout.Name = "pnlLockout"
+        Me.pnlLockout.Size = New System.Drawing.Size(450, 42)
+        Me.pnlLockout.TabIndex = 36
+        Me.pnlLockout.Visible = False
+        '
+        'lblLockoutTimer
+        '
+        Me.lblLockoutTimer.BackColor = System.Drawing.Color.Transparent
+        Me.lblLockoutTimer.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblLockoutTimer.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.lblLockoutTimer.ForeColor = System.Drawing.Color.FromArgb(CType(CType(185, Byte), Integer), CType(CType(28, Byte), Integer), CType(CType(28, Byte), Integer))
+        Me.lblLockoutTimer.Location = New System.Drawing.Point(0, 0)
+        Me.lblLockoutTimer.Name = "lblLockoutTimer"
+        Me.lblLockoutTimer.Size = New System.Drawing.Size(450, 42)
+        Me.lblLockoutTimer.TabIndex = 0
+        Me.lblLockoutTimer.Text = "⏳ تم إيقاف الدخول مؤقتاً | يرجى الانتظار: 01:00"
+        Me.lblLockoutTimer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'pn_0
         '
         Me.pn_0.BackColor = System.Drawing.Color.FromArgb(CType(CType(15, Byte), Integer), CType(CType(52, Byte), Integer), CType(CType(120, Byte), Integer))
         Me.pn_0.Controls.Add(Me.lblSideCopyright)
+        Me.pn_0.Controls.Add(Me.pnlFeature3)
+        Me.pn_0.Controls.Add(Me.pnlFeature2)
+        Me.pn_0.Controls.Add(Me.pnlFeature1)
         Me.pn_0.Controls.Add(Me.lblDesc)
+        Me.pn_0.Controls.Add(Me.lblVersionBadge)
         Me.pn_0.Controls.Add(Me.lblBrand)
         Me.pn_0.Controls.Add(Me.lblWelcome)
         Me.pn_0.Dock = System.Windows.Forms.DockStyle.Left
@@ -68,46 +122,10 @@ Partial Class Login
         Me.pn_0.Size = New System.Drawing.Size(560, 800)
         Me.pn_0.TabIndex = 0
         '
-        'lblWelcome
-        '
-        Me.lblWelcome.BackColor = System.Drawing.Color.Transparent
-        Me.lblWelcome.Font = New System.Drawing.Font("Segoe UI", 28.0!, System.Drawing.FontStyle.Bold)
-        Me.lblWelcome.ForeColor = System.Drawing.Color.White
-        Me.lblWelcome.Location = New System.Drawing.Point(80, 250)
-        Me.lblWelcome.Name = "lblWelcome"
-        Me.lblWelcome.Size = New System.Drawing.Size(400, 55)
-        Me.lblWelcome.TabIndex = 0
-        Me.lblWelcome.Text = "مرحباً بك"
-        Me.lblWelcome.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblBrand
-        '
-        Me.lblBrand.BackColor = System.Drawing.Color.Transparent
-        Me.lblBrand.Font = New System.Drawing.Font("Segoe UI", 22.0!, System.Drawing.FontStyle.Regular)
-        Me.lblBrand.ForeColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(210, Byte), Integer), CType(CType(230, Byte), Integer))
-        Me.lblBrand.Location = New System.Drawing.Point(80, 310)
-        Me.lblBrand.Name = "lblBrand"
-        Me.lblBrand.Size = New System.Drawing.Size(400, 45)
-        Me.lblBrand.TabIndex = 1
-        Me.lblBrand.Text = "في نظام سستامك"
-        Me.lblBrand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblDesc
-        '
-        Me.lblDesc.BackColor = System.Drawing.Color.Transparent
-        Me.lblDesc.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular)
-        Me.lblDesc.ForeColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(210, Byte), Integer))
-        Me.lblDesc.Location = New System.Drawing.Point(80, 390)
-        Me.lblDesc.Name = "lblDesc"
-        Me.lblDesc.Size = New System.Drawing.Size(400, 60)
-        Me.lblDesc.TabIndex = 2
-        Me.lblDesc.Text = "نظام متكامل لإدارة نقاط البيع والمطاعم" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "بأحدث التقنيات وأسهل الطرق"
-        Me.lblDesc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'lblSideCopyright
         '
         Me.lblSideCopyright.BackColor = System.Drawing.Color.Transparent
-        Me.lblSideCopyright.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular)
+        Me.lblSideCopyright.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblSideCopyright.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(140, Byte), Integer), CType(CType(190, Byte), Integer))
         Me.lblSideCopyright.Location = New System.Drawing.Point(80, 740)
         Me.lblSideCopyright.Name = "lblSideCopyright"
@@ -116,20 +134,188 @@ Partial Class Login
         Me.lblSideCopyright.Text = "Sestamk © 2026"
         Me.lblSideCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'pnlFeature3
+        '
+        Me.pnlFeature3.BackColor = System.Drawing.Color.Transparent
+        Me.pnlFeature3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlFeature3.BorderRadius = 14
+        Me.pnlFeature3.BorderThickness = 1
+        Me.pnlFeature3.Controls.Add(Me.lblFeatureDesc3)
+        Me.pnlFeature3.Controls.Add(Me.lblFeatureTitle3)
+        Me.pnlFeature3.FillColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlFeature3.Location = New System.Drawing.Point(70, 485)
+        Me.pnlFeature3.Name = "pnlFeature3"
+        Me.pnlFeature3.Size = New System.Drawing.Size(420, 68)
+        Me.pnlFeature3.TabIndex = 7
+        '
+        'lblFeatureDesc3
+        '
+        Me.lblFeatureDesc3.BackColor = System.Drawing.Color.Transparent
+        Me.lblFeatureDesc3.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.lblFeatureDesc3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(235, Byte), Integer))
+        Me.lblFeatureDesc3.Location = New System.Drawing.Point(15, 36)
+        Me.lblFeatureDesc3.Name = "lblFeatureDesc3"
+        Me.lblFeatureDesc3.Size = New System.Drawing.Size(390, 22)
+        Me.lblFeatureDesc3.TabIndex = 1
+        Me.lblFeatureDesc3.Text = "متابعة لحظية لحركة المبيعات والأرباح وإقفال الورديات"
+        Me.lblFeatureDesc3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblFeatureTitle3
+        '
+        Me.lblFeatureTitle3.BackColor = System.Drawing.Color.Transparent
+        Me.lblFeatureTitle3.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblFeatureTitle3.ForeColor = System.Drawing.Color.White
+        Me.lblFeatureTitle3.Location = New System.Drawing.Point(15, 10)
+        Me.lblFeatureTitle3.Name = "lblFeatureTitle3"
+        Me.lblFeatureTitle3.Size = New System.Drawing.Size(390, 24)
+        Me.lblFeatureTitle3.TabIndex = 0
+        Me.lblFeatureTitle3.Text = "تقارير وتحليلات فورية"
+        Me.lblFeatureTitle3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'pnlFeature2
+        '
+        Me.pnlFeature2.BackColor = System.Drawing.Color.Transparent
+        Me.pnlFeature2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlFeature2.BorderRadius = 14
+        Me.pnlFeature2.BorderThickness = 1
+        Me.pnlFeature2.Controls.Add(Me.lblFeatureDesc2)
+        Me.pnlFeature2.Controls.Add(Me.lblFeatureTitle2)
+        Me.pnlFeature2.FillColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlFeature2.Location = New System.Drawing.Point(70, 405)
+        Me.pnlFeature2.Name = "pnlFeature2"
+        Me.pnlFeature2.Size = New System.Drawing.Size(420, 68)
+        Me.pnlFeature2.TabIndex = 6
+        '
+        'lblFeatureDesc2
+        '
+        Me.lblFeatureDesc2.BackColor = System.Drawing.Color.Transparent
+        Me.lblFeatureDesc2.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.lblFeatureDesc2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(235, Byte), Integer))
+        Me.lblFeatureDesc2.Location = New System.Drawing.Point(15, 36)
+        Me.lblFeatureDesc2.Name = "lblFeatureDesc2"
+        Me.lblFeatureDesc2.Size = New System.Drawing.Size(390, 22)
+        Me.lblFeatureDesc2.TabIndex = 1
+        Me.lblFeatureDesc2.Text = "حفظ فوري لقاعدة البيانات وصلاحيات مستخدمين دقيقة"
+        Me.lblFeatureDesc2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblFeatureTitle2
+        '
+        Me.lblFeatureTitle2.BackColor = System.Drawing.Color.Transparent
+        Me.lblFeatureTitle2.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblFeatureTitle2.ForeColor = System.Drawing.Color.White
+        Me.lblFeatureTitle2.Location = New System.Drawing.Point(15, 10)
+        Me.lblFeatureTitle2.Name = "lblFeatureTitle2"
+        Me.lblFeatureTitle2.Size = New System.Drawing.Size(390, 24)
+        Me.lblFeatureTitle2.TabIndex = 0
+        Me.lblFeatureTitle2.Text = "أمان متقدم ونسخ احتياطي"
+        Me.lblFeatureTitle2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'pnlFeature1
+        '
+        Me.pnlFeature1.BackColor = System.Drawing.Color.Transparent
+        Me.pnlFeature1.BorderColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlFeature1.BorderRadius = 14
+        Me.pnlFeature1.BorderThickness = 1
+        Me.pnlFeature1.Controls.Add(Me.lblFeatureDesc1)
+        Me.pnlFeature1.Controls.Add(Me.lblFeatureTitle1)
+        Me.pnlFeature1.FillColor = System.Drawing.Color.FromArgb(CType(CType(25, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.pnlFeature1.Location = New System.Drawing.Point(70, 325)
+        Me.pnlFeature1.Name = "pnlFeature1"
+        Me.pnlFeature1.Size = New System.Drawing.Size(420, 68)
+        Me.pnlFeature1.TabIndex = 5
+        '
+        'lblFeatureDesc1
+        '
+        Me.lblFeatureDesc1.BackColor = System.Drawing.Color.Transparent
+        Me.lblFeatureDesc1.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.lblFeatureDesc1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(235, Byte), Integer))
+        Me.lblFeatureDesc1.Location = New System.Drawing.Point(15, 36)
+        Me.lblFeatureDesc1.Name = "lblFeatureDesc1"
+        Me.lblFeatureDesc1.Size = New System.Drawing.Size(390, 22)
+        Me.lblFeatureDesc1.TabIndex = 1
+        Me.lblFeatureDesc1.Text = "إتمام الطلبات وإدارة الطاولات والفواتير بضغطة زر واحدة"
+        Me.lblFeatureDesc1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblFeatureTitle1
+        '
+        Me.lblFeatureTitle1.BackColor = System.Drawing.Color.Transparent
+        Me.lblFeatureTitle1.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblFeatureTitle1.ForeColor = System.Drawing.Color.White
+        Me.lblFeatureTitle1.Location = New System.Drawing.Point(15, 10)
+        Me.lblFeatureTitle1.Name = "lblFeatureTitle1"
+        Me.lblFeatureTitle1.Size = New System.Drawing.Size(390, 24)
+        Me.lblFeatureTitle1.TabIndex = 0
+        Me.lblFeatureTitle1.Text = " سرعة فائقة في نقاط البيع"
+        Me.lblFeatureTitle1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'lblDesc
+        '
+        Me.lblDesc.BackColor = System.Drawing.Color.Transparent
+        Me.lblDesc.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.lblDesc.ForeColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(210, Byte), Integer))
+        Me.lblDesc.Location = New System.Drawing.Point(80, 255)
+        Me.lblDesc.Name = "lblDesc"
+        Me.lblDesc.Size = New System.Drawing.Size(400, 48)
+        Me.lblDesc.TabIndex = 2
+        Me.lblDesc.Text = "نظام متكامل لإدارة نقاط البيع والمطاعم" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "بأحدث التقنيات وأسهل الطرق"
+        Me.lblDesc.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblVersionBadge
+        '
+        Me.lblVersionBadge.BackColor = System.Drawing.Color.Transparent
+        Me.lblVersionBadge.BorderColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+        Me.lblVersionBadge.BorderRadius = 16
+        Me.lblVersionBadge.BorderThickness = 1
+        Me.lblVersionBadge.FillColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+        Me.lblVersionBadge.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.lblVersionBadge.ForeColor = System.Drawing.Color.White
+        Me.lblVersionBadge.Location = New System.Drawing.Point(175, 210)
+        Me.lblVersionBadge.Name = "lblVersionBadge"
+        Me.lblVersionBadge.Size = New System.Drawing.Size(210, 32)
+        Me.lblVersionBadge.TabIndex = 4
+        Me.lblVersionBadge.Text = "● النظام متصل | v1.0.0"
+        '
+        'lblBrand
+        '
+        Me.lblBrand.BackColor = System.Drawing.Color.Transparent
+        Me.lblBrand.Font = New System.Drawing.Font("Segoe UI", 20.0!)
+        Me.lblBrand.ForeColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(210, Byte), Integer), CType(CType(230, Byte), Integer))
+        Me.lblBrand.Location = New System.Drawing.Point(80, 160)
+        Me.lblBrand.Name = "lblBrand"
+        Me.lblBrand.Size = New System.Drawing.Size(400, 42)
+        Me.lblBrand.TabIndex = 1
+        Me.lblBrand.Text = "في نظام سستمك"
+        Me.lblBrand.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lblWelcome
+        '
+        Me.lblWelcome.BackColor = System.Drawing.Color.Transparent
+        Me.lblWelcome.Font = New System.Drawing.Font("Segoe UI", 26.0!, System.Drawing.FontStyle.Bold)
+        Me.lblWelcome.ForeColor = System.Drawing.Color.White
+        Me.lblWelcome.Location = New System.Drawing.Point(80, 110)
+        Me.lblWelcome.Name = "lblWelcome"
+        Me.lblWelcome.Size = New System.Drawing.Size(400, 50)
+        Me.lblWelcome.TabIndex = 0
+        Me.lblWelcome.Text = "مرحباً بك"
+        Me.lblWelcome.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'pn_main
         '
+        Me.pn_main.Controls.Add(Me.btnTogglePassword)
         Me.pn_main.Controls.Add(Me.Guna2PictureBox1)
         Me.pn_main.Controls.Add(Me.cmbUsername)
         Me.pn_main.Controls.Add(Me.btnclose)
+        Me.pn_main.Controls.Add(Me.btnMinimize)
         Me.pn_main.Controls.Add(Me.btnThemeToggle)
+        Me.pn_main.Controls.Add(Me.btnDbSettings)
         Me.pn_main.Controls.Add(Me.Label4)
         Me.pn_main.Controls.Add(Me.btnsup)
         Me.pn_main.Controls.Add(Me.Label1)
         Me.pn_main.Controls.Add(Me.Guna2Panel1)
         Me.pn_main.Controls.Add(Me.btnlogin)
+        Me.pn_main.Controls.Add(Me.pnlLockout)
         Me.pn_main.Controls.Add(Me.Label2)
         Me.pn_main.Controls.Add(Me.txtpassword)
-        Me.pn_main.Controls.Add(Me.CheckBox1)
         Me.pn_main.Controls.Add(Me.lblusername)
         Me.pn_main.Controls.Add(Me.lblpassword)
         Me.pn_main.Dock = System.Windows.Forms.DockStyle.Fill
@@ -137,6 +323,21 @@ Partial Class Login
         Me.pn_main.Name = "pn_main"
         Me.pn_main.Size = New System.Drawing.Size(720, 800)
         Me.pn_main.TabIndex = 1
+        '
+        'btnTogglePassword
+        '
+        Me.btnTogglePassword.BackColor = System.Drawing.Color.Transparent
+        Me.btnTogglePassword.BorderRadius = 13
+        Me.btnTogglePassword.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnTogglePassword.FillColor = System.Drawing.Color.Transparent
+        Me.btnTogglePassword.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnTogglePassword.ForeColor = System.Drawing.Color.FromArgb(CType(CType(140, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(165, Byte), Integer))
+        Me.btnTogglePassword.Image = Global.WindowsApp1.My.Resources.Resources.view
+        Me.btnTogglePassword.ImageSize = New System.Drawing.Size(32, 32)
+        Me.btnTogglePassword.Location = New System.Drawing.Point(140, 397)
+        Me.btnTogglePassword.Name = "btnTogglePassword"
+        Me.btnTogglePassword.Size = New System.Drawing.Size(50, 30)
+        Me.btnTogglePassword.TabIndex = 22
         '
         'Guna2PictureBox1
         '
@@ -163,7 +364,7 @@ Partial Class Login
         Me.cmbUsername.Font = New System.Drawing.Font("Segoe UI", 13.0!)
         Me.cmbUsername.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.cmbUsername.ItemHeight = 32
-        Me.cmbUsername.Location = New System.Drawing.Point(135, 380)
+        Me.cmbUsername.Location = New System.Drawing.Point(135, 308)
         Me.cmbUsername.Name = "cmbUsername"
         Me.cmbUsername.Size = New System.Drawing.Size(450, 38)
         Me.cmbUsername.TabIndex = 32
@@ -186,7 +387,23 @@ Partial Class Login
         Me.btnclose.Size = New System.Drawing.Size(38, 38)
         Me.btnclose.TabIndex = 31
         Me.btnclose.Text = "✕"
-        Me.btnclose.TextOffset = New System.Drawing.Point(0, 0)
+        '
+        'btnMinimize
+        '
+        Me.btnMinimize.BorderRadius = 14
+        Me.btnMinimize.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnMinimize.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnMinimize.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnMinimize.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnMinimize.FillColor = System.Drawing.Color.Transparent
+        Me.btnMinimize.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.btnMinimize.ForeColor = System.Drawing.Color.FromArgb(CType(CType(140, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(165, Byte), Integer))
+        Me.btnMinimize.Location = New System.Drawing.Point(60, 16)
+        Me.btnMinimize.Name = "btnMinimize"
+        Me.btnMinimize.Size = New System.Drawing.Size(38, 38)
+        Me.btnMinimize.TabIndex = 35
+        Me.btnMinimize.Text = "—"
+        Me.btnMinimize.TextOffset = New System.Drawing.Point(0, -2)
         '
         'btnThemeToggle
         '
@@ -198,21 +415,37 @@ Partial Class Login
         Me.btnThemeToggle.FillColor = System.Drawing.Color.Transparent
         Me.btnThemeToggle.Font = New System.Drawing.Font("Segoe UI", 13.0!)
         Me.btnThemeToggle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.btnThemeToggle.Location = New System.Drawing.Point(60, 16)
+        Me.btnThemeToggle.Location = New System.Drawing.Point(105, 16)
         Me.btnThemeToggle.Name = "btnThemeToggle"
-        Me.btnThemeToggle.Size = New System.Drawing.Size(38, 38)
+        Me.btnThemeToggle.Size = New System.Drawing.Size(45, 38)
         Me.btnThemeToggle.TabIndex = 33
         Me.btnThemeToggle.Text = "🌙"
+        '
+        'btnDbSettings
+        '
+        Me.btnDbSettings.BorderRadius = 14
+        Me.btnDbSettings.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnDbSettings.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnDbSettings.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnDbSettings.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnDbSettings.FillColor = System.Drawing.Color.Transparent
+        Me.btnDbSettings.Font = New System.Drawing.Font("Segoe UI", 13.0!)
+        Me.btnDbSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.btnDbSettings.Image = Global.WindowsApp1.My.Resources.Resources.setting__1_
+        Me.btnDbSettings.Location = New System.Drawing.Point(156, 16)
+        Me.btnDbSettings.Name = "btnDbSettings"
+        Me.btnDbSettings.Size = New System.Drawing.Size(45, 38)
+        Me.btnDbSettings.TabIndex = 34
         '
         'Label4
         '
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(160, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.Label4.Location = New System.Drawing.Point(135, 765)
+        Me.Label4.Location = New System.Drawing.Point(135, 755)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(450, 25)
         Me.Label4.TabIndex = 30
-        Me.Label4.Text = "جميع الحقوق محفوظة © سستامك 2026"
+        Me.Label4.Text = "جميع الحقوق محفوظة © سستمك 2026"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'btnsup
@@ -232,7 +465,7 @@ Partial Class Login
         Me.btnsup.Image = Global.WindowsApp1.My.Resources.Resources.customer_support
         Me.btnsup.ImageOffset = New System.Drawing.Point(-5, 0)
         Me.btnsup.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btnsup.Location = New System.Drawing.Point(225, 715)
+        Me.btnsup.Location = New System.Drawing.Point(225, 618)
         Me.btnsup.Name = "btnsup"
         Me.btnsup.Size = New System.Drawing.Size(270, 40)
         Me.btnsup.TabIndex = 29
@@ -242,7 +475,7 @@ Partial Class Login
         '
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(140, Byte), Integer), CType(CType(155, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(252, 680)
+        Me.Label1.Location = New System.Drawing.Point(252, 588)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(217, 20)
         Me.Label1.TabIndex = 28
@@ -252,7 +485,7 @@ Partial Class Login
         'Guna2Panel1
         '
         Me.Guna2Panel1.FillColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(225, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.Guna2Panel1.Location = New System.Drawing.Point(135, 660)
+        Me.Guna2Panel1.Location = New System.Drawing.Point(135, 570)
         Me.Guna2Panel1.Name = "Guna2Panel1"
         Me.Guna2Panel1.Size = New System.Drawing.Size(450, 2)
         Me.Guna2Panel1.TabIndex = 0
@@ -270,10 +503,10 @@ Partial Class Login
         Me.btnlogin.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.btnlogin.Image = Global.WindowsApp1.My.Resources.Resources.enter__1_
         Me.btnlogin.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnlogin.Location = New System.Drawing.Point(135, 590)
+        Me.btnlogin.Location = New System.Drawing.Point(135, 455)
         Me.btnlogin.Name = "btnlogin"
         Me.btnlogin.PressedColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(140, Byte), Integer))
-        Me.btnlogin.Size = New System.Drawing.Size(450, 50)
+        Me.btnlogin.Size = New System.Drawing.Size(450, 48)
         Me.btnlogin.TabIndex = 27
         Me.btnlogin.Text = "تسجيل الدخول"
         Me.btnlogin.TextOffset = New System.Drawing.Point(5, 0)
@@ -282,9 +515,9 @@ Partial Class Login
         '
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.Label2.Location = New System.Drawing.Point(260, 290)
+        Me.Label2.Location = New System.Drawing.Point(235, 230)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(200, 30)
+        Me.Label2.Size = New System.Drawing.Size(250, 30)
         Me.Label2.TabIndex = 24
         Me.Label2.Text = "إدارة مطعمك بذكاء"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -303,34 +536,16 @@ Partial Class Login
         Me.txtpassword.Font = New System.Drawing.Font("Segoe UI", 13.0!)
         Me.txtpassword.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtpassword.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.txtpassword.Location = New System.Drawing.Point(135, 490)
+        Me.txtpassword.Location = New System.Drawing.Point(135, 393)
         Me.txtpassword.Margin = New System.Windows.Forms.Padding(6)
         Me.txtpassword.Name = "txtpassword"
         Me.txtpassword.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(198, Byte), Integer))
-        Me.txtpassword.PlaceholderText = "أدخل كلمة المرور"
+        Me.txtpassword.PlaceholderText = "                              أدخل كلمة المرور  "
         Me.txtpassword.SelectedText = ""
         Me.txtpassword.Size = New System.Drawing.Size(450, 38)
         Me.txtpassword.TabIndex = 23
         Me.txtpassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         Me.txtpassword.UseSystemPasswordChar = True
-        '
-        'CheckBox1
-        '
-        Me.CheckBox1.BackColor = System.Drawing.Color.Transparent
-        Me.CheckBox1.CheckedState.BorderRadius = 4
-        Me.CheckBox1.CheckedState.BorderThickness = 0
-        Me.CheckBox1.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.CheckBox1.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.CheckBox1.Location = New System.Drawing.Point(435, 534)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(150, 26)
-        Me.CheckBox1.TabIndex = 21
-        Me.CheckBox1.Text = "إظهار كلمة المرور"
-        Me.CheckBox1.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(180, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(200, Byte), Integer))
-        Me.CheckBox1.UncheckedState.BorderRadius = 4
-        Me.CheckBox1.UncheckedState.BorderThickness = 1
-        Me.CheckBox1.UncheckedState.FillColor = System.Drawing.Color.Transparent
         '
         'lblusername
         '
@@ -338,7 +553,7 @@ Partial Class Login
         Me.lblusername.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblusername.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.lblusername.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.lblusername.Location = New System.Drawing.Point(420, 345)
+        Me.lblusername.Location = New System.Drawing.Point(420, 275)
         Me.lblusername.Name = "lblusername"
         Me.lblusername.Size = New System.Drawing.Size(165, 30)
         Me.lblusername.TabIndex = 16
@@ -351,7 +566,7 @@ Partial Class Login
         Me.lblpassword.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblpassword.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.lblpassword.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.lblpassword.Location = New System.Drawing.Point(420, 455)
+        Me.lblpassword.Location = New System.Drawing.Point(420, 360)
         Me.lblpassword.Name = "lblpassword"
         Me.lblpassword.Size = New System.Drawing.Size(165, 30)
         Me.lblpassword.TabIndex = 17
@@ -375,12 +590,17 @@ Partial Class Login
         Me.Controls.Add(Me.pn_0)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.Name = "Login"
         Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.RightToLeftLayout = True
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.pn_main.ResumeLayout(False)
+        Me.pnlLockout.ResumeLayout(False)
         Me.pn_0.ResumeLayout(False)
+        Me.pnlFeature3.ResumeLayout(False)
+        Me.pnlFeature2.ResumeLayout(False)
+        Me.pnlFeature1.ResumeLayout(False)
+        Me.pn_main.ResumeLayout(False)
         CType(Me.Guna2PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -394,18 +614,33 @@ Partial Class Login
     Friend WithEvents lblSideCopyright As Label
     Friend WithEvents pn_main As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents txtpassword As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents CheckBox1 As Guna.UI2.WinForms.Guna2CheckBox
     Friend WithEvents lblusername As Label
     Friend WithEvents lblpassword As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Guna2PictureBox1 As Guna.UI2.WinForms.Guna2PictureBox
     Friend WithEvents btnlogin As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents pnlLockout As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblLockoutTimer As Label
+    Friend WithEvents tmrLockoutCountdown As Timer
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Label4 As Label
     Friend WithEvents btnsup As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Label1 As Label
     Friend WithEvents btnclose As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnMinimize As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnThemeToggle As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnDbSettings As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnTogglePassword As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblVersionBadge As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents pnlFeature1 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblFeatureTitle1 As Label
+    Friend WithEvents lblFeatureDesc1 As Label
+    Friend WithEvents pnlFeature2 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblFeatureTitle2 As Label
+    Friend WithEvents lblFeatureDesc2 As Label
+    Friend WithEvents pnlFeature3 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblFeatureTitle3 As Label
+    Friend WithEvents lblFeatureDesc3 As Label
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents cmbUsername As Guna.UI2.WinForms.Guna2ComboBox
 End Class

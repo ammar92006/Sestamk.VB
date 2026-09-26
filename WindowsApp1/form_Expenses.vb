@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Drawing.Printing
 Imports Microsoft.Office.Interop.Excel
@@ -7,7 +7,7 @@ Imports Org.BouncyCastle.Asn1.Cmp
 Public Class form_Expenses
     Dim x, y As Integer
     Dim newpoint As New System.Drawing.Point
-    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+    Private defaultTreasuryid As Integer = -1
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
         Close()
@@ -231,8 +231,12 @@ Public Class form_Expenses
             cmbTreasury.DataSource = dt
             cmbTreasury.DisplayMember = "TreasuryNameAr"
             cmbTreasury.ValueMember = "TreasuryID"
-            defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
-            cmbTreasury.SelectedIndex = defaultTreasuryid
+            defaultTreasuryid = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+            If defaultTreasuryid > 0 Then
+                cmbTreasury.SelectedValue = defaultTreasuryid
+            ElseIf cmbTreasury.Items.Count > 0 Then
+                cmbTreasury.SelectedIndex = 0
+            End If
 
         Catch ex As Exception
 

@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Drawing.Printing
 Imports System.Text
@@ -1251,7 +1251,7 @@ Sub(sender, e)
             .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip
         }
 
-    Dim pen As New Pen(Color.Black, 1)
+    Dim pen As New Pen(Color.Black, 1.8!)
 
     ' ==== الدوال الصغيرة للرسم ====
     Dim Center = Sub(t As String, f As Font)
@@ -1503,12 +1503,7 @@ End Sub
 
     ' هل المعاينة مفعّلة؟
     Public Function ShouldShowReportPreview() As Boolean
-        Try
-            Dim v = SettingsManager.GetSetting("PrintPreview")
-            Return Not String.IsNullOrEmpty(v) AndAlso v.Trim().ToLower() = "true"
-        Catch
-            Return False
-        End Try
+        Return SettingsManager.GetBoolSetting(SettingsKeys.PrintPreview, False)
     End Function
 
     ' فتح نافذة المعاينة بدون أي طباعة فعلية
@@ -1929,7 +1924,7 @@ End Sub
                 .Alignment = StringAlignment.Near,
                 .LineAlignment = StringAlignment.Center,
                 .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoClip}
-            Dim linePen As New Pen(Color.Black, 1)
+            Dim linePen As New Pen(Color.Black, 1.8!)
 
             Const safeRightInset As Integer = 28
             Dim usableW As Integer = pageW - safeRightInset
@@ -2083,13 +2078,16 @@ End Sub
             Next
 
             Dim tableEndY As Integer = Y
-            g.DrawLine(linePen, leftX, tableY, leftX + tableW, tableY)
-            g.DrawLine(linePen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
-            g.DrawLine(linePen, xT, tableY, xT, tableEndY)
+            Using borderPen As New Pen(Color.Black, 2.0!)
+                g.DrawLine(borderPen, leftX, tableY, leftX + tableW, tableY)
+                g.DrawLine(borderPen, leftX, tableY + headerH, leftX + tableW, tableY + headerH)
+                g.DrawLine(borderPen, leftX, tableEndY, leftX + tableW, tableEndY)
+                g.DrawLine(borderPen, xT, tableY, xT, tableEndY)
+                g.DrawLine(borderPen, xN + colNW, tableY, xN + colNW, tableEndY)
+            End Using
             g.DrawLine(linePen, xP, tableY, xP, tableEndY)
             g.DrawLine(linePen, xQ, tableY, xQ, tableEndY)
             g.DrawLine(linePen, xN, tableY, xN, tableEndY)
-            g.DrawLine(linePen, xN + colNW, tableY, xN + colNW, tableEndY)
 
             If isLastItemPage Then
                 ' [تعديل] المجاميع والفوتر بيتطبعوا بس في آخر صفحة أصناف
@@ -2153,14 +2151,12 @@ End Sub
     End Sub
 
     Private Function GenerateQRCode(text As String) As Bitmap
-        Dim writer As New ZXing.BarcodeWriter()
-        writer.Format = ZXing.BarcodeFormat.CODE_128
-        writer.Options = New ZXing.Common.EncodingOptions With {
-        .Height = 70,
-        .Width = 140,
-        .Margin = 0
-    }
-        Return writer.Write(text)
+        Dim barcodeType As String = SettingsManager.GetSettingOrDefault(SettingsKeys.InvoiceBarcodeType, "2D")
+        If barcodeType.Equals("1D", StringComparison.OrdinalIgnoreCase) Then
+            Return QRCodeHelper.GenerateBarcode1D(text, 180, 50)
+        Else
+            Return QRCodeHelper.GenerateQRCode(text, 110, 110)
+        End If
     End Function
     Public Function GenerateInvoiceText2(invoiceID As Integer) As String
         ' 1. جلب بيانات رأس الفاتورة

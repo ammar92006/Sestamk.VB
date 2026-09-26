@@ -20,6 +20,15 @@ Installer/redist/*.exe
 Installer/redist/*.msi
 Installer/db/*.bak
 *.exe.config
+*.msi
+OutputSetup/
+WindowsApp1/V1.0/
+
+# Compressed archives
+*.rar
+*.zip
+*.7z
+*.tar.gz
 
 # Misc
 *.log
@@ -29,3 +38,5 @@ UpgradeLog*.htm
 WindowsApp1/CSharp_MainForm/
 *.exe
 !WindowsApp1/chromedriver.exe
+!WindowsApp1/tools/Sestamk.VB.Updater.exe
+

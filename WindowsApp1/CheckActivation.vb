@@ -6,10 +6,10 @@ Module CheckActivation
     End Function
 
     Public Function IsActivated() As Boolean
-        Return LicenseBootstrapper.CheckAsync().GetAwaiter().GetResult().IsValid
+        Return Task.Run(Function() LicenseBootstrapper.CheckAsync()).GetAwaiter().GetResult().IsValid
     End Function
 
     Public Function CheckActivationBackground() As Boolean
-        Return LicenseBootstrapper.CheckAsync().GetAwaiter().GetResult().IsValid
+        Return Task.Run(Function() LicenseBootstrapper.CheckAsync(forceOnlineCheck:=True)).GetAwaiter().GetResult().IsValid
     End Function
 End Module

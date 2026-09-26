@@ -22,6 +22,8 @@ Partial Class MainForm
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnLogout = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnSupport = New Guna.UI2.WinForms.Guna2Button()
         Me.lbltitle = New System.Windows.Forms.Label()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
@@ -128,12 +130,16 @@ Partial Class MainForm
         Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnfrmProductAddons = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnfrmKitchenComments = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparatorKitchenComments = New System.Windows.Forms.ToolStripSeparator()
         Me.btnfrmDeliveryAreas = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnfrmDeliveryDrivers = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnfrmShifts = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator36 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnShiftReports = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparatorShiftReports = New System.Windows.Forms.ToolStripSeparator()
         Me.btnfrmBranches = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator37 = New System.Windows.Forms.ToolStripSeparator()
         Me.TabControl1 = New Guna.UI2.WinForms.Guna2TabControl()
@@ -287,6 +293,8 @@ Partial Class MainForm
         'panelHeader
         '
         Me.panelHeader.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.panelHeader.Controls.Add(Me.btnLogout)
+        Me.panelHeader.Controls.Add(Me.btnSupport)
         Me.panelHeader.Controls.Add(Me.lbltitle)
         Me.panelHeader.Controls.Add(Me.btn_min)
         Me.panelHeader.Controls.Add(Me.btn_max)
@@ -346,6 +354,34 @@ Partial Class MainForm
         Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 3
+        '
+        'btnLogout
+        '
+        Me.btnLogout.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnLogout.BorderRadius = 8
+        Me.btnLogout.BorderThickness = 1
+        Me.btnLogout.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnLogout.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnLogout.Location = New System.Drawing.Point(1280, 16)
+        Me.btnLogout.Name = "btnLogout"
+        Me.btnLogout.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnLogout.Size = New System.Drawing.Size(140, 38)
+        Me.btnLogout.TabIndex = 6
+        Me.btnLogout.Text = "تسجيل خروج 🚪"
+        '
+        'btnSupport
+        '
+        Me.btnSupport.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSupport.BorderRadius = 8
+        Me.btnSupport.BorderThickness = 1
+        Me.btnSupport.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnSupport.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.btnSupport.Location = New System.Drawing.Point(1130, 16)
+        Me.btnSupport.Name = "btnSupport"
+        Me.btnSupport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnSupport.Size = New System.Drawing.Size(140, 38)
+        Me.btnSupport.TabIndex = 7
+        Me.btnSupport.Text = "الدعم الفني 🎧"
         '
         'btnSalesReturns
         '
@@ -1350,7 +1386,7 @@ Partial Class MainForm
         '
         Me.ToolStrip1.AutoSize = False
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnCategories, Me.ToolStripSeparator1, Me.btnProducts, Me.ToolStripSeparator9, Me.btnfrmProductSizes, Me.ToolStripSeparator7, Me.btnfrmProductAddons, Me.ToolStripSeparator5, Me.btnfrmDeliveryAreas, Me.ToolStripSeparator4, Me.btnfrmDeliveryDrivers, Me.ToolStripSeparator3, Me.btnfrmShifts, Me.ToolStripSeparator36, Me.btnfrmBranches, Me.ToolStripSeparator37})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnCategories, Me.ToolStripSeparator1, Me.btnProducts, Me.ToolStripSeparator9, Me.btnfrmProductSizes, Me.ToolStripSeparator7, Me.btnfrmProductAddons, Me.ToolStripSeparator5, Me.btnfrmKitchenComments, Me.ToolStripSeparatorKitchenComments, Me.btnfrmDeliveryAreas, Me.ToolStripSeparator4, Me.btnfrmDeliveryDrivers, Me.ToolStripSeparator3, Me.btnfrmShifts, Me.ToolStripSeparator36, Me.btnShiftReports, Me.ToolStripSeparatorShiftReports, Me.btnfrmBranches, Me.ToolStripSeparator37})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(1420, 133)
@@ -1441,6 +1477,27 @@ Partial Class MainForm
         Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
         Me.ToolStripSeparator5.Size = New System.Drawing.Size(10, 113)
         '
+        'btnfrmKitchenComments
+        '
+        Me.btnfrmKitchenComments.AutoSize = False
+        Me.btnfrmKitchenComments.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnfrmKitchenComments.ForeColor = System.Drawing.Color.Black
+        Me.btnfrmKitchenComments.Image = Global.WindowsApp1.My.Resources.Resources.bubble_chat
+        Me.btnfrmKitchenComments.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnfrmKitchenComments.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnfrmKitchenComments.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnfrmKitchenComments.Name = "btnfrmKitchenComments"
+        Me.btnfrmKitchenComments.Size = New System.Drawing.Size(135, 100)
+        Me.btnfrmKitchenComments.Text = "تعليقات المطبخ"
+        Me.btnfrmKitchenComments.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparatorKitchenComments
+        '
+        Me.ToolStripSeparatorKitchenComments.AutoSize = False
+        Me.ToolStripSeparatorKitchenComments.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparatorKitchenComments.Name = "ToolStripSeparatorKitchenComments"
+        Me.ToolStripSeparatorKitchenComments.Size = New System.Drawing.Size(10, 113)
+        '
         'btnfrmDeliveryAreas
         '
         Me.btnfrmDeliveryAreas.AutoSize = False
@@ -1503,6 +1560,27 @@ Partial Class MainForm
         Me.ToolStripSeparator36.ForeColor = System.Drawing.SystemColors.ControlDarkDark
         Me.ToolStripSeparator36.Name = "ToolStripSeparator36"
         Me.ToolStripSeparator36.Size = New System.Drawing.Size(10, 113)
+        '
+        'btnShiftReports
+        '
+        Me.btnShiftReports.AutoSize = False
+        Me.btnShiftReports.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnShiftReports.ForeColor = System.Drawing.Color.Black
+        Me.btnShiftReports.Image = Global.WindowsApp1.My.Resources.Resources.report
+        Me.btnShiftReports.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.btnShiftReports.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnShiftReports.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnShiftReports.Name = "btnShiftReports"
+        Me.btnShiftReports.Size = New System.Drawing.Size(150, 100)
+        Me.btnShiftReports.Text = "تقارير الورديات"
+        Me.btnShiftReports.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
+        '
+        'ToolStripSeparatorShiftReports
+        '
+        Me.ToolStripSeparatorShiftReports.AutoSize = False
+        Me.ToolStripSeparatorShiftReports.ForeColor = System.Drawing.SystemColors.ControlDarkDark
+        Me.ToolStripSeparatorShiftReports.Name = "ToolStripSeparatorShiftReports"
+        Me.ToolStripSeparatorShiftReports.Size = New System.Drawing.Size(10, 113)
         '
         'btnfrmBranches
         '
@@ -2725,6 +2803,8 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
     Friend WithEvents btnfrmProductAddons As ToolStripButton
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
+    Friend WithEvents btnfrmKitchenComments As ToolStripButton
+    Friend WithEvents ToolStripSeparatorKitchenComments As ToolStripSeparator
     Friend WithEvents btnfrmDeliveryAreas As ToolStripButton
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
     Friend WithEvents btnfrmDeliveryDrivers As ToolStripButton
@@ -2783,6 +2863,8 @@ Partial Class MainForm
     Friend WithEvents ToolStripSeparator35 As ToolStripSeparator
     Friend WithEvents btnfrmShifts As ToolStripButton
     Friend WithEvents ToolStripSeparator36 As ToolStripSeparator
+    Friend WithEvents btnShiftReports As ToolStripButton
+    Friend WithEvents ToolStripSeparatorShiftReports As ToolStripSeparator
     Friend WithEvents btnfrmBranches As ToolStripButton
     Friend WithEvents ToolStripSeparator37 As ToolStripSeparator
     Friend WithEvents ToolStrip3 As ToolStrip
@@ -2916,4 +2998,6 @@ Partial Class MainForm
     Friend WithEvents btnQuickBackup As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents tmrClock As Timer
     Friend WithEvents tmrDashboardRefresh As Timer
+    Friend WithEvents btnLogout As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnSupport As Guna.UI2.WinForms.Guna2Button
 End Class

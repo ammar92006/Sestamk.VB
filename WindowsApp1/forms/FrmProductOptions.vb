@@ -22,6 +22,12 @@ Public Class FrmProductOptions
     Private ReadOnly _sizeCards As New List(Of Guna.UI2.WinForms.Guna2Panel)
     Private ReadOnly _addonCards As New List(Of Guna.UI2.WinForms.Guna2Panel)
 
+    Private ReadOnly Property CurrencySymbol As String
+        Get
+            Return SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
+        End Get
+    End Property
+
     Public Sub New(product As ProductModel, repo As POSRepository)
         InitializeComponent()
         _product = product
@@ -122,6 +128,15 @@ Public Class FrmProductOptions
         Label3.Visible = True
         Guna2Panel1.Visible = True
 
+        ' ضبط ارتفاع لوحة الأحجام ديناميكياً لتفادي الفراغات الميتة
+        If sizes.Count <= 3 Then
+            Guna2Panel1.Height = 76
+        ElseIf sizes.Count <= 6 Then
+            Guna2Panel1.Height = 146
+        Else
+            Guna2Panel1.Height = 150
+        End If
+
         ' اختيار الحجم الافتراضي إذا وجد أو أول حجم
         _selectedSize = sizes.FirstOrDefault(Function(s) s.IsDefault)
         If _selectedSize Is Nothing AndAlso sizes.Count > 0 Then
@@ -141,20 +156,20 @@ Public Class FrmProductOptions
         Dim pal = ThemeManager.Instance.CurrentPalette
 
         Dim pnlCard As New Guna.UI2.WinForms.Guna2Panel With {
-            .Width = 212,
-            .Height = 60,
-            .Margin = New Padding(6),
+            .Width = 206,
+            .Height = 62,
+            .Margin = New Padding(5),
             .BorderRadius = 10,
             .BorderThickness = 1,
             .BorderColor = pal.Border,
             .FillColor = pal.Surface,
             .Cursor = Cursors.Hand,
             .Tag = ps,
-            .RightToLeft = RightToLeft.Yes
+            .RightToLeft = RightToLeft.No
         }
 
-        ' أيقونة الاختيار
-        Dim chk As New Guna.UI2.WinForms.Guna2CustomCheckBox With {
+        ' أيقونة الاختيار الدائرية (Radio Style للاختيار الأحادي)
+        Dim chk As New Guna.UI2.WinForms.Guna2CustomRadioButton With {
             .Dock = DockStyle.Right,
             .Width = 34,
             .Cursor = Cursors.Hand,
@@ -162,15 +177,18 @@ Public Class FrmProductOptions
         }
         chk.CheckedState.FillColor = Color.FromArgb(16, 185, 129)
         chk.CheckedState.BorderColor = Color.FromArgb(16, 185, 129)
+        chk.CheckedState.InnerColor = Color.White
         chk.UncheckedState.FillColor = Color.Transparent
         chk.UncheckedState.BorderColor = pal.Border
+        chk.UncheckedState.InnerColor = Color.Transparent
 
         ' حاوية النصوص
         Dim pnlText As New Panel With {
             .Dock = DockStyle.Fill,
             .BackColor = Color.Transparent,
-            .Padding = New Padding(4, 3, 4, 3),
-            .Cursor = Cursors.Hand
+            .Padding = New Padding(6, 4, 4, 4),
+            .Cursor = Cursors.Hand,
+            .RightToLeft = RightToLeft.No
         }
 
         Dim lblName As New Label With {
@@ -183,11 +201,11 @@ Public Class FrmProductOptions
             .BackColor = Color.Transparent,
             .ForeColor = pal.TextPrimary,
             .Cursor = Cursors.Hand,
-            .RightToLeft = RightToLeft.Yes
+            .RightToLeft = RightToLeft.No
         }
 
         Dim lblPrice As New Label With {
-            .Text = ps.SalePrice.ToString("N2") & " ج.م",
+            .Text = ps.SalePrice.ToString("N2") & " " & CurrencySymbol,
             .Dock = DockStyle.Bottom,
             .Height = 22,
             .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
@@ -195,7 +213,7 @@ Public Class FrmProductOptions
             .ForeColor = Color.FromArgb(16, 185, 129),
             .BackColor = Color.Transparent,
             .Cursor = Cursors.Hand,
-            .RightToLeft = RightToLeft.Yes
+            .RightToLeft = RightToLeft.No
         }
 
         pnlText.Controls.Add(lblPrice)
@@ -228,7 +246,7 @@ Public Class FrmProductOptions
             Dim ps = CType(card.Tag, ProductSizeModel)
             Dim isSelected = (_selectedSize IsNot Nothing AndAlso _selectedSize.ProductSizeID = ps.ProductSizeID)
 
-            Dim chk = card.Controls.OfType(Of Guna.UI2.WinForms.Guna2CustomCheckBox)().FirstOrDefault()
+            Dim chk = card.Controls.OfType(Of Guna.UI2.WinForms.Guna2CustomRadioButton)().FirstOrDefault()
             If chk IsNot Nothing Then chk.Checked = isSelected
 
             Dim pnlText = card.Controls.OfType(Of Panel)().FirstOrDefault()
@@ -288,16 +306,16 @@ Public Class FrmProductOptions
         Dim pal = ThemeManager.Instance.CurrentPalette
 
         Dim pnlCard As New Guna.UI2.WinForms.Guna2Panel With {
-            .Width = 212,
-            .Height = 60,
-            .Margin = New Padding(6),
+            .Width = 206,
+            .Height = 62,
+            .Margin = New Padding(5),
             .BorderRadius = 10,
             .BorderThickness = 1,
             .BorderColor = pal.Border,
             .FillColor = pal.Surface,
             .Cursor = Cursors.Hand,
             .Tag = pa,
-            .RightToLeft = RightToLeft.Yes
+            .RightToLeft = RightToLeft.No
         }
 
         Dim chk As New Guna.UI2.WinForms.Guna2CustomCheckBox With {
@@ -314,8 +332,9 @@ Public Class FrmProductOptions
         Dim pnlText As New Panel With {
             .Dock = DockStyle.Fill,
             .BackColor = Color.Transparent,
-            .Padding = New Padding(4, 3, 4, 3),
-            .Cursor = Cursors.Hand
+            .Padding = New Padding(6, 4, 4, 4),
+            .Cursor = Cursors.Hand,
+            .RightToLeft = RightToLeft.No
         }
 
         Dim lblName As New Label With {
@@ -328,11 +347,11 @@ Public Class FrmProductOptions
             .BackColor = Color.Transparent,
             .ForeColor = pal.TextPrimary,
             .Cursor = Cursors.Hand,
-            .RightToLeft = RightToLeft.Yes
+            .RightToLeft = RightToLeft.No
         }
 
         Dim lblPrice As New Label With {
-            .Text = "+ " & pa.SalePrice.ToString("N2") & " ج.م",
+            .Text = "+ " & pa.SalePrice.ToString("N2") & " " & CurrencySymbol,
             .Dock = DockStyle.Bottom,
             .Height = 22,
             .Font = New Font("Segoe UI", 9.5F, FontStyle.Bold),
@@ -340,7 +359,7 @@ Public Class FrmProductOptions
             .ForeColor = Color.FromArgb(59, 130, 246),
             .BackColor = Color.Transparent,
             .Cursor = Cursors.Hand,
-            .RightToLeft = RightToLeft.Yes
+            .RightToLeft = RightToLeft.No
         }
 
         pnlText.Controls.Add(lblPrice)
@@ -430,7 +449,7 @@ Public Class FrmProductOptions
         Dim singleItemPrice As Decimal = basePrice + addonsTotal
         Dim grandTotal As Decimal = singleItemPrice * _quantity
 
-        lblTotalPrice.Text = grandTotal.ToString("N2") & " ج.م"
+        lblTotalPrice.Text = grandTotal.ToString("N2") & " " & CurrencySymbol
         lblQuantity.Text = _quantity.ToString()
     End Sub
 

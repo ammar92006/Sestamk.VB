@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
@@ -26,24 +26,59 @@ Public Module DBModule
     Public password As String = ""
     Public useWindowsAuth As Boolean = True  ' True = Windows Auth, False = SQL Auth
 
-    ''' <summary>بناء ConnectionString من قيم محددة (يُستخدم للاختبار والاكتشاف التلقائي)</summary>
+    ' إعدادات محرك LocalDB
+    Public dbEngineType As String = "localdb" ' "localdb" أو "sqlserver"
+    Public useAttachDb As Boolean = False
+    Public attachDbPath As String = ""
+    Public localDbInstanceName As String = "MSSQLLocalDB"
+
+    ' إعدادات التشفير والسحابة للخوادم الخارجية (Online / Remote SQL Server)
+    Public encryptConnection As Boolean = False
+    Public trustServerCertificate As Boolean = True
+
+    ''' <summary>بناء ConnectionString من قيم محددة مع دعم تشفير SSL للخوادم السحابية</summary>
     Public Function BuildConnectionString(srv As String, db As String,
                                           usr As String, pwd As String,
-                                          winAuth As Boolean) As String
+                                          winAuth As Boolean,
+                                          Optional attachPath As String = "",
+                                          Optional timeoutSeconds As Integer = 15,
+                                          Optional encrypt As Boolean? = Nothing,
+                                          Optional trustServerCert As Boolean? = Nothing) As String
         Dim auth As String = If(winAuth,
             "Integrated Security=True;",
             $"User Id={usr};Password={pwd};")
 
-        Return $"Server={srv};Database={db};{auth}" &
+        Dim attachPart As String = ""
+        If Not String.IsNullOrEmpty(attachPath) Then
+            attachPart = $"AttachDbFilename={attachPath};"
+        End If
+
+        ' فحص إذا كان السيرفر أونلاين / خارجي
+        Dim isRemote = Not String.IsNullOrEmpty(srv) AndAlso
+                       Not srv.ToLower().Contains("(localdb)") AndAlso
+                       Not srv.Equals("localhost", StringComparison.OrdinalIgnoreCase) AndAlso
+                       Not srv.Equals(".", StringComparison.OrdinalIgnoreCase) AndAlso
+                       Not srv.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase)
+
+        Dim actualEncrypt = If(encrypt.HasValue, encrypt.Value, (encryptConnection OrElse isRemote))
+        Dim actualTrust = If(trustServerCert.HasValue, trustServerCert.Value, trustServerCertificate)
+
+        Dim sslPart As String = ""
+        If actualEncrypt OrElse isRemote Then
+            sslPart = $"Encrypt={If(actualEncrypt, "True", "False")};TrustServerCertificate={If(actualTrust, "True", "False")};"
+        End If
+
+        Return $"Server={srv};{attachPart}Database={db};{auth}{sslPart}" &
                "MultipleActiveResultSets=True;" &
                "Pooling=True;Max Pool Size=200;Min Pool Size=5;" &
-               "Connect Timeout=10;"
+               $"Connect Timeout={timeoutSeconds};"
     End Function
 
-    ''' <summary>بناء ConnectionString مع تفعيل Connection Pooling و Timeout</summary>
+    ''' <summary>بناء ConnectionString مع تفعيل Connection Pooling و Timeout والتشفير</summary>
     Public ReadOnly Property ConnectionString As String
         Get
-            Return BuildConnectionString(server, database, username, password, useWindowsAuth)
+            Dim attach As String = If(useAttachDb, attachDbPath, "")
+            Return BuildConnectionString(server, database, username, password, useWindowsAuth, attach, 15, encryptConnection, trustServerCertificate)
         End Get
     End Property
 
@@ -61,9 +96,7 @@ Public Module DBModule
                         da.Fill(dt)
                         Return dt
                     Catch ex As Exception
-                        ' عرض الخطأ بشكل واضح لمعرفته أثناء التطوير
-                        MessageBox.Show("حدث خطأ أثناء الاتصال بقاعدة البيانات: " & ex.Message,
-                                    "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Logger.LogError("ExecuteQuery: " & query, ex)
                         Return Nothing
                     End Try
                 End Using
@@ -77,8 +110,7 @@ Public Module DBModule
                     conn.Open()
                     Return cmd.ExecuteNonQuery()
                 Catch ex As Exception
-                    MessageBox.Show("حدث خطأ أثناء تنفيذ العملية: " & ex.Message,
-                                    "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Logger.LogError("ExecuteNonQuery: " & query, ex)
                     Return -1
                 End Try
             End Using
@@ -126,16 +158,51 @@ Public Module DBModule
     End Function
 
     ' ══════════════════════════════════════════════════════════
-    ' مسار ملف الاعدادات المحلي
     ' ══════════════════════════════════════════════════════════
-    Private ReadOnly DbConfigPath As String =
-        Path.Combine(Application.StartupPath, "db_config.ini")
+    ' مسار ملف الاعدادات المحلي مع دعم ذكي لصلاحيات المجلدات
+    ' ══════════════════════════════════════════════════════════
+    Public Function GetDbConfigPath() As String
+        Try
+            ' 1. المسار المباشر في مجلد التطبيق (إذا كان الملف موجوداً مسبقاً)
+            Dim appPath As String = Path.Combine(Application.StartupPath, "db_config.ini")
+            If File.Exists(appPath) Then Return appPath
+
+            ' 2. المسار في مجلد البيانات المشترك العام (C:\ProgramData\Sestamk\db_config.ini)
+            Dim commonDir As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+            Dim commonPath As String = Path.Combine(commonDir, "db_config.ini")
+            If File.Exists(commonPath) Then Return commonPath
+
+            ' 3. فحص إمكانية الكتابة في مجلد التطبيق الحالي
+            Dim testFile As String = Path.Combine(Application.StartupPath, ".perm_test")
+            File.WriteAllText(testFile, "1")
+            File.Delete(testFile)
+            Return appPath
+        Catch
+            ' مجلد التطبيق محمي (مثل Program Files) وغير قابل للكتابة للمستخدم العادي -> نستخدم ProgramData
+            Dim commonDir As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+            If Not Directory.Exists(commonDir) Then Directory.CreateDirectory(commonDir)
+            Return Path.Combine(commonDir, "db_config.ini")
+        End Try
+    End Function
 
     ''' <summary>تحميل إعدادات قاعدة البيانات من الملف عند بداية التشغيل</summary>
     Public Sub LoadDbSettings()
         Try
-            If Not File.Exists(DbConfigPath) Then Exit Sub
-            For Each line As String In File.ReadAllLines(DbConfigPath)
+            ' فحص مسار التطبيق أولاً ثم ProgramData
+            Dim appPath = Path.Combine(Application.StartupPath, "db_config.ini")
+            Dim commonDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+            Dim commonPath = Path.Combine(commonDir, "db_config.ini")
+
+            Dim targetPath As String = Nothing
+            If File.Exists(appPath) Then
+                targetPath = appPath
+            ElseIf File.Exists(commonPath) Then
+                targetPath = commonPath
+            End If
+
+            If String.IsNullOrEmpty(targetPath) OrElse Not File.Exists(targetPath) Then Exit Sub
+
+            For Each line As String In File.ReadAllLines(targetPath)
                 If line.StartsWith("#") OrElse Not line.Contains("=") Then Continue For
                 Dim parts() As String = line.Split(New Char() {"="c}, 2)
                 Dim key As String = parts(0).Trim().ToLower()
@@ -146,10 +213,25 @@ Public Module DBModule
                     Case "username" : username = val
                     Case "password" : password = val
                     Case "windowsauth" : useWindowsAuth = (val.ToLower() = "true")
+                    Case "dbengine" : dbEngineType = val.ToLower()
+                    Case "useattachdb" : useAttachDb = (val.ToLower() = "true")
+                    Case "attachdbpath" : attachDbPath = val
+                    Case "localdbinstance" : localDbInstanceName = val
+                    Case "encrypt" : encryptConnection = (val.ToLower() = "true")
+                    Case "trustservercert" : trustServerCertificate = (val.ToLower() = "true")
                 End Select
             Next
+
+            ' استنتاج ذكي لنوع المحرك إذا لم يكن محدداً صراحة في الملف
+            If String.IsNullOrEmpty(dbEngineType) OrElse (dbEngineType = "localdb" AndAlso Not server.ToLower().Contains("(localdb)")) Then
+                If server.ToLower().Contains("(localdb)") Then
+                    dbEngineType = "localdb"
+                Else
+                    dbEngineType = "sqlserver"
+                End If
+            End If
         Catch ex As Exception
-            Debug.WriteLine("خطأ تحميل إعدادات DB: " & ex.Message)
+            Logger.LogError("LoadDbSettings", ex)
         End Try
     End Sub
 
@@ -162,11 +244,29 @@ Public Module DBModule
                 "database=" & database,
                 "username=" & username,
                 "password=" & password,
-                "windowsauth=" & useWindowsAuth.ToString().ToLower()
+                "windowsauth=" & useWindowsAuth.ToString().ToLower(),
+                "dbengine=" & dbEngineType,
+                "useattachdb=" & useAttachDb.ToString().ToLower(),
+                "attachdbpath=" & attachDbPath,
+                "localdbinstance=" & localDbInstanceName,
+                "encrypt=" & encryptConnection.ToString().ToLower(),
+                "trustservercert=" & trustServerCertificate.ToString().ToLower()
             }
-            File.WriteAllLines(DbConfigPath, lines)
+
+            Dim targetPath As String = GetDbConfigPath()
+            Try
+                Dim parentDir = Path.GetDirectoryName(targetPath)
+                If Not Directory.Exists(parentDir) Then Directory.CreateDirectory(parentDir)
+                File.WriteAllLines(targetPath, lines)
+            Catch ex As UnauthorizedAccessException
+                ' عند مواجهة قيود UAC في Program Files، نحفظ تلقائياً في مجلد ProgramData الآمن
+                Dim commonDir As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+                If Not Directory.Exists(commonDir) Then Directory.CreateDirectory(commonDir)
+                Dim fallbackPath As String = Path.Combine(commonDir, "db_config.ini")
+                File.WriteAllLines(fallbackPath, lines)
+            End Try
         Catch ex As Exception
-            MessageBox.Show("خطأ حفظ إعدادات DB: " & ex.Message, "خطأ")
+            Logger.LogError("SaveDbSettings", ex)
         End Try
     End Sub
 
@@ -177,6 +277,23 @@ Public Module DBModule
             Using testConn As New SqlConnection(cs)
                 testConn.Open()
                 Return True
+            End Using
+        Catch
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>التحقق من جاهزية قاعدة البيانات ووجود جدول المستخدمين الأساسي Users_TBL</summary>
+    Public Function IsDatabaseReady(Optional customConnStr As String = "") As Boolean
+        Try
+            Dim cs As String = If(String.IsNullOrEmpty(customConnStr), ConnectionString, customConnStr)
+            Using cn As New SqlConnection(cs)
+                cn.Open()
+                Using cmd As New SqlCommand("SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users_TBL'", cn)
+                    cmd.CommandTimeout = 4
+                    Dim res = cmd.ExecuteScalar()
+                    Return res IsNot Nothing AndAlso Not Convert.IsDBNull(res)
+                End Using
             End Using
         Catch
             Return False
@@ -255,14 +372,82 @@ Public Module DBModule
     ''' ترجع True إذا نجح الاتصال.
     ''' </summary>
     Public Function TryAutoConnect() As Boolean
-        ' (1) جرّب الإعدادات المحفوظة الحالية كما هي
-        If TestConnection() Then Return True
+        ' (1) جرّب الإعدادات المحفوظة الحالية أولاً وفوراً بمهلة 3 ثوانٍ
+        ' فإذا كان السيرفر شغالاً (سواء SQLEXPRESS أو LocalDB أو Cloud) يتصل فوراً في أجزاء من الثانية بدون أي تأخير!
+        Dim fastCs As String = BuildConnectionString(server, database, username, password, useWindowsAuth, If(useAttachDb, attachDbPath, ""), 3, encryptConnection, trustServerCertificate)
+        If TestConnection(fastCs) Then Return True
 
-        ' (2) جرّب كل خادم مكتشف بنفس قاعدة البيانات والمصادقة
+        ' حماية السيرفرات السحابية والشبكية المخصصة: إذا كان السيرفر مهيأ بعنوان IP أو اسم خارجي
+        ' لا نقوم بالسقوط الصامت على LocalDB ومسح إعدادات السيرفر الأونلاين للمستخدم!
+        Dim isConfiguredAsRemote = (dbEngineType = "sqlserver") AndAlso
+                                   Not String.IsNullOrEmpty(server) AndAlso
+                                   Not server.ToLower().Contains("(localdb)") AndAlso
+                                   Not server.Equals("localhost", StringComparison.OrdinalIgnoreCase) AndAlso
+                                   Not server.Equals(".", StringComparison.OrdinalIgnoreCase) AndAlso
+                                   Not server.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase)
+
+        If isConfiguredAsRemote Then
+            ' محاولة ثانية بمهلة 6 ثوانٍ في حال وجود بطء مؤقت في اتصال الإنترنت
+            Dim retryCs As String = BuildConnectionString(server, database, username, password, useWindowsAuth, "", 6, encryptConnection, trustServerCertificate)
+            If TestConnection(retryCs) Then Return True
+
+            ' عند فشل الاتصال بالسيرفر الأونلاين نُرجع False ولا نقوم بالسقوط الصامت على LocalDB حفاظاً على بيانات العميل
+            Return False
+        End If
+
+        ' (2) إذا فشل الاتصال وكان المحرك هو LocalDB، نتأكد من تثبيت وتشغيل المحرك تلقائياً
+        Dim isLocalDbTarget = (dbEngineType = "localdb" OrElse server.ToLower().Contains("(localdb)"))
+        Dim isLocalDbAvailable = Services.LocalDbManager.IsLocalDbInstalled()
+
+        If isLocalDbTarget Then
+            ' إذا لم يكن محرك LocalDB مثبتاً على نظام العميل، نبحث عن الحزمة الصامتة ونثبتها تلقائياً
+            If Not isLocalDbAvailable Then
+                Dim msiPath = Services.LocalDbManager.FindLocalDbMsiInstaller()
+                If Not String.IsNullOrEmpty(msiPath) Then
+                    Try
+                        Dim installTask = Task.Run(Function() Services.LocalDbManager.InstallLocalDbSilentlyAsync(msiPath))
+                        installTask.Wait(TimeSpan.FromMinutes(2))
+                        isLocalDbAvailable = Services.LocalDbManager.IsLocalDbInstalled()
+                    Catch
+                    End Try
+                End If
+            End If
+
+            If isLocalDbAvailable Then
+                Try
+                    Dim startTask = Task.Run(Function() Services.LocalDbManager.EnsureInstanceRunningAsync(localDbInstanceName))
+                    startTask.Wait(TimeSpan.FromSeconds(10))
+                Catch
+                End Try
+
+                If TestConnection(fastCs) Then Return True
+
+                ' لو قاعدة البيانات غير منشأة بعد، أنشئها مع كامل الجداول كودياً عبر Self-Healing
+                Try
+                    Dim maint As New Services.DatabaseMaintenanceService(server, database, username, password, useWindowsAuth)
+                    Dim rep = Task.Run(Function() maint.CheckAndRepairDatabaseAsync()).GetAwaiter().GetResult()
+                    If rep IsNot Nothing AndAlso rep.IsSuccess AndAlso TestConnection(fastCs) Then
+                        Return True
+                    End If
+                Catch
+                End Try
+            End If
+        End If
+
+        ' (3) جرّب كل خادم مكتشف بنفس قاعدة البيانات والمصادقة بمهلة 2 ثانية فقط
         For Each srv As String In DetectSqlServers()
-            Dim cs As String = BuildConnectionString(srv, database, username, password, useWindowsAuth)
+            If String.Equals(srv, server, StringComparison.OrdinalIgnoreCase) Then Continue For
+            ' إذا كان خادم LocalDB والمحرك غير مثبت، تخطّاه فوراً لمنع التأخير
+            If srv.ToLower().Contains("(localdb)") AndAlso Not isLocalDbAvailable Then Continue For
+
+            Dim cs As String = BuildConnectionString(srv, database, username, password, useWindowsAuth, "", 2)
             If TestConnection(cs) Then
                 server = srv
+                If srv.ToLower().Contains("(localdb)") Then
+                    dbEngineType = "localdb"
+                Else
+                    dbEngineType = "sqlserver"
+                End If
                 Try
                     SaveDbSettings()
                 Catch
@@ -271,12 +456,12 @@ Public Module DBModule
             End If
         Next
 
-        ' (3) حل أخير: تهيئة قاعدة LocalDB من النسخة الاحتياطية المرفقة (db\<database>.bak)
-        '     يفيد عند التثبيت على جهاز جديد لا توجد عليه قاعدة بيانات بعد.
-        If EnsureLocalDbDatabase() Then
+        ' (4) حل أخير: تهيئة قاعدة LocalDB من النسخة الاحتياطية المرفقة (db\<database>.bak) إذا كان LocalDB متاحاً
+        If isLocalDbAvailable AndAlso EnsureLocalDbDatabase() Then
             server = "(localdb)\MSSQLLocalDB"
+            dbEngineType = "localdb"
             useWindowsAuth = True
-            If TestConnection() Then
+            If TestConnection(fastCs) Then
                 Try
                     SaveDbSettings()
                 Catch
@@ -295,6 +480,8 @@ Public Module DBModule
     ''' </summary>
     Public Function EnsureLocalDbDatabase() As Boolean
         Try
+            If Not Services.LocalDbManager.IsLocalDbInstalled() Then Return False
+
             ' تشغيل نسخة LocalDB الافتراضية (إنشاء + بدء) بأفضل جهد
             For Each arg As String In {"create MSSQLLocalDB", "start MSSQLLocalDB"}
                 Try
@@ -306,7 +493,7 @@ Public Module DBModule
                 End Try
             Next
 
-            Dim masterCs As String = "Server=(localdb)\MSSQLLocalDB;Database=master;Integrated Security=True;Connect Timeout=15;"
+            Dim masterCs As String = "Server=(localdb)\MSSQLLocalDB;Database=master;Integrated Security=True;Connect Timeout=5;"
             Using cn As New SqlConnection(masterCs)
                 cn.Open()
 
@@ -317,9 +504,14 @@ Public Module DBModule
                     If r IsNot Nothing AndAlso Not Convert.IsDBNull(r) Then Return True
                 End Using
 
-                ' البحث عن النسخة الاحتياطية المرفقة
+                ' البحث عن النسخة الاحتياطية المرفقة إن وُجدت اختيارياً
                 Dim bak As String = Path.Combine(Application.StartupPath, "db", database & ".bak")
-                If Not File.Exists(bak) Then Return False
+                If Not File.Exists(bak) Then
+                    ' إذا لم توجد نسخة .bak مرفقة، نقوم بإنشاء القاعدة والجداول كودياً 100% بدون أي ملفات خارجية
+                    Dim maint As New Services.DatabaseMaintenanceService(server, database, username, password, useWindowsAuth)
+                    Dim rep = Task.Run(Function() maint.CheckAndRepairDatabaseAsync()).GetAwaiter().GetResult()
+                    Return (rep IsNot Nothing AndAlso rep.IsSuccess)
+                End If
 
                 ' قراءة الأسماء المنطقية من النسخة الاحتياطية
                 Dim dataLogical As String = "", logLogical As String = ""
@@ -748,6 +940,51 @@ Public Module DBModule
                 pi.SetValue(dgv, True, Nothing)
             End If
         Catch
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' التحقق من وجود جدول تعليقات المطبخ وإنشاؤه مع البيانات الافتراضية إن لم يكن موجوداً
+    ''' </summary>
+    Public Sub EnsureKitchenCommentsTable()
+        Try
+            Dim sql = "
+            IF OBJECT_ID('KitchenComments', 'U') IS NULL
+            BEGIN
+                CREATE TABLE [dbo].[KitchenComments](
+                    [CommentID] [int] IDENTITY(1,1) NOT NULL,
+                    [CommentCode] [nvarchar](50) NULL,
+                    [CommentText] [nvarchar](250) NOT NULL,
+                    [IsActive] [bit] NOT NULL CONSTRAINT [DF_KitchenComments_IsActive] DEFAULT (1),
+                    [IsDeleted] [bit] NOT NULL CONSTRAINT [DF_KitchenComments_IsDeleted] DEFAULT (0),
+                    [CreatedAt] [datetime] NOT NULL CONSTRAINT [DF_KitchenComments_CreatedAt] DEFAULT (GETDATE()),
+                    CONSTRAINT [PK_KitchenComments] PRIMARY KEY CLUSTERED ([CommentID] ASC)
+                );
+            END
+
+            IF OBJECT_ID('KitchenComments', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM KitchenComments WHERE IsDeleted = 0 OR IsDeleted IS NULL)
+            BEGIN
+                INSERT INTO KitchenComments (CommentCode, CommentText, IsActive, IsDeleted, CreatedAt) VALUES
+                ('COM-001', N'بدون سكر', 1, 0, GETDATE()),
+                ('COM-002', N'بدون شطة', 1, 0, GETDATE()),
+                ('COM-003', N'شطة زيادة 🔥', 1, 0, GETDATE()),
+                ('COM-004', N'مستوي جيداً (Well Done)', 1, 0, GETDATE()),
+                ('COM-005', N'نصف استواء (Medium)', 1, 0, GETDATE()),
+                ('COM-006', N'بدون بصل', 1, 0, GETDATE()),
+                ('COM-007', N'سفري / خارجي', 1, 0, GETDATE()),
+                ('COM-008', N'سخن جداً ♨️', 1, 0, GETDATE()),
+                ('COM-009', N'صوص جانبي', 1, 0, GETDATE()),
+                ('COM-010', N'بدون ملح', 1, 0, GETDATE()),
+                ('COM-011', N'ملح خفيف', 1, 0, GETDATE()),
+                ('COM-012', N'بدون ثوم', 1, 0, GETDATE()),
+                ('COM-013', N'زيادة كاتشب', 1, 0, GETDATE()),
+                ('COM-014', N'زيادة مايونيز', 1, 0, GETDATE()),
+                ('COM-015', N'بدون طماطم', 1, 0, GETDATE()),
+                ('COM-016', N'خبز محمص زيادة', 1, 0, GETDATE());
+            END"
+            ExecuteNonQuery(sql)
+        Catch ex As Exception
+            Logger.LogError("EnsureKitchenCommentsTable", ex)
         End Try
     End Sub
 

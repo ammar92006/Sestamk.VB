@@ -1,8 +1,8 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class FrmTreasuryTransaction
 
-    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+    Private defaultTreasuryid As Integer = -1
 
     Public Enum TreasuryOperation
 
@@ -133,8 +133,12 @@ ORDER BY IsDefault DESC, TreasuryNameAr
             cmbTreasury.DataSource = dt
             cmbTreasury.DisplayMember = "TreasuryNameAr"
             cmbTreasury.ValueMember = "TreasuryID"
-            defaultTreasuryid = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
-            cmbTreasury.SelectedIndex = defaultTreasuryid
+            defaultTreasuryid = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
+            If defaultTreasuryid > 0 Then
+                cmbTreasury.SelectedValue = defaultTreasuryid
+            ElseIf cmbTreasury.Items.Count > 0 Then
+                cmbTreasury.SelectedIndex = 0
+            End If
 
         Catch ex As Exception
 

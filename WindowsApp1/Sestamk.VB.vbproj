@@ -28,10 +28,13 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ProductName>Cashier Market</ProductName>
+    <SupportUrl>https://sestamk.site.je/contact</SupportUrl>
+    <ProductName>سستمك - Sestamk</ProductName>
     <PublisherName>Ammar Ahmed</PublisherName>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <SuiteName>sestamk.site.je</SuiteName>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -89,7 +92,6 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
-
   <ItemGroup>
     <Reference Include="System.Configuration">
       <Private>True</Private>
@@ -112,7 +114,6 @@
     <Reference Include="DevExpress.Drawing.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Drawing.25.1.7\lib\net462\DevExpress.Drawing.v25.1.dll</HintPath>
     </Reference>
-
     <Reference Include="DevExpress.Office.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Office.Core.25.1.7\lib\net462\DevExpress.Office.v25.1.Core.dll</HintPath>
     </Reference>
@@ -161,7 +162,6 @@
     <Reference Include="DevExpress.XtraPrinting.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Win.Printing.25.1.7\lib\net462\DevExpress.XtraPrinting.v25.1.dll</HintPath>
     </Reference>
-
     <Reference Include="DevExpress.XtraTreeList.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
       <HintPath>..\packages\DevExpress.Win.TreeList.25.1.7\lib\net462\DevExpress.XtraTreeList.v25.1.dll</HintPath>
     </Reference>
@@ -242,7 +242,6 @@
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
-
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
     </Reference>
@@ -264,7 +263,6 @@
       <HintPath>..\packages\System.IO.Pipelines.5.0.2\lib\net461\System.IO.Pipelines.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
-
     <Reference Include="System.Memory, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.6.3\lib\net462\System.Memory.dll</HintPath>
     </Reference>
@@ -327,6 +325,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="moduls\WebLinks.vb" />
     <Compile Include="forms\frmMaterialUnits.Designer.vb">
       <DependentUpon>frmMaterialUnits.vb</DependentUpon>
     </Compile>
@@ -496,6 +495,24 @@
     <Compile Include="forms\frmAddons.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\frmKitchenComments.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmKitchenComments.Designer.vb">
+      <DependentUpon>frmKitchenComments.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmSelectKitchenComment.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\frmSelectKitchenComment.Designer.vb">
+      <DependentUpon>frmSelectKitchenComment.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmSelectSizeAndAddons.Designer.vb">
+      <DependentUpon>frmSelectSizeAndAddons.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmSelectSizeAndAddons.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="forms\frmCategoryTypes.Designer.vb">
       <DependentUpon>frmCategoryTypes.vb</DependentUpon>
     </Compile>
@@ -530,6 +547,12 @@
       <DependentUpon>FrmDriverReport.vb</DependentUpon>
     </Compile>
     <Compile Include="forms\FrmDriverReport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmShiftReports.Designer.vb">
+      <DependentUpon>FrmShiftReports.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmShiftReports.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="forms\frmJobTitles.Designer.vb">
@@ -724,10 +747,10 @@
     <Compile Include="frmShifts.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmPayInvoice.Designer.vb">
+    <Compile Include="forms\frmPayInvoice.Designer.vb">
       <DependentUpon>frmPayInvoice.vb</DependentUpon>
     </Compile>
-    <Compile Include="frmPayInvoice.vb">
+    <Compile Include="forms\frmPayInvoice.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmProductAddons.Designer.vb">
@@ -786,6 +809,7 @@
     <Compile Include="moduls\Data\DeliveryDriverModel.vb" />
     <Compile Include="moduls\Data\KitchenOrderModel.vb" />
     <Compile Include="moduls\Data\KitchenWasteModel.vb" />
+    <Compile Include="moduls\Data\KitchenCommentModel.vb" />
     <Compile Include="moduls\Data\TableReservationModel.vb" />
     <Compile Include="moduls\Data\DriverModel.vb" />
     <Compile Include="moduls\Data\OrderItemModel.vb" />
@@ -855,6 +879,9 @@
     </Compile>
     <Compile Include="Module1.vb" />
     <Compile Include="Services\TreasuryService.vb" />
+    <Compile Include="Services\DatabaseSchemaDefinitions.vb" />
+    <Compile Include="Services\DatabaseMaintenanceService.vb" />
+    <Compile Include="Services\LocalDbManager.vb" />
     <Compile Include="Session.vb" />
     <Compile Include="SettingsKeys.vb" />
     <Compile Include="StartupManager.vb" />
@@ -934,12 +961,18 @@
     <Compile Include="UC_Settings\UCAbout.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Services\DataExportImportService.vb" />
+    <Compile Include="UC_Settings\UCDataExportSettings.Designer.vb">
+      <DependentUpon>UCDataExportSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCDataExportSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="SplashScreen.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SplashScreen.Designer.vb">
       <DependentUpon>SplashScreen.vb</DependentUpon>
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="loginform.Designer.vb">
       <DependentUpon>loginform.vb</DependentUpon>
@@ -997,6 +1030,7 @@
     <Compile Include="ThermalTestReceiptHelper.vb" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\DatabaseSchema.sql" />
     <EmbeddedResource Include="About_the_program.resx">
       <DependentUpon>About_the_program.vb</DependentUpon>
     </EmbeddedResource>
@@ -1057,6 +1091,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="forms\FrmDriverReport.resx">
       <DependentUpon>FrmDriverReport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmShiftReports.resx">
+      <DependentUpon>FrmShiftReports.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\frmJobTitles.resx">
       <DependentUpon>frmJobTitles.vb</DependentUpon>
@@ -1242,8 +1279,71 @@
     <EmbeddedResource Include="The_Scale.resx">
       <DependentUpon>The_Scale.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCDatabaseSettings.resx">
+      <DependentUpon>UCDatabaseSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCPrinterSettings.resx">
+      <DependentUpon>UCPrinterSettings.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Users.resx">
       <DependentUpon>Users.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FirstRunSetup.resx">
+      <DependentUpon>FirstRunSetup.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FormUpdateNotifier.resx">
+      <DependentUpon>FormUpdateNotifier.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmKitchenDisplay.resx">
+      <DependentUpon>FrmKitchenDisplay.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmKitchenWaste.resx">
+      <DependentUpon>FrmKitchenWaste.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmKitchenComments.resx">
+      <DependentUpon>frmKitchenComments.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmSelectKitchenComment.resx">
+      <DependentUpon>frmSelectKitchenComment.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmPayInvoice.resx">
+      <DependentUpon>frmPayInvoice.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmSelectSizeAndAddons.resx">
+      <DependentUpon>frmSelectSizeAndAddons.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmSplitBill.resx">
+      <DependentUpon>FrmSplitBill.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\FrmTableReservations.resx">
+      <DependentUpon>FrmTableReservations.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCAbout.resx">
+      <DependentUpon>UCAbout.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCActivationSettings.resx">
+      <DependentUpon>UCActivationSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCNotificationsSettings.resx">
+      <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCReceiptSettings.resx">
+      <DependentUpon>UCReceiptSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCSalesSettings.resx">
+      <DependentUpon>UCSalesSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCScannerSettings.resx">
+      <DependentUpon>UCScannerSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCSystemSettings.resx">
+      <DependentUpon>UCSystemSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCUpdatesSettings.resx">
+      <DependentUpon>UCUpdatesSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCDataExportSettings.resx">
+      <DependentUpon>UCDataExportSettings.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -1260,6 +1360,9 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="WindowsApp1_TemporaryKey.pfx" />
+    <None Include="tools\Sestamk.VB.Updater.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\enter.png" />
@@ -1397,6 +1500,14 @@
     <None Include="Resources\clear %282%29.png" />
     <None Include="Resources\add %283%29.png" />
     <None Include="Resources\minus.png" />
+    <None Include="Resources\view.png" />
+    <None Include="Resources\hide1.png" />
+    <None Include="Resources\setting %281%29.png" />
+    <None Include="Resources\file %282%29.png" />
+    <None Include="Resources\excel1.png" />
+    <None Include="Resources\sheets.png" />
+    <None Include="Resources\cross.png" />
+    <None Include="Resources\apple.png" />
     <Content Include="store_icon-icons.com_54371.ico" />
     <None Include="Resources\info %281%29.png" />
     <None Include="Resources\info.png" />

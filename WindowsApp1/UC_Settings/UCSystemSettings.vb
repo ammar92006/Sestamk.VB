@@ -11,6 +11,8 @@ Namespace UC_Settings
 
         Public Event CloseRequested As EventHandler Implements ICloseRequest.CloseRequested
 
+        Private _selectedThemeMode As ThemeMode = ThemeMode.System
+
         Public Sub New()
             InitializeComponent()
         End Sub
@@ -25,7 +27,7 @@ Namespace UC_Settings
         End Sub
 
         Private Sub OnThemeChanged(sender As Object, theme As AppTheme, palette As ThemePalette)
-            UpdateThemeButtonsUI(theme)
+            UpdateThemeButtonsUI(_selectedThemeMode)
         End Sub
 
         Public Sub LoadSettings()
@@ -50,8 +52,9 @@ Namespace UC_Settings
                     numAutoLogoutMinutes.Value = logoutMinutes
                 End If
 
-                ' مظهر النظام (تحديث حالة أزرار الوضع الفاتح والداكن)
-                UpdateThemeButtonsUI(ThemeManager.Instance.CurrentTheme)
+                ' مظهر النظام (تحديث حالة أزرار الوضع الفاتح والداكن والتلقائي)
+                _selectedThemeMode = ThemeManager.Instance.CurrentMode
+                UpdateThemeButtonsUI(_selectedThemeMode)
 
                 ' مسار النسخ الاحتياطي
                 txtBackupPath.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.SystemBackupPath, "")
@@ -105,8 +108,7 @@ Namespace UC_Settings
                 SettingsManager.SaveSetting(SettingsKeys.SystemBackupPath, txtBackupPath.Text.Trim())
 
                 ' حفظ وتطبيق مظهر النظام الحالي
-                Dim selectedTheme = If(tglTheme.Checked, AppTheme.Dark, AppTheme.Light)
-                ThemeManager.Instance.SetTheme(selectedTheme)
+                ThemeManager.Instance.SetThemeMode(_selectedThemeMode)
 
                 ' إظهار رسالة النجاح
                 Try
@@ -120,62 +122,89 @@ Namespace UC_Settings
         End Sub
 
         ''' <summary>
-        ''' تحديث المظهر المرئي لأزرار الوضع الفاتح والداكن ومفتاح التبديل
+        ''' تحديث المظهر المرئي لأزرار الوضع الفاتح والداكن والتلقائي (حسب النظام)
         ''' </summary>
-        Private Sub UpdateThemeButtonsUI(theme As AppTheme)
+        Private Sub UpdateThemeButtonsUI(mode As ThemeMode)
             Try
-                RemoveHandler tglTheme.CheckedChanged, AddressOf tglTheme_CheckedChanged
+                Dim isDark = ThemeManager.Instance.IsDark
 
-                If theme = AppTheme.Dark Then
-                    tglTheme.Checked = True
+                ' إعداد ألوان الحالة غير النشطة بناءً على ثيم التطبيق الحالي
+                Dim inactiveFill As Color
+                Dim inactiveFore As Color
+                Dim inactiveBorder As Color
+                Dim inactiveBorderThickness As Integer = 1
 
-                    ' زر الوضع الداكن نشط (Active)
-                    btnThemeDark.FillColor = Color.FromArgb(59, 130, 246)
-                    btnThemeDark.ForeColor = Color.White
-                    btnThemeDark.BorderThickness = 0
-
-                    ' زر الوضع الفاتح غير نشط (Inactive)
-                    btnThemeLight.FillColor = Color.FromArgb(30, 36, 49)
-                    btnThemeLight.ForeColor = Color.FromArgb(156, 163, 175)
-                    btnThemeLight.BorderColor = Color.FromArgb(75, 85, 99)
-                    btnThemeLight.BorderThickness = 1
+                If isDark Then
+                    inactiveFill = Color.FromArgb(30, 36, 49)
+                    inactiveFore = Color.FromArgb(156, 163, 175)
+                    inactiveBorder = Color.FromArgb(75, 85, 99)
                 Else
-                    tglTheme.Checked = False
+                    inactiveFill = Color.FromArgb(243, 244, 246)
+                    inactiveFore = Color.FromArgb(107, 114, 128)
+                    inactiveBorder = Color.FromArgb(209, 213, 219)
+                End If
 
-                    ' زر الوضع الفاتح نشط (Active)
-                    btnThemeLight.FillColor = Color.FromArgb(43, 91, 132)
-                    btnThemeLight.ForeColor = Color.White
-                    btnThemeLight.BorderThickness = 0
+                ' ألوان الحالة النشطة
+                Dim activeFill = Color.FromArgb(59, 130, 246)
+                Dim activeFore = Color.White
+                Dim activeBorderThickness = 0
 
-                    ' زر الوضع الداكن غير نشط (Inactive)
-                    btnThemeDark.FillColor = Color.FromArgb(243, 244, 246)
-                    btnThemeDark.ForeColor = Color.FromArgb(107, 114, 128)
-                    btnThemeDark.BorderColor = Color.FromArgb(209, 213, 219)
-                    btnThemeDark.BorderThickness = 1
+                ' 1. زر الوضع الفاتح
+                If mode = ThemeMode.Light Then
+                    btnThemeLight.FillColor = activeFill
+                    btnThemeLight.ForeColor = activeFore
+                    btnThemeLight.BorderThickness = activeBorderThickness
+                Else
+                    btnThemeLight.FillColor = inactiveFill
+                    btnThemeLight.ForeColor = inactiveFore
+                    btnThemeLight.BorderColor = inactiveBorder
+                    btnThemeLight.BorderThickness = inactiveBorderThickness
+                End If
+
+                ' 2. زر الوضع الداكن
+                If mode = ThemeMode.Dark Then
+                    btnThemeDark.FillColor = activeFill
+                    btnThemeDark.ForeColor = activeFore
+                    btnThemeDark.BorderThickness = activeBorderThickness
+                Else
+                    btnThemeDark.FillColor = inactiveFill
+                    btnThemeDark.ForeColor = inactiveFore
+                    btnThemeDark.BorderColor = inactiveBorder
+                    btnThemeDark.BorderThickness = inactiveBorderThickness
+                End If
+
+                ' 3. زر الوضع التلقائي حسب النظام
+                If mode = ThemeMode.System Then
+                    btnThemeSystem.FillColor = activeFill
+                    btnThemeSystem.ForeColor = activeFore
+                    btnThemeSystem.BorderThickness = activeBorderThickness
+                Else
+                    btnThemeSystem.FillColor = inactiveFill
+                    btnThemeSystem.ForeColor = inactiveFore
+                    btnThemeSystem.BorderColor = inactiveBorder
+                    btnThemeSystem.BorderThickness = inactiveBorderThickness
                 End If
             Catch ex As Exception
                 ' حماية أثناء التحديث أو الإغلاق
-            Finally
-                AddHandler tglTheme.CheckedChanged, AddressOf tglTheme_CheckedChanged
             End Try
         End Sub
 
         Private Sub btnThemeLight_Click(sender As Object, e As EventArgs) Handles btnThemeLight.Click
-            ThemeManager.Instance.SetTheme(AppTheme.Light)
-            UpdateThemeButtonsUI(AppTheme.Light)
+            _selectedThemeMode = ThemeMode.Light
+            ThemeManager.Instance.SetThemeMode(ThemeMode.Light)
+            UpdateThemeButtonsUI(ThemeMode.Light)
         End Sub
 
         Private Sub btnThemeDark_Click(sender As Object, e As EventArgs) Handles btnThemeDark.Click
-            ThemeManager.Instance.SetTheme(AppTheme.Dark)
-            UpdateThemeButtonsUI(AppTheme.Dark)
+            _selectedThemeMode = ThemeMode.Dark
+            ThemeManager.Instance.SetThemeMode(ThemeMode.Dark)
+            UpdateThemeButtonsUI(ThemeMode.Dark)
         End Sub
 
-        Private Sub tglTheme_CheckedChanged(sender As Object, e As EventArgs) Handles tglTheme.CheckedChanged
-            Dim targetTheme = If(tglTheme.Checked, AppTheme.Dark, AppTheme.Light)
-            If ThemeManager.Instance.CurrentTheme <> targetTheme Then
-                ThemeManager.Instance.SetTheme(targetTheme)
-                UpdateThemeButtonsUI(targetTheme)
-            End If
+        Private Sub btnThemeSystem_Click(sender As Object, e As EventArgs) Handles btnThemeSystem.Click
+            _selectedThemeMode = ThemeMode.System
+            ThemeManager.Instance.SetThemeMode(ThemeMode.System)
+            UpdateThemeButtonsUI(ThemeMode.System)
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
@@ -189,9 +218,10 @@ Namespace UC_Settings
                 numAutoLogoutMinutes.Value = 15
                 txtBackupPath.Clear()
 
-                ' إعادة الوضع إلى الفاتح الافتراضي
-                ThemeManager.Instance.SetTheme(AppTheme.Light)
-                UpdateThemeButtonsUI(AppTheme.Light)
+                ' إعادة الوضع إلى التلقائي الافتراضي
+                _selectedThemeMode = ThemeMode.System
+                ThemeManager.Instance.SetThemeMode(ThemeMode.System)
+                UpdateThemeButtonsUI(ThemeMode.System)
             End If
         End Sub
 

@@ -3,11 +3,12 @@ Imports System.ComponentModel
 Imports System.IO
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
+Imports Microsoft.Win32
 
 ''' <summary>
 ''' المدير المركزي لنظام الثيمات (Theme Manager) — نمط Singleton.
 ''' مسؤول عن: إدارة الباليتة الحالية، التبديل بين الثيمات، الحفظ والاسترجاع الفوري،
-''' وتطبيق الثيم على كافة الشاشات المفتوحة.
+''' وتطبيق الثيم على كافة الشاشات المفتوحة مع دعم المزامنة التلقائية مع نظام ويندوز.
 ''' </summary>
 Public NotInheritable Class ThemeManager
 
@@ -31,9 +32,17 @@ Public NotInheritable Class ThemeManager
     End Sub
 
     ' ── الحالة الحالية ─────────────────────────────────────────
+    Private _currentMode As ThemeMode = ThemeMode.System
     Private _currentTheme As AppTheme = AppTheme.Light
     Private _currentPalette As ThemePalette = New LightThemePalette()
     Private _initialized As Boolean = False
+    Private _systemThemeTimer As System.Windows.Forms.Timer = Nothing
+
+    Public ReadOnly Property CurrentMode As ThemeMode
+        Get
+            Return _currentMode
+        End Get
+    End Property
 
     Public ReadOnly Property CurrentTheme As AppTheme
         Get
@@ -73,6 +82,16 @@ Public NotInheritable Class ThemeManager
 
         _initialized = True
         LoadTheme()
+
+        ' الاستماع لتغييرات تفضيلات مظهر النظام في ويندوز لحظياً
+        Try
+            AddHandler SystemEvents.UserPreferenceChanged, AddressOf OnUserPreferenceChanged
+        Catch ex As Exception
+        End Try
+
+        If _currentMode = ThemeMode.System Then
+            StartSystemThemeMonitoring()
+        End If
 
         ' هوك تلقائي شامل يضمن إكساء أي نافذة حوارية (Modal Dialog) أو شاشة جديدة تفتح عبر ShowDialog() أو Show()
         Try
@@ -130,12 +149,26 @@ Public NotInheritable Class ThemeManager
         End Try
     End Sub
 
-    ' ── تغيير الثيم ────────────────────────────────────────────
-    Public Sub SetTheme(theme As AppTheme)
+    ' ── تغيير وضع المظهر ──────────────────────────────────────
+    ''' <summary>
+    ''' تعيين وضع المظهر: فاتح، داكن، أو تلقائي حسب مظهر نظام ويندوز.
+    ''' </summary>
+    Public Sub SetThemeMode(mode As ThemeMode)
         If LicenseManager.UsageMode = LicenseUsageMode.Designtime Then Return
 
-        _currentTheme = theme
-        _currentPalette = CreatePalette(theme)
+        _currentMode = mode
+        Dim targetTheme As AppTheme
+
+        If mode = ThemeMode.System Then
+            targetTheme = GetWindowsTheme()
+            StartSystemThemeMonitoring()
+        Else
+            StopSystemThemeMonitoring()
+            targetTheme = If(mode = ThemeMode.Dark, AppTheme.Dark, AppTheme.Light)
+        End If
+
+        _currentTheme = targetTheme
+        _currentPalette = CreatePalette(targetTheme)
 
         SaveTheme()
 
@@ -143,13 +176,107 @@ Public NotInheritable Class ThemeManager
         ApplyToAllOpenForms()
     End Sub
 
+    ''' <summary>
+    ''' تعيين الثيم المباشر (للتوافق مع الاستدعاءات الحالية).
+    ''' </summary>
+    Public Sub SetTheme(theme As AppTheme)
+        If LicenseManager.UsageMode = LicenseUsageMode.Designtime Then Return
+        SetThemeMode(If(theme = AppTheme.Dark, ThemeMode.Dark, ThemeMode.Light))
+    End Sub
+
     ''' <summary>التبديل الفوري بين Light و Dark.</summary>
     Public Sub ToggleTheme()
         If _currentTheme = AppTheme.Light Then
-            SetTheme(AppTheme.Dark)
+            SetThemeMode(ThemeMode.Dark)
         Else
-            SetTheme(AppTheme.Light)
+            SetThemeMode(ThemeMode.Light)
         End If
+    End Sub
+
+    ' ── كشف ومراقبة مظهر نظام ويندوز اللحظي ───────────────────
+    ''' <summary>
+    ''' قراءة مظهر نظام ويندوز مباشرة من سجل النظام (Registry).
+    ''' </summary>
+    Public Shared Function GetWindowsTheme() As AppTheme
+        Try
+            Using key = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\CurrentVersion\Themes\Personalize")
+                If key IsNot Nothing Then
+                    Dim val = key.GetValue("AppsUseLightTheme")
+                    If val IsNot Nothing Then
+                        Dim intVal As Integer = Convert.ToInt32(val)
+                        Return If(intVal = 0, AppTheme.Dark, AppTheme.Light)
+                    End If
+                End If
+            End Using
+        Catch ex As Exception
+        End Try
+        Return AppTheme.Light
+    End Function
+
+    Private Sub StartSystemThemeMonitoring()
+        Try
+            If _systemThemeTimer Is Nothing Then
+                _systemThemeTimer = New System.Windows.Forms.Timer()
+                _systemThemeTimer.Interval = 2000
+                AddHandler _systemThemeTimer.Tick, AddressOf OnSystemThemeTimerTick
+            End If
+            If Not _systemThemeTimer.Enabled Then
+                _systemThemeTimer.Start()
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub StopSystemThemeMonitoring()
+        Try
+            If _systemThemeTimer IsNot Nothing AndAlso _systemThemeTimer.Enabled Then
+                _systemThemeTimer.Stop()
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub OnSystemThemeTimerTick(sender As Object, e As EventArgs)
+        If _currentMode = ThemeMode.System Then
+            CheckAndApplySystemTheme()
+        End If
+    End Sub
+
+    Private Sub OnUserPreferenceChanged(sender As Object, e As UserPreferenceChangedEventArgs)
+        If _currentMode = ThemeMode.System Then
+            CheckAndApplySystemTheme()
+        End If
+    End Sub
+
+    Private Sub CheckAndApplySystemTheme()
+        Try
+            If _currentMode <> ThemeMode.System Then Return
+            Dim detected = GetWindowsTheme()
+            If detected <> _currentTheme Then
+                If Application.OpenForms IsNot Nothing AndAlso Application.OpenForms.Count > 0 Then
+                    Dim mainForm = Application.OpenForms(0)
+                    If mainForm IsNot Nothing AndAlso Not mainForm.IsDisposed Then
+                        If mainForm.InvokeRequired Then
+                            mainForm.BeginInvoke(Sub() ApplySystemThemeChange(detected))
+                            Return
+                        End If
+                    End If
+                End If
+                ApplySystemThemeChange(detected)
+            End If
+        Catch ex As Exception
+        End Try
+    End Sub
+
+    Private Sub ApplySystemThemeChange(newTheme As AppTheme)
+        If _currentMode <> ThemeMode.System Then Return
+        If _currentTheme = newTheme Then Return
+
+        _currentTheme = newTheme
+        _currentPalette = CreatePalette(newTheme)
+
+        RaiseEvent ThemeChanged(Me, _currentTheme, _currentPalette)
+        ApplyToAllOpenForms()
     End Sub
 
     ' ── تطبيق الثيم على فورم محدد ──────────────────────────────
@@ -169,9 +296,22 @@ Public NotInheritable Class ThemeManager
     ' ── الحفظ والاسترجاع (محلي فوري + مزامنة قاعدة البيانات) ──
     Private Function GetLocalConfigPath() As String
         Try
-            Return Path.Combine(Application.StartupPath, "theme.cfg")
+            Dim appPath = Path.Combine(Application.StartupPath, "theme.cfg")
+            If File.Exists(appPath) Then Return appPath
+
+            Dim commonDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+            Dim commonPath = Path.Combine(commonDir, "theme.cfg")
+            If File.Exists(commonPath) Then Return commonPath
+
+            ' فحص إمكانية الكتابة في مجلد التطبيق
+            Dim testFile = Path.Combine(Application.StartupPath, ".theme_test")
+            File.WriteAllText(testFile, "1")
+            File.Delete(testFile)
+            Return appPath
         Catch
-            Return ""
+            Dim commonDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+            If Not Directory.Exists(commonDir) Then Directory.CreateDirectory(commonDir)
+            Return Path.Combine(commonDir, "theme.cfg")
         End Try
     End Function
 
@@ -180,7 +320,15 @@ Public NotInheritable Class ThemeManager
         Try
             Dim cfgPath = GetLocalConfigPath()
             If Not String.IsNullOrEmpty(cfgPath) Then
-                File.WriteAllText(cfgPath, _currentTheme.ToString())
+                Try
+                    Dim parentDir = Path.GetDirectoryName(cfgPath)
+                    If Not Directory.Exists(parentDir) Then Directory.CreateDirectory(parentDir)
+                    File.WriteAllText(cfgPath, _currentMode.ToString())
+                Catch ex As UnauthorizedAccessException
+                    Dim commonDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk")
+                    If Not Directory.Exists(commonDir) Then Directory.CreateDirectory(commonDir)
+                    File.WriteAllText(Path.Combine(commonDir, "theme.cfg"), _currentMode.ToString())
+                End Try
             End If
         Catch ex As Exception
         End Try
@@ -188,7 +336,7 @@ Public NotInheritable Class ThemeManager
         ' 2. مزامنة قاعدة البيانات في خلفية غير حاجبة
         Task.Run(Sub()
                      Try
-                         SettingsManager.SaveSetting(SettingsKeys.AppTheme, _currentTheme.ToString())
+                         SettingsManager.SaveSetting(SettingsKeys.AppTheme, _currentMode.ToString())
                      Catch
                      End Try
                  End Sub)
@@ -197,7 +345,7 @@ Public NotInheritable Class ThemeManager
     Private Sub LoadTheme()
         Dim loadedTheme As String = ""
 
-        ' 1. قراءة سريعة من الملف المحلي
+        ' 1. قراءة سريعة فورية من الملف المحلي (0ms)
         Try
             Dim cfgPath = GetLocalConfigPath()
             If Not String.IsNullOrEmpty(cfgPath) AndAlso File.Exists(cfgPath) Then
@@ -206,20 +354,26 @@ Public NotInheritable Class ThemeManager
         Catch
         End Try
 
-        ' 2. إذا لم يوجد الملف المحلي، نجرب من إعدادات قاعدة البيانات
-        If String.IsNullOrWhiteSpace(loadedTheme) Then
+        ' 2. تفسير الوضع المحفوظ
+        Dim parsedMode As ThemeMode
+        If Not String.IsNullOrWhiteSpace(loadedTheme) AndAlso [Enum].TryParse(Of ThemeMode)(loadedTheme, True, parsedMode) Then
+            _currentMode = parsedMode
+        Else
+            _currentMode = ThemeMode.System
             Try
-                loadedTheme = SettingsManager.GetSetting(SettingsKeys.AppTheme)
+                Dim cfgPath = GetLocalConfigPath()
+                If Not String.IsNullOrEmpty(cfgPath) Then
+                    File.WriteAllText(cfgPath, "System")
+                End If
             Catch
             End Try
         End If
 
-        ' 3. تفسير القيمة
-        Dim parsed As AppTheme = AppTheme.Light
-        If Not String.IsNullOrWhiteSpace(loadedTheme) Then
-            If [Enum].TryParse(Of AppTheme)(loadedTheme, True, parsed) Then
-                _currentTheme = parsed
-            End If
+        ' 3. تحديد الثيم الفعلي المطبق
+        If _currentMode = ThemeMode.System Then
+            _currentTheme = GetWindowsTheme()
+        ElseIf _currentMode = ThemeMode.Dark Then
+            _currentTheme = AppTheme.Dark
         Else
             _currentTheme = AppTheme.Light
         End If

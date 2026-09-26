@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -8,10 +8,10 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Sestamk - POS System")>
-<Assembly: AssemblyDescription("A complete Point of Sale system designed for supermarkets, providing advanced sales management, inventory tracking, barcode generation, customer management, supplier management, and detailed reporting tools.")>
+<Assembly: AssemblyTitle("سستمك - Sestamk POS")>
+<Assembly: AssemblyDescription("نظام سستمك لإدارة نقاط البيع والمطاعم والكافيهات والمتاجر.")>
 <Assembly: AssemblyCompany("Ammar Ahmed Software Solutions")>
-<Assembly: AssemblyProduct("Sestamk - Supermarket POS")>
+<Assembly: AssemblyProduct("سستمك - Sestamk POS")>
 <Assembly: AssemblyCopyright("© 2026 Ammar Ahmed. All Rights Reserved.")>
 <Assembly: AssemblyTrademark("")>
 

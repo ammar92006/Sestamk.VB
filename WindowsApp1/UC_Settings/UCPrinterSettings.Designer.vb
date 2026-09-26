@@ -1,4 +1,4 @@
-﻿Namespace UC_Settings
+Namespace UC_Settings
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
     Partial Class UCPrinterSettings
         Inherits System.Windows.Forms.UserControl
@@ -27,8 +27,13 @@
             Me.cmbThermalPrinter = New Guna.UI2.WinForms.Guna2ComboBox()
             Me.btnTestThermal = New Guna.UI2.WinForms.Guna2Button()
             Me.btnRefreshPrinters = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblKitchenPrinter = New System.Windows.Forms.Label()
+            Me.cmbKitchenPrinter = New Guna.UI2.WinForms.Guna2ComboBox()
+            Me.btnTestKitchen = New Guna.UI2.WinForms.Guna2Button()
             Me.lblNormalPrinter = New System.Windows.Forms.Label()
             Me.cmbNormalPrinter = New Guna.UI2.WinForms.Guna2ComboBox()
+            Me.lblBarcodePrinter = New System.Windows.Forms.Label()
+            Me.cmbBarcodePrinter = New Guna.UI2.WinForms.Guna2ComboBox()
             Me.cardPaperSize = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblCardPaperSizeTitle = New System.Windows.Forms.Label()
             Me.lblPaperSize = New System.Windows.Forms.Label()
@@ -38,15 +43,11 @@
             Me.lblSize58 = New System.Windows.Forms.Label()
             Me.rbSizeA4 = New Guna.UI2.WinForms.Guna2CustomRadioButton()
             Me.lblSizeA4 = New System.Windows.Forms.Label()
-            Me.lblPrintStyle = New System.Windows.Forms.Label()
-            Me.rbStyleSimple = New Guna.UI2.WinForms.Guna2CustomRadioButton()
-            Me.lblStyleSimple = New System.Windows.Forms.Label()
-            Me.rbStyleAdvanced = New Guna.UI2.WinForms.Guna2CustomRadioButton()
-            Me.lblStyleAdvanced = New System.Windows.Forms.Label()
             Me.cardOptions = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblCardOptionsTitle = New System.Windows.Forms.Label()
             Me.chkPrintLogo = New Guna.UI2.WinForms.Guna2CheckBox()
             Me.chkPrintBarcode = New Guna.UI2.WinForms.Guna2CheckBox()
+            Me.cmbBarcodeType = New Guna.UI2.WinForms.Guna2ComboBox()
             Me.chkPrintPreview = New Guna.UI2.WinForms.Guna2CheckBox()
             Me.lblAutoPrint = New System.Windows.Forms.Label()
             Me.tglAutoPrint = New Guna.UI2.WinForms.Guna2ToggleSwitch()
@@ -78,7 +79,7 @@
             Me.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill
             Me.pnlMain.Location = New System.Drawing.Point(0, 0)
             Me.pnlMain.Name = "pnlMain"
-            Me.pnlMain.Size = New System.Drawing.Size(1238, 760)
+            Me.pnlMain.Size = New System.Drawing.Size(1238, 815)
             Me.pnlMain.TabIndex = 0
             '
             'lblTitle
@@ -91,7 +92,7 @@
             Me.lblTitle.Size = New System.Drawing.Size(358, 35)
             Me.lblTitle.TabIndex = 0
             Me.lblTitle.Text = "إعدادات الطابعة والطباعة"
-            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblSubtitle
             '
@@ -103,7 +104,7 @@
             Me.lblSubtitle.Size = New System.Drawing.Size(608, 25)
             Me.lblSubtitle.TabIndex = 1
             Me.lblSubtitle.Text = "إدارة طابعات الفواتير والتقارير، مقاس الورق، نمط الطباعة، والتحكم في درج النقدية"
-            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'cardPrinters
             '
@@ -118,12 +119,17 @@
             Me.cardPrinters.Controls.Add(Me.cmbThermalPrinter)
             Me.cardPrinters.Controls.Add(Me.btnTestThermal)
             Me.cardPrinters.Controls.Add(Me.btnRefreshPrinters)
+            Me.cardPrinters.Controls.Add(Me.lblKitchenPrinter)
+            Me.cardPrinters.Controls.Add(Me.cmbKitchenPrinter)
+            Me.cardPrinters.Controls.Add(Me.btnTestKitchen)
             Me.cardPrinters.Controls.Add(Me.lblNormalPrinter)
             Me.cardPrinters.Controls.Add(Me.cmbNormalPrinter)
+            Me.cardPrinters.Controls.Add(Me.lblBarcodePrinter)
+            Me.cardPrinters.Controls.Add(Me.cmbBarcodePrinter)
             Me.cardPrinters.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardPrinters.Location = New System.Drawing.Point(30, 95)
             Me.cardPrinters.Name = "cardPrinters"
-            Me.cardPrinters.Size = New System.Drawing.Size(1178, 175)
+            Me.cardPrinters.Size = New System.Drawing.Size(1178, 280)
             Me.cardPrinters.TabIndex = 2
             '
             'lblCardPrintersTitle
@@ -159,6 +165,7 @@
             Me.cmbThermalPrinter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
             Me.cmbThermalPrinter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
             Me.cmbThermalPrinter.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbThermalPrinter.FocusedColor = System.Drawing.Color.Empty
             Me.cmbThermalPrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.cmbThermalPrinter.ForeColor = System.Drawing.Color.White
             Me.cmbThermalPrinter.ItemHeight = 32
@@ -166,6 +173,21 @@
             Me.cmbThermalPrinter.Name = "cmbThermalPrinter"
             Me.cmbThermalPrinter.Size = New System.Drawing.Size(600, 38)
             Me.cmbThermalPrinter.TabIndex = 2
+            '
+            'btnTestThermal
+            '
+            Me.btnTestThermal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnTestThermal.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
+            Me.btnTestThermal.BorderRadius = 8
+            Me.btnTestThermal.BorderThickness = 1
+            Me.btnTestThermal.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnTestThermal.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.btnTestThermal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.btnTestThermal.Location = New System.Drawing.Point(35, 52)
+            Me.btnTestThermal.Name = "btnTestThermal"
+            Me.btnTestThermal.Size = New System.Drawing.Size(150, 38)
+            Me.btnTestThermal.TabIndex = 4
+            Me.btnTestThermal.Text = "🖨️ تجربة الطباعة"
             '
             'btnRefreshPrinters
             '
@@ -180,28 +202,60 @@
             Me.btnRefreshPrinters.TabIndex = 3
             Me.btnRefreshPrinters.Text = "🔄 تحديث القائمة"
             '
-            'btnTestThermal
+            'lblKitchenPrinter
             '
-            Me.btnTestThermal.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.btnTestThermal.BorderRadius = 8
-            Me.btnTestThermal.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
-            Me.btnTestThermal.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-            Me.btnTestThermal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.btnTestThermal.Location = New System.Drawing.Point(35, 52)
-            Me.btnTestThermal.Name = "btnTestThermal"
-            Me.btnTestThermal.Size = New System.Drawing.Size(150, 38)
-            Me.btnTestThermal.TabIndex = 4
-            Me.btnTestThermal.Text = "🖨️ تجربة الطباعة"
+            Me.lblKitchenPrinter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblKitchenPrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblKitchenPrinter.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblKitchenPrinter.Location = New System.Drawing.Point(970, 110)
+            Me.lblKitchenPrinter.Name = "lblKitchenPrinter"
+            Me.lblKitchenPrinter.Size = New System.Drawing.Size(180, 32)
+            Me.lblKitchenPrinter.TabIndex = 5
+            Me.lblKitchenPrinter.Text = "طابعة المطبخ (KOT):"
+            Me.lblKitchenPrinter.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'cmbKitchenPrinter
+            '
+            Me.cmbKitchenPrinter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.cmbKitchenPrinter.BackColor = System.Drawing.Color.Transparent
+            Me.cmbKitchenPrinter.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.cmbKitchenPrinter.BorderRadius = 8
+            Me.cmbKitchenPrinter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+            Me.cmbKitchenPrinter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+            Me.cmbKitchenPrinter.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbKitchenPrinter.FocusedColor = System.Drawing.Color.Empty
+            Me.cmbKitchenPrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+            Me.cmbKitchenPrinter.ForeColor = System.Drawing.Color.White
+            Me.cmbKitchenPrinter.ItemHeight = 32
+            Me.cmbKitchenPrinter.Location = New System.Drawing.Point(360, 106)
+            Me.cmbKitchenPrinter.Name = "cmbKitchenPrinter"
+            Me.cmbKitchenPrinter.Size = New System.Drawing.Size(600, 38)
+            Me.cmbKitchenPrinter.TabIndex = 6
+            '
+            'btnTestKitchen
+            '
+            Me.btnTestKitchen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnTestKitchen.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
+            Me.btnTestKitchen.BorderRadius = 8
+            Me.btnTestKitchen.BorderThickness = 1
+            Me.btnTestKitchen.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnTestKitchen.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.btnTestKitchen.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.btnTestKitchen.Location = New System.Drawing.Point(35, 106)
+            Me.btnTestKitchen.Name = "btnTestKitchen"
+            Me.btnTestKitchen.Size = New System.Drawing.Size(150, 38)
+            Me.btnTestKitchen.TabIndex = 7
+            Me.btnTestKitchen.Text = "🍳 تجربة المطبخ"
             '
             'lblNormalPrinter
             '
             Me.lblNormalPrinter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblNormalPrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblNormalPrinter.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblNormalPrinter.Location = New System.Drawing.Point(970, 114)
+            Me.lblNormalPrinter.Location = New System.Drawing.Point(970, 164)
             Me.lblNormalPrinter.Name = "lblNormalPrinter"
             Me.lblNormalPrinter.Size = New System.Drawing.Size(180, 32)
-            Me.lblNormalPrinter.TabIndex = 5
+            Me.lblNormalPrinter.TabIndex = 8
             Me.lblNormalPrinter.Text = "طابعة التقارير (A4):"
             Me.lblNormalPrinter.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
@@ -214,13 +268,44 @@
             Me.cmbNormalPrinter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
             Me.cmbNormalPrinter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
             Me.cmbNormalPrinter.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbNormalPrinter.FocusedColor = System.Drawing.Color.Empty
             Me.cmbNormalPrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.cmbNormalPrinter.ForeColor = System.Drawing.Color.White
             Me.cmbNormalPrinter.ItemHeight = 32
-            Me.cmbNormalPrinter.Location = New System.Drawing.Point(360, 110)
+            Me.cmbNormalPrinter.Location = New System.Drawing.Point(360, 160)
             Me.cmbNormalPrinter.Name = "cmbNormalPrinter"
             Me.cmbNormalPrinter.Size = New System.Drawing.Size(600, 38)
-            Me.cmbNormalPrinter.TabIndex = 6
+            Me.cmbNormalPrinter.TabIndex = 9
+            '
+            'lblBarcodePrinter
+            '
+            Me.lblBarcodePrinter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblBarcodePrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblBarcodePrinter.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblBarcodePrinter.Location = New System.Drawing.Point(970, 218)
+            Me.lblBarcodePrinter.Name = "lblBarcodePrinter"
+            Me.lblBarcodePrinter.Size = New System.Drawing.Size(180, 32)
+            Me.lblBarcodePrinter.TabIndex = 10
+            Me.lblBarcodePrinter.Text = "طابعة الباركود (ملصقات):"
+            Me.lblBarcodePrinter.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'cmbBarcodePrinter
+            '
+            Me.cmbBarcodePrinter.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.cmbBarcodePrinter.BackColor = System.Drawing.Color.Transparent
+            Me.cmbBarcodePrinter.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.cmbBarcodePrinter.BorderRadius = 8
+            Me.cmbBarcodePrinter.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+            Me.cmbBarcodePrinter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+            Me.cmbBarcodePrinter.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbBarcodePrinter.FocusedColor = System.Drawing.Color.Empty
+            Me.cmbBarcodePrinter.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+            Me.cmbBarcodePrinter.ForeColor = System.Drawing.Color.White
+            Me.cmbBarcodePrinter.ItemHeight = 32
+            Me.cmbBarcodePrinter.Location = New System.Drawing.Point(360, 214)
+            Me.cmbBarcodePrinter.Name = "cmbBarcodePrinter"
+            Me.cmbBarcodePrinter.Size = New System.Drawing.Size(600, 38)
+            Me.cmbBarcodePrinter.TabIndex = 11
             '
             'cardPaperSize
             '
@@ -238,15 +323,10 @@
             Me.cardPaperSize.Controls.Add(Me.lblSize58)
             Me.cardPaperSize.Controls.Add(Me.rbSizeA4)
             Me.cardPaperSize.Controls.Add(Me.lblSizeA4)
-            Me.cardPaperSize.Controls.Add(Me.lblPrintStyle)
-            Me.cardPaperSize.Controls.Add(Me.rbStyleSimple)
-            Me.cardPaperSize.Controls.Add(Me.lblStyleSimple)
-            Me.cardPaperSize.Controls.Add(Me.rbStyleAdvanced)
-            Me.cardPaperSize.Controls.Add(Me.lblStyleAdvanced)
             Me.cardPaperSize.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
-            Me.cardPaperSize.Location = New System.Drawing.Point(30, 285)
+            Me.cardPaperSize.Location = New System.Drawing.Point(30, 390)
             Me.cardPaperSize.Name = "cardPaperSize"
-            Me.cardPaperSize.Size = New System.Drawing.Size(1178, 175)
+            Me.cardPaperSize.Size = New System.Drawing.Size(1178, 115)
             Me.cardPaperSize.TabIndex = 3
             '
             'lblCardPaperSizeTitle
@@ -258,7 +338,7 @@
             Me.lblCardPaperSizeTitle.Name = "lblCardPaperSizeTitle"
             Me.lblCardPaperSizeTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardPaperSizeTitle.TabIndex = 0
-            Me.lblCardPaperSizeTitle.Text = "📄 مقاس الورق ونمط الطباعة"
+            Me.lblCardPaperSizeTitle.Text = "📄 مقاس ورق الفاتورة"
             Me.lblCardPaperSizeTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
             'lblPaperSize
@@ -358,75 +438,6 @@
             Me.lblSizeA4.Text = "A4 (كبير)"
             Me.lblSizeA4.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
-            'lblPrintStyle
-            '
-            Me.lblPrintStyle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.lblPrintStyle.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-            Me.lblPrintStyle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblPrintStyle.Location = New System.Drawing.Point(970, 115)
-            Me.lblPrintStyle.Name = "lblPrintStyle"
-            Me.lblPrintStyle.Size = New System.Drawing.Size(180, 30)
-            Me.lblPrintStyle.TabIndex = 8
-            Me.lblPrintStyle.Text = "نمط وتصميم الفاتورة:"
-            Me.lblPrintStyle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            '
-            'rbStyleSimple
-            '
-            Me.rbStyleSimple.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.rbStyleSimple.Checked = True
-            Me.rbStyleSimple.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
-            Me.rbStyleSimple.CheckedState.BorderThickness = 0
-            Me.rbStyleSimple.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
-            Me.rbStyleSimple.CheckedState.InnerColor = System.Drawing.Color.White
-            Me.rbStyleSimple.Location = New System.Drawing.Point(935, 120)
-            Me.rbStyleSimple.Name = "rbStyleSimple"
-            Me.rbStyleSimple.Size = New System.Drawing.Size(20, 20)
-            Me.rbStyleSimple.TabIndex = 9
-            Me.rbStyleSimple.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
-            Me.rbStyleSimple.UncheckedState.BorderThickness = 2
-            Me.rbStyleSimple.UncheckedState.FillColor = System.Drawing.Color.Transparent
-            Me.rbStyleSimple.UncheckedState.InnerColor = System.Drawing.Color.Transparent
-            '
-            'lblStyleSimple
-            '
-            Me.lblStyleSimple.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.lblStyleSimple.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-            Me.lblStyleSimple.ForeColor = System.Drawing.Color.White
-            Me.lblStyleSimple.Location = New System.Drawing.Point(765, 115)
-            Me.lblStyleSimple.Name = "lblStyleSimple"
-            Me.lblStyleSimple.Size = New System.Drawing.Size(160, 30)
-            Me.lblStyleSimple.TabIndex = 10
-            Me.lblStyleSimple.Text = "ستايل 1 (بسيط وواضح)"
-            Me.lblStyleSimple.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            '
-            'rbStyleAdvanced
-            '
-            Me.rbStyleAdvanced.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.rbStyleAdvanced.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
-            Me.rbStyleAdvanced.CheckedState.BorderThickness = 0
-            Me.rbStyleAdvanced.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
-            Me.rbStyleAdvanced.CheckedState.InnerColor = System.Drawing.Color.White
-            Me.rbStyleAdvanced.Location = New System.Drawing.Point(715, 120)
-            Me.rbStyleAdvanced.Name = "rbStyleAdvanced"
-            Me.rbStyleAdvanced.Size = New System.Drawing.Size(20, 20)
-            Me.rbStyleAdvanced.TabIndex = 11
-            Me.rbStyleAdvanced.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
-            Me.rbStyleAdvanced.UncheckedState.BorderThickness = 2
-            Me.rbStyleAdvanced.UncheckedState.FillColor = System.Drawing.Color.Transparent
-            Me.rbStyleAdvanced.UncheckedState.InnerColor = System.Drawing.Color.Transparent
-            '
-            'lblStyleAdvanced
-            '
-            Me.lblStyleAdvanced.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.lblStyleAdvanced.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-            Me.lblStyleAdvanced.ForeColor = System.Drawing.Color.White
-            Me.lblStyleAdvanced.Location = New System.Drawing.Point(545, 115)
-            Me.lblStyleAdvanced.Name = "lblStyleAdvanced"
-            Me.lblStyleAdvanced.Size = New System.Drawing.Size(160, 30)
-            Me.lblStyleAdvanced.TabIndex = 12
-            Me.lblStyleAdvanced.Text = "ستايل 2 (مفصل وشامل)"
-            Me.lblStyleAdvanced.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-            '
             'cardOptions
             '
             Me.cardOptions.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
@@ -438,6 +449,7 @@
             Me.cardOptions.Controls.Add(Me.lblCardOptionsTitle)
             Me.cardOptions.Controls.Add(Me.chkPrintLogo)
             Me.cardOptions.Controls.Add(Me.chkPrintBarcode)
+            Me.cardOptions.Controls.Add(Me.cmbBarcodeType)
             Me.cardOptions.Controls.Add(Me.chkPrintPreview)
             Me.cardOptions.Controls.Add(Me.lblAutoPrint)
             Me.cardOptions.Controls.Add(Me.tglAutoPrint)
@@ -446,7 +458,7 @@
             Me.cardOptions.Controls.Add(Me.lblCopies)
             Me.cardOptions.Controls.Add(Me.txtCopies)
             Me.cardOptions.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
-            Me.cardOptions.Location = New System.Drawing.Point(30, 475)
+            Me.cardOptions.Location = New System.Drawing.Point(30, 520)
             Me.cardOptions.Name = "cardOptions"
             Me.cardOptions.Size = New System.Drawing.Size(1178, 175)
             Me.cardOptions.TabIndex = 4
@@ -474,12 +486,11 @@
             Me.chkPrintLogo.CheckState = System.Windows.Forms.CheckState.Checked
             Me.chkPrintLogo.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.chkPrintLogo.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.chkPrintLogo.Location = New System.Drawing.Point(880, 58)
+            Me.chkPrintLogo.Location = New System.Drawing.Point(920, 58)
             Me.chkPrintLogo.Name = "chkPrintLogo"
-            Me.chkPrintLogo.Size = New System.Drawing.Size(260, 30)
+            Me.chkPrintLogo.Size = New System.Drawing.Size(225, 30)
             Me.chkPrintLogo.TabIndex = 1
             Me.chkPrintLogo.Text = "طباعة الشعار على الفاتورة"
-            Me.chkPrintLogo.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             Me.chkPrintLogo.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
             Me.chkPrintLogo.UncheckedState.BorderRadius = 4
             Me.chkPrintLogo.UncheckedState.BorderThickness = 1
@@ -496,16 +507,35 @@
             Me.chkPrintBarcode.CheckState = System.Windows.Forms.CheckState.Checked
             Me.chkPrintBarcode.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.chkPrintBarcode.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.chkPrintBarcode.Location = New System.Drawing.Point(580, 58)
+            Me.chkPrintBarcode.Location = New System.Drawing.Point(680, 58)
             Me.chkPrintBarcode.Name = "chkPrintBarcode"
-            Me.chkPrintBarcode.Size = New System.Drawing.Size(260, 30)
+            Me.chkPrintBarcode.Size = New System.Drawing.Size(225, 30)
             Me.chkPrintBarcode.TabIndex = 2
             Me.chkPrintBarcode.Text = "طباعة الباركود على الفاتورة"
-            Me.chkPrintBarcode.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             Me.chkPrintBarcode.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
             Me.chkPrintBarcode.UncheckedState.BorderRadius = 4
             Me.chkPrintBarcode.UncheckedState.BorderThickness = 1
             Me.chkPrintBarcode.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            '
+            'cmbBarcodeType
+            '
+            Me.cmbBarcodeType.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.cmbBarcodeType.BackColor = System.Drawing.Color.Transparent
+            Me.cmbBarcodeType.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.cmbBarcodeType.BorderRadius = 6
+            Me.cmbBarcodeType.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+            Me.cmbBarcodeType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+            Me.cmbBarcodeType.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbBarcodeType.FocusedColor = System.Drawing.Color.Empty
+            Me.cmbBarcodeType.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+            Me.cmbBarcodeType.ForeColor = System.Drawing.Color.White
+            Me.cmbBarcodeType.ItemHeight = 24
+            Me.cmbBarcodeType.Items.AddRange(New Object() {"2D (QR Code)", "1D (Code 128)"})
+            Me.cmbBarcodeType.Location = New System.Drawing.Point(510, 56)
+            Me.cmbBarcodeType.Name = "cmbBarcodeType"
+            Me.cmbBarcodeType.Size = New System.Drawing.Size(155, 30)
+            Me.cmbBarcodeType.TabIndex = 3
+            Me.cmbBarcodeType.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
             '
             'chkPrintPreview
             '
@@ -516,12 +546,11 @@
             Me.chkPrintPreview.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.chkPrintPreview.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.chkPrintPreview.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.chkPrintPreview.Location = New System.Drawing.Point(280, 58)
+            Me.chkPrintPreview.Location = New System.Drawing.Point(230, 58)
             Me.chkPrintPreview.Name = "chkPrintPreview"
             Me.chkPrintPreview.Size = New System.Drawing.Size(260, 30)
-            Me.chkPrintPreview.TabIndex = 3
+            Me.chkPrintPreview.TabIndex = 4
             Me.chkPrintPreview.Text = "معاينة الفاتورة قبل الطباعة"
-            Me.chkPrintPreview.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             Me.chkPrintPreview.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
             Me.chkPrintPreview.UncheckedState.BorderRadius = 4
             Me.chkPrintPreview.UncheckedState.BorderThickness = 1
@@ -594,12 +623,16 @@
             Me.txtCopies.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtCopies.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtCopies.BorderRadius = 8
+            Me.txtCopies.Cursor = System.Windows.Forms.Cursors.IBeam
             Me.txtCopies.DefaultText = "1"
             Me.txtCopies.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtCopies.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtCopies.ForeColor = System.Drawing.Color.White
             Me.txtCopies.Location = New System.Drawing.Point(120, 111)
+            Me.txtCopies.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
             Me.txtCopies.Name = "txtCopies"
+            Me.txtCopies.PlaceholderText = ""
+            Me.txtCopies.SelectedText = ""
             Me.txtCopies.Size = New System.Drawing.Size(110, 38)
             Me.txtCopies.TabIndex = 9
             Me.txtCopies.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
@@ -611,7 +644,7 @@
             Me.btnSave.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnSave.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
             Me.btnSave.ForeColor = System.Drawing.Color.White
-            Me.btnSave.Location = New System.Drawing.Point(978, 670)
+            Me.btnSave.Location = New System.Drawing.Point(978, 715)
             Me.btnSave.Name = "btnSave"
             Me.btnSave.Size = New System.Drawing.Size(230, 48)
             Me.btnSave.TabIndex = 5
@@ -626,7 +659,7 @@
             Me.btnReset.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
             Me.btnReset.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
             Me.btnReset.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.btnReset.Location = New System.Drawing.Point(740, 670)
+            Me.btnReset.Location = New System.Drawing.Point(740, 715)
             Me.btnReset.Name = "btnReset"
             Me.btnReset.Size = New System.Drawing.Size(220, 48)
             Me.btnReset.TabIndex = 6
@@ -640,7 +673,7 @@
             Me.btnClose.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
             Me.btnClose.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
             Me.btnClose.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.btnClose.Location = New System.Drawing.Point(30, 670)
+            Me.btnClose.Location = New System.Drawing.Point(30, 715)
             Me.btnClose.Name = "btnClose"
             Me.btnClose.Size = New System.Drawing.Size(140, 48)
             Me.btnClose.TabIndex = 7
@@ -654,7 +687,7 @@
             Me.Font = New System.Drawing.Font("Segoe UI", 9.0!)
             Me.Name = "UCPrinterSettings"
             Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.Size = New System.Drawing.Size(1238, 760)
+            Me.Size = New System.Drawing.Size(1238, 805)
             Me.pnlMain.ResumeLayout(False)
             Me.cardPrinters.ResumeLayout(False)
             Me.cardPaperSize.ResumeLayout(False)
@@ -670,8 +703,13 @@
         Friend WithEvents lblCardPrintersTitle As System.Windows.Forms.Label
         Friend WithEvents lblThermalPrinter As System.Windows.Forms.Label
         Friend WithEvents cmbThermalPrinter As Guna.UI2.WinForms.Guna2ComboBox
+        Friend WithEvents lblKitchenPrinter As System.Windows.Forms.Label
+        Friend WithEvents cmbKitchenPrinter As Guna.UI2.WinForms.Guna2ComboBox
+        Friend WithEvents btnTestKitchen As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents lblNormalPrinter As System.Windows.Forms.Label
         Friend WithEvents cmbNormalPrinter As Guna.UI2.WinForms.Guna2ComboBox
+        Friend WithEvents lblBarcodePrinter As System.Windows.Forms.Label
+        Friend WithEvents cmbBarcodePrinter As Guna.UI2.WinForms.Guna2ComboBox
         Friend WithEvents btnRefreshPrinters As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnTestThermal As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents cardPaperSize As Guna.UI2.WinForms.Guna2Panel
@@ -683,15 +721,11 @@
         Friend WithEvents lblSize58 As System.Windows.Forms.Label
         Friend WithEvents rbSizeA4 As Guna.UI2.WinForms.Guna2CustomRadioButton
         Friend WithEvents lblSizeA4 As System.Windows.Forms.Label
-        Friend WithEvents lblPrintStyle As System.Windows.Forms.Label
-        Friend WithEvents rbStyleSimple As Guna.UI2.WinForms.Guna2CustomRadioButton
-        Friend WithEvents lblStyleSimple As System.Windows.Forms.Label
-        Friend WithEvents rbStyleAdvanced As Guna.UI2.WinForms.Guna2CustomRadioButton
-        Friend WithEvents lblStyleAdvanced As System.Windows.Forms.Label
         Friend WithEvents cardOptions As Guna.UI2.WinForms.Guna2Panel
         Friend WithEvents lblCardOptionsTitle As System.Windows.Forms.Label
         Friend WithEvents chkPrintLogo As Guna.UI2.WinForms.Guna2CheckBox
         Friend WithEvents chkPrintBarcode As Guna.UI2.WinForms.Guna2CheckBox
+        Friend WithEvents cmbBarcodeType As Guna.UI2.WinForms.Guna2ComboBox
         Friend WithEvents chkPrintPreview As Guna.UI2.WinForms.Guna2CheckBox
         Friend WithEvents lblAutoPrint As System.Windows.Forms.Label
         Friend WithEvents tglAutoPrint As Guna.UI2.WinForms.Guna2ToggleSwitch

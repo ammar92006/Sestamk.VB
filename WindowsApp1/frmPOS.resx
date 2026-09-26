@@ -189,23 +189,6 @@
         Zz4NCjwvc3ZnPgs=
 </value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnDecRow.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABXSURBVFhH7dEx
-        CoAwEETRVHomr2s8jjfKhHGLFIGIlcHC/2C6hVl2EwAA6NleLR2u9ZwSKUfH0upGLmWLIU9NdLS60fcL
-        xHliKN+e741I++MLAAD4oZQu4feLObU4GHIAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="btnDecCol.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wQAADsEBuJFr7QAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABXSURBVFhH7dEx
-        CoAwEETRVHomr2s8jjfKhHGLFIGIlcHC/2C6hVl2EwAA6NleLR2u9ZwSKUfH0upGLmWLIU9NdLS60fcL
-        xHliKN+e741I++MLAAD4oZQu4feLObU4GHIAAAAASUVORK5CYII=
-</value>
-  </data>
   <metadata name="Guna2BorderlessForm1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>923, 17</value>
   </metadata>

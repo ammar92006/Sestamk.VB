@@ -1,10 +1,10 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class FrmTreasuryTransfer
     Private _x, _y As Integer
     Private _newPoint As New Point
 
-    Private defaultTreasuryid As Integer = If(SettingsManager.GetSetting("defaultTreasuryid"), -1)
+    Private defaultTreasuryid As Integer = -1
 
 
     Private Sub panelHeader_MouseDown(sender As Object, e As MouseEventArgs) Handles panelHeader.MouseDown, lbltitle.MouseDown
@@ -112,7 +112,7 @@ Public Class FrmTreasuryTransfer
             Dim dtTo As DataTable = dtFrom.Copy()
 
             ' جلب الخزنة الافتراضية من الإعدادات
-            Dim defaultTreasuryId As Integer = Convert.ToInt32(If(SettingsManager.GetSetting("defaultTreasuryid"), -1))
+            Dim defaultTreasuryId As Integer = SettingsManager.GetIntSetting(SettingsKeys.DefaultTreasuryID, -1)
 
             ' 1. إعداد كومبو بوكس "من خزنة"
             cmbFromTreasury.DataSource = dtFrom

@@ -1900,10 +1900,15 @@ WHERE CustomerCode = @CustomerCode;"
         Dim doc As New Printing.PrintDocument
         AddHandler doc.PrintPage, AddressOf Me.PrintPageHandler
 
-        Dim dlg As New PrintPreviewDialog
-        dlg.Document = doc
-        dlg.WindowState = FormWindowState.Maximized
-        dlg.ShowDialog()
+        Dim usePreview As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.PrintPreview, False)
+        If usePreview Then
+            Dim dlg As New PrintPreviewDialog
+            dlg.Document = doc
+            dlg.WindowState = FormWindowState.Maximized
+            dlg.ShowDialog()
+        Else
+            doc.Print()
+        End If
 
     End Sub
 
@@ -2172,24 +2177,20 @@ Sub(sender, e)
     ' =======================
     ' باركود (مشروط بالإعداد)
     ' =======================
-    Dim printBarcodeSetting As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").ToLower() = "true")
+    Dim printBarcodeSetting As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.PrintBarcode, True)
     If printBarcodeSetting Then
         Dim qr As Bitmap = GenerateQRCode(InvoiceID.ToString())
-        Dim qrX = (pageW - qr.Width) \ 2
-        g.DrawImage(qr, qrX, Y)
-        Y += qr.Height + 20
+        If qr IsNot Nothing Then
+            Dim qrX = (pageW - qr.Width) \ 2
+            g.DrawImage(qr, qrX, Y)
+            Y += qr.Height + 10
+        End If
     End If
-    ' كود قديم (الباركود يطبع دائماً):
-    ' Dim qr As Bitmap = GenerateQRCode(InvoiceID.ToString())
-    ' Dim qrX = (pageW - qr.Width) \ 2
-    ' g.DrawImage(qr, qrX, Y)
-    ' Y += qr.Height + 20
 
     ' =======================
     ' فوتر
     ' =======================
     ' ✅ تحسين: فوتر بنجوم وخط سميك
-    ' كود قديم: Center(FooterMsg, f11b)
     Center(New String("="c, 40), f11b)
     Center("* " & FooterMsg & " *", f11b)
     Center("** يوجد توصيل للمنازل **", f11)
@@ -2198,26 +2199,29 @@ Sub(sender, e)
 
 End Sub
 
-        Dim dlg As New PrintPreviewDialog With {
-        .Document = pd,
-        .WindowState = FormWindowState.Maximized
-    }
-        dlg.ShowDialog()
+        Dim usePreview As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.PrintPreview, False)
+        If usePreview Then
+            Dim dlg As New PrintPreviewDialog With {
+                .Document = pd,
+                .WindowState = FormWindowState.Maximized
+            }
+            dlg.ShowDialog()
+        Else
+            pd.Print()
+        End If
 
     End Sub
 
     '============================
-    ' دالة توليد QR Code
+    ' دالة توليد الباركود (1D أو 2D)
     '============================
     Private Function GenerateQRCode(text As String) As Bitmap
-        Dim writer As New ZXing.BarcodeWriter()
-        writer.Format = ZXing.BarcodeFormat.QR_CODE
-        writer.Options = New ZXing.Common.EncodingOptions With {
-        .Height = 120,
-        .Width = 120,
-        .Margin = 0
-    }
-        Return writer.Write(text)
+        Dim barcodeType As String = SettingsManager.GetSettingOrDefault(SettingsKeys.InvoiceBarcodeType, "2D")
+        If barcodeType.Equals("1D", StringComparison.OrdinalIgnoreCase) Then
+            Return QRCodeHelper.GenerateBarcode1D(text, 180, 50)
+        Else
+            Return QRCodeHelper.GenerateQRCode(text, 110, 110)
+        End If
     End Function
 
     '============================

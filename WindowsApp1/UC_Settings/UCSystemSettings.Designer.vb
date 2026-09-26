@@ -30,7 +30,7 @@ Namespace UC_Settings
             Me.lblTheme = New System.Windows.Forms.Label()
             Me.btnThemeLight = New Guna.UI2.WinForms.Guna2Button()
             Me.btnThemeDark = New Guna.UI2.WinForms.Guna2Button()
-            Me.tglTheme = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+            Me.btnThemeSystem = New Guna.UI2.WinForms.Guna2Button()
             Me.cardBackup = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblCardBackupTitle = New System.Windows.Forms.Label()
             Me.lblAutoBackup = New System.Windows.Forms.Label()
@@ -77,7 +77,7 @@ Namespace UC_Settings
             Me.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill
             Me.pnlMain.Location = New System.Drawing.Point(0, 0)
             Me.pnlMain.Name = "pnlMain"
-            Me.pnlMain.Size = New System.Drawing.Size(1238, 900)
+            Me.pnlMain.Size = New System.Drawing.Size(1238, 850)
             Me.pnlMain.TabIndex = 0
             '
             'lblTitle
@@ -90,7 +90,7 @@ Namespace UC_Settings
             Me.lblTitle.Size = New System.Drawing.Size(358, 35)
             Me.lblTitle.TabIndex = 0
             Me.lblTitle.Text = "إعدادات النظام"
-            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblSubtitle
             '
@@ -102,7 +102,7 @@ Namespace UC_Settings
             Me.lblSubtitle.Size = New System.Drawing.Size(458, 25)
             Me.lblSubtitle.TabIndex = 1
             Me.lblSubtitle.Text = "إدارة الإعدادات العامة والأساسية للنظام"
-            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'cardLanguage
             '
@@ -120,7 +120,7 @@ Namespace UC_Settings
             Me.cardLanguage.Controls.Add(Me.lblTheme)
             Me.cardLanguage.Controls.Add(Me.btnThemeLight)
             Me.cardLanguage.Controls.Add(Me.btnThemeDark)
-            Me.cardLanguage.Controls.Add(Me.tglTheme)
+            Me.cardLanguage.Controls.Add(Me.btnThemeSystem)
             Me.cardLanguage.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardLanguage.Location = New System.Drawing.Point(30, 95)
             Me.cardLanguage.Name = "cardLanguage"
@@ -137,7 +137,7 @@ Namespace UC_Settings
             Me.lblCardLanguageTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardLanguageTitle.TabIndex = 0
             Me.lblCardLanguageTitle.Text = "اللغة والمظهر والعملة"
-            Me.lblCardLanguageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardLanguageTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblLanguage
             '
@@ -160,6 +160,7 @@ Namespace UC_Settings
             Me.cmbLanguage.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
             Me.cmbLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
             Me.cmbLanguage.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbLanguage.FocusedColor = System.Drawing.Color.Empty
             Me.cmbLanguage.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.cmbLanguage.ForeColor = System.Drawing.Color.White
             Me.cmbLanguage.ItemHeight = 34
@@ -191,6 +192,7 @@ Namespace UC_Settings
             Me.cmbCurrency.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
             Me.cmbCurrency.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
             Me.cmbCurrency.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbCurrency.FocusedColor = System.Drawing.Color.Empty
             Me.cmbCurrency.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.cmbCurrency.ForeColor = System.Drawing.Color.White
             Me.cmbCurrency.ItemHeight = 34
@@ -241,22 +243,19 @@ Namespace UC_Settings
             Me.btnThemeDark.TabIndex = 7
             Me.btnThemeDark.Text = "🌙 الوضع الداكن"
             '
-            'tglTheme
+            'btnThemeSystem
             '
-            Me.tglTheme.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.tglTheme.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-            Me.tglTheme.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-            Me.tglTheme.CheckedState.InnerBorderColor = System.Drawing.Color.White
-            Me.tglTheme.CheckedState.InnerColor = System.Drawing.Color.White
-            Me.tglTheme.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.tglTheme.Location = New System.Drawing.Point(440, 126)
-            Me.tglTheme.Name = "tglTheme"
-            Me.tglTheme.Size = New System.Drawing.Size(65, 28)
-            Me.tglTheme.TabIndex = 8
-            Me.tglTheme.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
-            Me.tglTheme.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
-            Me.tglTheme.UncheckedState.InnerBorderColor = System.Drawing.Color.White
-            Me.tglTheme.UncheckedState.InnerColor = System.Drawing.Color.White
+            Me.btnThemeSystem.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnThemeSystem.BorderRadius = 8
+            Me.btnThemeSystem.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnThemeSystem.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(36, Byte), Integer), CType(CType(49, Byte), Integer))
+            Me.btnThemeSystem.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+            Me.btnThemeSystem.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
+            Me.btnThemeSystem.Location = New System.Drawing.Point(280, 118)
+            Me.btnThemeSystem.Name = "btnThemeSystem"
+            Me.btnThemeSystem.Size = New System.Drawing.Size(220, 44)
+            Me.btnThemeSystem.TabIndex = 8
+            Me.btnThemeSystem.Text = "💻 تلقائي (حسب النظام)"
             '
             'cardBackup
             '
@@ -289,7 +288,7 @@ Namespace UC_Settings
             Me.lblCardBackupTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardBackupTitle.TabIndex = 0
             Me.lblCardBackupTitle.Text = "بدء التشغيل والأمان"
-            Me.lblCardBackupTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardBackupTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblAutoBackup
             '
@@ -360,14 +359,18 @@ Namespace UC_Settings
             Me.txtMaxLoginAttempts.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtMaxLoginAttempts.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtMaxLoginAttempts.BorderRadius = 8
+            Me.txtMaxLoginAttempts.Cursor = System.Windows.Forms.Cursors.IBeam
+            Me.txtMaxLoginAttempts.DefaultText = "5"
             Me.txtMaxLoginAttempts.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtMaxLoginAttempts.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtMaxLoginAttempts.ForeColor = System.Drawing.Color.White
             Me.txtMaxLoginAttempts.Location = New System.Drawing.Point(680, 100)
+            Me.txtMaxLoginAttempts.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
             Me.txtMaxLoginAttempts.Name = "txtMaxLoginAttempts"
+            Me.txtMaxLoginAttempts.PlaceholderText = ""
+            Me.txtMaxLoginAttempts.SelectedText = ""
             Me.txtMaxLoginAttempts.Size = New System.Drawing.Size(175, 38)
             Me.txtMaxLoginAttempts.TabIndex = 6
-            Me.txtMaxLoginAttempts.Text = "5"
             Me.txtMaxLoginAttempts.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
             '
             'cardAutoLogout
@@ -399,7 +402,7 @@ Namespace UC_Settings
             Me.lblCardAutoLogoutTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardAutoLogoutTitle.TabIndex = 0
             Me.lblCardAutoLogoutTitle.Text = "القفل التلقائي للجلسة"
-            Me.lblCardAutoLogoutTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardAutoLogoutTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblAutoLogout
             '
@@ -445,6 +448,7 @@ Namespace UC_Settings
             Me.numAutoLogoutMinutes.BackColor = System.Drawing.Color.Transparent
             Me.numAutoLogoutMinutes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.numAutoLogoutMinutes.BorderRadius = 8
+            Me.numAutoLogoutMinutes.Cursor = System.Windows.Forms.Cursors.IBeam
             Me.numAutoLogoutMinutes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.numAutoLogoutMinutes.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.numAutoLogoutMinutes.ForeColor = System.Drawing.Color.White
@@ -484,7 +488,7 @@ Namespace UC_Settings
             Me.lblCardPathTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardPathTitle.TabIndex = 0
             Me.lblCardPathTitle.Text = "مسار النسخ الاحتياطي"
-            Me.lblCardPathTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardPathTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblBackupPath
             '
@@ -496,7 +500,7 @@ Namespace UC_Settings
             Me.lblBackupPath.Size = New System.Drawing.Size(160, 32)
             Me.lblBackupPath.TabIndex = 1
             Me.lblBackupPath.Text = "مجلد الحفظ:"
-            Me.lblBackupPath.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblBackupPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'txtBackupPath
             '
@@ -504,12 +508,17 @@ Namespace UC_Settings
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtBackupPath.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtBackupPath.BorderRadius = 8
+            Me.txtBackupPath.Cursor = System.Windows.Forms.Cursors.IBeam
+            Me.txtBackupPath.DefaultText = ""
             Me.txtBackupPath.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtBackupPath.Font = New System.Drawing.Font("Segoe UI", 10.5!)
             Me.txtBackupPath.ForeColor = System.Drawing.Color.White
             Me.txtBackupPath.Location = New System.Drawing.Point(190, 60)
+            Me.txtBackupPath.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
             Me.txtBackupPath.Name = "txtBackupPath"
+            Me.txtBackupPath.PlaceholderText = ""
             Me.txtBackupPath.ReadOnly = True
+            Me.txtBackupPath.SelectedText = ""
             Me.txtBackupPath.Size = New System.Drawing.Size(790, 38)
             Me.txtBackupPath.TabIndex = 2
             '
@@ -579,7 +588,6 @@ Namespace UC_Settings
             Me.pnlMain.ResumeLayout(False)
             Me.cardLanguage.ResumeLayout(False)
             Me.cardBackup.ResumeLayout(False)
-            Me.cardBackup.PerformLayout()
             Me.cardAutoLogout.ResumeLayout(False)
             CType(Me.numAutoLogoutMinutes, System.ComponentModel.ISupportInitialize).EndInit()
             Me.cardPath.ResumeLayout(False)
@@ -599,7 +607,7 @@ Namespace UC_Settings
         Friend WithEvents lblTheme As System.Windows.Forms.Label
         Friend WithEvents btnThemeLight As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnThemeDark As Guna.UI2.WinForms.Guna2Button
-        Friend WithEvents tglTheme As Guna.UI2.WinForms.Guna2ToggleSwitch
+        Friend WithEvents btnThemeSystem As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents cardBackup As Guna.UI2.WinForms.Guna2Panel
         Friend WithEvents lblCardBackupTitle As System.Windows.Forms.Label
         Friend WithEvents lblAutoBackup As System.Windows.Forms.Label

@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmShifts
     Inherits System.Windows.Forms.Form
 
@@ -55,6 +55,10 @@ Partial Class frmShifts
         Me.lstSuggestions = New System.Windows.Forms.ListBox()
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.txtOpeningCash = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.cmbOpenUser = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.lblOpenUserTitle = New System.Windows.Forms.Label()
+        Me.cmbCloseUser = New Guna.UI2.WinForms.Guna2ComboBox()
+        Me.lblCloseUserTitle = New System.Windows.Forms.Label()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
         Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
@@ -113,6 +117,10 @@ Partial Class frmShifts
         Me.grpCustomerInfo.Controls.Add(Me.lstSuggestions)
         Me.grpCustomerInfo.Controls.Add(Me.txtSearch)
         Me.grpCustomerInfo.Controls.Add(Me.txtOpeningCash)
+        Me.grpCustomerInfo.Controls.Add(Me.cmbOpenUser)
+        Me.grpCustomerInfo.Controls.Add(Me.lblOpenUserTitle)
+        Me.grpCustomerInfo.Controls.Add(Me.cmbCloseUser)
+        Me.grpCustomerInfo.Controls.Add(Me.lblCloseUserTitle)
         Me.grpCustomerInfo.Dock = System.Windows.Forms.DockStyle.Top
         Me.grpCustomerInfo.FillColor = System.Drawing.Color.FromArgb(CType(CType(248, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(250, Byte), Integer))
         Me.grpCustomerInfo.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
@@ -120,7 +128,7 @@ Partial Class frmShifts
         Me.grpCustomerInfo.Location = New System.Drawing.Point(0, 70)
         Me.grpCustomerInfo.Name = "grpCustomerInfo"
         Me.grpCustomerInfo.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.grpCustomerInfo.Size = New System.Drawing.Size(1331, 366)
+        Me.grpCustomerInfo.Size = New System.Drawing.Size(1331, 375)
         Me.grpCustomerInfo.TabIndex = 43
         Me.grpCustomerInfo.Text = "البيانات"
         Me.grpCustomerInfo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -176,13 +184,13 @@ Partial Class frmShifts
         Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 12.0!)
         Me.txtNotes.ForeColor = System.Drawing.Color.Black
         Me.txtNotes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
-        Me.txtNotes.Location = New System.Drawing.Point(553, 233)
+        Me.txtNotes.Location = New System.Drawing.Point(550, 270)
         Me.txtNotes.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.PlaceholderText = ""
         Me.txtNotes.SelectedText = ""
-        Me.txtNotes.Size = New System.Drawing.Size(250, 76)
+        Me.txtNotes.Size = New System.Drawing.Size(250, 42)
         Me.txtNotes.TabIndex = 5638
         Me.txtNotes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -192,7 +200,7 @@ Partial Class frmShifts
         Me.lblCashDifference.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblCashDifference.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblCashDifference.ForeColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-        Me.lblCashDifference.Location = New System.Drawing.Point(553, 186)
+        Me.lblCashDifference.Location = New System.Drawing.Point(550, 225)
         Me.lblCashDifference.Name = "lblCashDifference"
         Me.lblCashDifference.Size = New System.Drawing.Size(250, 36)
         Me.lblCashDifference.TabIndex = 5637
@@ -204,19 +212,48 @@ Partial Class frmShifts
         Me.Label10.BackColor = System.Drawing.Color.Transparent
         Me.Label10.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-        Me.Label10.Location = New System.Drawing.Point(805, 186)
+        Me.Label10.Location = New System.Drawing.Point(802, 225)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(127, 36)
         Me.Label10.TabIndex = 5636
         Me.Label10.Text = "العجز"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
+        'cmbCloseUser
+        '
+        Me.cmbCloseUser.BackColor = System.Drawing.Color.Transparent
+        Me.cmbCloseUser.BorderRadius = 6
+        Me.cmbCloseUser.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbCloseUser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbCloseUser.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.cmbCloseUser.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.cmbCloseUser.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        Me.cmbCloseUser.ForeColor = System.Drawing.Color.Black
+        Me.cmbCloseUser.ItemHeight = 30
+        Me.cmbCloseUser.Location = New System.Drawing.Point(550, 180)
+        Me.cmbCloseUser.Name = "cmbCloseUser"
+        Me.cmbCloseUser.Size = New System.Drawing.Size(250, 36)
+        Me.cmbCloseUser.TabIndex = 5635
+        Me.cmbCloseUser.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'lblCloseUserTitle
+        '
+        Me.lblCloseUserTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblCloseUserTitle.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCloseUserTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+        Me.lblCloseUserTitle.Location = New System.Drawing.Point(802, 180)
+        Me.lblCloseUserTitle.Name = "lblCloseUserTitle"
+        Me.lblCloseUserTitle.Size = New System.Drawing.Size(127, 36)
+        Me.lblCloseUserTitle.TabIndex = 5636
+        Me.lblCloseUserTitle.Text = "مسؤول الإغلاق"
+        Me.lblCloseUserTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
         'Label6
         '
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
         Me.Label6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
-        Me.Label6.Location = New System.Drawing.Point(802, 139)
+        Me.Label6.Location = New System.Drawing.Point(802, 135)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(127, 36)
         Me.Label6.TabIndex = 5635
@@ -237,7 +274,7 @@ Partial Class frmShifts
         Me.txtClosingCash.Font = New System.Drawing.Font("Segoe UI", 12.0!)
         Me.txtClosingCash.ForeColor = System.Drawing.Color.Black
         Me.txtClosingCash.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
-        Me.txtClosingCash.Location = New System.Drawing.Point(550, 139)
+        Me.txtClosingCash.Location = New System.Drawing.Point(550, 135)
         Me.txtClosingCash.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.txtClosingCash.Name = "txtClosingCash"
         Me.txtClosingCash.PlaceholderText = ""
@@ -333,6 +370,7 @@ Partial Class frmShifts
         Me.lblOpeningCash.TabIndex = 5627
         Me.lblOpeningCash.Text = "0.00"
         Me.lblOpeningCash.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblOpeningCash.Visible = False
         '
         'Label7
         '
@@ -345,6 +383,36 @@ Partial Class frmShifts
         Me.Label7.TabIndex = 5626
         Me.Label7.Text = "العهدة الافتتاحية"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Label7.Visible = False
+        '
+        'cmbOpenUser
+        '
+        Me.cmbOpenUser.BackColor = System.Drawing.Color.Transparent
+        Me.cmbOpenUser.BorderRadius = 6
+        Me.cmbOpenUser.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cmbOpenUser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbOpenUser.FocusedColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.cmbOpenUser.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(43, Byte), Integer), CType(CType(91, Byte), Integer), CType(CType(132, Byte), Integer))
+        Me.cmbOpenUser.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        Me.cmbOpenUser.ForeColor = System.Drawing.Color.Black
+        Me.cmbOpenUser.ItemHeight = 30
+        Me.cmbOpenUser.Location = New System.Drawing.Point(939, 135)
+        Me.cmbOpenUser.Name = "cmbOpenUser"
+        Me.cmbOpenUser.Size = New System.Drawing.Size(250, 36)
+        Me.cmbOpenUser.TabIndex = 4
+        Me.cmbOpenUser.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'lblOpenUserTitle
+        '
+        Me.lblOpenUserTitle.BackColor = System.Drawing.Color.Transparent
+        Me.lblOpenUserTitle.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblOpenUserTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
+        Me.lblOpenUserTitle.Location = New System.Drawing.Point(1195, 135)
+        Me.lblOpenUserTitle.Name = "lblOpenUserTitle"
+        Me.lblOpenUserTitle.Size = New System.Drawing.Size(143, 36)
+        Me.lblOpenUserTitle.TabIndex = 5626
+        Me.lblOpenUserTitle.Text = "مسؤول الفتح"
+        Me.lblOpenUserTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label5
         '
@@ -719,4 +787,8 @@ Partial Class frmShifts
     Friend WithEvents btnSuspendShift As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents btnResumeShift As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents cmbOpenUser As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents lblOpenUserTitle As Label
+    Friend WithEvents cmbCloseUser As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents lblCloseUserTitle As Label
 End Class

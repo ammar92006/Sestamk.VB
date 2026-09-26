@@ -1,4 +1,4 @@
-﻿Imports System.IO
+Imports System.IO
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
@@ -25,10 +25,32 @@ Public Module Logger
     End Enum
 
     ' ── الإعدادات ──
-    Private ReadOnly LogDir As String = Path.Combine(Application.StartupPath, "logs")
     Private ReadOnly _lock As New Object()
     Private Const MAX_LOG_DAYS As Integer = 30  ' عدد الأيام للاحتفاظ بالملفات
     Private _lastCleanup As Date = Date.MinValue
+    Private _cachedLogDir As String = Nothing
+
+    ''' <summary>مسار مجلد اللوجات الآمن مع دعم صلاحيات UAC</summary>
+    Public ReadOnly Property LogDirectory As String
+        Get
+            If Not String.IsNullOrEmpty(_cachedLogDir) Then Return _cachedLogDir
+            Try
+                Dim p As String = Path.Combine(Application.StartupPath, "logs")
+                If Not Directory.Exists(p) Then Directory.CreateDirectory(p)
+                ' اختبار إمكانية الكتابة في المجلد
+                Dim testFile As String = Path.Combine(p, ".log_perm_test")
+                File.WriteAllText(testFile, "1")
+                File.Delete(testFile)
+                _cachedLogDir = p
+                Return _cachedLogDir
+            Catch
+                Dim commonDir As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "logs")
+                If Not Directory.Exists(commonDir) Then Directory.CreateDirectory(commonDir)
+                _cachedLogDir = commonDir
+                Return _cachedLogDir
+            End Try
+        End Get
+    End Property
 
     ' ── الحد الأدنى للتسجيل (يمكن تغييره عند التشغيل) ──
     Public Property MinLevel As LogLevel = LogLevel.Debug
@@ -166,14 +188,7 @@ Public Module Logger
     ''' <summary>مسار ملف اللوج لليوم الحالي</summary>
     Public ReadOnly Property TodayLogPath As String
         Get
-            Return Path.Combine(LogDir, "app_" & DateTime.Now.ToString("yyyy-MM-dd") & ".log")
-        End Get
-    End Property
-
-    ''' <summary>مسار مجلد اللوجات</summary>
-    Public ReadOnly Property LogDirectory As String
-        Get
-            Return LogDir
+            Return Path.Combine(LogDirectory, "app_" & DateTime.Now.ToString("yyyy-MM-dd") & ".log")
         End Get
     End Property
 
@@ -187,7 +202,8 @@ Public Module Logger
 
         Try
             SyncLock _lock
-                If Not Directory.Exists(LogDir) Then Directory.CreateDirectory(LogDir)
+                Dim logDir = LogDirectory
+                If Not Directory.Exists(logDir) Then Directory.CreateDirectory(logDir)
 
                 ' استخراج اسم الملف بدون المسار الكامل
                 Dim source As String = ""
@@ -242,7 +258,9 @@ Public Module Logger
     Private Sub CleanOldLogs()
         Try
             Dim cutoff As Date = DateTime.Now.AddDays(-MAX_LOG_DAYS)
-            For Each f As String In Directory.GetFiles(LogDir, "*.log")
+            Dim logDir = LogDirectory
+            If Not Directory.Exists(logDir) Then Return
+            For Each f As String In Directory.GetFiles(logDir, "*.log")
                 Try
                     If File.GetLastWriteTime(f) < cutoff Then
                         File.Delete(f)

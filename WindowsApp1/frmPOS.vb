@@ -35,7 +35,19 @@ Public Class frmPOS
     Private _selectedCategoryColor As Color = Color.FromArgb(94, 148, 255)
     Private _categoryButtons As New List(Of Guna.UI2.WinForms.Guna2Button)
 
+    Private ReadOnly Property CurrencySymbol As String
+        Get
+            Return SettingsManager.GetSettingOrDefault(SettingsKeys.Currency, "ج.م")
+        End Get
+    End Property
+
     Private Sub frmPOS_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Try
+            DBModule.EnsureKitchenCommentsTable()
+        Catch exComments As Exception
+            Logger.LogError("frmPOS_Load.EnsureKitchenCommentsTable", exComments)
+        End Try
+
         If _repo Is Nothing Then
             _repo = New POSRepository(DBModule.ConnectionString)
         End If
@@ -258,11 +270,28 @@ Public Class frmPOS
     Private Sub ApplyDefaultPOSSettings()
         Try
             ' =========================================================
-            ' 1. تعيين نوع الطلب الافتراضي
+            ' 1. تعيين نوع الطلب وضبط ظهور الأزرار وفق الإعدادات
             ' =========================================================
-            Dim defaultOrderTypeVal As String = SettingsManager.GetSettingOrDefault("DefaultOrderType", "1")
+            Dim enableTakeaway As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesEnableTakeaway, True)
+            Dim enableDineIn As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesEnableDineIn, True)
+            Dim enableDelivery As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesEnableDelivery, True)
+
+            btnTakeaway.Visible = enableTakeaway
+            btnDineIn.Visible = enableDineIn
+            btnDelivery.Visible = enableDelivery
+
+            Dim defaultOrderTypeVal As String = SettingsManager.GetSettingOrDefault(SettingsKeys.DefaultOrderType, "1")
             Dim orderTypeInt As Integer = 1
             Integer.TryParse(defaultOrderTypeVal, orderTypeInt)
+
+            ' إذا كان النوع الافتراضي معطلاً، اختيار أول نوع متاح
+            If orderTypeInt = 2 AndAlso Not enableDineIn Then
+                orderTypeInt = If(enableTakeaway, 1, If(enableDelivery, 3, 1))
+            ElseIf orderTypeInt = 3 AndAlso Not enableDelivery Then
+                orderTypeInt = If(enableTakeaway, 1, If(enableDineIn, 2, 1))
+            ElseIf orderTypeInt = 1 AndAlso Not enableTakeaway Then
+                orderTypeInt = If(enableDineIn, 2, If(enableDelivery, 3, 1))
+            End If
 
             Select Case orderTypeInt
                 Case 2 ' صالة
@@ -383,6 +412,52 @@ Public Class frmPOS
         dgvInvoice.AutoGenerateColumns = False
         dgvInvoice.ColumnHeadersHeight = 38
         dgvInvoice.RowTemplate.Height = 36
+        If dgvInvoice.Columns.Contains("colNotes") Then
+            dgvInvoice.Columns("colNotes").HeaderText = "ملاحظات المطبخ 📝"
+            dgvInvoice.Columns("colNotes").Width = 135
+            dgvInvoice.Columns("colNotes").ToolTipText = "انقر مرتين لاختيار أو كتابة تعليق للمطبخ 📝"
+        End If
+        SetupInvoiceContextMenu()
+    End Sub
+
+    Private Sub SetupInvoiceContextMenu()
+        Try
+            Dim cms As New ContextMenuStrip()
+            cms.Font = New Font("Segoe UI", 10.0!, FontStyle.Bold)
+            cms.RightToLeft = RightToLeft.Yes
+
+            Dim itemNote = cms.Items.Add("تعليقات وملاحظات المطبخ 📝 (نقر مزدوج)")
+            AddHandler itemNote.Click, Sub()
+                                           If dgvInvoice.CurrentRow IsNot Nothing Then
+                                               OpenKitchenCommentDialog(dgvInvoice.CurrentRow.Index)
+                                           End If
+                                       End Sub
+
+            cms.Items.Add(New ToolStripSeparator())
+
+            Dim itemPlus = cms.Items.Add("زيادة الكمية (+1)")
+            AddHandler itemPlus.Click, Sub()
+                                           If dgvInvoice.CurrentRow IsNot Nothing Then
+                                               UpdateRowQuantity(dgvInvoice.CurrentRow.Index, +1)
+                                           End If
+                                       End Sub
+
+            Dim itemMinus = cms.Items.Add("إنقاص الكمية (-1)")
+            AddHandler itemMinus.Click, Sub()
+                                            If dgvInvoice.CurrentRow IsNot Nothing Then
+                                                UpdateRowQuantity(dgvInvoice.CurrentRow.Index, -1)
+                                            End If
+                                        End Sub
+
+            Dim itemDelete = cms.Items.Add("حذف الصنف من الفاتورة 🗑️")
+            AddHandler itemDelete.Click, Sub()
+                                             btnDeleteRow_Click(Nothing, Nothing)
+                                         End Sub
+
+            dgvInvoice.ContextMenuStrip = cms
+        Catch ex As Exception
+            Logger.LogError("SetupInvoiceContextMenu", ex)
+        End Try
     End Sub
     ' =========================================================
     ' أداة شريط التحكم بشبكة الفئات (الأعمدة والصفوف) وحفظ الإعدادات
@@ -808,11 +883,11 @@ Public Class frmPOS
         Dim isDirect As Boolean = prod.IsDirectItem
 
         If isDirect Then
-            priceText = prod.DefaultPrice.ToString("N2") & " ج.م"
+            priceText = prod.DefaultPrice.ToString("N2") & " " & CurrencySymbol
             pillBgColor = Color.FromArgb(16, 185, 129) ' أخضر زمردي جذاب للأصناف السريعة
         Else
             If prod.DefaultPrice > 0 Then
-                priceText = "يبدأ من " & prod.DefaultPrice.ToString("N2") & " ج.م"
+                priceText = "يبدأ من " & prod.DefaultPrice.ToString("N2") & " " & CurrencySymbol
             Else
                 priceText = "+ خيارات"
             End If
@@ -1014,9 +1089,9 @@ Public Class frmPOS
         If finalGrandTotal < 0 Then finalGrandTotal = 0
 
         If CurrentReservationDeposit > 0 Then
-            lblGrandTotal.Text = $"{finalGrandTotal:N2} ج.م (عربون: -{CurrentReservationDeposit:N2})"
+            lblGrandTotal.Text = $"{finalGrandTotal:N2} {CurrencySymbol} (عربون: -{CurrentReservationDeposit:N2})"
         Else
-            lblGrandTotal.Text = finalGrandTotal.ToString("N2") & " ج.م"
+            lblGrandTotal.Text = finalGrandTotal.ToString("N2") & " " & CurrencySymbol
         End If
     End Sub
 
@@ -1432,7 +1507,7 @@ Public Class frmPOS
 
                 Dim invoiceNotes As String = ""
                 If CurrentReservationDeposit > 0 Then
-                    invoiceNotes = $"[تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} ج.م]"
+                    invoiceNotes = $"[تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} {CurrencySymbol}]"
                 End If
 
                 Dim invoice As New InvoiceModel With {
@@ -1674,9 +1749,28 @@ Public Class frmPOS
 
     Private Sub dgvInvoice_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvInvoice.CellDoubleClick
         If e.RowIndex >= 0 Then
-            ' الضغط المزدوج على سطر الصنف يزود الكمية بمقدار 1
-            UpdateRowQuantity(e.RowIndex, +1)
+            ' الضغط المزدوج على عمود الكمية يزود الكمية بمقدار 1
+            If e.ColumnIndex = dgvInvoice.Columns("colQuantity").Index OrElse e.ColumnIndex = dgvInvoice.Columns("colUnitPrice").Index Then
+                UpdateRowQuantity(e.RowIndex, +1)
+            Else
+                ' الضغط المزدوج على عمود الملاحظات أو اسم الصنف أو أي خلية أخرى في السطر يفتح نافذة اختيار وإضافة تعليق المطبخ
+                OpenKitchenCommentDialog(e.RowIndex)
+            End If
         End If
+    End Sub
+
+    Public Sub OpenKitchenCommentDialog(rowIndex As Integer)
+        If rowIndex < 0 OrElse rowIndex >= dgvInvoice.Rows.Count Then Return
+        Dim row = dgvInvoice.Rows(rowIndex)
+        Dim prodName = If(row.Cells("colProductName").Value IsNot Nothing, row.Cells("colProductName").Value.ToString(), "")
+        Dim currentNote = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+
+        Using dlg As New frmSelectKitchenComment(prodName, currentNote)
+            If dlg.ShowDialog(Me) = DialogResult.OK Then
+                row.Cells("colNotes").Value = dlg.SelectedComment
+                dgvInvoice.InvalidateRow(rowIndex)
+            End If
+        End Using
     End Sub
 
     Private Sub btnAddCategoryForm_Click(sender As Object, e As EventArgs)
@@ -1781,9 +1875,9 @@ Public Class frmPOS
                     CurrentReservationDeposit = frmTables.ActiveReservation.DepositAmount
                     CurrentReservationID = frmTables.ActiveReservation.ReservationID
                     txtCustomer.Text = frmTables.ActiveReservation.CustomerName
-                    lblOrderTypeStatus.Text = $"نوع الطلب: صالة | {SelectedTableName} (حجز: {frmTables.ActiveReservation.CustomerName} - عربون: {CurrentReservationDeposit:N2} ج)"
+                    lblOrderTypeStatus.Text = $"نوع الطلب: صالة | {SelectedTableName} (حجز: {frmTables.ActiveReservation.CustomerName} - عربون: {CurrentReservationDeposit:N2} {CurrencySymbol})"
                     MessageBox.Show($"تم تسكين العميل ({frmTables.ActiveReservation.CustomerName}) بنجاح!" & vbCrLf &
-                                    $"سيتم خصم مبلغ العربون ({CurrentReservationDeposit:N2} ج.م) تلقائياً من إجمالي الفاتورة.",
+                                    $"سيتم خصم مبلغ العربون ({CurrentReservationDeposit:N2} {CurrencySymbol}) تلقائياً من إجمالي الفاتورة.",
                                     "تسكين حجز الطاولة", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
 
@@ -2037,7 +2131,7 @@ Public Class frmPOS
 
                 Dim noteText = $"[فاتورة مقسمة مسددة بالكامل - {frmSplit.GuestCount} أفراد]"
                 If CurrentReservationDeposit > 0 Then
-                    noteText &= $" | [تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} ج.م]"
+                    noteText &= $" | [تم خصم عربون حجز مسبق بقيمة {CurrentReservationDeposit:N2} {CurrencySymbol}]"
                 End If
 
                 Dim invoice As New InvoiceModel With {

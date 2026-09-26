@@ -10,7 +10,7 @@
 #define AppName "Sestamk"
 #define AppVersion "1.0.0"
 #define AppPublisher "Ammar Ahmed"
-#define AppExe "Cashier Market.exe"
+#define AppExe "Sestamk.exe"
 
 ; مجلد ناتج بناء البرنامج. للإصدار النهائي غيّره إلى bin\Release.
 #ifndef SourceBin
@@ -25,7 +25,7 @@ AppPublisher={#AppPublisher}
 DefaultDirName={autopf}\{#AppName}
 DefaultGroupName={#AppName}
 OutputDir=Output
-OutputBaseFilename=CashierMarket-Setup
+OutputBaseFilename=Sestamk-Setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern

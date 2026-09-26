@@ -1,6 +1,6 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormActivation
-    Inherits System.Windows.Forms.Form
+    Inherits BaseForm
 
     'Form overrides dispose to clean up the component list.
     <System.Diagnostics.DebuggerNonUserCode()>
@@ -22,6 +22,7 @@ Partial Class FormActivation
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormActivation))
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
@@ -33,8 +34,15 @@ Partial Class FormActivation
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtLicense = New Guna.UI2.WinForms.Guna2TextBox()
         Me.btn_Staff = New DevExpress.XtraEditors.SimpleButton()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
+        Me.picQRCode = New System.Windows.Forms.PictureBox()
+        Me.lblHWID = New System.Windows.Forms.Label()
+        Me.btnCopyHwid = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSupport = New Guna.UI2.WinForms.Guna2Button()
+        Me.progressActivation = New Guna.UI2.WinForms.Guna2ProgressBar()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
+        CType(Me.picQRCode, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'panelHeader
@@ -48,7 +56,7 @@ Partial Class FormActivation
         Me.panelHeader.Location = New System.Drawing.Point(0, 0)
         Me.panelHeader.Name = "panelHeader"
         Me.panelHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.panelHeader.Size = New System.Drawing.Size(975, 70)
+        Me.panelHeader.Size = New System.Drawing.Size(700, 70)
         Me.panelHeader.TabIndex = 71
         '
         'btn_min
@@ -93,11 +101,11 @@ Partial Class FormActivation
         Me.Guna2HtmlLabel1.BackColor = System.Drawing.Color.Transparent
         Me.Guna2HtmlLabel1.Font = New System.Drawing.Font("LBC", 28.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Guna2HtmlLabel1.ForeColor = System.Drawing.Color.White
-        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(403, 12)
+        Me.Guna2HtmlLabel1.Location = New System.Drawing.Point(240, 12)
         Me.Guna2HtmlLabel1.Name = "Guna2HtmlLabel1"
         Me.Guna2HtmlLabel1.Size = New System.Drawing.Size(218, 49)
         Me.Guna2HtmlLabel1.TabIndex = 0
-        Me.Guna2HtmlLabel1.Text = "البرنامج تفعيل"
+        Me.Guna2HtmlLabel1.Text = "تفعيل البرنامج"
         Me.Guna2HtmlLabel1.TextAlignment = System.Drawing.ContentAlignment.BottomCenter
         '
         'Guna2Panel1
@@ -105,10 +113,10 @@ Partial Class FormActivation
         Me.Guna2Panel1.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(48, Byte), Integer))
         Me.Guna2Panel1.Controls.Add(Me.LabelDeveloper)
         Me.Guna2Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Guna2Panel1.Location = New System.Drawing.Point(0, 554)
+        Me.Guna2Panel1.Location = New System.Drawing.Point(0, 580)
         Me.Guna2Panel1.Name = "Guna2Panel1"
         Me.Guna2Panel1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Guna2Panel1.Size = New System.Drawing.Size(975, 70)
+        Me.Guna2Panel1.Size = New System.Drawing.Size(700, 70)
         Me.Guna2Panel1.TabIndex = 72
         '
         'LabelDeveloper
@@ -117,30 +125,30 @@ Partial Class FormActivation
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LabelDeveloper.AutoSize = True
-        Me.LabelDeveloper.Font = New System.Drawing.Font("LBC", 26.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.LabelDeveloper.Font = New System.Drawing.Font("LBC", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LabelDeveloper.ForeColor = System.Drawing.Color.FromArgb(CType(CType(252, Byte), Integer), CType(CType(249, Byte), Integer), CType(CType(234, Byte), Integer))
-        Me.LabelDeveloper.Location = New System.Drawing.Point(170, 13)
+        Me.LabelDeveloper.Location = New System.Drawing.Point(120, 15)
         Me.LabelDeveloper.Name = "LabelDeveloper"
-        Me.LabelDeveloper.Size = New System.Drawing.Size(634, 45)
+        Me.LabelDeveloper.Size = New System.Drawing.Size(460, 35)
         Me.LabelDeveloper.TabIndex = 1
         Me.LabelDeveloper.Text = "تم تصميم هذا البرنامج بواسطة عمار احمد"
         Me.LabelDeveloper.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label4
         '
-        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.Font = New System.Drawing.Font("LBC", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(482, 164)
+        Me.Label4.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.ForeColor = System.Drawing.Color.White
+        Me.Label4.Location = New System.Drawing.Point(542, 380)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(219, 41)
+        Me.Label4.Size = New System.Drawing.Size(126, 31)
         Me.Label4.TabIndex = 5562
-        Me.Label4.Text = "سيريال التفعيل"
+        Me.Label4.Text = "رقم التفعيل:"
+        Me.Label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         '
         'txtLicense
         '
-        Me.txtLicense.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.txtLicense.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.txtLicense.DefaultText = ""
         Me.txtLicense.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
@@ -148,38 +156,107 @@ Partial Class FormActivation
         Me.txtLicense.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
         Me.txtLicense.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
         Me.txtLicense.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtLicense.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.txtLicense.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.txtLicense.ForeColor = System.Drawing.Color.Black
         Me.txtLicense.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtLicense.Location = New System.Drawing.Point(287, 211)
-        Me.txtLicense.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
+        Me.txtLicense.Location = New System.Drawing.Point(40, 375)
+        Me.txtLicense.Margin = New System.Windows.Forms.Padding(5)
         Me.txtLicense.Name = "txtLicense"
         Me.txtLicense.PlaceholderText = ""
         Me.txtLicense.SelectedText = ""
-        Me.txtLicense.Size = New System.Drawing.Size(414, 45)
+        Me.txtLicense.Size = New System.Drawing.Size(490, 45)
         Me.txtLicense.TabIndex = 5561
         Me.txtLicense.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'btn_Staff
         '
-        Me.btn_Staff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_Staff.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btn_Staff.Appearance.Font = New System.Drawing.Font("LBC", 20.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btn_Staff.Appearance.Options.UseFont = True
         Me.btn_Staff.ImageOptions.Image = CType(resources.GetObject("btn_Staff.ImageOptions.Image"), System.Drawing.Image)
         Me.btn_Staff.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
-        Me.btn_Staff.Location = New System.Drawing.Point(313, 279)
+        Me.btn_Staff.Location = New System.Drawing.Point(180, 440)
         Me.btn_Staff.Name = "btn_Staff"
         Me.btn_Staff.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btn_Staff.Size = New System.Drawing.Size(348, 75)
+        Me.btn_Staff.Size = New System.Drawing.Size(340, 60)
         Me.btn_Staff.TabIndex = 5563
         Me.btn_Staff.Text = "تفعيل"
+        '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
+        'picQRCode
+        '
+        Me.picQRCode.Location = New System.Drawing.Point(250, 90)
+        Me.picQRCode.Name = "picQRCode"
+        Me.picQRCode.Size = New System.Drawing.Size(200, 200)
+        Me.picQRCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picQRCode.TabIndex = 5564
+        Me.picQRCode.TabStop = False
+        Me.picQRCode.BackColor = System.Drawing.Color.White
+        '
+        'lblHWID
+        '
+        Me.lblHWID.Font = New System.Drawing.Font("Consolas", 14.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblHWID.ForeColor = System.Drawing.Color.White
+        Me.lblHWID.Location = New System.Drawing.Point(150, 310)
+        Me.lblHWID.Name = "lblHWID"
+        Me.lblHWID.Size = New System.Drawing.Size(400, 40)
+        Me.lblHWID.TabIndex = 5565
+        Me.lblHWID.Text = "HWID-XXXX-XXXX"
+        Me.lblHWID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'btnCopyHwid
+        '
+        Me.btnCopyHwid.Appearance.Font = New System.Drawing.Font("LBC", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnCopyHwid.Appearance.Options.UseFont = True
+        Me.btnCopyHwid.ImageOptions.SvgImage = CType(resources.GetObject("btnCopyHwid.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
+        Me.btnCopyHwid.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.LeftCenter
+        Me.btnCopyHwid.Location = New System.Drawing.Point(40, 310)
+        Me.btnCopyHwid.Name = "btnCopyHwid"
+        Me.btnCopyHwid.Size = New System.Drawing.Size(100, 40)
+        Me.btnCopyHwid.TabIndex = 5566
+        Me.btnCopyHwid.Text = "نسخ"
+        '
+        'btnSupport
+        '
+        Me.btnSupport.BorderRadius = 5
+        Me.btnSupport.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnSupport.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnSupport.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnSupport.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnSupport.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(102, Byte), Integer))
+        Me.btnSupport.Font = New System.Drawing.Font("LBC", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnSupport.ForeColor = System.Drawing.Color.White
+        Me.btnSupport.Location = New System.Drawing.Point(180, 510)
+        Me.btnSupport.Name = "btnSupport"
+        Me.btnSupport.Size = New System.Drawing.Size(340, 45)
+        Me.btnSupport.TabIndex = 5567
+        Me.btnSupport.Text = "الدعم الفني (WhatsApp)"
+        '
+        'progressActivation
+        '
+        Me.progressActivation.Location = New System.Drawing.Point(0, 70)
+        Me.progressActivation.Name = "progressActivation"
+        Me.progressActivation.Size = New System.Drawing.Size(700, 5)
+        Me.progressActivation.Style = System.Windows.Forms.ProgressBarStyle.Marquee
+        Me.progressActivation.TabIndex = 5568
+        Me.progressActivation.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault
+        Me.progressActivation.Visible = False
         '
         'FormActivation
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ClientSize = New System.Drawing.Size(975, 624)
+        Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.ClientSize = New System.Drawing.Size(700, 650)
+        Me.Controls.Add(Me.progressActivation)
+        Me.Controls.Add(Me.btnSupport)
+        Me.Controls.Add(Me.btnCopyHwid)
+        Me.Controls.Add(Me.lblHWID)
+        Me.Controls.Add(Me.picQRCode)
         Me.Controls.Add(Me.btn_Staff)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.txtLicense)
@@ -193,6 +270,7 @@ Partial Class FormActivation
         Me.panelHeader.PerformLayout()
         Me.Guna2Panel1.ResumeLayout(False)
         Me.Guna2Panel1.PerformLayout()
+        CType(Me.picQRCode, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -208,4 +286,10 @@ Partial Class FormActivation
     Friend WithEvents Label4 As Label
     Friend WithEvents txtLicense As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents btn_Staff As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
+    Friend WithEvents picQRCode As PictureBox
+    Friend WithEvents lblHWID As Label
+    Friend WithEvents btnCopyHwid As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnSupport As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents progressActivation As Guna.UI2.WinForms.Guna2ProgressBar
 End Class

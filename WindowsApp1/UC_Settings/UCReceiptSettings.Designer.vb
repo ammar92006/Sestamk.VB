@@ -1,4 +1,4 @@
-﻿Namespace UC_Settings
+Namespace UC_Settings
     <Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
     Partial Class UCReceiptSettings
         Inherits System.Windows.Forms.UserControl
@@ -61,6 +61,7 @@
             Me.txtDeliveryText = New Guna.UI2.WinForms.Guna2TextBox()
             Me.btnSave = New Guna.UI2.WinForms.Guna2Button()
             Me.btnReset = New Guna.UI2.WinForms.Guna2Button()
+            Me.btnTestReceipt = New Guna.UI2.WinForms.Guna2Button()
             Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
             Me.pnlMain.SuspendLayout()
             Me.cardShopInfo.SuspendLayout()
@@ -82,6 +83,7 @@
             Me.pnlMain.Controls.Add(Me.cardFooter)
             Me.pnlMain.Controls.Add(Me.btnSave)
             Me.pnlMain.Controls.Add(Me.btnReset)
+            Me.pnlMain.Controls.Add(Me.btnTestReceipt)
             Me.pnlMain.Controls.Add(Me.btnClose)
             Me.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill
             Me.pnlMain.Location = New System.Drawing.Point(0, 0)
@@ -189,16 +191,15 @@
             '
             'txtShopTax
             '
-            Me.txtShopTax.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtShopTax.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtShopTax.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtShopTax.BorderRadius = 8
             Me.txtShopTax.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtShopTax.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtShopTax.ForeColor = System.Drawing.Color.White
-            Me.txtShopTax.Location = New System.Drawing.Point(30, 52)
+            Me.txtShopTax.Location = New System.Drawing.Point(85, 52)
             Me.txtShopTax.Name = "txtShopTax"
-            Me.txtShopTax.Size = New System.Drawing.Size(400, 38)
+            Me.txtShopTax.Size = New System.Drawing.Size(345, 38)
             Me.txtShopTax.TabIndex = 4
             '
             'lblShopPhone
@@ -240,16 +241,15 @@
             '
             'txtShopPhone2
             '
-            Me.txtShopPhone2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtShopPhone2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtShopPhone2.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtShopPhone2.BorderRadius = 8
             Me.txtShopPhone2.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtShopPhone2.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtShopPhone2.ForeColor = System.Drawing.Color.White
-            Me.txtShopPhone2.Location = New System.Drawing.Point(30, 102)
+            Me.txtShopPhone2.Location = New System.Drawing.Point(85, 102)
             Me.txtShopPhone2.Name = "txtShopPhone2"
-            Me.txtShopPhone2.Size = New System.Drawing.Size(400, 38)
+            Me.txtShopPhone2.Size = New System.Drawing.Size(345, 38)
             Me.txtShopPhone2.TabIndex = 8
             '
             'lblShopAddress
@@ -266,16 +266,15 @@
             '
             'txtShopAddress
             '
-            Me.txtShopAddress.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtShopAddress.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtShopAddress.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtShopAddress.BorderRadius = 8
             Me.txtShopAddress.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtShopAddress.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtShopAddress.ForeColor = System.Drawing.Color.White
-            Me.txtShopAddress.Location = New System.Drawing.Point(30, 152)
+            Me.txtShopAddress.Location = New System.Drawing.Point(85, 152)
             Me.txtShopAddress.Name = "txtShopAddress"
-            Me.txtShopAddress.Size = New System.Drawing.Size(935, 38)
+            Me.txtShopAddress.Size = New System.Drawing.Size(880, 38)
             Me.txtShopAddress.TabIndex = 10
             '
             'cardLogo
@@ -325,16 +324,15 @@
             '
             'txtLogoPath
             '
-            Me.txtLogoPath.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtLogoPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtLogoPath.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtLogoPath.BorderRadius = 8
             Me.txtLogoPath.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtLogoPath.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtLogoPath.ForeColor = System.Drawing.Color.White
-            Me.txtLogoPath.Location = New System.Drawing.Point(340, 52)
+            Me.txtLogoPath.Location = New System.Drawing.Point(430, 52)
             Me.txtLogoPath.Name = "txtLogoPath"
-            Me.txtLogoPath.Size = New System.Drawing.Size(625, 38)
+            Me.txtLogoPath.Size = New System.Drawing.Size(535, 38)
             Me.txtLogoPath.TabIndex = 2
             '
             'btnBrowseLogo
@@ -344,7 +342,7 @@
             Me.btnBrowseLogo.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnBrowseLogo.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.btnBrowseLogo.ForeColor = System.Drawing.Color.White
-            Me.btnBrowseLogo.Location = New System.Drawing.Point(195, 52)
+            Me.btnBrowseLogo.Location = New System.Drawing.Point(285, 52)
             Me.btnBrowseLogo.Name = "btnBrowseLogo"
             Me.btnBrowseLogo.Size = New System.Drawing.Size(135, 38)
             Me.btnBrowseLogo.TabIndex = 3
@@ -352,11 +350,12 @@
             '
             'picLogoPreview
             '
+            Me.picLogoPreview.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.picLogoPreview.BackColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.picLogoPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-            Me.picLogoPreview.Location = New System.Drawing.Point(30, 25)
+            Me.picLogoPreview.Location = New System.Drawing.Point(85, 18)
             Me.picLogoPreview.Name = "picLogoPreview"
-            Me.picLogoPreview.Size = New System.Drawing.Size(145, 110)
+            Me.picLogoPreview.Size = New System.Drawing.Size(180, 115)
             Me.picLogoPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
             Me.picLogoPreview.TabIndex = 4
             Me.picLogoPreview.TabStop = False
@@ -468,8 +467,7 @@
             '
             'cmbReceiptStyle
             '
-            Me.cmbReceiptStyle.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.cmbReceiptStyle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.cmbReceiptStyle.BackColor = System.Drawing.Color.Transparent
             Me.cmbReceiptStyle.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.cmbReceiptStyle.BorderRadius = 8
@@ -480,9 +478,9 @@
             Me.cmbReceiptStyle.ForeColor = System.Drawing.Color.White
             Me.cmbReceiptStyle.ItemHeight = 32
             Me.cmbReceiptStyle.Items.AddRange(New Object() {"الكلاسيكي البسيط (Classic)", "الجدولي المنظم (Grid Excel)"})
-            Me.cmbReceiptStyle.Location = New System.Drawing.Point(30, 52)
+            Me.cmbReceiptStyle.Location = New System.Drawing.Point(85, 52)
             Me.cmbReceiptStyle.Name = "cmbReceiptStyle"
-            Me.cmbReceiptStyle.Size = New System.Drawing.Size(400, 38)
+            Me.cmbReceiptStyle.Size = New System.Drawing.Size(345, 38)
             Me.cmbReceiptStyle.StartIndex = 0
             Me.cmbReceiptStyle.TabIndex = 4
             '
@@ -606,16 +604,15 @@
             '
             'txtFooterText
             '
-            Me.txtFooterText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtFooterText.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtFooterText.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtFooterText.BorderRadius = 8
             Me.txtFooterText.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtFooterText.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtFooterText.ForeColor = System.Drawing.Color.White
-            Me.txtFooterText.Location = New System.Drawing.Point(30, 52)
+            Me.txtFooterText.Location = New System.Drawing.Point(85, 52)
             Me.txtFooterText.Name = "txtFooterText"
-            Me.txtFooterText.Size = New System.Drawing.Size(935, 38)
+            Me.txtFooterText.Size = New System.Drawing.Size(880, 38)
             Me.txtFooterText.TabIndex = 2
             '
             'lblDeliveryText
@@ -632,16 +629,15 @@
             '
             'txtDeliveryText
             '
-            Me.txtDeliveryText.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtDeliveryText.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.txtDeliveryText.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             Me.txtDeliveryText.BorderRadius = 8
             Me.txtDeliveryText.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
             Me.txtDeliveryText.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.txtDeliveryText.ForeColor = System.Drawing.Color.White
-            Me.txtDeliveryText.Location = New System.Drawing.Point(30, 102)
+            Me.txtDeliveryText.Location = New System.Drawing.Point(85, 102)
             Me.txtDeliveryText.Name = "txtDeliveryText"
-            Me.txtDeliveryText.Size = New System.Drawing.Size(935, 38)
+            Me.txtDeliveryText.Size = New System.Drawing.Size(880, 38)
             Me.txtDeliveryText.TabIndex = 4
             '
             'btnSave
@@ -671,6 +667,19 @@
             Me.btnReset.Size = New System.Drawing.Size(220, 48)
             Me.btnReset.TabIndex = 7
             Me.btnReset.Text = "🔄 استعادة الافتراضي"
+            '
+            'btnTestReceipt
+            '
+            Me.btnTestReceipt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnTestReceipt.BorderRadius = 8
+            Me.btnTestReceipt.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnTestReceipt.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+            Me.btnTestReceipt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.btnTestReceipt.Location = New System.Drawing.Point(500, 850)
+            Me.btnTestReceipt.Name = "btnTestReceipt"
+            Me.btnTestReceipt.Size = New System.Drawing.Size(220, 48)
+            Me.btnTestReceipt.TabIndex = 8
+            Me.btnTestReceipt.Text = "🖨️ تجربة طباعة الفاتورة"
             '
             'btnClose
             '
@@ -748,6 +757,7 @@
         Friend WithEvents txtDeliveryText As Guna.UI2.WinForms.Guna2TextBox
         Friend WithEvents btnSave As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnReset As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents btnTestReceipt As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button
     End Class
 End Namespace
