@@ -119,7 +119,8 @@ Public Class Settings
             Case 7 : Return btnNotificationsSettings
             Case 8 : Return btnActivationSettings
             Case 9 : Return btnUpdatesSettings
-            Case 10 : Return btnAbout
+            Case 10 : Return btnCloudSyncSettings
+            Case 11 : Return btnAbout
             Case Else : Return btnSystemSettings
         End Select
     End Function
@@ -139,6 +140,7 @@ Public Class Settings
             btnNotificationsSettings,
             btnActivationSettings,
             btnUpdatesSettings,
+            btnCloudSyncSettings,
             btnAbout
         }
 
@@ -216,9 +218,15 @@ Public Class Settings
         LoadUserControl("UpdatesSettings", Function() New UCUpdatesSettings())
     End Sub
 
+    Private Sub btnCloudSyncSettings_Click(sender As Object, e As EventArgs) Handles btnCloudSyncSettings.Click
+        SetActiveButton(btnCloudSyncSettings)
+        _selectedSectionIndex = 10
+        LoadUserControl("CloudSyncSettings", Function() New UCCloudSyncSettings())
+    End Sub
+
     Private Sub btnAbout_Click(sender As Object, e As EventArgs) Handles btnAbout.Click
         SetActiveButton(btnAbout)
-        _selectedSectionIndex = 10
+        _selectedSectionIndex = 11
         LoadUserControl("About", Function() New UCAbout())
     End Sub
 
@@ -258,6 +266,7 @@ Public Class Settings
             btnNotificationsSettings.Visible = False
             btnActivationSettings.Visible = False
             btnUpdatesSettings.Visible = False
+            btnCloudSyncSettings.Visible = False
             btnAbout.Visible = True
 
             lblSettingsTitle.Text = "إعدادات قاعدة البيانات"

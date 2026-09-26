@@ -28,6 +28,7 @@ Partial Class Settings
         Me.pnlSidebar = New Guna.UI2.WinForms.Guna2Panel()
         Me.pnlSidebarButtons = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnAbout = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnCloudSyncSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnUpdatesSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnActivationSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnNotificationsSettings = New Guna.UI2.WinForms.Guna2Button()
@@ -149,6 +150,7 @@ Partial Class Settings
         '
         Me.pnlSidebarButtons.AutoScroll = True
         Me.pnlSidebarButtons.Controls.Add(Me.btnAbout)
+        Me.pnlSidebarButtons.Controls.Add(Me.btnCloudSyncSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnUpdatesSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnActivationSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnNotificationsSettings)
@@ -178,11 +180,28 @@ Partial Class Settings
         Me.btnAbout.Image = Global.WindowsApp1.My.Resources.Resources.information1
         Me.btnAbout.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnAbout.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnAbout.Location = New System.Drawing.Point(12, 610)
+        Me.btnAbout.Location = New System.Drawing.Point(12, 670)
         Me.btnAbout.Name = "btnAbout"
         Me.btnAbout.Size = New System.Drawing.Size(256, 54)
-        Me.btnAbout.TabIndex = 10
+        Me.btnAbout.TabIndex = 11
         Me.btnAbout.Text = "حول البرنامج"
+        '
+        'btnCloudSyncSettings
+        '
+        Me.btnCloudSyncSettings.BorderRadius = 10
+        Me.btnCloudSyncSettings.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
+        Me.btnCloudSyncSettings.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.btnCloudSyncSettings.CheckedState.ForeColor = System.Drawing.Color.White
+        Me.btnCloudSyncSettings.FillColor = System.Drawing.Color.Empty
+        Me.btnCloudSyncSettings.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.btnCloudSyncSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnCloudSyncSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnCloudSyncSettings.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnCloudSyncSettings.Location = New System.Drawing.Point(12, 610)
+        Me.btnCloudSyncSettings.Name = "btnCloudSyncSettings"
+        Me.btnCloudSyncSettings.Size = New System.Drawing.Size(256, 54)
+        Me.btnCloudSyncSettings.TabIndex = 10
+        Me.btnCloudSyncSettings.Text = "☁️ المزامنة السحابية"
         '
         'btnUpdatesSettings
         '
@@ -454,5 +473,6 @@ Partial Class Settings
     Friend WithEvents btnActivationSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnUpdatesSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnAbout As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnCloudSyncSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents panelMain As Guna.UI2.WinForms.Guna2Panel
 End Class

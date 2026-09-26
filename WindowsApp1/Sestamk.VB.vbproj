@@ -962,6 +962,12 @@
     <Compile Include="UC_Settings\UCUpdatesSettings.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UC_Settings\UCCloudSyncSettings.Designer.vb">
+      <DependentUpon>UCCloudSyncSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCCloudSyncSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UC_Settings\UCAbout.Designer.vb">
       <DependentUpon>UCAbout.vb</DependentUpon>
     </Compile>
@@ -1348,6 +1354,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCUpdatesSettings.resx">
       <DependentUpon>UCUpdatesSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCCloudSyncSettings.resx">
+      <DependentUpon>UCCloudSyncSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCDataExportSettings.resx">
       <DependentUpon>UCDataExportSettings.vb</DependentUpon>
