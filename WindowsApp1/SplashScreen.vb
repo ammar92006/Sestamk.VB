@@ -162,6 +162,15 @@ Public Class SplashScreen
                 ' تحميل بيانات المدير المهيّأة لهذا النشاط
                 Settingsall.LoadAdminCredentials()
 
+                ' تهيئة خدمة المزامنة السحابية وتتبع التغييرات في الخلفية
+                Try
+                    Dim syncInitTask = Task.Run(Async Function()
+                                                    Await Services.Cloud.CloudSyncService.Instance.InitializeAsync().ConfigureAwait(False)
+                                                End Function)
+                Catch exSync As Exception
+                    Debug.WriteLine("Splash CloudSync init error: " & exSync.Message)
+                End Try
+
                 ' معالج أول تشغيل (يظهر فقط إذا كان تثبيتاً جديداً)
                 Try
                     StartupManager.ShowFirstRunIfNeeded()
