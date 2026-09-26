@@ -82,6 +82,14 @@ Namespace Services.Cloud
                     If conn Is Nothing Then Return
                     If conn.State <> ConnectionState.Open Then Await conn.OpenAsync().ConfigureAwait(False)
 
+                    ' فحص سريع وفوري: إذا كان عمود sync_id موجوداً في جدول المنتجات، فالهيكل مهيأ مسبقاً
+                    Using cmdQuick As New SqlCommand("SELECT COL_LENGTH('Products', 'sync_id');", conn)
+                        Dim qRes = Await cmdQuick.ExecuteScalarAsync().ConfigureAwait(False)
+                        If qRes IsNot Nothing AndAlso Not DBNull.Value.Equals(qRes) Then
+                            Return ' تم تجهيز الأعمدة مسبقاً، نتخطى الفحص لتوفير الموارد
+                        End If
+                    End Using
+
                     Dim tables = SyncableTableRegistry.GetSyncableTables()
 
                     For Each table In tables
@@ -138,6 +146,14 @@ Namespace Services.Cloud
                 Using conn As SqlConnection = DBModule.NewConn()
                     If conn Is Nothing Then Return
                     If conn.State <> ConnectionState.Open Then Await conn.OpenAsync().ConfigureAwait(False)
+
+                    ' فحص سريع وفوري: إذا كان التريجر موجوداً مسبقاً في جدول المنتجات، نتجاوز إعادة الإنشاء
+                    Using cmdQuick As New SqlCommand("SELECT OBJECT_ID('dbo.TR_Products_SyncTrack', 'TR');", conn)
+                        Dim qRes = Await cmdQuick.ExecuteScalarAsync().ConfigureAwait(False)
+                        If qRes IsNot Nothing AndAlso Not DBNull.Value.Equals(qRes) Then
+                            Return ' التريجرات منشأة ومجهزة مسبقاً، نتخطى الفحص لتوفير الموارد
+                        End If
+                    End Using
 
                     Dim tables = SyncableTableRegistry.GetSyncableTables()
 
