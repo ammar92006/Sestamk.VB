@@ -882,6 +882,13 @@
     <Compile Include="Services\DatabaseSchemaDefinitions.vb" />
     <Compile Include="Services\DatabaseMaintenanceService.vb" />
     <Compile Include="Services\LocalDbManager.vb" />
+    <Compile Include="Services\Cloud\TursoHttpClient.vb" />
+    <Compile Include="Services\Cloud\TursoPlatformClient.vb" />
+    <Compile Include="Services\Cloud\CloudSyncConfig.vb" />
+    <Compile Include="Services\Cloud\NetworkMonitor.vb" />
+    <Compile Include="Services\Cloud\SyncableTableRegistry.vb" />
+    <Compile Include="Services\Cloud\SqlDialectTranslator.vb" />
+    <Compile Include="moduls\Data\SyncModels.vb" />
     <Compile Include="Session.vb" />
     <Compile Include="SettingsKeys.vb" />
     <Compile Include="StartupManager.vb" />

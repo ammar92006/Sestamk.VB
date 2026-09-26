@@ -1315,6 +1315,51 @@ Namespace Services
                 t.AddColumn("CreatedAt", "DATETIME2", False, "getdate()", False, False)
                 list.Add(t)
 
+                ' ═══════════════════════════════════════════════════════════
+                ' جداول البنية التحتية للمزامنة السحابية (Cloud Sync)
+                ' ═══════════════════════════════════════════════════════════
+
+                ' S1. _SyncLog (سجل تتبع التغييرات للمزامنة السحابية)
+                t = New TableDefinition("_SyncLog", "سجل تتبع التغييرات", "Sync Change Log", True)
+                t.AddColumn("LogId", "BIGINT", False, Nothing, True, True)
+                t.AddColumn("TableName", "NVARCHAR(128)", False, Nothing, False, False)
+                t.AddColumn("RowSyncId", "UNIQUEIDENTIFIER", False, Nothing, False, False)
+                t.AddColumn("Operation", "CHAR(1)", False, Nothing, False, False)
+                t.AddColumn("ChangedColumns", "NVARCHAR(MAX)", True, Nothing, False, False)
+                t.AddColumn("RowDataJson", "NVARCHAR(MAX)", True, Nothing, False, False)
+                t.AddColumn("CreatedAt", "DATETIME2", False, "SYSUTCDATETIME()", False, False)
+                t.AddColumn("IsSynced", "BIT", False, "0", False, False)
+                t.AddColumn("SyncedAt", "DATETIME2", True, Nothing, False, False)
+                t.AddColumn("ErrorMessage", "NVARCHAR(MAX)", True, Nothing, False, False)
+                t.AddColumn("RetryCount", "INT", False, "0", False, False)
+                list.Add(t)
+
+                ' S2. _SyncState (حالة المزامنة لكل جدول)
+                t = New TableDefinition("_SyncState", "حالة المزامنة", "Sync State", False)
+                t.AddColumn("TableName", "NVARCHAR(128)", False, Nothing, False, True)
+                t.AddColumn("LastPushAt", "DATETIME2", True, Nothing, False, False)
+                t.AddColumn("LastPullAt", "DATETIME2", True, Nothing, False, False)
+                t.AddColumn("LastPullVersion", "BIGINT", False, "0", False, False)
+                t.AddColumn("TotalPushed", "BIGINT", False, "0", False, False)
+                t.AddColumn("TotalPulled", "BIGINT", False, "0", False, False)
+                t.AddColumn("LastError", "NVARCHAR(MAX)", True, Nothing, False, False)
+                t.AddColumn("LastErrorAt", "DATETIME2", True, Nothing, False, False)
+                list.Add(t)
+
+                ' S3. _SyncConflicts (سجل التعارضات في المزامنة)
+                t = New TableDefinition("_SyncConflicts", "تعارضات المزامنة", "Sync Conflicts", True)
+                t.AddColumn("ConflictId", "BIGINT", False, Nothing, True, True)
+                t.AddColumn("TableName", "NVARCHAR(128)", False, Nothing, False, False)
+                t.AddColumn("RowSyncId", "UNIQUEIDENTIFIER", False, Nothing, False, False)
+                t.AddColumn("LocalDataJson", "NVARCHAR(MAX)", True, Nothing, False, False)
+                t.AddColumn("RemoteDataJson", "NVARCHAR(MAX)", True, Nothing, False, False)
+                t.AddColumn("DetectedAt", "DATETIME2", False, "SYSUTCDATETIME()", False, False)
+                t.AddColumn("IsResolved", "BIT", False, "0", False, False)
+                t.AddColumn("Resolution", "NVARCHAR(20)", True, Nothing, False, False)
+                t.AddColumn("ResolvedAt", "DATETIME2", True, Nothing, False, False)
+                t.AddColumn("ResolvedBy", "INT", True, Nothing, False, False)
+                list.Add(t)
+
                 _schemaTables = list
                 Return _schemaTables
             End SyncLock
