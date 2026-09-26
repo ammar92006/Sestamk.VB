@@ -1,20 +1,23 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class TreasuryService
 
     Public Shared Async Function UpdateBalanceAsync(
     treasuryId As Integer,
     cn As SqlConnection,
-    trans As SqlTransaction) As Task
+    trans As SqlTransaction,
+    Optional isDeposit As Boolean = True) As Task
 
-        ' 1. استعلام لحساب الرصيد الجديد المتوقع بعد الحركة الحالية
+        ' 1. استعلام لحساب الرصيد الجديد المتوقع بعد الحركة الحالية مع مراعاة الرصيد الافتتاحي للخزنة
         Const sqlCalculate As String = "
-        SELECT ISNULL(
-            SUM(CASE WHEN IsDeposit = 1 THEN Amount ELSE -Amount END), 
+        SELECT ISNULL(T.OpeningBalance, 0) + ISNULL(
+            (SELECT SUM(CASE WHEN TT.IsDeposit = 1 THEN TT.Amount ELSE -TT.Amount END) 
+             FROM TreasuryTransactions TT 
+             WHERE TT.TreasuryID = T.TreasuryID), 
             0
         ) 
-        FROM TreasuryTransactions 
-        WHERE TreasuryID = @TreasuryID"
+        FROM Treasury T 
+        WHERE T.TreasuryID = @TreasuryID"
 
         Dim newBalance As Decimal = 0
 
@@ -29,13 +32,14 @@ Public Class TreasuryService
             End If
         End Using
 
-        ' 2. الشرط الحاسم: إذا أصبح الرصيد سالباً، نوقف كل شيء فوراً
-        If newBalance < 0 Then
+        ' 2. الشرط الحاسم: فحص عدم كفاية الرصيد يكون فقط في حركات الصرف/السحب (isDeposit = False)
+        ' أما في حركات الإيداع والبيع، فالأموال تدخل الخزينة ولا يجوز منع الإيداع أبداً
+        If Not isDeposit AndAlso newBalance < 0 Then
             ' رمي الخطأ هنا سيجعل الـ Catch في فورم الحفظ تعمل تلقائياً، ويتم عمل Rollback للحركة كأنها لم تكن
             Throw New InvalidOperationException("عذراً، لا يمكن إتمام العملية نظراً لعدم وجود رصيد كافٍ في الخزنة.")
         End If
 
-        ' 3. إذا كان الرصيد سليماً (موجب أو صفر)، نقوم بتحديث جدول الخزنة
+        ' 3. إذا كان الرصيد سليماً أو الحركة إيداع، نقوم بتحديث جدول الخزنة
         Const sqlUpdate As String = "
         UPDATE Treasury 
         SET CurrentBalance = @NewBalance 
@@ -116,7 +120,7 @@ WHERE TreasuryID=@TreasuryID
         End Using
 
         ' تنبيه هام جداً: يجب أن تدعم الدالة بالأسفل استقبال الـ trans وتمريره للـ SqlCommand الداخلي بها
-        Await UpdateBalanceAsync(treasuryID, cn, trans)
+        Await UpdateBalanceAsync(treasuryID, cn, trans, isDeposit)
 
     End Function
 
