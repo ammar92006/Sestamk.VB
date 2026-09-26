@@ -201,10 +201,41 @@ Namespace UC_Settings
             Try
                 Dim current As String = txtDbServer.Text
                 txtDbServer.Items.Clear()
-                For Each srv As String In DBModule.DetectSqlServers()
-                    txtDbServer.Items.Add(srv)
+
+                ' إضافة الخوادم الافتراضية الشائعة فوراً لمنع أي تجميد للواجهة
+                Dim commonDefaults As String() = {".\SQLEXPRESS", "(localdb)\MSSQLLocalDB", "localhost", "."}
+                For Each srv In commonDefaults
+                    If Not txtDbServer.Items.Contains(srv) Then
+                        txtDbServer.Items.Add(srv)
+                    End If
                 Next
-                If Not String.IsNullOrEmpty(current) Then txtDbServer.Text = current
+
+                If Not String.IsNullOrEmpty(current) Then
+                    txtDbServer.Text = current
+                    If Not txtDbServer.Items.Contains(current) Then txtDbServer.Items.Add(current)
+                End If
+
+                ' استكشاف باقي خوادم SQL المثبتة في الخلفية دون تجميد النافذة
+                Task.Run(Function()
+                             Try
+                                 Return DBModule.DetectSqlServers()
+                             Catch
+                                 Return New List(Of String)()
+                             End Try
+                         End Function).ContinueWith(Sub(t)
+                                                        If t.IsFaulted OrElse t.Result Is Nothing Then Return
+                                                        If Me.IsDisposed OrElse Not Me.IsHandleCreated Then Return
+                                                        Me.BeginInvoke(Sub()
+                                                                           Try
+                                                                               For Each s In t.Result
+                                                                                   If Not txtDbServer.Items.Contains(s) Then
+                                                                                       txtDbServer.Items.Add(s)
+                                                                                   End If
+                                                                               Next
+                                                                           Catch
+                                                                           End Try
+                                                                       End Sub)
+                                                    End Sub)
             Catch ex As Exception
                 Debug.WriteLine("PopulateDetectedServers: " & ex.Message)
             End Try

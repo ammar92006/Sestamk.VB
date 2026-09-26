@@ -280,7 +280,7 @@ Public Class Login
         Dim drag0 As New FormDragHelper(Me, pn_0)
 
         ' ── تأثير Fade-in عند فتح النافذة ──
-        Me.Opacity = 0
+        Me.Opacity = 0.2
         Dim fadeTimer As New Timer() With {.Interval = 15}
         AddHandler fadeTimer.Tick, Sub(s, ev)
                                        If Me.Opacity < 1 Then

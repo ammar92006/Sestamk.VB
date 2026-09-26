@@ -317,7 +317,7 @@ Public Module DBModule
             }
             Using p = Process.Start(psi)
                 Dim output As String = p.StandardOutput.ReadToEnd()
-                p.WaitForExit(3000)
+                p.WaitForExit(1000)
                 For Each line As String In output.Split(New String() {vbCrLf, vbLf}, StringSplitOptions.RemoveEmptyEntries)
                     Dim inst As String = line.Trim()
                     If inst <> "" Then found.Add("(localdb)\" & inst)

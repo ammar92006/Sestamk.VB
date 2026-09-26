@@ -15,7 +15,9 @@ Public Class SplashScreen
     Private _targetProgress As Integer = 0
 
     Private Sub SplashScreen_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Opacity = 0.0
+        Me.Opacity = 0.15
+        Me.ShowInTaskbar = True
+        Me.TopMost = True
 
         Try
             If picLogo IsNot Nothing AndAlso picLogo.Image Is Nothing Then
@@ -74,6 +76,7 @@ Public Class SplashScreen
             If Me.Opacity < 0.0 Then Me.Opacity = 0.0
         Else
             Timer2.Stop()
+            Me.TopMost = False
 
             ' فحص ما إذا كانت شاشة تسجيل الدخول مفتوحة بالفعل لمنع تكرار النوافذ
             Dim loginAlreadyOpen As Boolean = False
@@ -179,14 +182,20 @@ Public Class SplashScreen
                 End Try
             Else
                 UpdateStatus("تعذر الاتصال المباشر، جاري المتابعة...", 85)
+                Me.Invoke(Sub()
+                              Me.Opacity = 1.0
+                              Me.TopMost = False
+                              Me.BringToFront()
+                          End Sub)
+
                 Dim msg As String =
                     "تعذر الاتصال التلقائي بقاعدة البيانات." & vbCrLf & vbCrLf &
                     "• إذا كان هذا أول تشغيل على جهاز جديد، يمكنك ضبط الاتصال أو تهيئة محرك LocalDB الداخلي من شاشة الإعدادات." & vbCrLf &
                     "• هل ترغب في فتح شاشة إعدادات قاعدة البيانات الآن؟"
 
-                Dim choice = MessageBox.Show(msg, "إعداد الاتصال بقاعدة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+                Dim choice = MessageBox.Show(Me, msg, "إعداد الاتصال بقاعدة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                 If choice = DialogResult.Yes Then
-                    Global.WindowsApp1.Settings.OpenDatabaseSettings(databaseOnly:=True)
+                    Global.WindowsApp1.Settings.OpenDatabaseSettings(owner:=Me, databaseOnly:=True)
                     If DBModule.TestConnection() Then
                         Settingsall.LoadAdminCredentials()
                     End If
