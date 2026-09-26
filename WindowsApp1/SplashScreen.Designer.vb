@@ -23,6 +23,7 @@ Partial Class SplashScreen
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SplashScreen))
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
@@ -144,8 +145,8 @@ Partial Class SplashScreen
         '
         Me.pnlBadgeVersion.BackColor = System.Drawing.Color.Transparent
         Me.pnlBadgeVersion.BorderColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.pnlBadgeVersion.BorderRadius = 14
-        Me.pnlBadgeVersion.BorderThickness = 1
+        Me.pnlBadgeVersion.BorderRadius = 12
+        Me.pnlBadgeVersion.BorderThickness = 2
         Me.pnlBadgeVersion.Controls.Add(Me.lblVersion)
         Me.pnlBadgeVersion.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
         Me.pnlBadgeVersion.Location = New System.Drawing.Point(270, 264)
@@ -269,6 +270,7 @@ Partial Class SplashScreen
         Me.Controls.Add(Me.pnlMain)
         Me.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "SplashScreen"
         Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.RightToLeftLayout = True

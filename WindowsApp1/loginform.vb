@@ -4,12 +4,15 @@ Imports System.Drawing.Drawing2D
 Imports System.Net.NetworkInformation
 Imports System.Windows.Forms
 Imports System.Threading.Tasks
+Imports System.Security.Cryptography
+Imports System.Text
 
 Public Class Login
     Private x As Integer, y As Integer
     Private newpoint As Point
     Private _failedLoginAttempts As Integer = 0
     Private _lockoutUntil As DateTime = DateTime.MinValue
+    Private _isBindingUsers As Boolean = False
 
 
     ' ──────────────────────────────────────────────────────────
@@ -53,20 +56,112 @@ Public Class Login
         Return 1
     End Function
 
+    Private Function EncryptPassword(plainText As String) As String
+        If String.IsNullOrEmpty(plainText) Then Return ""
+        Try
+            Dim plainBytes = Encoding.UTF8.GetBytes(plainText)
+            Dim encryptedBytes = ProtectedData.Protect(plainBytes, Nothing, DataProtectionScope.CurrentUser)
+            Return Convert.ToBase64String(encryptedBytes)
+        Catch ex As Exception
+            Logger.LogError("EncryptPassword", ex)
+            Return ""
+        End Try
+    End Function
+
+    Private Function DecryptPassword(cipherText As String) As String
+        If String.IsNullOrEmpty(cipherText) Then Return ""
+        Try
+            Dim cipherBytes = Convert.FromBase64String(cipherText)
+            Dim decryptedBytes = ProtectedData.Unprotect(cipherBytes, Nothing, DataProtectionScope.CurrentUser)
+            Return Encoding.UTF8.GetString(decryptedBytes)
+        Catch ex As Exception
+            Logger.LogError("DecryptPassword", ex)
+            Return ""
+        End Try
+    End Function
+
+    Private Sub SaveLoginPreferences(username As String, password As String)
+        Try
+            SettingsManager.SaveSetting("LastLoggedInUser", username)
+            If chkRememberMe IsNot Nothing AndAlso chkRememberMe.Checked Then
+                SettingsManager.SaveSetting("RememberMe_Enabled", "true")
+                SettingsManager.SaveSetting("RememberMe_User", username)
+                SettingsManager.SaveSetting("RememberMe_Pass", EncryptPassword(password))
+            Else
+                SettingsManager.SaveSetting("RememberMe_Enabled", "false")
+                SettingsManager.SaveSetting("RememberMe_Pass", "")
+            End If
+        Catch ex As Exception
+            Logger.LogError("SaveLoginPreferences", ex)
+        End Try
+    End Sub
+
     Public Sub FillUsersComboBox(Optional showPromptOnError As Boolean = True)
         Dim query As String = "SELECT User_ID, User_username FROM Users_TBL WHERE (IsActive = 1 OR IsActive IS NULL) AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY User_username"
+        _isBindingUsers = True
         Try
             Using cn As SqlConnection = DBModule.NewConn()
                 Using da As New SqlDataAdapter(query, cn)
                     Dim dt As New DataTable()
                     da.Fill(dt)
                     If dt.Rows.Count > 0 Then
+                        ' تحديد المستخدم المطلوب اختياره (المحفوظ في تذكرني أولاً، ثم آخر مستخدم سجل دخوله)
+                        Dim targetUser As String = ""
+                        Dim isRemembered As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
+                        If isRemembered Then
+                            targetUser = SettingsManager.GetSetting("RememberMe_User")
+                        End If
+                        If String.IsNullOrWhiteSpace(targetUser) Then
+                            targetUser = SettingsManager.GetSetting("LastLoggedInUser")
+                        End If
+                        If String.IsNullOrWhiteSpace(targetUser) Then
+                            Try
+                                Using cmdLast As New SqlCommand("SELECT TOP 1 Login_Username FROM Login_Info_TBL WHERE (Login_Note LIKE N'%ناجح%' OR Login_Note IS NULL) AND Login_Username IS NOT NULL AND Login_Username <> '' ORDER BY ID DESC", cn)
+                                    Dim lastObj = cmdLast.ExecuteScalar()
+                                    If lastObj IsNot Nothing AndAlso Not Convert.IsDBNull(lastObj) Then
+                                        targetUser = lastObj.ToString().Trim()
+                                    End If
+                                End Using
+                            Catch
+                            End Try
+                        End If
+
+                        Dim targetId As Object = Nothing
+                        If Not String.IsNullOrWhiteSpace(targetUser) Then
+                            For Each row As DataRow In dt.Rows
+                                If String.Equals(row("User_username").ToString().Trim(), targetUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
+                                    targetId = row("User_ID")
+                                    Exit For
+                                End If
+                            Next
+                        End If
+
                         cmbUsername.DataSource = dt
                         cmbUsername.DisplayMember = "User_username"
                         cmbUsername.ValueMember = "User_ID"
-                        cmbUsername.SelectedIndex = -1
+
+                        If targetId IsNot Nothing Then
+                            cmbUsername.SelectedValue = targetId
+                        Else
+                            cmbUsername.SelectedIndex = 0
+                        End If
+
+                        ' استرجاع كلمة المرور المحفوظة إذا كانت خاصية تذكرني مفعلة
+                        If isRemembered AndAlso targetId IsNot Nothing Then
+                            If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = True
+                            Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
+                            If Not String.IsNullOrEmpty(savedEncPass) Then
+                                Dim savedPass As String = DecryptPassword(savedEncPass)
+                                If Not String.IsNullOrEmpty(savedPass) Then
+                                    txtpassword.Text = savedPass
+                                End If
+                            End If
+                        ElseIf chkRememberMe IsNot Nothing Then
+                            chkRememberMe.Checked = False
+                        End If
                     Else
                         cmbUsername.DataSource = Nothing
+                        If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
                     End If
                 End Using
             End Using
@@ -75,6 +170,8 @@ Public Class Login
             If showPromptOnError Then
                 PromptDatabaseError(ex, "تعذر الاتصال بقاعدة البيانات أو تحميل قائمة المستخدمين.")
             End If
+        Finally
+            _isBindingUsers = False
         End Try
     End Sub
 
@@ -213,6 +310,13 @@ Public Class Login
     ' ──────────────────────────────────────────────────────────
 
     Private Async Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' ── تحميل قائمة المستخدمين وتحديد المستخدم الأخير وكلمة المرور فوراً قبل أي انتظار ──
+        Try
+            FillUsersComboBox(showPromptOnError:=False)
+        Catch ex As Exception
+            Logger.LogError("Login_Load.FillUsers", ex)
+        End Try
+
         AddHandler LicenseBootstrapper.LicenseInvalidated, Sub(msg)
             Try
                 If Me.IsDisposed Then Return
@@ -260,11 +364,14 @@ Public Class Login
             End If
         End If
 
-        Try
-            FillUsersComboBox()
-        Catch ex As Exception
-            Logger.LogError("Login_Load.FillUsers", ex)
-        End Try
+        ' التأكد من تعبئة القائمة في حال لم تكن محملة
+        If cmbUsername.Items.Count = 0 Then
+            Try
+                FillUsersComboBox(showPromptOnError:=False)
+            Catch ex As Exception
+                Logger.LogError("Login_Load.FillUsersFallback", ex)
+            End Try
+        End If
 
         If pnlLockout IsNot Nothing Then pnlLockout.Visible = False
 
@@ -289,6 +396,7 @@ Public Class Login
                                            Me.Opacity = 1
                                            fadeTimer.Stop()
                                            fadeTimer.Dispose()
+                                           FocusPasswordOrUser()
                                        End If
                                    End Sub
         fadeTimer.Start()
@@ -371,44 +479,87 @@ Public Class Login
         SelectLastUserAndFocusPassword()
     End Sub
 
+    Private Sub Login_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
+        Try
+            If cmbUsername.SelectedIndex >= 0 AndAlso Not txtpassword.Focused Then
+                Me.ActiveControl = txtpassword
+                txtpassword.Focus()
+            End If
+        Catch
+        End Try
+    End Sub
+
+    Private Sub cmbUsername_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbUsername.SelectedIndexChanged
+        If _isBindingUsers Then Return
+        Try
+            Dim selectedUser As String = cmbUsername.Text.Trim()
+            Dim remUser As String = SettingsManager.GetSetting("RememberMe_User")
+            Dim isRem As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
+
+            If isRem AndAlso Not String.IsNullOrEmpty(remUser) AndAlso String.Equals(selectedUser, remUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
+                If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = True
+                Dim encPass As String = SettingsManager.GetSetting("RememberMe_Pass")
+                txtpassword.Text = DecryptPassword(encPass)
+            Else
+                If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
+                txtpassword.Clear()
+            End If
+        Catch ex As Exception
+            Logger.LogError("cmbUsername_SelectedIndexChanged", ex)
+        End Try
+    End Sub
+
     Private Sub SelectLastUserAndFocusPassword()
         Try
-            Dim lastUser As String = SettingsManager.GetSetting("LastLoggedInUser")
-            If String.IsNullOrWhiteSpace(lastUser) Then
-                ' احتياطي: جلب آخر مستخدم مسجل من قاعدة البيانات
-                Try
-                    Using cn As SqlConnection = DBModule.NewConn()
-                        Using cmd As New SqlCommand("SELECT TOP 1 Login_Username FROM Login_Info_TBL WHERE (Login_Note LIKE N'%ناجح%' OR Login_Note IS NULL) AND Login_Username IS NOT NULL AND Login_Username <> '' ORDER BY ID DESC", cn)
-                            Dim res = cmd.ExecuteScalar()
-                            If res IsNot Nothing AndAlso Not Convert.IsDBNull(res) Then
-                                lastUser = res.ToString().Trim()
-                            End If
-                        End Using
-                    End Using
-                Catch
-                End Try
-            End If
+            ' في حال لم يتم تحديد أي مستخدم في القائمة بعد
+            If cmbUsername.SelectedIndex < 0 AndAlso cmbUsername.Items.Count > 0 Then
+                Dim targetUser As String = ""
+                Dim isRemembered As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
+                If isRemembered Then
+                    targetUser = SettingsManager.GetSetting("RememberMe_User")
+                End If
+                If String.IsNullOrWhiteSpace(targetUser) Then
+                    targetUser = SettingsManager.GetSetting("LastLoggedInUser")
+                End If
 
-            If Not String.IsNullOrWhiteSpace(lastUser) Then
-                Dim idx As Integer = cmbUsername.FindStringExact(lastUser)
-                If idx >= 0 Then
-                    cmbUsername.SelectedIndex = idx
+                Dim targetId As Object = Nothing
+                If Not String.IsNullOrWhiteSpace(targetUser) Then
+                    For Each item As Object In cmbUsername.Items
+                        Dim drv = TryCast(item, DataRowView)
+                        If drv IsNot Nothing AndAlso String.Equals(drv("User_username").ToString().Trim(), targetUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
+                            targetId = drv("User_ID")
+                            Exit For
+                        End If
+                    Next
+                End If
+
+                If targetId IsNot Nothing Then
+                    cmbUsername.SelectedValue = targetId
                 Else
-                    cmbUsername.Text = lastUser
+                    cmbUsername.SelectedIndex = 0
                 End If
             End If
 
-            Me.BeginInvoke(Sub()
-                               If cmbUsername.SelectedIndex >= 0 Then
-                                   txtpassword.Focus()
-                                   txtpassword.SelectAll()
-                               Else
-                                   cmbUsername.Focus()
-                               End If
-                           End Sub)
+            FocusPasswordOrUser()
         Catch ex As Exception
             Logger.LogError("SelectLastUserAndFocusPassword", ex)
         End Try
+    End Sub
+
+    Private Sub FocusPasswordOrUser()
+        Me.BeginInvoke(Sub()
+                           Try
+                               If cmbUsername.SelectedIndex >= 0 Then
+                                   Me.ActiveControl = txtpassword
+                                   txtpassword.Focus()
+                                   txtpassword.SelectAll()
+                               Else
+                                   Me.ActiveControl = cmbUsername
+                                   cmbUsername.Focus()
+                               End If
+                           Catch
+                           End Try
+                       End Sub)
     End Sub
 
     Private Sub btnMinimize_Click(sender As Object, e As EventArgs) Handles btnMinimize.Click
@@ -502,11 +653,22 @@ Public Class Login
         lblusername.ForeColor = palette.TextPrimary
         lblpassword.ForeColor = palette.TextPrimary
 
-        ' 8. مربع اختيار إظهار كلمة المرور
-        'CheckBox1.ForeColor = palette.TextSecondary
-        'CheckBox1.CheckedState.FillColor = palette.Primary
-        'CheckBox1.UncheckedState.FillColor = palette.InputBackground
-        'CheckBox1.UncheckedState.BorderColor = palette.InputBorder
+        ' 8. مربع اختيار تذكرني
+        If chkRememberMe IsNot Nothing Then
+            If ThemeManager.Instance.IsDark Then
+                chkRememberMe.ForeColor = palette.TextSecondary
+                chkRememberMe.CheckedState.FillColor = palette.Primary
+                chkRememberMe.CheckedState.BorderColor = palette.Primary
+                chkRememberMe.UncheckedState.FillColor = palette.InputBackground
+                chkRememberMe.UncheckedState.BorderColor = palette.InputBorder
+            Else
+                chkRememberMe.ForeColor = Color.FromArgb(100, 116, 139)
+                chkRememberMe.CheckedState.FillColor = palette.Primary
+                chkRememberMe.CheckedState.BorderColor = palette.Primary
+                chkRememberMe.UncheckedState.FillColor = Color.White
+                chkRememberMe.UncheckedState.BorderColor = Color.FromArgb(200, 205, 215)
+            End If
+        End If
 
         ' 9. لوحة الحظر المؤقت والعداد التنازلي
         If pnlLockout IsNot Nothing AndAlso lblLockoutTimer IsNot Nothing Then
@@ -779,11 +941,8 @@ Public Class Login
                 passwordlogin = enteredPass
                 useridlogin = Session.CurrentUserID
 
-                ' حفظ آخر مستخدم
-                Try
-                    SettingsManager.SaveSetting("LastLoggedInUser", enteredUser)
-                Catch
-                End Try
+                ' حفظ إعدادات تسجيل الدخول وتذكرني
+                SaveLoginPreferences(enteredUser, enteredPass)
 
                 ' تسجيل حركة الدخول
                 Dim code As Integer = GetNextLoginCode()
@@ -799,7 +958,9 @@ Public Class Login
                 Dim mainForm As New MainForm()
                 mainForm.Show()
 
-                txtpassword.Clear()
+                If Not (chkRememberMe IsNot Nothing AndAlso chkRememberMe.Checked) Then
+                    txtpassword.Clear()
+                End If
                 Return
             End If
 
@@ -851,11 +1012,8 @@ Public Class Login
                             passwordlogin = enteredPass
                             useridlogin = userId
 
-                            ' حفظ آخر مستخدم
-                            Try
-                                SettingsManager.SaveSetting("LastLoggedInUser", enteredUser)
-                            Catch
-                            End Try
+                            ' حفظ إعدادات تسجيل الدخول وتذكرني
+                            SaveLoginPreferences(enteredUser, enteredPass)
 
                             ' تسجيل حركة الدخول
                             Dim code As Integer = GetNextLoginCode()
@@ -871,7 +1029,9 @@ Public Class Login
                             Dim mainForm As New MainForm()
                             mainForm.Show()
 
-                            txtpassword.Clear()
+                            If Not (chkRememberMe IsNot Nothing AndAlso chkRememberMe.Checked) Then
+                                txtpassword.Clear()
+                            End If
                             Return
                         Else
                             _failedLoginAttempts += 1
@@ -995,7 +1155,20 @@ Public Class Login
     ''' </summary>
     Public Sub ResetForLogout()
         Try
-            txtpassword.Clear()
+            Dim isRem As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
+            If isRem Then
+                If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = True
+                Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
+                If Not String.IsNullOrEmpty(savedEncPass) Then
+                    txtpassword.Text = DecryptPassword(savedEncPass)
+                Else
+                    txtpassword.Clear()
+                End If
+            Else
+                txtpassword.Clear()
+                If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
+            End If
+
             If DateTime.Now < _lockoutUntil Then
                 StartLockoutCountdown()
             Else
@@ -1016,14 +1189,10 @@ Public Class Login
 
             ' التركيز الذكي على خانة الباسورد إذا كان المستخدم محدداً، أو على اسم المستخدم
             If cmbUsername.Items.Count > 0 Then
-                If cmbUsername.SelectedIndex >= 0 Then
-                    txtpassword.Focus()
-                Else
-                    cmbUsername.Focus()
-                End If
+                SelectLastUserAndFocusPassword()
             Else
                 FillUsersComboBox(showPromptOnError:=False)
-                cmbUsername.Focus()
+                SelectLastUserAndFocusPassword()
             End If
         Catch ex As Exception
             Logger.LogError("ResetForLogout", ex)

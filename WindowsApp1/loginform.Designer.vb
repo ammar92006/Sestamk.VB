@@ -57,6 +57,7 @@ Partial Class Login
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnlogin = New Guna.UI2.WinForms.Guna2Button()
+        Me.chkRememberMe = New Guna.UI2.WinForms.Guna2CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.txtpassword = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblusername = New System.Windows.Forms.Label()
@@ -313,6 +314,7 @@ Partial Class Login
         Me.pn_main.Controls.Add(Me.Label1)
         Me.pn_main.Controls.Add(Me.Guna2Panel1)
         Me.pn_main.Controls.Add(Me.btnlogin)
+        Me.pn_main.Controls.Add(Me.chkRememberMe)
         Me.pn_main.Controls.Add(Me.pnlLockout)
         Me.pn_main.Controls.Add(Me.Label2)
         Me.pn_main.Controls.Add(Me.txtpassword)
@@ -490,6 +492,26 @@ Partial Class Login
         Me.Guna2Panel1.Size = New System.Drawing.Size(450, 2)
         Me.Guna2Panel1.TabIndex = 0
         '
+        'chkRememberMe
+        '
+        Me.chkRememberMe.AutoSize = True
+        Me.chkRememberMe.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
+        Me.chkRememberMe.CheckedState.BorderRadius = 4
+        Me.chkRememberMe.CheckedState.BorderThickness = 1
+        Me.chkRememberMe.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
+        Me.chkRememberMe.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.chkRememberMe.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkRememberMe.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.chkRememberMe.Location = New System.Drawing.Point(465, 438)
+        Me.chkRememberMe.Name = "chkRememberMe"
+        Me.chkRememberMe.Size = New System.Drawing.Size(120, 24)
+        Me.chkRememberMe.TabIndex = 24
+        Me.chkRememberMe.Text = "تذكرني"
+        Me.chkRememberMe.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(205, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.chkRememberMe.UncheckedState.BorderRadius = 4
+        Me.chkRememberMe.UncheckedState.BorderThickness = 1
+        Me.chkRememberMe.UncheckedState.FillColor = System.Drawing.Color.White
+        '
         'btnlogin
         '
         Me.btnlogin.BorderRadius = 10
@@ -503,7 +525,7 @@ Partial Class Login
         Me.btnlogin.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(120, Byte), Integer), CType(CType(200, Byte), Integer))
         Me.btnlogin.Image = Global.WindowsApp1.My.Resources.Resources.enter__1_
         Me.btnlogin.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnlogin.Location = New System.Drawing.Point(135, 455)
+        Me.btnlogin.Location = New System.Drawing.Point(135, 474)
         Me.btnlogin.Name = "btnlogin"
         Me.btnlogin.PressedColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(140, Byte), Integer))
         Me.btnlogin.Size = New System.Drawing.Size(450, 48)
@@ -643,4 +665,5 @@ Partial Class Login
     Friend WithEvents lblFeatureDesc3 As Label
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents cmbUsername As Guna.UI2.WinForms.Guna2ComboBox
+    Friend WithEvents chkRememberMe As Guna.UI2.WinForms.Guna2CheckBox
 End Class
