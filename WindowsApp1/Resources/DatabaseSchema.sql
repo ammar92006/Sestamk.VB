@@ -897,6 +897,7 @@ BEGIN
         [CreatedAt] DATETIME NOT NULL DEFAULT getdate(),
         [BasePrice] DECIMAL(18, 2) NOT NULL DEFAULT 0,
         [Partner_ID] INT NULL,
+        [IsDirect] BIT NULL DEFAULT 1,
         CONSTRAINT [PK_Products] PRIMARY KEY ([Product_ID])
     );
 END
@@ -1716,6 +1717,68 @@ BEGIN
         [IsDeleted] BIT NOT NULL DEFAULT 0,
         [CreatedAt] DATETIME2 NOT NULL DEFAULT getdate(),
         CONSTRAINT [PK_WorkShifts] PRIMARY KEY ([WorkShiftID])
+    );
+END
+GO
+
+-- -------------------------------------------------------------
+-- 75. Table: [dbo].[_SyncLog]
+-- -------------------------------------------------------------
+IF OBJECT_ID('[dbo].[_SyncLog]', 'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[_SyncLog] (
+        [LogId] BIGINT IDENTITY(1,1) NOT NULL,
+        [TableName] NVARCHAR(128) NOT NULL,
+        [RowSyncId] UNIQUEIDENTIFIER NOT NULL,
+        [Operation] CHAR(1) NOT NULL,
+        [ChangedColumns] NVARCHAR(MAX) NULL,
+        [RowDataJson] NVARCHAR(MAX) NULL,
+        [CreatedAt] DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+        [IsSynced] BIT NOT NULL DEFAULT 0,
+        [SyncedAt] DATETIME2 NULL,
+        [ErrorMessage] NVARCHAR(MAX) NULL,
+        [RetryCount] INT NOT NULL DEFAULT 0,
+        CONSTRAINT [PK__SyncLog] PRIMARY KEY ([LogId])
+    );
+END
+GO
+
+-- -------------------------------------------------------------
+-- 76. Table: [dbo].[_SyncState]
+-- -------------------------------------------------------------
+IF OBJECT_ID('[dbo].[_SyncState]', 'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[_SyncState] (
+        [TableName] NVARCHAR(128) NOT NULL,
+        [LastPushAt] DATETIME2 NULL,
+        [LastPullAt] DATETIME2 NULL,
+        [LastPullVersion] BIGINT NOT NULL DEFAULT 0,
+        [TotalPushed] BIGINT NOT NULL DEFAULT 0,
+        [TotalPulled] BIGINT NOT NULL DEFAULT 0,
+        [LastError] NVARCHAR(MAX) NULL,
+        [LastErrorAt] DATETIME2 NULL,
+        CONSTRAINT [PK__SyncState] PRIMARY KEY ([TableName])
+    );
+END
+GO
+
+-- -------------------------------------------------------------
+-- 77. Table: [dbo].[_SyncConflicts]
+-- -------------------------------------------------------------
+IF OBJECT_ID('[dbo].[_SyncConflicts]', 'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[_SyncConflicts] (
+        [ConflictId] BIGINT IDENTITY(1,1) NOT NULL,
+        [TableName] NVARCHAR(128) NOT NULL,
+        [RowSyncId] UNIQUEIDENTIFIER NOT NULL,
+        [LocalDataJson] NVARCHAR(MAX) NULL,
+        [RemoteDataJson] NVARCHAR(MAX) NULL,
+        [DetectedAt] DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+        [IsResolved] BIT NOT NULL DEFAULT 0,
+        [Resolution] NVARCHAR(20) NULL,
+        [ResolvedAt] DATETIME2 NULL,
+        [ResolvedBy] INT NULL,
+        CONSTRAINT [PK__SyncConflicts] PRIMARY KEY ([ConflictId])
     );
 END
 GO

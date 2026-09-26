@@ -1,4 +1,4 @@
-﻿/*
+/*
 ================================================================================
    اسم الاسكربت: SestamkDB_SQL2014_Full.sql
    التوافق: Microsoft SQL Server 2014 (Version 12.0) والأحدث
@@ -668,6 +668,27 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 END
 GO
+/****** Object:  Table [dbo].[KitchenComments]    Script Date: 9/23/2026 6:26:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[KitchenComments]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[KitchenComments](
+	[CommentID] [int] IDENTITY(1,1) NOT NULL,
+	[CommentCode] [nvarchar](50) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[CommentText] [nvarchar](250) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[CreatedAt] [datetime] NOT NULL,
+ CONSTRAINT [PK_KitchenComments] PRIMARY KEY CLUSTERED 
+(
+	[CommentID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
 /****** Object:  Table [dbo].[KitchenOrderDetails]    Script Date: 9/23/2026 6:26:26 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -947,6 +968,32 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 END
 GO
+/****** Object:  Table [dbo].[Partners]    Script Date: 9/23/2026 6:26:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Partners]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[Partners](
+	[Partner_ID] [int] IDENTITY(1,1) NOT NULL,
+	[Partner_Name] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Partner_Type] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Phone] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Address] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Email] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[CompanyName] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Balance] [numeric](18, 2) NULL,
+	[Notes] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[CreatedAt] [datetime] NULL,
+	[ImagePath] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+ CONSTRAINT [PK_Partners] PRIMARY KEY CLUSTERED 
+(
+	[Partner_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
 /****** Object:  Table [dbo].[Products]    Script Date: 9/23/2026 6:26:26 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -983,6 +1030,7 @@ CREATE TABLE [dbo].[Products](
 	[CreatedAt] [datetime] NOT NULL,
 	[BasePrice] [decimal](18, 2) NOT NULL,
 	[Partner_ID] [int] NULL,
+	[IsDirect] [bit] NULL,
  CONSTRAINT [PK__Products__9834FB9A1823B93C] PRIMARY KEY CLUSTERED 
 (
 	[Product_ID] ASC
@@ -1813,6 +1861,26 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
 END
 GO
+/****** Object:  Table [dbo].[TheScale]    Script Date: 9/23/2026 6:26:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TheScale]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[TheScale](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Code] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Name] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[Price] [decimal](18, 2) NULL,
+	[Purchase_Price] [decimal](18, 2) NULL,
+ CONSTRAINT [PK_TheScale] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
 /****** Object:  Table [dbo].[Tratde_Type_TBL]    Script Date: 9/23/2026 6:26:26 PM ******/
 SET ANSI_NULLS ON
 GO
@@ -1992,6 +2060,80 @@ PRIMARY KEY CLUSTERED
 	[WorkShiftID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
+END
+GO
+/****** Object:  Table [dbo].[_SyncLog]    Script Date: 9/23/2026 6:26:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_SyncLog]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[_SyncLog](
+	[LogId] [bigint] IDENTITY(1,1) NOT NULL,
+	[TableName] [nvarchar](128) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[RowSyncId] [uniqueidentifier] NOT NULL,
+	[Operation] [char](1) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[ChangedColumns] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[RowDataJson] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[IsSynced] [bit] NOT NULL,
+	[SyncedAt] [datetime2](7) NULL,
+	[ErrorMessage] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[RetryCount] [int] NOT NULL,
+ CONSTRAINT [PK__SyncLog] PRIMARY KEY CLUSTERED 
+(
+	[LogId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+/****** Object:  Table [dbo].[_SyncState]    Script Date: 9/23/2026 6:26:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_SyncState]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[_SyncState](
+	[TableName] [nvarchar](128) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[LastPushAt] [datetime2](7) NULL,
+	[LastPullAt] [datetime2](7) NULL,
+	[LastPullVersion] [bigint] NOT NULL,
+	[TotalPushed] [bigint] NOT NULL,
+	[TotalPulled] [bigint] NOT NULL,
+	[LastError] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[LastErrorAt] [datetime2](7) NULL,
+ CONSTRAINT [PK__SyncState] PRIMARY KEY CLUSTERED 
+(
+	[TableName] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+/****** Object:  Table [dbo].[_SyncConflicts]    Script Date: 9/23/2026 6:26:26 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_SyncConflicts]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[_SyncConflicts](
+	[ConflictId] [bigint] IDENTITY(1,1) NOT NULL,
+	[TableName] [nvarchar](128) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[RowSyncId] [uniqueidentifier] NOT NULL,
+	[LocalDataJson] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[RemoteDataJson] [nvarchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[DetectedAt] [datetime2](7) NOT NULL,
+	[IsResolved] [bit] NOT NULL,
+	[Resolution] [nvarchar](20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+	[ResolvedAt] [datetime2](7) NULL,
+	[ResolvedBy] [int] NULL,
+ CONSTRAINT [PK__SyncConflicts] PRIMARY KEY CLUSTERED 
+(
+	[ConflictId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
 GO
 SET IDENTITY_INSERT [dbo].[Addons] ON 
@@ -5790,6 +5932,76 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__WorkShift__Creat__373B3228]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[WorkShifts] ADD  DEFAULT (getdate()) FOR [CreatedAt]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_KitchenComments_IsActive]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[KitchenComments] ADD CONSTRAINT [DF_KitchenComments_IsActive] DEFAULT ((1)) FOR [IsActive]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_KitchenComments_IsDeleted]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[KitchenComments] ADD CONSTRAINT [DF_KitchenComments_IsDeleted] DEFAULT ((0)) FOR [IsDeleted]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_KitchenComments_CreatedAt]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[KitchenComments] ADD CONSTRAINT [DF_KitchenComments_CreatedAt] DEFAULT (getdate()) FOR [CreatedAt]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Partners_Balance]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[Partners] ADD CONSTRAINT [DF_Partners_Balance] DEFAULT ((0)) FOR [Balance]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Partners_CreatedAt]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[Partners] ADD CONSTRAINT [DF_Partners_CreatedAt] DEFAULT (getdate()) FOR [CreatedAt]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF_Products_IsDirect]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[Products] ADD CONSTRAINT [DF_Products_IsDirect] DEFAULT ((1)) FOR [IsDirect]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncLog_CreatedAt]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncLog] ADD CONSTRAINT [DF__SyncLog_CreatedAt] DEFAULT (sysutcdatetime()) FOR [CreatedAt]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncLog_IsSynced]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncLog] ADD CONSTRAINT [DF__SyncLog_IsSynced] DEFAULT ((0)) FOR [IsSynced]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncLog_RetryCount]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncLog] ADD CONSTRAINT [DF__SyncLog_RetryCount] DEFAULT ((0)) FOR [RetryCount]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncState_LastPullVersion]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncState] ADD CONSTRAINT [DF__SyncState_LastPullVersion] DEFAULT ((0)) FOR [LastPullVersion]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncState_TotalPushed]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncState] ADD CONSTRAINT [DF__SyncState_TotalPushed] DEFAULT ((0)) FOR [TotalPushed]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncState_TotalPulled]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncState] ADD CONSTRAINT [DF__SyncState_TotalPulled] DEFAULT ((0)) FOR [TotalPulled]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncConflicts_DetectedAt]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncConflicts] ADD CONSTRAINT [DF__SyncConflicts_DetectedAt] DEFAULT (sysutcdatetime()) FOR [DetectedAt]
+END
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[DF__SyncConflicts_IsResolved]') AND type = 'D')
+BEGIN
+ALTER TABLE [dbo].[_SyncConflicts] ADD CONSTRAINT [DF__SyncConflicts_IsResolved] DEFAULT ((0)) FOR [IsResolved]
 END
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_BRANCH_TBL_Company_info_TBL]') AND parent_object_id = OBJECT_ID(N'[dbo].[BRANCH_TBL]'))

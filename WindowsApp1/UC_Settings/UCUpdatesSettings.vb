@@ -53,35 +53,68 @@ Namespace UC_Settings
 
         Private Async Function LoadUpdateHistoryCardsAsync(channel As String) As Task
             Try
-                Using client As New HttpClient()
-                    client.Timeout = TimeSpan.FromSeconds(15)
-                    client.DefaultRequestHeaders.Add("apikey", LicenseSettings.PublishableKey)
-                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " & LicenseSettings.PublishableKey)
+                Dim updatesArray As New JArray()
 
-                    Dim url = LicenseSettings.SupabaseUrl.TrimEnd("/"c) & "/rest/v1/updates?channel=eq." & Uri.EscapeDataString(channel) & "&is_active=eq.true&select=*&order=release_date.desc"
-                    Dim response = Await client.GetAsync(url)
+                ' 1. جلب التحديثات المخصصة لـ Sestamk.VB حصراً من GitHub Releases لمنع أي تداخل مع C#
+                Try
+                    Using ghClient As New HttpClient()
+                        ghClient.Timeout = TimeSpan.FromSeconds(12)
+                        ghClient.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
+                        Dim ghResp = Await ghClient.GetAsync(LicenseSettings.GitHubReleasesApiUrl)
+                        If ghResp.IsSuccessStatusCode Then
+                            Dim ghJson = Await ghResp.Content.ReadAsStringAsync()
+                            Dim ghList = JArray.Parse(ghJson)
+                            For Each rel In ghList
+                                Dim tag = Convert.ToString(rel("tag_name")).TrimStart("v"c)
+                                Dim title = Convert.ToString(rel("name"))
+                                Dim body = Convert.ToString(rel("body"))
+                                Dim pubDate = Convert.ToString(rel("published_at"))
+                                Dim manUrl = "https://github.com/ammar92006/Sestamk.VB/releases/download/v" & tag & "/manifest.json"
 
-                    If Not response.IsSuccessStatusCode Then
-                        lblLatestVersion.Text = "-"
-                        lblLatestUpdateDate.Text = "-"
-                        Return
-                    End If
-
-                    Dim json = Await response.Content.ReadAsStringAsync()
-                    Dim updatesArray = JArray.Parse(json)
-
-                    If updatesArray.Count = 0 AndAlso Not String.Equals(channel, "beta", StringComparison.OrdinalIgnoreCase) Then
-                        ' جلب التحديثات النشطة المتاحة لضمان عدم بقاء الشاشة فارغة
-                        Dim fallbackUrl = LicenseSettings.SupabaseUrl.TrimEnd("/"c) & "/rest/v1/updates?is_active=eq.true&select=*&order=release_date.desc"
-                        Dim fallbackResp = Await client.GetAsync(fallbackUrl)
-                        If fallbackResp.IsSuccessStatusCode Then
-                            Dim fallbackJson = Await fallbackResp.Content.ReadAsStringAsync()
-                            updatesArray = JArray.Parse(fallbackJson)
+                                Dim cardItem As New JObject From {
+                                    {"version", tag},
+                                    {"title", If(String.IsNullOrWhiteSpace(title), "الإصدار " & tag, title)},
+                                    {"description", body},
+                                    {"release_date", pubDate},
+                                    {"manifest_url", manUrl}
+                                }
+                                updatesArray.Add(cardItem)
+                            Next
                         End If
-                    End If
+                    End Using
+                Catch exGh As Exception
+                    Debug.WriteLine("GitHub releases check error: " & exGh.Message)
+                End Try
 
-                    flpUpdateHistory.SuspendLayout()
-                    flpUpdateHistory.Controls.Clear()
+                ' 2. في حال لم نتمكن من الوصول لـ GitHub Releases، نحاول فحص المانيفست الافتراضي
+                If updatesArray.Count = 0 Then
+                    Try
+                        Using client As New HttpClient()
+                            client.Timeout = TimeSpan.FromSeconds(10)
+                            client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
+                            Dim defResp = Await client.GetAsync(LicenseSettings.DefaultManifestUrl)
+                            If defResp.IsSuccessStatusCode Then
+                                Dim manJson = Await defResp.Content.ReadAsStringAsync()
+                                Dim parsedMan = UpdateCoordinator.ParseManifest(JObject.Parse(manJson))
+                                If parsedMan IsNot Nothing Then
+                                    Dim cardItem As New JObject From {
+                                        {"version", parsedMan.Version},
+                                        {"title", "الإصدار " & parsedMan.Version},
+                                        {"description", parsedMan.Notes},
+                                        {"release_date", DateTime.UtcNow.ToString("yyyy-MM-dd")},
+                                        {"manifest_url", LicenseSettings.DefaultManifestUrl}
+                                    }
+                                    updatesArray.Add(cardItem)
+                                End If
+                            End If
+                        End Using
+                    Catch exDef As Exception
+                        Debug.WriteLine("Default manifest check error: " & exDef.Message)
+                    End Try
+                End If
+
+                flpUpdateHistory.SuspendLayout()
+                flpUpdateHistory.Controls.Clear()
 
                     If updatesArray.Count > 0 Then
                         ' أحدث تحديث
@@ -136,7 +169,6 @@ Namespace UC_Settings
                         btnCheckForUpdates.FillColor = Color.FromArgb(16, 185, 129)
                         btnCheckForUpdates.Enabled = False
                     End If
-                End Using
             Catch ex As Exception
                 Debug.WriteLine("LoadUpdateHistoryCardsAsync error: " & ex.Message)
                 lblLatestVersion.Text = "-"
@@ -221,9 +253,14 @@ Namespace UC_Settings
 
                 Await LoadUpdateHistoryCardsAsync(channel)
 
+                If String.IsNullOrWhiteSpace(_latestManifestUrl) Then
+                    _latestManifestUrl = LicenseSettings.DefaultManifestUrl
+                End If
+
                 If Not String.IsNullOrWhiteSpace(_latestManifestUrl) Then
                     Using client As New HttpClient()
                         client.Timeout = TimeSpan.FromSeconds(15)
+                        client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
                         Dim manifestJson = Await client.GetStringAsync(_latestManifestUrl)
                         Dim parsed = JObject.Parse(manifestJson)
                         Dim manifest = UpdateCoordinator.ParseManifest(parsed)

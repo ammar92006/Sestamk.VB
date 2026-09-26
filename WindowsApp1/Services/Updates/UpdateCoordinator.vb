@@ -23,12 +23,19 @@ Public NotInheritable Class UpdateCoordinator
     End Sub
 
     Public Shared Async Function CheckAndPromptAsync(license As JObject, owner As IWin32Window) As Task
-        If license Is Nothing OrElse Not Convert.ToBoolean(license("update_available")) Then Return
-        Dim manifestUrl = Convert.ToString(license.SelectToken("update.manifest_url"))
-        If String.IsNullOrWhiteSpace(manifestUrl) Then Return
+        Dim manifestUrl As String = Nothing
+        If license IsNot Nothing AndAlso Convert.ToBoolean(license("update_available")) Then
+            manifestUrl = Convert.ToString(license.SelectToken("update.manifest_url"))
+        End If
+
+        If String.IsNullOrWhiteSpace(manifestUrl) Then
+            manifestUrl = LicenseSettings.DefaultManifestUrl
+        End If
+
         Try
             Using client As New HttpClient()
                 client.Timeout = TimeSpan.FromSeconds(15)
+                client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-Client")
                 Dim json = Await client.GetStringAsync(manifestUrl)
                 Dim manifest = ParseManifest(JObject.Parse(json))
                 If manifest Is Nothing Then Return
@@ -117,9 +124,9 @@ Public NotInheritable Class UpdateCoordinator
     Public Shared Function ParseManifest(json As JObject) As VbUpdateManifest
         If json Is Nothing Then Return Nothing
 
-        ' التحقق من توافق المنتج إذا كان محدداً
+        ' التحقق من توافق المنتج (يجب أن يكون sestamk-vb حصراً لمنع خلط تحديثات C# مع VB)
         Dim prod = Convert.ToString(If(json("product"), json("Product")))
-        If Not String.IsNullOrEmpty(prod) AndAlso Not String.Equals(prod, LicenseSettings.ProductId, StringComparison.OrdinalIgnoreCase) AndAlso Not prod.ToLower().Contains("sestamk") Then
+        If Not String.IsNullOrEmpty(prod) AndAlso Not String.Equals(prod, LicenseSettings.ProductId, StringComparison.OrdinalIgnoreCase) Then
             Return Nothing
         End If
 
@@ -162,6 +169,11 @@ Public NotInheritable Class UpdateCoordinator
         End If
         If pkgSize <= 0 Then
             pkgSize = CLng(Val(Convert.ToString(If(json("PackageSize"), If(json("FullVersionSizeBytes"), json("DownloadSizeBytes"))))))
+        End If
+
+        ' حماية قصوى: منع أي حزمة موجهة لمستودع C#
+        If Not String.IsNullOrEmpty(pkgUrl) AndAlso pkgUrl.IndexOf("/ammar92006/Sestamk/", StringComparison.OrdinalIgnoreCase) >= 0 AndAlso pkgUrl.IndexOf("/ammar92006/Sestamk.VB/", StringComparison.OrdinalIgnoreCase) < 0 Then
+            Return Nothing
         End If
 
         ' إذا كان الرابط مفقوداً أو فارغاً لا نقبل المانيفست لحماية البرنامج

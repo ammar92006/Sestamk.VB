@@ -16,6 +16,9 @@ Public NotInheritable Class LicenseSettings
     Public Const CheckLicenseRpc As String = "check_license"
     Public Const ProductId As String = "sestamk-vb"
     Public Const OfflineCacheDays As Integer = 7
+    Public Const GitHubRepo As String = "ammar92006/Sestamk.VB"
+    Public Const DefaultManifestUrl As String = "https://github.com/ammar92006/Sestamk.VB/releases/latest/download/manifest.json"
+    Public Const GitHubReleasesApiUrl As String = "https://api.github.com/repos/ammar92006/Sestamk.VB/releases"
 End Class
 
 Public NotInheritable Class HardwareFingerprint

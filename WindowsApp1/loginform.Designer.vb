@@ -87,7 +87,7 @@ Partial Class Login
         Me.pnlLockout.BorderThickness = 1
         Me.pnlLockout.Controls.Add(Me.lblLockoutTimer)
         Me.pnlLockout.FillColor = System.Drawing.Color.FromArgb(CType(CType(254, Byte), Integer), CType(CType(242, Byte), Integer), CType(CType(242, Byte), Integer))
-        Me.pnlLockout.Location = New System.Drawing.Point(135, 515)
+        Me.pnlLockout.Location = New System.Drawing.Point(135, 532)
         Me.pnlLockout.Name = "pnlLockout"
         Me.pnlLockout.Size = New System.Drawing.Size(450, 42)
         Me.pnlLockout.TabIndex = 36
@@ -467,7 +467,7 @@ Partial Class Login
         Me.btnsup.Image = Global.WindowsApp1.My.Resources.Resources.customer_support
         Me.btnsup.ImageOffset = New System.Drawing.Point(-5, 0)
         Me.btnsup.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btnsup.Location = New System.Drawing.Point(225, 618)
+        Me.btnsup.Location = New System.Drawing.Point(225, 635)
         Me.btnsup.Name = "btnsup"
         Me.btnsup.Size = New System.Drawing.Size(270, 40)
         Me.btnsup.TabIndex = 29
@@ -477,7 +477,7 @@ Partial Class Login
         '
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(130, Byte), Integer), CType(CType(140, Byte), Integer), CType(CType(155, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(252, 588)
+        Me.Label1.Location = New System.Drawing.Point(252, 605)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(217, 20)
         Me.Label1.TabIndex = 28
@@ -487,30 +487,10 @@ Partial Class Login
         'Guna2Panel1
         '
         Me.Guna2Panel1.FillColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(225, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.Guna2Panel1.Location = New System.Drawing.Point(135, 570)
+        Me.Guna2Panel1.Location = New System.Drawing.Point(135, 587)
         Me.Guna2Panel1.Name = "Guna2Panel1"
         Me.Guna2Panel1.Size = New System.Drawing.Size(450, 2)
         Me.Guna2Panel1.TabIndex = 0
-        '
-        'chkRememberMe
-        '
-        Me.chkRememberMe.AutoSize = True
-        Me.chkRememberMe.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.chkRememberMe.CheckedState.BorderRadius = 4
-        Me.chkRememberMe.CheckedState.BorderThickness = 1
-        Me.chkRememberMe.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.chkRememberMe.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.chkRememberMe.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkRememberMe.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.chkRememberMe.Location = New System.Drawing.Point(465, 438)
-        Me.chkRememberMe.Name = "chkRememberMe"
-        Me.chkRememberMe.Size = New System.Drawing.Size(120, 24)
-        Me.chkRememberMe.TabIndex = 24
-        Me.chkRememberMe.Text = "تذكرني"
-        Me.chkRememberMe.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(205, Byte), Integer), CType(CType(215, Byte), Integer))
-        Me.chkRememberMe.UncheckedState.BorderRadius = 4
-        Me.chkRememberMe.UncheckedState.BorderThickness = 1
-        Me.chkRememberMe.UncheckedState.FillColor = System.Drawing.Color.White
         '
         'btnlogin
         '
@@ -532,6 +512,26 @@ Partial Class Login
         Me.btnlogin.TabIndex = 27
         Me.btnlogin.Text = "تسجيل الدخول"
         Me.btnlogin.TextOffset = New System.Drawing.Point(5, 0)
+        '
+        'chkRememberMe
+        '
+        Me.chkRememberMe.AutoSize = True
+        Me.chkRememberMe.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
+        Me.chkRememberMe.CheckedState.BorderRadius = 4
+        Me.chkRememberMe.CheckedState.BorderThickness = 1
+        Me.chkRememberMe.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(175, Byte), Integer))
+        Me.chkRememberMe.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.chkRememberMe.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkRememberMe.ForeColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.chkRememberMe.Location = New System.Drawing.Point(512, 440)
+        Me.chkRememberMe.Name = "chkRememberMe"
+        Me.chkRememberMe.Size = New System.Drawing.Size(69, 23)
+        Me.chkRememberMe.TabIndex = 24
+        Me.chkRememberMe.Text = "تذكرني"
+        Me.chkRememberMe.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(200, Byte), Integer), CType(CType(205, Byte), Integer), CType(CType(215, Byte), Integer))
+        Me.chkRememberMe.UncheckedState.BorderRadius = 4
+        Me.chkRememberMe.UncheckedState.BorderThickness = 1
+        Me.chkRememberMe.UncheckedState.FillColor = System.Drawing.Color.White
         '
         'Label2
         '
@@ -623,6 +623,7 @@ Partial Class Login
         Me.pnlFeature2.ResumeLayout(False)
         Me.pnlFeature1.ResumeLayout(False)
         Me.pn_main.ResumeLayout(False)
+        Me.pn_main.PerformLayout()
         CType(Me.Guna2PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
