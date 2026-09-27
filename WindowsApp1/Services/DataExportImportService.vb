@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -84,7 +84,7 @@ Namespace Services
                 ' 2. الموردين
                 list.Add(New EntityExportInfo("Suppliers", "الموردين", "Suppliers",
                     "SELECT SupplierCode AS [كود المورد], ISNULL(SupplierName, SuppliersName) AS [اسم المورد], " &
-                    "Phone AS [رقم الهاتف], Address AS [العنوان], " &
+                    "Phone AS [رقم الهاتف], Address AS [العنوان], OpeningBalance AS [الرصيد الافتتاحي], " &
                     "ISNULL(CurrentBalance, ISNULL(Balance, 0)) AS [الرصيد الحالي], " &
                     "CASE WHEN IsActive = 1 THEN N'نشط' ELSE N'غير نشط' END AS [الحالة], Notes AS [ملاحظات] " &
                     "FROM Suppliers WHERE (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY ISNULL(SupplierName, SuppliersName)", True, "CreatedAt"))
@@ -156,13 +156,13 @@ Namespace Services
                     "FROM Invoices ORDER BY InvoiceID DESC", False, "InvoiceDate"))
 
                 ' 11. فواتير المشتريات
-                list.Add(New EntityExportInfo("Purchases", "فواتير المشتريات", "Purchases",
+                list.Add(New EntityExportInfo("Purchases", "فواتير مشتريات الخامات", "PurchaseHeaders",
                     "SELECT TOP 5000 InvoiceNumber AS [رقم الفاتورة], " &
                     "CONVERT(VARCHAR(16), PurchaseDate, 120) AS [تاريخ الشراء], " &
-                    "SupplierName AS [المورد], TotalAmount AS [الإجمالي], " &
-                    "DiscountAmount AS [الخصم], NetAmount AS [الصافي], " &
+                    "(SELECT SupplierName FROM Suppliers S WHERE S.SupplierID=PurchaseHeaders.SupplierID) AS [المورد], TotalAmount AS [الإجمالي], " &
+                    "Discount AS [الخصم], NetTotal AS [الصافي], " &
                     "PaidAmount AS [المدفوع], RemainingAmount AS [المتبقي] " &
-                    "FROM Purchases ORDER BY PurchaseID DESC", False, "PurchaseDate"))
+                    "FROM PurchaseHeaders WHERE ISNULL(IsDeleted,0)=0 ORDER BY PurchaseID DESC", False, "PurchaseDate"))
 
                 ' 12. وحدات القياس
                 list.Add(New EntityExportInfo("Units", "وحدات القياس", "Units",

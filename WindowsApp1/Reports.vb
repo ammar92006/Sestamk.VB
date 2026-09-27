@@ -16,6 +16,17 @@ Public Class Reports
     Private Sub ReportsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' التجاوب مع الشاشة: تكبير الفورم لملء الشاشة لو أكبر من المساحة المتاحة
         LayoutHelper.MaximizeIfTooLarge(Me)
+        TabPurchases.Text = "أرشيف مشتريات المنتجات"
+        Dim modernPage As New TabPage("مشتريات الخامات والموردين")
+        Dim openModern As New Button With {.Text = "فتح تقارير المشتريات الحديثة", .Dock = DockStyle.Top, .Height = 55}
+        AddHandler openModern.Click, Sub() PurchaseDocumentHelper.RunSafely(Sub()
+                                                                              SupplierAccountingService.DemandPermission("frmPurchaseReports", "CanOpen")
+                                                                              Using report As New frmPurchaseReports()
+                                                                                  report.ShowDialog(Me)
+                                                                              End Using
+                                                                          End Sub)
+        modernPage.Controls.Add(openModern)
+        TabReports.TabPages.Add(modernPage)
 
         UpdateDateTime()
         Timer1.Interval = 1000
@@ -870,13 +881,13 @@ Public Class Reports
 
             Connect()
 
-            Dim queryDetails As String = "DELETE FROM Purchase_Detalis WHERE Purchase_Id = @Invoice_ID"
+            Dim queryDetails As String = "DELETE FROM PurchaseDetails WHERE PurchaseID = @Invoice_ID"
             Using cmdDetails As New SqlCommand(queryDetails, Conn)
                 cmdDetails.Parameters.AddWithValue("@Invoice_ID", inv_id)
                 cmdDetails.ExecuteNonQuery()
             End Using
 
-            Dim queryHeader As String = "DELETE FROM Purchase_Header WHERE Purchase_Id = @Invoice_ID"
+            Dim queryHeader As String = "DELETE FROM PurchaseHeaders WHERE PurchaseID = @Invoice_ID"
             Using cmdHeader As New SqlCommand(queryHeader, Conn)
                 cmdHeader.Parameters.AddWithValue("@Invoice_ID", inv_id)
                 cmdHeader.ExecuteNonQuery()

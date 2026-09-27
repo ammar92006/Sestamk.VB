@@ -984,6 +984,38 @@ Partial Class frmPurchases
         Me.Guna2Panel1.ResumeLayout(False)
         Me.Guna2Panel2.ResumeLayout(False)
         CType(Me.dgvInvoiceItems, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.btnLookupPurchases = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnLookupPurchases.Name = "btnLookupPurchases"
+        Me.btnLookupPurchases.Text = "بحث الفواتير السابقة"
+        Me.btnLookupPurchases.Size = New System.Drawing.Size(210, 38)
+        Me.btnLookupPurchases.BorderRadius = 6
+        Me.btnLookupPurchases.FillColor = System.Drawing.Color.FromArgb(43, 132, 185)
+        Me.btnLookupPurchases.ForeColor = System.Drawing.Color.White
+        Me.btnLookupPurchases.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPrintLastPurchase = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnPrintLastPurchase.Name = "btnPrintLastPurchase"
+        Me.btnPrintLastPurchase.Text = "عرض / طباعة آخر فاتورة"
+        Me.btnPrintLastPurchase.Size = New System.Drawing.Size(230, 38)
+        Me.btnPrintLastPurchase.BorderRadius = 6
+        Me.btnPrintLastPurchase.FillColor = System.Drawing.Color.FromArgb(127, 140, 141)
+        Me.btnPrintLastPurchase.ForeColor = System.Drawing.Color.White
+        Me.btnPrintLastPurchase.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.updateCost = New Guna.UI2.WinForms.Guna2CheckBox()
+        Me.updateCost.Name = "updateCost"
+        Me.updateCost.Text = "تحديث تكلفة الخامات بآخر شراء (بعد الخصم)"
+        Me.updateCost.Size = New System.Drawing.Size(360, 38)
+        Me.updateCost.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.updateCost.Checked = True
+        Me.purchaseActions = New System.Windows.Forms.FlowLayoutPanel()
+        Me.purchaseActions.Name = "purchaseActions"
+        Me.purchaseActions.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.purchaseActions.Height = 58
+        Me.purchaseActions.Padding = New System.Windows.Forms.Padding(8)
+        Me.purchaseActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+        Me.purchaseActions.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.purchaseActions.Controls.AddRange(New System.Windows.Forms.Control() {Me.btnLookupPurchases, Me.btnPrintLastPurchase, Me.updateCost})
+        Me.Controls.Add(Me.purchaseActions)
+        Me.purchaseActions.SendToBack()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1041,4 +1073,9 @@ Partial Class frmPurchases
     Friend WithEvents txtBarcode As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label5 As Label
     Friend WithEvents cmbBranches As Guna.UI2.WinForms.Guna2ComboBox
+
+    Friend WithEvents btnLookupPurchases As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnPrintLastPurchase As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents updateCost As Guna.UI2.WinForms.Guna2CheckBox
+    Friend WithEvents purchaseActions As System.Windows.Forms.FlowLayoutPanel
 End Class

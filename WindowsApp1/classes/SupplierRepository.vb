@@ -10,9 +10,9 @@ Public Class SupplierRepository
     ' 1. جلب قائمة الموردين مع البحث
     Public Function GetSuppliers(Optional search As String = "") As DataTable
         Using conn As New SqlConnection(_connectionString)
-            Dim query As String = "SELECT SupplierID, SupplierCode, SupplierName, Phone1, CurrentBalance, IsActive " &
+            Dim query As String = "SELECT SupplierID, SupplierCode, SupplierName, Phone AS Phone1, CurrentBalance, IsActive " &
                                  "FROM Suppliers " &
-                                 "WHERE SupplierName LIKE @search OR Phone1 LIKE @search OR SupplierCode LIKE @search " &
+                                 "WHERE SupplierName LIKE @search OR Phone LIKE @search OR SupplierCode LIKE @search " &
                                  "ORDER BY SupplierID DESC"
 
             Using cmd As New SqlCommand(query, conn)
@@ -27,6 +27,7 @@ Public Class SupplierRepository
 
     ' 2. إضافة/تعديل مورد وتسجيل الرصيد الافتتاحي كحركة مالية
     Public Function SaveSupplier(supplier As SupplierModel, userId As Integer, ByRef newSupplierId As Integer) As Boolean
+        SupplierAccountingService.DemandPermission("FrmSuppliers", If(supplier.SupplierID = 0, "CanAdd", "CanEdit"))
         newSupplierId = supplier.SupplierID
         Using conn As New SqlConnection(_connectionString)
             conn.Open()
@@ -35,9 +36,9 @@ Public Class SupplierRepository
             Try
                 If supplier.SupplierID = 0 Then ' إضافة جديد
                     Dim insertQuery As String = "INSERT INTO Suppliers " &
-                        "(SupplierCode, SupplierName, Phone1, Phone2, Email, Address, OpeningBalance, CurrentBalance, CreditLimit, Notes, IsActive) " &
+                        "(SupplierCode, SupplierName, Phone, Address, OpeningBalance, CurrentBalance, Notes, IsActive) " &
                         "VALUES " &
-                        "(@SupplierCode, @SupplierName, @Phone1, @Phone2, @Email, @Address, @OpeningBalance, @OpeningBalance, @CreditLimit, @Notes, @IsActive); " &
+                        "(@SupplierCode, @SupplierName, @Phone1, @Address, @OpeningBalance, @OpeningBalance, @Notes, @IsActive); " &
                         "SELECT SCOPE_IDENTITY();"
 
                     Using cmd As New SqlCommand(insertQuery, conn, transaction)
@@ -48,9 +49,9 @@ Public Class SupplierRepository
                     ' تسجيل الرصيد الافتتاحي كحركة مالية
                     If supplier.OpeningBalance <> 0 Then
                         Dim txQuery As String = "INSERT INTO SupplierTransactions " &
-                            "(SupplierID, TransactionType, ReferenceType, CreditAmount, DebitAmount, BalanceAfter, Notes, CreatedByUserID) " &
+                            "(SupplierID, TransactionType, Credit, Debit, BalanceBefore, BalanceAfter, Notes, UserID) " &
                             "VALUES " &
-                            "(@SupplierID, N'رصيد افتتاحي', 'OpeningBalance', @Credit, @Debit, @BalanceAfter, N'رصيد افتتاحي عند الإنشاء', @UserID);"
+                            "(@SupplierID, 'OPENING_BALANCE', @Credit, @Debit, 0, @BalanceAfter, N'رصيد افتتاحي عند الإنشاء', @UserID);"
 
                         Using txCmd As New SqlCommand(txQuery, conn, transaction)
                             Dim credit As Decimal = If(supplier.OpeningBalance > 0, supplier.OpeningBalance, 0)
@@ -68,14 +69,10 @@ Public Class SupplierRepository
                     Dim updateQuery As String = "UPDATE Suppliers SET " &
                         "SupplierCode = @SupplierCode, " &
                         "SupplierName = @SupplierName, " &
-                        "Phone1 = @Phone1, " &
-                        "Phone2 = @Phone2, " &
-                        "Email = @Email, " &
+                        "Phone = @Phone1, " &
                         "Address = @Address, " &
-                        "CreditLimit = @CreditLimit, " &
                         "Notes = @Notes, " &
-                        "IsActive = @IsActive, " &
-                        "UpdatedAt = GETDATE() " &
+                        "IsActive = @IsActive " &
                         "WHERE SupplierID = @SupplierID;"
 
                     Using cmd As New SqlCommand(updateQuery, conn, transaction)
@@ -97,16 +94,16 @@ Public Class SupplierRepository
     ' 3. جلب كشف حساب المورد
     Public Function GetSupplierStatement(supplierId As Integer, fromDate As DateTime, toDate As DateTime) As DataTable
         Using conn As New SqlConnection(_connectionString)
-            Dim query As String = "SELECT TransactionID, TransactionDate, TransactionType, ReferenceType, ReferenceID, " &
-                                 "CreditAmount, DebitAmount, BalanceAfter, PaymentMethod, Notes " &
+            Dim query As String = "SELECT TransactionID, TransactionDate, TransactionType, ReferenceNo, " &
+                                 "Credit, Debit, BalanceBefore, BalanceAfter, PaymentMethod, Notes " &
                                  "FROM SupplierTransactions " &
-                                 "WHERE SupplierID = @SupplierID AND TransactionDate BETWEEN @FromDate AND @ToDate " &
-                                 "ORDER BY TransactionID ASC"
+                                 "WHERE SupplierID = @SupplierID AND TransactionDate >= @FromDate AND TransactionDate < @ToDate " &
+                                 "ORDER BY TransactionDate, TransactionID ASC"
 
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@SupplierID", supplierId)
                 cmd.Parameters.AddWithValue("@FromDate", fromDate.Date)
-                cmd.Parameters.AddWithValue("@ToDate", toDate.Date.AddDays(1).AddTicks(-1))
+                cmd.Parameters.AddWithValue("@ToDate", toDate.Date.AddDays(1))
 
                 Dim adapter As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable()

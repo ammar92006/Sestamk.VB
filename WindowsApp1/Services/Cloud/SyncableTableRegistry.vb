@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Linq
 
 Namespace Services.Cloud
@@ -73,8 +73,8 @@ Namespace Services.Cloud
             _tables.Add(New SyncableTable With {.TableName = "SalesInvoices", .DisplayNameAr = "فواتير المبيعات", .PrimaryKeyColumn = "InvoiceID", .Priority = 3, .DependsOn = {"Users", "Customers"}})
             _tables.Add(New SyncableTable With {.TableName = "SalesInvoiceDetails", .DisplayNameAr = "تفاصيل فواتير المبيعات", .PrimaryKeyColumn = "InvoiceDetailID", .Priority = 3, .DependsOn = {"SalesInvoices", "Products"}})
             _tables.Add(New SyncableTable With {.TableName = "Sales", .DisplayNameAr = "المبيعات", .PrimaryKeyColumn = "SaleID", .Priority = 3, .DependsOn = {"Users", "Customers"}})
-            _tables.Add(New SyncableTable With {.TableName = "PurchaseHeaders", .DisplayNameAr = "رأس المشتريات", .PrimaryKeyColumn = "PurchaseHeaderID", .Priority = 3, .DependsOn = {"Suppliers", "Users"}})
-            _tables.Add(New SyncableTable With {.TableName = "PurchaseDetails", .DisplayNameAr = "تفاصيل المشتريات", .PrimaryKeyColumn = "PurchaseDetailID", .Priority = 3, .DependsOn = {"PurchaseHeaders", "Products"}})
+            _tables.Add(New SyncableTable With {.TableName = "PurchaseHeaders", .DisplayNameAr = "رأس المشتريات", .PrimaryKeyColumn = "PurchaseID", .Priority = 3, .DependsOn = {"Suppliers", "Users"}})
+            _tables.Add(New SyncableTable With {.TableName = "PurchaseDetails", .DisplayNameAr = "تفاصيل المشتريات", .PrimaryKeyColumn = "DetailID", .Priority = 3, .DependsOn = {"PurchaseHeaders", "RawMaterials", "Units"}})
             _tables.Add(New SyncableTable With {.TableName = "Purchases", .DisplayNameAr = "المشتريات", .PrimaryKeyColumn = "PurchaseID", .Priority = 3, .DependsOn = {"Suppliers"}})
             _tables.Add(New SyncableTable With {.TableName = "PendingInvoices", .DisplayNameAr = "الفواتير المعلقة", .PrimaryKeyColumn = "PendingInvoiceID", .Priority = 3, .DependsOn = {"Users", "Customers"}})
             _tables.Add(New SyncableTable With {.TableName = "CustomerTransactions", .DisplayNameAr = "حركات العملاء", .PrimaryKeyColumn = "TransactionID", .Priority = 3, .DependsOn = {"Customers"}, .ConflictStrategy = 1}) ' 1 = ManualReview (Assuming enum value)

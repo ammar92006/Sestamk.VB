@@ -689,6 +689,45 @@ Partial Class frmPurchaseReports
         CType(Me.dgvReport, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Guna2Panel1.ResumeLayout(False)
         Me.Guna2Panel2.ResumeLayout(False)
+        Me.balancesMode = New Guna.UI2.WinForms.Guna2CheckBox()
+        Me.balancesMode.Name = "balancesMode"
+        Me.balancesMode.Text = "أرصدة الموردين الحالية (كل الفترات)"
+        Me.balancesMode.Size = New System.Drawing.Size(300, 38)
+        Me.balancesMode.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnViewPurchase = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnViewPurchase.Name = "btnViewPurchase"
+        Me.btnViewPurchase.Text = "استعراض الفاتورة"
+        Me.btnViewPurchase.Size = New System.Drawing.Size(185, 38)
+        Me.btnViewPurchase.BorderRadius = 6
+        Me.btnViewPurchase.FillColor = System.Drawing.Color.FromArgb(43, 132, 185)
+        Me.btnViewPurchase.ForeColor = System.Drawing.Color.White
+        Me.btnViewPurchase.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPrintReport = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnPrintReport.Name = "btnPrintReport"
+        Me.btnPrintReport.Text = "طباعة التقرير"
+        Me.btnPrintReport.Size = New System.Drawing.Size(158, 38)
+        Me.btnPrintReport.BorderRadius = 6
+        Me.btnPrintReport.FillColor = System.Drawing.Color.FromArgb(127, 140, 141)
+        Me.btnPrintReport.ForeColor = System.Drawing.Color.White
+        Me.btnPrintReport.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnExportReport = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnExportReport.Name = "btnExportReport"
+        Me.btnExportReport.Text = "تصدير Excel"
+        Me.btnExportReport.Size = New System.Drawing.Size(158, 38)
+        Me.btnExportReport.BorderRadius = 6
+        Me.btnExportReport.FillColor = System.Drawing.Color.FromArgb(22, 160, 133)
+        Me.btnExportReport.ForeColor = System.Drawing.Color.White
+        Me.btnExportReport.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.reportActions = New System.Windows.Forms.FlowLayoutPanel()
+        Me.reportActions.Name = "reportActions"
+        Me.reportActions.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.reportActions.Height = 58
+        Me.reportActions.Padding = New System.Windows.Forms.Padding(8)
+        Me.reportActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+        Me.reportActions.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.reportActions.Controls.AddRange(New System.Windows.Forms.Control() {Me.balancesMode, Me.btnViewPurchase, Me.btnPrintReport, Me.btnExportReport})
+        Me.Controls.Add(Me.reportActions)
+        Me.reportActions.SendToBack()
         Me.ResumeLayout(False)
 
     End Sub
@@ -733,4 +772,10 @@ Partial Class frmPurchaseReports
     Friend WithEvents lblInvoiceCount As Label
     Friend WithEvents Label13 As Label
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
+
+    Friend WithEvents balancesMode As Guna.UI2.WinForms.Guna2CheckBox
+    Friend WithEvents btnViewPurchase As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnPrintReport As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnExportReport As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents reportActions As System.Windows.Forms.FlowLayoutPanel
 End Class

@@ -656,6 +656,49 @@ Partial Class frmSuppliers
         Me.Guna2Panel1.ResumeLayout(False)
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
+        Me.openingLabel = New System.Windows.Forms.Label()
+        Me.openingLabel.Name = "openingLabel"
+        Me.openingLabel.Text = "الرصيد الافتتاحي للمورد الجديد (+ له / - عليه)"
+        Me.openingLabel.Size = New System.Drawing.Size(280, 38)
+        Me.openingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.openingLabel.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.openingLabel.ForeColor = System.Drawing.Color.FromArgb(40, 40, 40)
+        Me.openingInput = New Guna.UI2.WinForms.Guna2NumericUpDown()
+        Me.openingInput.Name = "openingInput"
+        Me.openingInput.Size = New System.Drawing.Size(155, 38)
+        Me.openingInput.BorderRadius = 6
+        Me.openingInput.DecimalPlaces = 2
+        Me.openingInput.Minimum = -999999999D
+        Me.openingInput.Maximum = 999999999D
+        Me.openingInput.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.openingInput.ForeColor = System.Drawing.Color.Black
+        Me.btnExportSuppliers = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnExportSuppliers.Name = "btnExportSuppliers"
+        Me.btnExportSuppliers.Text = "تصدير الموردين Excel"
+        Me.btnExportSuppliers.Size = New System.Drawing.Size(185, 38)
+        Me.btnExportSuppliers.BorderRadius = 6
+        Me.btnExportSuppliers.FillColor = System.Drawing.Color.FromArgb(22, 160, 133)
+        Me.btnExportSuppliers.ForeColor = System.Drawing.Color.White
+        Me.btnExportSuppliers.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.supplierTotals = New System.Windows.Forms.Label()
+        Me.supplierTotals.Name = "supplierTotals"
+        Me.supplierTotals.Text = ""
+        Me.supplierTotals.Size = New System.Drawing.Size(600, 38)
+        Me.supplierTotals.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.supplierTotals.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.supplierTotals.ForeColor = System.Drawing.Color.FromArgb(40, 40, 40)
+        Me.supplierTotals.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.supplierTotals.BackColor = System.Drawing.Color.White
+        Me.supplierActions = New System.Windows.Forms.FlowLayoutPanel()
+        Me.supplierActions.Name = "supplierActions"
+        Me.supplierActions.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.supplierActions.Height = 100
+        Me.supplierActions.Padding = New System.Windows.Forms.Padding(8)
+        Me.supplierActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+        Me.supplierActions.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.supplierActions.Controls.AddRange(New System.Windows.Forms.Control() {Me.openingLabel, Me.openingInput, Me.btnExportSuppliers, Me.supplierTotals})
+        Me.Controls.Add(Me.supplierActions)
+        Me.supplierActions.SendToBack()
         Me.ResumeLayout(False)
 
     End Sub
@@ -695,4 +738,10 @@ Partial Class frmSuppliers
     Friend WithEvents Label13 As Label
     Friend WithEvents txtCredit As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label11 As Label
+
+    Friend WithEvents openingLabel As System.Windows.Forms.Label
+    Friend WithEvents openingInput As Guna.UI2.WinForms.Guna2NumericUpDown
+    Friend WithEvents btnExportSuppliers As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents supplierTotals As System.Windows.Forms.Label
+    Friend WithEvents supplierActions As System.Windows.Forms.FlowLayoutPanel
 End Class

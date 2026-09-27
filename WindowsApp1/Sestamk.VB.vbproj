@@ -408,12 +408,6 @@
     <Compile Include="add_new_product.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="add_new_supplier.Designer.vb">
-      <DependentUpon>add_new_supplier.vb</DependentUpon>
-    </Compile>
-    <Compile Include="add_new_supplier.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="add_new_user.Designer.vb">
       <DependentUpon>add_new_user.vb</DependentUpon>
     </Compile>
@@ -851,18 +845,6 @@
     <Compile Include="ProductUnits.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Purchases.Designer.vb">
-      <DependentUpon>Purchases.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Purchases.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Purchase_Return.Designer.vb">
-      <DependentUpon>Purchase_Return.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Purchase_Return.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="RawPrinterESC.vb" />
     <Compile Include="RawPrinterHelper.vb" />
     <Compile Include="Reports.Designer.vb">
@@ -886,6 +868,14 @@
     </Compile>
     <Compile Include="Module1.vb" />
     <Compile Include="Services\TreasuryService.vb" />
+    <Compile Include="Services\SupplierAccountingService.vb" />
+    <Compile Include="Services\PurchaseDocumentHelper.vb" />
+    <Compile Include="forms\FrmPurchaseDocument.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="forms\FrmPurchaseDocument.Designer.vb">
+      <DependentUpon>FrmPurchaseDocument.vb</DependentUpon>
+    </Compile>
     <Compile Include="Services\DatabaseSchemaDefinitions.vb" />
     <Compile Include="Services\DatabaseMaintenanceService.vb" />
     <Compile Include="Services\LocalDbManager.vb" />
@@ -1034,12 +1024,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="StockManager.vb" />
-    <Compile Include="Suppliers.Designer.vb">
-      <DependentUpon>Suppliers.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Suppliers.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="The_Scale.Designer.vb">
       <DependentUpon>The_Scale.vb</DependentUpon>
     </Compile>
@@ -1068,9 +1052,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="add_new_product.resx">
       <DependentUpon>add_new_product.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="add_new_supplier.resx">
-      <DependentUpon>add_new_supplier.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="add_new_user.resx">
       <DependentUpon>add_new_user.vb</DependentUpon>
@@ -1262,12 +1243,6 @@
     <EmbeddedResource Include="ProductUnits.resx">
       <DependentUpon>ProductUnits.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Purchases.resx">
-      <DependentUpon>Purchases.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Purchase_Return.resx">
-      <DependentUpon>Purchase_Return.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Reports.resx">
       <DependentUpon>Reports.vb</DependentUpon>
     </EmbeddedResource>
@@ -1297,9 +1272,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Stock.resx">
       <DependentUpon>Stock.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Suppliers.resx">
-      <DependentUpon>Suppliers.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="The_Scale.resx">
       <DependentUpon>The_Scale.vb</DependentUpon>

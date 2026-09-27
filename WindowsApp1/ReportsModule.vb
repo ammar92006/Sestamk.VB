@@ -51,23 +51,25 @@ Module ReportsModule
 
             Dim sql As String = $"
             SELECT TOP {Maxnum}
-               PH.Purchase_Id,
-               PH.Purchase_type,
-               PH.Purchase_Date,
-               S.SuppliersID,
-               S.SuppliersName,
-               PH.Net_Amount,
-               PH.Discount_Value,
-               PH.Total_Amount,
-               PH.Amount_Paid,
-               PH.Remaining,
+               PH.PurchaseID AS Purchase_Id,
+               PH.PaymentType AS Purchase_type,
+               PH.PurchaseDate AS Purchase_Date,
+               S.SupplierID AS SuppliersID,
+               S.SupplierName AS SuppliersName,
+               PH.TotalAmount AS Net_Amount,
+               PH.Discount AS Discount_Value,
+               PH.NetTotal AS Total_Amount,
+               PH.PaidAmount AS Amount_Paid,
+               PH.RemainingAmount AS Remaining,
                PH.Notes,
-               PH.purchases_Image,
-               PH.User_ID,
-               PH.User_Name
-           FROM Purchase_Header PH
-           LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID
-           ORDER BY PH.Purchase_Id DESC"
+               CAST(NULL AS VARBINARY(MAX)) AS purchases_Image,
+               PH.UserID AS User_ID,
+               ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name
+            FROM PurchaseHeaders PH
+            LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID
+            LEFT JOIN Users U ON PH.UserID = U.UserID
+            WHERE ISNULL(PH.IsDeleted, 0) = 0
+            ORDER BY PH.PurchaseID DESC"
 
             Using cmd As New SqlCommand(sql, Conn)
                 cmd.CommandTimeout = 120
@@ -218,25 +220,26 @@ Module ReportsModule
 
             Dim q As String = "
             SELECT 
-            PH.Purchase_Id,
-            PH.Purchase_type,
-            PH.Purchase_Date,
-            S.SuppliersID,
-            S.SuppliersCode,
-            S.SuppliersName,
-            S.PhoneNumber,
-            PH.Net_Amount,
-            PH.Discount_Value,
-            PH.Total_Amount,
-            PH.Amount_Paid,
-            PH.Remaining,
-            PH.Notes,
-            PH.purchases_Image,
-            PH.User_ID,
-            PH.User_Name
-            FROM Purchase_Header PH
-            LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID
-            WHERE PH.Purchase_Id =@ID"
+                PH.PurchaseID AS Purchase_Id,
+                PH.PaymentType AS Purchase_type,
+                PH.PurchaseDate AS Purchase_Date,
+                S.SupplierID AS SuppliersID,
+                ISNULL(S.SupplierCode, '') AS SuppliersCode,
+                S.SupplierName AS SuppliersName,
+                ISNULL(S.Phone, '') AS PhoneNumber,
+                PH.TotalAmount AS Net_Amount,
+                PH.Discount AS Discount_Value,
+                PH.NetTotal AS Total_Amount,
+                PH.PaidAmount AS Amount_Paid,
+                PH.RemainingAmount AS Remaining,
+                PH.Notes,
+                CAST(NULL AS VARBINARY(MAX)) AS purchases_Image,
+                PH.UserID AS User_ID,
+                ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name
+            FROM PurchaseHeaders PH
+            LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID
+            LEFT JOIN Users U ON PH.UserID = U.UserID
+            WHERE PH.PurchaseID = @ID"
 
             Using cmd As New SqlCommand(q, Conn)
                 SafeAddParam(cmd, "@ID", invoiceID)
@@ -306,15 +309,16 @@ Module ReportsModule
 
             Dim q As String = "
                     SELECT 
-                        PD.Purchase_Id, 
-                        PD.Product_Name, 
-                        PD.Quantity_Sold, 
-                        PD.ProductUnit_Name, 
-                        PD.Purchase_Price_Per_Unit, 
-                        PD.Total_Line_Amount
-                    FROM Purchase_Detalis PD
-                    WHERE PD.Purchase_Id = @ID
-"
+                        PD.PurchaseID AS Purchase_Id, 
+                        ISNULL(RM.MaterialName, N'صنف مشتريات') AS Product_Name, 
+                        PD.Quantity AS Quantity_Sold, 
+                        ISNULL(U.UnitName, N'وحدة') AS ProductUnit_Name, 
+                        PD.UnitPrice AS Purchase_Price_Per_Unit, 
+                        (PD.Quantity * PD.UnitPrice) AS Total_Line_Amount
+                    FROM PurchaseDetails PD
+                    LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID
+                    LEFT JOIN Units U ON PD.UnitID = U.UnitID
+                    WHERE PD.PurchaseID = @ID"
 
             Using cmd As New SqlCommand(q, Conn)
                 SafeAddParam(cmd, "@ID", invoiceID)
@@ -457,38 +461,29 @@ Module ReportsModule
                 'sql.AppendLine("LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID")
                 'sql.AppendLine("LEFT JOIN SalesDetails SD ON SH.Invoice_ID = SD.Invoice_ID")
                 'sql.AppendLine("LEFT JOIN Products P ON SD.Product_ID = P.Product_ID")
-                sql.AppendLine("SELECT PH.Purchase_Id,PH.Purchase_type,PH.Purchase_Date,S.SuppliersID,S.SuppliersName,PH.Net_Amount,PH.Discount_Value,PH.Total_Amount,PH.Amount_Paid,PH.Remaining,PH.Notes,PH.purchases_Image,PH.User_ID,PH.User_Name,")
-                sql.AppendLine("PD.Purchase_Id, PD.Product_Name, PD.Quantity_Sold, PD.ProductUnit_Name, PD.Purchase_Price_Per_Unit, PD.Total_Line_Amount")
-                sql.AppendLine("FROM Purchase_Header PH")
-                sql.AppendLine("LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID")
-                sql.AppendLine("LEFT JOIN Purchase_Detalis PD ON PH.Purchase_Id = PD.Purchase_Id")
+                sql.AppendLine("SELECT PH.PurchaseID AS Purchase_Id, PH.PaymentType AS Purchase_type, PH.PurchaseDate AS Purchase_Date, S.SupplierID AS SuppliersID, S.SupplierName AS SuppliersName, PH.TotalAmount AS Net_Amount, PH.Discount AS Discount_Value, PH.NetTotal AS Total_Amount, PH.PaidAmount AS Amount_Paid, PH.RemainingAmount AS Remaining, PH.Notes, CAST(NULL AS VARBINARY(MAX)) AS purchases_Image, PH.UserID AS User_ID, ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name, PH.PaymentType AS Payment_Method,")
+                sql.AppendLine("PD.PurchaseID AS Detail_Purchase_Id, ISNULL(RM.MaterialName, N'صنف مشتريات') AS Product_Name, PD.Quantity AS Quantity_Sold, ISNULL(UN.UnitName, N'وحدة') AS ProductUnit_Name, PD.UnitPrice AS Purchase_Price_Per_Unit, (PD.Quantity * PD.UnitPrice) AS Total_Line_Amount")
+                sql.AppendLine("FROM PurchaseHeaders PH")
+                sql.AppendLine("LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID")
+                sql.AppendLine("LEFT JOIN Users U ON PH.UserID = U.UserID")
+                sql.AppendLine("LEFT JOIN PurchaseDetails PD ON PH.PurchaseID = PD.PurchaseID")
+                sql.AppendLine("LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID")
+                sql.AppendLine("LEFT JOIN Units UN ON PD.UnitID = UN.UnitID")
 
             Else
-                'sql.AppendLine("SELECT SH.Invoice_ID, SH.Invoice_Date, C.CustomerName,")
-                'sql.AppendLine("SH.Total_Amount, SH.Discount_Value, SH.Net_Amount,")
-                'sql.AppendLine("SH.Amount_Paid, SH.Remaining, SH.Payment_Method, SH.User_Name")
-                'sql.AppendLine("FROM SalesHeader SH")
-                'sql.AppendLine("LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID")
-                'sql.AppendLine("SELECT PH.Purchase_Id, PH.Purchase_type, PH.Purchase_Date, C.CustomerName,")
-                'sql.AppendLine("PH.Total_Amount, SH.Discount_Value, SH.Net_Amount,")
-                'sql.AppendLine("SH.Amount_Paid, SH.Remaining, SH.Payment_Method, SH.User_Name,")
-                'sql.AppendLine("SD.Product_ID, P.Product_Name, SD.Quantity_Sold,")
-                'sql.AppendLine("SD.Sale_Price_Per_Unit, SD.Total_Line_Amount")
-                'sql.AppendLine("FROM Purchase_Header PH")
-                'sql.AppendLine("LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID")
-                'sql.AppendLine("LEFT JOIN SalesDetails SD ON SH.Invoice_ID = SD.Invoice_ID")
-                'sql.AppendLine("LEFT JOIN Products P ON SD.Product_ID = P.Product_ID")
-                sql.AppendLine("SELECT PH.Purchase_Id, PH.Purchase_type,PH.Purchase_Date,S.SuppliersID,S.SuppliersName,PH.Net_Amount,PH.Discount_Value,PH.Total_Amount,PH.Amount_Paid,PH.Remaining,PH.Notes,PH.purchases_Image,PH.User_ID,PH.User_Name , PH.Payment_Method")
-                sql.AppendLine("FROM Purchase_Header PH")
-                sql.AppendLine("LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID")
+                sql.AppendLine("SELECT PH.PurchaseID AS Purchase_Id, PH.PaymentType AS Purchase_type, PH.PurchaseDate AS Purchase_Date, S.SupplierID AS SuppliersID, S.SupplierName AS SuppliersName, PH.TotalAmount AS Net_Amount, PH.Discount AS Discount_Value, PH.NetTotal AS Total_Amount, PH.PaidAmount AS Amount_Paid, PH.RemainingAmount AS Remaining, PH.Notes, CAST(NULL AS VARBINARY(MAX)) AS purchases_Image, PH.UserID AS User_ID, ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name, PH.PaymentType AS Payment_Method")
+                sql.AppendLine("FROM PurchaseHeaders PH")
+                sql.AppendLine("LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID")
+                sql.AppendLine("LEFT JOIN Users U ON PH.UserID = U.UserID")
 
             End If
 
             sql.AppendLine("
-            WHERE PH.Purchase_Date BETWEEN @D1 AND @D2
-            AND (@CID IS NULL OR PH.Supplier_ID = @CID)
-            AND (@UID IS NULL OR PH.User_ID = @UID)
-            AND (@Pay IS NULL OR PH.Payment_Method = @Pay)")
+            WHERE ISNULL(PH.IsDeleted, 0) = 0
+            AND PH.PurchaseDate BETWEEN @D1 AND @D2
+            AND (@CID IS NULL OR PH.SupplierID = @CID)
+            AND (@UID IS NULL OR PH.UserID = @UID)
+            AND (@Pay IS NULL OR PH.PaymentType = @Pay)")
 
             Using cmd As New SqlCommand(sql.ToString(), Conn)
                 cmd.CommandTimeout = 120
@@ -533,24 +528,26 @@ Module ReportsModule
             Connect()
             Dim sql As New Text.StringBuilder()
             If includeDetails Then
-                sql.AppendLine("SELECT PH.Purchase_Id, PH.Purchase_Date, S.Supplier_Name, PH.Total_Amount, PH.Discount_Value, PH.Net_Amount,")
-                sql.AppendLine(" PH.Amount_Paid, PH.Remaining, PH.Payment_Method, PH.User_Name, PD.Product_ID, P.ProductName, PD.Quantity_Sold, PD.Purchase_Price_Per_Unit")
-                sql.AppendLine("FROM Purchase_Header PH")
-                sql.AppendLine("LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID")
-                sql.AppendLine("LEFT JOIN Purchase_Detalis PD ON PH.Purchase_Id = PD.Purchase_Id")
-                sql.AppendLine("LEFT JOIN Products P ON PD.Product_ID = P.Product_ID")
-                sql.AppendLine("WHERE PH.Purchase_Date BETWEEN @D1 AND @D2")
+                sql.AppendLine("SELECT PH.PurchaseID AS Purchase_Id, PH.PurchaseDate AS Purchase_Date, S.SupplierName AS Supplier_Name, PH.TotalAmount AS Total_Amount, PH.Discount AS Discount_Value, PH.NetTotal AS Net_Amount,")
+                sql.AppendLine(" PH.PaidAmount AS Amount_Paid, PH.RemainingAmount AS Remaining, PH.PaymentType AS Payment_Method, ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name, PD.MaterialID AS Product_ID, ISNULL(RM.MaterialName, N'صنف مشتريات') AS ProductName, PD.Quantity AS Quantity_Sold, PD.UnitPrice AS Purchase_Price_Per_Unit")
+                sql.AppendLine("FROM PurchaseHeaders PH")
+                sql.AppendLine("LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID")
+                sql.AppendLine("LEFT JOIN Users U ON PH.UserID = U.UserID")
+                sql.AppendLine("LEFT JOIN PurchaseDetails PD ON PH.PurchaseID = PD.PurchaseID")
+                sql.AppendLine("LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID")
+                sql.AppendLine("WHERE ISNULL(PH.IsDeleted, 0) = 0 AND PH.PurchaseDate BETWEEN @D1 AND @D2")
             Else
-                sql.AppendLine("SELECT PH.Purchase_Id, PH.Purchase_Date, S.Supplier_Name, PH.Total_Amount, PH.Discount_Value, PH.Net_Amount,")
-                sql.AppendLine(" PH.Amount_Paid, PH.Remaining, PH.Payment_Method, PH.User_Name")
-                sql.AppendLine("FROM Purchase_Header PH")
-                sql.AppendLine("LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID")
-                sql.AppendLine("WHERE PH.Purchase_Date BETWEEN @D1 AND @D2")
+                sql.AppendLine("SELECT PH.PurchaseID AS Purchase_Id, PH.PurchaseDate AS Purchase_Date, S.SupplierName AS Supplier_Name, PH.TotalAmount AS Total_Amount, PH.Discount AS Discount_Value, PH.NetTotal AS Net_Amount,")
+                sql.AppendLine(" PH.PaidAmount AS Amount_Paid, PH.RemainingAmount AS Remaining, PH.PaymentType AS Payment_Method, ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name")
+                sql.AppendLine("FROM PurchaseHeaders PH")
+                sql.AppendLine("LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID")
+                sql.AppendLine("LEFT JOIN Users U ON PH.UserID = U.UserID")
+                sql.AppendLine("WHERE ISNULL(PH.IsDeleted, 0) = 0 AND PH.PurchaseDate BETWEEN @D1 AND @D2")
             End If
 
-            If supplierID > 0 Then sql.AppendLine(" AND PH.Supplier_ID = @SID")
-            If Not String.IsNullOrWhiteSpace(paymentMethod) Then sql.AppendLine(" AND PH.Payment_Method = @Pay")
-            If userID > 0 Then sql.AppendLine(" AND PH.User_ID = @UID")
+            If supplierID > 0 Then sql.AppendLine(" AND PH.SupplierID = @SID")
+            If Not String.IsNullOrWhiteSpace(paymentMethod) Then sql.AppendLine(" AND PH.PaymentType = @Pay")
+            If userID > 0 Then sql.AppendLine(" AND PH.UserID = @UID")
 
             Using cmd As New SqlCommand(sql.ToString(), Conn)
                 cmd.CommandTimeout = 120
@@ -616,10 +613,10 @@ WHERE SD.Invoice_ID = @ID"
         Try
             Connect()
             Dim q As String = "
-SELECT PD.Purchase_Id, P.ProductName, PD.Quantity_Sold, PD.Purchase_Price_Per_Unit
-FROM Purchase_Detalis PD
-LEFT JOIN Products P ON PD.Product_ID = P.Product_ID
-WHERE PD.Purchase_Id = @ID"
+SELECT PD.PurchaseID AS Purchase_Id, ISNULL(RM.MaterialName, N'صنف مشتريات') AS ProductName, PD.Quantity AS Quantity_Sold, PD.UnitPrice AS Purchase_Price_Per_Unit
+FROM PurchaseDetails PD
+LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID
+WHERE PD.PurchaseID = @ID"
             Using cmd As New SqlCommand(q, Conn)
                 SafeAddParam(cmd, "@ID", purchaseID)
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -652,7 +649,7 @@ SELECT
     P.Product_ID,
     P.ProductName,
     ISNULL((SELECT SUM(Quantity_Sold) FROM SalesDetails SD JOIN SalesHeader SH on SD.Invoice_ID=SH.Invoice_ID WHERE SD.Product_ID = P.Product_ID AND SH.Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSold,
-    ISNULL((SELECT SUM(Quantity_Sold) FROM Purchase_Detalis PD JOIN Purchase_Header PH on PD.Purchase_Id=PH.Purchase_Id WHERE PD.Product_ID = P.Product_ID AND PH.Purchase_Date BETWEEN @D1 AND @D2),0) AS TotalPurchased,
+    ISNULL((SELECT SUM(Quantity) FROM PurchaseDetails PD JOIN PurchaseHeaders PH on PD.PurchaseID=PH.PurchaseID WHERE PD.MaterialID = P.Product_ID AND PH.PurchaseDate BETWEEN @D1 AND @D2 AND ISNULL(PH.IsDeleted, 0) = 0),0) AS TotalPurchased,
     ISNULL(S.Quantity_OnHand,0) AS Quantity_OnHand
 FROM Products P
 LEFT JOIN Stock S ON S.Product_ID = P.Product_ID
@@ -689,7 +686,7 @@ ORDER BY P.ProductName
             Dim q As String = "
 SELECT 
     ISNULL((SELECT SUM(Net_Amount) FROM SalesHeader WHERE Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSales,
-    ISNULL((SELECT SUM(Net_Amount) FROM Purchase_Header WHERE Purchase_Date BETWEEN @D1 AND @D2),0) AS TotalPurchases
+    ISNULL((SELECT SUM(NetTotal) FROM PurchaseHeaders WHERE PurchaseDate BETWEEN @D1 AND @D2 AND ISNULL(IsDeleted, 0) = 0),0) AS TotalPurchases
 "
             Using cmd As New SqlCommand(q, Conn)
                 cmd.Parameters.AddWithValue("@D1", fromDate.Value)
@@ -774,7 +771,7 @@ SELECT
         Dim dt As New DataTable()
         Try
             Connect()
-            Using cmd As New SqlCommand("SELECT DISTINCT Payment_Method FROM (SELECT Payment_Method FROM SalesHeader UNION ALL SELECT Payment_Method FROM Purchase_Header) t WHERE Payment_Method IS NOT NULL", Conn)
+            Using cmd As New SqlCommand("SELECT DISTINCT Payment_Method FROM (SELECT Payment_Method FROM SalesHeader UNION ALL SELECT PaymentType AS Payment_Method FROM PurchaseHeaders) t WHERE Payment_Method IS NOT NULL", Conn)
                 dt.Load(cmd.ExecuteReader())
             End Using
         Catch
@@ -850,27 +847,27 @@ SELECT
 
         Dim q As String = "
                         SELECT 
-                        PH.Purchase_Id,
-                        PH.Purchase_type,
-                        PH.Purchase_Date,
-                        S.SuppliersID,
-                        S.SuppliersCode,
-                        S.SuppliersName,
-                        S.PhoneNumber,
-                        PH.Net_Amount,
-                        PH.Discount_Value,
-                        PH.Total_Amount,
-                        PH.Amount_Paid,
-                        PH.Remaining,
+                        PH.PurchaseID AS Purchase_Id,
+                        PH.PaymentType AS Purchase_type,
+                        PH.PurchaseDate AS Purchase_Date,
+                        S.SupplierID AS SuppliersID,
+                        ISNULL(S.SupplierCode, '') AS SuppliersCode,
+                        S.SupplierName AS SuppliersName,
+                        ISNULL(S.Phone, '') AS PhoneNumber,
+                        PH.TotalAmount AS Net_Amount,
+                        PH.Discount AS Discount_Value,
+                        PH.NetTotal AS Total_Amount,
+                        PH.PaidAmount AS Amount_Paid,
+                        PH.RemainingAmount AS Remaining,
                         PH.Notes,
-                        PH.purchases_Image,
-                        PH.User_ID,
-                        PH.User_Name,
-                        PH.Payment_Method
-
-                        FROM Purchase_Header PH
-                        LEFT JOIN Suppliers S ON PH.Supplier_ID = S.SuppliersID
-                        WHERE PH.Purchase_Id = @id"
+                        CAST(NULL AS VARBINARY(MAX)) AS purchases_Image,
+                        PH.UserID AS User_ID,
+                        ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name,
+                        PH.PaymentType AS Payment_Method
+                        FROM PurchaseHeaders PH
+                        LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID
+                        LEFT JOIN Users U ON PH.UserID = U.UserID
+                        WHERE PH.PurchaseID = @id"
         Connect()
 
         Using cmd As New SqlCommand(q, Conn)
@@ -941,12 +938,13 @@ SELECT
 
         Dim q As String = "
               SELECT 
-                  Product_Name,
-                  Quantity_Sold,
-                  Purchase_Price_Per_Unit,
-                  Total_Line_Amount
-              FROM Purchase_Detalis
-              WHERE Purchase_Id = @id"
+                  ISNULL(RM.MaterialName, N'صنف مشتريات') AS Product_Name,
+                  PD.Quantity AS Quantity_Sold,
+                  PD.UnitPrice AS Purchase_Price_Per_Unit,
+                  (PD.Quantity * PD.UnitPrice) AS Total_Line_Amount
+              FROM PurchaseDetails PD
+              LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID
+              WHERE PD.PurchaseID = @id"
         Connect()
 
         Using cmd As New SqlCommand(q, Conn)

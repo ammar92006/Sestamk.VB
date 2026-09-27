@@ -95,6 +95,8 @@ Public Module Session
                 Return "FrmCustomers"
             Case "add_new_supplier", "suppliers"
                 Return "FrmSuppliers"
+            Case "purchases", "purchase_return"
+                Return "frmPurchases"
             Case "add_new_categorie", "frmcategorytypes"
                 Return "Categories"
             Case "add_new_user", "users"

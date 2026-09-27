@@ -94,6 +94,13 @@ WHERE TreasuryID=@TreasuryID
     cn As SqlConnection,
     trans As SqlTransaction) As Task
 
+        ' Serialize writers before inserting and recalculating this treasury.
+        ' The lock is held by the caller's transaction through commit/rollback.
+        Using lockCommand As New SqlCommand("SELECT TreasuryID FROM Treasury WITH (UPDLOCK,HOLDLOCK) WHERE TreasuryID=@ID", cn, trans)
+            lockCommand.Parameters.AddWithValue("@ID", treasuryID)
+            If Await lockCommand.ExecuteScalarAsync() Is Nothing Then Throw New ArgumentException("الخزينة غير موجودة.")
+        End Using
+
         Const sql As String = "INSERT INTO TreasuryTransactions 
                            (TreasuryID, TransactionDate, TransactionType, ReferenceID, ReferenceNo, Amount, IsDeposit, Notes, UserID, CreatedDate) 
                            VALUES 

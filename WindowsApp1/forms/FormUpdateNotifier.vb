@@ -28,7 +28,7 @@ Partial Class FormUpdateNotifier
             ' عرض حجم التحديث في كافة عناصر التحكم المناسبة
             lblSizeBadge.Text = sizeStr
             lblSizeInCard.Text = "الحجم: " & sizeStrAr
-            btnUpdate.Text = "⬇️ تحديث الآن (" & sizeStr & ")"
+            'btnUpdate.Text = "⬇️ تحديث الآن (" & sizeStr & ")"
             lblDeltaNotice.Text = "⚡ تحديث ذكي وسريع (" & sizeStr & "): يتم تنزيل وتحديث الملفات الجديدة فقط دون الحاجة لإعادة التثبيت"
 
             ' تنسيق قائمة الملاحظات والتحسينات في بطاقات أنيقة

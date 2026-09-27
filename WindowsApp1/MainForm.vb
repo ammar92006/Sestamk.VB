@@ -762,7 +762,14 @@ Public Class MainForm
     End Sub
 
     Private Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton5.Click
-        OpenFormOnce(GetType(frmPurchaseReports), ToolStripButton5)
+        If Not Session.HasPermission("frmPurchaseReports", "CanOpen") Then
+            MessageBox.Show("ليس لديك صلاحية فتح تقارير الموردين.")
+            Return
+        End If
+        Using report As New frmPurchaseReports With {.ShowSupplierBalances = True}
+            ThemeManager.Instance.ApplyTheme(report)
+            report.ShowDialog(Me)
+        End Using
     End Sub
 
     Private Sub ToolStripButton13_Click(sender As Object, e As EventArgs) Handles btnfrmPurchases.Click
@@ -1023,7 +1030,7 @@ Public Class MainForm
             {ToolStripButton3, "FrmSuppliers"},
             {ToolStripButton4, "FrmSupplierTransactions"},
             {ToolStripButton5, "frmPurchaseReports"},
-            {btnfrmPurchases, "Purchases"},
+            {btnfrmPurchases, "frmPurchases"},
             {btnfrmPurchaseReports, "frmPurchaseReports"},
             {ToolStripButton11, "Reports"},
             {btnfrmSalaryPayment, "frmSalaryPayment"},

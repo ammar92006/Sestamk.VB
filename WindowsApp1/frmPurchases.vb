@@ -1,10 +1,25 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class frmPurchases
     Private _dtItems As New DataTable()
     Private defaultTreasuryid As Integer
+    Private savingInvoice As Boolean
+    Private lastPurchaseID As Integer
 
     Private Sub frmPurchases_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        AddHandler btnLookupPurchases.Click, Sub() PurchaseDocumentHelper.RunSafely(Sub()
+                                                                          SupplierAccountingService.DemandPermission("frmPurchaseReports", "CanOpen")
+                                                                          Using report As New frmPurchaseReports()
+                                                                              report.ShowDialog(Me)
+                                                                          End Using
+                                                                      End Sub)
+        AddHandler btnPrintLastPurchase.Click, Sub() PurchaseDocumentHelper.RunSafely(Sub()
+                                                                         If lastPurchaseID <= 0 Then Throw New ArgumentException("احفظ فاتورة أو افتح الفواتير السابقة أولاً.")
+                                                                         PurchaseDocumentHelper.ShowInvoice(Me, lastPurchaseID)
+                                                                     End Sub)
+        AddHandler FormClosing, Sub(sender2, args)
+                                    If savingInvoice Then args.Cancel = True
+                                End Sub
         InitItemsTable()
         FillDropdowns()
         txtInvoiceNumber.Text = GetNextCode("PurchaseHeaders", "InvoiceNumber")
@@ -269,6 +284,10 @@ Public Class frmPurchases
 
         Dim drvUnit As DataRowView = CType(cmbUnit.SelectedItem, DataRowView)
         Dim factor As Decimal = Convert.ToDecimal(drvUnit("ConversionFactor"))
+        If factor <= 0D Then
+            MessageBox.Show("معامل تحويل الوحدة غير صالح.")
+            Return
+        End If
         Dim baseQty As Decimal = qty * factor
         Dim total As Decimal = qty * price
 
@@ -328,6 +347,11 @@ Public Class frmPurchases
     End Sub
 
     Private Async Sub btnSaveInvoice_Click(sender As Object, e As EventArgs) Handles btnSaveInvoice.Click
+        If savingInvoice Then Return
+        If Session.CurrentUserID <= 0 OrElse Not Session.HasPermission("frmPurchases", "CanAdd") Then
+            MessageBox.Show("ليس لديك صلاحية إضافة فاتورة مشتريات.")
+            Return
+        End If
         If cmbSupplier.SelectedIndex = -1 Then
             MessageBox.Show("يرجى اختيار المورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
@@ -379,131 +403,48 @@ Public Class frmPurchases
         Dim netTotal As Decimal = Convert.ToDecimal(txtNetTotal.Text)
         Dim remaining As Decimal = Convert.ToDecimal(txtRemainingAmount.Text)
 
-        Using conn As New SqlConnection(DBModule.ConnectionString)
-            Await conn.OpenAsync()
-            Dim trans As SqlTransaction = conn.BeginTransaction()
-
+        Dim total As Decimal = 0D
+        For Each row As DataRow In _dtItems.Rows
+            If CDec(row("Quantity")) <= 0 OrElse CDec(row("UnitPrice")) <= 0 OrElse CDec(row("ConversionFactor")) <= 0 Then
+                MessageBox.Show("راجع كميات وأسعار ومعاملات تحويل الأصناف.")
+                Return
+            End If
+            total += CDec(row("Quantity")) * CDec(row("UnitPrice"))
+        Next
+        Dim discount As Decimal
+        If Not Decimal.TryParse(If(String.IsNullOrWhiteSpace(txtDiscount.Text), "0", txtDiscount.Text), discount) OrElse discount < 0 OrElse discount > total Then
+            MessageBox.Show("الخصم يجب أن يكون بين صفر وإجمالي الفاتورة.")
+            Return
+        End If
+        netTotal = Decimal.Round(total - discount, 2, MidpointRounding.AwayFromZero)
+        If paymentCode = "CASH" Then paid = netTotal
+        If paymentCode = "CREDIT" Then paid = 0D
+        If paid < 0D OrElse paid > netTotal OrElse Decimal.Round(paid, 2) <> paid Then
+            MessageBox.Show("المبلغ المدفوع غير صالح أو يتجاوز صافي الفاتورة.")
+            Return
+        End If
+        remaining = netTotal - paid
+        If String.IsNullOrWhiteSpace(invNumber) OrElse invNumber.Length > 50 Then
+            MessageBox.Show("أدخل رقم فاتورة لا يتجاوز 50 حرفاً.")
+            Return
+        End If
+        savingInvoice = True
+        Me.Enabled = False
+        Try
+            lastPurchaseID = Await SupplierAccountingService.SavePurchaseAsync(invNumber, supID, storeID, dtpInvoiceDate.Value, discount, paid, paymentCode, treasuryID, txtNotes.Text.Trim(), _dtItems.Copy(), updateCost.Checked)
+            MessageBox.Show("تم حفظ فاتورة المشتريات وتوريد الأصناف للمخزن بنجاح!", "نجاح التوريد")
             Try
-                ' 1. حفظ رأس الفاتورة مع طريقة الدفع
-                Dim sqlHeader As String = "INSERT INTO PurchaseHeaders (InvoiceNumber, SupplierID, StoreID, PurchaseDate, TotalAmount, Discount, NetTotal, PaidAmount, RemainingAmount, PaymentType, TreasuryID, Notes, UserID) " &
-                                          "VALUES (@InvNo, @SupID, @StoreID, @Date, @Total, @Disc, @Net, @Paid, @Rem, @PayType, @TreasuryID, @Notes, 1); " &
-                                          "SELECT SCOPE_IDENTITY();"
-
-                Dim purchaseID As Integer = 0
-                Using cmdH As New SqlCommand(sqlHeader, conn, trans)
-                    cmdH.Parameters.AddWithValue("@InvNo", invNumber)
-                    cmdH.Parameters.AddWithValue("@SupID", supID)
-                    cmdH.Parameters.AddWithValue("@StoreID", storeID)
-                    cmdH.Parameters.AddWithValue("@Date", dtpInvoiceDate.Value)
-                    cmdH.Parameters.AddWithValue("@Total", Convert.ToDecimal(txtTotalAmount.Text))
-                    cmdH.Parameters.AddWithValue("@Disc", Convert.ToDecimal(If(String.IsNullOrWhiteSpace(txtDiscount.Text), "0", txtDiscount.Text)))
-                    cmdH.Parameters.AddWithValue("@Net", netTotal)
-                    cmdH.Parameters.AddWithValue("@Paid", paid)
-                    cmdH.Parameters.AddWithValue("@Rem", remaining)
-                    cmdH.Parameters.AddWithValue("@PayType", paymentCode)
-                    cmdH.Parameters.AddWithValue("@TreasuryID", If(treasuryID.HasValue, treasuryID.Value, DBNull.Value))
-                    cmdH.Parameters.AddWithValue("@Notes", If(String.IsNullOrWhiteSpace(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
-
-                    purchaseID = Convert.ToInt32(Await cmdH.ExecuteScalarAsync())
-                End Using
-
-                ' 2. حفظ التفاصيل وزيادة رصيد الخامات في المخزن المحدد بالوحدة الأساسية
-                For Each r As DataRow In _dtItems.Rows
-                    Dim matID As Integer = Convert.ToInt32(r("MaterialID"))
-                    Dim unitID As Integer = Convert.ToInt32(r("UnitID"))
-                    Dim qty As Decimal = Convert.ToDecimal(r("Quantity"))
-                    Dim factor As Decimal = Convert.ToDecimal(r("ConversionFactor"))
-                    Dim baseQty As Decimal = Convert.ToDecimal(r("BaseQuantity"))
-                    Dim price As Decimal = Convert.ToDecimal(r("UnitPrice"))
-
-                    ' أ) إدراج السطر
-                    Dim sqlDetail As String = "INSERT INTO PurchaseDetails (PurchaseID, MaterialID, UnitID, Quantity, ConversionFactor, UnitPrice) " &
-                                              "VALUES (@PurchID, @MatID, @UnitID, @Qty, @Factor, @Price)"
-                    Using cmdD As New SqlCommand(sqlDetail, conn, trans)
-                        cmdD.Parameters.AddWithValue("@PurchID", purchaseID)
-                        cmdD.Parameters.AddWithValue("@MatID", matID)
-                        cmdD.Parameters.AddWithValue("@UnitID", unitID)
-                        cmdD.Parameters.AddWithValue("@Qty", qty)
-                        cmdD.Parameters.AddWithValue("@Factor", factor)
-                        cmdD.Parameters.AddWithValue("@Price", price)
-                        Await cmdD.ExecuteNonQueryAsync()
-                    End Using
-
-                    ' ب) زيادة رصيد الخامة في المخزن بالوحدة الأساسية (BaseQuantity)
-                    Dim sqlStock As String = "IF NOT EXISTS (SELECT 1 FROM StoreStock WHERE StoreID = @StoreID AND MaterialID = @MatID) " &
-                                             "    INSERT INTO StoreStock (StoreID, MaterialID, CurrentStock) VALUES (@StoreID, @MatID, @BaseQty); " &
-                                             "ELSE " &
-                                             "    UPDATE StoreStock SET CurrentStock = CurrentStock + @BaseQty WHERE StoreID = @StoreID AND MaterialID = @MatID;"
-                    Using cmdStock As New SqlCommand(sqlStock, conn, trans)
-                        cmdStock.Parameters.AddWithValue("@StoreID", storeID)
-                        cmdStock.Parameters.AddWithValue("@MatID", matID)
-                        cmdStock.Parameters.AddWithValue("@BaseQty", baseQty)
-                        Await cmdStock.ExecuteNonQueryAsync()
-                    End Using
-
-                    ' ج) تسجيل حركة توريد في StockMovements
-                    Dim sqlMove As String = "INSERT INTO StockMovements (StoreID, MaterialID, MovementType, Quantity, ReferenceID, CreatedDate) " &
-                                            "VALUES (@StoreID, @MatID, 'PURCHASE', @BaseQty, @Ref, GETDATE())"
-                    Using cmdMove As New SqlCommand(sqlMove, conn, trans)
-                        cmdMove.Parameters.AddWithValue("@StoreID", storeID)
-                        cmdMove.Parameters.AddWithValue("@MatID", matID)
-                        cmdMove.Parameters.AddWithValue("@BaseQty", baseQty)
-                        cmdMove.Parameters.AddWithValue("@Ref", invNumber)
-                        Await cmdMove.ExecuteNonQueryAsync()
-                    End Using
-                Next
-
-                ' 3. تحديث حساب المورد بالمتبقي وتسجيل الحركة
-                ' CurrentBalance يزداد بالمبلغ المتبقي (الآجل) فقط
-                Dim sqlSupBal As String = "UPDATE Suppliers SET CurrentBalance = CurrentBalance + @Rem WHERE SupplierID = @SupID; " &
-                                          "SELECT CurrentBalance FROM Suppliers WHERE SupplierID = @SupID;"
-                Dim supNewBal As Decimal = 0
-                Using cmdSup As New SqlCommand(sqlSupBal, conn, trans)
-                    cmdSup.Parameters.AddWithValue("@Rem", remaining)
-                    cmdSup.Parameters.AddWithValue("@SupID", supID)
-                    supNewBal = Convert.ToDecimal(Await cmdSup.ExecuteScalarAsync())
-                End Using
-
-                ' تسجيل حركة المورد:
-                ' الدائن (Credit) = صافي الفاتورة (مبلغ مستحق للمورد مقابل البضاعة)
-                ' المدين (Debit) = المبلغ المسدد نقداً (ما دفعناه للمورد)
-                Dim sqlSupTrans As String = "INSERT INTO SupplierTransactions (SupplierID, TransactionType, ReferenceNo, Debit, Credit, BalanceAfter, Notes, UserID) " &
-                                            "VALUES (@SupID, 'PURCHASE', @Ref, @Debit, @Credit, @BalAfter, @Notes, 1)"
-                Using cmdST As New SqlCommand(sqlSupTrans, conn, trans)
-                    cmdST.Parameters.AddWithValue("@SupID", supID)
-                    cmdST.Parameters.AddWithValue("@Ref", invNumber)
-                    cmdST.Parameters.AddWithValue("@Debit", paid)
-                    cmdST.Parameters.AddWithValue("@Credit", netTotal)
-                    cmdST.Parameters.AddWithValue("@BalAfter", supNewBal)
-                    cmdST.Parameters.AddWithValue("@Notes", $"فاتورة مشتريات رقم {invNumber}")
-                    Await cmdST.ExecuteNonQueryAsync()
-                End Using
-
-                ' 4. خصم المسدد نقداً من الخزينة إن وجد
-                If paid > 0 AndAlso treasuryID.HasValue Then
-                    Await TreasuryService.AddTransactionAsync(
-                        treasuryID:=treasuryID.Value,
-                        transactionType:=TreasuryTransactionTypes.Expense,
-                        amount:=paid,
-                        isDeposit:=False,
-                        referenceID:=purchaseID,
-                        referenceNo:=invNumber,
-                        notes:=$"سداد نقدي لفاتورة مشتريات رقم {invNumber}",
-                        userID:=1,
-                        cn:=conn,
-                        trans:=trans
-                    )
-                End If
-
-                trans.Commit()
-                MessageBox.Show("تم حفظ فاتورة المشتريات وتوريد الأصناف للمخزن بنجاح!", "نجاح التوريد", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 ClearForm()
-
             Catch ex As Exception
-                trans.Rollback()
-                MessageBox.Show("خطأ أثناء حفظ فاتورة المشتريات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("تم الحفظ، لكن تعذر تهيئة فاتورة جديدة: " & ex.Message)
             End Try
-        End Using
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "تعذر حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        Finally
+            savingInvoice = False
+            Me.Enabled = True
+        End Try
     End Sub
 
     Private Sub btnDeleteItem_Click(sender As Object, e As EventArgs) Handles btnDeleteItem.Click

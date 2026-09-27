@@ -1,12 +1,39 @@
 ﻿Imports System.Data.SqlClient
 
 Public Class frmPurchaseReports
+    Public Property ShowSupplierBalances As Boolean
+    Private reportsReady As Boolean
+
 
     Private Sub frmPurchaseReports_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' ضبط التواريخ: من أول يوم في الشهر الحالي حتى اليوم
         dtpFrom.Value = New DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)
         dtpTo.Value = DateTime.Now
 
+        AddHandler balancesMode.CheckedChanged, Sub()
+                                                   ShowSupplierBalances = balancesMode.Checked
+                                                   Label13.Text = If(balancesMode.Checked, "عدد الموردين", "عدد الفواتير")
+                                                   Label12.Text = If(balancesMode.Checked, "صافي أرصدة الموردين", "إجمالي المتبقي")
+                                                   Label9.Text = If(balancesMode.Checked, "إجمالي الأرصدة الافتتاحية", "إجمالي الفاتورة بعد الخصم")
+                                                   Label8.Text = If(balancesMode.Checked, "فروق تاريخية غير مسجلة", "إجمالي الخصم")
+                                                   dtpFrom.Enabled = Not balancesMode.Checked
+                                                   dtpTo.Enabled = Not balancesMode.Checked
+                                                   cmbStore.Enabled = Not balancesMode.Checked
+                                                   cmbPaymentType.Enabled = Not balancesMode.Checked
+                                                   rbInvoicesSummary.Enabled = Not balancesMode.Checked
+                                                   rbItemsDetails.Enabled = Not balancesMode.Checked
+                                                   cmbMaterial.Enabled = Not balancesMode.Checked AndAlso rbItemsDetails.Checked
+                                                   LoadReport()
+                                               End Sub
+        AddHandler btnPrintReport.Click, Sub() PurchaseDocumentHelper.RunSafely(Sub() PurchaseDocumentHelper.PrintGrid(dgvReport, If(balancesMode.Checked, "أرصدة الموردين الحالية", "تقرير المشتريات من " & dtpFrom.Value.ToString("yyyy-MM-dd") & " إلى " & dtpTo.Value.ToString("yyyy-MM-dd"))))
+        AddHandler btnExportReport.Click, Sub() PurchaseDocumentHelper.RunSafely(Sub() PurchaseDocumentHelper.ExportGrid(dgvReport, "تقرير الموردين والمشتريات"))
+        AddHandler btnViewPurchase.Click, Sub() PurchaseDocumentHelper.RunSafely(Sub()
+                                                                        If Not balancesMode.Checked AndAlso rbInvoicesSummary.Checked AndAlso dgvReport.CurrentRow IsNot Nothing Then
+                                                                            PurchaseDocumentHelper.ShowInvoice(Me, CInt(dgvReport.CurrentRow.Cells("PurchaseID").Value))
+                                                                        Else
+                                                                            MessageBox.Show("اختر فاتورة من تقرير إجمالي الفواتير.")
+                                                                        End If
+                                                                    End Sub)
         FillFilterDropdowns()
         rbInvoicesSummary.Checked = True
 
@@ -14,6 +41,8 @@ Public Class frmPurchaseReports
         datagridviewsetup(dgvReport)
 
         ' تشغيل البحث الأولي
+        reportsReady = True
+        balancesMode.Checked = ShowSupplierBalances
         LoadReport()
 
         Dim Drag As FormDragHelper
@@ -75,9 +104,27 @@ Public Class frmPurchaseReports
     ''' جلب وتحميل التقرير بناءً على نوع العرض والفلاتر المحددة
     ''' </summary>
     Private Sub LoadReport()
+        If Not reportsReady Then Return
         Try
+            If balancesMode.Checked Then
+                Dim supplierID As Integer = 0
+                If cmbSupplier.SelectedValue IsNot Nothing Then Integer.TryParse(cmbSupplier.SelectedValue.ToString(), supplierID)
+                Dim balances = SupplierAccountingService.GetBalances(supplierID, txtSearch.Text.Trim())
+                dgvReport.DataSource = balances
+                For Each name As String In {"الرصيد الافتتاحي", "المشتريات", "المسدد", "الرصيد الحالي", "فرق تاريخي غير مسجل"}
+                    dgvReport.Columns(name).DefaultCellStyle.Format = "N2"
+                Next
+                lblTotalAmount.Text = balances.AsEnumerable().Sum(Function(r) CDec(r("المشتريات"))).ToString("N2")
+                lblNetTotal.Text = balances.AsEnumerable().Sum(Function(r) CDec(r("الرصيد الافتتاحي"))).ToString("N2")
+                lblTotalDiscount.Text = balances.AsEnumerable().Sum(Function(r) CDec(r("فرق تاريخي غير مسجل"))).ToString("N2")
+                lblTotalPaid.Text = balances.AsEnumerable().Sum(Function(r) CDec(r("المسدد"))).ToString("N2")
+                lblTotalRemaining.Text = balances.AsEnumerable().Sum(Function(r) CDec(r("الرصيد الحالي"))).ToString("N2")
+                lblInvoiceCount.Text = balances.Rows.Count.ToString()
+                Return
+            End If
+            If dtpFrom.Value.Date > dtpTo.Value.Date Then Throw New ArgumentException("راجع ترتيب تاريخ البداية والنهاية.")
             Dim fromDate As DateTime = dtpFrom.Value.Date
-            Dim toDate As DateTime = dtpTo.Value.Date.AddDays(1).AddSeconds(-1) ' لنهاية اليوم المختار
+            Dim toDate As DateTime = dtpTo.Value.Date.AddDays(1) ' لنهاية اليوم المختار
 
             Dim supID As Integer = If(cmbSupplier.SelectedValue IsNot Nothing AndAlso Integer.TryParse(cmbSupplier.SelectedValue.ToString(), Nothing), Convert.ToInt32(cmbSupplier.SelectedValue), 0)
             Dim storeID As Integer = If(cmbStore.SelectedValue IsNot Nothing AndAlso Integer.TryParse(cmbStore.SelectedValue.ToString(), Nothing), Convert.ToInt32(cmbStore.SelectedValue), 0)
@@ -105,7 +152,7 @@ Public Class frmPurchaseReports
                                             "INNER JOIN Suppliers S ON H.SupplierID = S.SupplierID " &
                                             "INNER JOIN Stores ST ON H.StoreID = ST.StoreID " &
                                             "LEFT JOIN Treasury T ON H.TreasuryID = T.TreasuryID " &
-                                            "WHERE H.PurchaseDate BETWEEN @FromDate AND @ToDate "
+                                            "WHERE ISNULL(H.IsDeleted,0)=0 AND H.PurchaseDate >= @FromDate AND H.PurchaseDate < @ToDate "
 
                         If supID > 0 Then
                             sql &= " AND H.SupplierID = @SupID "
@@ -134,14 +181,14 @@ Public Class frmPurchaseReports
                     Else
                         Dim sql As String = "SELECT D.DetailID, H.InvoiceNumber, H.PurchaseDate, S.SupplierName, ST.StoreName, " &
                                             "       M.MaterialName, U.UnitName, D.Quantity, D.ConversionFactor, " &
-                                            "       D.ActualBaseQuantity, D.UnitPrice, D.BaseUnitCost, D.TotalPrice " &
+                                            "       D.Quantity*D.ConversionFactor AS ActualBaseQuantity, D.UnitPrice, D.BaseUnitCost, D.Quantity*D.UnitPrice AS TotalPrice " &
                                             "FROM PurchaseDetails D " &
                                             "INNER JOIN PurchaseHeaders H ON D.PurchaseID = H.PurchaseID " &
                                             "INNER JOIN RawMaterials M ON D.MaterialID = M.MaterialID " &
                                             "INNER JOIN Units U ON D.UnitID = U.UnitID " &
                                             "INNER JOIN Suppliers S ON H.SupplierID = S.SupplierID " &
                                             "INNER JOIN Stores ST ON H.StoreID = ST.StoreID " &
-                                            "WHERE H.PurchaseDate BETWEEN @FromDate AND @ToDate "
+                                            "WHERE ISNULL(H.IsDeleted,0)=0 AND H.PurchaseDate >= @FromDate AND H.PurchaseDate < @ToDate "
 
                         If supID > 0 Then
                             sql &= " AND H.SupplierID = @SupID "
@@ -322,6 +369,7 @@ Public Class frmPurchaseReports
     End Sub
 
     Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
+        balancesMode.Checked = False
         dtpFrom.Value = New DateTime(DateTime.Now.Year, DateTime.Now.Month, 1)
         dtpTo.Value = DateTime.Now
         cmbSupplier.SelectedIndex = 0
@@ -344,7 +392,7 @@ Public Class frmPurchaseReports
     ''' عند الضغط مرتين على فاتورة في تقرير الإجماليات، يمكن عرض أصنافها فوراً
     ''' </summary>
     Private Sub dgvReport_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvReport.CellDoubleClick
-        If e.RowIndex >= 0 AndAlso rbInvoicesSummary.Checked Then
+        If e.RowIndex >= 0 AndAlso rbInvoicesSummary.Checked AndAlso Not balancesMode.Checked Then
             Dim invNumber As String = dgvReport.Rows(e.RowIndex).Cells("InvoiceNumber").Value.ToString()
             txtSearch.Text = invNumber
             rbItemsDetails.Checked = True ' الانتقال لتقرير تفاصيل هذه الفاتورة

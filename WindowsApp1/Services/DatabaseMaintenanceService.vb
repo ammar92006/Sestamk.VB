@@ -691,8 +691,7 @@ Namespace Services
                         ('frmRecipes', N'الأصناف والمخزون', N'مكونات وتكاليف الوجبات'),
                         ('FrmKitchenWaste', N'الأصناف والمخزون', N'إدارة الهالك والتالف'),
                         ('FrmKitchenDisplay', N'الأصناف والمخزون', N'شاشة المطبخ (KDS)'),
-                        ('Purchases', N'المشتريات والموردين', N'فواتير المشتريات'),
-                        ('Purchase_Return', N'المشتريات والموردين', N'مرتجع المشتريات'),
+                        ('frmPurchases', N'المشتريات والموردين', N'فواتير المشتريات'),
                         ('FrmSuppliers', N'المشتريات والموردين', N'إدارة الموردين'),
                         ('FrmSupplierTransactions', N'المشتريات والموردين', N'حركات ومدفوعات الموردين'),
                         ('frmPurchaseReports', N'المشتريات والموردين', N'تقارير المشتريات'),
@@ -918,8 +917,6 @@ Namespace Services
                 "SalaryPayments",
                 "StockTransactions",
                 "StockMovements",
-                "Purchase_Detalis",
-                "Purchase_Header",
                 "SalesInvoiceDetails",
                 "PurchaseDetails",
                 "SalesDetails",
@@ -931,7 +928,6 @@ Namespace Services
                 "Sales",
                 "SalesHeader",
                 "PurchaseHeaders",
-                "Purchases",
                 "Shifts"
             }
 
