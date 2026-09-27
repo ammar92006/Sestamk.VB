@@ -12,11 +12,13 @@ Public Class VbUpdateManifest
     Public Property Version As String
     Public Property Channel As String
     Public Property Mandatory As Boolean
+    Public Property Title As String
     Public Property Notes As String
     Public Property WhatsNew As New List(Of String)()
     Public Property PackageUrl As String
     Public Property PackageSha256 As String
     Public Property PackageSize As Long
+    Public Property InstallerSize As Long
 End Class
 
 Public NotInheritable Class UpdateCoordinator
@@ -208,16 +210,25 @@ Public NotInheritable Class UpdateCoordinator
             Return Nothing
         End If
 
+        Dim title = Convert.ToString(If(json("title"), json("Title")))
+        Dim instSize As Long = 0
+        Dim installerObj = TryCast(If(json("installer"), json("Installer")), JObject)
+        If installerObj IsNot Nothing Then
+            instSize = CLng(Val(Convert.ToString(If(installerObj("size"), installerObj("Size")))))
+        End If
+
         Return New VbUpdateManifest With {
             .Product = LicenseSettings.ProductId,
             .Version = versionText,
             .Channel = channelText,
             .Mandatory = isMandatory,
+            .Title = title,
             .Notes = notes,
             .WhatsNew = whatsNewList,
             .PackageUrl = pkgUrl,
             .PackageSha256 = pkgSha,
-            .PackageSize = pkgSize
+            .PackageSize = pkgSize,
+            .InstallerSize = instSize
         }
     End Function
 End Class
