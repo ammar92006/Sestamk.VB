@@ -406,12 +406,15 @@ Namespace UC_Settings
         Private Function CleanReleaseTitle(title As String, version As String) As String
             If String.IsNullOrWhiteSpace(title) Then Return "تحديث سستمك الشامل"
             Dim t = title.Trim()
+            ' إزالة أي ذكر لـ VB.NET أو VB نهائياً من العناوين
+            t = t.Replace("(VB.NET)", "").Replace("(vb.net)", "").Replace("VB.NET", "").Replace("vb.net", "")
+            t = t.Replace("(VB)", "").Replace("(vb)", "").Replace("VB .NET", "").Replace("vb .net", "")
             ' إزالة التكرار مثل "الإصدار 1.2.2 - " أو "v1.2.2"
             t = t.Replace("الإصدار " & version, "")
             t = t.Replace("v" & version, "")
             t = t.Replace("V" & version, "")
             t = t.Replace(version, "")
-            t = t.Trim(" "c, "-"c, "•"c, ":"c).Trim()
+            t = t.Trim(" "c, "-"c, "•"c, ":"c, "("c, ")"c).Trim()
             If String.IsNullOrWhiteSpace(t) Then t = "تحديث سستمك الشامل"
             Return t
         End Function
@@ -489,8 +492,8 @@ Namespace UC_Settings
                     End If
                 End If
 
-                itemTitle = itemTitle.Replace("**", "").Replace("__", "").Trim()
-                itemDesc = itemDesc.Replace("**", "").Replace("__", "").Trim()
+                itemTitle = itemTitle.Replace("**", "").Replace("__", "").Replace("(VB.NET)", "").Replace("VB.NET", "").Replace("(VB)", "").Trim()
+                itemDesc = itemDesc.Replace("**", "").Replace("__", "").Replace("(VB.NET)", "").Replace("VB.NET", "").Replace("(VB)", "").Trim()
 
                 If String.IsNullOrWhiteSpace(icon) Then
                     icon = GetSmartIcon(itemTitle & " " & itemDesc)
@@ -565,15 +568,15 @@ Namespace UC_Settings
                 .RightToLeft = RightToLeft.Yes
             }
 
-            ' حاوية الأيقونة
+            ' حاوية الأيقونة في أقصى اليسار
             Dim pnlIcon As New Guna.UI2.WinForms.Guna2Panel With {
                 .Size = New Size(36, 36),
                 .BorderRadius = 8,
                 .FillColor = Color.FromArgb(26, 34, 49),
                 .BorderColor = Color.FromArgb(51, 65, 85),
                 .BorderThickness = 1,
-                .Location = New Point(itemWidth - 46, 10),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Right
+                .Location = New Point(10, 10),
+                .Anchor = AnchorStyles.Top Or AnchorStyles.Left
             }
 
             Dim lblIcon As New Label With {
@@ -586,14 +589,14 @@ Namespace UC_Settings
             pnlIcon.Controls.Add(lblIcon)
             pnl.Controls.Add(pnlIcon)
 
-            Dim textWidth = itemWidth - 62
+            Dim textWidth = itemWidth - 68
 
             If Not String.IsNullOrWhiteSpace(item.Description) Then
                 Dim lblTitle As New Label With {
                     .Text = item.Title,
                     .Font = New Font("Segoe UI", 10.25!, FontStyle.Bold),
                     .ForeColor = Color.FromArgb(248, 250, 252),
-                    .Location = New Point(12, 10),
+                    .Location = New Point(56, 10),
                     .Width = textWidth,
                     .AutoSize = True,
                     .MaximumSize = New Size(textWidth, 0),
@@ -607,7 +610,7 @@ Namespace UC_Settings
                     .Text = item.Description,
                     .Font = New Font("Segoe UI", 9.25!, FontStyle.Regular),
                     .ForeColor = Color.FromArgb(203, 213, 225),
-                    .Location = New Point(12, lblTitle.Bottom + 4),
+                    .Location = New Point(56, lblTitle.Bottom + 4),
                     .Width = textWidth,
                     .AutoSize = True,
                     .MaximumSize = New Size(textWidth, 0),
@@ -623,7 +626,7 @@ Namespace UC_Settings
                     .Text = item.Title,
                     .Font = New Font("Segoe UI", 9.75!, FontStyle.Regular),
                     .ForeColor = Color.FromArgb(241, 245, 249),
-                    .Location = New Point(12, 16),
+                    .Location = New Point(56, 16),
                     .Width = textWidth,
                     .AutoSize = True,
                     .MaximumSize = New Size(textWidth, 0),
@@ -675,7 +678,7 @@ Namespace UC_Settings
 
             Dim htmlUrl = Convert.ToString(update("html_url"))
 
-            ' بادج أحجام الملفات على اليمين
+            ' شارة أحجام الملفات بكامل عرض البطاقة
             Dim sizeInfo = ""
             If pkgSize > 0 Then
                 sizeInfo &= "📦 حزمة التحديث: " & FormatBytesArabic(pkgSize)
@@ -690,38 +693,14 @@ Namespace UC_Settings
                     .Text = sizeInfo,
                     .Font = New Font("Segoe UI", 9.0!, FontStyle.Regular),
                     .ForeColor = Color.FromArgb(148, 163, 184),
-                    .Location = New Point(160, 6),
-                    .Width = footerWidth - 170,
+                    .Location = New Point(10, 6),
+                    .Width = footerWidth - 20,
                     .Height = 24,
                     .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right,
                     .TextAlign = ContentAlignment.MiddleRight,
                     .RightToLeft = RightToLeft.Yes
                 }
                 pnl.Controls.Add(lblSizes)
-            End If
-
-            ' زر فتح الرابط على GitHub على اليسار
-            If Not String.IsNullOrWhiteSpace(htmlUrl) Then
-                Dim btnGh As New Guna.UI2.WinForms.Guna2Button With {
-                    .Text = "عرض في GitHub ↗",
-                    .Font = New Font("Segoe UI", 8.75!, FontStyle.Bold),
-                    .ForeColor = Color.FromArgb(96, 165, 250),
-                    .FillColor = Color.FromArgb(30, 41, 59),
-                    .BorderColor = Color.FromArgb(51, 65, 85),
-                    .BorderRadius = 6,
-                    .BorderThickness = 1,
-                    .Size = New Size(145, 28),
-                    .Location = New Point(0, 4),
-                    .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
-                    .Cursor = Cursors.Hand
-                }
-                AddHandler btnGh.Click, Sub(s, e)
-                                            Try
-                                                Process.Start(New ProcessStartInfo(htmlUrl) With {.UseShellExecute = True})
-                                            Catch
-                                            End Try
-                                        End Sub
-                pnl.Controls.Add(btnGh)
             End If
 
             Return pnl
