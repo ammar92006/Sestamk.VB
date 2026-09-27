@@ -358,4 +358,15 @@ Public Class Backup
         Return targetFolder
     End Function
 
+    Private Sub btnWinMax_Click(sender As Object, e As EventArgs) Handles btnWinMax.Click
+        FormHelper.ToggleMaximize(Me)
+    End Sub
+
+    Private Sub btnWinClose_Click(sender As Object, e As EventArgs) Handles btnWinClose.Click
+        Close()
+    End Sub
+
+    Private Sub btnWinMin_Click(sender As Object, e As EventArgs) Handles btnWinMin.Click
+        FormHelper.Minimiz(Me)
+    End Sub
 End Class

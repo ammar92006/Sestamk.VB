@@ -41,6 +41,8 @@ Public Class frmSelectKitchenComment
         LoadCommentCards()
 
         Dim drag As New FormDragHelper(Me, panelHeader)
+        Dim drag1 As New FormDragHelper(Me, lblTitle)
+        Dim drag2 As New FormDragHelper(Me, lblProductSub)
     End Sub
 
     Private Sub frmSelectKitchenComment_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed

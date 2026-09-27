@@ -18,6 +18,7 @@ Public Class frmKitchenComments
         ClearFields()
 
         Dim drag As New FormDragHelper(Me, panelHeader)
+        Dim drag2 As New FormDragHelper(Me, lblTitle)
     End Sub
 
     Private Sub frmKitchenComments_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed

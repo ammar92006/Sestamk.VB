@@ -28,21 +28,21 @@ Partial Class frmSelectKitchenComment
         Me.btnCancel = New Guna.UI2.WinForms.Guna2Button()
         Me.btnApply = New Guna.UI2.WinForms.Guna2Button()
         Me.pnlContent = New Guna.UI2.WinForms.Guna2Panel()
-        Me.lblPresetsHeader = New System.Windows.Forms.Label()
-        Me.pnlCardsContainer = New Guna.UI2.WinForms.Guna2Panel()
-        Me.flpComments = New System.Windows.Forms.FlowLayoutPanel()
+        Me.lblFinalNoteHeader = New System.Windows.Forms.Label()
+        Me.txtFinalNote = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblQuickAddHeader = New System.Windows.Forms.Label()
         Me.pnlQuickAdd = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnQuickAdd = New Guna.UI2.WinForms.Guna2Button()
         Me.txtNewComment = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.lblFinalNoteHeader = New System.Windows.Forms.Label()
-        Me.txtFinalNote = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.lblPresetsHeader = New System.Windows.Forms.Label()
+        Me.pnlCardsContainer = New Guna.UI2.WinForms.Guna2Panel()
+        Me.flpComments = New System.Windows.Forms.FlowLayoutPanel()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.panelHeader.SuspendLayout()
         Me.pnlFooter.SuspendLayout()
         Me.pnlContent.SuspendLayout()
-        Me.pnlCardsContainer.SuspendLayout()
         Me.pnlQuickAdd.SuspendLayout()
+        Me.pnlCardsContainer.SuspendLayout()
         Me.SuspendLayout()
         '
         'panelHeader
@@ -65,10 +65,10 @@ Partial Class frmSelectKitchenComment
         Me.lblProductSub.BackColor = System.Drawing.Color.Transparent
         Me.lblProductSub.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.lblProductSub.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblProductSub.Location = New System.Drawing.Point(60, 36)
+        Me.lblProductSub.Location = New System.Drawing.Point(220, 36)
         Me.lblProductSub.Name = "lblProductSub"
         Me.lblProductSub.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblProductSub.Size = New System.Drawing.Size(600, 22)
+        Me.lblProductSub.Size = New System.Drawing.Size(440, 22)
         Me.lblProductSub.TabIndex = 2
         Me.lblProductSub.Text = "الصنف: بيتزا مشكل جبن"
         '
@@ -79,16 +79,15 @@ Partial Class frmSelectKitchenComment
         Me.lblTitle.BackColor = System.Drawing.Color.Transparent
         Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.lblTitle.ForeColor = System.Drawing.Color.White
-        Me.lblTitle.Location = New System.Drawing.Point(60, 8)
+        Me.lblTitle.Location = New System.Drawing.Point(220, 8)
         Me.lblTitle.Name = "lblTitle"
         Me.lblTitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitle.Size = New System.Drawing.Size(600, 28)
+        Me.lblTitle.Size = New System.Drawing.Size(440, 28)
         Me.lblTitle.TabIndex = 1
-        Me.lblTitle.Text = "تعليقات وملاحظات المطبخ 📝"
+        Me.lblTitle.Text = "تعليقات المطبخ "
         '
         'btnClose
         '
-        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnClose.FillColor = System.Drawing.Color.Transparent
         Me.btnClose.IconColor = System.Drawing.Color.White
         Me.btnClose.Location = New System.Drawing.Point(12, 16)
@@ -122,7 +121,7 @@ Partial Class frmSelectKitchenComment
         Me.btnManage.ForeColor = System.Drawing.Color.White
         Me.btnManage.Location = New System.Drawing.Point(16, 12)
         Me.btnManage.Name = "btnManage"
-        Me.btnManage.Size = New System.Drawing.Size(125, 42)
+        Me.btnManage.Size = New System.Drawing.Size(139, 42)
         Me.btnManage.TabIndex = 3
         Me.btnManage.Text = "إدارة التعليقات ⚙️"
         '
@@ -133,9 +132,9 @@ Partial Class frmSelectKitchenComment
         Me.btnClear.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
         Me.btnClear.ForeColor = System.Drawing.Color.White
-        Me.btnClear.Location = New System.Drawing.Point(150, 12)
+        Me.btnClear.Location = New System.Drawing.Point(160, 12)
         Me.btnClear.Name = "btnClear"
-        Me.btnClear.Size = New System.Drawing.Size(110, 42)
+        Me.btnClear.Size = New System.Drawing.Size(139, 42)
         Me.btnClear.TabIndex = 2
         Me.btnClear.Text = "مسح الملاحظة ❌"
         '
@@ -184,43 +183,36 @@ Partial Class frmSelectKitchenComment
         Me.pnlContent.Size = New System.Drawing.Size(680, 502)
         Me.pnlContent.TabIndex = 1
         '
-        'lblPresetsHeader
+        'lblFinalNoteHeader
         '
-        Me.lblPresetsHeader.AutoSize = True
-        Me.lblPresetsHeader.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.lblPresetsHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.lblPresetsHeader.Location = New System.Drawing.Point(490, 8)
-        Me.lblPresetsHeader.Name = "lblPresetsHeader"
-        Me.lblPresetsHeader.Size = New System.Drawing.Size(175, 20)
-        Me.lblPresetsHeader.TabIndex = 0
-        Me.lblPresetsHeader.Text = "التعليقات والملاحظات الجاهزة:"
+        Me.lblFinalNoteHeader.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblFinalNoteHeader.AutoSize = True
+        Me.lblFinalNoteHeader.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+        Me.lblFinalNoteHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.lblFinalNoteHeader.Location = New System.Drawing.Point(434, 378)
+        Me.lblFinalNoteHeader.Name = "lblFinalNoteHeader"
+        Me.lblFinalNoteHeader.Size = New System.Drawing.Size(234, 19)
+        Me.lblFinalNoteHeader.TabIndex = 4
+        Me.lblFinalNoteHeader.Text = "نص الملاحظة النهائي المرسل للمطبخ:"
         '
-        'pnlCardsContainer
+        'txtFinalNote
         '
-        Me.pnlCardsContainer.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.txtFinalNote.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlCardsContainer.BorderColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.pnlCardsContainer.BorderRadius = 10
-        Me.pnlCardsContainer.BorderThickness = 1
-        Me.pnlCardsContainer.Controls.Add(Me.flpComments)
-        Me.pnlCardsContainer.FillColor = System.Drawing.Color.White
-        Me.pnlCardsContainer.Location = New System.Drawing.Point(16, 32)
-        Me.pnlCardsContainer.Name = "pnlCardsContainer"
-        Me.pnlCardsContainer.Padding = New System.Windows.Forms.Padding(8)
-        Me.pnlCardsContainer.Size = New System.Drawing.Size(648, 260)
-        Me.pnlCardsContainer.TabIndex = 1
-        '
-        'flpComments
-        '
-        Me.flpComments.AutoScroll = True
-        Me.flpComments.BackColor = System.Drawing.Color.Transparent
-        Me.flpComments.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpComments.Location = New System.Drawing.Point(8, 8)
-        Me.flpComments.Name = "flpComments"
-        Me.flpComments.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpComments.Size = New System.Drawing.Size(632, 244)
-        Me.flpComments.TabIndex = 0
+        Me.txtFinalNote.BorderRadius = 8
+        Me.txtFinalNote.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtFinalNote.DefaultText = ""
+        Me.txtFinalNote.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.txtFinalNote.ForeColor = System.Drawing.Color.Black
+        Me.txtFinalNote.Location = New System.Drawing.Point(16, 401)
+        Me.txtFinalNote.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.txtFinalNote.Multiline = True
+        Me.txtFinalNote.Name = "txtFinalNote"
+        Me.txtFinalNote.PlaceholderText = "يمكنك التعديل أو كتابة أي ملاحظة يدوية إضافية هنا..."
+        Me.txtFinalNote.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtFinalNote.SelectedText = ""
+        Me.txtFinalNote.Size = New System.Drawing.Size(648, 85)
+        Me.txtFinalNote.TabIndex = 5
         '
         'lblQuickAddHeader
         '
@@ -228,9 +220,9 @@ Partial Class frmSelectKitchenComment
         Me.lblQuickAddHeader.AutoSize = True
         Me.lblQuickAddHeader.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         Me.lblQuickAddHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.lblQuickAddHeader.Location = New System.Drawing.Point(490, 302)
+        Me.lblQuickAddHeader.Location = New System.Drawing.Point(466, 303)
         Me.lblQuickAddHeader.Name = "lblQuickAddHeader"
-        Me.lblQuickAddHeader.Size = New System.Drawing.Size(175, 19)
+        Me.lblQuickAddHeader.Size = New System.Drawing.Size(202, 19)
         Me.lblQuickAddHeader.TabIndex = 2
         Me.lblQuickAddHeader.Text = "إضافة تعليق جديد سريعاً وحفظه:"
         '
@@ -269,43 +261,50 @@ Partial Class frmSelectKitchenComment
         Me.txtNewComment.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         Me.txtNewComment.ForeColor = System.Drawing.Color.Black
         Me.txtNewComment.Location = New System.Drawing.Point(165, 2)
-        Me.txtNewComment.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.txtNewComment.Margin = New System.Windows.Forms.Padding(4)
         Me.txtNewComment.Name = "txtNewComment"
         Me.txtNewComment.PlaceholderText = "اكتب تعليقاً جديداً ليتم إدراجه وحفظه تلقائياً..."
         Me.txtNewComment.SelectedText = ""
         Me.txtNewComment.Size = New System.Drawing.Size(483, 40)
         Me.txtNewComment.TabIndex = 0
         '
-        'lblFinalNoteHeader
+        'lblPresetsHeader
         '
-        Me.lblFinalNoteHeader.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblFinalNoteHeader.AutoSize = True
-        Me.lblFinalNoteHeader.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
-        Me.lblFinalNoteHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.lblFinalNoteHeader.Location = New System.Drawing.Point(475, 377)
-        Me.lblFinalNoteHeader.Name = "lblFinalNoteHeader"
-        Me.lblFinalNoteHeader.Size = New System.Drawing.Size(190, 19)
-        Me.lblFinalNoteHeader.TabIndex = 4
-        Me.lblFinalNoteHeader.Text = "نص الملاحظة النهائي المرسل للمطبخ:"
+        Me.lblPresetsHeader.AutoSize = True
+        Me.lblPresetsHeader.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblPresetsHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.lblPresetsHeader.Location = New System.Drawing.Point(469, 9)
+        Me.lblPresetsHeader.Name = "lblPresetsHeader"
+        Me.lblPresetsHeader.Size = New System.Drawing.Size(200, 20)
+        Me.lblPresetsHeader.TabIndex = 0
+        Me.lblPresetsHeader.Text = "التعليقات والملاحظات الجاهزة:"
         '
-        'txtFinalNote
+        'pnlCardsContainer
         '
-        Me.txtFinalNote.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.pnlCardsContainer.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.txtFinalNote.BorderRadius = 8
-        Me.txtFinalNote.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtFinalNote.DefaultText = ""
-        Me.txtFinalNote.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.txtFinalNote.ForeColor = System.Drawing.Color.Black
-        Me.txtFinalNote.Location = New System.Drawing.Point(16, 401)
-        Me.txtFinalNote.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
-        Me.txtFinalNote.Multiline = True
-        Me.txtFinalNote.Name = "txtFinalNote"
-        Me.txtFinalNote.PlaceholderText = "يمكنك التعديل أو كتابة أي ملاحظة يدوية إضافية هنا..."
-        Me.txtFinalNote.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtFinalNote.SelectedText = ""
-        Me.txtFinalNote.Size = New System.Drawing.Size(648, 85)
-        Me.txtFinalNote.TabIndex = 5
+        Me.pnlCardsContainer.BorderColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.pnlCardsContainer.BorderRadius = 10
+        Me.pnlCardsContainer.BorderThickness = 1
+        Me.pnlCardsContainer.Controls.Add(Me.flpComments)
+        Me.pnlCardsContainer.FillColor = System.Drawing.Color.White
+        Me.pnlCardsContainer.Location = New System.Drawing.Point(16, 32)
+        Me.pnlCardsContainer.Name = "pnlCardsContainer"
+        Me.pnlCardsContainer.Padding = New System.Windows.Forms.Padding(8)
+        Me.pnlCardsContainer.Size = New System.Drawing.Size(648, 260)
+        Me.pnlCardsContainer.TabIndex = 1
+        '
+        'flpComments
+        '
+        Me.flpComments.AutoScroll = True
+        Me.flpComments.BackColor = System.Drawing.Color.Transparent
+        Me.flpComments.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.flpComments.Location = New System.Drawing.Point(8, 8)
+        Me.flpComments.Name = "flpComments"
+        Me.flpComments.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.flpComments.Size = New System.Drawing.Size(632, 244)
+        Me.flpComments.TabIndex = 0
         '
         'Guna2BorderlessForm1
         '
@@ -336,8 +335,8 @@ Partial Class frmSelectKitchenComment
         Me.pnlFooter.ResumeLayout(False)
         Me.pnlContent.ResumeLayout(False)
         Me.pnlContent.PerformLayout()
-        Me.pnlCardsContainer.ResumeLayout(False)
         Me.pnlQuickAdd.ResumeLayout(False)
+        Me.pnlCardsContainer.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub

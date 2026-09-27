@@ -37,8 +37,8 @@ Partial Class frmKitchenComments
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnClose = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.btnMinimize = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btnClose = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.lblTitle = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         CType(Me.dgvComments, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -60,7 +60,7 @@ Partial Class frmKitchenComments
         Me.dgvComments.ColumnHeadersHeight = 38
         DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 9.5!)
         DataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer), CType(CType(40, Byte), Integer))
         DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
         DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
@@ -212,7 +212,7 @@ Partial Class frmKitchenComments
         Me.lblStatus.ForeColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(85, Byte), Integer))
         Me.lblStatus.Location = New System.Drawing.Point(125, 78)
         Me.lblStatus.Name = "lblStatus"
-        Me.lblStatus.Size = New System.Drawing.Size(43, 19)
+        Me.lblStatus.Size = New System.Drawing.Size(42, 19)
         Me.lblStatus.TabIndex = 4
         Me.lblStatus.Text = "نشط:"
         '
@@ -226,7 +226,7 @@ Partial Class frmKitchenComments
         Me.txtCommentText.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         Me.txtCommentText.ForeColor = System.Drawing.Color.Black
         Me.txtCommentText.Location = New System.Drawing.Point(200, 70)
-        Me.txtCommentText.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.txtCommentText.Margin = New System.Windows.Forms.Padding(4)
         Me.txtCommentText.Name = "txtCommentText"
         Me.txtCommentText.PlaceholderText = "مثال: بدون سكر، شطة زيادة، مستوي جيداً..."
         Me.txtCommentText.SelectedText = ""
@@ -242,7 +242,7 @@ Partial Class frmKitchenComments
         Me.lblCommentText.ForeColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(85, Byte), Integer))
         Me.lblCommentText.Location = New System.Drawing.Point(655, 78)
         Me.lblCommentText.Name = "lblCommentText"
-        Me.lblCommentText.Size = New System.Drawing.Size(81, 19)
+        Me.lblCommentText.Size = New System.Drawing.Size(84, 19)
         Me.lblCommentText.TabIndex = 2
         Me.lblCommentText.Text = "نص التعليق:"
         '
@@ -255,7 +255,7 @@ Partial Class frmKitchenComments
         Me.txtCommentCode.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         Me.txtCommentCode.ForeColor = System.Drawing.Color.Black
         Me.txtCommentCode.Location = New System.Drawing.Point(745, 70)
-        Me.txtCommentCode.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.txtCommentCode.Margin = New System.Windows.Forms.Padding(4)
         Me.txtCommentCode.Name = "txtCommentCode"
         Me.txtCommentCode.PlaceholderText = "تلقائي"
         Me.txtCommentCode.ReadOnly = True
@@ -286,7 +286,7 @@ Partial Class frmKitchenComments
         Me.txtSearch.Font = New System.Drawing.Font("Segoe UI", 10.0!)
         Me.txtSearch.ForeColor = System.Drawing.Color.Black
         Me.txtSearch.Location = New System.Drawing.Point(20, 118)
-        Me.txtSearch.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.txtSearch.Margin = New System.Windows.Forms.Padding(4)
         Me.txtSearch.Name = "txtSearch"
         Me.txtSearch.PlaceholderText = "ابحث بالاسم أو الكود..."
         Me.txtSearch.SelectedText = ""
@@ -302,7 +302,7 @@ Partial Class frmKitchenComments
         Me.lblSearch.ForeColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(85, Byte), Integer))
         Me.lblSearch.Location = New System.Drawing.Point(870, 125)
         Me.lblSearch.Name = "lblSearch"
-        Me.lblSearch.Size = New System.Drawing.Size(42, 19)
+        Me.lblSearch.Size = New System.Drawing.Size(39, 19)
         Me.lblSearch.TabIndex = 6
         Me.lblSearch.Text = "بحث:"
         '
@@ -319,19 +319,8 @@ Partial Class frmKitchenComments
         Me.panelHeader.Size = New System.Drawing.Size(950, 60)
         Me.panelHeader.TabIndex = 0
         '
-        'btnClose
-        '
-        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.FillColor = System.Drawing.Color.Transparent
-        Me.btnClose.IconColor = System.Drawing.Color.White
-        Me.btnClose.Location = New System.Drawing.Point(12, 14)
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(32, 32)
-        Me.btnClose.TabIndex = 2
-        '
         'btnMinimize
         '
-        Me.btnMinimize.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnMinimize.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
         Me.btnMinimize.FillColor = System.Drawing.Color.Transparent
         Me.btnMinimize.IconColor = System.Drawing.Color.White
@@ -340,17 +329,26 @@ Partial Class frmKitchenComments
         Me.btnMinimize.Size = New System.Drawing.Size(32, 32)
         Me.btnMinimize.TabIndex = 1
         '
+        'btnClose
+        '
+        Me.btnClose.FillColor = System.Drawing.Color.Transparent
+        Me.btnClose.IconColor = System.Drawing.Color.White
+        Me.btnClose.Location = New System.Drawing.Point(12, 14)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(32, 32)
+        Me.btnClose.TabIndex = 2
+        '
         'lblTitle
         '
         Me.lblTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitle.BackColor = System.Drawing.Color.Transparent
         Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.lblTitle.ForeColor = System.Drawing.Color.White
-        Me.lblTitle.Location = New System.Drawing.Point(680, 16)
+        Me.lblTitle.Location = New System.Drawing.Point(797, 16)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(250, 27)
+        Me.lblTitle.Size = New System.Drawing.Size(124, 27)
         Me.lblTitle.TabIndex = 0
-        Me.lblTitle.Text = "إدارة تعليقات وملاحظات المطبخ"
+        Me.lblTitle.Text = "المطبخ تعليقات"
         '
         'Guna2BorderlessForm1
         '
