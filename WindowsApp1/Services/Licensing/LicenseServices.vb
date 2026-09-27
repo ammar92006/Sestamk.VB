@@ -46,12 +46,26 @@ Public NotInheritable Class HardwareFingerprint
 
     Private Shared Function GetMachineGuid() As String
         Try
-            Using key = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Cryptography")
-                Return Convert.ToString(key.GetValue("MachineGuid"))
+            Using baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+                Using key = baseKey.OpenSubKey("SOFTWARE\Microsoft\Cryptography")
+                    If key IsNot Nothing Then
+                        Dim val = Convert.ToString(key.GetValue("MachineGuid"))
+                        If Not String.IsNullOrWhiteSpace(val) Then Return val
+                    End If
+                End Using
             End Using
         Catch
-            Return "UNKNOWN_GUID"
         End Try
+        Try
+            Using key = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Cryptography")
+                If key IsNot Nothing Then
+                    Dim val = Convert.ToString(key.GetValue("MachineGuid"))
+                    If Not String.IsNullOrWhiteSpace(val) Then Return val
+                End If
+            End Using
+        Catch
+        End Try
+        Return "UNKNOWN_GUID"
     End Function
 
     Private Shared Function GetWmiValue(className As String, propertyName As String) As String
@@ -109,48 +123,233 @@ Public NotInheritable Class LicenseCache
     Private Sub New()
     End Sub
 
-    Private Shared ReadOnly CachePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "vb-license.dat")
+    Private Shared ReadOnly PrimaryCachePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "vb-license.dat")
     Private Shared ReadOnly SharedAppCachePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "license.dat")
+    Private Shared ReadOnly LocalAppCachePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Sestamk", "vb-license.dat")
+    Private Shared ReadOnly RoamingAppCachePath As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Sestamk", "vb-license.dat")
+    Private Const RegistryKeyPath As String = "Software\Sestamk\License"
 
     Public Shared Sub Save(license As JObject)
-        license("last_successful_sync_utc") = DateTime.UtcNow.ToString("O")
-        Dim encrypted = ProtectedData.Protect(Encoding.UTF8.GetBytes(license.ToString(Formatting.None)), Nothing, DataProtectionScope.LocalMachine)
-        Directory.CreateDirectory(Path.GetDirectoryName(CachePath))
-        File.WriteAllBytes(CachePath, encrypted)
+        If license Is Nothing Then Return
+        Try
+            ' الحفاظ التام على السيريال المحفوظ وعدم تركه يضيع أبداً
+            Dim currentSerial = Convert.ToString(license("saved_serial"))
+            If String.IsNullOrWhiteSpace(currentSerial) Then
+                Dim old = Load()
+                If old IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(old("saved_serial"))) Then
+                    license("saved_serial") = Convert.ToString(old("saved_serial")).Trim()
+                End If
+            End If
+
+            license("last_successful_sync_utc") = DateTime.UtcNow.ToString("O", System.Globalization.CultureInfo.InvariantCulture)
+            license("last_successful_sync") = DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)
+
+            Dim jsonBytes = Encoding.UTF8.GetBytes(license.ToString(Formatting.None))
+            Dim encrypted = ProtectedData.Protect(jsonBytes, Nothing, DataProtectionScope.LocalMachine)
+
+            ' 1) الحفظ في المجلد العام المشترك (ProgramData)
+            Try
+                Directory.CreateDirectory(Path.GetDirectoryName(PrimaryCachePath))
+                File.WriteAllBytes(PrimaryCachePath, encrypted)
+            Catch
+            End Try
+
+            ' 2) الحفظ في مجلد LocalAppData الخاص بالمستخدم الحالي
+            Try
+                Directory.CreateDirectory(Path.GetDirectoryName(LocalAppCachePath))
+                File.WriteAllBytes(LocalAppCachePath, encrypted)
+            Catch
+            End Try
+
+            ' 3) الحفظ في مجلد Roaming AppData
+            Try
+                Directory.CreateDirectory(Path.GetDirectoryName(RoamingAppCachePath))
+                File.WriteAllBytes(RoamingAppCachePath, encrypted)
+            Catch
+            End Try
+
+            ' 4) الحفظ الاحتياطي في سجل النظام (Registry HKCU)
+            Try
+                Using regKey = Registry.CurrentUser.CreateSubKey(RegistryKeyPath)
+                    If regKey IsNot Nothing Then
+                        regKey.SetValue("EncryptedPayload", Convert.ToBase64String(encrypted))
+                        Dim s = Convert.ToString(license("saved_serial"))
+                        If Not String.IsNullOrWhiteSpace(s) Then regKey.SetValue("SavedSerial", s.Trim())
+                    End If
+                End Using
+            Catch
+            End Try
+
+            ' 5) الحفظ الاحتياطي في سجل النظام (Registry HKLM) إن توفرت الصلاحيات
+            Try
+                Using baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+                    Using regKey = baseKey.CreateSubKey(RegistryKeyPath)
+                        If regKey IsNot Nothing Then
+                            regKey.SetValue("EncryptedPayload", Convert.ToBase64String(encrypted))
+                            Dim s = Convert.ToString(license("saved_serial"))
+                            If Not String.IsNullOrWhiteSpace(s) Then regKey.SetValue("SavedSerial", s.Trim())
+                        End If
+                    End Using
+                End Using
+            Catch
+            End Try
+
+        Catch ex As Exception
+            Logger.LogError("LicenseCache.Save", ex)
+        End Try
     End Sub
 
     Public Shared Function Load() As JObject
-        Try
-            Dim targetFile As String = Nothing
-            If File.Exists(CachePath) Then
-                targetFile = CachePath
-            ElseIf File.Exists(SharedAppCachePath) Then
-                targetFile = SharedAppCachePath
-            End If
+        Dim candidates As String() = {PrimaryCachePath, LocalAppCachePath, RoamingAppCachePath, SharedAppCachePath}
+        Dim foundObject As JObject = Nothing
 
-            If targetFile Is Nothing Then Return Nothing
-            Dim plain = ProtectedData.Unprotect(File.ReadAllBytes(targetFile), Nothing, DataProtectionScope.LocalMachine)
-            Return JObject.Parse(Encoding.UTF8.GetString(plain))
-        Catch
-            Return Nothing
-        End Try
+        ' فحص مسارات الملفات أولاً
+        For Each filePath In candidates
+            Try
+                If File.Exists(filePath) Then
+                    Dim raw = File.ReadAllBytes(filePath)
+                    Dim plain = ProtectedData.Unprotect(raw, Nothing, DataProtectionScope.LocalMachine)
+                    Dim obj = JObject.Parse(Encoding.UTF8.GetString(plain))
+                    If obj IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(Convert.ToString(obj("saved_serial"))) Then
+                        foundObject = obj
+                        Exit For
+                    ElseIf obj IsNot Nothing AndAlso foundObject Is Nothing Then
+                        foundObject = obj
+                    End If
+                End If
+            Catch
+            End Try
+        Next
+
+        ' إذا لم يوجد بالملفات، فحص سجل النظام HKCU
+        If foundObject Is Nothing Then
+            Try
+                Using regKey = Registry.CurrentUser.OpenSubKey(RegistryKeyPath)
+                    If regKey IsNot Nothing Then
+                        Dim b64 = Convert.ToString(regKey.GetValue("EncryptedPayload"))
+                        If Not String.IsNullOrWhiteSpace(b64) Then
+                            Dim raw = Convert.FromBase64String(b64)
+                            Dim plain = ProtectedData.Unprotect(raw, Nothing, DataProtectionScope.LocalMachine)
+                            foundObject = JObject.Parse(Encoding.UTF8.GetString(plain))
+                        Else
+                            Dim savedSerial = Convert.ToString(regKey.GetValue("SavedSerial"))
+                            If Not String.IsNullOrWhiteSpace(savedSerial) Then
+                                foundObject = New JObject From {{"saved_serial", savedSerial.Trim()}, {"status", "active"}}
+                            End If
+                        End If
+                    End If
+                End Using
+            Catch
+            End Try
+        End If
+
+        ' إذا لم يوجد، فحص سجل النظام HKLM
+        If foundObject Is Nothing Then
+            Try
+                Using baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+                    Using regKey = baseKey.OpenSubKey(RegistryKeyPath)
+                        If regKey IsNot Nothing Then
+                            Dim b64 = Convert.ToString(regKey.GetValue("EncryptedPayload"))
+                            If Not String.IsNullOrWhiteSpace(b64) Then
+                                Dim raw = Convert.FromBase64String(b64)
+                                Dim plain = ProtectedData.Unprotect(raw, Nothing, DataProtectionScope.LocalMachine)
+                                foundObject = JObject.Parse(Encoding.UTF8.GetString(plain))
+                            End If
+                        End If
+                    End Using
+                End Using
+            Catch
+            End Try
+        End If
+
+        ' التوافق التلقائي الذاتي والترقية مع النظام القديم (sys.dat)
+        If foundObject Is Nothing Then
+            Try
+                Dim legacyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "sys.dat")
+                If File.Exists(legacyPath) Then
+                    Dim enc = File.ReadAllText(legacyPath)
+                    Using aes As Aes = Aes.Create()
+                        aes.Key = Encoding.UTF8.GetBytes("MySuperSecretKey123!".PadRight(32, "0"c))
+                        aes.IV = Encoding.UTF8.GetBytes("1234567890123456")
+                        Using decryptor = aes.CreateDecryptor()
+                            Dim cipherBytes = Convert.FromBase64String(enc)
+                            Dim plainBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length)
+                            Dim legacyText = Encoding.UTF8.GetString(plainBytes)
+                            Dim parts = legacyText.Split("|"c)
+                            If parts.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(parts(0)) Then
+                                foundObject = New JObject From {
+                                    {"saved_serial", parts(0).Trim()},
+                                    {"status", "active"},
+                                    {"expires_at", DateTime.Today.AddYears(1).ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}
+                                }
+                            End If
+                        End Using
+                    End Using
+                End If
+            Catch
+            End Try
+        End If
+
+        ' المعالجة التلقائية الذاتية (Self-Healing): إذا وجد في مكان واحد ولم يوجد في باقي الأماكن نقوم بمزامنته فوراً
+        If foundObject IsNot Nothing Then
+            Try
+                Dim needHealing = Not File.Exists(PrimaryCachePath) OrElse Not File.Exists(LocalAppCachePath)
+                If needHealing Then
+                    Save(foundObject)
+                End If
+            Catch
+            End Try
+        End If
+
+        Return foundObject
     End Function
 
-    Public Shared Sub Delete()
+    Public Shared Sub Delete(Optional keepSerial As Boolean = True)
         Try
-            If File.Exists(CachePath) Then File.Delete(CachePath)
+            If keepSerial Then
+                Dim obj = Load()
+                If obj IsNot Nothing Then
+                    obj("status") = "inactive"
+                    Save(obj)
+                    Return
+                End If
+            End If
+
+            If File.Exists(PrimaryCachePath) Then File.Delete(PrimaryCachePath)
+            If File.Exists(LocalAppCachePath) Then File.Delete(LocalAppCachePath)
+            If File.Exists(RoamingAppCachePath) Then File.Delete(RoamingAppCachePath)
             If File.Exists(SharedAppCachePath) Then File.Delete(SharedAppCachePath)
+
+            Try
+                Using regKey = Registry.CurrentUser.OpenSubKey("Software\Sestamk", True)
+                    If regKey IsNot Nothing Then regKey.DeleteSubKeyTree("License", False)
+                End Using
+            Catch
+            End Try
         Catch
         End Try
     End Sub
 
     Public Shared Function IsOfflineAllowed(cache As JObject) As Boolean
         If cache Is Nothing Then Return False
+        Dim status = Convert.ToString(cache("status")).ToLowerInvariant()
+        If status <> "active" AndAlso status <> "grace_period" Then Return False
+
         Dim expiresAt As DateTime
+        Dim expStr = Convert.ToString(cache("expires_at"))
+        If DateTime.TryParse(expStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, expiresAt) OrElse DateTime.TryParse(expStr, expiresAt) Then
+            If expiresAt.Date < DateTime.Today Then Return False
+        End If
+
         Dim lastSync As DateTime
-        If Not DateTime.TryParse(Convert.ToString(cache("expires_at")), expiresAt) OrElse expiresAt.Date < DateTime.Today Then Return False
-        If Not DateTime.TryParse(Convert.ToString(cache("last_successful_sync_utc")), lastSync) Then Return False
-        Return DateTime.UtcNow.Subtract(lastSync.ToUniversalTime()).TotalDays <= LicenseSettings.OfflineCacheDays
+        Dim syncStr = Convert.ToString(If(cache("last_successful_sync_utc"), cache("last_successful_sync")))
+        If DateTime.TryParse(syncStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, lastSync) OrElse DateTime.TryParse(syncStr, lastSync) Then
+            If DateTime.UtcNow.Subtract(lastSync.ToUniversalTime()).TotalDays > LicenseSettings.OfflineCacheDays Then
+                Return False
+            End If
+        End If
+
+        Return True
     End Function
 End Class
 
@@ -181,9 +380,10 @@ Public NotInheritable Class LicenseBootstrapper
             Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يرجى تفعيل البرنامج أولاً."}
         End If
 
+        Dim savedSerial = Convert.ToString(cache("saved_serial")).Trim()
+
         ' تسريع فوري: إذا كان الكاش المحلي صالحاً، يتم قبول الترخيص فوراً في 0ms بدون تجميد الشاشة
         If Not forceOnlineCheck AndAlso LicenseCache.IsOfflineAllowed(cache) Then
-            Dim savedSerial = Convert.ToString(cache("saved_serial"))
             Dim bgLicenseCheck = Task.Run(Async Function()
                          Try
                              Dim bgResponse = Await RequestAsync(savedSerial)
@@ -191,13 +391,16 @@ Public NotInheritable Class LicenseBootstrapper
                                  bgResponse("saved_serial") = savedSerial
                                  LicenseCache.Save(bgResponse)
                              Else
-                                 ' تم إيقاف أو إلغاء الترخيص على السيرفر
-                                 LicenseCache.Delete()
-                                 Dim revokedMsg = ReadMessage(bgResponse, "تم إيقاف أو انتهاء ترخيص البرنامج من السيرفر.")
-                                 RaiseEvent LicenseInvalidated(revokedMsg)
+                                 Dim st = Convert.ToString(bgResponse("status")).ToLowerInvariant()
+                                 If st = "revoked" OrElse st = "blocked" OrElse st = "expired" Then
+                                     bgResponse("saved_serial") = savedSerial
+                                     LicenseCache.Save(bgResponse)
+                                     Dim revokedMsg = ReadMessage(bgResponse, "تم إيقاف أو انتهاء ترخيص البرنامج من السيرفر.")
+                                     RaiseEvent LicenseInvalidated(revokedMsg)
+                                 End If
                              End If
                          Catch
-                             ' في حال انقطاع الاتصال أثناء الفحص الخلفي الصامت يستمر العمل بالكاش المسموح
+                             ' في حال انقطاع الاتصال أو بطء الشبكة في الخلفية، يستمر العمل دون تعطيل
                          End Try
                      End Function)
 
@@ -205,24 +408,34 @@ Public NotInheritable Class LicenseBootstrapper
         End If
 
         Try
-            Dim response = Await RequestAsync(Convert.ToString(cache("saved_serial")))
+            Dim response = Await RequestAsync(savedSerial)
             If IsServerValid(response) Then
-                response("saved_serial") = Convert.ToString(cache("saved_serial"))
+                response("saved_serial") = savedSerial
                 LicenseCache.Save(response)
                 Return New LicenseCheckResult With {.IsValid = True, .Payload = response}
             End If
-            LicenseCache.Delete()
+
+            ' الترخيص غير ساري حالياً على السيرفر - نحفظ الحالة مع بقاء السيريال محفوظاً دائماً
+            response("saved_serial") = savedSerial
+            LicenseCache.Save(response)
             Dim failMsg = ReadMessage(response, "تم إيقاف أو انتهاء الترخيص.")
             RaiseEvent LicenseInvalidated(failMsg)
-            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = failMsg}
+            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = failMsg, .Payload = response}
         Catch ex As HttpRequestException
-            If LicenseCache.IsOfflineAllowed(cache) Then Return New LicenseCheckResult With {.IsValid = True, .IsOffline = True, .Payload = cache, .Message = "تعمل النسخة مؤقتاً دون اتصال بالإنترنت."}
-            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يلزم الاتصال بالإنترنت للتحقق من الترخيص."}
+            If LicenseCache.IsOfflineAllowed(cache) Then
+                Return New LicenseCheckResult With {.IsValid = True, .IsOffline = True, .Payload = cache, .Message = "تعمل النسخة مؤقتاً دون اتصال بالإنترنت."}
+            End If
+            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يلزم الاتصال بالإنترنت للتحقق من الترخيص.", .Payload = cache}
         Catch ex As TaskCanceledException
-            If LicenseCache.IsOfflineAllowed(cache) Then Return New LicenseCheckResult With {.IsValid = True, .IsOffline = True, .Payload = cache}
-            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "انتهت مهلة التحقق من الترخيص."}
+            If LicenseCache.IsOfflineAllowed(cache) Then
+                Return New LicenseCheckResult With {.IsValid = True, .IsOffline = True, .Payload = cache}
+            End If
+            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "انتهت مهلة التحقق من الترخيص.", .Payload = cache}
         Catch ex As Exception
-            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "تعذر التحقق من الترخيص: " & ex.Message}
+            If LicenseCache.IsOfflineAllowed(cache) Then
+                Return New LicenseCheckResult With {.IsValid = True, .IsOffline = True, .Payload = cache}
+            End If
+            Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "تعذر التحقق من الترخيص: " & ex.Message, .Payload = cache}
         End Try
     End Function
 

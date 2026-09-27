@@ -445,6 +445,13 @@
     <Compile Include="Forms\FormUpdateNotifier.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\frmToast.Designer.vb">
+      <DependentUpon>frmToast.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmToast.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="classes\ToastManager.vb" />
     <Compile Include="chkpassword.Designer.vb">
       <DependentUpon>chkpassword.vb</DependentUpon>
     </Compile>
@@ -1311,6 +1318,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="forms\FormUpdateNotifier.resx">
       <DependentUpon>FormUpdateNotifier.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="forms\frmToast.resx">
+      <DependentUpon>frmToast.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="forms\FrmKitchenDisplay.resx">
       <DependentUpon>FrmKitchenDisplay.vb</DependentUpon>

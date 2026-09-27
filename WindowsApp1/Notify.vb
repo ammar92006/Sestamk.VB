@@ -1,10 +1,9 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.Windows.Forms
 
 ''' <summary>
-''' نظام إشعارات موحّد (Toast) هادئ بدل MessageBox المتناثرة للرسائل الروتينية.
-''' يظهر إشعاراً صغيراً أسفل يمين الشاشة يختفي تلقائياً.
-''' للرسائل المهمة/التأكيد ما زال يُستخدم MessageBox عبر Confirm/Error.
+''' نظام الإشعارات والتنبيهات الموحد (Toast) المتوافق تماماً مع Sestamk_App.
+''' يعرض كروت إشعارات عصرية داكنة بستايل Guna2 تنزلق بسلاسة أسفل يمين الشاشة.
 ''' </summary>
 Public Module Notify
 
@@ -15,13 +14,72 @@ Public Module Notify
         [Error]
     End Enum
 
-    ''' <summary>إشعار سريع يختفي تلقائياً (للنجاح/المعلومات الروتينية)</summary>
-    Public Sub Toast(message As String, Optional type As ToastType = ToastType.Success, Optional ms As Integer = 2500)
+    ''' <summary>
+    ''' إشعار سريع يختفي تلقائياً مع تحديد الرسالة والنوع والمدة
+    ''' </summary>
+    Public Sub Toast(message As String, Optional type As ToastType = ToastType.Success, Optional ms As Integer = 3800)
+        Dim defaultTitle As String
+        Select Case type
+            Case ToastType.Success : defaultTitle = "تمت العملية بنجاح"
+            Case ToastType.Warning : defaultTitle = "تنبيه"
+            Case ToastType.[Error] : defaultTitle = "خطأ"
+            Case Else : defaultTitle = "إشعار"
+        End Select
+
+        Toast(defaultTitle, message, type, ms)
+    End Sub
+
+    ''' <summary>
+    ''' إشعار مخصص مع عنوان ورسالة ونوع ومدة
+    ''' </summary>
+    Public Sub Toast(title As String, message As String, Optional type As ToastType = ToastType.Success, Optional ms As Integer = 3800)
         Try
-            Dim t As New ToastForm(message, type, ms)
-            t.Show()
+            ' تشغيل الصوت إذا كان مفعلاً في الإعدادات
+            PlayNotificationSound(type)
+
+            Dim model As New ToastModel With {
+                .Type = type,
+                .Title = title,
+                .Message = message,
+                .Duration = ms
+            }
+            ToastManager.Show(model)
         Catch
-            ' fallback صامت
+        End Try
+    End Sub
+
+    Public Sub ShowSuccess(message As String, Optional title As String = "تمت العملية بنجاح")
+        Toast(title, message, ToastType.Success)
+    End Sub
+
+    Public Sub ShowWarning(message As String, Optional title As String = "تنبيه")
+        Toast(title, message, ToastType.Warning)
+    End Sub
+
+    Public Sub ShowError(message As String, Optional title As String = "خطأ")
+        Toast(title, message, ToastType.[Error])
+    End Sub
+
+    Public Sub ShowInfo(message As String, Optional title As String = "إشعار")
+        Toast(title, message, ToastType.Info)
+    End Sub
+
+    Public Sub CloseAll()
+        ToastManager.CloseAll()
+    End Sub
+
+    Private Sub PlayNotificationSound(type As ToastType)
+        Try
+            If type = ToastType.Success OrElse type = ToastType.Info Then
+                If SettingsManager.GetBoolSetting(SettingsKeys.NotificationNewOrderSound, True) Then
+                    System.Media.SystemSounds.Asterisk.Play()
+                End If
+            ElseIf type = ToastType.Warning OrElse type = ToastType.[Error] Then
+                If SettingsManager.GetBoolSetting(SettingsKeys.NotificationErrorSound, True) Then
+                    System.Media.SystemSounds.Exclamation.Play()
+                End If
+            End If
+        Catch
         End Try
     End Sub
 
@@ -34,77 +92,5 @@ Public Module Notify
     Public Sub [Error](message As String, Optional title As String = "خطأ")
         MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Sub
-
-    ''' <summary>نافذة الإشعار الصغيرة (تُدار داخلياً)</summary>
-    Private Class ToastForm
-        Inherits Form
-
-        Private ReadOnly _timer As New Timer()
-        Private _life As Integer
-
-        Public Sub New(message As String, type As ToastType, ms As Integer)
-            _life = ms
-            Me.FormBorderStyle = FormBorderStyle.None
-            Me.ShowInTaskbar = False
-            Me.StartPosition = FormStartPosition.Manual
-            Me.TopMost = True
-            Me.Size = New Size(330, 70)
-            Me.RightToLeft = RightToLeft.Yes
-            Me.Opacity = 0
-
-            Dim back As Color
-            Dim icon As String
-            Select Case type
-                Case ToastType.Success : back = Color.FromArgb(39, 174, 96) : icon = "✅"
-                Case ToastType.Warning : back = Color.FromArgb(211, 154, 0) : icon = "⚠️"
-                Case ToastType.[Error] : back = Color.FromArgb(192, 57, 43) : icon = "❌"
-                Case Else : back = Color.FromArgb(41, 128, 185) : icon = "ℹ️"
-            End Select
-            Me.BackColor = back
-
-            Dim lbl As New Label() With {
-                .Text = icon & "  " & message,
-                .ForeColor = Color.White,
-                .Font = New Font("Segoe UI", 12, FontStyle.Bold),
-                .Dock = DockStyle.Fill,
-                .TextAlign = ContentAlignment.MiddleCenter,
-                .RightToLeft = RightToLeft.Yes
-            }
-            Me.Controls.Add(lbl)
-
-            ' الموضع: أسفل يمين المساحة المتاحة
-            Dim wa = Screen.PrimaryScreen.WorkingArea
-            Me.Location = New Point(wa.Right - Me.Width - 20, wa.Bottom - Me.Height - 20)
-
-            _timer.Interval = 40
-            AddHandler _timer.Tick, AddressOf OnTick
-            _timer.Start()
-        End Sub
-
-        Private _fadingOut As Boolean = False
-        Private Sub OnTick(sender As Object, e As EventArgs)
-            If Not _fadingOut Then
-                If Me.Opacity < 0.95 Then
-                    Me.Opacity += 0.12
-                Else
-                    _life -= _timer.Interval
-                    If _life <= 0 Then _fadingOut = True
-                End If
-            Else
-                If Me.Opacity > 0.05 Then
-                    Me.Opacity -= 0.12
-                Else
-                    _timer.Stop()
-                    Me.Close()
-                End If
-            End If
-        End Sub
-
-        Protected Overrides ReadOnly Property ShowWithoutActivation As Boolean
-            Get
-                Return True
-            End Get
-        End Property
-    End Class
 
 End Module

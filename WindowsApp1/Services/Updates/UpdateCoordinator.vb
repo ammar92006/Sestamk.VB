@@ -124,7 +124,16 @@ Public NotInheritable Class UpdateCoordinator
                 Return "أداة تطبيق التحديث (update.exe) غير موجودة ضمن ملفات البرنامج."
             End If
 
-            Process.Start(New ProcessStartInfo(updater, "--pending " & ChrW(34) & pendingPath & ChrW(34)) With {.UseShellExecute = True})
+            Dim psi As New ProcessStartInfo(updater, "--pending " & ChrW(34) & pendingPath & ChrW(34)) With {
+                .UseShellExecute = True,
+                .Verb = "runas"
+            }
+            Try
+                Process.Start(psi)
+            Catch
+                psi.Verb = ""
+                Process.Start(psi)
+            End Try
             progress.Report(100)
             Return Nothing
         Catch ex As Exception
