@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmStores
     Private _cachedStores As DataTable = Nothing
@@ -82,23 +82,7 @@ Public Class frmStores
     ' ──────────────────────────────────────────────────────────
     Private Sub GenerateNextStoreCode()
         Try
-            If _cachedStores IsNot Nothing AndAlso _cachedStores.Rows.Count > 0 Then
-                Dim maxCode As Integer = 0
-                For Each row As DataRow In _cachedStores.Rows
-                    If _storeCodeColumnExists AndAlso Not row.IsNull("StoreCode") Then
-                        Dim val As Integer = 0
-                        If Integer.TryParse(row("StoreCode").ToString(), val) Then
-                            If val > maxCode Then maxCode = val
-                        End If
-                    ElseIf Not row.IsNull("StoreID") Then
-                        Dim val As Integer = Convert.ToInt32(row("StoreID"))
-                        If val > maxCode Then maxCode = val
-                    End If
-                Next
-                txtStoreCode.Text = (maxCode + 1).ToString()
-            Else
-                txtStoreCode.Text = "1"
-            End If
+            txtStoreCode.Text = GetNextCode("Stores", "StoreCode").ToString()
         Catch
             txtStoreCode.Text = "1"
         End Try
@@ -228,7 +212,7 @@ Public Class frmStores
                 cmd.Parameters.AddWithValue("@IsDefault", chkIsDefault.Checked)
 
                 If _storeCodeColumnExists Then
-                    cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtStoreCode.Text), DBNull.Value, txtStoreCode.Text.Trim()))
+                    cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtStoreCode.Text), GetNextCode("Stores", "StoreCode").ToString(), txtStoreCode.Text.Trim()))
                 End If
                 If _notesColumnExists Then
                     cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))

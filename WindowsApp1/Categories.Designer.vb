@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Categories
     Inherits System.Windows.Forms.Form
 
@@ -404,7 +404,7 @@ Partial Class Categories
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(107, 33)
         Me.Label8.TabIndex = 5596
-        Me.Label8.Text = "نوع الفئة"
+        Me.Label8.Text = "نوع الفئة *"
         '
         'cmbType
         '
@@ -548,7 +548,7 @@ Partial Class Categories
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(174, 33)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم الفئة عربي"
+        Me.Label2.Text = "اسم الفئة عربي *"
         '
         'txtCategoryNameAr
         '
@@ -581,7 +581,7 @@ Partial Class Categories
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(105, 33)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود الفئة"
+        Me.Label1.Text = "كود الفئة *"
         '
         'lblPaid
         '

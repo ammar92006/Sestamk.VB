@@ -336,7 +336,7 @@ Namespace Global.WindowsApp1
             Me.lblStoreTitle.Name = "lblStoreTitle"
             Me.lblStoreTitle.Size = New System.Drawing.Size(46, 15)
             Me.lblStoreTitle.TabIndex = 2
-            Me.lblStoreTitle.Text = "المخزن:"
+            Me.lblStoreTitle.Text = "المخزن *:"
             '
             'cmbStores
             '
@@ -375,7 +375,7 @@ Namespace Global.WindowsApp1
             Me.lblMaterialTitle.Name = "lblMaterialTitle"
             Me.lblMaterialTitle.Size = New System.Drawing.Size(82, 15)
             Me.lblMaterialTitle.TabIndex = 6
-            Me.lblMaterialTitle.Text = "الخامة المهدورة:"
+            Me.lblMaterialTitle.Text = "الخامة المهدورة *:"
             '
             'cmbMaterials
             '
@@ -405,7 +405,7 @@ Namespace Global.WindowsApp1
             Me.lblQtyTitle.Name = "lblQtyTitle"
             Me.lblQtyTitle.Size = New System.Drawing.Size(74, 15)
             Me.lblQtyTitle.TabIndex = 9
-            Me.lblQtyTitle.Text = "الكمية التالفة:"
+            Me.lblQtyTitle.Text = "الكمية التالفة *:"
             '
             'txtQuantity
             '

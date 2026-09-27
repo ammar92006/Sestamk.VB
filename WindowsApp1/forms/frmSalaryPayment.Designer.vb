@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmSalaryPayment
     Inherits System.Windows.Forms.Form
 
@@ -149,7 +149,7 @@ Partial Class frmSalaryPayment
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(120, 36)
         Me.Label2.TabIndex = 5612
-        Me.Label2.Text = "اختيار الموظف"
+        Me.Label2.Text = "اختيار الموظف *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbTreasury
@@ -180,7 +180,7 @@ Partial Class frmSalaryPayment
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(120, 36)
         Me.Label1.TabIndex = 5614
-        Me.Label1.Text = "اختيار الخزنة"
+        Me.Label1.Text = "اختيار الخزنة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'dtpPaymentDate
@@ -238,7 +238,7 @@ Partial Class frmSalaryPayment
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(120, 36)
         Me.Label4.TabIndex = 5618
-        Me.Label4.Text = "شهر الراتب"
+        Me.Label4.Text = "شهر الراتب *"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label5
@@ -251,7 +251,7 @@ Partial Class frmSalaryPayment
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(120, 36)
         Me.Label5.TabIndex = 5620
-        Me.Label5.Text = "سنة الراتب"
+        Me.Label5.Text = "سنة الراتب *"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label23

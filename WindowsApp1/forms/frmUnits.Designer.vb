@@ -224,7 +224,7 @@ Partial Class frmUnits
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(75, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم الوحدة"
+        Me.Label2.Text = "اسم الوحدة *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtUnitName
@@ -259,7 +259,7 @@ Partial Class frmUnits
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(75, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود الوحدة"
+        Me.Label1.Text = "كود الوحدة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

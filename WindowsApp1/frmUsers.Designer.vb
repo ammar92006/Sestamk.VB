@@ -138,7 +138,7 @@ Partial Class frmUsers
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(178, 36)
         Me.Label23.TabIndex = 5624
-        Me.Label23.Text = "كود المستخدم"
+        Me.Label23.Text = "كود المستخدم *"
         Me.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtUserCode
@@ -171,7 +171,7 @@ Partial Class frmUsers
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(178, 36)
         Me.Label1.TabIndex = 5626
-        Me.Label1.Text = "الاسم الكامل"
+        Me.Label1.Text = "الاسم الكامل *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtFullName
@@ -204,7 +204,7 @@ Partial Class frmUsers
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(178, 36)
         Me.Label2.TabIndex = 5628
-        Me.Label2.Text = "(Username) اسم الدخول"
+        Me.Label2.Text = "(Username) اسم الدخول *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtUsername
@@ -237,7 +237,7 @@ Partial Class frmUsers
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(178, 36)
         Me.Label3.TabIndex = 5630
-        Me.Label3.Text = "كلمة المرور"
+        Me.Label3.Text = "كلمة المرور *"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtPassword
@@ -306,7 +306,7 @@ Partial Class frmUsers
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(178, 36)
         Me.Label4.TabIndex = 5631
-        Me.Label4.Text = "الدور الوظيفي"
+        Me.Label4.Text = "الدور الوظيفي *"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbEmployee

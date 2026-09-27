@@ -339,7 +339,7 @@ Namespace UC_Settings
                 .Location = New Point(leftBound, 3),
                 .Size = New Size(titleWidth, 28),
                 .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right,
-                .TextAlign = ContentAlignment.MiddleRight,
+                .TextAlign = ContentAlignment.MiddleLeft,
                 .RightToLeft = RightToLeft.Yes
             }
             pnlHeader.Controls.Add(lblCardTitle)

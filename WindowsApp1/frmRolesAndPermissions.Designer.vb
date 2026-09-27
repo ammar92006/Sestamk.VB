@@ -164,7 +164,7 @@ Partial Class frmRolesAndPermissions
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(116, 36)
         Me.Label23.TabIndex = 5646
-        Me.Label23.Text = "اسم الدور"
+        Me.Label23.Text = "اسم الدور *"
         Me.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtRoleName

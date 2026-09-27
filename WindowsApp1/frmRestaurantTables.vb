@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmRestaurantTables
 
@@ -66,7 +66,7 @@ Public Class frmRestaurantTables
 
     ' 4. تفريغ الحقول
     Private Sub ClearFields(Optional preserveSection As Boolean = False)
-        txtTableNumber.Clear()
+        txtTableNumber.Text = GetNextCode("RestaurantTables", "TableNumber").ToString()
         txtTableName.Clear()
         If Not preserveSection Then cmbSection.SelectedIndex = -1
         txtChairsCount.Text = "4"
@@ -105,6 +105,7 @@ Public Class frmRestaurantTables
         FillSectionsDropdown()
         datagridviewsetup(dgvTables)
         LoadTablesGrid()
+        ClearFields()
 
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
@@ -136,7 +137,7 @@ Public Class frmRestaurantTables
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@TableNumber", If(String.IsNullOrEmpty(txtTableNumber.Text), DBNull.Value, txtTableNumber.Text.Trim()))
+                cmd.Parameters.AddWithValue("@TableNumber", If(String.IsNullOrEmpty(txtTableNumber.Text), GetNextCode("RestaurantTables", "TableNumber").ToString(), txtTableNumber.Text.Trim()))
                 cmd.Parameters.AddWithValue("@TableName", txtTableName.Text.Trim())
                 cmd.Parameters.AddWithValue("@SectionID", If(cmbSection.SelectedValue Is Nothing, DBNull.Value, cmbSection.SelectedValue))
                 cmd.Parameters.AddWithValue("@ChairsCount", If(String.IsNullOrEmpty(txtChairsCount.Text), DBNull.Value, txtChairsCount.Text.Trim()))

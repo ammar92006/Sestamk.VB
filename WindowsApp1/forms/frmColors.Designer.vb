@@ -236,7 +236,7 @@ Partial Class frmColors
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(92, 36)
         Me.Label1.TabIndex = 5606
-        Me.Label1.Text = "كود اللون"
+        Me.Label1.Text = "كود اللون *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtColorCode
@@ -271,7 +271,7 @@ Partial Class frmColors
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(92, 36)
         Me.Label2.TabIndex = 5608
-        Me.Label2.Text = "اسم اللون"
+        Me.Label2.Text = "اسم اللون *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtColorName

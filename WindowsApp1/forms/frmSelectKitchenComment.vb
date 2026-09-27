@@ -259,7 +259,7 @@ Public Class frmSelectKitchenComment
             ' حفظ التعليق في قاعدة البيانات
             Try
                 Dim maxIdObj = DBModule.ExecuteScalar("SELECT ISNULL(MAX(CommentID), 0) + 1 FROM KitchenComments")
-                Dim nextCode = "COM-" & Convert.ToInt32(maxIdObj).ToString("D3")
+                Dim nextCode = GetNextCode("KitchenComments", "CommentCode").ToString()
 
                 Dim query = "INSERT INTO KitchenComments (CommentCode, CommentText, IsActive, IsDeleted, CreatedAt) VALUES (@Code, @Text, 1, 0, GETDATE())"
                 Using conn As New SqlConnection(DBModule.ConnectionString)

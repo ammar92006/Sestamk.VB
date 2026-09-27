@@ -609,7 +609,7 @@ Partial Class frmTreasury
         Me.Guna2HtmlLabel3.Name = "Guna2HtmlLabel3"
         Me.Guna2HtmlLabel3.Size = New System.Drawing.Size(206, 36)
         Me.Guna2HtmlLabel3.TabIndex = 21
-        Me.Guna2HtmlLabel3.Text = "الخزنة اسم"
+        Me.Guna2HtmlLabel3.Text = "اسم الخزنة *"
         Me.Guna2HtmlLabel3.TextAlignment = System.Drawing.ContentAlignment.BottomRight
         '
         'txtTreasuryNameAr
@@ -645,7 +645,7 @@ Partial Class frmTreasury
         Me.Guna2HtmlLabel2.Name = "Guna2HtmlLabel2"
         Me.Guna2HtmlLabel2.Size = New System.Drawing.Size(206, 36)
         Me.Guna2HtmlLabel2.TabIndex = 19
-        Me.Guna2HtmlLabel2.Text = "الخزنة كود"
+        Me.Guna2HtmlLabel2.Text = "كود الخزنة *"
         Me.Guna2HtmlLabel2.TextAlignment = System.Drawing.ContentAlignment.BottomRight
         '
         'txtTreasuryCode

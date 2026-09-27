@@ -244,7 +244,7 @@ Partial Class frmKitchenComments
         Me.lblCommentText.Name = "lblCommentText"
         Me.lblCommentText.Size = New System.Drawing.Size(84, 19)
         Me.lblCommentText.TabIndex = 2
-        Me.lblCommentText.Text = "نص التعليق:"
+        Me.lblCommentText.Text = "نص التعليق *:"
         '
         'txtCommentCode
         '
@@ -274,7 +274,7 @@ Partial Class frmKitchenComments
         Me.lblCommentCode.Name = "lblCommentCode"
         Me.lblCommentCode.Size = New System.Drawing.Size(43, 19)
         Me.lblCommentCode.TabIndex = 0
-        Me.lblCommentCode.Text = "الكود:"
+        Me.lblCommentCode.Text = "الكود *:"
         '
         'txtSearch
         '

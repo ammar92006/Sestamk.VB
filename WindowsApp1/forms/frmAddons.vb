@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmAddons
 
@@ -30,6 +30,9 @@ Public Class frmAddons
 
     ' 2. خط الدفاع الأول: دالة التحقق من صحة البيانات
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtAddonCode.Text) Then
+            txtAddonCode.Text = GetNextCode("Addons", "AddonCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtAddonNameAr.Text) Then
             MessageBox.Show("عذراً، يجب إدخال اسم الإضافة بالعربي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtAddonNameAr.Focus()

@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Drawing.Imaging
 
@@ -233,7 +233,7 @@ Public Class frmUsers
                                   "VALUES (@Code, @Name, @Username, @Password, @RoleID, @EmpID, @Barcode, @Photo, @IsActive, 0, @Note)"
 
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtUserCode.Text), "USR-" & DateTime.Now.ToString("mmss"), txtUserCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtUserCode.Text), GetNextCode("Users_TBL", "User_Code").ToString(), txtUserCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtFullName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Username", txtUsername.Text.Trim())
                 cmd.Parameters.AddWithValue("@Password", txtPassword.Text.Trim())
@@ -411,6 +411,10 @@ Public Class frmUsers
     End Function
 
     Private Function ValidateInputs() As Boolean
+        If String.IsNullOrWhiteSpace(txtUserCode.Text) Then
+            txtUserCode.Text = GetNextCode("Users_TBL", "User_Code").ToString()
+        End If
+
         If String.IsNullOrWhiteSpace(txtFullName.Text) OrElse String.IsNullOrWhiteSpace(txtUsername.Text) OrElse String.IsNullOrWhiteSpace(txtPassword.Text) Then
             MessageBox.Show("يرجى ملء الحقول الإلزامية: (الاسم، اسم الدخول، كلمة المرور)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False

@@ -257,7 +257,7 @@ Partial Class frmShifts
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(127, 36)
         Me.Label6.TabIndex = 5635
-        Me.Label6.Text = "النقدية المجرودة فعلياً"
+        Me.Label6.Text = "النقدية المجرودة فعلياً *"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtClosingCash
@@ -423,7 +423,7 @@ Partial Class frmShifts
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(143, 36)
         Me.Label5.TabIndex = 5622
-        Me.Label5.Text = "اختيار الوردية"
+        Me.Label5.Text = "اختيار الوردية *"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbWorkShift

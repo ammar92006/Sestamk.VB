@@ -32,6 +32,8 @@ Public Class frmTreasury
 
         cmbSearchBy.SelectedIndex = 0
 
+        ClearControls()
+
     End Sub
     Private Async Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
 
@@ -768,7 +770,7 @@ WHERE TreasuryID = @TreasuryID"
 
         txtSearch.Clear()
 
-        txtTreasuryCode.Clear()
+        txtTreasuryCode.Text = GetNextCode("Treasuries", "TreasuryCode").ToString()
 
         txtTreasuryNameAr.Clear()
 
@@ -940,6 +942,9 @@ WHERE TreasuryID = @TreasuryID"
     End Sub
 
     Private Async Function ValidateTreasuryAsync() As Task(Of Boolean)
+        If String.IsNullOrWhiteSpace(txtTreasuryCode.Text) Then
+            txtTreasuryCode.Text = GetNextCode("Treasuries", "TreasuryCode").ToString()
+        End If
 
         If String.IsNullOrWhiteSpace(txtTreasuryCode.Text) Then
             MessageBox.Show("يرجى إدخال كود الخزنة.",

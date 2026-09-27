@@ -327,7 +327,7 @@ Partial Class frmWorkShifts
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(103, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم الوردية"
+        Me.Label2.Text = "اسم الوردية *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtWorkShiftName
@@ -362,7 +362,7 @@ Partial Class frmWorkShifts
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(110, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود الوردية"
+        Me.Label1.Text = "كود الوردية *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

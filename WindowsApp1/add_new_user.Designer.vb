@@ -330,7 +330,7 @@ Partial Class add_new_user
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(153, 37)
         Me.Label4.TabIndex = 5560
-        Me.Label4.Text = "كلمة المرور"
+        Me.Label4.Text = "كلمة المرور *"
         '
         'txtUser_password
         '
@@ -363,7 +363,7 @@ Partial Class add_new_user
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(201, 37)
         Me.Label3.TabIndex = 5558
-        Me.Label3.Text = "اسم المستخدم"
+        Me.Label3.Text = "اسم المستخدم *"
         '
         'Label2
         '
@@ -374,7 +374,7 @@ Partial Class add_new_user
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(151, 37)
         Me.Label2.TabIndex = 5557
-        Me.Label2.Text = "الاسم كامل"
+        Me.Label2.Text = "الاسم كامل *"
         '
         'Label1
         '
@@ -385,7 +385,7 @@ Partial Class add_new_user
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(199, 37)
         Me.Label1.TabIndex = 5556
-        Me.Label1.Text = "كود المستخدم"
+        Me.Label1.Text = "كود المستخدم *"
         '
         'btn_clean
         '

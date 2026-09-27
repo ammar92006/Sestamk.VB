@@ -579,7 +579,7 @@ Partial Class Login
         Me.lblusername.Name = "lblusername"
         Me.lblusername.Size = New System.Drawing.Size(165, 30)
         Me.lblusername.TabIndex = 16
-        Me.lblusername.Text = "اسم المستخدم"
+        Me.lblusername.Text = "اسم المستخدم *"
         Me.lblusername.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblpassword
@@ -592,7 +592,7 @@ Partial Class Login
         Me.lblpassword.Name = "lblpassword"
         Me.lblpassword.Size = New System.Drawing.Size(165, 30)
         Me.lblpassword.TabIndex = 17
-        Me.lblpassword.Text = "كلمة المرور"
+        Me.lblpassword.Text = "كلمة المرور *"
         Me.lblpassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Guna2BorderlessForm1

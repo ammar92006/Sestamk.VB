@@ -253,7 +253,7 @@ Partial Class frmDepartments
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(85, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم القسم"
+        Me.Label2.Text = "اسم القسم *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtDepartmentName
@@ -286,7 +286,7 @@ Partial Class frmDepartments
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(85, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود القسم"
+        Me.Label1.Text = "كود القسم *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

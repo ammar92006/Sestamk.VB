@@ -300,7 +300,7 @@ Partial Class frmAddons
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(130, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم الحجم بالعربي"
+        Me.Label2.Text = "اسم الإضافة بالعربي *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtAddonNameAr
@@ -335,7 +335,7 @@ Partial Class frmAddons
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(110, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود الحجم"
+        Me.Label1.Text = "كود الإضافة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

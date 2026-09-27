@@ -426,7 +426,7 @@ Partial Class frmEmployees
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(140, 36)
         Me.Label5.TabIndex = 5593
-        Me.Label5.Text = "رقم الهاتف"
+        Me.Label5.Text = "رقم الهاتف *"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtPhone
@@ -522,7 +522,7 @@ Partial Class frmEmployees
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(140, 36)
         Me.Label2.TabIndex = 5587
-        Me.Label2.Text = "الاسم عربي"
+        Me.Label2.Text = "الاسم عربي *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtArabicName
@@ -554,7 +554,7 @@ Partial Class frmEmployees
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(140, 36)
         Me.Label1.TabIndex = 5585
-        Me.Label1.Text = "كود الموظف"
+        Me.Label1.Text = "كود الموظف *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtEmployeeCode
@@ -755,7 +755,7 @@ Partial Class frmEmployees
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(140, 36)
         Me.Label13.TabIndex = 5602
-        Me.Label13.Text = "المسمى الوظيفي"
+        Me.Label13.Text = "المسمى الوظيفي *"
         Me.Label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbJobTitle
@@ -782,7 +782,7 @@ Partial Class frmEmployees
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(140, 36)
         Me.Label12.TabIndex = 5600
-        Me.Label12.Text = "القسم"
+        Me.Label12.Text = "القسم *"
         Me.Label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbDepartment
@@ -1196,7 +1196,7 @@ Partial Class frmEmployees
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(120, 36)
         Me.Label22.TabIndex = 5613
-        Me.Label22.Text = "نظام الرواتب"
+        Me.Label22.Text = "نظام الرواتب *"
         Me.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSalarySystem

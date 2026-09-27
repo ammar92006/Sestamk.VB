@@ -126,7 +126,7 @@ Partial Class frmMaterialUnits
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(80, 36)
         Me.Label5.TabIndex = 5604
-        Me.Label5.Text = "الوحدة"
+        Me.Label5.Text = "الوحدة *"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label1
@@ -139,7 +139,7 @@ Partial Class frmMaterialUnits
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(80, 36)
         Me.Label1.TabIndex = 5606
-        Me.Label1.Text = "المعامل"
+        Me.Label1.Text = "المعامل *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtConversionFactor

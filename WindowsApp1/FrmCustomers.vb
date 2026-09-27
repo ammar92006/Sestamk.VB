@@ -80,6 +80,11 @@ Public Class FrmCustomers
     ' 2. دالة التحقق من البيانات قبل الحفظ والتعديل (Validation)
     ' =========================================================
     Private Function ValidateInput() As Boolean
+        ' 0. كود العميل
+        If String.IsNullOrWhiteSpace(txtCustomerCode.Text) Then
+            txtCustomerCode.Text = GetNextCode("Customers", "CustomerCode").ToString()
+        End If
+
         ' أ) اسم العميل
         If String.IsNullOrWhiteSpace(txtCustomerName.Text) Then
             MessageBox.Show("برجاء إدخال اسم العميل!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)

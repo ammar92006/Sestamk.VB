@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmTreasuryTransfer
     Inherits System.Windows.Forms.Form
 
@@ -147,7 +147,7 @@ Partial Class FrmTreasuryTransfer
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(244, 46)
         Me.Label4.TabIndex = 5643
-        Me.Label4.Text = "الخزنة المحوّل منها"
+        Me.Label4.Text = "الخزنة المحوّل منها *"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbToTreasury
@@ -177,7 +177,7 @@ Partial Class FrmTreasuryTransfer
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(244, 46)
         Me.Label1.TabIndex = 5645
-        Me.Label1.Text = "الخزنة المحوّل إليها"
+        Me.Label1.Text = "الخزنة المحوّل إليها *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label2
@@ -189,7 +189,7 @@ Partial Class FrmTreasuryTransfer
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(244, 46)
         Me.Label2.TabIndex = 5648
-        Me.Label2.Text = "المبلغ المراد تحويله"
+        Me.Label2.Text = "المبلغ المراد تحويله *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtAmount

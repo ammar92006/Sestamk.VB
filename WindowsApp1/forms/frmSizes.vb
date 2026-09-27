@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmSizes
 
@@ -31,6 +31,9 @@ Public Class frmSizes
 
     ' 2. خط الدفاع الأول: دالة التحقق من صحة المدخلات
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtSizeCode.Text) Then
+            txtSizeCode.Text = GetNextCode("Sizes", "SizeCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtSizeNameAr.Text) Then
             MessageBox.Show("عذراً، يجب إدخال اسم الحجم بالعربي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSizeNameAr.Focus()

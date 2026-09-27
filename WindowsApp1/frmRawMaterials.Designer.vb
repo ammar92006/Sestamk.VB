@@ -193,7 +193,7 @@ Partial Class frmRawMaterials
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(106, 36)
         Me.Label5.TabIndex = 5602
-        Me.Label5.Text = "الوحدة الأساسية"
+        Me.Label5.Text = "الوحدة الأساسية *"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Guna2Panel1
@@ -381,7 +381,7 @@ Partial Class frmRawMaterials
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(142, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "تكلفة الوحدة الأساسية"
+        Me.Label2.Text = "تكلفة الوحدة الأساسية *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtCostPrice
@@ -417,7 +417,7 @@ Partial Class frmRawMaterials
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(77, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "اسم الخامة"
+        Me.Label1.Text = "اسم الخامة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

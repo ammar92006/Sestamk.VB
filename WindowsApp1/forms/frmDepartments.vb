@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmDepartments
     Private _cachedDepts As DataTable = Nothing
@@ -26,6 +26,9 @@ Public Class frmDepartments
     End Sub
 
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtDepartmentCode.Text) Then
+            txtDepartmentCode.Text = GetNextCode("Departments", "DepartmentCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtDepartmentName.Text) Then
             MessageBox.Show("عذراً، يجب إدخال اسم القسم أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtDepartmentName.Focus()
@@ -35,7 +38,7 @@ Public Class frmDepartments
     End Function
 
     Private Sub ClearFields()
-        txtDepartmentCode.Clear()
+        txtDepartmentCode.Text = GetNextCode("Departments", "DepartmentCode").ToString()
         txtDepartmentName.Clear()
         txtNotes.Clear()
         txtSearch.Clear()
@@ -57,6 +60,7 @@ Public Class frmDepartments
 
         datagridviewsetup(dgvDepartments)
         LoadGrid()
+        ClearFields()
 
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
@@ -78,7 +82,7 @@ Public Class frmDepartments
         Dim query As String = "INSERT INTO Departments (DepartmentCode, DepartmentName, Notes, IsActive, IsDeleted) VALUES (@Code, @Name, @Notes, @IsActive, 0)"
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtDepartmentCode.Text), DBNull.Value, txtDepartmentCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtDepartmentCode.Text), GetNextCode("Departments", "DepartmentCode").ToString(), txtDepartmentCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtDepartmentName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
@@ -103,7 +107,7 @@ Public Class frmDepartments
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@ID", currentID)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtDepartmentCode.Text), DBNull.Value, txtDepartmentCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtDepartmentCode.Text), GetNextCode("Departments", "DepartmentCode").ToString(), txtDepartmentCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtDepartmentName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)

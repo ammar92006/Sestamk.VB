@@ -373,7 +373,7 @@ Partial Class add_new_customer
         Me.Guna2HtmlLabel4.Name = "Guna2HtmlLabel4"
         Me.Guna2HtmlLabel4.Size = New System.Drawing.Size(206, 36)
         Me.Guna2HtmlLabel4.TabIndex = 23
-        Me.Guna2HtmlLabel4.Text = "الهاتف رقم"
+        Me.Guna2HtmlLabel4.Text = "رقم الهاتف *"
         Me.Guna2HtmlLabel4.TextAlignment = System.Drawing.ContentAlignment.BottomRight
         '
         'txtPhone
@@ -409,7 +409,7 @@ Partial Class add_new_customer
         Me.Guna2HtmlLabel3.Name = "Guna2HtmlLabel3"
         Me.Guna2HtmlLabel3.Size = New System.Drawing.Size(206, 36)
         Me.Guna2HtmlLabel3.TabIndex = 21
-        Me.Guna2HtmlLabel3.Text = "العميل اسم"
+        Me.Guna2HtmlLabel3.Text = "اسم العميل *"
         Me.Guna2HtmlLabel3.TextAlignment = System.Drawing.ContentAlignment.BottomRight
         '
         'txtCustomerName
@@ -445,7 +445,7 @@ Partial Class add_new_customer
         Me.Guna2HtmlLabel2.Name = "Guna2HtmlLabel2"
         Me.Guna2HtmlLabel2.Size = New System.Drawing.Size(206, 36)
         Me.Guna2HtmlLabel2.TabIndex = 19
-        Me.Guna2HtmlLabel2.Text = "العميل كود"
+        Me.Guna2HtmlLabel2.Text = "كود العميل *"
         Me.Guna2HtmlLabel2.TextAlignment = System.Drawing.ContentAlignment.BottomRight
         '
         'txtCustomerCode

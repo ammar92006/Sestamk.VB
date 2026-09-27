@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmUnits
     Private _cachedUnits As DataTable = Nothing
@@ -46,7 +46,14 @@ Public Class frmUnits
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
-        If String.IsNullOrWhiteSpace(txtUnitName.Text) Then Exit Sub
+        If String.IsNullOrWhiteSpace(txtUnitName.Text) Then
+            MessageBox.Show("يرجى إدخال اسم الوحدة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtUnitName.Focus()
+            Exit Sub
+        End If
+        If String.IsNullOrWhiteSpace(txtUnitCode.Text) Then
+            txtUnitCode.Text = GetNextCode("Units", "UnitCode").ToString()
+        End If
         Dim query As String = "INSERT INTO Units (UnitCode,UnitName,IsActive) VALUES (@Code,@Name,@IsActive)"
 
         Using conn As New SqlConnection(DBModule.ConnectionString)

@@ -219,7 +219,7 @@ Partial Class FrmCustomers
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(139, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود العميل"
+        Me.Label1.Text = "كود العميل *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbSearchField
@@ -707,7 +707,7 @@ Partial Class FrmCustomers
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(139, 36)
         Me.Label7.TabIndex = 5634
-        Me.Label7.Text = "اسم العميل"
+        Me.Label7.Text = "اسم العميل *"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtCustomerName
@@ -777,7 +777,7 @@ Partial Class FrmCustomers
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(139, 36)
         Me.Label2.TabIndex = 5630
-        Me.Label2.Text = "رقم الموبايل الأساسي"
+        Me.Label2.Text = "رقم الموبايل الأساسي *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtPhone1

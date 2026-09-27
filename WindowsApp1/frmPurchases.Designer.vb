@@ -383,7 +383,7 @@ Partial Class frmPurchases
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(136, 36)
         Me.Label9.TabIndex = 5629
-        Me.Label9.Text = "السعر"
+        Me.Label9.Text = "السعر *"
         Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtPrice
@@ -418,7 +418,7 @@ Partial Class frmPurchases
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(136, 36)
         Me.Label8.TabIndex = 5627
-        Me.Label8.Text = "الكمية"
+        Me.Label8.Text = "الكمية *"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtQuantity
@@ -453,7 +453,7 @@ Partial Class frmPurchases
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(136, 36)
         Me.Label7.TabIndex = 5625
-        Me.Label7.Text = "وحدة الشراء"
+        Me.Label7.Text = "وحدة الشراء *"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbUnit
@@ -483,7 +483,7 @@ Partial Class frmPurchases
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(240, 36)
         Me.Label6.TabIndex = 5623
-        Me.Label6.Text = "الخامة"
+        Me.Label6.Text = "الخامة *"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbMaterial
@@ -513,7 +513,7 @@ Partial Class frmPurchases
         Me.lblTreasury.Name = "lblTreasury"
         Me.lblTreasury.Size = New System.Drawing.Size(110, 36)
         Me.lblTreasury.TabIndex = 5621
-        Me.lblTreasury.Text = "الخزنة"
+        Me.lblTreasury.Text = "الخزنة *"
         Me.lblTreasury.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbTreasury
@@ -543,7 +543,7 @@ Partial Class frmPurchases
         Me.lblStore.Name = "lblStore"
         Me.lblStore.Size = New System.Drawing.Size(110, 36)
         Me.lblStore.TabIndex = 5619
-        Me.lblStore.Text = "المخزن"
+        Me.lblStore.Text = "المخزن *"
         Me.lblStore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbStore
@@ -573,7 +573,7 @@ Partial Class frmPurchases
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(110, 36)
         Me.Label3.TabIndex = 5617
-        Me.Label3.Text = "المورد"
+        Me.Label3.Text = "المورد *"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'cmbSupplier
@@ -632,7 +632,7 @@ Partial Class frmPurchases
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(110, 36)
         Me.Label1.TabIndex = 5613
-        Me.Label1.Text = "رقم الفاتورة"
+        Me.Label1.Text = "رقم الفاتورة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtInvoiceNumber

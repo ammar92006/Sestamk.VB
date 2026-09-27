@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -680,7 +680,7 @@ Namespace Services
                         ws.Cell(1, 7).Value = "حد الطلب"
                         ws.Cell(1, 8).Value = "الباركود"
 
-                        ws.Cell(2, 1).Value = "PRD-101"
+                        ws.Cell(2, 1).Value = "101"
                         ws.Cell(2, 2).Value = "منتج تجريبي"
                         ws.Cell(2, 3).Value = "عام"
                         ws.Cell(2, 4).Value = 25.5
@@ -694,7 +694,7 @@ Namespace Services
                         ws.Cell(1, 2).Value = "اسم القسم"
                         ws.Cell(1, 3).Value = "الوصف"
 
-                        ws.Cell(2, 1).Value = "CAT-01"
+                        ws.Cell(2, 1).Value = "1"
                         ws.Cell(2, 2).Value = "المشروبات"
                         ws.Cell(2, 3).Value = "قسم المشروبات الباردة والساخنة"
 
@@ -705,7 +705,7 @@ Namespace Services
                         ws.Cell(1, 4).Value = "الكمية الفعلية المجرودة"
                         ws.Cell(1, 5).Value = "سعر التكلفة"
 
-                        ws.Cell(2, 1).Value = "PRD-101"
+                        ws.Cell(2, 1).Value = "101"
                         ws.Cell(2, 2).Value = "6221234567890"
                         ws.Cell(2, 3).Value = "منتج تجريبي"
                         ws.Cell(2, 4).Value = 150
@@ -928,7 +928,7 @@ Namespace Services
                     End If
 
                     If String.IsNullOrWhiteSpace(code) Then
-                        code = "CUST-" & (i + 1).ToString("D4")
+                        code = (i + 1).ToString()
                     End If
 
                     Dim existingId As Integer = 0
@@ -1009,7 +1009,7 @@ Namespace Services
                     End If
 
                     If String.IsNullOrWhiteSpace(code) Then
-                        code = "SUP-" & (i + 1).ToString("D4")
+                        code = (i + 1).ToString()
                     End If
 
                     Dim existingId As Integer = 0
@@ -1090,7 +1090,7 @@ Namespace Services
                     End If
 
                     If String.IsNullOrWhiteSpace(code) Then
-                        code = "PRD-" & (i + 1).ToString("D4")
+                        code = (i + 1).ToString()
                     End If
 
                     Dim categoryId As Integer = 1
@@ -1187,7 +1187,7 @@ Namespace Services
                     End If
 
                     If String.IsNullOrWhiteSpace(code) Then
-                        code = "CAT-" & (i + 1).ToString("D3")
+                        code = (i + 1).ToString()
                     End If
 
                     Dim existingId As Integer = 0

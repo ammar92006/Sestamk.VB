@@ -395,6 +395,14 @@ Public Class frmEmployees
             Return False
         End If
 
+        ' 2.1 Validate Phone (Required)
+        If String.IsNullOrWhiteSpace(txtPhone.Text) Then
+            MessageBox.Show("عذراً، يجب إدخال رقم الهاتف للموظف!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Guna2TabControl1.SelectedTab = tabPageBasic
+            txtPhone.Focus()
+            Return False
+        End If
+
         ' 3. Validate National ID format if entered
         If Not String.IsNullOrWhiteSpace(txtNationalID.Text) AndAlso Not IsNumeric(txtNationalID.Text.Trim()) Then
             MessageBox.Show("عذراً، الرقم القومي يجب أن يتكون من أرقام فقط!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -450,12 +458,12 @@ Public Class frmEmployees
             Dim dt As DataTable = DBModule.ExecuteQuery("SELECT ISNULL(MAX(EmployeeID), 0) + 1 FROM Employees")
             If dt IsNot Nothing AndAlso dt.Rows.Count > 0 AndAlso Not IsDBNull(dt.Rows(0)(0)) Then
                 Dim nextId As Integer = Convert.ToInt32(dt.Rows(0)(0))
-                Return "EMP-" & nextId.ToString("D4")
+                Return GetNextCode("Employees", "EmployeeCode").ToString()
             End If
         Catch ex As Exception
             Debug.WriteLine("Error generating employee code: " & ex.Message)
         End Try
-        Return "EMP-" & DateTime.Now.ToString("yyMMddHHmmss")
+        Return GetNextCode("Employees", "EmployeeCode").ToString()
     End Function
 
     ' =========================================================================
@@ -859,4 +867,4 @@ Public Class frmEmployees
         End If
     End Sub
 
-End Class
+End Class

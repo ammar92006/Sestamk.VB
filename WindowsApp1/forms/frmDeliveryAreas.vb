@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmDeliveryAreas
 
@@ -28,6 +28,9 @@ Public Class frmDeliveryAreas
     End Sub
 
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtAreaCode.Text) Then
+            txtAreaCode.Text = GetNextCode("DeliveryAreas", "AreaCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtAreaName.Text) Then
             MessageBox.Show("يرجى إدخال اسم المنطقة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtAreaName.Focus()
@@ -37,7 +40,7 @@ Public Class frmDeliveryAreas
     End Function
 
     Private Sub ClearFields()
-        txtAreaCode.Clear()
+        txtAreaCode.Text = GetNextCode("DeliveryAreas", "AreaCode").ToString()
         txtAreaName.Clear()
         txtNotes.Clear()
         tgStatus.Checked = True
@@ -49,6 +52,7 @@ Public Class frmDeliveryAreas
         Session.ApplyFormPermissions(Me)
 
         LoadAreasGrid()
+        ClearFields()
         datagridviewsetup(dgvDeliveryAreas)
 
         Dim Drag As FormDragHelper
@@ -76,7 +80,7 @@ Public Class frmDeliveryAreas
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtAreaCode.Text), DBNull.Value, txtAreaCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtAreaCode.Text), GetNextCode("DeliveryAreas", "AreaCode").ToString(), txtAreaCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtAreaName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
@@ -106,7 +110,7 @@ Public Class frmDeliveryAreas
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@ID", currentID)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtAreaCode.Text), DBNull.Value, txtAreaCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtAreaCode.Text), GetNextCode("DeliveryAreas", "AreaCode").ToString(), txtAreaCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtAreaName.Text.Trim())
 
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))

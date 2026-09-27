@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports DevExpress.Utils.Html.Internal
 
 Public Class frmRawMaterials
@@ -87,8 +87,20 @@ Public Class frmRawMaterials
     End Sub
 
     Private Function IsValidData() As Boolean
-        If String.IsNullOrWhiteSpace(txtMaterialName.Text) OrElse cmbUnit.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى إدخال اسم الخامة واختيار الوحدة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If String.IsNullOrWhiteSpace(txtMaterialName.Text) Then
+            MessageBox.Show("يرجى إدخال اسم الخامة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtMaterialName.Focus()
+            Return False
+        End If
+        If cmbUnit.SelectedIndex = -1 Then
+            MessageBox.Show("يرجى اختيار الوحدة الأساسية أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cmbUnit.Focus()
+            Return False
+        End If
+        Dim cost As Decimal = 0
+        If Not Decimal.TryParse(txtCostPrice.Text, cost) OrElse cost < 0 Then
+            MessageBox.Show("يرجى إدخال تكلفة وحدة أساسية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtCostPrice.Focus()
             Return False
         End If
         Return True
@@ -101,6 +113,7 @@ Public Class frmRawMaterials
 
         FillUnitsDropdown()
         LoadMaterialsGrid()
+        ClearFields()
 
         datagridviewsetup(dgvMaterials)
         Dim Drag As FormDragHelper

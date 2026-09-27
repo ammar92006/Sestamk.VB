@@ -223,7 +223,7 @@ Partial Class frmJobTitles
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(130, 36)
         Me.Label3.TabIndex = 5587
-        Me.Label3.Text = "القسم التابع له"
+        Me.Label3.Text = "القسم التابع له *"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'btnAdd
@@ -249,7 +249,7 @@ Partial Class frmJobTitles
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(130, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "المسمى الوظيفي"
+        Me.Label2.Text = "المسمى الوظيفي *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtJobTitleName
@@ -282,7 +282,7 @@ Partial Class frmJobTitles
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(130, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود الوظيفة"
+        Me.Label1.Text = "كود الوظيفة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

@@ -1536,7 +1536,7 @@ ORDER BY ShiftID DESC;"
 
                 Dim newOrderID As Integer = 0
                 Using cmd As New SqlCommand(sqlOrder, con)
-                    cmd.Parameters.AddWithValue("@OrderNumber", If(String.IsNullOrEmpty(order.OrderNumber), "ORD-" & DateTime.Now.ToString("HHmmss"), order.OrderNumber))
+                    cmd.Parameters.AddWithValue("@OrderNumber", If(String.IsNullOrEmpty(order.OrderNumber), GetNextCode("KitchenOrders", "OrderNumber").ToString(), order.OrderNumber))
                     cmd.Parameters.AddWithValue("@OrderType", order.OrderType)
                     cmd.Parameters.AddWithValue("@TableID", If(order.TableID.HasValue, order.TableID.Value, DBNull.Value))
                     cmd.Parameters.AddWithValue("@TableName", If(String.IsNullOrEmpty(order.TableName), DBNull.Value, order.TableName))

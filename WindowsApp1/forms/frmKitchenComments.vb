@@ -127,6 +127,9 @@ Public Class frmKitchenComments
     End Sub
 
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtCommentCode.Text) Then
+            txtCommentCode.Text = GetNextCommentCode()
+        End If
         If String.IsNullOrWhiteSpace(txtCommentText.Text) Then
             MessageBox.Show("عذراً، يجب كتابة نص التعليق أو الملاحظة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCommentText.Focus()
@@ -146,11 +149,9 @@ Public Class frmKitchenComments
 
     Private Function GetNextCommentCode() As String
         Try
-            Dim maxIdObj = DBModule.ExecuteScalar("SELECT ISNULL(MAX(CommentID), 0) + 1 FROM KitchenComments")
-            Dim nextId As Integer = If(maxIdObj IsNot Nothing AndAlso Not IsDBNull(maxIdObj), Convert.ToInt32(maxIdObj), 1)
-            Return "COM-" & nextId.ToString("D3")
+            Return GetNextCode("KitchenComments", "CommentCode").ToString()
         Catch
-            Return "COM-001"
+            Return "1"
         End Try
     End Function
 
@@ -172,7 +173,7 @@ Public Class frmKitchenComments
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtCommentCode.Text), DBNull.Value, txtCommentCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtCommentCode.Text), GetNextCode("KitchenComments", "CommentCode").ToString(), txtCommentCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Text", txtCommentText.Text.Trim())
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
 

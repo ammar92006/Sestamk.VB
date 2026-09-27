@@ -726,7 +726,7 @@ Partial Class Products
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(79, 19)
         Me.Label12.TabIndex = 5618
-        Me.Label12.Text = "سعر التكلفة"
+        Me.Label12.Text = "سعر التكلفة *"
         '
         'txtSalePrice
         '
@@ -788,7 +788,7 @@ Partial Class Products
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(47, 19)
         Me.Label15.TabIndex = 5616
-        Me.Label15.Text = "الوحدة"
+        Me.Label15.Text = "الوحدة *"
         '
         'btnAddCategoryForm
         '
@@ -969,7 +969,7 @@ Partial Class Products
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(76, 19)
         Me.Label1.TabIndex = 5606
-        Me.Label1.Text = "كود الصنف"
+        Me.Label1.Text = "كود الصنف *"
         '
         'txtNotes
         '

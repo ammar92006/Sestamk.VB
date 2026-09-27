@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmRestaurantSections
     Private _cachedSections As DataTable = Nothing
@@ -30,6 +30,9 @@ Public Class frmRestaurantSections
 
     ' 2. دالة التحقق من صحة المدخلات
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtSectionCode.Text) Then
+            txtSectionCode.Text = GetNextCode("RestaurantSections", "SectionCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtSectionName.Text) Then
             MessageBox.Show("يرجى كتابة اسم القسم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSectionName.Focus()
@@ -40,7 +43,7 @@ Public Class frmRestaurantSections
 
     ' 3. دالة تفريغ الحقول
     Private Sub ClearFields()
-        txtSectionCode.Clear()
+        txtSectionCode.Text = GetNextCode("RestaurantSections", "SectionCode").ToString()
         txtSectionName.Clear()
         txtNotes.Clear()
         tgStatus.Checked = True
@@ -65,6 +68,7 @@ Public Class frmRestaurantSections
 
         datagridviewsetup(dgvRestaurantSections)
         LoadSectionsGrid()
+        ClearFields()
 
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
@@ -92,7 +96,7 @@ Public Class frmRestaurantSections
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtSectionCode.Text), DBNull.Value, txtSectionCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtSectionCode.Text), GetNextCode("RestaurantSections", "SectionCode").ToString(), txtSectionCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtSectionName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrWhiteSpace(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
@@ -126,7 +130,7 @@ Public Class frmRestaurantSections
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@SectionID", currentID)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtSectionCode.Text), DBNull.Value, txtSectionCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtSectionCode.Text), GetNextCode("RestaurantSections", "SectionCode").ToString(), txtSectionCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtSectionName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrWhiteSpace(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)

@@ -186,7 +186,7 @@ Public Class frmColors
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@ColorCode", If(String.IsNullOrEmpty(txtColorCode.Text), "CLR-" & DateTime.Now.ToString("mmss"), txtColorCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@ColorCode", If(String.IsNullOrEmpty(txtColorCode.Text), GetNextCode("Colors", "ColorCode").ToString(), txtColorCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@ColorName", txtColorName.Text.Trim())
                 cmd.Parameters.AddWithValue("@HexCode", _currentColorHex)
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)

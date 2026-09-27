@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmJobTitles
     Private _cachedJobs As DataTable = Nothing
@@ -40,6 +40,9 @@ Public Class frmJobTitles
     End Sub
 
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtJobTitleCode.Text) Then
+            txtJobTitleCode.Text = GetNextCode("JobTitles", "JobTitleCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtJobTitleName.Text) Then
             MessageBox.Show("يرجى إدخال المسمى الوظيفي!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
@@ -52,7 +55,7 @@ Public Class frmJobTitles
     End Function
 
     Private Sub ClearFields()
-        txtJobTitleCode.Clear()
+        txtJobTitleCode.Text = GetNextCode("JobTitles", "JobTitleCode").ToString()
         txtJobTitleName.Clear()
         txtNotes.Clear()
         txtSearch.Clear()
@@ -76,6 +79,7 @@ Public Class frmJobTitles
 
         FillDepartments()
         LoadGrid()
+        ClearFields()
         datagridviewsetup(dgvJobTitles)
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
@@ -98,7 +102,7 @@ Public Class frmJobTitles
         Dim query As String = "INSERT INTO JobTitles (JobTitleCode, JobTitleName, DepartmentID, Notes, IsActive, IsDeleted) VALUES (@Code, @Name, @DeptID, @Notes, @IsActive, 0)"
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtJobTitleCode.Text), DBNull.Value, txtJobTitleCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtJobTitleCode.Text), GetNextCode("JobTitles", "JobTitleCode").ToString(), txtJobTitleCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtJobTitleName.Text.Trim())
                 cmd.Parameters.AddWithValue("@DeptID", cmbDepartment.SelectedValue)
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
@@ -124,7 +128,7 @@ Public Class frmJobTitles
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@ID", currentID)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtJobTitleCode.Text), DBNull.Value, txtJobTitleCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtJobTitleCode.Text), GetNextCode("JobTitles", "JobTitleCode").ToString(), txtJobTitleCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtJobTitleName.Text.Trim())
                 cmd.Parameters.AddWithValue("@DeptID", cmbDepartment.SelectedValue)
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))

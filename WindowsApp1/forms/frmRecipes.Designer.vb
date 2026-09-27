@@ -166,7 +166,7 @@ Partial Class frmRecipes
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(102, 36)
         Me.Label9.TabIndex = 5613
-        Me.Label9.Text = "وحدة الاستخدام"
+        Me.Label9.Text = "وحدة الاستخدام *"
         Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbRecipeType
@@ -197,7 +197,7 @@ Partial Class frmRecipes
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(89, 36)
         Me.Label8.TabIndex = 5611
-        Me.Label8.Text = "نوع الريسبي"
+        Me.Label8.Text = "نوع الريسبي *"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'lblUnitIndicator
@@ -223,7 +223,7 @@ Partial Class frmRecipes
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(51, 36)
         Me.Label7.TabIndex = 5609
-        Me.Label7.Text = "الكمية"
+        Me.Label7.Text = "الكمية *"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbMaterial
@@ -254,7 +254,7 @@ Partial Class frmRecipes
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(45, 36)
         Me.Label2.TabIndex = 5607
-        Me.Label2.Text = "الخامة"
+        Me.Label2.Text = "الخامة *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbAddon
@@ -499,7 +499,7 @@ Partial Class frmRecipes
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(53, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "الصنف"
+        Me.Label1.Text = "الصنف *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

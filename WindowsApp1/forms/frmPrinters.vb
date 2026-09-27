@@ -110,6 +110,10 @@ Public Class frmPrinters
     ' زر تعديل بيانات الطابعة الحالية
     Private Sub btnEditPrinter_Click(sender As Object, e As EventArgs) Handles btnEditPrinter.Click
         If dgvPrinters.SelectedRows.Count = 0 Then Exit Sub
+        If String.IsNullOrWhiteSpace(txtPrinterName.Text) OrElse cmbWindowsPrinters.SelectedIndex = -1 Then
+            MessageBox.Show("يرجى كتابة اسم المنفذ واختيار الطابعة الحقيقية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
         Dim currentID As Integer = Convert.ToInt32(dgvPrinters.SelectedRows(0).Cells("PrinterID").Value)
 
         Dim query As String = "UPDATE Printers SET PrinterName = @PrinterName, TargetPrinter = @TargetPrinter, Note = @Note, IsActive = @IsActive WHERE PrinterID = @PrinterID"

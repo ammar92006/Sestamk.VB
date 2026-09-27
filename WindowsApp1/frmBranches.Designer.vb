@@ -479,7 +479,7 @@ Partial Class frmBranches
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(119, 33)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم الفرع"
+        Me.Label2.Text = "اسم الفرع *"
         '
         'txtBranchName
         '
@@ -512,7 +512,7 @@ Partial Class frmBranches
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(117, 33)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود الفرع"
+        Me.Label1.Text = "كود الفرع *"
         '
         'cmbSearchField
         '

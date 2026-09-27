@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmTreasuryTransaction
     Inherits System.Windows.Forms.Form
 
@@ -73,7 +73,7 @@ Partial Class FrmTreasuryTransaction
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(160, 36)
         Me.Label4.TabIndex = 5637
-        Me.Label4.Text = "الخزنة"
+        Me.Label4.Text = "الخزنة *"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'panelHeader
@@ -206,7 +206,7 @@ Partial Class FrmTreasuryTransaction
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(160, 36)
         Me.Label2.TabIndex = 5643
-        Me.Label2.Text = "المبلغ"
+        Me.Label2.Text = "المبلغ *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label3
@@ -230,7 +230,7 @@ Partial Class FrmTreasuryTransaction
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(160, 36)
         Me.Label5.TabIndex = 5646
-        Me.Label5.Text = "السبب"
+        Me.Label5.Text = "السبب *"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtReferenceNo

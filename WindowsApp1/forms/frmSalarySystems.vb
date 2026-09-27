@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmSalarySystems
     Private _cachedSalaries As DataTable = Nothing
@@ -27,6 +27,9 @@ Public Class frmSalarySystems
     End Sub
 
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtSalarySystemCode.Text) Then
+            txtSalarySystemCode.Text = GetNextCode("SalarySystems", "SalarySystemCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtSalarySystemName.Text) Then
             MessageBox.Show("يرجى إدخال اسم نظام الرواتب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
@@ -35,7 +38,7 @@ Public Class frmSalarySystems
     End Function
 
     Private Sub ClearFields()
-        txtSalarySystemCode.Clear()
+        txtSalarySystemCode.Text = GetNextCode("SalarySystems", "SalarySystemCode").ToString()
         txtSalarySystemName.Clear()
         txtPaymentDays.Text = "30"
         txtNotes.Clear()
@@ -58,6 +61,7 @@ Public Class frmSalarySystems
         cmbSearchField.SelectedIndex = 0
 
         LoadGrid()
+        ClearFields()
         datagridviewsetup(dgvSalarySystems)
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
@@ -80,7 +84,7 @@ Public Class frmSalarySystems
         Dim query As String = "INSERT INTO SalarySystems (SalarySystemCode, SalarySystemName, PaymentDays, Notes, IsActive, IsDeleted) VALUES (@Code, @Name, @Days, @Notes, @IsActive, 0)"
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtSalarySystemCode.Text), DBNull.Value, txtSalarySystemCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtSalarySystemCode.Text), GetNextCode("SalarySystems", "SalarySystemCode").ToString(), txtSalarySystemCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtSalarySystemName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Days", If(String.IsNullOrEmpty(txtPaymentDays.Text), 30, Convert.ToInt32(txtPaymentDays.Text)))
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))
@@ -106,7 +110,7 @@ Public Class frmSalarySystems
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@ID", currentID)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtSalarySystemCode.Text), DBNull.Value, txtSalarySystemCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtSalarySystemCode.Text), GetNextCode("SalarySystems", "SalarySystemCode").ToString(), txtSalarySystemCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtSalarySystemName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Days", If(String.IsNullOrEmpty(txtPaymentDays.Text), 30, Convert.ToInt32(txtPaymentDays.Text)))
                 cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(txtNotes.Text), DBNull.Value, txtNotes.Text.Trim()))

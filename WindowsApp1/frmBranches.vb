@@ -51,6 +51,9 @@ Public Class frmBranches
 
     ' 2. دالة التحقق من المدخلات (Validation)
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtBranchCode.Text) Then
+            txtBranchCode.Text = GetNextCode("Branches", "BranchCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtBranchName.Text) Then
             MessageBox.Show("عذراً، يجب إدخال اسم الفرع أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtBranchName.Focus()
@@ -61,7 +64,7 @@ Public Class frmBranches
 
     ' 3. دالة تنظيف الحقول
     Private Sub ClearFields()
-        txtBranchCode.Clear()
+        txtBranchCode.Text = GetNextCode("Branches", "BranchCode").ToString()
         txtBranchName.Clear()
         txtPhone.Clear()
         txtMobile.Clear()
@@ -86,6 +89,7 @@ Public Class frmBranches
 
         datagridviewsetup()
         LoadBranchesGrid()
+        ClearFields()
     End Sub
 
     ' 4. حدث التحديد التلقائي بأمان لعرض بيانات الفرع داخل أدوات الإدخال
@@ -121,7 +125,7 @@ Public Class frmBranches
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@BranchCode", If(String.IsNullOrEmpty(txtBranchCode.Text), DBNull.Value, txtBranchCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@BranchCode", If(String.IsNullOrEmpty(txtBranchCode.Text), GetNextCode("Branches", "BranchCode").ToString(), txtBranchCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@BranchName", txtBranchName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Phone", If(String.IsNullOrEmpty(txtPhone.Text), DBNull.Value, txtPhone.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Mobile", If(String.IsNullOrEmpty(txtMobile.Text), DBNull.Value, txtMobile.Text.Trim()))
@@ -158,7 +162,7 @@ Public Class frmBranches
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@BranchID", currentID)
-                cmd.Parameters.AddWithValue("@BranchCode", If(String.IsNullOrEmpty(txtBranchCode.Text), DBNull.Value, txtBranchCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@BranchCode", If(String.IsNullOrEmpty(txtBranchCode.Text), GetNextCode("Branches", "BranchCode").ToString(), txtBranchCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@BranchName", txtBranchName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Phone", If(String.IsNullOrEmpty(txtPhone.Text), DBNull.Value, txtPhone.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Mobile", If(String.IsNullOrEmpty(txtMobile.Text), DBNull.Value, txtMobile.Text.Trim()))

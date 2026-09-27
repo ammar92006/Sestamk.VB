@@ -100,7 +100,7 @@ Public Class frmDeliveryDrivers
 
     ' 3. دالة تفريغ الحقول
     Private Sub ClearFields()
-        txtDriverCode.Clear()
+        txtDriverCode.Text = GetNextCode("DeliveryDrivers", "DriverCode").ToString()
         txtDriverName.Clear()
         txtPhone.Clear()
         txtNationalID.Clear()
@@ -132,6 +132,9 @@ Public Class frmDeliveryDrivers
     End Sub
 
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtDriverCode.Text) Then
+            txtDriverCode.Text = GetNextCode("DeliveryDrivers", "DriverCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtDriverName.Text) OrElse String.IsNullOrWhiteSpace(txtPhone.Text) Then
             MessageBox.Show("يرجى كتابة اسم الطيار ورقم الهاتف كحد أدنى!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
@@ -193,7 +196,7 @@ Public Class frmDeliveryDrivers
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtDriverCode.Text), "DRV-" & DateTime.Now.ToString("HHmmss"), txtDriverCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrEmpty(txtDriverCode.Text), GetNextCode("DeliveryDrivers", "DriverCode").ToString(), txtDriverCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtDriverName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Phone", txtPhone.Text.Trim())
                 cmd.Parameters.AddWithValue("@NationalID", If(String.IsNullOrEmpty(txtNationalID.Text), DBNull.Value, txtNationalID.Text.Trim()))

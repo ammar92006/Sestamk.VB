@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmSuppliers
     Private _cachedSuppliers As DataTable = Nothing
@@ -80,6 +80,12 @@ Public Class frmSuppliers
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         If String.IsNullOrWhiteSpace(txtSupplierName.Text) Then
             MessageBox.Show("يرجى إدخال اسم المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtSupplierName.Focus()
+            Exit Sub
+        End If
+        If String.IsNullOrWhiteSpace(txtPhone.Text) Then
+            MessageBox.Show("يرجى إدخال رقم الهاتف للمورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtPhone.Focus()
             Exit Sub
         End If
 
@@ -88,7 +94,7 @@ Public Class frmSuppliers
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtSupplierCode.Text), "SUP-" & DateTime.Now.ToString("mmss"), txtSupplierCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtSupplierCode.Text), GetNextCode("Suppliers", "SupplierCode").ToString(), txtSupplierCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtSupplierName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Phone", If(String.IsNullOrWhiteSpace(txtPhone.Text), DBNull.Value, txtPhone.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Address", If(String.IsNullOrWhiteSpace(txtAddress.Text), DBNull.Value, txtAddress.Text.Trim()))
@@ -132,6 +138,16 @@ Public Class frmSuppliers
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvSuppliers.SelectedRows.Count = 0 Then Exit Sub
+        If String.IsNullOrWhiteSpace(txtSupplierName.Text) Then
+            MessageBox.Show("يرجى إدخال اسم المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtSupplierName.Focus()
+            Exit Sub
+        End If
+        If String.IsNullOrWhiteSpace(txtPhone.Text) Then
+            MessageBox.Show("يرجى إدخال رقم الهاتف للمورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtPhone.Focus()
+            Exit Sub
+        End If
         Dim currentID As Integer = Convert.ToInt32(dgvSuppliers.SelectedRows(0).Cells("SupplierID").Value)
 
         Dim query As String = "UPDATE Suppliers SET SupplierCode = @Code, SupplierName = @Name, Phone = @Phone, " &

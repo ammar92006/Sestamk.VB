@@ -204,7 +204,7 @@ Partial Class frmCategoryTypes
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(113, 33)
         Me.Label2.TabIndex = 5614
-        Me.Label2.Text = "كود النوع"
+        Me.Label2.Text = "كود النوع *"
         '
         'txtTypeCode
         '
@@ -238,7 +238,7 @@ Partial Class frmCategoryTypes
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(115, 33)
         Me.Label1.TabIndex = 5616
-        Me.Label1.Text = "اسم النوع"
+        Me.Label1.Text = "اسم النوع *"
         '
         'txtTypeName
         '

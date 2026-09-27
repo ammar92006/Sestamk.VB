@@ -290,7 +290,7 @@ Partial Class frmSalarySystems
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(150, 36)
         Me.Label2.TabIndex = 5585
-        Me.Label2.Text = "اسم نظام الرواتب"
+        Me.Label2.Text = "اسم نظام الرواتب *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtSalarySystemName
@@ -323,7 +323,7 @@ Partial Class frmSalarySystems
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(130, 36)
         Me.Label1.TabIndex = 5583
-        Me.Label1.Text = "كود النظام"
+        Me.Label1.Text = "كود النظام *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

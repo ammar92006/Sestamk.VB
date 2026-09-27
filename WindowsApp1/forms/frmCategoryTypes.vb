@@ -27,11 +27,15 @@ Public Class frmCategoryTypes
         Session.ApplyFormPermissions(Me)
 
         LoadTypesGrid()
+        ClearFields()
         datagridviewsetup()
     End Sub
 
     ' 2. خط الدفاع الأول: دالة التحقق من المدخلات (Validation)
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtTypeCode.Text) Then
+            txtTypeCode.Text = GetNextCode("CategoryTypes", "TypeCode").ToString()
+        End If
         ' التحقق من أن اسم النوع ليس فارغاً (لأنه حقل لا يقبل NULL في قاعدة البيانات)
         If String.IsNullOrWhiteSpace(txtTypeName.Text) Then
             MessageBox.Show("عذراً، يجب إدخال اسم نوع الفئة أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -43,7 +47,7 @@ Public Class frmCategoryTypes
 
     ' 3. دالة تنظيف الحقول وتفريغها
     Private Sub ClearFields()
-        txtTypeCode.Clear()
+        txtTypeCode.Text = GetNextCode("CategoryTypes", "TypeCode").ToString()
         txtTypeName.Clear()
         tgStatus.Checked = True ' الوضع الافتراضي نشط
         dgvCategoryTypes.ClearSelection() ' إلغاء تحديد الصفوف في الجدول
@@ -77,7 +81,7 @@ Public Class frmCategoryTypes
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@TypeCode", If(String.IsNullOrEmpty(txtTypeCode.Text), DBNull.Value, txtTypeCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@TypeCode", If(String.IsNullOrEmpty(txtTypeCode.Text), GetNextCode("CategoryTypes", "TypeCode").ToString(), txtTypeCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@TypeName", txtTypeName.Text.Trim())
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
 
@@ -110,7 +114,7 @@ Public Class frmCategoryTypes
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@CategoryTypeID", currentID)
-                cmd.Parameters.AddWithValue("@TypeCode", If(String.IsNullOrEmpty(txtTypeCode.Text), DBNull.Value, txtTypeCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@TypeCode", If(String.IsNullOrEmpty(txtTypeCode.Text), GetNextCode("CategoryTypes", "TypeCode").ToString(), txtTypeCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@TypeName", txtTypeName.Text.Trim())
                 cmd.Parameters.AddWithValue("@IsActive", tgStatus.Checked)
 

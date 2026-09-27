@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmWorkShifts
     Private _cachedWorkShifts As DataTable = Nothing
@@ -31,6 +31,9 @@ Public Class frmWorkShifts
 
     ' 2. دالة التحقق من صحة المدخلات
     Private Function IsValidData() As Boolean
+        If String.IsNullOrWhiteSpace(txtWorkShiftCode.Text) Then
+            txtWorkShiftCode.Text = GetNextCode("WorkShifts", "WorkShiftCode").ToString()
+        End If
         If String.IsNullOrWhiteSpace(txtWorkShiftName.Text) Then
             MessageBox.Show("يرجى كتابة اسم الوردية أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtWorkShiftName.Focus()
@@ -41,7 +44,7 @@ Public Class frmWorkShifts
 
     ' 3. دالة تفريغ الحقول
     Private Sub ClearFields()
-        txtWorkShiftCode.Clear()
+        txtWorkShiftCode.Text = GetNextCode("WorkShifts", "WorkShiftCode").ToString()
         txtWorkShiftName.Clear()
         dtpStartTime.Value = DateTime.Today.AddHours(8)
         dtpEndTime.Value = DateTime.Today.AddHours(16)
@@ -68,6 +71,7 @@ Public Class frmWorkShifts
         cmbSearchField.SelectedIndex = 0
 
         LoadWorkShiftsGrid()
+        ClearFields()
 
         datagridviewsetup(dgvWorkShifts)
         Dim Drag As FormDragHelper
@@ -121,7 +125,7 @@ Public Class frmWorkShifts
 
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtWorkShiftCode.Text), DBNull.Value, txtWorkShiftCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtWorkShiftCode.Text), GetNextCode("WorkShifts", "WorkShiftCode").ToString(), txtWorkShiftCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtWorkShiftName.Text.Trim())
                 cmd.Parameters.Add("@StartTime", SqlDbType.Time).Value = dtpStartTime.Value.TimeOfDay
                 cmd.Parameters.Add("@EndTime", SqlDbType.Time).Value = dtpEndTime.Value.TimeOfDay
@@ -157,7 +161,7 @@ Public Class frmWorkShifts
         Using conn As New SqlConnection(DBModule.ConnectionString)
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@WorkShiftID", currentID)
-                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtWorkShiftCode.Text), DBNull.Value, txtWorkShiftCode.Text.Trim()))
+                cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtWorkShiftCode.Text), GetNextCode("WorkShifts", "WorkShiftCode").ToString(), txtWorkShiftCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtWorkShiftName.Text.Trim())
                 cmd.Parameters.Add("@StartTime", SqlDbType.Time).Value = dtpStartTime.Value.TimeOfDay
                 cmd.Parameters.Add("@EndTime", SqlDbType.Time).Value = dtpEndTime.Value.TimeOfDay

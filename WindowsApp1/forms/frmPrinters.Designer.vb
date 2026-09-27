@@ -149,7 +149,7 @@ Partial Class frmPrinters
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(153, 33)
         Me.Label1.TabIndex = 5609
-        Me.Label1.Text = "اختار الطابعة"
+        Me.Label1.Text = "اختار الطابعة *"
         '
         'txtPrinterName
         '
@@ -269,7 +269,7 @@ Partial Class frmPrinters
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(118, 33)
         Me.Label2.TabIndex = 5612
-        Me.Label2.Text = "اسم المنفذ"
+        Me.Label2.Text = "اسم المنفذ *"
         '
         'Label6
         '

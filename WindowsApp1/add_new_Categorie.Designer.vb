@@ -86,7 +86,7 @@ Partial Class add_new_Categorie
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(98, 36)
         Me.Label6.TabIndex = 5618
-        Me.Label6.Text = "كود الفئة"
+        Me.Label6.Text = "كود الفئة *"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtCategoryCode
@@ -122,7 +122,7 @@ Partial Class add_new_Categorie
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(98, 36)
         Me.Label1.TabIndex = 5620
-        Me.Label1.Text = "اسم الفئة"
+        Me.Label1.Text = "اسم الفئة *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtCategoryName

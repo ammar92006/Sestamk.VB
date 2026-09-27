@@ -382,7 +382,7 @@ Partial Class frmDeliveryDrivers
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(110, 36)
         Me.Label3.TabIndex = 5616
-        Me.Label3.Text = "الهاتف"
+        Me.Label3.Text = "الهاتف *"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtPhone
@@ -574,7 +574,7 @@ Partial Class frmDeliveryDrivers
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(110, 36)
         Me.Label2.TabIndex = 5607
-        Me.Label2.Text = "اسم الطيار"
+        Me.Label2.Text = "اسم الطيار *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'txtDriverName
@@ -609,7 +609,7 @@ Partial Class frmDeliveryDrivers
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(110, 36)
         Me.Label1.TabIndex = 5605
-        Me.Label1.Text = "كود الطيار"
+        Me.Label1.Text = "كود الطيار *"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'cmbSearchField

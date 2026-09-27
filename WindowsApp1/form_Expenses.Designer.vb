@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class form_Expenses
     Inherits System.Windows.Forms.Form
 
@@ -187,7 +187,7 @@ Partial Class form_Expenses
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(125, 46)
         Me.Label8.TabIndex = 5640
-        Me.Label8.Text = "الخزنة"
+        Me.Label8.Text = "الخزنة *"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'dtpDate
@@ -245,7 +245,7 @@ Partial Class form_Expenses
         Me.Guna2HtmlLabel4.Name = "Guna2HtmlLabel4"
         Me.Guna2HtmlLabel4.Size = New System.Drawing.Size(317, 36)
         Me.Guna2HtmlLabel4.TabIndex = 5635
-        Me.Guna2HtmlLabel4.Text = "الباسورد"
+        Me.Guna2HtmlLabel4.Text = "الباسورد *"
         Me.Guna2HtmlLabel4.TextAlignment = System.Drawing.ContentAlignment.BottomRight
         '
         'txtUserPassword
@@ -335,7 +335,7 @@ Partial Class form_Expenses
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(189, 36)
         Me.Label6.TabIndex = 5627
-        Me.Label6.Text = "جهه الدفع"
+        Me.Label6.Text = "جهه الدفع *"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtAmount
@@ -356,7 +356,7 @@ Partial Class form_Expenses
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(189, 36)
         Me.Label4.TabIndex = 5625
-        Me.Label4.Text = "المدفوع"
+        Me.Label4.Text = "المدفوع *"
         Me.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label3
@@ -367,7 +367,7 @@ Partial Class form_Expenses
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(189, 36)
         Me.Label3.TabIndex = 5623
-        Me.Label3.Text = "التصنيف"
+        Me.Label3.Text = "التصنيف *"
         Me.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label2
@@ -378,7 +378,7 @@ Partial Class form_Expenses
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(189, 36)
         Me.Label2.TabIndex = 5621
-        Me.Label2.Text = "طريقة الدفع"
+        Me.Label2.Text = "طريقة الدفع *"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Label5
