@@ -878,6 +878,7 @@
     </Compile>
     <Compile Include="Services\DatabaseSchemaDefinitions.vb" />
     <Compile Include="Services\DatabaseMaintenanceService.vb" />
+    <Compile Include="Services\WhatsAppService.vb" />
     <Compile Include="Services\LocalDbManager.vb" />
     <Compile Include="Services\Cloud\TursoHttpClient.vb" />
     <Compile Include="Services\Cloud\TursoPlatformClient.vb" />
@@ -950,6 +951,12 @@
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
     </Compile>
     <Compile Include="UC_Settings\UCNotificationsSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCWhatsAppSettings.Designer.vb">
+      <DependentUpon>UCWhatsAppSettings.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCWhatsAppSettings.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UC_Settings\UCActivationSettings.Designer.vb">
@@ -1326,6 +1333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCNotificationsSettings.resx">
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Settings\UCWhatsAppSettings.resx">
+      <DependentUpon>UCWhatsAppSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCReceiptSettings.resx">
       <DependentUpon>UCReceiptSettings.vb</DependentUpon>

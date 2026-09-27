@@ -117,10 +117,11 @@ Public Class Settings
             Case 5 : Return btnDatabaseSettings
             Case 6 : Return btnDataExportSettings
             Case 7 : Return btnNotificationsSettings
-            Case 8 : Return btnActivationSettings
-            Case 9 : Return btnUpdatesSettings
-            Case 10 : Return btnCloudSyncSettings
-            Case 11 : Return btnAbout
+            Case 8 : Return btnWhatsAppSettings
+            Case 9 : Return btnActivationSettings
+            Case 10 : Return btnUpdatesSettings
+            Case 11 : Return btnCloudSyncSettings
+            Case 12 : Return btnAbout
             Case Else : Return btnSystemSettings
         End Select
     End Function
@@ -138,6 +139,7 @@ Public Class Settings
             btnDatabaseSettings,
             btnDataExportSettings,
             btnNotificationsSettings,
+            btnWhatsAppSettings,
             btnActivationSettings,
             btnUpdatesSettings,
             btnCloudSyncSettings,
@@ -206,27 +208,33 @@ Public Class Settings
         LoadUserControl("NotificationsSettings", Function() New UCNotificationsSettings())
     End Sub
 
+    Private Sub btnWhatsAppSettings_Click(sender As Object, e As EventArgs) Handles btnWhatsAppSettings.Click
+        SetActiveButton(btnWhatsAppSettings)
+        _selectedSectionIndex = 8
+        LoadUserControl("WhatsAppSettings", Function() New UCWhatsAppSettings())
+    End Sub
+
     Private Sub btnActivationSettings_Click(sender As Object, e As EventArgs) Handles btnActivationSettings.Click
         SetActiveButton(btnActivationSettings)
-        _selectedSectionIndex = 8
+        _selectedSectionIndex = 9
         LoadUserControl("ActivationSettings", Function() New UCActivationSettings())
     End Sub
 
     Private Sub btnUpdatesSettings_Click(sender As Object, e As EventArgs) Handles btnUpdatesSettings.Click
         SetActiveButton(btnUpdatesSettings)
-        _selectedSectionIndex = 9
+        _selectedSectionIndex = 10
         LoadUserControl("UpdatesSettings", Function() New UCUpdatesSettings())
     End Sub
 
     Private Sub btnCloudSyncSettings_Click(sender As Object, e As EventArgs) Handles btnCloudSyncSettings.Click
         SetActiveButton(btnCloudSyncSettings)
-        _selectedSectionIndex = 10
+        _selectedSectionIndex = 11
         LoadUserControl("CloudSyncSettings", Function() New UCCloudSyncSettings())
     End Sub
 
     Private Sub btnAbout_Click(sender As Object, e As EventArgs) Handles btnAbout.Click
         SetActiveButton(btnAbout)
-        _selectedSectionIndex = 11
+        _selectedSectionIndex = 12
         LoadUserControl("About", Function() New UCAbout())
     End Sub
 

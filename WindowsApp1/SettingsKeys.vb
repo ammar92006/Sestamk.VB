@@ -128,4 +128,14 @@ Public Module SettingsKeys
     Public Const NotificationLowStockAlert As String = "Notification_LowStockAlert"
     Public Const NotificationPrintFailAlert As String = "Notification_PrintFailAlert"
 
+    ' ── إعدادات خدمة الواتساب (WhatsApp Settings) ──
+    Public Const WhatsAppEnabled As String = "WhatsApp_Enabled"
+    Public Const WhatsAppServerUrl As String = "WhatsApp_ServerUrl"
+    Public Const WhatsAppApiSecret As String = "WhatsApp_ApiSecret"
+    Public Const WhatsAppMode As String = "WhatsApp_Mode" ' "Cloud" or "Local"
+    Public Const WhatsAppAutoSendInvoice As String = "WhatsApp_AutoSendInvoice"
+    Public Const WhatsAppInvoiceFormat As String = "WhatsApp_InvoiceFormat" ' "Text", "Image", "PDF"
+    Public Const WhatsAppWelcomeTemplate As String = "WhatsApp_WelcomeTemplate"
+    Public Const WhatsAppInvoiceTemplate As String = "WhatsApp_InvoiceTemplate"
+
 End Module

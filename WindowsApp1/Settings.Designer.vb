@@ -31,6 +31,7 @@ Partial Class Settings
         Me.btnCloudSyncSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnUpdatesSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnActivationSettings = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnWhatsAppSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnNotificationsSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnDataExportSettings = New Guna.UI2.WinForms.Guna2Button()
         Me.btnDatabaseSettings = New Guna.UI2.WinForms.Guna2Button()
@@ -153,6 +154,7 @@ Partial Class Settings
         Me.pnlSidebarButtons.Controls.Add(Me.btnCloudSyncSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnUpdatesSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnActivationSettings)
+        Me.pnlSidebarButtons.Controls.Add(Me.btnWhatsAppSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnNotificationsSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnDataExportSettings)
         Me.pnlSidebarButtons.Controls.Add(Me.btnDatabaseSettings)
@@ -180,10 +182,10 @@ Partial Class Settings
         Me.btnAbout.Image = Global.WindowsApp1.My.Resources.Resources.information1
         Me.btnAbout.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnAbout.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnAbout.Location = New System.Drawing.Point(12, 670)
+        Me.btnAbout.Location = New System.Drawing.Point(12, 730)
         Me.btnAbout.Name = "btnAbout"
         Me.btnAbout.Size = New System.Drawing.Size(256, 54)
-        Me.btnAbout.TabIndex = 11
+        Me.btnAbout.TabIndex = 12
         Me.btnAbout.Text = "حول البرنامج"
         '
         'btnCloudSyncSettings
@@ -197,10 +199,10 @@ Partial Class Settings
         Me.btnCloudSyncSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
         Me.btnCloudSyncSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnCloudSyncSettings.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnCloudSyncSettings.Location = New System.Drawing.Point(12, 610)
+        Me.btnCloudSyncSettings.Location = New System.Drawing.Point(12, 670)
         Me.btnCloudSyncSettings.Name = "btnCloudSyncSettings"
         Me.btnCloudSyncSettings.Size = New System.Drawing.Size(256, 54)
-        Me.btnCloudSyncSettings.TabIndex = 10
+        Me.btnCloudSyncSettings.TabIndex = 11
         Me.btnCloudSyncSettings.Text = "☁️ المزامنة السحابية"
         '
         'btnUpdatesSettings
@@ -215,10 +217,10 @@ Partial Class Settings
         Me.btnUpdatesSettings.Image = Global.WindowsApp1.My.Resources.Resources.update
         Me.btnUpdatesSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnUpdatesSettings.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnUpdatesSettings.Location = New System.Drawing.Point(12, 550)
+        Me.btnUpdatesSettings.Location = New System.Drawing.Point(12, 610)
         Me.btnUpdatesSettings.Name = "btnUpdatesSettings"
         Me.btnUpdatesSettings.Size = New System.Drawing.Size(256, 54)
-        Me.btnUpdatesSettings.TabIndex = 9
+        Me.btnUpdatesSettings.TabIndex = 10
         Me.btnUpdatesSettings.Text = "التحديثات والترقية"
         '
         'btnActivationSettings
@@ -233,11 +235,29 @@ Partial Class Settings
         Me.btnActivationSettings.Image = Global.WindowsApp1.My.Resources.Resources.activation
         Me.btnActivationSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnActivationSettings.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnActivationSettings.Location = New System.Drawing.Point(12, 490)
+        Me.btnActivationSettings.Location = New System.Drawing.Point(12, 550)
         Me.btnActivationSettings.Name = "btnActivationSettings"
         Me.btnActivationSettings.Size = New System.Drawing.Size(256, 54)
-        Me.btnActivationSettings.TabIndex = 8
+        Me.btnActivationSettings.TabIndex = 9
         Me.btnActivationSettings.Text = "إدارة التفعيل"
+        '
+        'btnWhatsAppSettings
+        '
+        Me.btnWhatsAppSettings.BorderRadius = 10
+        Me.btnWhatsAppSettings.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
+        Me.btnWhatsAppSettings.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+        Me.btnWhatsAppSettings.CheckedState.ForeColor = System.Drawing.Color.White
+        Me.btnWhatsAppSettings.FillColor = System.Drawing.Color.Empty
+        Me.btnWhatsAppSettings.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.btnWhatsAppSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnWhatsAppSettings.Image = Global.WindowsApp1.My.Resources.Resources.whatsapp
+        Me.btnWhatsAppSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnWhatsAppSettings.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnWhatsAppSettings.Location = New System.Drawing.Point(12, 490)
+        Me.btnWhatsAppSettings.Name = "btnWhatsAppSettings"
+        Me.btnWhatsAppSettings.Size = New System.Drawing.Size(256, 54)
+        Me.btnWhatsAppSettings.TabIndex = 8
+        Me.btnWhatsAppSettings.Text = "خدمة الواتساب"
         '
         'btnNotificationsSettings
         '
@@ -470,6 +490,7 @@ Partial Class Settings
     Friend WithEvents btnDatabaseSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnDataExportSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnNotificationsSettings As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnWhatsAppSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnActivationSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnUpdatesSettings As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnAbout As Guna.UI2.WinForms.Guna2Button
