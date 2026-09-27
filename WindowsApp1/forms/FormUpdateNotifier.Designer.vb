@@ -24,6 +24,7 @@ Partial Class FormUpdateNotifier
         Me.pnlHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
         Me.lblVersionBadge = New Guna.UI2.WinForms.Guna2Button()
+        Me.lblSizeBadge = New Guna.UI2.WinForms.Guna2Button()
         Me.lblSubtitle = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.btnHeaderIcon = New Guna.UI2.WinForms.Guna2Button()
@@ -39,6 +40,8 @@ Partial Class FormUpdateNotifier
         Me.cardNotes = New Guna.UI2.WinForms.Guna2Panel()
         Me.txtNotes = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblNotesHeader = New System.Windows.Forms.Label()
+        Me.lblSizeInCard = New Guna.UI2.WinForms.Guna2Button()
+        Me.pnlNotesList = New System.Windows.Forms.FlowLayoutPanel()
         Me.pnlHeader.SuspendLayout()
         Me.pnlContainer.SuspendLayout()
         Me.pnlFooter.SuspendLayout()
@@ -72,6 +75,7 @@ Partial Class FormUpdateNotifier
         Me.pnlHeader.BorderThickness = 1
         Me.pnlHeader.Controls.Add(Me.btnClose)
         Me.pnlHeader.Controls.Add(Me.lblVersionBadge)
+        Me.pnlHeader.Controls.Add(Me.lblSizeBadge)
         Me.pnlHeader.Controls.Add(Me.lblSubtitle)
         Me.pnlHeader.Controls.Add(Me.lblTitle)
         Me.pnlHeader.Controls.Add(Me.btnHeaderIcon)
@@ -108,22 +112,41 @@ Partial Class FormUpdateNotifier
         Me.lblVersionBadge.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(147, Byte), Integer), CType(CType(197, Byte), Integer), CType(CType(253, Byte), Integer))
         Me.lblVersionBadge.Enabled = False
         Me.lblVersionBadge.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.lblVersionBadge.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.lblVersionBadge.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
         Me.lblVersionBadge.ForeColor = System.Drawing.Color.FromArgb(CType(CType(147, Byte), Integer), CType(CType(197, Byte), Integer), CType(CType(253, Byte), Integer))
-        Me.lblVersionBadge.Location = New System.Drawing.Point(73, 25)
+        Me.lblVersionBadge.Location = New System.Drawing.Point(52, 25)
         Me.lblVersionBadge.Name = "lblVersionBadge"
-        Me.lblVersionBadge.Size = New System.Drawing.Size(95, 30)
+        Me.lblVersionBadge.Size = New System.Drawing.Size(84, 30)
         Me.lblVersionBadge.TabIndex = 3
-        Me.lblVersionBadge.Text = "v1.1.0"
+        Me.lblVersionBadge.Text = "v1.2.1"
+        '
+        'lblSizeBadge
+        '
+        Me.lblSizeBadge.BorderColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblSizeBadge.BorderRadius = 8
+        Me.lblSizeBadge.BorderThickness = 1
+        Me.lblSizeBadge.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblSizeBadge.DisabledState.CustomBorderColor = System.Drawing.Color.Transparent
+        Me.lblSizeBadge.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(6, Byte), Integer), CType(CType(78, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.lblSizeBadge.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(183, Byte), Integer))
+        Me.lblSizeBadge.Enabled = False
+        Me.lblSizeBadge.FillColor = System.Drawing.Color.FromArgb(CType(CType(6, Byte), Integer), CType(CType(78, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.lblSizeBadge.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSizeBadge.ForeColor = System.Drawing.Color.FromArgb(CType(CType(110, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(183, Byte), Integer))
+        Me.lblSizeBadge.Location = New System.Drawing.Point(142, 25)
+        Me.lblSizeBadge.Name = "lblSizeBadge"
+        Me.lblSizeBadge.Size = New System.Drawing.Size(96, 30)
+        Me.lblSizeBadge.TabIndex = 5
+        Me.lblSizeBadge.Text = "📦 43.5 MB"
         '
         'lblSubtitle
         '
         Me.lblSubtitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblSubtitle.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.lblSubtitle.Font = New System.Drawing.Font("Segoe UI", 8.5!)
         Me.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblSubtitle.Location = New System.Drawing.Point(165, 46)
+        Me.lblSubtitle.Location = New System.Drawing.Point(245, 42)
         Me.lblSubtitle.Name = "lblSubtitle"
-        Me.lblSubtitle.Size = New System.Drawing.Size(345, 22)
+        Me.lblSubtitle.Size = New System.Drawing.Size(265, 32)
         Me.lblSubtitle.TabIndex = 2
         Me.lblSubtitle.Text = "يتوفر إصدار أحدث يتضمن ميزات وتحديثات لقاعدة البيانات"
         Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -133,9 +156,9 @@ Partial Class FormUpdateNotifier
         Me.lblTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
         Me.lblTitle.ForeColor = System.Drawing.Color.White
-        Me.lblTitle.Location = New System.Drawing.Point(165, 16)
+        Me.lblTitle.Location = New System.Drawing.Point(245, 14)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(345, 28)
+        Me.lblTitle.Size = New System.Drawing.Size(265, 26)
         Me.lblTitle.TabIndex = 1
         Me.lblTitle.Text = "تحديث جديد متوفر للنظام"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -194,7 +217,7 @@ Partial Class FormUpdateNotifier
         Me.btnLater.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.btnLater.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.btnLater.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
-        Me.btnLater.Location = New System.Drawing.Point(240, 6)
+        Me.btnLater.Location = New System.Drawing.Point(205, 6)
         Me.btnLater.Name = "btnLater"
         Me.btnLater.Size = New System.Drawing.Size(125, 44)
         Me.btnLater.TabIndex = 1
@@ -206,12 +229,12 @@ Partial Class FormUpdateNotifier
         Me.btnUpdate.BorderRadius = 10
         Me.btnUpdate.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnUpdate.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnUpdate.ForeColor = System.Drawing.Color.White
         Me.btnUpdate.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(29, Byte), Integer), CType(CType(78, Byte), Integer), CType(CType(216, Byte), Integer))
-        Me.btnUpdate.Location = New System.Drawing.Point(375, 6)
+        Me.btnUpdate.Location = New System.Drawing.Point(340, 6)
         Me.btnUpdate.Name = "btnUpdate"
-        Me.btnUpdate.Size = New System.Drawing.Size(165, 44)
+        Me.btnUpdate.Size = New System.Drawing.Size(195, 44)
         Me.btnUpdate.TabIndex = 0
         Me.btnUpdate.Text = "⬇️ تحديث الآن"
         '
@@ -283,13 +306,58 @@ Partial Class FormUpdateNotifier
         Me.cardNotes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.cardNotes.BorderRadius = 12
         Me.cardNotes.BorderThickness = 1
+        Me.cardNotes.Controls.Add(Me.pnlNotesList)
         Me.cardNotes.Controls.Add(Me.txtNotes)
+        Me.cardNotes.Controls.Add(Me.lblSizeInCard)
         Me.cardNotes.Controls.Add(Me.lblNotesHeader)
         Me.cardNotes.FillColor = System.Drawing.Color.FromArgb(CType(CType(24, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(42, Byte), Integer))
         Me.cardNotes.Location = New System.Drawing.Point(20, 95)
         Me.cardNotes.Name = "cardNotes"
         Me.cardNotes.Size = New System.Drawing.Size(540, 215)
         Me.cardNotes.TabIndex = 1
+        '
+        'lblSizeInCard
+        '
+        Me.lblSizeInCard.BorderColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblSizeInCard.BorderRadius = 6
+        Me.lblSizeInCard.BorderThickness = 1
+        Me.lblSizeInCard.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblSizeInCard.DisabledState.CustomBorderColor = System.Drawing.Color.Transparent
+        Me.lblSizeInCard.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(15, Byte), Integer), CType(CType(23, Byte), Integer), CType(CType(42, Byte), Integer))
+        Me.lblSizeInCard.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(153, Byte), Integer))
+        Me.lblSizeInCard.Enabled = False
+        Me.lblSizeInCard.FillColor = System.Drawing.Color.FromArgb(CType(CType(15, Byte), Integer), CType(CType(23, Byte), Integer), CType(CType(42, Byte), Integer))
+        Me.lblSizeInCard.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.lblSizeInCard.ForeColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(153, Byte), Integer))
+        Me.lblSizeInCard.Location = New System.Drawing.Point(15, 10)
+        Me.lblSizeInCard.Name = "lblSizeInCard"
+        Me.lblSizeInCard.Size = New System.Drawing.Size(165, 26)
+        Me.lblSizeInCard.TabIndex = 2
+        Me.lblSizeInCard.Text = "📦 الحجم: 43.5 ميجابايت"
+        '
+        'lblNotesHeader
+        '
+        Me.lblNotesHeader.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblNotesHeader.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+        Me.lblNotesHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.lblNotesHeader.Location = New System.Drawing.Point(185, 11)
+        Me.lblNotesHeader.Name = "lblNotesHeader"
+        Me.lblNotesHeader.Size = New System.Drawing.Size(340, 24)
+        Me.lblNotesHeader.TabIndex = 0
+        Me.lblNotesHeader.Text = "أبرز التحسينات والإضافات في هذا الإصدار:"
+        Me.lblNotesHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
+        'pnlNotesList
+        '
+        Me.pnlNotesList.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnlNotesList.AutoScroll = True
+        Me.pnlNotesList.FlowDirection = System.Windows.Forms.FlowDirection.TopDown
+        Me.pnlNotesList.Location = New System.Drawing.Point(15, 42)
+        Me.pnlNotesList.Name = "pnlNotesList"
+        Me.pnlNotesList.Size = New System.Drawing.Size(510, 158)
+        Me.pnlNotesList.TabIndex = 0
+        Me.pnlNotesList.WrapContents = False
         '
         'txtNotes
         '
@@ -307,7 +375,7 @@ Partial Class FormUpdateNotifier
         Me.txtNotes.Font = New System.Drawing.Font("Segoe UI", 9.5!)
         Me.txtNotes.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
         Me.txtNotes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.txtNotes.Location = New System.Drawing.Point(15, 40)
+        Me.txtNotes.Location = New System.Drawing.Point(15, 42)
         Me.txtNotes.Multiline = True
         Me.txtNotes.Name = "txtNotes"
         Me.txtNotes.PlaceholderText = ""
@@ -315,20 +383,9 @@ Partial Class FormUpdateNotifier
         Me.txtNotes.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.txtNotes.SelectedText = ""
-        Me.txtNotes.Size = New System.Drawing.Size(510, 160)
+        Me.txtNotes.Size = New System.Drawing.Size(510, 158)
         Me.txtNotes.TabIndex = 1
-        '
-        'lblNotesHeader
-        '
-        Me.lblNotesHeader.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblNotesHeader.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
-        Me.lblNotesHeader.ForeColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.lblNotesHeader.Location = New System.Drawing.Point(15, 12)
-        Me.lblNotesHeader.Name = "lblNotesHeader"
-        Me.lblNotesHeader.Size = New System.Drawing.Size(510, 24)
-        Me.lblNotesHeader.TabIndex = 0
-        Me.lblNotesHeader.Text = "أبرز التحسينات والإضافات في هذا الإصدار:"
-        Me.lblNotesHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.txtNotes.Visible = False
         '
         'FormUpdateNotifier
         '
@@ -363,9 +420,12 @@ Partial Class FormUpdateNotifier
     Friend WithEvents lblTitle As System.Windows.Forms.Label
     Friend WithEvents lblSubtitle As System.Windows.Forms.Label
     Friend WithEvents lblVersionBadge As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblSizeBadge As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents cardNotes As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents lblNotesHeader As System.Windows.Forms.Label
+    Friend WithEvents lblSizeInCard As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents pnlNotesList As System.Windows.Forms.FlowLayoutPanel
     Friend WithEvents txtNotes As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents pnlDeltaNotice As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents lblDeltaNotice As System.Windows.Forms.Label

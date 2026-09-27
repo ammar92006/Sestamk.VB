@@ -55,7 +55,7 @@
             Me.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill
             Me.pnlMain.Location = New System.Drawing.Point(0, 0)
             Me.pnlMain.Name = "pnlMain"
-            Me.pnlMain.Size = New System.Drawing.Size(1238, 520)
+            Me.pnlMain.Size = New System.Drawing.Size(1238, 470)
             Me.pnlMain.TabIndex = 0
             '
             'lblTitle
@@ -68,7 +68,7 @@
             Me.lblTitle.Size = New System.Drawing.Size(358, 35)
             Me.lblTitle.TabIndex = 0
             Me.lblTitle.Text = "الإشعارات والتنبيهات الصوتية"
-            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblSubtitle
             '
@@ -80,7 +80,7 @@
             Me.lblSubtitle.Size = New System.Drawing.Size(608, 25)
             Me.lblSubtitle.TabIndex = 1
             Me.lblSubtitle.Text = "التحكم في أصوات العمليات وتنبيهات نفاذ المخزون وأعطال الطباعة"
-            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'cardSounds
             '

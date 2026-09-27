@@ -68,7 +68,7 @@ Namespace UC_Settings
             Me.lblTitle.Size = New System.Drawing.Size(358, 35)
             Me.lblTitle.TabIndex = 0
             Me.lblTitle.Text = "التحديثات والترقية"
-            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblSubtitle
             '
@@ -80,7 +80,7 @@ Namespace UC_Settings
             Me.lblSubtitle.Size = New System.Drawing.Size(508, 25)
             Me.lblSubtitle.TabIndex = 1
             Me.lblSubtitle.Text = "التحقق من التحديثات وإدارة الترقية وسجل الإصدارات"
-            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'cardStatus
             '
@@ -118,7 +118,7 @@ Namespace UC_Settings
             Me.lblCardStatusTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardStatusTitle.TabIndex = 0
             Me.lblCardStatusTitle.Text = "معلومات الإصدار والقناة"
-            Me.lblCardStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblCurrentVersionHeader
             '
@@ -286,7 +286,7 @@ Namespace UC_Settings
             Me.lblCardHistoryTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardHistoryTitle.TabIndex = 0
             Me.lblCardHistoryTitle.Text = "سجل التحديثات والإصدارات السابقة"
-            Me.lblCardHistoryTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardHistoryTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'flpUpdateHistory
             '

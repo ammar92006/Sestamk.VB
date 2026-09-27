@@ -13,6 +13,7 @@ Public Class VbUpdateManifest
     Public Property Channel As String
     Public Property Mandatory As Boolean
     Public Property Notes As String
+    Public Property WhatsNew As New List(Of String)()
     Public Property PackageUrl As String
     Public Property PackageSha256 As String
     Public Property PackageSize As Long
@@ -157,16 +158,22 @@ Public NotInheritable Class UpdateCoordinator
         Dim isMandatory = Convert.ToBoolean(If(json("mandatory"), json("IsMandatory")))
 
         ' تجميع الملاحظات
+        Dim whatsNewList As New List(Of String)()
+        Dim whatsNewToken = If(json("whats_new"), json("WhatsNew"))
+        If whatsNewToken IsNot Nothing AndAlso whatsNewToken.Type = JTokenType.Array Then
+            For Each item In whatsNewToken
+                Dim s = Convert.ToString(item)
+                If Not String.IsNullOrWhiteSpace(s) Then whatsNewList.Add(s.Trim())
+            Next
+        End If
+
         Dim notes = Convert.ToString(If(json("notes"), json("Notes")))
-        If String.IsNullOrWhiteSpace(notes) Then
-            Dim whatsNewToken = If(json("whats_new"), json("WhatsNew"))
-            If whatsNewToken IsNot Nothing AndAlso whatsNewToken.Type = JTokenType.Array Then
-                Dim sb As New StringBuilder()
-                For Each item In whatsNewToken
-                    sb.AppendLine("• " & Convert.ToString(item))
-                Next
-                notes = sb.ToString().TrimEnd()
-            End If
+        If String.IsNullOrWhiteSpace(notes) AndAlso whatsNewList.Count > 0 Then
+            Dim sb As New StringBuilder()
+            For Each item In whatsNewList
+                sb.AppendLine("• " & item)
+            Next
+            notes = sb.ToString().TrimEnd()
         End If
 
         ' استخراج معلومات الحزمة
@@ -207,6 +214,7 @@ Public NotInheritable Class UpdateCoordinator
             .Channel = channelText,
             .Mandatory = isMandatory,
             .Notes = notes,
+            .WhatsNew = whatsNewList,
             .PackageUrl = pkgUrl,
             .PackageSha256 = pkgSha,
             .PackageSize = pkgSize
