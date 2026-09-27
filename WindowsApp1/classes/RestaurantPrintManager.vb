@@ -458,7 +458,7 @@ Public Class RestaurantPrintManager
             ' 7. تذييل الفاتورة ونصوص التوصيل
             Dim deliveryNotice = SettingsManager.GetSettingOrDefault(SettingsKeys.DeliveryText, "")
             If inv.OrderType = 3 AndAlso Not String.IsNullOrWhiteSpace(deliveryNotice) Then
-                g.DrawString("🛵 " & deliveryNotice, fontSub, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfCenter)
+                g.DrawString("[توصيل] " & deliveryNotice, fontSub, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfCenter)
                 yPos += 18
             End If
 
@@ -702,7 +702,7 @@ Public Class RestaurantPrintManager
                                          tableName As String,
                                          staffName As String,
                                          items As List(Of InvoiceDetailModel),
-                                         Optional ticketTitle As String = "طلب تشغيل مطبخ",
+                                         Optional ticketTitle As String = "طلب تجهيز المطبخ",
                                          Optional customPrinterName As String = "",
                                          Optional forcePreview As Boolean = False)
         Try
@@ -726,84 +726,22 @@ Public Class RestaurantPrintManager
 
             AddHandler pd.PrintPage, Sub(sender As Object, e As PrintPageEventArgs)
                                          Dim g As Graphics = e.Graphics
+                                         g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+                                         g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
+
+                                         Dim paperSizeVal = SettingsManager.GetSettingOrDefault(SettingsKeys.PrinterPaperSize, "80mm").ToLower()
+                                         Dim isSmallPaper As Boolean = (paperSizeVal = "58mm" OrElse e.PageBounds.Width < 240)
+
                                          Dim pageWidth As Integer = e.PageBounds.Width
-                                         If pageWidth > 300 Then pageWidth = 290
+                                         If pageWidth > 300 Then pageWidth = 285
+                                         If isSmallPaper Then pageWidth = Math.Min(pageWidth, 205)
 
-                                         Dim yPos As Integer = 10
-
-                                         Using fontHeader As New Font("Segoe UI", 14.0!, FontStyle.Bold),
-                                               fontOrderType As New Font("Segoe UI", 13.0!, FontStyle.Bold),
-                                               fontItemName As New Font("Segoe UI", 11.5!, FontStyle.Bold),
-                                               fontQty As New Font("Segoe UI", 13.0!, FontStyle.Bold),
-                                               fontSub As New Font("Segoe UI", 9.5!, FontStyle.Bold),
-                                               fontMeta As New Font("Segoe UI", 9.0!, FontStyle.Regular),
-                                               sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center},
-                                               sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
-                                               sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near}
-
-                                             ' عنوان البون
-                                             g.DrawString("══ " & ticketTitle & " ══", fontHeader, Brushes.Black, New RectangleF(0, yPos, pageWidth, 26), sfCenter)
-                                             yPos += 28
-
-                                             ' نوع الطلب والطاولة بشكل ضخم وواضح لطهاة المطبخ
-                                             Dim tableOrType As String = orderTypeDesc
-                                             If Not String.IsNullOrWhiteSpace(tableName) AndAlso Not orderTypeDesc.Contains(tableName) Then
-                                                 tableOrType &= " [ " & tableName & " ]"
-                                             End If
-                                             g.DrawString(tableOrType, fontOrderType, Brushes.Black, New RectangleF(0, yPos, pageWidth, 26), sfCenter)
-                                             yPos += 26
-
-                                             DrawSolidLine(g, yPos, pageWidth, 2)
-                                             yPos += 6
-
-                                             ' الوقت ورقم الطلب والموظف
-                                             g.DrawString("طلب رقم: " & orderNumber, fontMeta, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfRight)
-                                             yPos += 18
-                                             g.DrawString("الوقت: " & DateTime.Now.ToString("yyyy/MM/dd - hh:mm tt"), fontMeta, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfRight)
-                                             yPos += 18
-                                             If Not String.IsNullOrWhiteSpace(staffName) Then
-                                                 g.DrawString("الكاشير/الويتر: " & staffName, fontMeta, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfRight)
-                                                 yPos += 18
-                                             End If
-
-                                             DrawDashedLine(g, yPos, pageWidth)
-                                             yPos += 8
-
-                                             ' الأصناف بدون أسعار
-                                             For Each det In items
-                                                 ' الصنف
-                                                 Dim itemName As String = det.ProductName
-                                                 If Not String.IsNullOrWhiteSpace(det.SizeName) AndAlso det.SizeName <> "عادي" Then
-                                                     itemName &= " (" & det.SizeName & ")"
-                                                 End If
-
-                                                 ' الكمية في اليسار بحجم كبير
-                                                 g.DrawString(det.Quantity.ToString() & "x", fontQty, Brushes.Black, New RectangleF(0, yPos, 45, 24), sfLeft)
-                                                 ' اسم الصنف في اليمين
-                                                 g.DrawString(itemName, fontItemName, Brushes.Black, New RectangleF(45, yPos, pageWidth - 45, 24), sfRight)
-                                                 yPos += 24
-
-                                                 ' الإضافات
-                                                 If Not String.IsNullOrWhiteSpace(det.AddonsText) AndAlso det.AddonsText <> "-" Then
-                                                     g.DrawString("  [+] " & det.AddonsText, fontSub, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfRight)
-                                                     yPos += 18
-                                                 End If
-
-                                                 ' الملاحظات التجهيزية (مثل بدون شطة، تسوية زيادة)
-                                                 If Not String.IsNullOrWhiteSpace(det.Notes) Then
-                                                     g.DrawString("  [!] " & det.Notes, fontSub, Brushes.DarkRed, New RectangleF(0, yPos, pageWidth, 18), sfRight)
-                                                     yPos += 18
-                                                 End If
-
-                                                 yPos += 4
-                                                 DrawDashedLine(g, yPos, pageWidth)
-                                                 yPos += 6
-                                             Next
-
-                                             yPos += 10
-                                             g.DrawString("══ نهاية طلب التشغيل ══", fontMeta, Brushes.Gray, New RectangleF(0, yPos, pageWidth, 20), sfCenter)
-                                             yPos += 25
-                                         End Using
+                                         Dim kitchenDesign = SettingsManager.GetSettingOrDefault(SettingsKeys.KitchenTicketDesign, "1")
+                                         If kitchenDesign = "2" Then
+                                             RenderKitchenTicketDesign2(g, pageWidth, isSmallPaper, orderNumber, orderTypeDesc, tableName, staffName, items, ticketTitle)
+                                         Else
+                                             RenderKitchenTicketDesign1(g, pageWidth, isSmallPaper, orderNumber, orderTypeDesc, tableName, staffName, items, ticketTitle)
+                                         End If
 
                                          e.HasMorePages = False
                                      End Sub
@@ -828,6 +766,330 @@ Public Class RestaurantPrintManager
         Catch ex As Exception
             Debug.WriteLine("PrintKitchenTicket error: " & ex.Message)
         End Try
+    End Sub
+
+    ''' <summary>
+    ''' تصميم 1 لبون المطبخ: كلاسيكي مدمج وواضح مع التفاف نصوص كامل للأصناف والملاحظات
+    ''' </summary>
+    Private Shared Sub RenderKitchenTicketDesign1(g As Graphics,
+                                                 pageWidth As Integer,
+                                                 isSmallPaper As Boolean,
+                                                 orderNumber As String,
+                                                 orderTypeDesc As String,
+                                                 tableName As String,
+                                                 staffName As String,
+                                                 items As List(Of InvoiceDetailModel),
+                                                 ticketTitle As String)
+        Dim yPos As Integer = 8
+        Dim isFollowUp As Boolean = ticketTitle.Contains("متابعة")
+
+        Using fontTitle As New Font("Segoe UI", If(isSmallPaper, 12.0!, 13.5!), FontStyle.Bold),
+              fontOrderType As New Font("Segoe UI", If(isSmallPaper, 11.5!, 13.0!), FontStyle.Bold),
+              fontMeta As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Regular),
+              fontMetaBold As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Bold),
+              fontColHeader As New Font("Segoe UI", If(isSmallPaper, 9.0!, 10.0!), FontStyle.Bold),
+              fontItemName As New Font("Segoe UI", If(isSmallPaper, 10.5!, 11.5!), FontStyle.Bold),
+              fontQty As New Font("Segoe UI", If(isSmallPaper, 11.5!, 13.0!), FontStyle.Bold),
+              fontAddon As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Regular),
+              fontNotes As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.5!), FontStyle.Bold),
+              fontFooter As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Regular),
+              sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center},
+              headerBrush As New SolidBrush(Color.FromArgb(240, 240, 240)),
+              noteBrush As New SolidBrush(Color.FromArgb(254, 242, 242)),
+              penDark As New Pen(Color.Black, 2.0!),
+              penNote As New Pen(Color.FromArgb(239, 68, 68), 1.0!)
+
+            ' 1. عنوان البون
+            Dim titleRect As New RectangleF(4, yPos, pageWidth - 8, 26)
+            If isFollowUp Then
+                g.FillRectangle(headerBrush, 4, yPos, pageWidth - 8, 26)
+                g.DrawRectangle(penDark, 4, yPos, pageWidth - 8, 26)
+                g.DrawString("◄◄ " & ticketTitle & " ►►", fontTitle, Brushes.Black, titleRect, sfCenter)
+            Else
+                g.DrawString("══ " & ticketTitle & " ══", fontTitle, Brushes.Black, titleRect, sfCenter)
+            End If
+            yPos += 28
+
+            If isFollowUp Then
+                Dim alertRect As New RectangleF(4, yPos, pageWidth - 8, 20)
+                g.DrawString("[تنبيه]: أصناف جديدة مضافة للطلب", fontMetaBold, Brushes.DarkRed, alertRect, sfCenter)
+                yPos += 22
+            End If
+
+            ' 2. نوع الطلب والطاولة
+            Dim tableOrType As String = orderTypeDesc
+            If Not String.IsNullOrWhiteSpace(tableName) AndAlso Not orderTypeDesc.Contains(tableName) Then
+                tableOrType &= " [ " & tableName & " ]"
+            End If
+            g.DrawString(tableOrType, fontOrderType, Brushes.Black, New RectangleF(4, yPos, pageWidth - 8, 24), sfCenter)
+            yPos += 26
+
+            DrawSolidLine(g, yPos, pageWidth, 2)
+            yPos += 6
+
+            ' 3. البيانات الوصفية (رقم الطلب، التاريخ، الكاشير)
+            g.DrawString("طلب رقم: " & orderNumber, fontMetaBold, Brushes.Black, New RectangleF(4, yPos, pageWidth - 8, 18), sfRight)
+            yPos += 18
+            g.DrawString("الوقت: " & DateTime.Now.ToString("yyyy/MM/dd - hh:mm tt"), fontMeta, Brushes.Black, New RectangleF(4, yPos, pageWidth - 8, 18), sfRight)
+            yPos += 18
+            If Not String.IsNullOrWhiteSpace(staffName) Then
+                g.DrawString("الكاشير/الويتر: " & staffName, fontMeta, Brushes.Black, New RectangleF(4, yPos, pageWidth - 8, 18), sfRight)
+                yPos += 18
+            End If
+
+            DrawSolidLine(g, yPos, pageWidth, 1)
+            yPos += 5
+
+            ' 4. ترويسة الأعمدة
+            Dim colQtyW As Integer = If(isSmallPaper, 38, 48)
+            Dim colNameW As Integer = (pageWidth - 8) - colQtyW
+
+            g.DrawString("الكمية", fontColHeader, Brushes.Black, New RectangleF(4, yPos, colQtyW, 20), sfLeft)
+            g.DrawString("الصنف والملاحظات", fontColHeader, Brushes.Black, New RectangleF(4 + colQtyW, yPos, colNameW, 20), sfRight)
+            yPos += 22
+            DrawDashedLine(g, yPos, pageWidth)
+            yPos += 6
+
+            ' 5. قائمة الأصناف
+            Dim totalQty As Integer = 0
+            For Each det In items
+                totalQty += det.Quantity
+
+                ' اسم الصنف مع الحجم
+                Dim itemName As String = det.ProductName
+                If Not String.IsNullOrWhiteSpace(det.SizeName) AndAlso det.SizeName <> "عادي" Then
+                    itemName &= " (" & det.SizeName & ")"
+                End If
+
+                ' قياس ارتفاع اسم الصنف لمنع أي قص
+                Dim nameSize = g.MeasureString(itemName, fontItemName, colNameW, sfItemWrap)
+                Dim nameH As Integer = Math.Max(22, CInt(Math.Ceiling(nameSize.Height)) + 2)
+
+                ' رسم الكمية في اليسار بخط عريض
+                g.DrawString(det.Quantity.ToString() & "x", fontQty, Brushes.Black, New RectangleF(4, yPos, colQtyW, nameH), sfLeft)
+
+                ' رسم اسم الصنف في اليمين مع التفاف كامل
+                g.DrawString(itemName, fontItemName, Brushes.Black, New RectangleF(4 + colQtyW, yPos, colNameW, nameH), sfItemWrap)
+                yPos += nameH
+
+                ' الإضافات
+                If Not String.IsNullOrWhiteSpace(det.AddonsText) AndAlso det.AddonsText <> "-" Then
+                    Dim addonText As String = "  [+] إضافات: " & det.AddonsText
+                    Dim addonSize = g.MeasureString(addonText, fontAddon, pageWidth - 12, sfItemWrap)
+                    Dim addonH As Integer = Math.Max(16, CInt(Math.Ceiling(addonSize.Height)) + 2)
+                    g.DrawString(addonText, fontAddon, Brushes.DarkSlateGray, New RectangleF(4, yPos, pageWidth - 8, addonH), sfItemWrap)
+                    yPos += addonH
+                End If
+
+                ' ملاحظات التحضير (مثل بدون شطة، تسوية زيادة)
+                If Not String.IsNullOrWhiteSpace(det.Notes) Then
+                    Dim noteText As String = "  [*] ملاحظة: " & det.Notes
+                    Dim noteSize = g.MeasureString(noteText, fontNotes, pageWidth - 16, sfItemWrap)
+                    Dim noteH As Integer = Math.Max(18, CInt(Math.Ceiling(noteSize.Height)) + 4)
+
+                    ' بوكس مظلل للملاحظات
+                    g.FillRectangle(noteBrush, 4, yPos, pageWidth - 8, noteH)
+                    g.DrawRectangle(penNote, 4, yPos, pageWidth - 8, noteH)
+                    g.DrawString(noteText, fontNotes, Brushes.DarkRed, New RectangleF(6, yPos + 2, pageWidth - 12, noteH - 4), sfItemWrap)
+                    yPos += noteH + 3
+                End If
+
+                yPos += 3
+                DrawDashedLine(g, yPos, pageWidth)
+                yPos += 5
+            Next
+
+            ' 6. التذييل
+            yPos += 4
+            g.DrawString("إجمالي الكميات: " & totalQty.ToString() & " قطعة", fontMetaBold, Brushes.Black, New RectangleF(4, yPos, pageWidth - 8, 18), sfCenter)
+            yPos += 20
+            Dim endText As String = If(isFollowUp, "══ نهاية ورقة المتابعة ══", "══ نهاية طلب التجهيز ══")
+            g.DrawString(endText, fontFooter, Brushes.Gray, New RectangleF(4, yPos, pageWidth - 8, 18), sfCenter)
+            yPos += 22
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' تصميم 2 لبون المطبخ: بطاقات حديثة مقسمة لكل صنف مع شارات بارزة ومربعات مميزة للملاحظات
+    ''' </summary>
+    Private Shared Sub RenderKitchenTicketDesign2(g As Graphics,
+                                                 pageWidth As Integer,
+                                                 isSmallPaper As Boolean,
+                                                 orderNumber As String,
+                                                 orderTypeDesc As String,
+                                                 tableName As String,
+                                                 staffName As String,
+                                                 items As List(Of InvoiceDetailModel),
+                                                 ticketTitle As String)
+        Dim yPos As Integer = 8
+        Dim isFollowUp As Boolean = ticketTitle.Contains("متابعة")
+
+        Using fontTitle As New Font("Segoe UI", If(isSmallPaper, 12.0!, 13.5!), FontStyle.Bold),
+              fontOrderType As New Font("Segoe UI", If(isSmallPaper, 12.5!, 14.0!), FontStyle.Bold),
+              fontMeta As New Font("Segoe UI", If(isSmallPaper, 8.0!, 8.5!), FontStyle.Regular),
+              fontMetaBold As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Bold),
+              fontItemName As New Font("Segoe UI", If(isSmallPaper, 11.0!, 12.0!), FontStyle.Bold),
+              fontQty As New Font("Segoe UI", If(isSmallPaper, 12.0!, 13.5!), FontStyle.Bold),
+              fontAddon As New Font("Segoe UI", If(isSmallPaper, 8.0!, 8.5!), FontStyle.Regular),
+              fontNotes As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Bold),
+              fontFooter As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Bold),
+              sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center},
+              headerBgBrush As New SolidBrush(Color.FromArgb(235, 238, 242)),
+              badgeBgBrush As New SolidBrush(Color.FromArgb(220, 226, 236)),
+              cardBgBrush As New SolidBrush(Color.FromArgb(250, 251, 252)),
+              qtyBadgeBrush As New SolidBrush(Color.FromArgb(233, 236, 239)),
+              noteBgBrush As New SolidBrush(Color.FromArgb(254, 242, 242)),
+              penBorder As New Pen(Color.FromArgb(55, 65, 81), 1.5!),
+              penCard As New Pen(Color.FromArgb(107, 114, 128), 1.2!),
+              penBadge As New Pen(Color.FromArgb(75, 85, 99), 1.0!),
+              penNote As New Pen(Color.FromArgb(220, 38, 38), 1.0!)
+
+            ' 1. بطاقة الرأس المؤطرة (Header Card)
+            Dim headerH As Integer = If(isFollowUp, 62, 38)
+            Dim headerRect As New Rectangle(4, yPos, pageWidth - 8, headerH)
+            g.FillRectangle(headerBgBrush, headerRect)
+            g.DrawRectangle(penBorder, headerRect)
+
+            ' العنوان
+            Dim titleRect As New RectangleF(6, yPos + 4, pageWidth - 12, 26)
+            Dim titlePrefix As String = If(isFollowUp, "[!] ", "◆ ")
+            g.DrawString(titlePrefix & ticketTitle, fontTitle, Brushes.Black, titleRect, sfCenter)
+
+            If isFollowUp Then
+                Dim alertRect As New RectangleF(6, yPos + 32, pageWidth - 12, 24)
+                g.FillRectangle(noteBgBrush, 8, yPos + 32, pageWidth - 16, 22)
+                g.DrawRectangle(penNote, 8, yPos + 32, pageWidth - 16, 22)
+                g.DrawString("[!] طلب متابعة: أصناف مضافة حديثاً", fontMetaBold, Brushes.DarkRed, alertRect, sfCenter)
+            End If
+            yPos += headerH + 6
+
+            ' 2. نوع الطلب والطاولة داخل شارة بارزة وضخمة
+            Dim tableOrType As String = orderTypeDesc
+            If Not String.IsNullOrWhiteSpace(tableName) AndAlso Not orderTypeDesc.Contains(tableName) Then
+                tableOrType &= " [ " & tableName & " ]"
+            End If
+            Dim badgeH As Integer = 34
+            Dim typeBadgeRect As New Rectangle(4, yPos, pageWidth - 8, badgeH)
+            g.FillRectangle(badgeBgBrush, typeBadgeRect)
+            g.DrawRectangle(penBorder, typeBadgeRect)
+            g.DrawString(tableOrType, fontOrderType, Brushes.Black, New RectangleF(6, yPos, pageWidth - 12, badgeH), sfCenter)
+            yPos += badgeH + 6
+
+            ' 3. صندوق البيانات الوصفية (جدول من سطرين)
+            Dim metaBoxH As Integer = 38
+            Dim metaRect As New Rectangle(4, yPos, pageWidth - 8, metaBoxH)
+            g.DrawRectangle(penCard, metaRect)
+            Dim halfW As Integer = (pageWidth - 8) \ 2
+            g.DrawLine(penCard, 4 + halfW, yPos, 4 + halfW, yPos + metaBoxH)
+            g.DrawLine(penCard, 4, yPos + 19, 4 + (pageWidth - 8), yPos + 19)
+
+            ' السطر الأول: رقم الطلب (يمين) | التاريخ (يسار)
+            g.DrawString("طلب #: " & orderNumber, fontMetaBold, Brushes.Black, New RectangleF(4 + halfW + 4, yPos + 1, halfW - 8, 18), sfRight)
+            g.DrawString(DateTime.Now.ToString("yyyy/MM/dd"), fontMeta, Brushes.Black, New RectangleF(6, yPos + 1, halfW - 8, 18), sfCenter)
+
+            ' السطر الثاني: الويتر/الكاشير (يمين) | الوقت (يسار)
+            Dim waiterStr As String = If(Not String.IsNullOrWhiteSpace(staffName), "الويتر: " & staffName, "كاشير")
+            g.DrawString(waiterStr, fontMeta, Brushes.Black, New RectangleF(4 + halfW + 4, yPos + 19, halfW - 8, 18), sfRight)
+            g.DrawString(DateTime.Now.ToString("hh:mm tt"), fontMetaBold, Brushes.Black, New RectangleF(6, yPos + 19, halfW - 8, 18), sfCenter)
+            yPos += metaBoxH + 8
+
+            ' 4. بطاقات الأصناف المستقلة (Item Cards)
+            Dim totalQty As Integer = 0
+            Dim cardW As Integer = pageWidth - 8
+            Dim qtyBadgeW As Integer = If(isSmallPaper, 40, 50)
+            Dim innerNameW As Integer = cardW - qtyBadgeW - 14
+
+            For Each det In items
+                totalQty += det.Quantity
+
+                ' اسم الصنف مع الحجم
+                Dim itemName As String = det.ProductName
+                If Not String.IsNullOrWhiteSpace(det.SizeName) AndAlso det.SizeName <> "عادي" Then
+                    itemName &= " (" & det.SizeName & ")"
+                End If
+
+                ' قياس ارتفاع اسم الصنف
+                Dim nameSize = g.MeasureString(itemName, fontItemName, innerNameW, sfItemWrap)
+                Dim nameH As Integer = Math.Max(24, CInt(Math.Ceiling(nameSize.Height)) + 2)
+
+                ' حساب ارتفاع البطاقة بالكامل
+                Dim hasAddons As Boolean = (Not String.IsNullOrWhiteSpace(det.AddonsText) AndAlso det.AddonsText <> "-")
+                Dim hasNotes As Boolean = Not String.IsNullOrWhiteSpace(det.Notes)
+
+                Dim addonH As Integer = 0
+                Dim addonText As String = ""
+                If hasAddons Then
+                    addonText = "[+] " & det.AddonsText
+                    Dim addonSize = g.MeasureString(addonText, fontAddon, cardW - 16, sfItemWrap)
+                    addonH = Math.Max(16, CInt(Math.Ceiling(addonSize.Height)) + 2)
+                End If
+
+                Dim noteH As Integer = 0
+                Dim noteText As String = ""
+                If hasNotes Then
+                    noteText = "[*] ملاحظة: " & det.Notes
+                    Dim noteSize = g.MeasureString(noteText, fontNotes, cardW - 24, sfItemWrap)
+                    noteH = Math.Max(20, CInt(Math.Ceiling(noteSize.Height)) + 6)
+                End If
+
+                Dim cardH As Integer = 8 + nameH
+                If hasAddons Then cardH += addonH + 4
+                If hasNotes Then cardH += noteH + 6
+                cardH += 6 ' هامش سفلي للبطاقة
+
+                ' رسم خلفية وحدود البطاقة
+                Dim cardRect As New Rectangle(4, yPos, cardW, cardH)
+                g.FillRectangle(cardBgBrush, cardRect)
+                g.DrawRectangle(penCard, cardRect)
+
+                ' رسم شارة الكمية في يسار البطاقة
+                Dim badgeBoxH As Integer = Math.Min(34, cardH - 12)
+                Dim badgeRect As New Rectangle(8, yPos + 6, qtyBadgeW, badgeBoxH)
+                g.FillRectangle(qtyBadgeBrush, badgeRect)
+                g.DrawRectangle(penBadge, badgeRect)
+                g.DrawString(det.Quantity.ToString() & "x", fontQty, Brushes.Black, New RectangleF(badgeRect.X, badgeRect.Y, badgeRect.Width, badgeRect.Height), sfCenter)
+
+                ' رسم اسم الصنف في يمين البطاقة
+                Dim nameX As Integer = 4 + qtyBadgeW + 8
+                g.DrawString(itemName, fontItemName, Brushes.Black, New RectangleF(nameX, yPos + 6, innerNameW, nameH), sfItemWrap)
+
+                Dim currentInnerY As Integer = yPos + 6 + nameH + 2
+
+                ' رسم الإضافات داخل البطاقة
+                If hasAddons Then
+                    g.DrawString(addonText, fontAddon, Brushes.DarkSlateGray, New RectangleF(8, currentInnerY, cardW - 16, addonH), sfItemWrap)
+                    currentInnerY += addonH + 4
+                End If
+
+                ' رسم الملاحظات داخل بوكس مميز بالبطاقة
+                If hasNotes Then
+                    Dim nBoxRect As New Rectangle(8, currentInnerY, cardW - 16, noteH)
+                    g.FillRectangle(noteBgBrush, nBoxRect)
+                    g.DrawRectangle(penNote, nBoxRect)
+                    g.DrawString(noteText, fontNotes, Brushes.DarkRed, New RectangleF(12, currentInnerY + 2, cardW - 24, noteH - 4), sfItemWrap)
+                    currentInnerY += noteH + 4
+                End If
+
+                yPos += cardH + 6 ' مسافة فاصلة بين كل كارت والتالي
+            Next
+
+            ' 5. بطاقة التلخيص والتذييل
+            Dim footerH As Integer = 46
+            Dim footerRect As New Rectangle(4, yPos, pageWidth - 8, footerH)
+            g.FillRectangle(headerBgBrush, footerRect)
+            g.DrawRectangle(penBorder, footerRect)
+
+            g.DrawString("إجمالي الكميات: " & totalQty.ToString() & " قطعة | الأصناف: " & items.Count.ToString(), fontFooter, Brushes.Black, New RectangleF(6, yPos + 4, pageWidth - 12, 18), sfCenter)
+            Dim footerEndText As String = If(isFollowUp, "« للتجهيز والمتابعة الفورية »", "« للتجهيز والتحضير الفوري »")
+            g.DrawString(footerEndText, fontMetaBold, Brushes.DarkSlateGray, New RectangleF(6, yPos + 24, pageWidth - 12, 18), sfCenter)
+            yPos += footerH + 16
+        End Using
     End Sub
 
     ' ═════════════════════════════════════════════════════════════════

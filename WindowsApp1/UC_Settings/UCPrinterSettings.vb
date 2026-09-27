@@ -87,6 +87,10 @@ Namespace UC_Settings
                 cmbBarcodeType.Visible = chkPrintBarcode.Checked
                 chkPrintPreview.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PrintPreview, False)
                 tglAutoPrint.Checked = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, True)
+                tglAutoPrintKitchen.Checked = SettingsManager.GetBoolSetting(SettingsKeys.AutoPrintKitchenTicket, True)
+                tglAutoPrintFollowUp.Checked = SettingsManager.GetBoolSetting(SettingsKeys.AutoPrintFollowUpTicket, True)
+                Dim kDesign = SettingsManager.GetSettingOrDefault(SettingsKeys.KitchenTicketDesign, "1")
+                cmbKitchenDesign.SelectedIndex = If(kDesign = "2", 1, 0)
                 tglOpenDrawer.Checked = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterOpenCashDrawer, SettingsKeys.OpenDrawerOnPayment, True)
                 txtCopies.Text = SettingsManager.GetIntSetting(SettingsKeys.PrinterCopiesCount, 1).ToString()
             Catch ex As Exception
@@ -131,6 +135,9 @@ Namespace UC_Settings
                 SettingsManager.SaveSetting(SettingsKeys.InvoiceBarcodeType, If(cmbBarcodeType.SelectedIndex = 1, "1D", "2D"))
                 SettingsManager.SaveSetting(SettingsKeys.PrintPreview, chkPrintPreview.Checked.ToString().ToLower())
                 SettingsManager.SaveSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, tglAutoPrint.Checked.ToString().ToLower())
+                SettingsManager.SaveSetting(SettingsKeys.AutoPrintKitchenTicket, tglAutoPrintKitchen.Checked.ToString().ToLower())
+                SettingsManager.SaveSetting(SettingsKeys.AutoPrintFollowUpTicket, tglAutoPrintFollowUp.Checked.ToString().ToLower())
+                SettingsManager.SaveSetting(SettingsKeys.KitchenTicketDesign, If(cmbKitchenDesign.SelectedIndex = 1, "2", "1"))
                 SettingsManager.SaveSettingDual(SettingsKeys.PrinterOpenCashDrawer, SettingsKeys.OpenDrawerOnPayment, tglOpenDrawer.Checked.ToString().ToLower())
 
                 Dim copies As Integer
@@ -173,10 +180,13 @@ Namespace UC_Settings
             End If
 
             Try
+                ' حفظ التصميم المختار مؤقتاً لتطبيقه في التجربة
+                SettingsManager.SaveSetting(SettingsKeys.KitchenTicketDesign, If(cmbKitchenDesign.SelectedIndex = 1, "2", "1"))
+
                 Dim testItems As New List(Of InvoiceDetailModel) From {
-                    New InvoiceDetailModel With {.ProductName = "برجر كلاسيك دوبل", .SizeName = "كبير", .Quantity = 2, .AddonsText = "جبنة شيدر إضافية", .Notes = "بدون بصل"},
-                    New InvoiceDetailModel With {.ProductName = "بيتزا رانش دجاج", .SizeName = "وسط", .Quantity = 1, .Notes = "تسوية مقرمشة"},
-                    New InvoiceDetailModel With {.ProductName = "بطاطس محمرة كرسبي", .Quantity = 2}
+                    New InvoiceDetailModel With {.ProductName = "برجر كلاسيك دوبل بالجبنة وصوص المشروم الخاص", .SizeName = "كبير عائلي", .Quantity = 2, .AddonsText = "جبنة شيدر إضافية + صوص باربيكيو", .Notes = "بدون بصل - تسوية زيادة على الجريل"},
+                    New InvoiceDetailModel With {.ProductName = "بيتزا رانش دجاج مقرمشة مع الخضار الطازج", .SizeName = "وسط", .Quantity = 1, .Notes = "تسوية كرسبي مقرمشة مع تقطيع 8 قطع"},
+                    New InvoiceDetailModel With {.ProductName = "بطاطس محمرة فارم فريتس متبلة", .Quantity = 3, .AddonsText = "بهارات حارة"}
                 }
 
                 RestaurantPrintManager.PrintKitchenTicket(
@@ -185,7 +195,7 @@ Namespace UC_Settings
                     tableName:="طاولة 5",
                     staffName:="كاشير تجريبي",
                     items:=testItems,
-                    ticketTitle:="بون اختبار طابعة المطبخ",
+                    ticketTitle:="طلب تجهيز المطبخ (تجريبي)",
                     customPrinterName:=kitchenPrn,
                     forcePreview:=chkPrintPreview.Checked
                 )

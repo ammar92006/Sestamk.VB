@@ -1,78 +1,245 @@
+Imports System.Diagnostics
+Imports System.Drawing
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
+
 Public Class FormActivation
-    Dim x, y As Integer
-    Dim newpoint As New Point
-    Private _hwid As String
 
-    Protected Overrides Sub ApplyCustomTheme()
-        MyBase.ApplyCustomTheme()
-        Try
-            Dim palette = ThemeManager.Instance.Palette
-            If palette Is Nothing Then Return
-
-            If ThemeManager.Instance.IsDark Then
-                Me.BackColor = Color.FromArgb(20, 24, 33)
-                panelHeader.BackColor = Color.FromArgb(26, 31, 43)
-                Guna2Panel1.BackColor = Color.FromArgb(26, 31, 43)
-                Label4.ForeColor = Color.FromArgb(243, 244, 246)
-                lblHWID.ForeColor = Color.FromArgb(56, 189, 248)
-                LabelDeveloper.ForeColor = Color.FromArgb(156, 163, 175)
-            Else
-                Me.BackColor = Color.FromArgb(243, 244, 246)
-                panelHeader.BackColor = Color.White
-                Guna2Panel1.BackColor = Color.White
-                Label4.ForeColor = Color.FromArgb(17, 24, 39)
-                lblHWID.ForeColor = Color.FromArgb(37, 99, 235)
-                LabelDeveloper.ForeColor = Color.FromArgb(107, 114, 128)
-            End If
-        Catch ex As Exception
-        End Try
-    End Sub
+    Private _hwid As String = ""
 
     Private Sub FormActivation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
-            ApplyCustomTheme()
-
-            ' Get Hardware ID
+            ' 1. قراءة بصمة الجهاز الفريدة (HWID)
             _hwid = HardwareFingerprint.GetCurrent()
             lblHWID.Text = _hwid
 
-            ' Generate QR Code using native QRCodeHelper (ZXing)
+            ' 2. توليد رمز الاستجابة السريعة (QR Code) ليسهل مسحه بالكاميرا
             picQRCode.Image = QRCodeHelper.GenerateQRCode(_hwid, 200, 200)
+
+            ' 3. فحص الكاش المحلي في حال وجود سيريال محفوظ مسبقاً
+            Dim cache = LicenseCache.Load()
+            If cache IsNot Nothing Then
+                Dim savedSerial = Convert.ToString(cache("saved_serial"))
+                If Not String.IsNullOrWhiteSpace(savedSerial) Then
+                    txtLicense.Text = savedSerial.Trim().ToUpperInvariant()
+                End If
+
+                Dim status = Convert.ToString(cache("status")).ToLowerInvariant()
+                Dim expiresAtStr = Convert.ToString(cache("expires_at"))
+                Dim expiresAt As DateTime
+                Dim isExpired = (DateTime.TryParse(expiresAtStr, expiresAt) AndAlso expiresAt.Date < DateTime.Today)
+
+                If (status = "active" OrElse status = "grace_period") AndAlso Not isExpired Then
+                    UpdateStatusBadge("مفعل (نشط)", isSuccess:=True)
+                    lblStatusMessage.Text = "الترخيص مفعل حالياً حتى تاريخ: " & expiresAt.ToString("yyyy-MM-dd")
+                    lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+                ElseIf isExpired Then
+                    UpdateStatusBadge("منتهي الصلاحية", isSuccess:=False, isWarning:=True)
+                    lblStatusMessage.Text = "⚠️ انتهت صلاحية هذا الترخيص في: " & expiresAt.ToString("yyyy-MM-dd") & " - يرجى التجديد"
+                    lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+                Else
+                    UpdateStatusBadge("يلزم التفعيل", isSuccess:=False)
+                End If
+            Else
+                UpdateStatusBadge("يلزم التفعيل", isSuccess:=False)
+            End If
+
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ في توليد بصمة الجهاز: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("حدث خطأ في تحميل بيانات بصمة الجهاز: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
+    ''' <summary>
+    ''' تفعيل البرنامج باستخدام مفتاح الترخيص المدخل
+    ''' </summary>
     Private Async Sub btn_Staff_Click(sender As Object, e As EventArgs) Handles btn_Staff.Click
+        Dim serial = txtLicense.Text.Trim()
+        If String.IsNullOrWhiteSpace(serial) Then
+            lblStatusMessage.Text = "⚠️ يرجى إدخال أو لصق كود التفعيل أولاً."
+            lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+            txtLicense.Focus()
+            Return
+        End If
+
         btn_Staff.Enabled = False
+        btnCheckOnline.Enabled = False
+        btnPaste.Enabled = False
         progressActivation.Visible = True
+        lblStatusMessage.Text = "جارٍ الاتصال بالسيرفر والتحقق من كود التفعيل..."
+        lblStatusMessage.ForeColor = Color.FromArgb(147, 197, 253)
+
         Try
-            Dim result = Await LicenseBootstrapper.ActivateAsync(txtLicense.Text)
+            Dim result = Await LicenseBootstrapper.ActivateAsync(serial)
             If result.IsValid Then
-                Notify.Toast(result.Message, Notify.ToastType.Success)
+                UpdateStatusBadge("تم التفعيل", isSuccess:=True)
+                lblStatusMessage.Text = "✅ تم تفعيل البرنامج بنجاح! جاري الدخول للنظام..."
+                lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+
+                Try
+                    Notify.Toast(result.Message, Notify.ToastType.Success)
+                Catch
+                End Try
+
+                Await Task.Delay(800)
                 DialogResult = DialogResult.OK
                 Close()
             Else
-                MessageBox.Show(result.Message, "فشل التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Dim msg = If(String.IsNullOrWhiteSpace(result.Message), "مفتاح التفعيل غير صالح.", result.Message)
+                lblStatusMessage.Text = "❌ " & msg
+                lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+                MessageBox.Show(msg, "فشل التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
+        Catch ex As Exception
+            lblStatusMessage.Text = "❌ خطأ في الاتصال: " & ex.Message
+            lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+            MessageBox.Show("تعذر إتمام عملية التفعيل: " & ex.Message, "خطأ تفعيل", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
+            btn_Staff.Enabled = True
+            btnCheckOnline.Enabled = True
+            btnPaste.Enabled = True
+            progressActivation.Visible = False
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' فحص مباشر لحالة الترخيص عبر السيرفر دون كتابة يدوي
+    ''' </summary>
+    Private Async Sub btnCheckOnline_Click(sender As Object, e As EventArgs) Handles btnCheckOnline.Click
+        btnCheckOnline.Enabled = False
+        btn_Staff.Enabled = False
+        progressActivation.Visible = True
+        lblStatusMessage.Text = "جارٍ فحص حالة التفعيل المباشر من خادم التراخيص..."
+        lblStatusMessage.ForeColor = Color.FromArgb(147, 197, 253)
+
+        Try
+            Dim serialToCheck = txtLicense.Text.Trim()
+            Dim cache = LicenseCache.Load()
+            If String.IsNullOrWhiteSpace(serialToCheck) AndAlso cache IsNot Nothing Then
+                serialToCheck = Convert.ToString(cache("saved_serial"))
+            End If
+
+            If Not String.IsNullOrWhiteSpace(serialToCheck) Then
+                Dim actResult = Await LicenseBootstrapper.ActivateAsync(serialToCheck)
+                If actResult.IsValid Then
+                    UpdateStatusBadge("مفعل أونلاين", isSuccess:=True)
+                    lblStatusMessage.Text = "✅ الترخيص ساري ومسجل بالسيرفر بنجاح!"
+                    lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+
+                    Try
+                        Notify.Toast("تم التحقق من الترخيص وتفعيله بنجاح ✅", Notify.ToastType.Success)
+                    Catch
+                    End Try
+
+                    Await Task.Delay(800)
+                    DialogResult = DialogResult.OK
+                    Close()
+                    Return
+                End If
+            End If
+
+            Dim checkResult = Await LicenseBootstrapper.CheckAsync(forceOnlineCheck:=True)
+            If checkResult.IsValid Then
+                UpdateStatusBadge("مفعل أونلاين", isSuccess:=True)
+                lblStatusMessage.Text = "✅ تم تأكيد تفعيل البرنامج من السيرفر!"
+                lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+
+                Try
+                    Notify.Toast("البرنامج مفعل ومسجل بالسيرفر ✅", Notify.ToastType.Success)
+                Catch
+                End Try
+
+                Await Task.Delay(800)
+                DialogResult = DialogResult.OK
+                Close()
+            Else
+                lblStatusMessage.Text = "⚠️ لم يتم العثور على ترخيص نشط مسجل لهذا الجهاز على السيرفر."
+                lblStatusMessage.ForeColor = Color.FromArgb(251, 191, 36)
+                MessageBox.Show("لا يوجد ترخيص نشط مسجل لهذا الجهاز على السيرفر. يرجى إدخال كود التفعيل أو التواصل مع الدعم الفني.", "فحص السيرفر", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End If
+        Catch ex As Exception
+            lblStatusMessage.Text = "❌ تعذر الاتصال بالسيرفر: " & ex.Message
+            lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+        Finally
+            btnCheckOnline.Enabled = True
             btn_Staff.Enabled = True
             progressActivation.Visible = False
         End Try
     End Sub
 
-    Private Sub btnCopyHwid_Click(sender As Object, e As EventArgs) Handles btnCopyHwid.Click
-        If Not String.IsNullOrEmpty(_hwid) Then
-            Clipboard.SetText(_hwid)
-            Notify.Toast("تم نسخ المعرف بنجاح ✅", Notify.ToastType.Success)
+    Private Sub UpdateStatusBadge(badgeText As String, isSuccess As Boolean, Optional isWarning As Boolean = False)
+        lblStatusBadge.Text = badgeText
+        If isSuccess Then
+            lblStatusBadge.FillColor = Color.FromArgb(6, 78, 59)
+            lblStatusBadge.ForeColor = Color.FromArgb(52, 211, 153)
+        ElseIf isWarning Then
+            lblStatusBadge.FillColor = Color.FromArgb(69, 58, 26)
+            lblStatusBadge.ForeColor = Color.FromArgb(251, 191, 36)
+        Else
+            lblStatusBadge.FillColor = Color.FromArgb(69, 26, 26)
+            lblStatusBadge.ForeColor = Color.FromArgb(248, 113, 113)
         End If
+        lblStatusBadge.HoverState.FillColor = lblStatusBadge.FillColor
+        lblStatusBadge.HoverState.ForeColor = lblStatusBadge.ForeColor
     End Sub
 
+    ''' <summary>
+    ''' نسخ بصمة الجهاز للحافظة مع إشعار وتغيير نص الزر مؤقتاً
+    ''' </summary>
+    Private Async Sub btnCopyHwid_Click(sender As Object, e As EventArgs) Handles btnCopyHwid.Click
+        Try
+            If Not String.IsNullOrEmpty(_hwid) Then
+                Clipboard.SetText(_hwid)
+                Dim origText = btnCopyHwid.Text
+                btnCopyHwid.Text = "✓ تم النسخ بنجاح!"
+                btnCopyHwid.FillColor = Color.FromArgb(16, 185, 129)
+
+                Try
+                    Notify.Toast("تم نسخ معرف الجهاز للحافظة بنجاح ✅", Notify.ToastType.Success)
+                Catch
+                End Try
+
+                Await Task.Delay(2000)
+                btnCopyHwid.Text = origText
+                btnCopyHwid.FillColor = Color.FromArgb(51, 65, 85)
+            End If
+        Catch ex As Exception
+            MessageBox.Show("تعذر نسخ المعرف: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' لصق كود التفعيل من الحافظة مباشرة
+    ''' </summary>
+    Private Sub btnPaste_Click(sender As Object, e As EventArgs) Handles btnPaste.Click
+        Try
+            If Clipboard.ContainsText() Then
+                Dim clipText = Clipboard.GetText().Trim().ToUpperInvariant()
+                If Not String.IsNullOrWhiteSpace(clipText) Then
+                    txtLicense.Text = clipText
+                    lblStatusMessage.Text = "تم لصق كود التفعيل. اضغط على زر 'تأكيد وتفعيل' للمتابعة."
+                    lblStatusMessage.ForeColor = Color.FromArgb(56, 189, 248)
+                End If
+            Else
+                lblStatusMessage.Text = "⚠️ الحافظة لا تحتوي على نص للصقه."
+                lblStatusMessage.ForeColor = Color.FromArgb(251, 191, 36)
+            End If
+        Catch ex As Exception
+            MessageBox.Show("تعذر اللصق: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' فتح واتساب مباشرة مع رسالة مجهزة مسبقاً ببصمة الجهاز
+    ''' </summary>
     Private Sub btnSupport_Click(sender As Object, e As EventArgs) Handles btnSupport.Click
         Try
-            Process.Start(New ProcessStartInfo("https://wa.me/201281637066") With {.UseShellExecute = True})
+            Dim message = "مرحباً، أود تفعيل ترخيص برنامج سستمك لإدارة المطاعم (Sestamk POS)" & vbCrLf &
+                          "معرّف بصمة الجهاز (HWID):" & vbCrLf &
+                          _hwid
+            Dim url = "https://wa.me/201281637066?text=" & Uri.EscapeDataString(message)
+            Process.Start(New ProcessStartInfo(url) With {.UseShellExecute = True})
         Catch ex As Exception
-            MessageBox.Show("تعذر فتح رابط الدعم الفني", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("تعذر فتح رابط الدعم الفني: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -81,25 +248,8 @@ Public Class FormActivation
         Close()
     End Sub
 
-    Private Sub btn_max_Click(sender As Object, e As EventArgs) Handles btn_max.Click
-        WindowState = If(WindowState = FormWindowState.Maximized, FormWindowState.Normal, FormWindowState.Maximized)
-    End Sub
-
     Private Sub btn_min_Click(sender As Object, e As EventArgs) Handles btn_min.Click
         WindowState = FormWindowState.Minimized
     End Sub
 
-    Private Sub panelHeader_MouseMove(sender As Object, e As MouseEventArgs) Handles panelHeader.MouseMove
-        If e.Button = MouseButtons.Left Then
-            newpoint = Control.MousePosition
-            newpoint.X -= x
-            newpoint.Y -= y
-            Location = newpoint
-        End If
-    End Sub
-
-    Private Sub panelHeader_MouseDown(sender As Object, e As MouseEventArgs) Handles panelHeader.MouseDown
-        x = Control.MousePosition.X - Location.X
-        y = Control.MousePosition.Y - Location.Y
-    End Sub
 End Class

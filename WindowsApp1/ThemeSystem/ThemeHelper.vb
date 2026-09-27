@@ -22,7 +22,7 @@ Public NotInheritable Class ThemeHelper
             DirectCast(frm, FrmKitchenDisplay).ApplyTheme()
             Return
         End If
-        If TypeOf frm Is SplashScreen Then
+        If TypeOf frm Is SplashScreen OrElse TypeOf frm Is FormActivation OrElse TypeOf frm Is FormUpdateNotifier Then
             Return
         End If
 

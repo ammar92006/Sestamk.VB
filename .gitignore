@@ -39,4 +39,5 @@ WindowsApp1/CSharp_MainForm/
 *.exe
 !WindowsApp1/chromedriver.exe
 !WindowsApp1/tools/Sestamk.VB.Updater.exe
+!WindowsApp1/tools/update.exe
 

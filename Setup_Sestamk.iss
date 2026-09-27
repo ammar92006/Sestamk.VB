@@ -6,7 +6,7 @@
 ; ==============================================================================
 
 #define MyAppName "Sestamk POS"
-#define MyAppVersion "1.1.0"
+#define MyAppVersion "1.2.0"
 #define MyAppPublisher "Sestamk Solutions"
 #define MyAppURL "https://sestamk.com"
 #define MyAppExeName "Sestamk.exe"
@@ -63,6 +63,12 @@ Name: "{commonappdata}\Sestamk\Backups"; Permissions: users-modify
 [Files]
 ; 1. الملفات الأساسية للبرنامج (exe + جميع المكتبات المشغلة) مع منح صلاحية التعديل
 Source: "{#SourceBin}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: users-modify; Excludes: "*.pdb,*.xml,*.vshost.*,*.manifest,*.application,Backups\*,logs\*,app.publish\*"
+
+; 1.1 أداة التحديث المباشر التلقائي (update.exe و Sestamk.VB.Updater.exe) في مجلد البرنامج الرئيسي ومجلد tools
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "update.exe"; Flags: ignoreversion; Permissions: users-modify
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion; Permissions: users-modify
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "update.exe"; Flags: ignoreversion; Permissions: users-modify
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion; Permissions: users-modify
 
 ; 2. حزمة محرك LocalDB للتثبيت المؤقت
 Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall skipifsourcedoesntexist

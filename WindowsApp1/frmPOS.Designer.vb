@@ -26,10 +26,15 @@ Partial Class frmPOS
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPOS))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblDateTime = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
@@ -63,22 +68,14 @@ Partial Class frmPOS
         Me.Guna2Panel6 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel5 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel3 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnclear = New Guna.UI2.WinForms.Guna2Button()
-        Me.Guna2Panel21 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnSelectCustomer = New Guna.UI2.WinForms.Guna2Button()
-        Me.Guna2Panel22 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.txtCustomer = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.btnPendingInvoices = New Guna.UI2.WinForms.Guna2Button()
-        Me.btntables = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnDeleteRow = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnHoldInvoice = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnPay = New Guna.UI2.WinForms.Guna2Button()
-        Me.Guna2Panel20 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.Guna2Panel24 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.Guna2Panel26 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.Label25 = New System.Windows.Forms.Label()
-        Me.lblGrandTotal = New System.Windows.Forms.Label()
+        Me.Guna2Panel10 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.dgvInvoice = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.Guna2Panel11 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnDelivery = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnDineIn = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnTakeaway = New Guna.UI2.WinForms.Guna2Button()
+        Me.Guna2Panel12 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblOrderTypeStatus = New System.Windows.Forms.Label()
         Me.Guna2Panel13 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel15 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel19 = New Guna.UI2.WinForms.Guna2Panel()
@@ -94,14 +91,29 @@ Partial Class frmPOS
         Me.Guna2Panel16 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.lblSubTotal = New System.Windows.Forms.Label()
-        Me.Guna2Panel11 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnDelivery = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnDineIn = New Guna.UI2.WinForms.Guna2Button()
-        Me.btnTakeaway = New Guna.UI2.WinForms.Guna2Button()
-        Me.Guna2Panel12 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.lblOrderTypeStatus = New System.Windows.Forms.Label()
-        Me.Guna2Panel10 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.dgvInvoice = New Guna.UI2.WinForms.Guna2DataGridView()
+        Me.Guna2Panel20 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.Guna2Panel24 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.Guna2Panel26 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.lblGrandTotal = New System.Windows.Forms.Label()
+        Me.Guna2Panel21 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnSelectCustomer = New Guna.UI2.WinForms.Guna2Button()
+        Me.Guna2Panel22 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.txtCustomer = New Guna.UI2.WinForms.Guna2TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.Guna2Panel9 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblInvoiceNumber = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Guna2Panel23 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnclear = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnPay = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnHoldInvoice = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnPendingInvoices = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnDeleteRow = New Guna.UI2.WinForms.Guna2Button()
+        Me.btntables = New Guna.UI2.WinForms.Guna2Button()
+        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.colIndex = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colProductName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colSize = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -111,24 +123,16 @@ Partial Class frmPOS
         Me.colTotalPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colNotes = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Guna2Panel9 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.lblInvoiceNumber = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
-        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Guna2Panel23 = New Guna.UI2.WinForms.Guna2Panel()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
         Me.Guna2Panel4.SuspendLayout()
         Me.pnlCategoryGridToolbar.SuspendLayout()
         Me.Guna2Panel3.SuspendLayout()
-        Me.Guna2Panel21.SuspendLayout()
-        Me.Guna2Panel22.SuspendLayout()
-        Me.Guna2Panel20.SuspendLayout()
-        Me.Guna2Panel24.SuspendLayout()
-        Me.Guna2Panel26.SuspendLayout()
+        Me.Guna2Panel10.SuspendLayout()
+        CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Guna2Panel11.SuspendLayout()
+        Me.Guna2Panel12.SuspendLayout()
         Me.Guna2Panel13.SuspendLayout()
         Me.Guna2Panel15.SuspendLayout()
         Me.Guna2Panel19.SuspendLayout()
@@ -136,10 +140,11 @@ Partial Class frmPOS
         Me.Guna2Panel14.SuspendLayout()
         Me.Guna2Panel17.SuspendLayout()
         Me.Guna2Panel16.SuspendLayout()
-        Me.Guna2Panel11.SuspendLayout()
-        Me.Guna2Panel12.SuspendLayout()
-        Me.Guna2Panel10.SuspendLayout()
-        CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Guna2Panel20.SuspendLayout()
+        Me.Guna2Panel24.SuspendLayout()
+        Me.Guna2Panel26.SuspendLayout()
+        Me.Guna2Panel21.SuspendLayout()
+        Me.Guna2Panel22.SuspendLayout()
         Me.Guna2Panel9.SuspendLayout()
         Me.Guna2Panel23.SuspendLayout()
         Me.SuspendLayout()
@@ -550,246 +555,152 @@ Partial Class frmPOS
         Me.Guna2Panel3.Size = New System.Drawing.Size(600, 830)
         Me.Guna2Panel3.TabIndex = 43
         '
-        'btnclear
+        'Guna2Panel10
         '
-        Me.btnclear.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnclear.BorderRadius = 8
-        Me.btnclear.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnclear.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnclear.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnclear.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnclear.FillColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
-        Me.btnclear.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btnclear.ForeColor = System.Drawing.Color.White
-        Me.btnclear.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnclear.Location = New System.Drawing.Point(5, 67)
-        Me.btnclear.Name = "btnclear"
-        Me.btnclear.Size = New System.Drawing.Size(138, 44)
-        Me.btnclear.TabIndex = 13
-        Me.btnclear.Text = "تفريغ الكل"
+        Me.Guna2Panel10.BackColor = System.Drawing.SystemColors.ControlLightLight
+        Me.Guna2Panel10.Controls.Add(Me.dgvInvoice)
+        Me.Guna2Panel10.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Guna2Panel10.Location = New System.Drawing.Point(0, 50)
+        Me.Guna2Panel10.Name = "Guna2Panel10"
+        Me.Guna2Panel10.Size = New System.Drawing.Size(600, 372)
+        Me.Guna2Panel10.TabIndex = 3
         '
-        'Guna2Panel21
+        'dgvInvoice
         '
-        Me.Guna2Panel21.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-        Me.Guna2Panel21.Controls.Add(Me.btnSelectCustomer)
-        Me.Guna2Panel21.Controls.Add(Me.Guna2Panel22)
-        Me.Guna2Panel21.Controls.Add(Me.Label6)
-        Me.Guna2Panel21.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Guna2Panel21.Location = New System.Drawing.Point(0, 640)
-        Me.Guna2Panel21.Name = "Guna2Panel21"
-        Me.Guna2Panel21.Size = New System.Drawing.Size(600, 50)
-        Me.Guna2Panel21.TabIndex = 12
+        Me.dgvInvoice.AllowUserToAddRows = False
+        Me.dgvInvoice.AllowUserToDeleteRows = False
+        Me.dgvInvoice.AllowUserToResizeRows = False
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.dgvInvoice.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvInvoice.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None
+        Me.dgvInvoice.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
+        Me.dgvInvoice.BackgroundColor = System.Drawing.Color.Silver
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvInvoice.ColumnHeadersHeight = 38
+        Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID})
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        DataGridViewCellStyle11.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvInvoice.DefaultCellStyle = DataGridViewCellStyle11
+        Me.dgvInvoice.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvInvoice.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.dgvInvoice.Location = New System.Drawing.Point(0, 0)
+        Me.dgvInvoice.MultiSelect = False
+        Me.dgvInvoice.Name = "dgvInvoice"
+        Me.dgvInvoice.ReadOnly = True
+        Me.dgvInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.dgvInvoice.RowHeadersVisible = False
+        Me.dgvInvoice.RowTemplate.Height = 36
+        Me.dgvInvoice.Size = New System.Drawing.Size(600, 372)
+        Me.dgvInvoice.TabIndex = 5611
+        Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
+        Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
+        Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+        Me.dgvInvoice.ThemeStyle.HeaderStyle.Height = 38
+        Me.dgvInvoice.ThemeStyle.ReadOnly = True
+        Me.dgvInvoice.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.dgvInvoice.ThemeStyle.RowsStyle.Height = 36
         '
-        'btnSelectCustomer
+        'Guna2Panel11
         '
-        Me.btnSelectCustomer.BorderRadius = 8
-        Me.btnSelectCustomer.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnSelectCustomer.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnSelectCustomer.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnSelectCustomer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnSelectCustomer.FillColor = System.Drawing.Color.LightSlateGray
-        Me.btnSelectCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btnSelectCustomer.ForeColor = System.Drawing.Color.White
-        Me.btnSelectCustomer.Location = New System.Drawing.Point(15, 6)
-        Me.btnSelectCustomer.Name = "btnSelectCustomer"
-        Me.btnSelectCustomer.Size = New System.Drawing.Size(150, 38)
-        Me.btnSelectCustomer.TabIndex = 5594
-        Me.btnSelectCustomer.Text = "تحديد عميل"
+        Me.Guna2Panel11.Controls.Add(Me.btnDelivery)
+        Me.Guna2Panel11.Controls.Add(Me.btnDineIn)
+        Me.Guna2Panel11.Controls.Add(Me.btnTakeaway)
+        Me.Guna2Panel11.Controls.Add(Me.Guna2Panel12)
+        Me.Guna2Panel11.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel11.Location = New System.Drawing.Point(0, 422)
+        Me.Guna2Panel11.Name = "Guna2Panel11"
+        Me.Guna2Panel11.Size = New System.Drawing.Size(600, 100)
+        Me.Guna2Panel11.TabIndex = 4
         '
-        'Guna2Panel22
+        'btnDelivery
         '
-        Me.Guna2Panel22.Controls.Add(Me.txtCustomer)
-        Me.Guna2Panel22.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Guna2Panel22.Location = New System.Drawing.Point(175, 0)
-        Me.Guna2Panel22.Name = "Guna2Panel22"
-        Me.Guna2Panel22.Size = New System.Drawing.Size(325, 50)
-        Me.Guna2Panel22.TabIndex = 5593
+        Me.btnDelivery.BorderRadius = 10
+        Me.btnDelivery.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
+        Me.btnDelivery.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnDelivery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnDelivery.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnDelivery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnDelivery.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDelivery.ForeColor = System.Drawing.Color.White
+        Me.btnDelivery.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike
+        Me.btnDelivery.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnDelivery.Location = New System.Drawing.Point(10, 38)
+        Me.btnDelivery.Name = "btnDelivery"
+        Me.btnDelivery.Size = New System.Drawing.Size(186, 54)
+        Me.btnDelivery.TabIndex = 6
+        Me.btnDelivery.Text = "دليفري"
         '
-        'txtCustomer
+        'btnDineIn
         '
-        Me.txtCustomer.BorderColor = System.Drawing.Color.Silver
-        Me.txtCustomer.BorderRadius = 8
-        Me.txtCustomer.Cursor = System.Windows.Forms.Cursors.IBeam
-        Me.txtCustomer.DefaultText = ""
-        Me.txtCustomer.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
-        Me.txtCustomer.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
-        Me.txtCustomer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtCustomer.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
-        Me.txtCustomer.FillColor = System.Drawing.Color.Gray
-        Me.txtCustomer.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.txtCustomer.ForeColor = System.Drawing.Color.White
-        Me.txtCustomer.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.txtCustomer.Location = New System.Drawing.Point(8, 6)
-        Me.txtCustomer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
-        Me.txtCustomer.Name = "txtCustomer"
-        Me.txtCustomer.PlaceholderText = ""
-        Me.txtCustomer.SelectedText = ""
-        Me.txtCustomer.Size = New System.Drawing.Size(310, 38)
-        Me.txtCustomer.TabIndex = 0
-        Me.txtCustomer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        Me.btnDineIn.BorderRadius = 10
+        Me.btnDineIn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
+        Me.btnDineIn.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnDineIn.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnDineIn.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnDineIn.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnDineIn.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDineIn.ForeColor = System.Drawing.Color.White
+        Me.btnDineIn.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
+        Me.btnDineIn.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnDineIn.Location = New System.Drawing.Point(207, 38)
+        Me.btnDineIn.Name = "btnDineIn"
+        Me.btnDineIn.Size = New System.Drawing.Size(186, 54)
+        Me.btnDineIn.TabIndex = 5
+        Me.btnDineIn.Text = "صالة"
         '
-        'Label6
+        'btnTakeaway
         '
-        Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
-        Me.Label6.ForeColor = System.Drawing.Color.White
-        Me.Label6.Location = New System.Drawing.Point(500, 0)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(100, 50)
-        Me.Label6.TabIndex = 5592
-        Me.Label6.Text = "العميل :"
-        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.btnTakeaway.BorderRadius = 10
+        Me.btnTakeaway.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
+        Me.btnTakeaway.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnTakeaway.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnTakeaway.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnTakeaway.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnTakeaway.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnTakeaway.ForeColor = System.Drawing.Color.White
+        Me.btnTakeaway.Image = Global.WindowsApp1.My.Resources.Resources.take_away
+        Me.btnTakeaway.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnTakeaway.Location = New System.Drawing.Point(404, 38)
+        Me.btnTakeaway.Name = "btnTakeaway"
+        Me.btnTakeaway.Size = New System.Drawing.Size(186, 54)
+        Me.btnTakeaway.TabIndex = 4
+        Me.btnTakeaway.Text = "تيك اوي"
         '
-        'btnPendingInvoices
+        'Guna2Panel12
         '
-        Me.btnPendingInvoices.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPendingInvoices.BorderRadius = 8
-        Me.btnPendingInvoices.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnPendingInvoices.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnPendingInvoices.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnPendingInvoices.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnPendingInvoices.FillColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnPendingInvoices.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btnPendingInvoices.ForeColor = System.Drawing.Color.White
-        Me.btnPendingInvoices.Image = Global.WindowsApp1.My.Resources.Resources.pause
-        Me.btnPendingInvoices.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btnPendingInvoices.Location = New System.Drawing.Point(308, 67)
-        Me.btnPendingInvoices.Name = "btnPendingInvoices"
-        Me.btnPendingInvoices.Size = New System.Drawing.Size(138, 44)
-        Me.btnPendingInvoices.TabIndex = 11
-        Me.btnPendingInvoices.Text = "المعلقة [F7]"
+        Me.Guna2Panel12.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+        Me.Guna2Panel12.Controls.Add(Me.lblOrderTypeStatus)
+        Me.Guna2Panel12.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Guna2Panel12.Location = New System.Drawing.Point(0, 0)
+        Me.Guna2Panel12.Name = "Guna2Panel12"
+        Me.Guna2Panel12.Size = New System.Drawing.Size(600, 32)
+        Me.Guna2Panel12.TabIndex = 3
         '
-        'btntables
+        'lblOrderTypeStatus
         '
-        Me.btntables.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btntables.BorderRadius = 8
-        Me.btntables.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btntables.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btntables.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btntables.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btntables.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
-        Me.btntables.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btntables.ForeColor = System.Drawing.Color.White
-        Me.btntables.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
-        Me.btntables.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btntables.Location = New System.Drawing.Point(454, 67)
-        Me.btntables.Name = "btntables"
-        Me.btntables.Size = New System.Drawing.Size(138, 44)
-        Me.btntables.TabIndex = 10
-        Me.btntables.Text = "الطاولات"
-        '
-        'btnDeleteRow
-        '
-        Me.btnDeleteRow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnDeleteRow.BorderRadius = 8
-        Me.btnDeleteRow.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnDeleteRow.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnDeleteRow.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnDeleteRow.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnDeleteRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.btnDeleteRow.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btnDeleteRow.ForeColor = System.Drawing.Color.White
-        Me.btnDeleteRow.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
-        Me.btnDeleteRow.Location = New System.Drawing.Point(151, 67)
-        Me.btnDeleteRow.Name = "btnDeleteRow"
-        Me.btnDeleteRow.Size = New System.Drawing.Size(138, 44)
-        Me.btnDeleteRow.TabIndex = 9
-        Me.btnDeleteRow.Text = "حذف صنف"
-        '
-        'btnHoldInvoice
-        '
-        Me.btnHoldInvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnHoldInvoice.BorderRadius = 10
-        Me.btnHoldInvoice.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnHoldInvoice.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnHoldInvoice.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnHoldInvoice.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnHoldInvoice.FillColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(158, Byte), Integer), CType(CType(11, Byte), Integer))
-        Me.btnHoldInvoice.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.btnHoldInvoice.ForeColor = System.Drawing.Color.White
-        Me.btnHoldInvoice.Image = Global.WindowsApp1.My.Resources.Resources.hold
-        Me.btnHoldInvoice.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnHoldInvoice.Location = New System.Drawing.Point(5, 11)
-        Me.btnHoldInvoice.Name = "btnHoldInvoice"
-        Me.btnHoldInvoice.Size = New System.Drawing.Size(180, 50)
-        Me.btnHoldInvoice.TabIndex = 8
-        Me.btnHoldInvoice.Text = "تعليق [F5]"
-        '
-        'btnPay
-        '
-        Me.btnPay.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPay.BorderRadius = 10
-        Me.btnPay.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnPay.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnPay.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnPay.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnPay.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
-        Me.btnPay.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
-        Me.btnPay.ForeColor = System.Drawing.Color.White
-        Me.btnPay.Image = Global.WindowsApp1.My.Resources.Resources.payment
-        Me.btnPay.ImageSize = New System.Drawing.Size(26, 26)
-        Me.btnPay.Location = New System.Drawing.Point(206, 11)
-        Me.btnPay.Name = "btnPay"
-        Me.btnPay.Size = New System.Drawing.Size(386, 50)
-        Me.btnPay.TabIndex = 7
-        Me.btnPay.Text = "دفع الحساب  [F12]"
-        '
-        'Guna2Panel20
-        '
-        Me.Guna2Panel20.Controls.Add(Me.Guna2Panel24)
-        Me.Guna2Panel20.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Guna2Panel20.Location = New System.Drawing.Point(0, 588)
-        Me.Guna2Panel20.Name = "Guna2Panel20"
-        Me.Guna2Panel20.Size = New System.Drawing.Size(600, 52)
-        Me.Guna2Panel20.TabIndex = 6
-        '
-        'Guna2Panel24
-        '
-        Me.Guna2Panel24.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
-        Me.Guna2Panel24.Controls.Add(Me.Guna2Panel26)
-        Me.Guna2Panel24.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Guna2Panel24.Location = New System.Drawing.Point(0, 0)
-        Me.Guna2Panel24.Name = "Guna2Panel24"
-        Me.Guna2Panel24.Size = New System.Drawing.Size(600, 52)
-        Me.Guna2Panel24.TabIndex = 1
-        '
-        'Guna2Panel26
-        '
-        Me.Guna2Panel26.Controls.Add(Me.Label25)
-        Me.Guna2Panel26.Controls.Add(Me.lblGrandTotal)
-        Me.Guna2Panel26.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Guna2Panel26.Location = New System.Drawing.Point(0, 0)
-        Me.Guna2Panel26.Name = "Guna2Panel26"
-        Me.Guna2Panel26.Size = New System.Drawing.Size(600, 52)
-        Me.Guna2Panel26.TabIndex = 6
-        '
-        'Label25
-        '
-        Me.Label25.BackColor = System.Drawing.Color.Transparent
-        Me.Label25.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label25.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.Label25.ForeColor = System.Drawing.Color.White
-        Me.Label25.Location = New System.Drawing.Point(350, 0)
-        Me.Label25.Name = "Label25"
-        Me.Label25.Size = New System.Drawing.Size(250, 52)
-        Me.Label25.TabIndex = 5591
-        Me.Label25.Text = "الإجمالي النهائي"
-        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'lblGrandTotal
-        '
-        Me.lblGrandTotal.BackColor = System.Drawing.Color.Transparent
-        Me.lblGrandTotal.Dock = System.Windows.Forms.DockStyle.Left
-        Me.lblGrandTotal.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
-        Me.lblGrandTotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
-        Me.lblGrandTotal.Location = New System.Drawing.Point(0, 0)
-        Me.lblGrandTotal.Name = "lblGrandTotal"
-        Me.lblGrandTotal.Size = New System.Drawing.Size(350, 52)
-        Me.lblGrandTotal.TabIndex = 5592
-        Me.lblGrandTotal.Text = "0.00 ج.م"
-        Me.lblGrandTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblOrderTypeStatus.BackColor = System.Drawing.Color.Transparent
+        Me.lblOrderTypeStatus.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblOrderTypeStatus.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblOrderTypeStatus.ForeColor = System.Drawing.Color.White
+        Me.lblOrderTypeStatus.Location = New System.Drawing.Point(0, 0)
+        Me.lblOrderTypeStatus.Name = "lblOrderTypeStatus"
+        Me.lblOrderTypeStatus.Size = New System.Drawing.Size(600, 32)
+        Me.lblOrderTypeStatus.TabIndex = 5588
+        Me.lblOrderTypeStatus.Text = "  نوع الطلب"
+        Me.lblOrderTypeStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Guna2Panel13
         '
@@ -967,236 +878,134 @@ Partial Class frmPOS
         Me.lblSubTotal.Text = "0.00 ج.م"
         Me.lblSubTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Guna2Panel11
+        'Guna2Panel20
         '
-        Me.Guna2Panel11.Controls.Add(Me.btnDelivery)
-        Me.Guna2Panel11.Controls.Add(Me.btnDineIn)
-        Me.Guna2Panel11.Controls.Add(Me.btnTakeaway)
-        Me.Guna2Panel11.Controls.Add(Me.Guna2Panel12)
-        Me.Guna2Panel11.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Guna2Panel11.Location = New System.Drawing.Point(0, 422)
-        Me.Guna2Panel11.Name = "Guna2Panel11"
-        Me.Guna2Panel11.Size = New System.Drawing.Size(600, 100)
-        Me.Guna2Panel11.TabIndex = 4
+        Me.Guna2Panel20.Controls.Add(Me.Guna2Panel24)
+        Me.Guna2Panel20.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel20.Location = New System.Drawing.Point(0, 588)
+        Me.Guna2Panel20.Name = "Guna2Panel20"
+        Me.Guna2Panel20.Size = New System.Drawing.Size(600, 52)
+        Me.Guna2Panel20.TabIndex = 6
         '
-        'btnDelivery
+        'Guna2Panel24
         '
-        Me.btnDelivery.BorderRadius = 10
-        Me.btnDelivery.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
-        Me.btnDelivery.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnDelivery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnDelivery.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnDelivery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnDelivery.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnDelivery.ForeColor = System.Drawing.Color.White
-        Me.btnDelivery.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike
-        Me.btnDelivery.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnDelivery.Location = New System.Drawing.Point(10, 38)
-        Me.btnDelivery.Name = "btnDelivery"
-        Me.btnDelivery.Size = New System.Drawing.Size(186, 54)
-        Me.btnDelivery.TabIndex = 6
-        Me.btnDelivery.Text = "دليفري"
+        Me.Guna2Panel24.BackColor = System.Drawing.Color.FromArgb(CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(45, Byte), Integer))
+        Me.Guna2Panel24.Controls.Add(Me.Guna2Panel26)
+        Me.Guna2Panel24.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Guna2Panel24.Location = New System.Drawing.Point(0, 0)
+        Me.Guna2Panel24.Name = "Guna2Panel24"
+        Me.Guna2Panel24.Size = New System.Drawing.Size(600, 52)
+        Me.Guna2Panel24.TabIndex = 1
         '
-        'btnDineIn
+        'Guna2Panel26
         '
-        Me.btnDineIn.BorderRadius = 10
-        Me.btnDineIn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
-        Me.btnDineIn.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnDineIn.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnDineIn.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnDineIn.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnDineIn.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnDineIn.ForeColor = System.Drawing.Color.White
-        Me.btnDineIn.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
-        Me.btnDineIn.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnDineIn.Location = New System.Drawing.Point(207, 38)
-        Me.btnDineIn.Name = "btnDineIn"
-        Me.btnDineIn.Size = New System.Drawing.Size(186, 54)
-        Me.btnDineIn.TabIndex = 5
-        Me.btnDineIn.Text = "صالة"
+        Me.Guna2Panel26.Controls.Add(Me.Label25)
+        Me.Guna2Panel26.Controls.Add(Me.lblGrandTotal)
+        Me.Guna2Panel26.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Guna2Panel26.Location = New System.Drawing.Point(0, 0)
+        Me.Guna2Panel26.Name = "Guna2Panel26"
+        Me.Guna2Panel26.Size = New System.Drawing.Size(600, 52)
+        Me.Guna2Panel26.TabIndex = 6
         '
-        'btnTakeaway
+        'Label25
         '
-        Me.btnTakeaway.BorderRadius = 10
-        Me.btnTakeaway.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
-        Me.btnTakeaway.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btnTakeaway.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btnTakeaway.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btnTakeaway.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.btnTakeaway.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnTakeaway.ForeColor = System.Drawing.Color.White
-        Me.btnTakeaway.Image = Global.WindowsApp1.My.Resources.Resources.take_away
-        Me.btnTakeaway.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnTakeaway.Location = New System.Drawing.Point(404, 38)
-        Me.btnTakeaway.Name = "btnTakeaway"
-        Me.btnTakeaway.Size = New System.Drawing.Size(186, 54)
-        Me.btnTakeaway.TabIndex = 4
-        Me.btnTakeaway.Text = "تيك اوي"
+        Me.Label25.BackColor = System.Drawing.Color.Transparent
+        Me.Label25.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label25.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.Label25.ForeColor = System.Drawing.Color.White
+        Me.Label25.Location = New System.Drawing.Point(350, 0)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(250, 52)
+        Me.Label25.TabIndex = 5591
+        Me.Label25.Text = "الإجمالي النهائي"
+        Me.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Guna2Panel12
+        'lblGrandTotal
         '
-        Me.Guna2Panel12.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
-        Me.Guna2Panel12.Controls.Add(Me.lblOrderTypeStatus)
-        Me.Guna2Panel12.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Guna2Panel12.Location = New System.Drawing.Point(0, 0)
-        Me.Guna2Panel12.Name = "Guna2Panel12"
-        Me.Guna2Panel12.Size = New System.Drawing.Size(600, 32)
-        Me.Guna2Panel12.TabIndex = 3
+        Me.lblGrandTotal.BackColor = System.Drawing.Color.Transparent
+        Me.lblGrandTotal.Dock = System.Windows.Forms.DockStyle.Left
+        Me.lblGrandTotal.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
+        Me.lblGrandTotal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.lblGrandTotal.Location = New System.Drawing.Point(0, 0)
+        Me.lblGrandTotal.Name = "lblGrandTotal"
+        Me.lblGrandTotal.Size = New System.Drawing.Size(350, 52)
+        Me.lblGrandTotal.TabIndex = 5592
+        Me.lblGrandTotal.Text = "0.00 ج.م"
+        Me.lblGrandTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'lblOrderTypeStatus
+        'Guna2Panel21
         '
-        Me.lblOrderTypeStatus.BackColor = System.Drawing.Color.Transparent
-        Me.lblOrderTypeStatus.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblOrderTypeStatus.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.lblOrderTypeStatus.ForeColor = System.Drawing.Color.White
-        Me.lblOrderTypeStatus.Location = New System.Drawing.Point(0, 0)
-        Me.lblOrderTypeStatus.Name = "lblOrderTypeStatus"
-        Me.lblOrderTypeStatus.Size = New System.Drawing.Size(600, 32)
-        Me.lblOrderTypeStatus.TabIndex = 5588
-        Me.lblOrderTypeStatus.Text = "  نوع الطلب"
-        Me.lblOrderTypeStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.Guna2Panel21.BackColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer))
+        Me.Guna2Panel21.Controls.Add(Me.btnSelectCustomer)
+        Me.Guna2Panel21.Controls.Add(Me.Guna2Panel22)
+        Me.Guna2Panel21.Controls.Add(Me.Label6)
+        Me.Guna2Panel21.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Guna2Panel21.Location = New System.Drawing.Point(0, 640)
+        Me.Guna2Panel21.Name = "Guna2Panel21"
+        Me.Guna2Panel21.Size = New System.Drawing.Size(600, 50)
+        Me.Guna2Panel21.TabIndex = 12
         '
-        'Guna2Panel10
+        'btnSelectCustomer
         '
-        Me.Guna2Panel10.BackColor = System.Drawing.SystemColors.ControlLightLight
-        Me.Guna2Panel10.Controls.Add(Me.dgvInvoice)
-        Me.Guna2Panel10.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Guna2Panel10.Location = New System.Drawing.Point(0, 50)
-        Me.Guna2Panel10.Name = "Guna2Panel10"
-        Me.Guna2Panel10.Size = New System.Drawing.Size(600, 372)
-        Me.Guna2Panel10.TabIndex = 3
+        Me.btnSelectCustomer.BorderRadius = 8
+        Me.btnSelectCustomer.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnSelectCustomer.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnSelectCustomer.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnSelectCustomer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnSelectCustomer.FillColor = System.Drawing.Color.LightSlateGray
+        Me.btnSelectCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnSelectCustomer.ForeColor = System.Drawing.Color.White
+        Me.btnSelectCustomer.Location = New System.Drawing.Point(15, 6)
+        Me.btnSelectCustomer.Name = "btnSelectCustomer"
+        Me.btnSelectCustomer.Size = New System.Drawing.Size(150, 38)
+        Me.btnSelectCustomer.TabIndex = 5594
+        Me.btnSelectCustomer.Text = "تحديد عميل"
         '
-        'dgvInvoice
+        'Guna2Panel22
         '
-        Me.dgvInvoice.AllowUserToAddRows = False
-        Me.dgvInvoice.AllowUserToDeleteRows = False
-        Me.dgvInvoice.AllowUserToResizeRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
-        Me.dgvInvoice.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvInvoice.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.None
-        Me.dgvInvoice.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
-        Me.dgvInvoice.BackgroundColor = System.Drawing.Color.Silver
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(88, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvInvoice.ColumnHeadersHeight = 38
-        Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 9.5!)
-        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(69, Byte), Integer), CType(CType(94, Byte), Integer))
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvInvoice.DefaultCellStyle = DataGridViewCellStyle6
-        Me.dgvInvoice.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvInvoice.GridColor = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(229, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.dgvInvoice.Location = New System.Drawing.Point(0, 0)
-        Me.dgvInvoice.MultiSelect = False
-        Me.dgvInvoice.Name = "dgvInvoice"
-        Me.dgvInvoice.ReadOnly = True
-        Me.dgvInvoice.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.dgvInvoice.RowHeadersVisible = False
-        Me.dgvInvoice.RowTemplate.Height = 36
-        Me.dgvInvoice.Size = New System.Drawing.Size(600, 372)
-        Me.dgvInvoice.TabIndex = 5611
-        Me.dgvInvoice.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.White
-        Me.dgvInvoice.ThemeStyle.BackColor = System.Drawing.Color.Silver
-        Me.dgvInvoice.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.dgvInvoice.ThemeStyle.HeaderStyle.Height = 38
-        Me.dgvInvoice.ThemeStyle.ReadOnly = True
-        Me.dgvInvoice.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.5!)
-        Me.dgvInvoice.ThemeStyle.RowsStyle.Height = 36
+        Me.Guna2Panel22.Controls.Add(Me.txtCustomer)
+        Me.Guna2Panel22.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Guna2Panel22.Location = New System.Drawing.Point(175, 0)
+        Me.Guna2Panel22.Name = "Guna2Panel22"
+        Me.Guna2Panel22.Size = New System.Drawing.Size(325, 50)
+        Me.Guna2Panel22.TabIndex = 5593
         '
-        'colIndex
+        'txtCustomer
         '
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.colIndex.DefaultCellStyle = DataGridViewCellStyle3
-        Me.colIndex.HeaderText = "#"
-        Me.colIndex.Name = "colIndex"
-        Me.colIndex.ReadOnly = True
-        Me.colIndex.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colIndex.Visible = False
-        Me.colIndex.Width = 35
+        Me.txtCustomer.BorderColor = System.Drawing.Color.Silver
+        Me.txtCustomer.BorderRadius = 8
+        Me.txtCustomer.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtCustomer.DefaultText = ""
+        Me.txtCustomer.DisabledState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
+        Me.txtCustomer.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer), CType(CType(226, Byte), Integer))
+        Me.txtCustomer.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtCustomer.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(138, Byte), Integer))
+        Me.txtCustomer.FillColor = System.Drawing.Color.Gray
+        Me.txtCustomer.FocusedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtCustomer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.txtCustomer.ForeColor = System.Drawing.Color.White
+        Me.txtCustomer.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(94, Byte), Integer), CType(CType(148, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.txtCustomer.Location = New System.Drawing.Point(8, 6)
+        Me.txtCustomer.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.txtCustomer.Name = "txtCustomer"
+        Me.txtCustomer.PlaceholderText = ""
+        Me.txtCustomer.SelectedText = ""
+        Me.txtCustomer.Size = New System.Drawing.Size(310, 38)
+        Me.txtCustomer.TabIndex = 0
+        Me.txtCustomer.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
-        'colProductName
+        'Label6
         '
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colProductName.DefaultCellStyle = DataGridViewCellStyle4
-        Me.colProductName.HeaderText = "الصنف"
-        Me.colProductName.Name = "colProductName"
-        Me.colProductName.ReadOnly = True
-        Me.colProductName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colProductName.Width = 120
-        '
-        'colSize
-        '
-        Me.colSize.DefaultCellStyle = DataGridViewCellStyle3
-        Me.colSize.HeaderText = "الحجم"
-        Me.colSize.Name = "colSize"
-        Me.colSize.ReadOnly = True
-        Me.colSize.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colSize.Width = 75
-        '
-        'colAddons
-        '
-        Me.colAddons.DefaultCellStyle = DataGridViewCellStyle4
-        Me.colAddons.HeaderText = "الإضافات"
-        Me.colAddons.Name = "colAddons"
-        Me.colAddons.ReadOnly = True
-        Me.colAddons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colAddons.Width = 110
-        '
-        'colUnitPrice
-        '
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "N2"
-        Me.colUnitPrice.DefaultCellStyle = DataGridViewCellStyle5
-        Me.colUnitPrice.HeaderText = "السعر"
-        Me.colUnitPrice.Name = "colUnitPrice"
-        Me.colUnitPrice.ReadOnly = True
-        Me.colUnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colUnitPrice.Width = 75
-        '
-        'colQuantity
-        '
-        Me.colQuantity.DefaultCellStyle = DataGridViewCellStyle3
-        Me.colQuantity.HeaderText = "الكمية"
-        Me.colQuantity.Name = "colQuantity"
-        Me.colQuantity.ReadOnly = True
-        Me.colQuantity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colQuantity.Width = 65
-        '
-        'colTotalPrice
-        '
-        Me.colTotalPrice.DefaultCellStyle = DataGridViewCellStyle5
-        Me.colTotalPrice.HeaderText = "الإجمالي"
-        Me.colTotalPrice.Name = "colTotalPrice"
-        Me.colTotalPrice.ReadOnly = True
-        Me.colTotalPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colTotalPrice.Width = 85
-        '
-        'colNotes
-        '
-        Me.colNotes.DefaultCellStyle = DataGridViewCellStyle4
-        Me.colNotes.HeaderText = "ملاحظات المطبخ 📝"
-        Me.colNotes.Name = "colNotes"
-        Me.colNotes.ReadOnly = True
-        Me.colNotes.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.colNotes.Width = 135
-        '
-        'colProductID
-        '
-        Me.colProductID.HeaderText = "ProductID"
-        Me.colProductID.Name = "colProductID"
-        Me.colProductID.ReadOnly = True
-        Me.colProductID.Visible = False
+        Me.Label6.BackColor = System.Drawing.Color.Transparent
+        Me.Label6.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Label6.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.Label6.ForeColor = System.Drawing.Color.White
+        Me.Label6.Location = New System.Drawing.Point(500, 0)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(100, 50)
+        Me.Label6.TabIndex = 5592
+        Me.Label6.Text = "العميل :"
+        Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Guna2Panel9
         '
@@ -1246,17 +1055,6 @@ Partial Class frmPOS
         Me.Label1.Text = "الاصناف"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'Guna2BorderlessForm1
-        '
-        Me.Guna2BorderlessForm1.BorderRadius = 8
-        Me.Guna2BorderlessForm1.ContainerControl = Me
-        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
-        '
-        'Timer1
-        '
-        Me.Timer1.Interval = 1000
-        '
         'Guna2Panel23
         '
         Me.Guna2Panel23.Controls.Add(Me.btnclear)
@@ -1270,6 +1068,219 @@ Partial Class frmPOS
         Me.Guna2Panel23.Name = "Guna2Panel23"
         Me.Guna2Panel23.Size = New System.Drawing.Size(600, 140)
         Me.Guna2Panel23.TabIndex = 14
+        '
+        'btnclear
+        '
+        Me.btnclear.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnclear.BorderRadius = 8
+        Me.btnclear.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnclear.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnclear.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnclear.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnclear.FillColor = System.Drawing.Color.FromArgb(CType(CType(100, Byte), Integer), CType(CType(116, Byte), Integer), CType(CType(139, Byte), Integer))
+        Me.btnclear.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnclear.ForeColor = System.Drawing.Color.White
+        Me.btnclear.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
+        Me.btnclear.Location = New System.Drawing.Point(5, 67)
+        Me.btnclear.Name = "btnclear"
+        Me.btnclear.Size = New System.Drawing.Size(138, 44)
+        Me.btnclear.TabIndex = 13
+        Me.btnclear.Text = "تفريغ الكل"
+        '
+        'btnPay
+        '
+        Me.btnPay.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPay.BorderRadius = 10
+        Me.btnPay.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnPay.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnPay.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnPay.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnPay.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.btnPay.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPay.ForeColor = System.Drawing.Color.White
+        Me.btnPay.Image = Global.WindowsApp1.My.Resources.Resources.payment
+        Me.btnPay.ImageSize = New System.Drawing.Size(26, 26)
+        Me.btnPay.Location = New System.Drawing.Point(206, 11)
+        Me.btnPay.Name = "btnPay"
+        Me.btnPay.Size = New System.Drawing.Size(386, 50)
+        Me.btnPay.TabIndex = 7
+        Me.btnPay.Text = "دفع الحساب  [F12]"
+        '
+        'btnHoldInvoice
+        '
+        Me.btnHoldInvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnHoldInvoice.BorderRadius = 10
+        Me.btnHoldInvoice.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnHoldInvoice.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnHoldInvoice.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnHoldInvoice.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnHoldInvoice.FillColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(158, Byte), Integer), CType(CType(11, Byte), Integer))
+        Me.btnHoldInvoice.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.btnHoldInvoice.ForeColor = System.Drawing.Color.White
+        Me.btnHoldInvoice.Image = Global.WindowsApp1.My.Resources.Resources.hold
+        Me.btnHoldInvoice.ImageSize = New System.Drawing.Size(24, 24)
+        Me.btnHoldInvoice.Location = New System.Drawing.Point(5, 11)
+        Me.btnHoldInvoice.Name = "btnHoldInvoice"
+        Me.btnHoldInvoice.Size = New System.Drawing.Size(180, 50)
+        Me.btnHoldInvoice.TabIndex = 8
+        Me.btnHoldInvoice.Text = "تعليق [F5]"
+        '
+        'btnPendingInvoices
+        '
+        Me.btnPendingInvoices.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPendingInvoices.BorderRadius = 8
+        Me.btnPendingInvoices.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnPendingInvoices.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnPendingInvoices.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnPendingInvoices.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnPendingInvoices.FillColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+        Me.btnPendingInvoices.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPendingInvoices.ForeColor = System.Drawing.Color.White
+        Me.btnPendingInvoices.Image = Global.WindowsApp1.My.Resources.Resources.pause
+        Me.btnPendingInvoices.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btnPendingInvoices.Location = New System.Drawing.Point(308, 67)
+        Me.btnPendingInvoices.Name = "btnPendingInvoices"
+        Me.btnPendingInvoices.Size = New System.Drawing.Size(138, 44)
+        Me.btnPendingInvoices.TabIndex = 11
+        Me.btnPendingInvoices.Text = "المعلقة [F7]"
+        '
+        'btnDeleteRow
+        '
+        Me.btnDeleteRow.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnDeleteRow.BorderRadius = 8
+        Me.btnDeleteRow.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btnDeleteRow.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btnDeleteRow.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btnDeleteRow.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btnDeleteRow.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.btnDeleteRow.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnDeleteRow.ForeColor = System.Drawing.Color.White
+        Me.btnDeleteRow.Image = Global.WindowsApp1.My.Resources.Resources.clear__1_
+        Me.btnDeleteRow.Location = New System.Drawing.Point(151, 67)
+        Me.btnDeleteRow.Name = "btnDeleteRow"
+        Me.btnDeleteRow.Size = New System.Drawing.Size(138, 44)
+        Me.btnDeleteRow.TabIndex = 9
+        Me.btnDeleteRow.Text = "حذف صنف"
+        '
+        'btntables
+        '
+        Me.btntables.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btntables.BorderRadius = 8
+        Me.btntables.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.btntables.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.btntables.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.btntables.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btntables.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
+        Me.btntables.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btntables.ForeColor = System.Drawing.Color.White
+        Me.btntables.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
+        Me.btntables.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btntables.Location = New System.Drawing.Point(454, 67)
+        Me.btntables.Name = "btntables"
+        Me.btntables.Size = New System.Drawing.Size(138, 44)
+        Me.btntables.TabIndex = 10
+        Me.btntables.Text = "الطاولات"
+        '
+        'Guna2BorderlessForm1
+        '
+        Me.Guna2BorderlessForm1.BorderRadius = 8
+        Me.Guna2BorderlessForm1.ContainerControl = Me
+        Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        '
+        'Timer1
+        '
+        Me.Timer1.Interval = 1000
+        '
+        'colIndex
+        '
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.colIndex.DefaultCellStyle = DataGridViewCellStyle3
+        Me.colIndex.HeaderText = "#"
+        Me.colIndex.Name = "colIndex"
+        Me.colIndex.ReadOnly = True
+        Me.colIndex.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colIndex.Visible = False
+        Me.colIndex.Width = 35
+        '
+        'colProductName
+        '
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colProductName.DefaultCellStyle = DataGridViewCellStyle4
+        Me.colProductName.HeaderText = "الصنف"
+        Me.colProductName.Name = "colProductName"
+        Me.colProductName.ReadOnly = True
+        Me.colProductName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colProductName.Width = 120
+        '
+        'colSize
+        '
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.colSize.DefaultCellStyle = DataGridViewCellStyle5
+        Me.colSize.HeaderText = "الحجم"
+        Me.colSize.Name = "colSize"
+        Me.colSize.ReadOnly = True
+        Me.colSize.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colSize.Width = 75
+        '
+        'colAddons
+        '
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colAddons.DefaultCellStyle = DataGridViewCellStyle6
+        Me.colAddons.HeaderText = "الإضافات"
+        Me.colAddons.Name = "colAddons"
+        Me.colAddons.ReadOnly = True
+        Me.colAddons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colAddons.Width = 110
+        '
+        'colUnitPrice
+        '
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle7.Format = "N2"
+        Me.colUnitPrice.DefaultCellStyle = DataGridViewCellStyle7
+        Me.colUnitPrice.HeaderText = "السعر"
+        Me.colUnitPrice.Name = "colUnitPrice"
+        Me.colUnitPrice.ReadOnly = True
+        Me.colUnitPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colUnitPrice.Width = 75
+        '
+        'colQuantity
+        '
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.colQuantity.DefaultCellStyle = DataGridViewCellStyle8
+        Me.colQuantity.HeaderText = "الكمية"
+        Me.colQuantity.Name = "colQuantity"
+        Me.colQuantity.ReadOnly = True
+        Me.colQuantity.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colQuantity.Width = 65
+        '
+        'colTotalPrice
+        '
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle9.Format = "N2"
+        Me.colTotalPrice.DefaultCellStyle = DataGridViewCellStyle9
+        Me.colTotalPrice.HeaderText = "الإجمالي"
+        Me.colTotalPrice.Name = "colTotalPrice"
+        Me.colTotalPrice.ReadOnly = True
+        Me.colTotalPrice.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colTotalPrice.Width = 85
+        '
+        'colNotes
+        '
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colNotes.DefaultCellStyle = DataGridViewCellStyle10
+        Me.colNotes.HeaderText = "ملاحظات المطبخ "
+        Me.colNotes.Name = "colNotes"
+        Me.colNotes.ReadOnly = True
+        Me.colNotes.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.colNotes.Width = 135
+        '
+        'colProductID
+        '
+        Me.colProductID.HeaderText = "ProductID"
+        Me.colProductID.Name = "colProductID"
+        Me.colProductID.ReadOnly = True
+        Me.colProductID.Visible = False
         '
         'frmPOS
         '
@@ -1292,11 +1303,10 @@ Partial Class frmPOS
         Me.Guna2Panel4.ResumeLayout(False)
         Me.pnlCategoryGridToolbar.ResumeLayout(False)
         Me.Guna2Panel3.ResumeLayout(False)
-        Me.Guna2Panel21.ResumeLayout(False)
-        Me.Guna2Panel22.ResumeLayout(False)
-        Me.Guna2Panel20.ResumeLayout(False)
-        Me.Guna2Panel24.ResumeLayout(False)
-        Me.Guna2Panel26.ResumeLayout(False)
+        Me.Guna2Panel10.ResumeLayout(False)
+        CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Guna2Panel11.ResumeLayout(False)
+        Me.Guna2Panel12.ResumeLayout(False)
         Me.Guna2Panel13.ResumeLayout(False)
         Me.Guna2Panel15.ResumeLayout(False)
         Me.Guna2Panel19.ResumeLayout(False)
@@ -1304,10 +1314,11 @@ Partial Class frmPOS
         Me.Guna2Panel14.ResumeLayout(False)
         Me.Guna2Panel17.ResumeLayout(False)
         Me.Guna2Panel16.ResumeLayout(False)
-        Me.Guna2Panel11.ResumeLayout(False)
-        Me.Guna2Panel12.ResumeLayout(False)
-        Me.Guna2Panel10.ResumeLayout(False)
-        CType(Me.dgvInvoice, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Guna2Panel20.ResumeLayout(False)
+        Me.Guna2Panel24.ResumeLayout(False)
+        Me.Guna2Panel26.ResumeLayout(False)
+        Me.Guna2Panel21.ResumeLayout(False)
+        Me.Guna2Panel22.ResumeLayout(False)
         Me.Guna2Panel9.ResumeLayout(False)
         Me.Guna2Panel23.ResumeLayout(False)
         Me.ResumeLayout(False)
@@ -1337,15 +1348,6 @@ Partial Class frmPOS
     Friend WithEvents Guna2Panel10 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2Panel11 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents dgvInvoice As Guna.UI2.WinForms.Guna2DataGridView
-    Friend WithEvents colIndex As DataGridViewTextBoxColumn
-    Friend WithEvents colProductName As DataGridViewTextBoxColumn
-    Friend WithEvents colSize As DataGridViewTextBoxColumn
-    Friend WithEvents colAddons As DataGridViewTextBoxColumn
-    Friend WithEvents colUnitPrice As DataGridViewTextBoxColumn
-    Friend WithEvents colQuantity As DataGridViewTextBoxColumn
-    Friend WithEvents colTotalPrice As DataGridViewTextBoxColumn
-    Friend WithEvents colNotes As DataGridViewTextBoxColumn
-    Friend WithEvents colProductID As DataGridViewTextBoxColumn
     Friend WithEvents btnAddCategoryForm As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnTakeaway As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2Panel12 As Guna.UI2.WinForms.Guna2Panel
@@ -1402,4 +1404,13 @@ Partial Class frmPOS
     Friend WithEvents lblRowValue As Label
     Friend WithEvents btnIncRow As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2Panel23 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents colIndex As DataGridViewTextBoxColumn
+    Friend WithEvents colProductName As DataGridViewTextBoxColumn
+    Friend WithEvents colSize As DataGridViewTextBoxColumn
+    Friend WithEvents colAddons As DataGridViewTextBoxColumn
+    Friend WithEvents colUnitPrice As DataGridViewTextBoxColumn
+    Friend WithEvents colQuantity As DataGridViewTextBoxColumn
+    Friend WithEvents colTotalPrice As DataGridViewTextBoxColumn
+    Friend WithEvents colNotes As DataGridViewTextBoxColumn
+    Friend WithEvents colProductID As DataGridViewTextBoxColumn
 End Class

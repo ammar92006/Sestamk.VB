@@ -55,6 +55,12 @@ Namespace UC_Settings
             Me.tglOpenDrawer = New Guna.UI2.WinForms.Guna2ToggleSwitch()
             Me.lblCopies = New System.Windows.Forms.Label()
             Me.txtCopies = New Guna.UI2.WinForms.Guna2TextBox()
+            Me.lblAutoPrintKitchen = New System.Windows.Forms.Label()
+            Me.tglAutoPrintKitchen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+            Me.lblAutoPrintFollowUp = New System.Windows.Forms.Label()
+            Me.tglAutoPrintFollowUp = New Guna.UI2.WinForms.Guna2ToggleSwitch()
+            Me.lblKitchenDesign = New System.Windows.Forms.Label()
+            Me.cmbKitchenDesign = New Guna.UI2.WinForms.Guna2ComboBox()
             Me.btnSave = New Guna.UI2.WinForms.Guna2Button()
             Me.btnReset = New Guna.UI2.WinForms.Guna2Button()
             Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
@@ -457,10 +463,16 @@ Namespace UC_Settings
             Me.cardOptions.Controls.Add(Me.tglOpenDrawer)
             Me.cardOptions.Controls.Add(Me.lblCopies)
             Me.cardOptions.Controls.Add(Me.txtCopies)
+            Me.cardOptions.Controls.Add(Me.lblAutoPrintKitchen)
+            Me.cardOptions.Controls.Add(Me.tglAutoPrintKitchen)
+            Me.cardOptions.Controls.Add(Me.lblAutoPrintFollowUp)
+            Me.cardOptions.Controls.Add(Me.tglAutoPrintFollowUp)
+            Me.cardOptions.Controls.Add(Me.lblKitchenDesign)
+            Me.cardOptions.Controls.Add(Me.cmbKitchenDesign)
             Me.cardOptions.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardOptions.Location = New System.Drawing.Point(30, 520)
             Me.cardOptions.Name = "cardOptions"
-            Me.cardOptions.Size = New System.Drawing.Size(1178, 175)
+            Me.cardOptions.Size = New System.Drawing.Size(1178, 235)
             Me.cardOptions.TabIndex = 4
             '
             'lblCardOptionsTitle
@@ -637,6 +649,88 @@ Namespace UC_Settings
             Me.txtCopies.TabIndex = 9
             Me.txtCopies.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
             '
+            'lblAutoPrintKitchen
+            '
+            Me.lblAutoPrintKitchen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblAutoPrintKitchen.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblAutoPrintKitchen.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblAutoPrintKitchen.Location = New System.Drawing.Point(920, 168)
+            Me.lblAutoPrintKitchen.Name = "lblAutoPrintKitchen"
+            Me.lblAutoPrintKitchen.Size = New System.Drawing.Size(230, 30)
+            Me.lblAutoPrintKitchen.TabIndex = 10
+            Me.lblAutoPrintKitchen.Text = "طباعة تلقائي طلب تجهيز المطبخ:"
+            Me.lblAutoPrintKitchen.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'tglAutoPrintKitchen
+            '
+            Me.tglAutoPrintKitchen.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.tglAutoPrintKitchen.Checked = True
+            Me.tglAutoPrintKitchen.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglAutoPrintKitchen.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglAutoPrintKitchen.Location = New System.Drawing.Point(845, 170)
+            Me.tglAutoPrintKitchen.Name = "tglAutoPrintKitchen"
+            Me.tglAutoPrintKitchen.Size = New System.Drawing.Size(65, 26)
+            Me.tglAutoPrintKitchen.TabIndex = 11
+            Me.tglAutoPrintKitchen.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
+            Me.tglAutoPrintKitchen.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            '
+            'lblAutoPrintFollowUp
+            '
+            Me.lblAutoPrintFollowUp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblAutoPrintFollowUp.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblAutoPrintFollowUp.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblAutoPrintFollowUp.Location = New System.Drawing.Point(620, 168)
+            Me.lblAutoPrintFollowUp.Name = "lblAutoPrintFollowUp"
+            Me.lblAutoPrintFollowUp.Size = New System.Drawing.Size(210, 30)
+            Me.lblAutoPrintFollowUp.TabIndex = 12
+            Me.lblAutoPrintFollowUp.Text = "طباعة تلقائي طلب المتابعة:"
+            Me.lblAutoPrintFollowUp.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'tglAutoPrintFollowUp
+            '
+            Me.tglAutoPrintFollowUp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.tglAutoPrintFollowUp.Checked = True
+            Me.tglAutoPrintFollowUp.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglAutoPrintFollowUp.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglAutoPrintFollowUp.Location = New System.Drawing.Point(545, 170)
+            Me.tglAutoPrintFollowUp.Name = "tglAutoPrintFollowUp"
+            Me.tglAutoPrintFollowUp.Size = New System.Drawing.Size(65, 26)
+            Me.tglAutoPrintFollowUp.TabIndex = 13
+            Me.tglAutoPrintFollowUp.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
+            Me.tglAutoPrintFollowUp.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            '
+            'lblKitchenDesign
+            '
+            Me.lblKitchenDesign.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblKitchenDesign.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblKitchenDesign.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblKitchenDesign.Location = New System.Drawing.Point(375, 168)
+            Me.lblKitchenDesign.Name = "lblKitchenDesign"
+            Me.lblKitchenDesign.Size = New System.Drawing.Size(155, 30)
+            Me.lblKitchenDesign.TabIndex = 14
+            Me.lblKitchenDesign.Text = "تصميم بون المطبخ:"
+            Me.lblKitchenDesign.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'cmbKitchenDesign
+            '
+            Me.cmbKitchenDesign.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.cmbKitchenDesign.BackColor = System.Drawing.Color.Transparent
+            Me.cmbKitchenDesign.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.cmbKitchenDesign.BorderRadius = 8
+            Me.cmbKitchenDesign.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+            Me.cmbKitchenDesign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+            Me.cmbKitchenDesign.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.cmbKitchenDesign.FocusedColor = System.Drawing.Color.Empty
+            Me.cmbKitchenDesign.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
+            Me.cmbKitchenDesign.ForeColor = System.Drawing.Color.White
+            Me.cmbKitchenDesign.ItemHeight = 30
+            Me.cmbKitchenDesign.Items.AddRange(New Object() {"التصميم 1 (كلاسيكي مدمج)", "التصميم 2 (حديث وبطاقات مقسمة)"})
+            Me.cmbKitchenDesign.Location = New System.Drawing.Point(60, 164)
+            Me.cmbKitchenDesign.Name = "cmbKitchenDesign"
+            Me.cmbKitchenDesign.Size = New System.Drawing.Size(305, 36)
+            Me.cmbKitchenDesign.StartIndex = 0
+            Me.cmbKitchenDesign.TabIndex = 15
+            '
             'btnSave
             '
             Me.btnSave.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -644,7 +738,7 @@ Namespace UC_Settings
             Me.btnSave.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnSave.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
             Me.btnSave.ForeColor = System.Drawing.Color.White
-            Me.btnSave.Location = New System.Drawing.Point(978, 715)
+            Me.btnSave.Location = New System.Drawing.Point(978, 775)
             Me.btnSave.Name = "btnSave"
             Me.btnSave.Size = New System.Drawing.Size(230, 48)
             Me.btnSave.TabIndex = 5
@@ -659,7 +753,7 @@ Namespace UC_Settings
             Me.btnReset.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
             Me.btnReset.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
             Me.btnReset.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.btnReset.Location = New System.Drawing.Point(740, 715)
+            Me.btnReset.Location = New System.Drawing.Point(740, 775)
             Me.btnReset.Name = "btnReset"
             Me.btnReset.Size = New System.Drawing.Size(220, 48)
             Me.btnReset.TabIndex = 6
@@ -673,7 +767,7 @@ Namespace UC_Settings
             Me.btnClose.FillColor = System.Drawing.Color.FromArgb(CType(CType(42, Byte), Integer), CType(CType(47, Byte), Integer), CType(CType(59, Byte), Integer))
             Me.btnClose.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
             Me.btnClose.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.btnClose.Location = New System.Drawing.Point(30, 715)
+            Me.btnClose.Location = New System.Drawing.Point(30, 775)
             Me.btnClose.Name = "btnClose"
             Me.btnClose.Size = New System.Drawing.Size(140, 48)
             Me.btnClose.TabIndex = 7
@@ -733,6 +827,12 @@ Namespace UC_Settings
         Friend WithEvents tglOpenDrawer As Guna.UI2.WinForms.Guna2ToggleSwitch
         Friend WithEvents lblCopies As System.Windows.Forms.Label
         Friend WithEvents txtCopies As Guna.UI2.WinForms.Guna2TextBox
+        Friend WithEvents lblAutoPrintKitchen As System.Windows.Forms.Label
+        Friend WithEvents tglAutoPrintKitchen As Guna.UI2.WinForms.Guna2ToggleSwitch
+        Friend WithEvents lblAutoPrintFollowUp As System.Windows.Forms.Label
+        Friend WithEvents tglAutoPrintFollowUp As Guna.UI2.WinForms.Guna2ToggleSwitch
+        Friend WithEvents lblKitchenDesign As System.Windows.Forms.Label
+        Friend WithEvents cmbKitchenDesign As Guna.UI2.WinForms.Guna2ComboBox
         Friend WithEvents btnSave As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnReset As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button

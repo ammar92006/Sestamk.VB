@@ -110,7 +110,7 @@ Partial Class FormUpdateNotifier
         Me.lblVersionBadge.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(58, Byte), Integer), CType(CType(138, Byte), Integer))
         Me.lblVersionBadge.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lblVersionBadge.ForeColor = System.Drawing.Color.FromArgb(CType(CType(147, Byte), Integer), CType(CType(197, Byte), Integer), CType(CType(253, Byte), Integer))
-        Me.lblVersionBadge.Location = New System.Drawing.Point(55, 25)
+        Me.lblVersionBadge.Location = New System.Drawing.Point(73, 25)
         Me.lblVersionBadge.Name = "lblVersionBadge"
         Me.lblVersionBadge.Size = New System.Drawing.Size(95, 30)
         Me.lblVersionBadge.TabIndex = 3
@@ -206,7 +206,7 @@ Partial Class FormUpdateNotifier
         Me.btnUpdate.BorderRadius = 10
         Me.btnUpdate.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnUpdate.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnUpdate.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.btnUpdate.ForeColor = System.Drawing.Color.White
         Me.btnUpdate.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(29, Byte), Integer), CType(CType(78, Byte), Integer), CType(CType(216, Byte), Integer))
         Me.btnUpdate.Location = New System.Drawing.Point(375, 6)
@@ -249,7 +249,7 @@ Partial Class FormUpdateNotifier
         Me.lblProgressStatus.Size = New System.Drawing.Size(540, 20)
         Me.lblProgressStatus.TabIndex = 0
         Me.lblProgressStatus.Text = "جارٍ تحميل حزمة التحديث... 0%"
-        Me.lblProgressStatus.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblProgressStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'pnlDeltaNotice
         '
@@ -327,7 +327,7 @@ Partial Class FormUpdateNotifier
         Me.lblNotesHeader.Name = "lblNotesHeader"
         Me.lblNotesHeader.Size = New System.Drawing.Size(510, 24)
         Me.lblNotesHeader.TabIndex = 0
-        Me.lblNotesHeader.Text = "📋 أبرز ما جاء في هذا التحديث:"
+        Me.lblNotesHeader.Text = "أبرز التحسينات والإضافات في هذا الإصدار:"
         Me.lblNotesHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'FormUpdateNotifier

@@ -20,6 +20,8 @@ Public Class frmPOS
     Public Property CurrentReservationDeposit As Decimal = 0
     Public Property CurrentReservationID As Integer? = Nothing
     Private _currentPendingInvoiceID As Integer? = Nothing
+    Private _currentPendingInvoiceNumber As String = ""
+    Private _recalledOriginalItems As New List(Of InvoiceDetailModel)()
 
     ' متغيرات الطباعة وإعادة الطباعة وعمليات الطاولات
     Private _lastSavedInvoice As InvoiceModel = Nothing
@@ -1201,10 +1203,14 @@ Public Class frmPOS
 
         If _repo.SavePendingInvoice(pendingInv) Then
 
+            Dim isRecalledInvoice As Boolean = _currentPendingInvoiceID.HasValue
+            Dim oldPendingNumber As String = If(isRecalledInvoice, _currentPendingInvoiceNumber, "")
+
             ' إذا كانت هناك فاتورة معلقة سابقة مسترجعة، نحذفها بعد تعليق الفاتورة الجديدة
             If _currentPendingInvoiceID.HasValue Then
                 _repo.DeletePendingInvoice(_currentPendingInvoiceID.Value)
                 _currentPendingInvoiceID = Nothing
+                _currentPendingInvoiceNumber = ""
             End If
 
             ' إذا كان نوع الطلب صالة -> تغيير حالة الطاولة إلى مشغولة (2) في الداتا بيز
@@ -1225,39 +1231,99 @@ Public Class frmPOS
                 If custName <> "عميل نقدي" Then kotTypeDesc &= " | العميل: " & custName
             End If
 
-            ' طباعة بون المطبخ (Kitchen Order Ticket - KOT)
-            Try
-                Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
-                RestaurantPrintManager.PrintKitchenTicket("طلب #" & pendingInv.PendingID, kotTypeDesc, SelectedTableName, staffName, itemsList)
-            Catch exKot As Exception
-                Logger.LogError("btnHoldInvoice_Click - PrintKitchenTicket", exKot)
-            End Try
+            Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
 
-            ' إرسال الطلب لشاشة المطبخ الرقمية (KDS)
-            Try
-                Dim kOrder As New KitchenOrderModel With {
-                    .OrderNumber = "طلب #" & pendingInv.PendingID,
-                    .OrderType = CByte(CurrentOrderType),
-                    .TableID = SelectedTableID,
-                    .TableName = SelectedTableName,
-                    .CustomerName = custName,
-                    .ServerName = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير"),
-                    .Status = KitchenOrderStatus.New
-                }
-                For Each itm In itemsList
-                    kOrder.Items.Add(New KitchenOrderItemModel With {
-                        .ProductID = itm.ProductID,
-                        .ProductName = itm.ProductName,
-                        .SizeName = itm.SizeName,
-                        .AddonsText = itm.AddonsText,
-                        .Quantity = itm.Quantity,
-                        .Notes = itm.Notes
-                    })
-                Next
-                Dim unusedTask = Task.Run(Async Function() Await _repo.CreateKitchenOrderAsync(kOrder))
-            Catch exKds As Exception
-                Logger.LogError("btnHoldInvoice_Click - KDS", exKds)
-            End Try
+            If isRecalledInvoice Then
+                ' فحص الأصناف الجديدة المضافة عند تعديل الفاتورة المسترجعة
+                Dim newAddedItems = GetNewlyAddedItems(itemsList)
+                If newAddedItems.Count > 0 Then
+                    Dim autoFollowUp = SettingsManager.GetBoolSetting(SettingsKeys.AutoPrintFollowUpTicket, True)
+                    If autoFollowUp Then
+                        Dim ticketNumStr = If(Not String.IsNullOrWhiteSpace(oldPendingNumber), oldPendingNumber, pendingInv.PendingID.ToString())
+                        Try
+                            RestaurantPrintManager.PrintKitchenTicket(
+                                orderNumber:="متابعة #" & pendingInv.PendingID,
+                                orderTypeDesc:=kotTypeDesc,
+                                tableName:=SelectedTableName,
+                                staffName:=staffName,
+                                items:=newAddedItems,
+                                ticketTitle:="ورقة متابعة فاتورة #" & ticketNumStr
+                            )
+                        Catch exKot As Exception
+                            Logger.LogError("btnHoldInvoice_Click - PrintKitchenFollowUpTicket", exKot)
+                        End Try
+                    End If
+
+                    ' إرسال الأصناف المضافة فقط لشاشة المطبخ KDS
+                    Try
+                        Dim kOrder As New KitchenOrderModel With {
+                            .OrderNumber = "متابعة #" & pendingInv.PendingID,
+                            .OrderType = CByte(CurrentOrderType),
+                            .TableID = SelectedTableID,
+                            .TableName = SelectedTableName,
+                            .CustomerName = custName,
+                            .ServerName = staffName,
+                            .Status = KitchenOrderStatus.New
+                        }
+                        For Each itm In newAddedItems
+                            kOrder.Items.Add(New KitchenOrderItemModel With {
+                                .ProductID = itm.ProductID,
+                                .ProductName = itm.ProductName,
+                                .SizeName = itm.SizeName,
+                                .AddonsText = itm.AddonsText,
+                                .Quantity = itm.Quantity,
+                                .Notes = itm.Notes
+                            })
+                        Next
+                        Dim unusedTask = Task.Run(Async Function() Await _repo.CreateKitchenOrderAsync(kOrder))
+                    Catch exKds As Exception
+                        Logger.LogError("btnHoldInvoice_Click - KDS FollowUp", exKds)
+                    End Try
+                End If
+            Else
+                ' طلب جديد بالكامل لأول مرة
+                Dim autoKitchen = SettingsManager.GetBoolSetting(SettingsKeys.AutoPrintKitchenTicket, True)
+                If autoKitchen Then
+                    Try
+                        RestaurantPrintManager.PrintKitchenTicket(
+                            orderNumber:="طلب #" & pendingInv.PendingID,
+                            orderTypeDesc:=kotTypeDesc,
+                            tableName:=SelectedTableName,
+                            staffName:=staffName,
+                            items:=itemsList,
+                            ticketTitle:="طلب تجهيز المطبخ"
+                        )
+                    Catch exKot As Exception
+                        Logger.LogError("btnHoldInvoice_Click - PrintKitchenTicket", exKot)
+                    End Try
+                End If
+
+                ' إرسال الطلب الجديد لشاشة المطبخ KDS
+                Try
+                    Dim kOrder As New KitchenOrderModel With {
+                        .OrderNumber = "طلب #" & pendingInv.PendingID,
+                        .OrderType = CByte(CurrentOrderType),
+                        .TableID = SelectedTableID,
+                        .TableName = SelectedTableName,
+                        .CustomerName = custName,
+                        .ServerName = staffName,
+                        .Status = KitchenOrderStatus.New
+                    }
+                    For Each itm In itemsList
+                        kOrder.Items.Add(New KitchenOrderItemModel With {
+                            .ProductID = itm.ProductID,
+                            .ProductName = itm.ProductName,
+                            .SizeName = itm.SizeName,
+                            .AddonsText = itm.AddonsText,
+                            .Quantity = itm.Quantity,
+                            .Notes = itm.Notes
+                        })
+                    Next
+                    Dim unusedTask = Task.Run(Async Function() Await _repo.CreateKitchenOrderAsync(kOrder))
+                Catch exKds As Exception
+                    Logger.LogError("btnHoldInvoice_Click - KDS", exKds)
+                End Try
+            End If
 
             If CurrentOrderType = OrderType.DineIn Then
                 MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وتسكينه على ({SelectedTableName}) بنجاح!" & vbCrLf & "سيظل الحساب معلقاً حتى انتهاء العميل من تناول وجبته وسداد الفاتورة.", "إرسال للمطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -1395,6 +1461,8 @@ Public Class frmPOS
 
                     ' الاحتفاظ برقم الفاتورة المعلقة لحذفها بأمان عند إتمام الدفع أو إعادة التعليق
                     _currentPendingInvoiceID = pendingItem.PendingID
+                    _currentPendingInvoiceNumber = If(Not String.IsNullOrWhiteSpace(pendingItem.PendingNumber), pendingItem.PendingNumber, pendingItem.PendingID.ToString())
+                    SnapshotRecalledItems()
 
                 End If
 
@@ -1567,43 +1635,105 @@ Public Class frmPOS
 
                     ' فحص ما إذا كان الطلب قد أُرسل بالفعل للمطبخ عبر التعليق المسبق
                     Dim wasAlreadyHeld As Boolean = _currentPendingInvoiceID.HasValue
+                    Dim oldPendingNumber As String = If(wasAlreadyHeld, _currentPendingInvoiceNumber, "")
 
                     ' إغلاق الفاتورة المعلقة بعد الحفظ الناجح
                     If _currentPendingInvoiceID.HasValue Then
                         _repo.DeletePendingInvoice(_currentPendingInvoiceID.Value)
                         _currentPendingInvoiceID = Nothing
+                        _currentPendingInvoiceNumber = ""
                     End If
 
                     invoice.InvoiceNumber = savedInvNum
                     Dim custNameStr As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, If(Not String.IsNullOrWhiteSpace(txtCustomer.Text) AndAlso txtCustomer.Text.Trim() <> "عميل نقدي", txtCustomer.Text.Trim(), "عميل نقدي"))
 
-                    ' 1. الطباعة التلقائية لإيصال العميل (GDI+ مع QR وفتح الدرج)
-                    Try
-                        RestaurantPrintManager.PrintCustomerReceipt(invoice, custNameStr, SelectedTableName, SelectedDriverName)
-                    Catch printEx As Exception
-                        Logger.LogError("btnPay_Click - PrintCustomerReceipt", printEx)
-                    End Try
-
-                    ' 2. طباعة بون المطبخ (KOT) وإرساله للـ KDS عند الدفع الفوري (إذا لم يكن قد أُرسل مسبقاً)
-                    If Not wasAlreadyHeld Then
-                        Dim orderDesc As String
-                        If CurrentOrderType = OrderType.DineIn Then
-                            orderDesc = "صالة - طاولة: " & SelectedTableName
-                            If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
-                        ElseIf CurrentOrderType = OrderType.Delivery Then
-                            orderDesc = "دليفري | الطيار: " & SelectedDriverName
-                            If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
-                        Else
-                            orderDesc = "تيك أوي"
-                            If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
-                        End If
-
+                    ' 1. الطباعة التلقائية لإيصال العميل (إذا كانت مفعلة في الإعدادات)
+                    Dim autoPrintReceipt As Boolean = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, True)
+                    If autoPrintReceipt Then
                         Try
-                            Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
-                            RestaurantPrintManager.PrintKitchenTicket(savedInvNum, orderDesc, SelectedTableName, staffName, invoice.Details)
-                        Catch exKot As Exception
-                            Logger.LogError("btnPay_Click - PrintKitchenTicket", exKot)
+                            RestaurantPrintManager.PrintCustomerReceipt(invoice, custNameStr, SelectedTableName, SelectedDriverName)
+                        Catch printEx As Exception
+                            Logger.LogError("btnPay_Click - PrintCustomerReceipt", printEx)
                         End Try
+                    End If
+
+                    ' 2. طباعة بون المطبخ أو ورقة المتابعة للأصناف المضافة
+                    Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
+                    Dim orderDesc As String
+                    If CurrentOrderType = OrderType.DineIn Then
+                        orderDesc = "صالة - طاولة: " & SelectedTableName
+                        If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
+                    ElseIf CurrentOrderType = OrderType.Delivery Then
+                        orderDesc = "دليفري | الطيار: " & SelectedDriverName
+                        If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
+                    Else
+                        orderDesc = "تيك أوي"
+                        If custNameStr <> "عميل نقدي" Then orderDesc &= " | العميل: " & custNameStr
+                    End If
+
+                    If wasAlreadyHeld Then
+                        ' إذا كانت الفاتورة معلقة مسبقاً، نتحقق من وجود أصناف أُضيفت حديثاً
+                        Dim newAddedItems = GetNewlyAddedItems(invoice.Details)
+                        If newAddedItems.Count > 0 Then
+                            Dim autoFollowUp = SettingsManager.GetBoolSetting(SettingsKeys.AutoPrintFollowUpTicket, True)
+                            If autoFollowUp Then
+                                Try
+                                    RestaurantPrintManager.PrintKitchenTicket(
+                                        orderNumber:=savedInvNum,
+                                        orderTypeDesc:=orderDesc,
+                                        tableName:=SelectedTableName,
+                                        staffName:=staffName,
+                                        items:=newAddedItems,
+                                        ticketTitle:="ورقة متابعة فاتورة #" & savedInvNum
+                                    )
+                                Catch exKot As Exception
+                                    Logger.LogError("btnPay_Click - PrintKitchenFollowUpTicket", exKot)
+                                End Try
+                            End If
+
+                            ' إرسال الأصناف المضافة لشاشة المطبخ KDS
+                            Try
+                                Dim kOrder As New KitchenOrderModel With {
+                                    .OrderNumber = savedInvNum,
+                                    .OrderType = CByte(CurrentOrderType),
+                                    .TableID = SelectedTableID,
+                                    .TableName = SelectedTableName,
+                                    .CustomerName = custNameStr,
+                                    .ServerName = staffName,
+                                    .Status = KitchenOrderStatus.New
+                                }
+                                For Each itm In newAddedItems
+                                    kOrder.Items.Add(New KitchenOrderItemModel With {
+                                        .ProductID = itm.ProductID,
+                                        .ProductName = itm.ProductName,
+                                        .SizeName = itm.SizeName,
+                                        .AddonsText = itm.AddonsText,
+                                        .Quantity = itm.Quantity,
+                                        .Notes = itm.Notes
+                                    })
+                                Next
+                                Await _repo.CreateKitchenOrderAsync(kOrder)
+                            Catch exKds As Exception
+                                Logger.LogError("btnPay_Click - KDS FollowUp", exKds)
+                            End Try
+                        End If
+                    Else
+                        ' طلب دفع فوري بالكامل
+                        Dim autoKitchen = SettingsManager.GetBoolSetting(SettingsKeys.AutoPrintKitchenTicket, True)
+                        If autoKitchen Then
+                            Try
+                                RestaurantPrintManager.PrintKitchenTicket(
+                                    orderNumber:=savedInvNum,
+                                    orderTypeDesc:=orderDesc,
+                                    tableName:=SelectedTableName,
+                                    staffName:=staffName,
+                                    items:=invoice.Details,
+                                    ticketTitle:="طلب تجهيز المطبخ"
+                                )
+                            Catch exKot As Exception
+                                Logger.LogError("btnPay_Click - PrintKitchenTicket", exKot)
+                            End Try
+                        End If
 
                         ' إرسال الطلب لشاشة المطبخ الرقمية (KDS)
                         Try
@@ -1613,7 +1743,7 @@ Public Class frmPOS
                                 .TableID = SelectedTableID,
                                 .TableName = SelectedTableName,
                                 .CustomerName = custNameStr,
-                                .ServerName = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير"),
+                                .ServerName = staffName,
                                 .Status = KitchenOrderStatus.New
                             }
                             For Each itm In invoice.Details
@@ -1673,6 +1803,8 @@ Public Class frmPOS
         CurrentReservationDeposit = 0
         CurrentReservationID = Nothing
         _currentPendingInvoiceID = Nothing
+        _currentPendingInvoiceNumber = ""
+        _recalledOriginalItems.Clear()
 
         ApplyDefaultPOSSettings()
 
@@ -1683,6 +1815,98 @@ Public Class frmPOS
 
         CalculatePOSGrandTotal()
     End Sub
+
+    ''' <summary>
+    ''' التقاط لقطة فورية للأصناف الموجودة داخل الفاتورة عند استرجاعها
+    ''' للمقارنة لاحقاً وطباعة الأصناف الإضافية الجديدة فقط في ورقة المتابعة
+    ''' </summary>
+    Private Sub SnapshotRecalledItems()
+        _recalledOriginalItems.Clear()
+        For Each row As DataGridViewRow In dgvInvoice.Rows
+            If Not row.IsNewRow Then
+                Dim itm As New InvoiceDetailModel With {
+                    .ProductID = Convert.ToInt32(row.Cells("colProductID").Value),
+                    .ProductName = If(row.Cells("colProductName").Value IsNot Nothing, row.Cells("colProductName").Value.ToString(), ""),
+                    .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
+                    .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
+                    .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
+                    .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
+                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+                }
+                _recalledOriginalItems.Add(itm)
+            End If
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' استخراج الأصناف أو الكميات التي تمت إضافتها حديثاً بعد استرجاع الفاتورة المعلقة
+    ''' </summary>
+    Private Function GetNewlyAddedItems(currentItems As List(Of InvoiceDetailModel)) As List(Of InvoiceDetailModel)
+        Dim result As New List(Of InvoiceDetailModel)()
+        If currentItems Is Nothing OrElse currentItems.Count = 0 Then Return result
+
+        ' إذا لم تكن هناك أصناف سابقة محفوظة، كل الأصناف الحالية جديدة
+        If _recalledOriginalItems Is Nothing OrElse _recalledOriginalItems.Count = 0 Then
+            Return New List(Of InvoiceDetailModel)(currentItems)
+        End If
+
+        ' نسخة عمل من الأصناف الأصلية لخصم الكميات المطابقة تدريجياً
+        Dim originalCopies = _recalledOriginalItems.Select(Function(x) New InvoiceDetailModel With {
+            .ProductID = x.ProductID,
+            .ProductName = x.ProductName,
+            .SizeName = If(x.SizeName, ""),
+            .AddonsText = If(x.AddonsText, ""),
+            .Notes = If(x.Notes, ""),
+            .Quantity = x.Quantity
+        }).ToList()
+
+        For Each cur In currentItems
+            Dim curSize = If(cur.SizeName, "").Trim()
+            Dim curAddons = If(cur.AddonsText, "").Trim()
+            Dim curNotes = If(cur.Notes, "").Trim()
+
+            ' البحث عن صنف مطابق في الأصناف الأصلية (نفس الصنف، الحجم، الإضافات، والملاحظات)
+            Dim match = originalCopies.FirstOrDefault(Function(orig) orig.ProductID = cur.ProductID AndAlso
+                                                                     If(orig.SizeName, "").Trim().Equals(curSize, StringComparison.OrdinalIgnoreCase) AndAlso
+                                                                     If(orig.AddonsText, "").Trim().Equals(curAddons, StringComparison.OrdinalIgnoreCase) AndAlso
+                                                                     If(orig.Notes, "").Trim().Equals(curNotes, StringComparison.OrdinalIgnoreCase))
+
+            If match Is Nothing Then
+                ' صنف جديد لم يكن موجوداً
+                result.Add(New InvoiceDetailModel With {
+                    .ProductID = cur.ProductID,
+                    .ProductName = cur.ProductName,
+                    .SizeName = cur.SizeName,
+                    .AddonsText = cur.AddonsText,
+                    .UnitPrice = cur.UnitPrice,
+                    .Quantity = cur.Quantity,
+                    .TotalPrice = cur.UnitPrice * cur.Quantity,
+                    .Notes = cur.Notes
+                })
+            Else
+                ' صنف موجود مسبقاً، نتحقق هل زادت كميته
+                If cur.Quantity > match.Quantity Then
+                    Dim addedQty = cur.Quantity - match.Quantity
+                    result.Add(New InvoiceDetailModel With {
+                        .ProductID = cur.ProductID,
+                        .ProductName = cur.ProductName,
+                        .SizeName = cur.SizeName,
+                        .AddonsText = cur.AddonsText,
+                        .UnitPrice = cur.UnitPrice,
+                        .Quantity = addedQty,
+                        .TotalPrice = cur.UnitPrice * addedQty,
+                        .Notes = cur.Notes
+                    })
+                    match.Quantity = 0
+                Else
+                    match.Quantity -= cur.Quantity
+                End If
+            End If
+        Next
+
+        Return result
+    End Function
 
     Private Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnclear.Click
         ResetPOSForm()
@@ -1898,6 +2122,7 @@ Public Class frmPOS
             If pendingItem IsNot Nothing Then
                 dgvInvoice.Rows.Clear()
                 _currentPendingInvoiceID = pendingItem.PendingID
+                _currentPendingInvoiceNumber = If(Not String.IsNullOrWhiteSpace(pendingItem.PendingNumber), pendingItem.PendingNumber, pendingItem.PendingID.ToString())
                 CurrentOrderType = OrderType.DineIn
                 btnDineIn.Checked = True
                 UpdateHoldButtonText()
@@ -1950,6 +2175,7 @@ Public Class frmPOS
                 End If
 
                 CalculatePOSGrandTotal()
+                SnapshotRecalledItems()
                 MessageBox.Show($"تم استرجاع طلب الطاولة [{SelectedTableName}] بنجاح، يمكنك تعديل الأصناف أو إتمام المحاسبة.", "طلب طاولة مفتوح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
@@ -2025,7 +2251,18 @@ Public Class frmPOS
         Try
             Dim kotTypeDesc As String = If(CurrentOrderType = OrderType.DineIn, "صالة - طاولة: " & SelectedTableName, If(CurrentOrderType = OrderType.Delivery, "دليفري | الطيار: " & SelectedDriverName, "تيك أوي"))
             Dim staffName As String = If(Session.CurrentUserfullName IsNot Nothing, Session.CurrentUserfullName, "كاشير")
-            RestaurantPrintManager.PrintKitchenTicket("طلب يدوي", kotTypeDesc, SelectedTableName, staffName, itemsList)
+            Dim title As String = "طلب تجهيز المطبخ"
+
+            If _currentPendingInvoiceID.HasValue Then
+                Dim newItems = GetNewlyAddedItems(itemsList)
+                If newItems.Count > 0 Then
+                    Dim pNum = If(Not String.IsNullOrWhiteSpace(_currentPendingInvoiceNumber), _currentPendingInvoiceNumber, _currentPendingInvoiceID.Value.ToString())
+                    title = "ورقة متابعة فاتورة #" & pNum
+                    itemsList = newItems
+                End If
+            End If
+
+            RestaurantPrintManager.PrintKitchenTicket("طلب يدوي", kotTypeDesc, SelectedTableName, staffName, itemsList, ticketTitle:=title)
             MessageBox.Show("تمت طباعة بون المطبخ (KOT) بنجاح!", "طباعة المطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             Logger.LogError("PrintCurrentKOT", ex)

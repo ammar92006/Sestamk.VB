@@ -102,6 +102,11 @@ Public Module SettingsKeys
     Public Const ShowCashier As String = "ShowCashier"
     Public Const ShowLogo As String = "ShowLogo"
 
+    ' ── إعدادات طباعة المطبخ والمتابعة (Kitchen & Follow-Up Settings) ──
+    Public Const KitchenTicketDesign As String = "KitchenTicketDesign"             ' "1" (Classic) or "2" (Modern Cards)
+    Public Const AutoPrintKitchenTicket As String = "AutoPrintKitchenTicket"       ' Boolean
+    Public Const AutoPrintFollowUpTicket As String = "AutoPrintFollowUpTicket"     ' Boolean
+
     ' ── مفاتيح التوافق المزدوج مع C# ──
     Public Const DefaultPrinterName As String = "DefaultPrinterName"
     Public Const PrintReceiptOnPayment As String = "PrintReceiptOnPayment"

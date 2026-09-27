@@ -38,6 +38,16 @@ Public NotInheritable Class UpdateCoordinator
                 client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-Client")
                 Dim json = Await client.GetStringAsync(manifestUrl)
                 Dim manifest = ParseManifest(JObject.Parse(json))
+
+                ' إذا كان الرابط القادم من ترخيص السيرفر غير متوافق مع نسخة VB، نفحص رابط المستودع الافتراضي لـ VB
+                If manifest Is Nothing AndAlso Not String.Equals(manifestUrl, LicenseSettings.DefaultManifestUrl, StringComparison.OrdinalIgnoreCase) Then
+                    Try
+                        json = Await client.GetStringAsync(LicenseSettings.DefaultManifestUrl)
+                        manifest = ParseManifest(JObject.Parse(json))
+                    Catch
+                    End Try
+                End If
+
                 If manifest Is Nothing Then Return
 
                 Dim manifestVer As Version = Nothing
@@ -103,14 +113,15 @@ Public NotInheritable Class UpdateCoordinator
             Dim pendingPath = Path.Combine(updateDir, "pending-update.json")
             File.WriteAllText(pendingPath, pending.ToString())
 
-            Dim updater = Path.Combine(Application.StartupPath, "tools", "Sestamk.VB.Updater.exe")
-            If Not File.Exists(updater) Then
-                Dim fallback = Path.Combine(Application.StartupPath, "Sestamk.VB.Updater.exe")
-                If File.Exists(fallback) Then
-                    updater = fallback
-                Else
-                    Return "أداة تطبيق التحديث غير موجودة ضمن ملفات البرنامج."
-                End If
+            Dim updaterCandidates As String() = {
+                Path.Combine(Application.StartupPath, "update.exe"),
+                Path.Combine(Application.StartupPath, "tools", "update.exe"),
+                Path.Combine(Application.StartupPath, "tools", "Sestamk.VB.Updater.exe"),
+                Path.Combine(Application.StartupPath, "Sestamk.VB.Updater.exe")
+            }
+            Dim updater As String = updaterCandidates.FirstOrDefault(Function(p) File.Exists(p))
+            If String.IsNullOrEmpty(updater) Then
+                Return "أداة تطبيق التحديث (update.exe) غير موجودة ضمن ملفات البرنامج."
             End If
 
             Process.Start(New ProcessStartInfo(updater, "--pending " & ChrW(34) & pendingPath & ChrW(34)) With {.UseShellExecute = True})
