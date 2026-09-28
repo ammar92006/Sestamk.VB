@@ -19,6 +19,21 @@ Namespace Services.Sync
         Private Const AdminLoginUrl As String = "https://axigicbiydhfbkfqogma.supabase.co/functions/v1/admin-login"
         Private Const AdminDbUrl As String = "https://axigicbiydhfbkfqogma.supabase.co/functions/v1/admin-db"
 
+        Public Class LocalUserInfo
+            Public Property UserId As Integer
+            Public Property UserCode As String = ""
+            Public Property Username As String = ""
+            Public Property FullName As String = ""
+            Public Property Password As String = ""
+            Public Property Role As String = "user"
+            Public Property RoleName As String = ""
+            Public Property Phone As String = ""
+            Public Property Email As String = ""
+            Public Property Barcode As String = ""
+            Public Property Notes As String = ""
+            Public Property IsActive As Boolean = True
+        End Class
+
         ''' <summary>
         ''' مزامنة مستخدمي المنشأة بالكامل إلى Supabase
         ''' </summary>
@@ -33,25 +48,45 @@ Namespace Services.Sync
                 Dim supabaseKey = LicenseSettings.PublishableKey
                 If String.IsNullOrWhiteSpace(supabaseUrl) OrElse String.IsNullOrWhiteSpace(supabaseKey) Then Return False
 
-                ' 1. قراءة المستخدمين المحليين من قاعدة البيانات
+                ' 1. قراءة المستخدمين المحليين من قاعدة البيانات باستعلام شامل وآمن
                 Dim dt As DataTable = Nothing
                 Try
-                    Dim queryFull = "SELECT U.User_username, U.User_Name, U.User_password, " &
-                                    "ISNULL(R.RoleName, N'') AS RoleName, " &
-                                    "ISNULL(U.IsActive, 1) AS IsActive, " &
-                                    "ISNULL(E.Mobile, ISNULL(E.Phone, '')) AS UserPhone, " &
-                                    "ISNULL(E.Email, '') AS UserEmail " &
-                                    "FROM Users_TBL U " &
-                                    "LEFT JOIN Roles R ON U.RoleID = R.RoleID " &
-                                    "LEFT JOIN Employees E ON U.EmployeeID = E.EmployeeID " &
-                                    "WHERE (U.IsDeleted = 0 OR U.IsDeleted IS NULL)"
+                    Dim queryFull As String =
+                        "SELECT U.User_ID, " &
+                        "       ISNULL(U.User_Code, '') AS User_Code, " &
+                        "       ISNULL(U.User_Name, U.User_username) AS FullName, " &
+                        "       U.User_username, " &
+                        "       ISNULL(U.User_password, '') AS User_password, " &
+                        "       ISNULL(U.UserBarcode, '') AS UserBarcode, " &
+                        "       ISNULL(U.User_Note, '') AS User_Note, " &
+                        "       U.RoleID, " &
+                        "       ISNULL(R.RoleName, ISNULL(U.User_Role, N'مستخدم')) AS RoleName, " &
+                        "       ISNULL(U.IsActive, 1) AS IsActive, " &
+                        "       ISNULL(E.Phone, ISNULL(E.Phone2, '')) AS Phone, " &
+                        "       ISNULL(E.Email, '') AS Email " &
+                        "FROM Users_TBL U " &
+                        "LEFT JOIN Roles R ON U.RoleID = R.RoleID " &
+                        "LEFT JOIN Employees E ON U.EmployeeID = E.EmployeeID " &
+                        "WHERE (U.IsDeleted = 0 OR U.IsDeleted IS NULL)"
                     dt = DBModule.ExecuteQuery(queryFull)
-                Catch
+                Catch exFull As Exception
+                    Logger.Warn("UserSyncService: queryFull failed, trying fallback: " & exFull.Message)
                     Try
-                        Dim queryBasic = "SELECT User_username, User_Name, User_password, " &
-                                         "ISNULL(IsActive, 1) AS IsActive " &
-                                         "FROM Users_TBL WHERE (IsDeleted = 0 OR IsDeleted IS NULL)"
-                        dt = DBModule.ExecuteQuery(queryBasic)
+                        Dim queryFallback As String =
+                            "SELECT U.User_ID, " &
+                            "       ISNULL(U.User_Code, '') AS User_Code, " &
+                            "       ISNULL(U.User_Name, U.User_username) AS FullName, " &
+                            "       U.User_username, " &
+                            "       ISNULL(U.User_password, '') AS User_password, " &
+                            "       ISNULL(U.UserBarcode, '') AS UserBarcode, " &
+                            "       ISNULL(U.User_Note, '') AS User_Note, " &
+                            "       ISNULL(U.User_Role, N'مستخدم') AS RoleName, " &
+                            "       ISNULL(U.IsActive, 1) AS IsActive, " &
+                            "       '' AS Phone, " &
+                            "       '' AS Email " &
+                            "FROM Users_TBL U " &
+                            "WHERE (U.IsDeleted = 0 OR U.IsDeleted IS NULL)"
+                        dt = DBModule.ExecuteQuery(queryFallback)
                     Catch ex As Exception
                         Logger.LogError("UserSyncService.ReadUsers", ex)
                         Return False
@@ -60,48 +95,82 @@ Namespace Services.Sync
 
                 If dt Is Nothing OrElse dt.Rows.Count = 0 Then Return False
 
-                Dim users As New List(Of Object)()
-                Dim userPasswordMap As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+                Dim userList As New List(Of LocalUserInfo)()
+                Dim rpcUsersPayload As New List(Of Object)()
 
                 For Each row As DataRow In dt.Rows
                     Dim username = Convert.ToString(row("User_username")).Trim()
                     If String.IsNullOrWhiteSpace(username) Then Continue For
 
-                    Dim fullName = If(row.Table.Columns.Contains("User_Name") AndAlso Not Convert.IsDBNull(row("User_Name")), Convert.ToString(row("User_Name")).Trim(), username)
-                    If String.IsNullOrWhiteSpace(fullName) Then fullName = username
+                    Dim u As New LocalUserInfo()
+                    u.Username = username
 
-                    Dim roleName = If(row.Table.Columns.Contains("RoleName") AndAlso Not Convert.IsDBNull(row("RoleName")), Convert.ToString(row("RoleName")), "")
-                    Dim phone = If(row.Table.Columns.Contains("UserPhone") AndAlso Not Convert.IsDBNull(row("UserPhone")), Convert.ToString(row("UserPhone")), "")
-                    Dim email = If(row.Table.Columns.Contains("UserEmail") AndAlso Not Convert.IsDBNull(row("UserEmail")), Convert.ToString(row("UserEmail")), "")
-                    Dim rawPass = If(row.Table.Columns.Contains("User_password") AndAlso Not Convert.IsDBNull(row("User_password")), Convert.ToString(row("User_password")), "")
+                    If row.Table.Columns.Contains("FullName") AndAlso Not Convert.IsDBNull(row("FullName")) Then
+                        u.FullName = Convert.ToString(row("FullName")).Trim()
+                    ElseIf row.Table.Columns.Contains("User_Name") AndAlso Not Convert.IsDBNull(row("User_Name")) Then
+                        u.FullName = Convert.ToString(row("User_Name")).Trim()
+                    End If
+                    If String.IsNullOrWhiteSpace(u.FullName) Then u.FullName = username
 
-                    Dim isActive = True
+                    If row.Table.Columns.Contains("User_password") AndAlso Not Convert.IsDBNull(row("User_password")) Then
+                        u.Password = Convert.ToString(row("User_password")).Trim()
+                    End If
+
+                    Dim rawRole = ""
+                    If row.Table.Columns.Contains("RoleName") AndAlso Not Convert.IsDBNull(row("RoleName")) Then
+                        rawRole = Convert.ToString(row("RoleName"))
+                    ElseIf row.Table.Columns.Contains("User_Role") AndAlso Not Convert.IsDBNull(row("User_Role")) Then
+                        rawRole = Convert.ToString(row("User_Role"))
+                    End If
+                    u.RoleName = rawRole
+                    u.Role = MapRole(rawRole)
+
+                    If row.Table.Columns.Contains("Phone") AndAlso Not Convert.IsDBNull(row("Phone")) Then
+                        u.Phone = Convert.ToString(row("Phone")).Trim()
+                    End If
+
+                    If row.Table.Columns.Contains("Email") AndAlso Not Convert.IsDBNull(row("Email")) Then
+                        u.Email = Convert.ToString(row("Email")).Trim()
+                    End If
+
+                    If row.Table.Columns.Contains("User_Code") AndAlso Not Convert.IsDBNull(row("User_Code")) Then
+                        u.UserCode = Convert.ToString(row("User_Code")).Trim()
+                    End If
+
+                    If row.Table.Columns.Contains("UserBarcode") AndAlso Not Convert.IsDBNull(row("UserBarcode")) Then
+                        u.Barcode = Convert.ToString(row("UserBarcode")).Trim()
+                    End If
+
+                    If row.Table.Columns.Contains("User_Note") AndAlso Not Convert.IsDBNull(row("User_Note")) Then
+                        u.Notes = Convert.ToString(row("User_Note")).Trim()
+                    End If
+
+                    u.IsActive = True
                     If row.Table.Columns.Contains("IsActive") AndAlso Not Convert.IsDBNull(row("IsActive")) Then
-                        Boolean.TryParse(Convert.ToString(row("IsActive")), isActive)
+                        Boolean.TryParse(Convert.ToString(row("IsActive")), u.IsActive)
                     End If
 
-                    users.Add(New With {
-                        .username = username,
-                        .full_name = fullName,
-                        .email = email,
-                        .phone = phone,
-                        .role = MapRole(roleName),
-                        .is_active = isActive,
-                        .password = rawPass,
-                        .password_hash = rawPass
+                    userList.Add(u)
+
+                    ' تجهيز بيانات دالة المزامنة السحابية sync_company_users
+                    rpcUsersPayload.Add(New With {
+                        .username = u.Username,
+                        .full_name = u.FullName,
+                        .email = u.Email,
+                        .phone = u.Phone,
+                        .role = u.Role,
+                        .is_active = u.IsActive,
+                        .password = u.Password,
+                        .password_hash = u.Password
                     })
-
-                    If Not String.IsNullOrWhiteSpace(rawPass) Then
-                        userPasswordMap(username) = rawPass
-                    End If
                 Next
 
-                If users.Count = 0 Then Return False
+                If userList.Count = 0 Then Return False
 
                 ' 2. إرسال المستخدمين إلى دالة المزامنة السحابية sync_company_users
                 Dim payload = New With {
                     .p_company_id = companyId,
-                    .p_users = users
+                    .p_users = rpcUsersPayload
                 }
                 Dim jsonBody = JsonConvert.SerializeObject(payload)
 
@@ -114,19 +183,17 @@ Namespace Services.Sync
                     Dim response = Await client.PostAsync(supabaseUrl.TrimEnd("/"c) & "/rest/v1/rpc/sync_company_users", content)
                     If response.IsSuccessStatusCode Then
                         syncSuccess = True
-                        Logger.Info($"UserSyncService: Synced {users.Count} users successfully to Supabase for company {companyId}.")
+                        Logger.Info($"UserSyncService: Synced {userList.Count} users successfully to Supabase for company {companyId}.")
                     Else
                         Dim respErr = Await response.Content.ReadAsStringAsync()
                         Logger.Warn($"UserSyncService: Server returned {response.StatusCode} - {respErr}")
                     End If
                 End Using
 
-                ' 3. مزامنة كلمات المرور الصريحة لضمان ظهورها للإدارة في لوحة التحكم
-                If userPasswordMap.Count > 0 Then
-                    Dim bgPwSync = Task.Run(Async Function()
-                                                Await SyncUserPasswordsDirectAsync(companyId, userPasswordMap)
-                                            End Function)
-                End If
+                ' 3. مزامنة كلمات المرور والتفاصيل الصريحة لضمان ظهورها للإدارة في لوحة التحكم
+                Dim bgPwSync = Task.Run(Async Function()
+                                            Await SyncUserDetailsDirectAsync(companyId, userList)
+                                        End Function)
 
                 Return syncSuccess
             Catch ex As Exception
@@ -194,9 +261,9 @@ Namespace Services.Sync
         End Function
 
         ''' <summary>
-        ''' تحديث كلمات المرور مباشرة على جدول users لظهورها في لوحة التحكم الإدارية
+        ''' تحديث كلمات المرور والبيانات كاملة مباشرة على جدول users لظهورها في لوحة التحكم الإدارية
         ''' </summary>
-        Private Shared Async Function SyncUserPasswordsDirectAsync(companyId As String, userMap As Dictionary(Of String, String)) As Task
+        Private Shared Async Function SyncUserDetailsDirectAsync(companyId As String, users As List(Of LocalUserInfo)) As Task
             Try
                 Dim supabaseKey = LicenseSettings.PublishableKey
                 Using client As New HttpClient()
@@ -215,15 +282,24 @@ Namespace Services.Sync
                     Dim token = Convert.ToString(loginObj("token"))
                     If String.IsNullOrWhiteSpace(token) Then Return
 
-                    ' تحديث كلمة المرور لكل مستخدم
-                    For Each kv In userMap
+                    ' تحديث كل مستخدم بالحقول المتوفرة في جدول users
+                    For Each u In users
                         Try
+                            Dim changes As New Dictionary(Of String, Object) From {
+                                {"password_hash", u.Password},
+                                {"full_name", u.FullName},
+                                {"role", u.Role},
+                                {"is_active", u.IsActive}
+                            }
+                            If Not String.IsNullOrWhiteSpace(u.Phone) Then changes("phone") = u.Phone
+                            If Not String.IsNullOrWhiteSpace(u.Email) Then changes("email") = u.Email
+
                             Dim updateData = New With {
                                 .token = token,
                                 .op = "update",
                                 .table = "users",
-                                .filter = $"company_id=eq.{companyId}&username=eq.{kv.Key}",
-                                .payload = New With {.password_hash = kv.Value}
+                                .filter = $"company_id=eq.{companyId}&username=eq.{u.Username}",
+                                .payload = changes
                             }
                             Dim updateJson = JsonConvert.SerializeObject(updateData)
                             Dim updateContent As New StringContent(updateJson, Encoding.UTF8, "application/json")
@@ -233,8 +309,7 @@ Namespace Services.Sync
                     Next
                 End Using
             Catch ex As Exception
-                ' غير حرج
-                Logger.LogError("UserSyncService.SyncUserPasswordsDirectAsync", ex)
+                Logger.LogError("UserSyncService.SyncUserDetailsDirectAsync", ex)
             End Try
         End Function
 
