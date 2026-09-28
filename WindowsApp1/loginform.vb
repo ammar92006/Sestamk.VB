@@ -105,14 +105,11 @@ Public Class Login
                     Dim dt As New DataTable()
                     da.Fill(dt)
                     If dt.Rows.Count > 0 Then
-                        ' تحديد المستخدم المطلوب اختياره (المحفوظ في تذكرني أولاً، ثم آخر مستخدم سجل دخوله)
-                        Dim targetUser As String = ""
+                        ' تحديد المستخدم المطلوب اختياره (آخر مستخدم سجل دخوله أولاً، ثم المحفوظ في تذكرني)
+                        Dim targetUser As String = SettingsManager.GetSetting("LastLoggedInUser")
                         Dim isRemembered As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
-                        If isRemembered Then
+                        If String.IsNullOrWhiteSpace(targetUser) AndAlso isRemembered Then
                             targetUser = SettingsManager.GetSetting("RememberMe_User")
-                        End If
-                        If String.IsNullOrWhiteSpace(targetUser) Then
-                            targetUser = SettingsManager.GetSetting("LastLoggedInUser")
                         End If
                         If String.IsNullOrWhiteSpace(targetUser) Then
                             Try
@@ -511,32 +508,59 @@ Public Class Login
 
     Private Sub SelectLastUserAndFocusPassword()
         Try
-            ' في حال لم يتم تحديد أي مستخدم في القائمة بعد
-            If cmbUsername.SelectedIndex < 0 AndAlso cmbUsername.Items.Count > 0 Then
-                Dim targetUser As String = ""
+            If cmbUsername.Items.Count > 0 Then
+                ' استرجاع اسم آخر مستخدم:
+                ' 1. آخر مستخدم سجل دخوله في الإعدادات (LastLoggedInUser)
+                ' 2. خيار تذكرني إذا كان مفعلاً
+                ' 3. آخر عملية تسجيل دخول مسجلة في جدول Login_Info_TBL
+                Dim targetUser As String = SettingsManager.GetSetting("LastLoggedInUser")
                 Dim isRemembered As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
-                If isRemembered Then
+
+                If String.IsNullOrWhiteSpace(targetUser) AndAlso isRemembered Then
                     targetUser = SettingsManager.GetSetting("RememberMe_User")
                 End If
+
                 If String.IsNullOrWhiteSpace(targetUser) Then
-                    targetUser = SettingsManager.GetSetting("LastLoggedInUser")
+                    Try
+                        Using cn As SqlConnection = DBModule.NewConn()
+                            Using cmdLast As New SqlCommand("SELECT TOP 1 Login_Username FROM Login_Info_TBL WHERE (Login_Note LIKE N'%ناجح%' OR Login_Note IS NULL) AND Login_Username IS NOT NULL AND Login_Username <> '' ORDER BY ID DESC", cn)
+                                Dim lastObj = cmdLast.ExecuteScalar()
+                                If lastObj IsNot Nothing AndAlso Not Convert.IsDBNull(lastObj) Then
+                                    targetUser = lastObj.ToString().Trim()
+                                End If
+                            End Using
+                        End Using
+                    Catch
+                    End Try
                 End If
 
-                Dim targetId As Object = Nothing
                 If Not String.IsNullOrWhiteSpace(targetUser) Then
-                    For Each item As Object In cmbUsername.Items
-                        Dim drv = TryCast(item, DataRowView)
+                    Dim foundIndex As Integer = -1
+                    For i As Integer = 0 To cmbUsername.Items.Count - 1
+                        Dim drv = TryCast(cmbUsername.Items(i), DataRowView)
                         If drv IsNot Nothing AndAlso String.Equals(drv("User_username").ToString().Trim(), targetUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
-                            targetId = drv("User_ID")
+                            foundIndex = i
+                            Exit For
+                        ElseIf String.Equals(cmbUsername.GetItemText(cmbUsername.Items(i)).Trim(), targetUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
+                            foundIndex = i
                             Exit For
                         End If
                     Next
+
+                    If foundIndex >= 0 Then
+                        cmbUsername.SelectedIndex = foundIndex
+                    End If
                 End If
 
-                If targetId IsNot Nothing Then
-                    cmbUsername.SelectedValue = targetId
-                Else
-                    cmbUsername.SelectedIndex = 0
+                ' تعبئة كلمة المرور إذا كانت ميزة تذكرني مفعلة لهذا المستخدم
+                If isRemembered Then
+                    Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
+                    If Not String.IsNullOrEmpty(savedEncPass) Then
+                        Dim savedPass As String = DecryptPassword(savedEncPass)
+                        If Not String.IsNullOrEmpty(savedPass) Then
+                            txtpassword.Text = savedPass
+                        End If
+                    End If
                 End If
             End If
 

@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Diagnostics
 Imports System.Drawing
@@ -311,8 +311,13 @@ Public Class FrmModernUpdater
                                        If String.IsNullOrEmpty(entryName) Then
                                            ' مجلد
                                            Directory.CreateDirectory(destPath)
-                                       Else
-                                           ' ملف
+                                       ElseIf entryName.Equals("update.exe", StringComparison.OrdinalIgnoreCase) OrElse entryName.Equals("Sestamk.VB.Updater.exe", StringComparison.OrdinalIgnoreCase) Then
+                                            Try
+                                                entry.ExtractToFile(destPath, overwrite:=True)
+                                            Catch
+                                            End Try
+                                        Else
+' ملف
                                            Directory.CreateDirectory(Path.GetDirectoryName(destPath))
 
                                            ' تطبيق خدعة Rename Trick للملفات المقفولة

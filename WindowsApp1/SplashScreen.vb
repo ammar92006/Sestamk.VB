@@ -165,12 +165,29 @@ Public Class SplashScreen
 
             ' ── الخطوة 4: فحص وترقيع هيكل الجداول وتحميل البيانات ──
             If connected Then
-                UpdateStatus("فحص الجداول والبيانات وتكامل النظام...", 85)
+                Dim isPostUpdate As Boolean = False
+                Try
+                    Dim cmdArgs = Environment.GetCommandLineArgs()
+                    If cmdArgs IsNot Nothing Then
+                        isPostUpdate = cmdArgs.Any(Function(a) String.Equals(a, "--post-update", StringComparison.OrdinalIgnoreCase))
+                    End If
+                Catch
+                End Try
+
+                If isPostUpdate Then
+                    UpdateStatus("تطبيق التحديث: فحص وترقيع قاعدة البيانات وإضافة الأعمدة الجديدة...", 85)
+                Else
+                    UpdateStatus("فحص الجداول والبيانات وتكامل النظام...", 85)
+                End If
+
                 Try
                     Dim maintService As New DatabaseMaintenanceService(DBModule.ConnectionString)
-                    Await maintService.CheckAndRepairDatabaseAsync()
+                    Dim maintReport = Await maintService.CheckAndRepairDatabaseAsync()
+                    If maintReport IsNot Nothing AndAlso (maintReport.TablesCreated.Count > 0 OrElse maintReport.ColumnsAdded.Count > 0) Then
+                        Logger.LogInfo("Database Self-Healing applied: Tables created=" & maintReport.TablesCreated.Count & ", Columns added=" & maintReport.ColumnsAdded.Count)
+                    End If
                 Catch exMaint As Exception
-                    Debug.WriteLine("Splash maintenance error: " & exMaint.Message)
+                    Logger.LogError("Splash maintenance error: " & exMaint.Message, exMaint)
                 End Try
 
                 ' تحميل بيانات المدير المهيّأة لهذا النشاط
