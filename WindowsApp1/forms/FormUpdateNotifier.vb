@@ -1,5 +1,6 @@
 Imports System.Drawing
 Imports System.Linq
+Imports System.Net.Http
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
 Imports Guna.UI2.WinForms
@@ -21,29 +22,64 @@ Partial Class FormUpdateNotifier
             lblVersionBadge.Text = "v" & verStr.TrimStart("v"c)
             lblTitle.Text = "تحديث جديد متوفر: " & verStr
 
-            ' استخراج وتنسيق حجم الحزمة
-            Dim sizeStr = FormatFileSize(manifest.PackageSize)
-            Dim sizeStrAr = FormatFileSizeArabic(manifest.PackageSize)
+            ' عرض حجم الحزمة الفعلي في كافة عناصر التحكم
+            UpdateSizeLabels(manifest.PackageSize, manifest.Mandatory)
 
-            ' عرض حجم التحديث في كافة عناصر التحكم المناسبة
-            lblSizeBadge.Text = sizeStr
-            lblSizeInCard.Text = "الحجم: " & sizeStrAr
-            'btnUpdate.Text = "⬇️ تحديث الآن (" & sizeStr & ")"
-            lblDeltaNotice.Text = "⚡ تحديث ذكي وسريع (" & sizeStr & "): يتم تنزيل وتحديث الملفات الجديدة فقط دون الحاجة لإعادة التثبيت"
+            ' إذا كان الحجم غير محدد في المانيفست، نقوم بجلبه ديناميكياً بدقة عبر طلب HEAD
+            If manifest.PackageSize <= 0 AndAlso Not String.IsNullOrWhiteSpace(manifest.PackageUrl) Then
+                FetchRealPackageSizeAsync()
+            End If
 
             ' تنسيق قائمة الملاحظات والتحسينات في بطاقات أنيقة
             PopulateNotesList(manifest)
 
             btnLater.Visible = Not manifest.Mandatory
             btnClose.Visible = Not manifest.Mandatory
-
-            If manifest.Mandatory Then
-                lblDeltaNotice.Text = "⚠️ هذا التحديث إلزامي (" & sizeStr & ") لمتابعة العمل والتوافق مع السيرفر"
-                lblDeltaNotice.ForeColor = Color.FromArgb(248, 113, 113)
-                pnlDeltaNotice.FillColor = Color.FromArgb(69, 26, 26)
-                pnlDeltaNotice.BorderColor = Color.FromArgb(239, 68, 68)
-            End If
         End If
+    End Sub
+
+    Private Sub UpdateSizeLabels(bytes As Long, isMandatory As Boolean)
+        Dim sizeStr = FormatFileSize(bytes)
+        Dim sizeStrAr = FormatFileSizeArabic(bytes)
+
+        lblSizeBadge.Text = sizeStr
+        lblSizeInCard.Text = "الحجم: " & sizeStrAr
+
+        If isMandatory Then
+            lblDeltaNotice.Text = "⚠️ هذا التحديث إلزامي (" & sizeStr & ") لمتابعة العمل والتوافق مع السيرفر"
+            lblDeltaNotice.ForeColor = Color.FromArgb(248, 113, 113)
+            pnlDeltaNotice.FillColor = Color.FromArgb(69, 26, 26)
+            pnlDeltaNotice.BorderColor = Color.FromArgb(239, 68, 68)
+        Else
+            lblDeltaNotice.Text = "⚡ تحديث ذكي وسريع (" & sizeStr & "): يتم تنزيل وتحديث الملفات الجديدة فقط دون الحاجة لإعادة التثبيت"
+            lblDeltaNotice.ForeColor = Color.FromArgb(148, 163, 184)
+            pnlDeltaNotice.FillColor = Color.FromArgb(30, 41, 59)
+            pnlDeltaNotice.BorderColor = Color.FromArgb(51, 65, 85)
+        End If
+    End Sub
+
+    Private Async Sub FetchRealPackageSizeAsync()
+        If _manifest Is Nothing OrElse String.IsNullOrWhiteSpace(_manifest.PackageUrl) Then Return
+        Try
+            Using client As New HttpClient()
+                client.Timeout = TimeSpan.FromSeconds(6)
+                Using req As New HttpRequestMessage(HttpMethod.Head, _manifest.PackageUrl)
+                    Dim resp = Await client.SendAsync(req)
+                    If resp.IsSuccessStatusCode AndAlso resp.Content.Headers.ContentLength.HasValue Then
+                        Dim realBytes = resp.Content.Headers.ContentLength.Value
+                        If realBytes > 0 Then
+                            _manifest.PackageSize = realBytes
+                            If Me.InvokeRequired Then
+                                Me.Invoke(Sub() UpdateSizeLabels(realBytes, _manifest.Mandatory))
+                            Else
+                                UpdateSizeLabels(realBytes, _manifest.Mandatory)
+                            End If
+                        End If
+                    End If
+                End Using
+            End Using
+        Catch
+        End Try
     End Sub
 
     ''' <summary>
@@ -171,7 +207,7 @@ Partial Class FormUpdateNotifier
     End Function
 
     Private Shared Function FormatFileSize(bytes As Long) As String
-        If bytes <= 0 Then Return "43.5 MB"
+        If bytes <= 0 Then Return "-- MB"
         If bytes >= 1024L * 1024L * 1024L Then
             Dim gb = bytes / (1024.0 * 1024.0 * 1024.0)
             Return gb.ToString("0.0") & " GB"
@@ -187,7 +223,7 @@ Partial Class FormUpdateNotifier
     End Function
 
     Private Shared Function FormatFileSizeArabic(bytes As Long) As String
-        If bytes <= 0 Then Return "43.5 ميجابايت"
+        If bytes <= 0 Then Return "غير محدد"
         If bytes >= 1024L * 1024L * 1024L Then
             Dim gb = bytes / (1024.0 * 1024.0 * 1024.0)
             Return gb.ToString("0.0") & " جيجابايت"

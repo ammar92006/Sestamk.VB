@@ -5,6 +5,7 @@ Imports System.Net.Http
 Imports System.Text
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
+Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 
 Namespace UC_Settings
@@ -56,54 +57,59 @@ Namespace UC_Settings
         Private Async Function LoadUpdateHistoryCardsAsync(channel As String) As Task
             Try
                 Dim updatesArray As New JArray()
+                Dim cleanChannel = If(String.IsNullOrWhiteSpace(channel), "public", channel.Trim().ToLowerInvariant())
 
-                ' 1. جلب التحديثات المخصصة لـ Sestamk.VB حصراً من GitHub Releases لمنع أي تداخل مع C#
+                ' 1. المصدر الأول: Supabase RPC (get_update_history) لقناة المستخدم المحددة
                 Try
-                    Using ghClient As New HttpClient()
-                        ghClient.Timeout = TimeSpan.FromSeconds(12)
-                        ghClient.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
-                        Dim ghResp = Await ghClient.GetAsync(LicenseSettings.GitHubReleasesApiUrl)
-                        If ghResp.IsSuccessStatusCode Then
-                            Dim ghJson = Await ghResp.Content.ReadAsStringAsync()
-                            Dim ghList = JArray.Parse(ghJson)
-                            For Each rel In ghList
-                                Dim tag = Convert.ToString(rel("tag_name")).TrimStart("v"c)
-                                Dim title = Convert.ToString(rel("name"))
-                                Dim body = Convert.ToString(rel("body"))
-                                Dim pubDate As String = ""
-                                Dim pubDateToken = rel("published_at")
-                                If pubDateToken IsNot Nothing Then
-                                    If TypeOf pubDateToken Is JValue AndAlso TypeOf DirectCast(pubDateToken, JValue).Value Is DateTime Then
-                                        Dim dtUtc = CDate(DirectCast(pubDateToken, JValue).Value)
-                                        pubDate = dtUtc.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture)
-                                    Else
-                                        pubDate = Convert.ToString(pubDateToken)
-                                    End If
+                    Using client As New HttpClient()
+                        client.Timeout = TimeSpan.FromSeconds(10)
+                        client.DefaultRequestHeaders.Add("apikey", LicenseSettings.PublishableKey)
+                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " & LicenseSettings.PublishableKey)
+                        Dim bodyObj As New Dictionary(Of String, Object) From {{"p_channel", cleanChannel}}
+                        Dim content As New StringContent(JsonConvert.SerializeObject(bodyObj), Encoding.UTF8, "application/json")
+                        Dim resp = Await client.PostAsync(LicenseSettings.SupabaseUrl.TrimEnd("/"c) & "/rest/v1/rpc/get_update_history", content)
+                        If resp.IsSuccessStatusCode Then
+                            Dim jsonStr = Await resp.Content.ReadAsStringAsync()
+                            Dim list = JArray.Parse(jsonStr)
+                            For Each item In list
+                                Dim mUrl = Convert.ToString(item("manifest_url"))
+                                ' استبعاد أي تحديثات تخص مشروع C# القديم
+                                If Not String.IsNullOrEmpty(mUrl) AndAlso mUrl.IndexOf("/ammar92006/Sestamk/", StringComparison.OrdinalIgnoreCase) >= 0 AndAlso mUrl.IndexOf("/ammar92006/Sestamk.VB/", StringComparison.OrdinalIgnoreCase) < 0 Then
+                                    Continue For
                                 End If
-                                Dim manUrl = "https://github.com/ammar92006/Sestamk.VB/releases/download/v" & tag & "/manifest.json"
-                                Dim htmlUrl = Convert.ToString(rel("html_url"))
+
+                                Dim itemChan = Convert.ToString(item("channel"))
+                                If Not String.IsNullOrWhiteSpace(itemChan) AndAlso Not String.Equals(itemChan.Trim(), cleanChannel, StringComparison.OrdinalIgnoreCase) Then
+                                    Continue For
+                                End If
+
+                                Dim ver = Convert.ToString(item("version"))
+                                Dim title = Convert.ToString(item("title"))
+                                Dim desc = Convert.ToString(item("description"))
+                                Dim whatsNewArr = item("whats_new")
+                                If (String.IsNullOrWhiteSpace(desc) OrElse desc.Length < 10) AndAlso whatsNewArr IsNot Nothing AndAlso whatsNewArr.Type = JTokenType.Array Then
+                                    Dim sbNotes As New StringBuilder()
+                                    For Each w In whatsNewArr
+                                        sbNotes.AppendLine("• " & Convert.ToString(w))
+                                    Next
+                                    desc = sbNotes.ToString().TrimEnd()
+                                End If
+
+                                Dim relDate = Convert.ToString(item("release_date"))
+                                If String.IsNullOrWhiteSpace(relDate) Then relDate = Convert.ToString(item("created_at"))
 
                                 Dim pkgSize As Long = 0
+                                Long.TryParse(Convert.ToString(item("delta_size_bytes")), pkgSize)
                                 Dim instSize As Long = 0
-                                Dim assets = rel("assets")
-                                If assets IsNot Nothing AndAlso assets.Type = JTokenType.Array Then
-                                    For Each a In assets
-                                        Dim aName = Convert.ToString(a("name")).ToLowerInvariant()
-                                        If aName = "package.zip" Then
-                                            Long.TryParse(Convert.ToString(a("size")), pkgSize)
-                                        ElseIf aName.EndsWith(".exe") AndAlso aName.Contains("setup") Then
-                                            Long.TryParse(Convert.ToString(a("size")), instSize)
-                                        End If
-                                    Next
-                                End If
+                                Long.TryParse(Convert.ToString(item("full_size_bytes")), instSize)
 
                                 Dim cardItem As New JObject From {
-                                    {"version", tag},
-                                    {"title", If(String.IsNullOrWhiteSpace(title), "الإصدار " & tag, title)},
-                                    {"description", body},
-                                    {"release_date", pubDate},
-                                    {"manifest_url", manUrl},
-                                    {"html_url", htmlUrl},
+                                    {"version", ver},
+                                    {"title", If(String.IsNullOrWhiteSpace(title), "الإصدار " & ver, title)},
+                                    {"description", desc},
+                                    {"release_date", relDate},
+                                    {"manifest_url", mUrl},
+                                    {"html_url", If(Not String.IsNullOrEmpty(ver), "https://github.com/ammar92006/Sestamk.VB/releases/tag/v" & ver.TrimStart("v"c), "")},
                                     {"package_size", pkgSize},
                                     {"installer_size", instSize}
                                 }
@@ -111,37 +117,115 @@ Namespace UC_Settings
                             Next
                         End If
                     End Using
-                Catch exGh As Exception
-                    Debug.WriteLine("GitHub releases check error: " & exGh.Message)
+                Catch exRpc As Exception
+                    Debug.WriteLine("Supabase get_update_history error: " & exRpc.Message)
                 End Try
 
-                ' 2. في حال لم نتمكن من الوصول لـ GitHub Releases، نحاول فحص المانيفست الافتراضي
+                ' 2. في حال فشل الـ RPC، نحاول القراءة المباشرة من جدول updates في Supabase
                 If updatesArray.Count = 0 Then
                     Try
                         Using client As New HttpClient()
                             client.Timeout = TimeSpan.FromSeconds(10)
-                            client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
-                            Dim defResp = Await client.GetAsync(LicenseSettings.DefaultManifestUrl)
-                            If defResp.IsSuccessStatusCode Then
-                                Dim manJson = Await defResp.Content.ReadAsStringAsync()
-                                Dim parsedMan = UpdateCoordinator.ParseManifest(JObject.Parse(manJson))
-                                If parsedMan IsNot Nothing Then
+                            client.DefaultRequestHeaders.Add("apikey", LicenseSettings.PublishableKey)
+                            client.DefaultRequestHeaders.Add("Authorization", "Bearer " & LicenseSettings.PublishableKey)
+                            Dim url = LicenseSettings.SupabaseUrl.TrimEnd("/"c) & "/rest/v1/updates?channel=eq." & Uri.EscapeDataString(cleanChannel) & "&is_active=eq.true&order=release_date.desc,created_at.desc"
+                            Dim resp = Await client.GetAsync(url)
+                            If resp.IsSuccessStatusCode Then
+                                Dim jsonStr = Await resp.Content.ReadAsStringAsync()
+                                Dim list = JArray.Parse(jsonStr)
+                                For Each item In list
+                                    Dim mUrl = Convert.ToString(item("manifest_url"))
+                                    If Not String.IsNullOrEmpty(mUrl) AndAlso mUrl.IndexOf("/ammar92006/Sestamk/", StringComparison.OrdinalIgnoreCase) >= 0 AndAlso mUrl.IndexOf("/ammar92006/Sestamk.VB/", StringComparison.OrdinalIgnoreCase) < 0 Then
+                                        Continue For
+                                    End If
+
+                                    Dim ver = Convert.ToString(item("version"))
+                                    Dim title = Convert.ToString(item("title"))
+                                    Dim desc = Convert.ToString(item("description"))
+                                    Dim whatsNewArr = item("whats_new")
+                                    If (String.IsNullOrWhiteSpace(desc) OrElse desc.Length < 10) AndAlso whatsNewArr IsNot Nothing AndAlso whatsNewArr.Type = JTokenType.Array Then
+                                        Dim sbNotes As New StringBuilder()
+                                        For Each w In whatsNewArr
+                                            sbNotes.AppendLine("• " & Convert.ToString(w))
+                                        Next
+                                        desc = sbNotes.ToString().TrimEnd()
+                                    End If
+
+                                    Dim relDate = Convert.ToString(item("release_date"))
+                                    If String.IsNullOrWhiteSpace(relDate) Then relDate = Convert.ToString(item("created_at"))
+
+                                    Dim pkgSize As Long = 0
+                                    Long.TryParse(Convert.ToString(item("delta_size_bytes")), pkgSize)
+                                    Dim instSize As Long = 0
+                                    Long.TryParse(Convert.ToString(item("full_size_bytes")), instSize)
+
                                     Dim cardItem As New JObject From {
-                                        {"version", parsedMan.Version},
-                                        {"title", If(String.IsNullOrWhiteSpace(parsedMan.Title), "الإصدار " & parsedMan.Version, parsedMan.Title)},
-                                        {"description", parsedMan.Notes},
-                                        {"release_date", DateTime.UtcNow.ToString("yyyy-MM-dd")},
-                                        {"manifest_url", LicenseSettings.DefaultManifestUrl},
-                                        {"html_url", "https://github.com/ammar92006/Sestamk.VB/releases/latest"},
-                                        {"package_size", parsedMan.PackageSize},
-                                        {"installer_size", parsedMan.InstallerSize}
+                                        {"version", ver},
+                                        {"title", If(String.IsNullOrWhiteSpace(title), "الإصدار " & ver, title)},
+                                        {"description", desc},
+                                        {"release_date", relDate},
+                                        {"manifest_url", mUrl},
+                                        {"html_url", If(Not String.IsNullOrEmpty(ver), "https://github.com/ammar92006/Sestamk.VB/releases/tag/v" & ver.TrimStart("v"c), "")},
+                                        {"package_size", pkgSize},
+                                        {"installer_size", instSize}
                                     }
                                     updatesArray.Add(cardItem)
-                                End If
+                                Next
                             End If
                         End Using
-                    Catch exDef As Exception
-                        Debug.WriteLine("Default manifest check error: " & exDef.Message)
+                    Catch exTbl As Exception
+                        Debug.WriteLine("Supabase updates table error: " & exTbl.Message)
+                    End Try
+                End If
+
+                ' 3. في حال كان المستخدم في قناة public حصراً ولم نجد سجلات، يمكن فحص GitHub Releases
+                If updatesArray.Count = 0 AndAlso cleanChannel = "public" Then
+                    Try
+                        Using ghClient As New HttpClient()
+                            ghClient.Timeout = TimeSpan.FromSeconds(10)
+                            ghClient.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
+                            Dim ghResp = Await ghClient.GetAsync(LicenseSettings.GitHubReleasesApiUrl)
+                            If ghResp.IsSuccessStatusCode Then
+                                Dim ghJson = Await ghResp.Content.ReadAsStringAsync()
+                                Dim ghList = JArray.Parse(ghJson)
+                                For Each rel In ghList
+                                    Dim tag = Convert.ToString(rel("tag_name")).TrimStart("v"c)
+                                    Dim title = Convert.ToString(rel("name"))
+                                    Dim body = Convert.ToString(rel("body"))
+                                    Dim pubDate = Convert.ToString(rel("published_at"))
+                                    Dim manUrl = "https://github.com/ammar92006/Sestamk.VB/releases/download/v" & tag & "/manifest.json"
+                                    Dim htmlUrl = Convert.ToString(rel("html_url"))
+
+                                    Dim pkgSize As Long = 0
+                                    Dim instSize As Long = 0
+                                    Dim assets = rel("assets")
+                                    If assets IsNot Nothing AndAlso assets.Type = JTokenType.Array Then
+                                        For Each a In assets
+                                            Dim aName = Convert.ToString(a("name")).ToLowerInvariant()
+                                            If aName = "package.zip" Then
+                                                Long.TryParse(Convert.ToString(a("size")), pkgSize)
+                                            ElseIf aName.EndsWith(".exe") AndAlso aName.Contains("setup") Then
+                                                Long.TryParse(Convert.ToString(a("size")), instSize)
+                                            End If
+                                        Next
+                                    End If
+
+                                    Dim cardItem As New JObject From {
+                                        {"version", tag},
+                                        {"title", If(String.IsNullOrWhiteSpace(title), "الإصدار " & tag, title)},
+                                        {"description", body},
+                                        {"release_date", pubDate},
+                                        {"manifest_url", manUrl},
+                                        {"html_url", htmlUrl},
+                                        {"package_size", pkgSize},
+                                        {"installer_size", instSize}
+                                    }
+                                    updatesArray.Add(cardItem)
+                                Next
+                            End If
+                        End Using
+                    Catch exGh As Exception
+                        Debug.WriteLine("GitHub releases fallback error: " & exGh.Message)
                     End Try
                 End If
 
@@ -150,7 +234,7 @@ Namespace UC_Settings
                 flpUpdateHistory.Controls.Clear()
 
                 If updatesArray.Count > 0 Then
-                    ' أحدث تحديث
+                    ' أحدث تحديث متاح لهذه القناة
                     Dim latest = updatesArray(0)
                     Dim latestVerStr = Convert.ToString(latest("version"))
                     _latestManifestUrl = Convert.ToString(latest("manifest_url"))
@@ -168,15 +252,13 @@ Namespace UC_Settings
                         lblLatestUpdateDate.Text = If(String.IsNullOrWhiteSpace(dateStr), "-", dateStr)
                     End If
 
-                    ' التحقق من وجود إصدار أحدث
+                    ' التحقق من وجود إصدار أحدث في نفس القناة
                     Dim currentVer As Version = Nothing
                     Dim latestVer As Version = Nothing
                     Dim hasNewer = False
 
                     If Version.TryParse(Application.ProductVersion, currentVer) AndAlso Version.TryParse(latestVerStr, latestVer) Then
                         hasNewer = (latestVer > currentVer)
-                    Else
-                        hasNewer = Not String.Equals(Application.ProductVersion, latestVerStr, StringComparison.OrdinalIgnoreCase)
                     End If
 
                     If hasNewer Then
@@ -184,9 +266,9 @@ Namespace UC_Settings
                         btnCheckForUpdates.FillColor = Color.FromArgb(37, 99, 235)
                         btnCheckForUpdates.Enabled = True
                     Else
-                        btnCheckForUpdates.Text = "✅ النظام محدّث"
+                        btnCheckForUpdates.Text = "🔄 فحص التحديثات"
                         btnCheckForUpdates.FillColor = Color.FromArgb(16, 185, 129)
-                        btnCheckForUpdates.Enabled = False
+                        btnCheckForUpdates.Enabled = True
                     End If
 
                     ' رسم بطاقات التحديثات بتصميم بطاقات الميزات العصرية
@@ -204,9 +286,9 @@ Namespace UC_Settings
                 Else
                     lblLatestVersion.Text = Application.ProductVersion
                     lblLatestUpdateDate.Text = "لا توجد سجلات"
-                    btnCheckForUpdates.Text = "✅ النظام محدّث"
+                    btnCheckForUpdates.Text = "🔄 فحص التحديثات"
                     btnCheckForUpdates.FillColor = Color.FromArgb(16, 185, 129)
-                    btnCheckForUpdates.Enabled = False
+                    btnCheckForUpdates.Enabled = True
                 End If
             Catch ex As Exception
                 Debug.WriteLine("LoadUpdateHistoryCardsAsync error: " & ex.Message)
@@ -781,61 +863,105 @@ Namespace UC_Settings
             Dim originalText = btnCheckForUpdates.Text
             btnCheckForUpdates.Text = "جاري الفحص..."
             Try
-                Dim license = LicenseCache.Load()
-                Dim channel = If(license IsNot Nothing, Convert.ToString(license("channel")), "public")
-                If String.IsNullOrWhiteSpace(channel) Then channel = "public"
+                ' 1. التحقق المباشر من حالة الترخيص وقناة المستخدم عبر سيرفر Supabase
+                Dim licenseResult = Await LicenseBootstrapper.CheckAsync(forceOnlineCheck:=True)
+                Dim payload = licenseResult.Payload
+                If payload Is Nothing Then payload = LicenseCache.Load()
 
+                Dim channel = "public"
+                If payload IsNot Nothing Then
+                    channel = Convert.ToString(payload("channel"))
+                    If String.IsNullOrWhiteSpace(channel) Then channel = "public"
+                End If
+                channel = channel.Trim().ToLowerInvariant()
+
+                lblChannel.Text = channel.ToUpperInvariant()
+
+                ' تحديث بطاقات السجل للقناة الحالية
                 Await LoadUpdateHistoryCardsAsync(channel)
 
-                If String.IsNullOrWhiteSpace(_latestManifestUrl) Then
-                    _latestManifestUrl = LicenseSettings.DefaultManifestUrl
+                ' 2. فحص هل يوجد تحديث متاح على السيرفر لهذه القناة
+                Dim isUpdateAvailable = False
+                If payload IsNot Nothing AndAlso payload("update_available") IsNot Nothing Then
+                    Boolean.TryParse(Convert.ToString(payload("update_available")), isUpdateAvailable)
                 End If
 
-                If Not String.IsNullOrWhiteSpace(_latestManifestUrl) Then
-                    Using client As New HttpClient()
-                        client.Timeout = TimeSpan.FromSeconds(15)
-                        client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
-                        Dim manifestJson = Await client.GetStringAsync(_latestManifestUrl)
-                        Dim parsed = JObject.Parse(manifestJson)
-                        Dim manifest = UpdateCoordinator.ParseManifest(parsed)
+                If Not isUpdateAvailable Then
+                    Try
+                        Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
+                    Catch
+                        MessageBox.Show($"أنت تستخدم أحدث إصدار متاح حالياً لقناة {channel.ToUpperInvariant()}.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Try
+                    Return
+                End If
 
-                        If manifest IsNot Nothing Then
-                            Dim curVer As Version = Nothing
-                            Dim manVer As Version = Nothing
-                            Dim isNewer = False
+                ' 3. في حال أفاد السيرفر بوجود تحديث، نجلب المانيفست المخصص
+                Dim manifestUrl = Convert.ToString(payload.SelectToken("update.manifest_url"))
+                If String.IsNullOrWhiteSpace(manifestUrl) Then
+                    manifestUrl = _latestManifestUrl
+                End If
 
-                            If Version.TryParse(Application.ProductVersion, curVer) AndAlso Version.TryParse(manifest.Version, manVer) Then
-                                isNewer = (manVer > curVer)
-                            Else
-                                isNewer = Not String.Equals(Application.ProductVersion, manifest.Version, StringComparison.OrdinalIgnoreCase)
+                If String.IsNullOrWhiteSpace(manifestUrl) Then
+                    Try
+                        Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
+                    Catch
+                    End Try
+                    Return
+                End If
+
+                Using client As New HttpClient()
+                    client.Timeout = TimeSpan.FromSeconds(15)
+                    client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
+                    Dim manifestJson = Await client.GetStringAsync(manifestUrl)
+                    Dim parsed = JObject.Parse(manifestJson)
+                    Dim manifest = UpdateCoordinator.ParseManifest(parsed)
+
+                    If manifest IsNot Nothing Then
+                        ' التحقق الصارم من تطابق القناة
+                        Dim manifestChannel = If(String.IsNullOrWhiteSpace(manifest.Channel), "public", manifest.Channel.Trim().ToLowerInvariant())
+                        If Not String.Equals(manifestChannel, channel, StringComparison.OrdinalIgnoreCase) Then
+                            Try
+                                Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
+                            Catch
+                            End Try
+                            Return
+                        End If
+
+                        ' التحقق من أن رقم الإصدار أحدث من الإصدار الحالي للبرنامج
+                        Dim curVer As Version = Nothing
+                        Dim manVer As Version = Nothing
+                        Dim isNewer = False
+
+                        If Version.TryParse(Application.ProductVersion, curVer) AndAlso Version.TryParse(manifest.Version, manVer) Then
+                            isNewer = (manVer > curVer)
+                        Else
+                            isNewer = Not String.Equals(Application.ProductVersion, manifest.Version, StringComparison.OrdinalIgnoreCase)
+                        End If
+
+                        If isNewer Then
+                            ' إسناد الحجم من السيرفر إذا لم يكن محدداً في المانيفست
+                            If manifest.PackageSize <= 0 Then
+                                Dim sSize = CLng(Val(Convert.ToString(payload.SelectToken("update.delta_size_bytes"))))
+                                If sSize > 0 Then manifest.PackageSize = sSize
                             End If
 
-                            If isNewer Then
-                                Using notifier As New FormUpdateNotifier(manifest)
-                                    notifier.ShowDialog(Me.FindForm())
-                                End Using
-                            Else
-                                Try
-                                    Notify.Toast("أنت تستخدم أحدث إصدار حالياً ✅", Notify.ToastType.Success)
-                                Catch
-                                    MessageBox.Show("أنت تستخدم أحدث إصدار متاح حالياً.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                                End Try
-                            End If
+                            Using notifier As New FormUpdateNotifier(manifest)
+                                notifier.ShowDialog(Me.FindForm())
+                            End Using
                         Else
                             Try
-                                Notify.Toast("أنت تستخدم أحدث إصدار حالياً ✅", Notify.ToastType.Success)
+                                Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
                             Catch
-                                MessageBox.Show("أنت تستخدم أحدث إصدار متاح حالياً.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                MessageBox.Show($"أنت تستخدم أحدث إصدار متاح حالياً لقناة {channel.ToUpperInvariant()}.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             End Try
                         End If
-                    End Using
-                Else
-                    Try
-                        Notify.Toast("أنت تستخدم أحدث إصدار حالياً ✅", Notify.ToastType.Success)
-                    Catch
-                        MessageBox.Show("أنت تستخدم أحدث إصدار حالياً.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    End Try
-                End If
+                    Else
+                        Try
+                            Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
+                        Catch
+                        End Try
+                    End If
+                End Using
             Catch ex As Exception
                 MessageBox.Show("حدث خطأ أثناء فحص التحديثات: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Finally

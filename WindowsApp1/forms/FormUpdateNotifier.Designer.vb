@@ -118,7 +118,7 @@ Partial Class FormUpdateNotifier
         Me.lblVersionBadge.Name = "lblVersionBadge"
         Me.lblVersionBadge.Size = New System.Drawing.Size(84, 30)
         Me.lblVersionBadge.TabIndex = 3
-        Me.lblVersionBadge.Text = "v1.2.1"
+        Me.lblVersionBadge.Text = "v--"
         '
         'lblSizeBadge
         '
@@ -137,7 +137,7 @@ Partial Class FormUpdateNotifier
         Me.lblSizeBadge.Name = "lblSizeBadge"
         Me.lblSizeBadge.Size = New System.Drawing.Size(96, 30)
         Me.lblSizeBadge.TabIndex = 5
-        Me.lblSizeBadge.Text = "📦 43.5 MB"
+        Me.lblSizeBadge.Text = "📦 --"
         '
         'lblSubtitle
         '
@@ -373,7 +373,7 @@ Partial Class FormUpdateNotifier
         Me.lblSizeInCard.Name = "lblSizeInCard"
         Me.lblSizeInCard.Size = New System.Drawing.Size(165, 26)
         Me.lblSizeInCard.TabIndex = 2
-        Me.lblSizeInCard.Text = "📦 الحجم: 43.5 ميجابايت"
+        Me.lblSizeInCard.Text = "📦 الحجم: --"
         '
         'lblNotesHeader
         '

@@ -26,14 +26,24 @@ Public NotInheritable Class UpdateCoordinator
     End Sub
 
     Public Shared Async Function CheckAndPromptAsync(license As JObject, owner As IWin32Window) As Task
-        Dim manifestUrl As String = Nothing
-        If license IsNot Nothing AndAlso Convert.ToBoolean(license("update_available")) Then
-            manifestUrl = Convert.ToString(license.SelectToken("update.manifest_url"))
+        ' التحقق من الترخيص وقناة المستخدم
+        If license Is Nothing Then Return
+
+        Dim isUpdateAvailable = False
+        Dim availToken = license("update_available")
+        If availToken IsNot Nothing Then
+            Boolean.TryParse(Convert.ToString(availToken), isUpdateAvailable)
         End If
 
-        If String.IsNullOrWhiteSpace(manifestUrl) Then
-            manifestUrl = LicenseSettings.DefaultManifestUrl
-        End If
+        ' إذا كان السيرفر يفيد بعدم وجود تحديث متوفر لهذه القناة والترخيص، نتوقف فوراً
+        If Not isUpdateAvailable Then Return
+
+        Dim userChannel = Convert.ToString(license("channel"))
+        If String.IsNullOrWhiteSpace(userChannel) Then userChannel = "public"
+        userChannel = userChannel.Trim().ToLowerInvariant()
+
+        Dim manifestUrl As String = Convert.ToString(license.SelectToken("update.manifest_url"))
+        If String.IsNullOrWhiteSpace(manifestUrl) Then Return
 
         Try
             Using client As New HttpClient()
@@ -41,17 +51,14 @@ Public NotInheritable Class UpdateCoordinator
                 client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-Client")
                 Dim json = Await client.GetStringAsync(manifestUrl)
                 Dim manifest = ParseManifest(JObject.Parse(json))
-
-                ' إذا كان الرابط القادم من ترخيص السيرفر غير متوافق مع نسخة VB، نفحص رابط المستودع الافتراضي لـ VB
-                If manifest Is Nothing AndAlso Not String.Equals(manifestUrl, LicenseSettings.DefaultManifestUrl, StringComparison.OrdinalIgnoreCase) Then
-                    Try
-                        json = Await client.GetStringAsync(LicenseSettings.DefaultManifestUrl)
-                        manifest = ParseManifest(JObject.Parse(json))
-                    Catch
-                    End Try
-                End If
-
                 If manifest Is Nothing Then Return
+
+                ' التحقق الصارم من تطابق قناة التحديث مع قناة الترخيص (Beta vs Public)
+                Dim manifestChannel = If(String.IsNullOrWhiteSpace(manifest.Channel), "public", manifest.Channel.Trim().ToLowerInvariant())
+                If Not String.Equals(manifestChannel, userChannel, StringComparison.OrdinalIgnoreCase) Then
+                    Debug.WriteLine($"Update ignored due to channel mismatch: manifest channel '{manifestChannel}' vs user channel '{userChannel}'")
+                    Return
+                End If
 
                 Dim manifestVer As Version = Nothing
                 Dim currentVer As Version = Nothing
@@ -59,6 +66,12 @@ Public NotInheritable Class UpdateCoordinator
                     If manifestVer <= currentVer Then Return
                 ElseIf String.Equals(manifest.Version, Application.ProductVersion, StringComparison.OrdinalIgnoreCase) Then
                     Return
+                End If
+
+                ' في حال لم يتم تحديد حجم الحزمة في المانيفست، نقرأ الحجم من بيانات السيرفر
+                If manifest.PackageSize <= 0 Then
+                    Dim serverSizeBytes = CLng(Val(Convert.ToString(license.SelectToken("update.delta_size_bytes"))))
+                    If serverSizeBytes > 0 Then manifest.PackageSize = serverSizeBytes
                 End If
 
                 If owner IsNot Nothing AndAlso TypeOf owner Is Control AndAlso DirectCast(owner, Control).InvokeRequired Then
