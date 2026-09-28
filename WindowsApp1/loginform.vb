@@ -80,8 +80,11 @@ Public Class Login
         End Try
     End Function
 
-    Private Sub SaveLoginPreferences(username As String, password As String)
+    Private Sub SaveLoginPreferences(username As String, password As String, Optional userId As Integer = 0)
         Try
+            If userId > 0 Then
+                SettingsManager.SaveSetting(SettingsKeys.Lastinuserlogin, userId.ToString())
+            End If
             SettingsManager.SaveSetting("LastLoggedInUser", username)
             If chkRememberMe IsNot Nothing AndAlso chkRememberMe.Checked Then
                 SettingsManager.SaveSetting("RememberMe_Enabled", "true")
@@ -105,57 +108,9 @@ Public Class Login
                     Dim dt As New DataTable()
                     da.Fill(dt)
                     If dt.Rows.Count > 0 Then
-                        ' تحديد المستخدم المطلوب اختياره (آخر مستخدم سجل دخوله أولاً، ثم المحفوظ في تذكرني)
-                        Dim targetUser As String = SettingsManager.GetSetting("LastLoggedInUser")
-                        Dim isRemembered As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
-                        If String.IsNullOrWhiteSpace(targetUser) AndAlso isRemembered Then
-                            targetUser = SettingsManager.GetSetting("RememberMe_User")
-                        End If
-                        If String.IsNullOrWhiteSpace(targetUser) Then
-                            Try
-                                Using cmdLast As New SqlCommand("SELECT TOP 1 Login_Username FROM Login_Info_TBL WHERE (Login_Note LIKE N'%ناجح%' OR Login_Note IS NULL) AND Login_Username IS NOT NULL AND Login_Username <> '' ORDER BY ID DESC", cn)
-                                    Dim lastObj = cmdLast.ExecuteScalar()
-                                    If lastObj IsNot Nothing AndAlso Not Convert.IsDBNull(lastObj) Then
-                                        targetUser = lastObj.ToString().Trim()
-                                    End If
-                                End Using
-                            Catch
-                            End Try
-                        End If
-
-                        Dim targetId As Object = Nothing
-                        If Not String.IsNullOrWhiteSpace(targetUser) Then
-                            For Each row As DataRow In dt.Rows
-                                If String.Equals(row("User_username").ToString().Trim(), targetUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
-                                    targetId = row("User_ID")
-                                    Exit For
-                                End If
-                            Next
-                        End If
-
-                        cmbUsername.DataSource = dt
                         cmbUsername.DisplayMember = "User_username"
                         cmbUsername.ValueMember = "User_ID"
-
-                        If targetId IsNot Nothing Then
-                            cmbUsername.SelectedValue = targetId
-                        Else
-                            cmbUsername.SelectedIndex = 0
-                        End If
-
-                        ' استرجاع كلمة المرور المحفوظة إذا كانت خاصية تذكرني مفعلة
-                        If isRemembered AndAlso targetId IsNot Nothing Then
-                            If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = True
-                            Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
-                            If Not String.IsNullOrEmpty(savedEncPass) Then
-                                Dim savedPass As String = DecryptPassword(savedEncPass)
-                                If Not String.IsNullOrEmpty(savedPass) Then
-                                    txtpassword.Text = savedPass
-                                End If
-                            End If
-                        ElseIf chkRememberMe IsNot Nothing Then
-                            chkRememberMe.Checked = False
-                        End If
+                        cmbUsername.DataSource = dt
                     Else
                         cmbUsername.DataSource = Nothing
                         If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
@@ -170,6 +125,9 @@ Public Class Login
         Finally
             _isBindingUsers = False
         End Try
+
+        ' تحديد آخر مستخدم مسجل وتوجيه التركيز
+        SelectLastUserAndFocusPassword()
     End Sub
 
     ''' <summary>
@@ -315,24 +273,24 @@ Public Class Login
         End Try
 
         AddHandler LicenseBootstrapper.LicenseInvalidated, Sub(msg)
-            Try
-                If Me.IsDisposed Then Return
-                Me.BeginInvoke(Sub()
-                    Try
-                        BackgroundActivationTimer.Stop()
-                        Dim alertText = If(String.IsNullOrWhiteSpace(msg), "تم إلغاء تفعيل البرنامج من السيرفر.", msg)
-                        MessageBox.Show(alertText, "تنبيه التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                        Dim actForm As New FormActivation()
-                        actForm.Show()
-                        For Each frm As Form In Application.OpenForms.Cast(Of Form)().ToList()
-                            If frm IsNot actForm Then frm.Close()
-                        Next
-                    Catch
-                    End Try
-                End Sub)
-            Catch
-            End Try
-        End Sub
+                                                               Try
+                                                                   If Me.IsDisposed Then Return
+                                                                   Me.BeginInvoke(Sub()
+                                                                                      Try
+                                                                                          BackgroundActivationTimer.Stop()
+                                                                                          Dim alertText = If(String.IsNullOrWhiteSpace(msg), "تم إلغاء تفعيل البرنامج من السيرفر.", msg)
+                                                                                          MessageBox.Show(alertText, "تنبيه التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                                                                                          Dim actForm As New FormActivation()
+                                                                                          actForm.Show()
+                                                                                          For Each frm As Form In Application.OpenForms.Cast(Of Form)().ToList()
+                                                                                              If frm IsNot actForm Then frm.Close()
+                                                                                          Next
+                                                                                      Catch
+                                                                                      End Try
+                                                                                  End Sub)
+                                                               Catch
+                                                               End Try
+                                                           End Sub
 
         Dim license = Await LicenseBootstrapper.CheckAsync()
         If Not license.IsValid Then
@@ -403,45 +361,45 @@ Public Class Login
 
         ' ── النسخ الاحتياطي التلقائي وفق إعدادات النظام بدون حجب واجهة المستخدم ──
         Dim bgBackup = Task.Run(Sub()
-                     Try
-                         ' فحص تفعيل النسخ الاحتياطي التلقائي من الإعدادات
-                         If Not SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoBackup, True) Then
-                             Exit Sub
-                         End If
+                                    Try
+                                        ' فحص تفعيل النسخ الاحتياطي التلقائي من الإعدادات
+                                        If Not SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoBackup, True) Then
+                                            Exit Sub
+                                        End If
 
-                         ' استخدام مسار النسخ المخصص أو الافتراضي مع معالجة صلاحيات UAC
-                         Dim customPath = SettingsManager.GetSetting(SettingsKeys.SystemBackupPath)
-                         Dim appBackupFolder As String = ""
-                         If Not String.IsNullOrWhiteSpace(customPath) Then
-                             appBackupFolder = customPath.Trim()
-                         Else
-                             Try
-                                 Dim appBak = Path.Combine(Application.StartupPath, "Backups")
-                                 If Not Directory.Exists(appBak) Then Directory.CreateDirectory(appBak)
-                                 appBackupFolder = appBak
-                             Catch
-                                 Dim commonBak = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "Backups")
-                                 If Not Directory.Exists(commonBak) Then Directory.CreateDirectory(commonBak)
-                                 appBackupFolder = commonBak
-                             End Try
-                         End If
+                                        ' استخدام مسار النسخ المخصص أو الافتراضي مع معالجة صلاحيات UAC
+                                        Dim customPath = SettingsManager.GetSetting(SettingsKeys.SystemBackupPath)
+                                        Dim appBackupFolder As String = ""
+                                        If Not String.IsNullOrWhiteSpace(customPath) Then
+                                            appBackupFolder = customPath.Trim()
+                                        Else
+                                            Try
+                                                Dim appBak = Path.Combine(Application.StartupPath, "Backups")
+                                                If Not Directory.Exists(appBak) Then Directory.CreateDirectory(appBak)
+                                                appBackupFolder = appBak
+                                            Catch
+                                                Dim commonBak = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "Backups")
+                                                If Not Directory.Exists(commonBak) Then Directory.CreateDirectory(commonBak)
+                                                appBackupFolder = commonBak
+                                            End Try
+                                        End If
 
-                         Try
-                             If Not Directory.Exists(appBackupFolder) Then
-                                 Directory.CreateDirectory(appBackupFolder)
-                             End If
-                         Catch
-                             Dim docBak = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Sestamk", "Backups")
-                             If Not Directory.Exists(docBak) Then Directory.CreateDirectory(docBak)
-                             appBackupFolder = docBak
-                         End Try
+                                        Try
+                                            If Not Directory.Exists(appBackupFolder) Then
+                                                Directory.CreateDirectory(appBackupFolder)
+                                            End If
+                                        Catch
+                                            Dim docBak = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Sestamk", "Backups")
+                                            If Not Directory.Exists(docBak) Then Directory.CreateDirectory(docBak)
+                                            appBackupFolder = docBak
+                                        End Try
 
-                         CheckAndTakeScheduledBackup(appBackupFolder, "نسخة بدء التشغيل")
-                         DeleteOldBackups(appBackupFolder)
-                     Catch ex As Exception
-                         Logger.LogError("BackgroundBackup", ex)
-                     End Try
-                 End Sub)
+                                        CheckAndTakeScheduledBackup(appBackupFolder, "نسخة بدء التشغيل")
+                                        DeleteOldBackups(appBackupFolder)
+                                    Catch ex As Exception
+                                        Logger.LogError("BackgroundBackup", ex)
+                                    End Try
+                                End Sub)
 
         ' ضبط مؤقت التفعيل لفترة منطقية (كل 5 دقائق بدل ثانية واحدة لتوفير المعالج)
         Try
@@ -509,10 +467,12 @@ Public Class Login
     Private Sub SelectLastUserAndFocusPassword()
         Try
             If cmbUsername.Items.Count > 0 Then
-                ' استرجاع اسم آخر مستخدم:
-                ' 1. آخر مستخدم سجل دخوله في الإعدادات (LastLoggedInUser)
-                ' 2. خيار تذكرني إذا كان مفعلاً
-                ' 3. آخر عملية تسجيل دخول مسجلة في جدول Login_Info_TBL
+                ' استرجاع معرف واسم آخر مستخدم:
+                ' 1. معرف آخر مستخدم مسجل في Lastinuserlogin
+                ' 2. اسم آخر مستخدم مسجل في LastLoggedInUser
+                ' 3. خيار تذكرني إذا كان مفعلاً
+                ' 4. آخر عملية تسجيل دخول مسجلة في جدول Login_Info_TBL
+                Dim targetId As Integer = SettingsManager.GetIntSetting(SettingsKeys.Lastinuserlogin, -1)
                 Dim targetUser As String = SettingsManager.GetSetting("LastLoggedInUser")
                 Dim isRemembered As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
 
@@ -520,7 +480,7 @@ Public Class Login
                     targetUser = SettingsManager.GetSetting("RememberMe_User")
                 End If
 
-                If String.IsNullOrWhiteSpace(targetUser) Then
+                If targetId <= 0 AndAlso String.IsNullOrWhiteSpace(targetUser) Then
                     Try
                         Using cn As SqlConnection = DBModule.NewConn()
                             Using cmdLast As New SqlCommand("SELECT TOP 1 Login_Username FROM Login_Info_TBL WHERE (Login_Note LIKE N'%ناجح%' OR Login_Note IS NULL) AND Login_Username IS NOT NULL AND Login_Username <> '' ORDER BY ID DESC", cn)
@@ -534,8 +494,24 @@ Public Class Login
                     End Try
                 End If
 
-                If Not String.IsNullOrWhiteSpace(targetUser) Then
-                    Dim foundIndex As Integer = -1
+                Dim foundIndex As Integer = -1
+
+                ' 1. البحث أولاً بواسطة معرف المستخدم User_ID (من Lastinuserlogin)
+                If targetId > 0 Then
+                    For i As Integer = 0 To cmbUsername.Items.Count - 1
+                        Dim drv = TryCast(cmbUsername.Items(i), DataRowView)
+                        If drv IsNot Nothing Then
+                            Dim uid As Integer
+                            If Integer.TryParse(drv("User_ID").ToString(), uid) AndAlso uid = targetId Then
+                                foundIndex = i
+                                Exit For
+                            End If
+                        End If
+                    Next
+                End If
+
+                ' 2. البحث ثانياً بواسطة اسم المستخدم إذا لم يتم العثور بالمعرف
+                If foundIndex = -1 AndAlso Not String.IsNullOrWhiteSpace(targetUser) Then
                     For i As Integer = 0 To cmbUsername.Items.Count - 1
                         Dim drv = TryCast(cmbUsername.Items(i), DataRowView)
                         If drv IsNot Nothing AndAlso String.Equals(drv("User_username").ToString().Trim(), targetUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
@@ -546,21 +522,37 @@ Public Class Login
                             Exit For
                         End If
                     Next
+                End If
 
-                    If foundIndex >= 0 Then
-                        cmbUsername.SelectedIndex = foundIndex
-                    End If
+                ' 3. إذا لم يتم العثور على أي مستخدم، اختيار أول عنصر في القائمة
+                If foundIndex = -1 AndAlso cmbUsername.Items.Count > 0 Then
+                    foundIndex = 0
+                End If
+
+                If foundIndex >= 0 AndAlso foundIndex < cmbUsername.Items.Count Then
+                    cmbUsername.SelectedIndex = foundIndex
                 End If
 
                 ' تعبئة كلمة المرور إذا كانت ميزة تذكرني مفعلة لهذا المستخدم
                 If isRemembered Then
-                    Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
-                    If Not String.IsNullOrEmpty(savedEncPass) Then
-                        Dim savedPass As String = DecryptPassword(savedEncPass)
-                        If Not String.IsNullOrEmpty(savedPass) Then
-                            txtpassword.Text = savedPass
+                    Dim remUser As String = SettingsManager.GetSetting("RememberMe_User")
+                    Dim currentSelectedUser As String = cmbUsername.Text.Trim()
+                    If Not String.IsNullOrEmpty(remUser) AndAlso String.Equals(currentSelectedUser, remUser.Trim(), StringComparison.OrdinalIgnoreCase) Then
+                        If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = True
+                        Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
+                        If Not String.IsNullOrEmpty(savedEncPass) Then
+                            Dim savedPass As String = DecryptPassword(savedEncPass)
+                            If Not String.IsNullOrEmpty(savedPass) Then
+                                txtpassword.Text = savedPass
+                            End If
                         End If
+                    Else
+                        If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
+                        txtpassword.Clear()
                     End If
+                Else
+                    If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
+                    txtpassword.Clear()
                 End If
             End If
 
@@ -959,7 +951,7 @@ Public Class Login
                 useridlogin = Session.CurrentUserID
 
                 ' حفظ إعدادات تسجيل الدخول وتذكرني
-                SaveLoginPreferences(enteredUser, enteredPass)
+                SaveLoginPreferences(enteredUser, enteredPass, Session.CurrentUserID)
 
                 ' تسجيل حركة الدخول
                 Dim code As Integer = GetNextLoginCode()
@@ -1030,7 +1022,7 @@ Public Class Login
                             useridlogin = userId
 
                             ' حفظ إعدادات تسجيل الدخول وتذكرني
-                            SaveLoginPreferences(enteredUser, enteredPass)
+                            SaveLoginPreferences(enteredUser, enteredPass, userId)
 
                             ' تسجيل حركة الدخول
                             Dim code As Integer = GetNextLoginCode()
@@ -1040,6 +1032,7 @@ Public Class Login
                             _lockoutUntil = DateTime.MinValue
                             If tmrLockoutCountdown IsNot Nothing Then tmrLockoutCountdown.Stop()
                             If pnlLockout IsNot Nothing Then pnlLockout.Visible = False
+                            ' تم حفظ آخر مستخدم بنجاح عبر SaveLoginPreferences
                             Notify.Toast("تم تسجيل الدخول بنجاح ✅", Notify.ToastType.Success)
 
                             Me.Hide()

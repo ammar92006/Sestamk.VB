@@ -575,11 +575,11 @@ Partial Class Login
         Me.lblusername.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblusername.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.lblusername.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.lblusername.Location = New System.Drawing.Point(420, 275)
+        Me.lblusername.Location = New System.Drawing.Point(470, 275)
         Me.lblusername.Name = "lblusername"
-        Me.lblusername.Size = New System.Drawing.Size(165, 30)
+        Me.lblusername.Size = New System.Drawing.Size(115, 30)
         Me.lblusername.TabIndex = 16
-        Me.lblusername.Text = "اسم المستخدم *"
+        Me.lblusername.Text = "اسم المستخدم"
         Me.lblusername.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'lblpassword
@@ -588,11 +588,11 @@ Partial Class Login
         Me.lblpassword.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblpassword.ForeColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.lblpassword.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.lblpassword.Location = New System.Drawing.Point(420, 360)
+        Me.lblpassword.Location = New System.Drawing.Point(494, 360)
         Me.lblpassword.Name = "lblpassword"
-        Me.lblpassword.Size = New System.Drawing.Size(165, 30)
+        Me.lblpassword.Size = New System.Drawing.Size(91, 30)
         Me.lblpassword.TabIndex = 17
-        Me.lblpassword.Text = "كلمة المرور *"
+        Me.lblpassword.Text = "كلمة المرور "
         Me.lblpassword.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Guna2BorderlessForm1

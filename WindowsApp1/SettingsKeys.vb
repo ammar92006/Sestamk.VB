@@ -64,7 +64,7 @@ Public Module SettingsKeys
     Public Const SystemAutoLogoutTimer As String = "System_AutoLogoutTimer"
     Public Const LoginMaxAttempts As String = "Login_MaxAttempts"
     Public Const CurrencyName As String = "CurrencyName"
-
+    Public Const Lastinuserlogin As String = "Lastinuserlogin"
     ' ── إعدادات المبيعات (Sales Settings) ──
     Public Const SalesEnableDineIn As String = "Sales_EnableDineIn"
     Public Const SalesEnableTakeaway As String = "Sales_EnableTakeaway"

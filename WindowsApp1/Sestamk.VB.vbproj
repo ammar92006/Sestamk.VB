@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -1408,7 +1408,6 @@
     <None Include="Resources\switch %281%29.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="1455739798_Kitchen_Bold_Line_Color_Mix-42_icon-icons.com_53390.ico" />
     <None Include="Resources\518348218_1434214821335102_4304040704815404944_n %281%29.jpg" />
     <None Include="Resources\518348218_1434214821335102_4304040704815404944_n %281%291.jpg" />
     <None Include="Resources\new-hire.png" />
@@ -1524,7 +1523,6 @@
     <None Include="Resources\sheets.png" />
     <None Include="Resources\cross.png" />
     <None Include="Resources\apple.png" />
-    <Content Include="store_icon-icons.com_54371.ico" />
     <None Include="Resources\info %281%29.png" />
     <None Include="Resources\info.png" />
     <None Include="Resources\software-testing.png" />

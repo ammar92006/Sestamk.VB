@@ -73,6 +73,7 @@ Partial Class Settings
         '
         'btnWinClose
         '
+        Me.btnWinClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnWinClose.FillColor = System.Drawing.Color.Transparent
         Me.btnWinClose.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
         Me.btnWinClose.HoverState.IconColor = System.Drawing.Color.White
@@ -84,6 +85,7 @@ Partial Class Settings
         '
         'btnWinMax
         '
+        Me.btnWinMax.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnWinMax.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
         Me.btnWinMax.FillColor = System.Drawing.Color.Transparent
         Me.btnWinMax.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
@@ -96,6 +98,7 @@ Partial Class Settings
         '
         'btnWinMin
         '
+        Me.btnWinMin.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnWinMin.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
         Me.btnWinMin.FillColor = System.Drawing.Color.Transparent
         Me.btnWinMin.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
