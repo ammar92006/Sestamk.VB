@@ -132,9 +132,9 @@ Public NotInheritable Class UpdateCoordinator
             File.WriteAllText(pendingPath, pending.ToString())
 
             Dim updaterCandidates As String() = {
-                Path.Combine(Application.StartupPath, "update.exe"),
                 Path.Combine(Application.StartupPath, "tools", "update.exe"),
                 Path.Combine(Application.StartupPath, "tools", "Sestamk.VB.Updater.exe"),
+                Path.Combine(Application.StartupPath, "update.exe"),
                 Path.Combine(Application.StartupPath, "Sestamk.VB.Updater.exe")
             }
             Dim updater As String = updaterCandidates.FirstOrDefault(Function(p) File.Exists(p))
@@ -142,7 +142,21 @@ Public NotInheritable Class UpdateCoordinator
                 Return "أداة تطبيق التحديث (update.exe) غير موجودة ضمن ملفات البرنامج."
             End If
 
-            Dim psi As New ProcessStartInfo(updater, "--pending " & ChrW(34) & pendingPath & ChrW(34)) With {
+            ' تشغيل الأداة عبر مشغل خارجي في ProgramData لتجنب قفل أي ملف داخل مجلد البرنامج
+            Dim launchTarget As String = updater
+            Dim launchArgs As String = "--pending " & ChrW(34) & pendingPath & ChrW(34)
+            Try
+                Dim runnerDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "updates", "runner")
+                Directory.CreateDirectory(runnerDir)
+                Dim externalRunner = Path.Combine(runnerDir, "update_runner.exe")
+                File.Copy(updater, externalRunner, True)
+                launchTarget = externalRunner
+                launchArgs = "--shadow-runner --pending " & ChrW(34) & pendingPath & ChrW(34)
+            Catch
+                ' في حال تعذر النسخ يتم التشغيل المباشر من مسار الأداة الأصلي
+            End Try
+
+            Dim psi As New ProcessStartInfo(launchTarget, launchArgs) With {
                 .UseShellExecute = True,
                 .Verb = "runas"
             }

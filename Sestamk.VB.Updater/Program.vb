@@ -378,7 +378,21 @@ Public Class FrmModernUpdater
             lblDetail.Text = "انتهى التحديث، جاري فتح النظام الآن."
             Await Task.Delay(900)
 
-            ' 4) إعادة تشغيل سستمك مع تمرير مؤشر ما بعد التحديث
+            ' 4) تحديث ملفات أداة التحديث في مجلد البرنامج بالأداة الحديثة إن كنا نعمل من مجلد خارجي
+            Try
+                Dim currentRunnerExe = Process.GetCurrentProcess().MainModule.FileName
+                If Not currentRunnerExe.StartsWith(_targetPath.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase) Then
+                    Dim toolsDir = Path.Combine(_targetPath, "tools")
+                    Directory.CreateDirectory(toolsDir)
+                    File.Copy(currentRunnerExe, Path.Combine(toolsDir, "update.exe"), True)
+                    File.Copy(currentRunnerExe, Path.Combine(toolsDir, "Sestamk.VB.Updater.exe"), True)
+                    File.Copy(currentRunnerExe, Path.Combine(_targetPath, "update.exe"), True)
+                    File.Copy(currentRunnerExe, Path.Combine(_targetPath, "Sestamk.VB.Updater.exe"), True)
+                End If
+            Catch
+            End Try
+
+            ' 5) إعادة تشغيل سستمك مع تمرير مؤشر ما بعد التحديث
             RestartMainApp()
             Application.Exit()
 
