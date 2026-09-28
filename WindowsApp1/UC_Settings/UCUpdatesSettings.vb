@@ -70,7 +70,16 @@ Namespace UC_Settings
                                 Dim tag = Convert.ToString(rel("tag_name")).TrimStart("v"c)
                                 Dim title = Convert.ToString(rel("name"))
                                 Dim body = Convert.ToString(rel("body"))
-                                Dim pubDate = Convert.ToString(rel("published_at"))
+                                Dim pubDate As String = ""
+                                Dim pubDateToken = rel("published_at")
+                                If pubDateToken IsNot Nothing Then
+                                    If TypeOf pubDateToken Is JValue AndAlso TypeOf DirectCast(pubDateToken, JValue).Value Is DateTime Then
+                                        Dim dtUtc = CDate(DirectCast(pubDateToken, JValue).Value)
+                                        pubDate = dtUtc.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture)
+                                    Else
+                                        pubDate = Convert.ToString(pubDateToken)
+                                    End If
+                                End If
                                 Dim manUrl = "https://github.com/ammar92006/Sestamk.VB/releases/download/v" & tag & "/manifest.json"
                                 Dim htmlUrl = Convert.ToString(rel("html_url"))
 
@@ -152,8 +161,9 @@ Namespace UC_Settings
                     If String.IsNullOrWhiteSpace(dateStr) Then dateStr = Convert.ToString(latest("created_at"))
 
                     Dim parsedDate As DateTime
-                    If DateTime.TryParse(dateStr, parsedDate) Then
-                        lblLatestUpdateDate.Text = parsedDate.ToString("yyyy-MM-dd")
+                    If DateTime.TryParse(dateStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal, parsedDate) OrElse DateTime.TryParse(dateStr, parsedDate) Then
+                        Dim localDate = If(parsedDate.Kind = DateTimeKind.Utc, parsedDate.ToLocalTime(), parsedDate)
+                        lblLatestUpdateDate.Text = localDate.ToString("yyyy-MM-dd")
                     Else
                         lblLatestUpdateDate.Text = If(String.IsNullOrWhiteSpace(dateStr), "-", dateStr)
                     End If
@@ -708,11 +718,33 @@ Namespace UC_Settings
 
         Private Function FormatReleaseDateArabic(rawDate As String) As String
             If String.IsNullOrWhiteSpace(rawDate) Then Return "غير محدد"
-            Dim dt As DateTime
-            If DateTime.TryParse(rawDate, dt) Then
-                Return dt.ToString("yyyy/MM/dd  hh:mm tt", System.Globalization.CultureInfo.InvariantCulture) _
-                         .Replace("AM", "صباحاً").Replace("PM", "مساءً")
+
+            ' إذا كان النص منسقاً بالفعل بالتوقيت العربي
+            If rawDate.Contains("صباحاً") OrElse rawDate.Contains("مساءً") Then
+                Return rawDate
             End If
+
+            ' محاولة القراءة الدقيقة كـ DateTimeOffset للتعامل مع الـ TimeZone الصريح (Z أو فارق الساعات)
+            Dim dto As DateTimeOffset
+            If rawDate.Contains("Z") OrElse rawDate.Contains("+") OrElse (rawDate.Length > 10 AndAlso rawDate.Substring(10).Contains("-")) Then
+                If DateTimeOffset.TryParse(rawDate, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, dto) Then
+                    Dim localDt = dto.ToLocalTime().DateTime
+                    Return localDt.ToString("yyyy/MM/dd  hh:mm tt", System.Globalization.CultureInfo.InvariantCulture) _
+                                  .Replace("AM", "صباحاً").Replace("PM", "مساءً")
+                End If
+            End If
+
+            ' محاولة القراءة كـ DateTime والتحويل الصريح للتوقيت المحلي
+            Dim dt As DateTime
+            If DateTime.TryParse(rawDate, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal, dt) OrElse DateTime.TryParse(rawDate, dt) Then
+                If dt.Kind = DateTimeKind.Unspecified Then
+                    dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc)
+                End If
+                Dim localDt = dt.ToLocalTime()
+                Return localDt.ToString("yyyy/MM/dd  hh:mm tt", System.Globalization.CultureInfo.InvariantCulture) _
+                              .Replace("AM", "صباحاً").Replace("PM", "مساءً")
+            End If
+
             Return rawDate
         End Function
 
