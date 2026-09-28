@@ -6,6 +6,7 @@ Imports System.Windows.Forms
 Imports System.Threading.Tasks
 Imports System.Security.Cryptography
 Imports System.Text
+Imports WindowsApp1.Services.Sync
 
 Public Class Login
     Private x As Integer, y As Integer
@@ -317,6 +318,19 @@ Public Class Login
                                               End Try
                                           End Function)
             End If
+        End If
+
+        ' مزامنة مستخدمي المنشأة في الخلفية مع Supabase وسحب إعادات تعيين كلمات المرور
+        If license.IsValid Then
+            Dim bgSyncTask = Task.Run(Async Function()
+                                          Try
+                                              Await Task.Delay(3000)
+                                              Await UserSyncService.SyncAsync()
+                                              Await UserSyncService.PullPasswordResetsAsync()
+                                          Catch ex As Exception
+                                              Debug.WriteLine("Background user sync skipped: " & ex.Message)
+                                          End Try
+                                      End Function)
         End If
 
         ' التأكد من تعبئة القائمة في حال لم تكن محملة

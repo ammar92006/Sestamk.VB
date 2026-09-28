@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class add_new_user
     Dim x, y As Integer
@@ -101,6 +101,14 @@ Public Class add_new_user
                     cmd.ExecuteNonQuery()
                 End Using
             End Using
+
+            ' مزامنة سحابية فورية في الخلفية
+            Task.Run(Async Function()
+                         Try
+                             Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
+                         Catch
+                         End Try
+                     End Function)
 
             '===========================
             ' ✔ نجاح العملية

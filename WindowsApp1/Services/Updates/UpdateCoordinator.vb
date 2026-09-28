@@ -25,9 +25,9 @@ Public NotInheritable Class UpdateCoordinator
     Private Sub New()
     End Sub
 
-    Public Shared Async Function CheckAndPromptAsync(license As JObject, owner As IWin32Window) As Task
+    Public Shared Async Function CheckAndPromptAsync(license As JObject, owner As IWin32Window) As Task(Of Boolean)
         ' التحقق من الترخيص وقناة المستخدم
-        If license Is Nothing Then Return
+        If license Is Nothing Then Return False
 
         Dim isUpdateAvailable = False
         Dim availToken = license("update_available")
@@ -36,14 +36,14 @@ Public NotInheritable Class UpdateCoordinator
         End If
 
         ' إذا كان السيرفر يفيد بعدم وجود تحديث متوفر لهذه القناة والترخيص، نتوقف فوراً
-        If Not isUpdateAvailable Then Return
+        If Not isUpdateAvailable Then Return False
 
         Dim userChannel = Convert.ToString(license("channel"))
         If String.IsNullOrWhiteSpace(userChannel) Then userChannel = "public"
         userChannel = userChannel.Trim().ToLowerInvariant()
 
         Dim manifestUrl As String = Convert.ToString(license.SelectToken("update.manifest_url"))
-        If String.IsNullOrWhiteSpace(manifestUrl) Then Return
+        If String.IsNullOrWhiteSpace(manifestUrl) Then Return False
 
         Try
             Using client As New HttpClient()
@@ -51,21 +51,21 @@ Public NotInheritable Class UpdateCoordinator
                 client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-Client")
                 Dim json = Await client.GetStringAsync(manifestUrl)
                 Dim manifest = ParseManifest(JObject.Parse(json))
-                If manifest Is Nothing Then Return
+                If manifest Is Nothing Then Return False
 
                 ' التحقق الصارم من تطابق قناة التحديث مع قناة الترخيص (Beta vs Public)
                 Dim manifestChannel = If(String.IsNullOrWhiteSpace(manifest.Channel), "public", manifest.Channel.Trim().ToLowerInvariant())
                 If Not String.Equals(manifestChannel, userChannel, StringComparison.OrdinalIgnoreCase) Then
                     Debug.WriteLine($"Update ignored due to channel mismatch: manifest channel '{manifestChannel}' vs user channel '{userChannel}'")
-                    Return
+                    Return False
                 End If
 
                 Dim manifestVer As Version = Nothing
                 Dim currentVer As Version = Nothing
                 If Version.TryParse(manifest.Version, manifestVer) AndAlso Version.TryParse(Application.ProductVersion, currentVer) Then
-                    If manifestVer <= currentVer Then Return
+                    If manifestVer <= currentVer Then Return False
                 ElseIf String.Equals(manifest.Version, Application.ProductVersion, StringComparison.OrdinalIgnoreCase) Then
-                    Return
+                    Return False
                 End If
 
                 ' في حال لم يتم تحديد حجم الحزمة في المانيفست، نقرأ الحجم من بيانات السيرفر
@@ -85,9 +85,11 @@ Public NotInheritable Class UpdateCoordinator
                         prompt.ShowDialog(owner)
                     End Using
                 End If
+                Return True
             End Using
         Catch ex As Exception
             Debug.WriteLine("Update check skipped: " & ex.Message)
+            Return False
         End Try
     End Function
 

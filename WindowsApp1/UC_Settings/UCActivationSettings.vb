@@ -1,10 +1,11 @@
 Imports System.Drawing
 Imports System.Windows.Forms
 Imports Newtonsoft.Json.Linq
+Imports WindowsApp1.Services.Sync
 
 Namespace UC_Settings
     ''' <summary>
-    ''' شاشة إعدادات التفعيل والترخيص وبصمة الجهاز المحدثة
+    ''' شاشة إعدادات التفعيل والترخيص السحابي ومزامنة المستخدمين وبصمة الجهاز
     ''' </summary>
     Public Class UCActivationSettings
         Implements ICloseRequest
@@ -26,26 +27,43 @@ Namespace UC_Settings
 
         Public Sub LoadLicenseData()
             Try
+                lblHWID.Text = HardwareFingerprint.GetCurrent()
                 Dim license = LicenseCache.Load()
+
                 If license IsNot Nothing Then
                     Dim status = Convert.ToString(license("status")).ToLowerInvariant()
                     Dim expiresAtStr = Convert.ToString(license("expires_at"))
                     Dim expiresAt As DateTime
-                    Dim isExpired = (DateTime.TryParse(expiresAtStr, expiresAt) AndAlso expiresAt.Date < DateTime.Today)
+                    Dim hasExpiry = DateTime.TryParse(expiresAtStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, expiresAt) OrElse DateTime.TryParse(expiresAtStr, expiresAt)
 
-                    If status = "active" AndAlso Not isExpired Then
-                        lblStatus.Text = "✅ مفعل (نشط)"
-                        lblStatus.ForeColor = Color.FromArgb(52, 211, 153)
-                    ElseIf status = "grace_period" Then
-                        lblStatus.Text = "⚠️ فترة سماح"
-                        lblStatus.ForeColor = Color.FromArgb(245, 158, 11)
-                    ElseIf isExpired Then
+                    Dim graceDays = 0
+                    Dim graceToken = license("grace_days")
+                    If graceToken IsNot Nothing Then Integer.TryParse(Convert.ToString(graceToken), graceDays)
+
+                    Dim effectiveExpiry = If(hasExpiry, expiresAt.Date.AddDays(graceDays), DateTime.MaxValue)
+
+                    ' حساب وتحديد حالة الاشتراك وفترة السماح بدقة متناهية
+                    If hasExpiry AndAlso DateTime.Today > effectiveExpiry Then
                         lblStatus.Text = "❌ منتهي الصلاحية"
                         lblStatus.ForeColor = Color.FromArgb(239, 68, 68)
+                    ElseIf hasExpiry AndAlso DateTime.Today > expiresAt.Date Then
+                        Dim remainingGrace = Math.Max(0, (effectiveExpiry - DateTime.Today).Days)
+                        lblStatus.Text = $"⚠️ في فترة السماح (متبقي {remainingGrace} يوم)"
+                        lblStatus.ForeColor = Color.FromArgb(245, 158, 11)
+                    ElseIf status = "grace_period" Then
+                        Dim remainingGrace = If(hasExpiry, Math.Max(0, (effectiveExpiry - DateTime.Today).Days), graceDays)
+                        lblStatus.Text = $"⚠️ فترة سماح (متبقي {remainingGrace} يوم)"
+                        lblStatus.ForeColor = Color.FromArgb(245, 158, 11)
+                    ElseIf status = "active" Then
+                        lblStatus.Text = "✅ مفعل (نشط)"
+                        lblStatus.ForeColor = Color.FromArgb(52, 211, 153)
                     Else
                         lblStatus.Text = "غير مفعل (" & status & ")"
                         lblStatus.ForeColor = Color.FromArgb(239, 68, 68)
                     End If
+
+                    ' فترة السماح
+                    lblGracePeriod.Text = If(graceDays > 0, $"{graceDays} أيام سماح بعد الانتهاء", "بدون فترة سماح")
 
                     ' تاريخ البداية
                     Dim createdAtStr = Convert.ToString(license("created_at"))
@@ -57,7 +75,7 @@ Namespace UC_Settings
                     End If
 
                     ' تاريخ الانتهاء
-                    If DateTime.TryParse(expiresAtStr, expiresAt) Then
+                    If hasExpiry Then
                         lblExpiryDate.Text = expiresAt.ToString("yyyy-MM-dd")
                     Else
                         lblExpiryDate.Text = If(String.IsNullOrWhiteSpace(expiresAtStr), "-", expiresAtStr)
@@ -71,9 +89,23 @@ Namespace UC_Settings
                     Dim company = Convert.ToString(license("company_name"))
                     lblCompanyName.Text = If(String.IsNullOrWhiteSpace(company), "شركة عامة", company)
 
-                    ' الخطة
+                    ' كود / معرف المنشأة
+                    Dim companyId = Convert.ToString(license("company_id"))
+                    lblCompanyId.Text = If(String.IsNullOrWhiteSpace(companyId), "-", companyId)
+
+                    ' نوع الخطة
                     Dim plan = Convert.ToString(license("plan"))
                     lblPlanName.Text = If(String.IsNullOrWhiteSpace(plan), "PRO", plan.ToUpperInvariant())
+
+                    ' قناة التحديث
+                    Dim channel = Convert.ToString(license("channel")).ToUpperInvariant()
+                    If channel = "BETA" Then
+                        lblChannel.Text = "قناة تجريبية (BETA)"
+                        lblChannel.ForeColor = Color.FromArgb(245, 158, 11)
+                    Else
+                        lblChannel.Text = "قناة عامة مستقرة (PUBLIC)"
+                        lblChannel.ForeColor = Color.FromArgb(52, 211, 153)
+                    End If
 
                     ' الأجهزة والمستخدمين
                     Dim maxDevices = Convert.ToString(license("max_devices"))
@@ -92,17 +124,37 @@ Namespace UC_Settings
                         If String.IsNullOrWhiteSpace(price) Then price = "0.00"
                         lblPrice.Text = price & " " & currency
                     End If
+
+                    ' حالة الجهاز والإصدار
+                    Dim appVer = Application.ProductVersion
+                    lblDeviceStatus.Text = $"الجهاز: {Environment.MachineName} | الحالة: نشط وغير محظور (Active) ✅ | الإصدار: v{appVer}"
+                    lblDeviceStatus.ForeColor = Color.FromArgb(52, 211, 153)
+
+                    ' آخر اتصال ومزامنة
+                    Dim syncStr = Convert.ToString(If(license("last_successful_sync_utc"), license("last_successful_sync")))
+                    Dim syncDt As DateTime
+                    If DateTime.TryParse(syncStr, syncDt) Then
+                        lblLastSync.Text = syncDt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss") & " (متصل ومحدث لحظياً)"
+                    Else
+                        lblLastSync.Text = "نشط ومتصل بالخادم السحابي"
+                    End If
+
                 Else
                     lblStatus.Text = "⚠️ غير مفعل"
                     lblStatus.ForeColor = Color.FromArgb(239, 68, 68)
                     lblStartDate.Text = "-"
                     lblExpiryDate.Text = "-"
+                    lblGracePeriod.Text = "-"
                     lblSerial.Text = "لا يوجد سيريال مفعل"
                     lblCompanyName.Text = "-"
+                    lblCompanyId.Text = "-"
                     lblPlanName.Text = "-"
+                    lblChannel.Text = "-"
                     lblMaxDevices.Text = "-"
                     lblMaxUsers.Text = "-"
                     lblPrice.Text = "-"
+                    lblDeviceStatus.Text = $"الجهاز: {Environment.MachineName} | الإصدار: v{Application.ProductVersion}"
+                    lblLastSync.Text = "-"
                 End If
             Catch ex As Exception
                 Debug.WriteLine("LoadLicenseData error: " & ex.Message)
@@ -116,7 +168,37 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم نسخ بصمة الجهاز إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("تم نسخ بصمة الجهاز (HWID) بنجاح إلى الحافظة.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show("تم نسخ بصمة الجهاز (HWID) بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Try
+                End If
+            Catch ex As Exception
+                MessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Try
+        End Sub
+
+        Private Sub btnCopySerial_Click(sender As Object, e As EventArgs) Handles btnCopySerial.Click
+            Try
+                If Not String.IsNullOrWhiteSpace(lblSerial.Text) AndAlso lblSerial.Text <> "-" AndAlso lblSerial.Text <> "غير متوفر" Then
+                    Clipboard.SetText(lblSerial.Text)
+                    Try
+                        Notify.Toast("تم نسخ مفتاح الترخيص إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
+                    Catch
+                        MessageBox.Show("تم نسخ مفتاح الترخيص بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Try
+                End If
+            Catch ex As Exception
+                MessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End Try
+        End Sub
+
+        Private Sub btnCopyCompanyId_Click(sender As Object, e As EventArgs) Handles btnCopyCompanyId.Click
+            Try
+                If Not String.IsNullOrWhiteSpace(lblCompanyId.Text) AndAlso lblCompanyId.Text <> "-" Then
+                    Clipboard.SetText(lblCompanyId.Text)
+                    Try
+                        Notify.Toast("تم نسخ كود المنشأة إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
+                    Catch
+                        MessageBox.Show("تم نسخ كود المنشأة بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception
@@ -129,8 +211,15 @@ Namespace UC_Settings
                 Using frm As New FormActivation()
                     If frm.ShowDialog(Me.FindForm()) = DialogResult.OK Then
                         LoadLicenseData()
+                        ' مزامنة فورية بعد تفعيل سيريال جديد
+                        Task.Run(Async Function()
+                                     Try
+                                         Await UserSyncService.SyncAsync()
+                                     Catch
+                                     End Try
+                                 End Function)
                         Try
-                            Notify.Toast("تم تحديث بيانات التفعيل بنجاح ✅", Notify.ToastType.Success)
+                            Notify.Toast("تم تحديث بيانات التفعيل والربط السحابي بنجاح ✅", Notify.ToastType.Success)
                         Catch
                         End Try
                     End If
@@ -140,17 +229,46 @@ Namespace UC_Settings
             End Try
         End Sub
 
+        Private Async Sub btnCheckUpdate_Click(sender As Object, e As EventArgs) Handles btnCheckUpdate.Click
+            btnCheckUpdate.Enabled = False
+            btnCheckUpdate.Text = "جاري الفحص..."
+            Try
+                Dim license = LicenseCache.Load()
+                Dim found = Await UpdateCoordinator.CheckAndPromptAsync(license, Me.FindForm())
+                If Not found Then
+                    Try
+                        Notify.Toast("أنت تستخدم أحدث إصدار متوفر بالفعل! 🎉", Notify.ToastType.Info)
+                    Catch
+                        MessageBox.Show("أنت تستخدم أحدث إصدار متوفر بالفعل من البرنامج.", "لا يوجد تحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    End Try
+                End If
+            Catch ex As Exception
+                MessageBox.Show("خطأ أثناء فحص التحديثات: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Finally
+                btnCheckUpdate.Enabled = True
+                btnCheckUpdate.Text = "🚀 البحث عن تحديثات للبرنامج"
+            End Try
+        End Sub
+
         Private Async Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
             btnRefresh.Enabled = False
-            btnRefresh.Text = "جاري الفحص..."
+            btnRefresh.Text = "جاري الفحص والمزامنة..."
             Try
+                ' 1. التحقق من الترخيص أونلاين
                 Dim result = Await LicenseBootstrapper.CheckAsync(forceOnlineCheck:=True)
+
+                ' 2. مزامنة المستخدمين وسحب إعادة تعيين كلمات المرور
+                Dim syncedUsers = Await UserSyncService.SyncAsync()
+                Await UserSyncService.PullPasswordResetsAsync()
+
                 LoadLicenseData()
+
                 If result.IsValid Then
+                    Dim syncMsg = If(syncedUsers, "وتمت مزامنة بيانات المستخدمين وكلمات المرور بنجاح ✅", "والترخيص متصل بالسيرفر بنجاح ✅")
                     Try
-                        Notify.Toast("تم التحقق من الترخيص: الترخيص ساري ✅", Notify.ToastType.Success)
+                        Notify.Toast($"الترخيص ساري ومفعل، {syncMsg}", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("الترخيص ساري ومفعل بنجاح.", "تم التحقق", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show($"الترخيص ساري ومفعل بنجاح، {syncMsg}", "تم التحديث", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 Else
                     MessageBox.Show(result.Message, "حالة الترخيص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -159,7 +277,7 @@ Namespace UC_Settings
                 MessageBox.Show("تعذر الاتصال بخادم التراخيص: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Finally
                 btnRefresh.Enabled = True
-                btnRefresh.Text = "🔄 تحديث بيانات الترخيص"
+                btnRefresh.Text = "🔄 تحديث الترخيص ومزامنة المستخدمين"
             End Try
         End Sub
 

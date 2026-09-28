@@ -351,7 +351,11 @@ Public NotInheritable Class LicenseCache
         Dim expiresAt As DateTime
         Dim expStr = Convert.ToString(cache("expires_at"))
         If DateTime.TryParse(expStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, expiresAt) OrElse DateTime.TryParse(expStr, expiresAt) Then
-            If expiresAt.Date < DateTime.Today Then Return False
+            Dim graceDays = 0
+            Dim graceToken = cache("grace_days")
+            If graceToken IsNot Nothing Then Integer.TryParse(Convert.ToString(graceToken), graceDays)
+            Dim effectiveExpiry = expiresAt.Date.AddDays(graceDays)
+            If DateTime.Today > effectiveExpiry Then Return False
         End If
 
         Dim lastSync As DateTime

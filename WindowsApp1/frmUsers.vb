@@ -246,6 +246,12 @@ Public Class frmUsers
 
                 Try
                     cmd.ExecuteNonQuery()
+                    Task.Run(Async Function()
+                                 Try
+                                     Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
+                                 Catch
+                                 End Try
+                             End Function)
                     MessageBox.Show("تمت إضافة المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadUsersGrid()
                     ClearFields()
@@ -298,6 +304,12 @@ Public Class frmUsers
 
                 Try
                     cmd.ExecuteNonQuery()
+                    Task.Run(Async Function()
+                                 Try
+                                     Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
+                                 Catch
+                                 End Try
+                             End Function)
                     MessageBox.Show("تم تعديل بيانات المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadUsersGrid()
                     ClearFields()
@@ -321,6 +333,12 @@ Public Class frmUsers
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
+                        Task.Run(Async Function()
+                                     Try
+                                         Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
+                                     Catch
+                                     End Try
+                                 End Function)
                         MessageBox.Show("تم حذف المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         LoadUsersGrid()
                         ClearFields()
