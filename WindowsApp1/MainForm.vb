@@ -55,6 +55,9 @@ Public Class MainForm
         tmrClock.Start()
         tmrDashboardRefresh.Start()
 
+        ' استمرار مزامنة المستخدمين التلقائية في الخلفية
+        WindowsApp1.Services.Sync.UserSyncService.StartBackgroundSync(25)
+
         ' إعداد التلميح لأزرار الهيدر
         Try
             Dim tip As New ToolTip()

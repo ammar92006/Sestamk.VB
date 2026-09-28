@@ -88,7 +88,7 @@ Public Class frmUsers
         End Try
     End Sub
 
-    Private Sub LoadUsersGrid(Optional filterText As String = "")
+    Public Sub LoadUsersGrid(Optional filterText As String = "")
         Try
             Dim query As String = "SELECT U.User_ID, U.User_Code, U.User_Name, U.User_username, U.User_password, " &
                                   "U.RoleID, R.RoleName, U.EmployeeID, E.ArabicName AS EmployeeName, " &
