@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 ' ---------------------------------------------------------
 ' الكلاس المساعد 1: ProductUnitInfo
@@ -225,46 +225,44 @@ ORDER BY
 "
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(sql, cn)
+                    cmd.Parameters.AddWithValue("@KW", keyword)
 
-            Using cmd As New SqlCommand(sql, Conn)
-                cmd.Parameters.AddWithValue("@KW", keyword)
+                    Using r = cmd.ExecuteReader()
+                        While r.Read()
 
-                Using r = cmd.ExecuteReader()
-                    While r.Read()
+                            Dim productId As Integer = Convert.ToInt32(r("Product_ID"))
+                            Dim qty As Decimal = Convert.ToDecimal(r("Quantity_OnHand"))
 
-                        Dim productId As Integer = Convert.ToInt32(r("Product_ID"))
-                        Dim qty As Decimal = Convert.ToDecimal(r("Quantity_OnHand"))
+                            Dim displayQty As String
+                            If qty <= 0 Then
+                                displayQty = "غير متوفر"
+                            Else
+                                displayQty = DecomposeQuantity(cn, productId, qty)
+                            End If
 
-                        Dim displayQty As String
-                        If qty <= 0 Then
-                            displayQty = "غير متوفر"
-                        Else
-                            displayQty = DecomposeQuantity(Conn, productId, qty)
-                        End If
-
-                        list.Add(New StockDisplayItem With {
-                        .Stock_ID = Convert.ToInt32(r("Stock_ID")),
-                        .ProductId = productId,
-                        .ProductCode = r("Product_Code").ToString(),
-                        .ProductName = r("Product_Name").ToString(),
-                        .CategoryName = r("Category_Name").ToString(),
-                        .Partner_Name = r("SuppliersName").ToString(),
-                        .BaseQuantityTotal = qty,
-                        .MinQuantity = Convert.ToDecimal(r("Min_Quantity")),
-                        .DisplayStockQuantity = displayQty,
-                        .BaseUnitName = r("BaseUnit_Name").ToString(),
-                        .LastUpdate = Convert.ToDateTime(r("Last_Update")),
-                        .ProductImage = TryCast(r("Product_Image"), Byte())
-                    })
-                    End While
+                            list.Add(New StockDisplayItem With {
+                            .Stock_ID = Convert.ToInt32(r("Stock_ID")),
+                            .ProductId = productId,
+                            .ProductCode = r("Product_Code").ToString(),
+                            .ProductName = r("Product_Name").ToString(),
+                            .CategoryName = r("Category_Name").ToString(),
+                            .Partner_Name = r("SuppliersName").ToString(),
+                            .BaseQuantityTotal = qty,
+                            .MinQuantity = Convert.ToDecimal(r("Min_Quantity")),
+                            .DisplayStockQuantity = displayQty,
+                            .BaseUnitName = r("BaseUnit_Name").ToString(),
+                            .LastUpdate = Convert.ToDateTime(r("Last_Update")),
+                            .ProductImage = TryCast(r("Product_Image"), Byte())
+                        })
+                        End While
+                    End Using
                 End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
-        Finally
-            Disconnect()
         End Try
 
         Return list
@@ -273,21 +271,19 @@ ORDER BY
 
     Public Function DeleteStock(stockId As Integer) As Boolean
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim sql As String = "DELETE FROM Stock WHERE Stock_ID = @ID"
 
-            Dim sql As String = "DELETE FROM Stock WHERE Stock_ID = @ID"
+                Using cmd As New SqlCommand(sql, cn)
+                    cmd.Parameters.AddWithValue("@ID", stockId)
 
-            Using cmd As New SqlCommand(sql, Conn)
-                cmd.Parameters.AddWithValue("@ID", stockId)
-
-                Return cmd.ExecuteNonQuery() > 0
+                    Return cmd.ExecuteNonQuery() > 0
+                End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
             Return False
-        Finally
-            Disconnect()
         End Try
     End Function
 
@@ -295,28 +291,26 @@ ORDER BY
                             newQuantity As Decimal,
                             newMinQty As Decimal) As Boolean
         Try
-            Connect()
-
-            Dim sql As String = "
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim sql As String = "
             UPDATE Stock
             SET Quantity_OnHand = @QTY,
                 Min_Quantity = @MinQty,
                 Last_Update = GETDATE()
             WHERE Stock_ID = @ID"
 
-            Using cmd As New SqlCommand(sql, Conn)
-                cmd.Parameters.AddWithValue("@QTY", newQuantity)
-                cmd.Parameters.AddWithValue("@MinQty", newMinQty)
-                cmd.Parameters.AddWithValue("@ID", stockId)
+                Using cmd As New SqlCommand(sql, cn)
+                    cmd.Parameters.AddWithValue("@QTY", newQuantity)
+                    cmd.Parameters.AddWithValue("@MinQty", newMinQty)
+                    cmd.Parameters.AddWithValue("@ID", stockId)
 
-                Return cmd.ExecuteNonQuery() > 0
+                    Return cmd.ExecuteNonQuery() > 0
+                End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
             Return False
-        Finally
-            Disconnect()
         End Try
     End Function
 
@@ -386,47 +380,43 @@ LEFT JOIN
     dbo.Suppliers AS V ON P.Partner_ID = V.SuppliersID ;"
 
         Try
-            Disconnect()
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(stockQuery, cn)
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
 
-            Using cmd As New SqlCommand(stockQuery, Conn)
-                Using reader As SqlDataReader = cmd.ExecuteReader()
+                        While reader.Read()
 
-                    While reader.Read()
+                            Dim productId As Integer = SafeGetInt(reader, "Product_ID")
+                            Dim baseQty As Decimal = SafeGetDecimal(reader, "Quantity_OnHand")
 
-                        Dim productId As Integer = SafeGetInt(reader, "Product_ID")
-                        Dim baseQty As Decimal = SafeGetDecimal(reader, "Quantity_OnHand")
+                            Dim displayQuantity As String =
+                                DecomposeQuantity(cn, productId, baseQty)
 
-                        Dim displayQuantity As String =
-                            DecomposeQuantity(Conn, productId, baseQty)
+                            Dim item As New StockDisplayItem With {
+                                .ProductId = productId,
+                                .Stock_ID = SafeGetInt(reader, "Stock_ID"),
+                                .ProductCode = SafeGetString(reader, "Product_Code"),
+                                .ProductName = SafeGetString(reader, "Product_Name"),
+                                .Partner_ID = SafeGetInt(reader, "SuppliersID"),
+                                .Partner_Name = SafeGetString(reader, "SuppliersName"),
+                                .BaseQuantityTotal = baseQty,
+                                .MinQuantity = SafeGetDecimal(reader, "Min_Quantity"),
+                                .LastUpdate = SafeGetDate(reader, "Last_Update"),
+                                .BaseUnitName = SafeGetString(reader, "BaseUnit_Name"),
+                                .CategoryName = SafeGetString(reader, "Category_Name"),
+                                .ProductImagePath = SafeGetImagePath(reader, "Product_Image"),
+                                .DisplayStockQuantity = displayQuantity
+                            }
 
-                        Dim item As New StockDisplayItem With {
-                            .ProductId = productId,
-                            .Stock_ID = SafeGetInt(reader, "Stock_ID"),
-                            .ProductCode = SafeGetString(reader, "Product_Code"),
-                            .ProductName = SafeGetString(reader, "Product_Name"),
-                            .Partner_ID = SafeGetInt(reader, "SuppliersID"),
-                            .Partner_Name = SafeGetString(reader, "SuppliersName"),
-                            .BaseQuantityTotal = baseQty,
-                            .MinQuantity = SafeGetDecimal(reader, "Min_Quantity"),
-                            .LastUpdate = SafeGetDate(reader, "Last_Update"),
-                            .BaseUnitName = SafeGetString(reader, "BaseUnit_Name"),
-                            .CategoryName = SafeGetString(reader, "Category_Name"),
-                            .ProductImagePath = SafeGetImagePath(reader, "Product_Image"),
-                            .DisplayStockQuantity = displayQuantity
-                        }
+                            stockList.Add(item)
+                        End While
 
-                        stockList.Add(item)
-                    End While
-
+                    End Using
                 End Using
             End Using
 
         Catch ex As Exception
             Throw New Exception("حدث خطأ أثناء جلب بيانات المخزون: " & ex.Message, ex)
-
-        Finally
-            Disconnect()
         End Try
 
         Return stockList
@@ -655,88 +645,86 @@ LEFT JOIN
         Dim stockList As New List(Of StockDisplayItem)
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                ' 1) تحميل كل الوحدات مرة واحدة
+                Dim unitsCache = LoadAllProductUnits(cn)
 
-            ' 1) تحميل كل الوحدات مرة واحدة
-            Dim unitsCache = LoadAllProductUnits(Conn)
+                ' 2) تحديد عمود البحث (نفس النظام القديم)
+                Dim columnName As String = ""
+                Select Case field
+                    Case "كود المنتج" : columnName = "P.Product_Code"
+                    Case "اسم المنتج" : columnName = "P.Product_Name"
+                    Case "الوحدة الأساسية" : columnName = "BU.Unit_Name"
+                    Case "المخزون المتوفر" : columnName = "S.Quantity_OnHand"
+                    Case "القسم" : columnName = "C.Category_Name"
+                    Case "اسم المورد" : columnName = "V.SuppliersName"
+                End Select
 
-            ' 2) تحديد عمود البحث (نفس النظام القديم)
-            Dim columnName As String = ""
-            Select Case field
-                Case "كود المنتج" : columnName = "P.Product_Code"
-                Case "اسم المنتج" : columnName = "P.Product_Name"
-                Case "الوحدة الأساسية" : columnName = "BU.Unit_Name"
-                Case "المخزون المتوفر" : columnName = "S.Quantity_OnHand"
-                Case "القسم" : columnName = "C.Category_Name"
-                Case "اسم المورد" : columnName = "V.SuppliersName"
-            End Select
+                ' 3) الاستعلام الأساسي
+                Dim sql As String = "
+            SELECT 
+                S.Stock_ID,
+                S.Product_ID,
+                P.Product_Code,
+                P.Product_Name,
+                P.Product_Image,
+                S.Quantity_OnHand,
+                S.Min_Quantity,
+                S.Last_Update,
+                BU.Unit_Name AS BaseUnit_Name,
+                C.Category_Name,
+                V.SuppliersID,
+                V.SuppliersName
+            FROM Stock S
+            LEFT JOIN Products P ON S.Product_ID = P.Product_ID
+            LEFT JOIN ProductUnits BU ON P.BaseUnit_ID = BU.ProductUnit_ID
+            LEFT JOIN Categories C ON P.Category_ID = C.Category_ID
+            LEFT JOIN Suppliers V ON P.Partner_ID = V.SuppliersID
+            "
 
-            ' 3) الاستعلام الأساسي
-            Dim sql As String = "
-        SELECT 
-            S.Stock_ID,
-            S.Product_ID,
-            P.Product_Code,
-            P.Product_Name,
-            P.Product_Image,
-            S.Quantity_OnHand,
-            S.Min_Quantity,
-            S.Last_Update,
-            BU.Unit_Name AS BaseUnit_Name,
-            C.Category_Name,
-            V.SuppliersID,
-            V.SuppliersName
-        FROM Stock S
-        LEFT JOIN Products P ON S.Product_ID = P.Product_ID
-        LEFT JOIN ProductUnits BU ON P.BaseUnit_ID = BU.ProductUnit_ID
-        LEFT JOIN Categories C ON P.Category_ID = C.Category_ID
-        LEFT JOIN Suppliers V ON P.Partner_ID = V.SuppliersID
-        "
-
-            ' 4) إضافة الفلتر لو موجود
-            If filter <> "" AndAlso columnName <> "" Then
-                sql &= $" WHERE {columnName} LIKE @filter"
-            End If
-
-            Using cmd As New SqlCommand(sql, Conn)
-
+                ' 4) إضافة الفلتر لو موجود
                 If filter <> "" AndAlso columnName <> "" Then
-                    cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
+                    sql &= $" WHERE {columnName} LIKE @filter"
                 End If
 
-                Using r = cmd.ExecuteReader()
-                    While r.Read()
+                Using cmd As New SqlCommand(sql, cn)
 
-                        Dim productId As Integer = SafeGetInt(r, "Product_ID")
-                        Dim qty As Decimal = SafeGetDecimal(r, "Quantity_OnHand")
+                    If filter <> "" AndAlso columnName <> "" Then
+                        cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
+                    End If
 
-                        Dim displayQty As String =
-                        DecomposeQuantityFast(productId, qty, unitsCache)
+                    Using r = cmd.ExecuteReader()
+                        While r.Read()
 
-                        stockList.Add(New StockDisplayItem With {
-                        .Stock_ID = SafeGetInt(r, "Stock_ID"),
-                        .ProductId = productId,
-                        .ProductCode = SafeGetString(r, "Product_Code"),
-                        .ProductName = SafeGetString(r, "Product_Name"),
-                        .Partner_ID = SafeGetInt(r, "SuppliersID"),
-                        .Partner_Name = SafeGetString(r, "SuppliersName"),
-                        .BaseQuantityTotal = qty,
-                        .MinQuantity = SafeGetDecimal(r, "Min_Quantity"),
-                        .LastUpdate = SafeGetDate(r, "Last_Update"),
-                        .BaseUnitName = SafeGetString(r, "BaseUnit_Name"),
-                        .CategoryName = SafeGetString(r, "Category_Name"),
-                        .ProductImagePath = SafeGetImagePath(r, "Product_Image"),
-                        .DisplayStockQuantity = displayQty
-                    })
+                            Dim productId As Integer = SafeGetInt(r, "Product_ID")
+                            Dim qty As Decimal = SafeGetDecimal(r, "Quantity_OnHand")
 
-                    End While
+                            Dim displayQty As String =
+                            DecomposeQuantityFast(productId, qty, unitsCache)
+
+                            stockList.Add(New StockDisplayItem With {
+                            .Stock_ID = SafeGetInt(r, "Stock_ID"),
+                            .ProductId = productId,
+                            .ProductCode = SafeGetString(r, "Product_Code"),
+                            .ProductName = SafeGetString(r, "Product_Name"),
+                            .Partner_ID = SafeGetInt(r, "SuppliersID"),
+                            .Partner_Name = SafeGetString(r, "SuppliersName"),
+                            .BaseQuantityTotal = qty,
+                            .MinQuantity = SafeGetDecimal(r, "Min_Quantity"),
+                            .LastUpdate = SafeGetDate(r, "Last_Update"),
+                            .BaseUnitName = SafeGetString(r, "BaseUnit_Name"),
+                            .CategoryName = SafeGetString(r, "Category_Name"),
+                            .ProductImagePath = SafeGetImagePath(r, "Product_Image"),
+                            .DisplayStockQuantity = displayQty
+                        })
+
+                        End While
+                    End Using
                 End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
-        Finally
-            Disconnect()
         End Try
 
         Return stockList

@@ -88,60 +88,60 @@ Namespace Global.WindowsApp1
 
                 If isDark Then
                     ' الثيم الداكن (Dark Theme)
-                    Me.BackColor = Color.FromArgb(17, 24, 39)
-                    flowOrders.BackColor = Color.FromArgb(17, 24, 39)
-                    panelHeader.BackColor = Color.FromArgb(31, 41, 55)
-                    pnlFilterContainer.BackColor = Color.FromArgb(31, 41, 55)
-                    lblTitle.ForeColor = Color.White
-                    lblClock.ForeColor = Color.FromArgb(156, 163, 175)
+                    Me.BackColor = pal.Background
+                    flowOrders.BackColor = pal.Background
+                    panelHeader.BackColor = pal.SurfaceHeader
+                    pnlFilterContainer.BackColor = pal.SurfaceHeader
+                    lblTitle.ForeColor = pal.TextOnDark
+                    lblClock.ForeColor = pal.TextSecondary
 
                     ' الأزرار العلوية
-                    Dim btnBg = Color.FromArgb(55, 65, 81)
-                    Dim btnFg = Color.White
+                    Dim btnBg = pal.SurfaceSecondary
+                    Dim btnFg = pal.TextPrimary
                     btnFullscreen.BackColor = btnBg : btnFullscreen.ForeColor = btnFg
-                    btnHistory.BackColor = If(_isHistoryMode, Color.FromArgb(180, 83, 9), btnBg) : btnHistory.ForeColor = btnFg
-                    btnSoundToggle.BackColor = If(_soundEnabled, btnBg, Color.FromArgb(120, 30, 30)) : btnSoundToggle.ForeColor = btnFg
+                    btnHistory.BackColor = If(_isHistoryMode, pal.Warning, btnBg) : btnHistory.ForeColor = pal.TextOnPrimary
+                    btnSoundToggle.BackColor = If(_soundEnabled, btnBg, pal.DangerSubtleBackground) : btnSoundToggle.ForeColor = If(_soundEnabled, btnFg, pal.DangerSubtleForeground)
                     btnRefresh.BackColor = btnBg : btnRefresh.ForeColor = btnFg
 
                     ' فلاتر البحث
-                    cmbOrderType.FillColor = Color.FromArgb(17, 24, 39)
-                    cmbOrderType.BorderColor = Color.FromArgb(75, 85, 99)
-                    cmbOrderType.ForeColor = Color.White
-                    cmbStation.FillColor = Color.FromArgb(17, 24, 39)
-                    cmbStation.BorderColor = Color.FromArgb(75, 85, 99)
-                    cmbStation.ForeColor = Color.White
-                    lblFilterType.ForeColor = Color.FromArgb(156, 163, 175)
-                    lblFilterStation.ForeColor = Color.FromArgb(156, 163, 175)
+                    cmbOrderType.FillColor = pal.InputBackground
+                    cmbOrderType.BorderColor = pal.InputBorder
+                    cmbOrderType.ForeColor = pal.InputForeground
+                    cmbStation.FillColor = pal.InputBackground
+                    cmbStation.BorderColor = pal.InputBorder
+                    cmbStation.ForeColor = pal.InputForeground
+                    lblFilterType.ForeColor = pal.TextSecondary
+                    lblFilterStation.ForeColor = pal.TextSecondary
 
-                    lblEmptyNotice.ForeColor = Color.FromArgb(156, 163, 175)
+                    lblEmptyNotice.ForeColor = pal.TextMuted
                 Else
                     ' الثيم الفاتح (Light Theme)
-                    Me.BackColor = Color.FromArgb(241, 245, 249)
-                    flowOrders.BackColor = Color.FromArgb(241, 245, 249)
-                    panelHeader.BackColor = Color.White
-                    pnlFilterContainer.BackColor = Color.White
-                    lblTitle.ForeColor = Color.FromArgb(15, 23, 42)
-                    lblClock.ForeColor = Color.FromArgb(71, 85, 105)
+                    Me.BackColor = pal.BackgroundSecondary
+                    flowOrders.BackColor = pal.BackgroundSecondary
+                    panelHeader.BackColor = pal.Surface
+                    pnlFilterContainer.BackColor = pal.Surface
+                    lblTitle.ForeColor = pal.TextPrimary
+                    lblClock.ForeColor = pal.TextSecondary
 
                     ' الأزرار العلوية
-                    Dim btnBg = Color.FromArgb(241, 245, 249)
-                    Dim btnFg = Color.FromArgb(30, 41, 59)
+                    Dim btnBg = pal.SurfaceSecondary
+                    Dim btnFg = pal.TextPrimary
                     btnFullscreen.BackColor = btnBg : btnFullscreen.ForeColor = btnFg
-                    btnHistory.BackColor = If(_isHistoryMode, Color.FromArgb(217, 119, 6), btnBg) : btnHistory.ForeColor = If(_isHistoryMode, Color.White, btnFg)
-                    btnSoundToggle.BackColor = If(_soundEnabled, btnBg, Color.FromArgb(254, 226, 226)) : btnSoundToggle.ForeColor = If(_soundEnabled, btnFg, Color.FromArgb(185, 28, 28))
+                    btnHistory.BackColor = If(_isHistoryMode, pal.Warning, btnBg) : btnHistory.ForeColor = If(_isHistoryMode, pal.WarningText, btnFg)
+                    btnSoundToggle.BackColor = If(_soundEnabled, btnBg, pal.DangerSubtleBackground) : btnSoundToggle.ForeColor = If(_soundEnabled, btnFg, pal.DangerSubtleForeground)
                     btnRefresh.BackColor = btnBg : btnRefresh.ForeColor = btnFg
 
                     ' فلاتر البحث
-                    cmbOrderType.FillColor = Color.FromArgb(248, 250, 252)
-                    cmbOrderType.BorderColor = Color.FromArgb(203, 213, 225)
-                    cmbOrderType.ForeColor = Color.FromArgb(15, 23, 42)
-                    cmbStation.FillColor = Color.FromArgb(248, 250, 252)
-                    cmbStation.BorderColor = Color.FromArgb(203, 213, 225)
-                    cmbStation.ForeColor = Color.FromArgb(15, 23, 42)
-                    lblFilterType.ForeColor = Color.FromArgb(71, 85, 105)
-                    lblFilterStation.ForeColor = Color.FromArgb(71, 85, 105)
+                    cmbOrderType.FillColor = pal.InputBackground
+                    cmbOrderType.BorderColor = pal.InputBorder
+                    cmbOrderType.ForeColor = pal.InputForeground
+                    cmbStation.FillColor = pal.InputBackground
+                    cmbStation.BorderColor = pal.InputBorder
+                    cmbStation.ForeColor = pal.InputForeground
+                    lblFilterType.ForeColor = pal.TextSecondary
+                    lblFilterStation.ForeColor = pal.TextSecondary
 
-                    lblEmptyNotice.ForeColor = Color.FromArgb(100, 116, 139)
+                    lblEmptyNotice.ForeColor = pal.TextMuted
                 End If
 
                 ' تحديث كل البطاقات المعروضة

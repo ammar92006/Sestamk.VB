@@ -17,15 +17,15 @@ Public Class frm_LowStockProducts
 
         Dim dt As New DataTable()
 
-        Connect()
-        Using cmd As New SqlCommand(sql, Conn)
+        Using cn As SqlConnection = DBModule.NewConn()
+        Using cmd As New SqlCommand(sql, cn)
             Using da As New SqlDataAdapter(cmd)
                 da.Fill(dt)
             End Using
         End Using
 
         DGV_LowStock.DataSource = dt
-        Disconnect()
+        End Using
 
         ' تنسيق الأعمدة
         DGV_LowStock.Columns("Product_Name").HeaderText = "اسم المنتج"

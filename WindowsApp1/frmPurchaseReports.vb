@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmPurchaseReports
     Public Property ShowSupplierBalances As Boolean
@@ -145,12 +145,13 @@ Public Class frmPurchaseReports
                     ' تقرير 1: إجمالي الفواتير
                     If rbInvoicesSummary.Checked Then
                         Dim sql As String = "SELECT H.PurchaseID, H.InvoiceNumber, H.PurchaseDate, " &
-                                            "       S.SupplierName, ST.StoreName, " &
+                                            "       S.SupplierName, ISNULL(B.BranchName, '---') AS BranchName, ST.StoreName, " &
                                             "       H.TotalAmount, H.Discount, H.NetTotal, H.PaidAmount, H.RemainingAmount, " &
                                             "       H.PaymentType, ISNULL(T.TreasuryNameAr, '---') AS TreasuryName, H.Notes " &
                                             "FROM PurchaseHeaders H " &
                                             "INNER JOIN Suppliers S ON H.SupplierID = S.SupplierID " &
                                             "INNER JOIN Stores ST ON H.StoreID = ST.StoreID " &
+                                            "LEFT JOIN Branches B ON H.BranchID = B.BranchID " &
                                             "LEFT JOIN Treasury T ON H.TreasuryID = T.TreasuryID " &
                                             "WHERE ISNULL(H.IsDeleted,0)=0 AND H.PurchaseDate >= @FromDate AND H.PurchaseDate < @ToDate "
 
@@ -170,7 +171,7 @@ Public Class frmPurchaseReports
                         End If
 
                         If Not String.IsNullOrEmpty(searchTxt) Then
-                            sql &= " AND (H.InvoiceNumber LIKE @Search OR S.SupplierName LIKE @Search OR H.Notes LIKE @Search) "
+                            sql &= " AND (H.InvoiceNumber LIKE @Search OR S.SupplierName LIKE @Search OR H.Notes LIKE @Search OR B.BranchName LIKE @Search) "
                             cmd.Parameters.AddWithValue("@Search", "%" & searchTxt & "%")
                         End If
 
@@ -179,7 +180,7 @@ Public Class frmPurchaseReports
 
                         ' تقرير 2: تفصيلي بالخامات والأصناف
                     Else
-                        Dim sql As String = "SELECT D.DetailID, H.InvoiceNumber, H.PurchaseDate, S.SupplierName, ST.StoreName, " &
+                        Dim sql As String = "SELECT D.DetailID, H.InvoiceNumber, H.PurchaseDate, S.SupplierName, ISNULL(B.BranchName, '---') AS BranchName, ST.StoreName, " &
                                             "       M.MaterialName, U.UnitName, D.Quantity, D.ConversionFactor, " &
                                             "       D.Quantity*D.ConversionFactor AS ActualBaseQuantity, D.UnitPrice, D.BaseUnitCost, D.Quantity*D.UnitPrice AS TotalPrice " &
                                             "FROM PurchaseDetails D " &
@@ -188,6 +189,7 @@ Public Class frmPurchaseReports
                                             "INNER JOIN Units U ON D.UnitID = U.UnitID " &
                                             "INNER JOIN Suppliers S ON H.SupplierID = S.SupplierID " &
                                             "INNER JOIN Stores ST ON H.StoreID = ST.StoreID " &
+                                            "LEFT JOIN Branches B ON H.BranchID = B.BranchID " &
                                             "WHERE ISNULL(H.IsDeleted,0)=0 AND H.PurchaseDate >= @FromDate AND H.PurchaseDate < @ToDate "
 
                         If supID > 0 Then
@@ -211,7 +213,7 @@ Public Class frmPurchaseReports
                         End If
 
                         If Not String.IsNullOrEmpty(searchTxt) Then
-                            sql &= " AND (H.InvoiceNumber LIKE @Search OR S.SupplierName LIKE @Search OR M.MaterialName LIKE @Search) "
+                            sql &= " AND (H.InvoiceNumber LIKE @Search OR S.SupplierName LIKE @Search OR M.MaterialName LIKE @Search OR B.BranchName LIKE @Search) "
                             cmd.Parameters.AddWithValue("@Search", "%" & searchTxt & "%")
                         End If
 
@@ -246,6 +248,7 @@ Public Class frmPurchaseReports
             dgvReport.Columns("InvoiceNumber").HeaderText = "رقم الفاتورة"
             dgvReport.Columns("PurchaseDate").HeaderText = "تاريخ الشراء"
             dgvReport.Columns("SupplierName").HeaderText = "المورد"
+            If dgvReport.Columns.Contains("BranchName") Then dgvReport.Columns("BranchName").HeaderText = "الفرع"
             dgvReport.Columns("StoreName").HeaderText = "المخزن"
             dgvReport.Columns("TotalAmount").HeaderText = "الإجمالي"
             dgvReport.Columns("Discount").HeaderText = "الخصم"
@@ -268,15 +271,28 @@ Public Class frmPurchaseReports
             dgvReport.Columns("InvoiceNumber").DisplayIndex = 0    ' رقم الفاتورة   ← أقصى اليمين
             dgvReport.Columns("PurchaseDate").DisplayIndex = 1     ' تاريخ الشراء
             dgvReport.Columns("SupplierName").DisplayIndex = 2     ' المورد
-            dgvReport.Columns("StoreName").DisplayIndex = 3        ' المخزن
-            dgvReport.Columns("TotalAmount").DisplayIndex = 4      ' الإجمالي
-            dgvReport.Columns("Discount").DisplayIndex = 5         ' الخصم
-            dgvReport.Columns("NetTotal").DisplayIndex = 6         ' الصافي
-            dgvReport.Columns("PaidAmount").DisplayIndex = 7       ' المدفوع
-            dgvReport.Columns("RemainingAmount").DisplayIndex = 8  ' المتبقي (آجل)
-            dgvReport.Columns("PaymentType").DisplayIndex = 9      ' طريقة الدفع
-            dgvReport.Columns("TreasuryName").DisplayIndex = 10    ' الخزينة
-            dgvReport.Columns("Notes").DisplayIndex = 11           ' ملاحظات        ← أقصى اليسار
+            Dim colIdx As Integer = 3
+            If dgvReport.Columns.Contains("BranchName") Then
+                dgvReport.Columns("BranchName").DisplayIndex = colIdx
+                colIdx += 1
+            End If
+            dgvReport.Columns("StoreName").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("TotalAmount").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("Discount").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("NetTotal").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("PaidAmount").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("RemainingAmount").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("PaymentType").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("TreasuryName").DisplayIndex = colIdx
+            colIdx += 1
+            dgvReport.Columns("Notes").DisplayIndex = colIdx           ' ملاحظات        ← أقصى اليسار
 
         Else
             If dgvReport.Columns.Contains("DetailID") Then dgvReport.Columns("DetailID").Visible = False
@@ -284,6 +300,7 @@ Public Class frmPurchaseReports
             dgvReport.Columns("InvoiceNumber").HeaderText = "رقم الفاتورة"
             dgvReport.Columns("PurchaseDate").HeaderText = "التاريخ"
             dgvReport.Columns("SupplierName").HeaderText = "المورد"
+            If dgvReport.Columns.Contains("BranchName") Then dgvReport.Columns("BranchName").HeaderText = "الفرع"
             dgvReport.Columns("StoreName").HeaderText = "المخزن"
             dgvReport.Columns("MaterialName").HeaderText = "الخامة"
             dgvReport.Columns("UnitName").HeaderText = "الوحدة"
@@ -307,15 +324,28 @@ Public Class frmPurchaseReports
             dgvReport.Columns("InvoiceNumber").DisplayIndex = 0         ' رقم الفاتورة          ← أقصى اليمين
             dgvReport.Columns("PurchaseDate").DisplayIndex = 1          ' التاريخ
             dgvReport.Columns("SupplierName").DisplayIndex = 2          ' المورد
-            dgvReport.Columns("StoreName").DisplayIndex = 3             ' المخزن
-            dgvReport.Columns("MaterialName").DisplayIndex = 4          ' الخامة
-            dgvReport.Columns("UnitName").DisplayIndex = 5              ' الوحدة
-            dgvReport.Columns("Quantity").DisplayIndex = 6              ' الكمية المشتراة
-            dgvReport.Columns("ConversionFactor").DisplayIndex = 7      ' معامل التحويل
-            dgvReport.Columns("ActualBaseQuantity").DisplayIndex = 8    ' الوارد الفعلي
-            dgvReport.Columns("UnitPrice").DisplayIndex = 9             ' سعر الوحدة
-            dgvReport.Columns("BaseUnitCost").DisplayIndex = 10         ' تكلفة الوحدة الأساسية
-            dgvReport.Columns("TotalPrice").DisplayIndex = 11           ' إجمالي السطر          ← أقصى اليسار
+            Dim colIdx2 As Integer = 3
+            If dgvReport.Columns.Contains("BranchName") Then
+                dgvReport.Columns("BranchName").DisplayIndex = colIdx2
+                colIdx2 += 1
+            End If
+            dgvReport.Columns("StoreName").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("MaterialName").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("UnitName").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("Quantity").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("ConversionFactor").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("ActualBaseQuantity").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("UnitPrice").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("BaseUnitCost").DisplayIndex = colIdx2
+            colIdx2 += 1
+            dgvReport.Columns("TotalPrice").DisplayIndex = colIdx2           ' إجمالي السطر          ← أقصى اليسار
         End If
     End Sub
 

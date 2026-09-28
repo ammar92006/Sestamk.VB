@@ -119,18 +119,17 @@ Public Class Customer
 
     End Sub
     Private Sub GetMaxProductCode()
-        Connect()
         Try
             Dim maxCode As Integer = 0
 
-            Using cmd As New SqlClient.SqlCommand("SELECT ISNULL(MAX(CAST(CustomerCode AS INT)), 0) 
-                                                    FROM Customers
-                                                    WHERE ISNUMERIC(CustomerCode) = 1
-                                                    ", Conn)
-                maxCode = Convert.ToInt32(cmd.ExecuteScalar())
-                Disconnect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlClient.SqlCommand("SELECT ISNULL(MAX(CAST(CustomerCode AS INT)), 0) 
+                                                        FROM Customers
+                                                        WHERE ISNUMERIC(CustomerCode) = 1
+                                                        ", cn)
+                    maxCode = Convert.ToInt32(cmd.ExecuteScalar())
+                End Using
             End Using
-
 
             txtCustomerCode.Text = (maxCode + 1).ToString()
 
@@ -161,10 +160,9 @@ Public Class Customer
                 columnName = "Notes"
         End Select
 
-        Using Conn
-            Connect()
+        Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = $"SELECT {columnName} FROM Customers WHERE {columnName} LIKE @keyword"
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             cmd.Parameters.AddWithValue("@keyword", "%" & keyword & "%")
 
             Dim reader = cmd.ExecuteReader()
@@ -172,7 +170,6 @@ Public Class Customer
                 suggestions.Add(reader(columnName).ToString())
             End While
         End Using
-        Disconnect()
         Return suggestions
     End Function
 
@@ -274,9 +271,9 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
 
     Private Sub LoadCustomers(Optional filter As String = "", Optional field As String = "")
-        Using Conn
+        Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = "SELECT CustomerID, CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes , CreatedAt , updated_at AS UpdatedAt FROM Customers"
-            Connect()
+
             txtCustomerCode.Clear()
             txtCustomerName.Clear()
             txtCreatedAt.Clear()
@@ -315,7 +312,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 End If
             End If
 
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             If filter <> "" Then
                 cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
             End If
@@ -324,7 +321,6 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             Dim dt As New DataTable()
             da.Fill(dt)
             dgvCustomers.DataSource = dt
-            Disconnect()
         End Using
         lblStatus.Text = "نشط غير"
         lblStatus.ForeColor = Color.Red
@@ -502,14 +498,12 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             End If
 
             ' تنفيذ عملية الإضافة
-            Using Conn
-                Connect()
-
+            Using cn As SqlConnection = DBModule.NewConn()
                 Dim query As String = "
             INSERT INTO Customers (CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes, CreatedAt)
             VALUES (@Code, @Name, @Phone, @Address, @Limit, @CurrentBalance, @Active, @Notes, GETDATE())"
 
-                Using cmd As New SqlCommand(query, Conn)
+                Using cmd As New SqlCommand(query, cn)
                     cmd.Parameters.AddWithValue("@Code", txtCustomerCode.Text.Trim())
                     cmd.Parameters.AddWithValue("@Name", txtCustomerName.Text.Trim())
                     cmd.Parameters.AddWithValue("@Phone", txtPhone.Text.Trim())
@@ -528,8 +522,6 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء إضافة العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -538,27 +530,25 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         Dim exists As Boolean = False
 
         Try
-            Connect()
-
-            Dim query As String = "SELECT COUNT(*) FROM Customers WHERE CustomerCode = @code"
-            If excludeCustomerID <> -1 Then
-                query &= " AND CustomerID <> @id"
-            End If
-
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@code", customerCode)
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "SELECT COUNT(*) FROM Customers WHERE CustomerCode = @code"
                 If excludeCustomerID <> -1 Then
-                    cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    query &= " AND CustomerID <> @id"
                 End If
 
-                Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
-                exists = (count > 0)
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@code", customerCode)
+                    If excludeCustomerID <> -1 Then
+                        cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    End If
+
+                    Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
+                    exists = (count > 0)
+                End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
         Return exists
@@ -692,9 +682,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             End If
 
             ' تنفيذ التعديل
-            Using Conn
-                Connect()
-
+            Using cn As SqlConnection = DBModule.NewConn()
                 Dim query As String = "
             UPDATE Customers
             SET CustomerCode=@Code, 
@@ -709,7 +697,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 LastTransactionDate=GETDATE()
             WHERE CustomerID=@ID"
 
-                Using cmd As New SqlCommand(query, Conn)
+                Using cmd As New SqlCommand(query, cn)
                     cmd.Parameters.AddWithValue("@Code", code)
                     cmd.Parameters.AddWithValue("@Name", txtCustomerName.Text.Trim())
                     cmd.Parameters.AddWithValue("@Phone", txtPhone.Text.Trim())
@@ -729,8 +717,6 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء تعديل العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -749,8 +735,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         Try
             ' 1️⃣ تحميل البيانات من قاعدة البيانات
             Dim dt As New DataTable()
-            Using Conn
-                Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
                 Dim cmd As New SqlCommand("
                 SELECT CustomerCode AS [كود العميل],
                        CustomerName AS [اسم العميل],
@@ -762,10 +747,9 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                        Notes AS [ملاحظات],
                        CreatedAt AS [تاريخ الإنشاء],
                        updated_at AS [آخر تحديث]
-                FROM Customers", Conn)
+                FROM Customers", cn)
                 Dim da As New SqlDataAdapter(cmd)
                 da.Fill(dt)
-                Disconnect()
             End Using
 
             ' 2️⃣ تحديد مسار الحفظ
@@ -883,13 +867,11 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
     Private Sub SaveImportedData(dt As DataTable)
         Try
-            Using Conn
-                Connect()
-
+            Using cn As SqlConnection = DBModule.NewConn()
                 For Each row As DataRow In dt.Rows
                     Dim cmd As New SqlCommand("
                     INSERT INTO Customers (CustomerCode, CustomerName, PhoneNumber, Address, CreditLimit, CurrentBalance, IsActive, Notes, CreatedAt, updated_at)
-                    VALUES (@Code, @Name, @Phone, @Address, @Credit, @Balance, @Active, @Notes, GETDATE(), SYSUTCDATETIME())", Conn)
+                    VALUES (@Code, @Name, @Phone, @Address, @Credit, @Balance, @Active, @Notes, GETDATE(), SYSUTCDATETIME())", cn)
 
                     cmd.Parameters.AddWithValue("@Code", row("كود العميل"))
                     cmd.Parameters.AddWithValue("@Name", row("اسم العميل"))
@@ -908,8 +890,6 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
         Catch ex As Exception
             MessageBox.Show("⚠️ خطأ أثناء حفظ البيانات في القاعدة: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 

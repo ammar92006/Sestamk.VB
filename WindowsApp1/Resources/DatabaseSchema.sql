@@ -936,6 +936,7 @@ BEGIN
         [InvoiceNumber] NVARCHAR(50) NOT NULL,
         [SupplierID] INT NOT NULL,
         [StoreID] INT NOT NULL,
+        [BranchID] INT NULL,
         [PurchaseDate] DATETIME NOT NULL DEFAULT getdate(),
         [TotalAmount] DECIMAL(18, 2) NOT NULL DEFAULT 0.00,
         [Discount] DECIMAL(18, 2) NOT NULL DEFAULT 0.00,
@@ -950,6 +951,10 @@ BEGIN
         [IsDeleted] BIT NOT NULL DEFAULT 0,
         CONSTRAINT [PK_PurchaseHeaders] PRIMARY KEY ([PurchaseID])
     );
+END
+ELSE IF COL_LENGTH('[dbo].[PurchaseHeaders]', 'BranchID') IS NULL
+BEGIN
+    ALTER TABLE [dbo].[PurchaseHeaders] ADD [BranchID] INT NULL;
 END
 GO
 

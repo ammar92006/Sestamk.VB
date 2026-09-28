@@ -86,7 +86,7 @@ Public Class The_Scale
         End With
     End Sub
     Private Sub LoadTheScale(Optional filter As String = "", Optional field As String = "")
-        Using Conn
+        Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = "SELECT   
                                         ID AS 'ID',
                                         Code AS 'الكود',
@@ -94,7 +94,6 @@ Public Class The_Scale
                                         Price AS 'سعر البيع',
                                         Purchase_Price AS 'سعر الشراء'
                                         FROM TheScale"
-            Connect()
 
             If filter <> "" Then
                 Dim columnName As String = ""
@@ -114,14 +113,13 @@ Public Class The_Scale
                 End If
             End If
 
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             If filter <> "" Then cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
 
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable()
             da.Fill(dt)
             dgv_TheScale.DataSource = dt
-            Disconnect()
         End Using
     End Sub
 
@@ -177,25 +175,22 @@ Public Class The_Scale
 
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using bulk As New SqlBulkCopy(cn)
+                    bulk.DestinationTableName = "TheScale"
 
-            Using bulk As New SqlBulkCopy(Conn)
-                bulk.DestinationTableName = "TheScale"
+                    bulk.ColumnMappings.Add("Code", "Code")
+                    bulk.ColumnMappings.Add("Name", "Name")
+                    bulk.ColumnMappings.Add("Price", "Price")
 
-                bulk.ColumnMappings.Add("Code", "Code")
-                bulk.ColumnMappings.Add("Name", "Name")
-                bulk.ColumnMappings.Add("Price", "Price")
-
-                bulk.WriteToServer(finalDT)
+                    bulk.WriteToServer(finalDT)
+                End Using
             End Using
 
             MessageBox.Show("✔ تم استيراد البيانات بنجاح")
 
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء الاستيراد: " & ex.Message)
-
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -278,22 +273,21 @@ Public Class The_Scale
         End If
 
         Try
-            Connect()
-            Dim query As String = "INSERT INTO TheScale (Code, Name, Price , Purchase_Price) VALUES (@Code, @Name, @Price,@Purchase_Price)"
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@Code", Code.Text.Trim())
-                cmd.Parameters.AddWithValue("@Name", txt_Name.Text.Trim())
-                cmd.Parameters.AddWithValue("@Price", If(Price.Text = "", 0, Convert.ToDecimal(Price.Text)))
-                cmd.Parameters.AddWithValue("@Purchase_Price", If(txt_Purchase_Price.Text = "", 0, Convert.ToDecimal(txt_Purchase_Price.Text)))
-                cmd.ExecuteNonQuery()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "INSERT INTO TheScale (Code, Name, Price , Purchase_Price) VALUES (@Code, @Name, @Price,@Purchase_Price)"
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@Code", Code.Text.Trim())
+                    cmd.Parameters.AddWithValue("@Name", txt_Name.Text.Trim())
+                    cmd.Parameters.AddWithValue("@Price", If(Price.Text = "", 0, Convert.ToDecimal(Price.Text)))
+                    cmd.Parameters.AddWithValue("@Purchase_Price", If(txt_Purchase_Price.Text = "", 0, Convert.ToDecimal(txt_Purchase_Price.Text)))
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
             MessageBox.Show("✔ تم إضافة المنتج بنجاح")
             cleantxts()
             LoadTheScale() ' دالة لتحديث DataGridView
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 
@@ -307,23 +301,22 @@ Public Class The_Scale
         Dim id As Integer = Convert.ToInt32(selectedRow.Cells("ID").Value)
 
         Try
-            Connect()
-            Dim query As String = "UPDATE TheScale SET Code=@Code, Name=@Name, Price=@Price , Purchase_Price=@Purchase_Price WHERE ID=@ID"
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@Code", Code.Text.Trim())
-                cmd.Parameters.AddWithValue("@Name", txt_Name.Text.Trim())
-                cmd.Parameters.AddWithValue("@Price", If(Price.Text = "", 0, Convert.ToDecimal(Price.Text)))
-                cmd.Parameters.AddWithValue("@Purchase_Price", If(txt_Purchase_Price.Text = "", 0, Convert.ToDecimal(txt_Purchase_Price.Text)))
-                cmd.Parameters.AddWithValue("@ID", id)
-                cmd.ExecuteNonQuery()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "UPDATE TheScale SET Code=@Code, Name=@Name, Price=@Price , Purchase_Price=@Purchase_Price WHERE ID=@ID"
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@Code", Code.Text.Trim())
+                    cmd.Parameters.AddWithValue("@Name", txt_Name.Text.Trim())
+                    cmd.Parameters.AddWithValue("@Price", If(Price.Text = "", 0, Convert.ToDecimal(Price.Text)))
+                    cmd.Parameters.AddWithValue("@Purchase_Price", If(txt_Purchase_Price.Text = "", 0, Convert.ToDecimal(txt_Purchase_Price.Text)))
+                    cmd.Parameters.AddWithValue("@ID", id)
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
             MessageBox.Show("✔ تم تعديل المنتج بنجاح")
             cleantxts()
             LoadTheScale()
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء التعديل: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 
@@ -341,19 +334,18 @@ Public Class The_Scale
         End If
 
         Try
-            Connect()
-            Dim query As String = "DELETE FROM TheScale WHERE ID=@ID"
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@ID", id)
-                cmd.ExecuteNonQuery()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "DELETE FROM TheScale WHERE ID=@ID"
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@ID", id)
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
             MessageBox.Show("✔ تم حذف المنتج بنجاح")
             cleantxts()
             LoadTheScale()
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء الحذف: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 

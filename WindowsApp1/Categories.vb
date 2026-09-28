@@ -207,18 +207,17 @@ Public Class Categories
         Dim count As Integer = 0
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = "SELECT COUNT(*) FROM Products WHERE Category_ID = @id"
 
-            Using cmd As New SqlCommand(query, Conn)
+            Using cmd As New SqlCommand(query, cn)
                 cmd.Parameters.AddWithValue("@id", categoryId)
                 count = Convert.ToInt32(cmd.ExecuteScalar())
             End Using
 
+        End Using
         Catch ex As Exception
             MessageBox.Show("خطأ: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
 
         Return count
@@ -389,9 +388,9 @@ Public Class Categories
                 columnName = "Category_NameAr"
         End Select
         Using Conn
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = $"SELECT {columnName} FROM Categories WHERE {columnName} LIKE @keyword AND IsDeleted = 0"
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             cmd.Parameters.AddWithValue("@keyword", "%" & keyword & "%")
 
             Dim reader = cmd.ExecuteReader()
@@ -399,7 +398,7 @@ Public Class Categories
                 suggestions.Add(reader(columnName).ToString())
             End While
         End Using
-        Disconnect()
+        End Using
         Return suggestions
     End Function
 

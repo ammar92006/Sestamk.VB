@@ -772,6 +772,7 @@ Namespace Services
                 t.AddColumn("InvoiceNumber", "NVARCHAR(50)", False, Nothing, False, False)
                 t.AddColumn("SupplierID", "INT", False, Nothing, False, False)
                 t.AddColumn("StoreID", "INT", False, Nothing, False, False)
+                t.AddColumn("BranchID", "INT", True, Nothing, False, False)
                 t.AddColumn("PurchaseDate", "DATETIME", False, "getdate()", False, False)
                 t.AddColumn("TotalAmount", "DECIMAL(18, 2)", False, "0.00", False, False)
                 t.AddColumn("Discount", "DECIMAL(18, 2)", False, "0.00", False, False)

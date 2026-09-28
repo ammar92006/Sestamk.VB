@@ -525,42 +525,24 @@ Public Class MainForm
             If btnLogout IsNot Nothing Then
                 btnLogout.BorderRadius = 8
                 btnLogout.BorderThickness = 1
-                If ThemeManager.Instance.IsDark Then
-                    btnLogout.FillColor = Color.FromArgb(45, 25, 30)
-                    btnLogout.ForeColor = Color.FromArgb(254, 202, 202)
-                    btnLogout.BorderColor = Color.FromArgb(239, 68, 68)
-                    btnLogout.HoverState.FillColor = Color.FromArgb(220, 38, 38)
-                    btnLogout.HoverState.ForeColor = Color.White
-                    btnLogout.HoverState.BorderColor = Color.FromArgb(220, 38, 38)
-                Else
-                    btnLogout.FillColor = Color.FromArgb(254, 242, 242)
-                    btnLogout.ForeColor = Color.FromArgb(185, 28, 28)
-                    btnLogout.BorderColor = Color.FromArgb(248, 113, 113)
-                    btnLogout.HoverState.FillColor = Color.FromArgb(220, 38, 38)
-                    btnLogout.HoverState.ForeColor = Color.White
-                    btnLogout.HoverState.BorderColor = Color.FromArgb(220, 38, 38)
-                End If
+                btnLogout.FillColor = pal.DangerSubtleBackground
+                btnLogout.ForeColor = pal.DangerSubtleForeground
+                btnLogout.BorderColor = pal.DangerSubtleBorder
+                btnLogout.HoverState.FillColor = pal.Danger
+                btnLogout.HoverState.ForeColor = Color.White
+                btnLogout.HoverState.BorderColor = pal.Danger
             End If
 
             ' زر الدعم الفني في الهيدر
             If btnSupport IsNot Nothing Then
                 btnSupport.BorderRadius = 8
                 btnSupport.BorderThickness = 1
-                If ThemeManager.Instance.IsDark Then
-                    btnSupport.FillColor = Color.FromArgb(24, 38, 62)
-                    btnSupport.ForeColor = Color.FromArgb(191, 219, 254)
-                    btnSupport.BorderColor = Color.FromArgb(59, 130, 246)
-                    btnSupport.HoverState.FillColor = Color.FromArgb(37, 99, 235)
-                    btnSupport.HoverState.ForeColor = Color.White
-                    btnSupport.HoverState.BorderColor = Color.FromArgb(37, 99, 235)
-                Else
-                    btnSupport.FillColor = Color.FromArgb(239, 246, 255)
-                    btnSupport.ForeColor = Color.FromArgb(29, 78, 216)
-                    btnSupport.BorderColor = Color.FromArgb(147, 197, 253)
-                    btnSupport.HoverState.FillColor = Color.FromArgb(37, 99, 235)
-                    btnSupport.HoverState.ForeColor = Color.White
-                    btnSupport.HoverState.BorderColor = Color.FromArgb(37, 99, 235)
-                End If
+                btnSupport.FillColor = pal.InfoSubtleBackground
+                btnSupport.ForeColor = pal.InfoSubtleForeground
+                btnSupport.BorderColor = pal.InfoSubtleBorder
+                btnSupport.HoverState.FillColor = pal.Info
+                btnSupport.HoverState.ForeColor = Color.White
+                btnSupport.HoverState.BorderColor = pal.Info
             End If
 
             ' شريط الحالة السفلي

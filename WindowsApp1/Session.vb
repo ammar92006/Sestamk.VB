@@ -307,25 +307,34 @@ Public Module Session
         End If
 
         ctrl.Enabled = False
-        ctrl.Tag = "LOCKED_BY_PERMISSION_" & reason
+        ctrl.Tag = "LOCKED_BY_PERMISSION_" & reason & "|" & errorMessage
 
         ' منع إعادة تفعيل الزر برمجياً من أحداث الفورم عند تغير التحديد
-        AddHandler ctrl.EnabledChanged, Sub(s As Object, e As EventArgs)
-                                            Dim c As Control = TryCast(s, Control)
-                                            If c IsNot Nothing AndAlso c.Tag IsNot Nothing AndAlso c.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
-                                                If c.Enabled Then
-                                                    c.Enabled = False
-                                                End If
-                                            End If
-                                        End Sub
+        RemoveHandler ctrl.EnabledChanged, AddressOf OnLockedControlEnabledChanged
+        AddHandler ctrl.EnabledChanged, AddressOf OnLockedControlEnabledChanged
 
         ' إضافة حماية عند النقر
-        AddHandler ctrl.Click, Sub(s As Object, e As EventArgs)
-                                   Dim c As Control = TryCast(s, Control)
-                                   If c IsNot Nothing AndAlso c.Tag IsNot Nothing AndAlso c.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
-                                       MessageBox.Show(errorMessage, "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                                   End If
-                               End Sub
+        RemoveHandler ctrl.Click, AddressOf OnLockedControlClick
+        AddHandler ctrl.Click, AddressOf OnLockedControlClick
+    End Sub
+
+    Private Sub OnLockedControlEnabledChanged(s As Object, e As EventArgs)
+        Dim c As Control = TryCast(s, Control)
+        If c IsNot Nothing AndAlso c.Tag IsNot Nothing AndAlso c.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
+            If c.Enabled Then
+                c.Enabled = False
+            End If
+        End If
+    End Sub
+
+    Private Sub OnLockedControlClick(s As Object, e As EventArgs)
+        Dim c As Control = TryCast(s, Control)
+        If c IsNot Nothing AndAlso c.Tag IsNot Nothing AndAlso c.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
+            Dim parts = c.Tag.ToString().Split("|"c)
+            If parts.Length > 1 Then
+                MessageBox.Show(parts(1), "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+        End If
     End Sub
 
     Private Sub ProcessToolStripItem(item As ToolStripItem, canAdd As Boolean, canEdit As Boolean, canDelete As Boolean, formName As String)
@@ -373,22 +382,31 @@ Public Module Session
         End If
 
         item.Enabled = False
-        item.Tag = "LOCKED_BY_PERMISSION_" & reason
+        item.Tag = "LOCKED_BY_PERMISSION_" & reason & "|" & errorMessage
 
-        AddHandler item.EnabledChanged, Sub(s As Object, e As EventArgs)
-                                            Dim itm As ToolStripItem = TryCast(s, ToolStripItem)
-                                            If itm IsNot Nothing AndAlso itm.Tag IsNot Nothing AndAlso itm.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
-                                                If itm.Enabled Then
-                                                    itm.Enabled = False
-                                                End If
-                                            End If
-                                        End Sub
+        RemoveHandler item.EnabledChanged, AddressOf OnLockedToolStripEnabledChanged
+        AddHandler item.EnabledChanged, AddressOf OnLockedToolStripEnabledChanged
 
-        AddHandler item.Click, Sub(s As Object, e As EventArgs)
-                                   Dim itm As ToolStripItem = TryCast(s, ToolStripItem)
-                                   If itm IsNot Nothing AndAlso itm.Tag IsNot Nothing AndAlso itm.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
-                                       MessageBox.Show(errorMessage, "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                                   End If
-                               End Sub
+        RemoveHandler item.Click, AddressOf OnLockedToolStripClick
+        AddHandler item.Click, AddressOf OnLockedToolStripClick
+    End Sub
+
+    Private Sub OnLockedToolStripEnabledChanged(s As Object, e As EventArgs)
+        Dim itm As ToolStripItem = TryCast(s, ToolStripItem)
+        If itm IsNot Nothing AndAlso itm.Tag IsNot Nothing AndAlso itm.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
+            If itm.Enabled Then
+                itm.Enabled = False
+            End If
+        End If
+    End Sub
+
+    Private Sub OnLockedToolStripClick(s As Object, e As EventArgs)
+        Dim itm As ToolStripItem = TryCast(s, ToolStripItem)
+        If itm IsNot Nothing AndAlso itm.Tag IsNot Nothing AndAlso itm.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
+            Dim parts = itm.Tag.ToString().Split("|"c)
+            If parts.Length > 1 Then
+                MessageBox.Show(parts(1), "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            End If
+        End If
     End Sub
 End Module

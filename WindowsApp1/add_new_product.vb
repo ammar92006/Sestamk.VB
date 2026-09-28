@@ -48,7 +48,6 @@ Public Class add_new_product
         End If
     End Sub
     Private Sub GetMaxProductCode()
-        Connect()
         If InputLanguage.CurrentInputLanguage.Culture.TwoLetterISOLanguageName.ToUpper() = "EN" Then
             lblLang.Text = "انجليزي"
         ElseIf InputLanguage.CurrentInputLanguage.Culture.TwoLetterISOLanguageName.ToUpper() = "AR" Then
@@ -57,14 +56,14 @@ Public Class add_new_product
         Try
             Dim maxCode As Integer = 0
 
-            Using cmd As New SqlClient.SqlCommand("SELECT ISNULL(MAX(CAST(Product_Code AS INT)), 0) 
-                                                    FROM Products
-                                                    WHERE ISNUMERIC(Product_Code) = 1
-                                                    ", Conn)
-                maxCode = Convert.ToInt32(cmd.ExecuteScalar())
-                Disconnect()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlClient.SqlCommand("SELECT ISNULL(MAX(CAST(Product_Code AS INT)), 0) 
+                                                        FROM Products
+                                                        WHERE ISNUMERIC(Product_Code) = 1
+                                                        ", cn)
+                    maxCode = Convert.ToInt32(cmd.ExecuteScalar())
+                End Using
             End Using
-
 
             txtProductCode.Text = (maxCode + 1).ToString()
 
@@ -88,8 +87,8 @@ Public Class add_new_product
             Dim cmd_LoadCategories As SqlCommand
             Dim da_LoadCategories As SqlDataAdapter
             Dim dt_LoadCategories As DataTable
-            Connect()
-            cmd_LoadCategories = New SqlCommand("SELECT Category_ID, Category_Name FROM Categories ORDER BY Category_ID", Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+            cmd_LoadCategories = New SqlCommand("SELECT Category_ID, Category_Name FROM Categories ORDER BY Category_ID", cn)
             da_LoadCategories = New SqlDataAdapter(cmd_LoadCategories)
             dt_LoadCategories = New DataTable
             da_LoadCategories.Fill(dt_LoadCategories)
@@ -97,10 +96,9 @@ Public Class add_new_product
             cmbCategory.DisplayMember = "Category_Name"
             cmbCategory.ValueMember = "Category_ID"
             cmbCategory.SelectedIndex = -1
+        End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 
@@ -255,7 +253,7 @@ Public Class add_new_product
         End If
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             '====================================================
             ' 2 — إضافة المنتج أولاً إلى جدول Products
@@ -266,7 +264,7 @@ Public Class add_new_product
              VALUES (@Code, @Name, @Cat, @Vendor, @Image, @State, @Note);
              SELECT SCOPE_IDENTITY();"
 
-            Using cmdProd As New SqlCommand(queryProd, Conn)
+            Using cmdProd As New SqlCommand(queryProd, cn)
 
                 cmdProd.Parameters.AddWithValue("@Code", txtProductCode.Text.Trim())
                 cmdProd.Parameters.AddWithValue("@Name", txtProductName.Text.Trim())
@@ -291,7 +289,7 @@ Public Class add_new_product
                 For Each row As DataGridViewRow In dgvUnits.Rows
                     If row.IsNewRow Then Continue For
 
-                    Using cmdUnit As New SqlCommand(queryUnit, Conn)
+                    Using cmdUnit As New SqlCommand(queryUnit, cn)
 
                         cmdUnit.Parameters.AddWithValue("@PID", NewProductID)
                         cmdUnit.Parameters.AddWithValue("@UName", row.Cells("ColUnitName").Value)
@@ -311,28 +309,26 @@ Public Class add_new_product
             ClearAll()
             GetMaxProductCode()
 
+        End Using
         Catch ex As Exception
             MessageBox.Show("❌ حدث خطأ أثناء حفظ المنتج:" & vbCrLf & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub
     Private Function BarcodeExistsInDatabase(barcode As String) As Boolean
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = "SELECT COUNT(*) FROM ProductUnits WHERE Barcode = @Bar"
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             cmd.Parameters.AddWithValue("@Bar", barcode)
 
             Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
             Return count > 0
 
+        End Using
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء فحص الباركود: " & ex.Message)
             Return True
-        Finally
-            Disconnect()
         End Try
     End Function
     Private Function BarcodeExistsInGrid(barcode As String) As Boolean
@@ -362,7 +358,7 @@ Public Class add_new_product
         Dim exists As Boolean = True
         Dim rnd As New Random()
 
-        Connect()
+        Using cn As SqlConnection = DBModule.NewConn()
         While exists
 
             ' توليد رقم عشوائي من 12 رقم (مناسب للباركود)
@@ -371,17 +367,15 @@ Public Class add_new_product
 
             ' فحص هل موجود في قاعدة البيانات؟
             Using cmd As New SqlClient.SqlCommand("
-            SELECT COUNT(*) FROM ProductUnits WHERE Barcode = @Barcode", Conn)
+            SELECT COUNT(*) FROM ProductUnits WHERE Barcode = @Barcode", cn)
 
                 cmd.Parameters.AddWithValue("@Barcode", newBarcode)
 
                 Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
 
-                exists = (count > 0)
             End Using
-
-            Disconnect()
         End While
+        End Using
 
         ' وضع الباركود في التيكست بوكس
         txtUnitBarcode.Text = newBarcode
@@ -497,8 +491,8 @@ Public Class add_new_product
             Dim cmd_LoadSuppliers As SqlCommand
             Dim da_LoadSuppliers As SqlDataAdapter
             Dim dt_LoadSuppliers As DataTable
-            Connect()
-            cmd_LoadSuppliers = New SqlCommand("SELECT SuppliersID ,SuppliersName, Companyname FROM dbo.Suppliers ORDER BY SuppliersID;", Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+            cmd_LoadSuppliers = New SqlCommand("SELECT SuppliersID ,SuppliersName, Companyname FROM dbo.Suppliers ORDER BY SuppliersID;", cn)
             da_LoadSuppliers = New SqlDataAdapter(cmd_LoadSuppliers)
             dt_LoadSuppliers = New DataTable
             da_LoadSuppliers.Fill(dt_LoadSuppliers)
@@ -506,10 +500,9 @@ Public Class add_new_product
             cmbVendor.DisplayMember = "SuppliersName"
             cmbVendor.ValueMember = "SuppliersID"
             cmbVendor.SelectedIndex = -1
+        End Using
         Catch ex As Exception
             MessageBox.Show(ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 

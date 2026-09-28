@@ -325,8 +325,8 @@ Public NotInheritable Class ThemeHelper
                 End If
             End If
 
-            ' High contrast check based on effective parent background
-            If parentBg.GetBrightness() < 0.45 Then
+            ' High contrast check based on effective parent background using WCAG luminance
+            If ThemePalette.GetRelativeLuminance(parentBg) < 0.35 Then
                 lbl.ForeColor = palette.TextOnDark
             Else
                 lbl.ForeColor = palette.TextPrimary
@@ -621,7 +621,7 @@ Public NotInheritable Class ThemeHelper
             Dim parent As Control = lbl.Parent
             If parent IsNot Nothing AndAlso
                (parent.Name.ToLower().Contains("header") OrElse
-                parent.BackColor.GetBrightness() < 0.3) Then
+                ThemePalette.GetRelativeLuminance(parent.BackColor) < 0.35) Then
                 lbl.ForeColor = palette.TextOnDark
             Else
                 lbl.ForeColor = palette.TextPrimary

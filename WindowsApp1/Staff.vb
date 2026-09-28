@@ -215,7 +215,7 @@ Public Class Staff
                                           Per.CanDelete
                                           FROM dbo.Roles AS R
                                           LEFT JOIN Permissions AS Per ON Per.RoleID = R.RoleID"
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
 
 
@@ -245,14 +245,14 @@ Public Class Staff
                 End If
             End If
 
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             If filter <> "" Then cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
 
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable()
             da.Fill(dt)
             dgv_Staff.DataSource = dt
-            Disconnect()
+            End Using
         End Using
 
 
@@ -271,8 +271,8 @@ Public Class Staff
             WHERE Per.RoleID = @roleId "
 
             Try
-                Connect()
-                Dim cmd As New SqlCommand(query, Conn)
+                Using cn As SqlConnection = DBModule.NewConn()
+                Dim cmd As New SqlCommand(query, cn)
                 cmd.Parameters.AddWithValue("@roleId", roleId)
                 Dim da As New SqlDataAdapter(cmd)
                 Dim dt As New DataTable()
@@ -356,10 +356,9 @@ Public Class Staff
                             chkSettingsDelete.Checked = Convert.ToBoolean(row("CanDelete"))
                     End Select
                 Next
+            End Using
             Catch ex As Exception
                 MessageBox.Show("حدث خطأ أثناء جلب الصلاحيات: " & ex.Message)
-            Finally
-                Disconnect()
             End Try
         End If
     End Sub
@@ -476,7 +475,7 @@ Public Class Staff
                 Return
             End If
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             ' أولاً: إضافة الدور في جدول Roles
             Dim insertRoleQuery As String = "
@@ -484,7 +483,7 @@ Public Class Staff
             OUTPUT INSERTED.RoleID
             VALUES (@RoleName, @Description)"
 
-            Dim cmdRole As New SqlCommand(insertRoleQuery, Conn)
+            Dim cmdRole As New SqlCommand(insertRoleQuery, cn)
             cmdRole.Parameters.AddWithValue("@RoleName", txtUser_Name.Text)
             cmdRole.Parameters.AddWithValue("@Description", txtUser_Note.Text)
 
@@ -495,7 +494,7 @@ Public Class Staff
             INSERT INTO Permissions (RoleID, FormName, CanOpen, CanAdd, CanEdit, CanDelete)
             VALUES (@RoleID, @FormName, @CanOpen, @CanAdd, @CanEdit, @CanDelete)"
 
-            Dim cmdPermission As New SqlCommand(insertPermissionQuery, Conn)
+            Dim cmdPermission As New SqlCommand(insertPermissionQuery, cn)
             cmdPermission.Parameters.Add("@RoleID", SqlDbType.Int).Value = newRoleId
             cmdPermission.Parameters.Add("@FormName", SqlDbType.NVarChar)
             cmdPermission.Parameters.Add("@CanOpen", SqlDbType.Bit)
@@ -515,10 +514,9 @@ Public Class Staff
 
             MessageBox.Show("✅ تم إضافة الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
+        End Using
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
     Private Sub UpdateRoleAndPermissions()
@@ -529,12 +527,12 @@ Public Class Staff
             End If
 
             Dim roleId As Integer = Convert.ToInt32(txtUser_Code.Text)
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             ' تحديث بيانات الدور
             Dim updateRoleQuery As String = "
             UPDATE Roles SET RoleName = @RoleName, Description = @Description WHERE RoleID = @RoleID"
-            Dim cmdRole As New SqlCommand(updateRoleQuery, Conn)
+            Dim cmdRole As New SqlCommand(updateRoleQuery, cn)
             cmdRole.Parameters.AddWithValue("@RoleName", txtUser_Name.Text)
             cmdRole.Parameters.AddWithValue("@Description", txtUser_Note.Text)
             cmdRole.Parameters.AddWithValue("@RoleID", roleId)
@@ -542,7 +540,7 @@ Public Class Staff
 
             ' حذف الصلاحيات القديمة
             Dim deleteQuery As String = "DELETE FROM Permissions WHERE RoleID = @RoleID"
-            Dim cmdDel As New SqlCommand(deleteQuery, Conn)
+            Dim cmdDel As New SqlCommand(deleteQuery, cn)
             cmdDel.Parameters.AddWithValue("@RoleID", roleId)
             cmdDel.ExecuteNonQuery()
 
@@ -551,7 +549,7 @@ Public Class Staff
             INSERT INTO Permissions (RoleID, FormName, CanOpen, CanAdd, CanEdit, CanDelete)
             VALUES (@RoleID, @FormName, @CanOpen, @CanAdd, @CanEdit, @CanDelete)"
 
-            Dim cmdPermission As New SqlCommand(insertPermissionQuery, Conn)
+            Dim cmdPermission As New SqlCommand(insertPermissionQuery, cn)
             cmdPermission.Parameters.Add("@RoleID", SqlDbType.Int).Value = roleId
             cmdPermission.Parameters.Add("@FormName", SqlDbType.NVarChar)
             cmdPermission.Parameters.Add("@CanOpen", SqlDbType.Bit)
@@ -569,10 +567,9 @@ Public Class Staff
             Next
 
             MessageBox.Show("✅ تم تحديث الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
 
 
@@ -589,15 +586,15 @@ Public Class Staff
             End If
 
             Dim roleId As Integer = Convert.ToInt32(txtUser_Code.Text)
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             ' حذف الصلاحيات
-            Dim delPerm As New SqlCommand("DELETE FROM Permissions WHERE RoleID = @RoleID", Conn)
+            Dim delPerm As New SqlCommand("DELETE FROM Permissions WHERE RoleID = @RoleID", cn)
             delPerm.Parameters.AddWithValue("@RoleID", roleId)
             delPerm.ExecuteNonQuery()
 
             ' حذف الدور
-            Dim delRole As New SqlCommand("DELETE FROM Roles WHERE RoleID = @RoleID", Conn)
+            Dim delRole As New SqlCommand("DELETE FROM Roles WHERE RoleID = @RoleID", cn)
             delRole.Parameters.AddWithValue("@RoleID", roleId)
             delRole.ExecuteNonQuery()
 
@@ -607,10 +604,9 @@ Public Class Staff
             txtUser_Note.Clear()
 
             MessageBox.Show("🗑️ تم حذف الدور وجميع صلاحياته بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        End Using
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 

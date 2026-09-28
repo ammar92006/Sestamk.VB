@@ -358,11 +358,12 @@ Public Class Users
             Dim cmd_LoadStaff As SqlCommand
             Dim da_LoadStaff As SqlDataAdapter
             Dim dt_LoadStaff As DataTable
-            Connect()
-            cmd_LoadStaff = New SqlCommand("SELECT RoleID, RoleName FROM Roles ORDER BY RoleID", Conn)
-            da_LoadStaff = New SqlDataAdapter(cmd_LoadStaff)
-            dt_LoadStaff = New DataTable
-            da_LoadStaff.Fill(dt_LoadStaff)
+            Using cn As SqlConnection = DBModule.NewConn()
+                cmd_LoadStaff = New SqlCommand("SELECT RoleID, RoleName FROM Roles ORDER BY RoleID", cn)
+                da_LoadStaff = New SqlDataAdapter(cmd_LoadStaff)
+                dt_LoadStaff = New DataTable
+                da_LoadStaff.Fill(dt_LoadStaff)
+            End Using
             cmbRoleName.DataSource = dt_LoadStaff
             cmbRoleName.DisplayMember = "RoleName"
             cmbRoleName.ValueMember = "RoleID"
@@ -371,14 +372,12 @@ Public Class Users
 
         Catch ex As Exception
             MessageBox.Show(ex.Message)
-        Finally
-            Disconnect()
         End Try
     End Sub
 
 
     Private Sub LoadUsers(Optional filter As String = "", Optional field As String = "")
-        Using Conn
+        Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = "SELECT   
                                         U.User_ID,
                                         U.User_Code,
@@ -393,7 +392,6 @@ Public Class Users
                                         U.User_photo_path
                                         FROM Users_TBL AS U
                                         LEFT JOIN Roles AS R ON U.RoleID = R.RoleID"
-            Connect()
 
             If filter <> "" Then
                 Dim columnName As String = ""
@@ -419,14 +417,13 @@ Public Class Users
                 End If
             End If
 
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             If filter <> "" Then cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
 
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable()
             da.Fill(dt)
             dgv_Users.DataSource = dt
-            Disconnect()
         End Using
         lblStatus.Text = "نشط غير"
         lblStatus.ForeColor = Color.Red
@@ -571,29 +568,28 @@ Public Class Users
             '===========================
             ' 🔌 بدء الاتصال
             '===========================
-            Connect()
-
             Dim query As String =
                 "INSERT INTO Users_TBL 
         (User_Code, User_Name, User_username, User_password, User_Stats, User_Note, RoleID, User_Barcode_path, User_photo_path)
         VALUES 
         (@User_Code, @User_Name, @User_username, @User_password, @User_Stats, @User_Note, @RoleID, @User_Barcode_path, @User_photo_path);"
 
-            Using cmd As New SqlCommand(query, Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
+                    cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
+                    cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
+                    cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
+                    cmd.Parameters.AddWithValue("@User_Barcode_path",
+                                                If(String.IsNullOrEmpty(User_Barcode_path), DBNull.Value, User_Barcode_path))
+                    cmd.Parameters.AddWithValue("@User_photo_path",
+                                                If(String.IsNullOrEmpty(User_photo_path), DBNull.Value, User_photo_path))
 
-                cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
-                cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
-                cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
-                cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
-                cmd.Parameters.AddWithValue("@User_Barcode_path",
-                                            If(String.IsNullOrEmpty(User_Barcode_path), DBNull.Value, User_Barcode_path))
-                cmd.Parameters.AddWithValue("@User_photo_path",
-                                            If(String.IsNullOrEmpty(User_photo_path), DBNull.Value, User_photo_path))
-
-                cmd.ExecuteNonQuery()
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
 
             '===========================
@@ -606,8 +602,6 @@ Public Class Users
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
 
@@ -634,27 +628,25 @@ Public Class Users
         Dim exists As Boolean = False
 
         Try
-            Connect()
-
-            Dim query As String = "SELECT COUNT(*) FROM Users_TBL WHERE User_Code = @User_Code"
-            If excludeCustomerID <> -1 Then
-                query &= " AND CustomerID <> @id"
-            End If
-
-            Using cmd As New SqlCommand(query, Conn)
-                cmd.Parameters.AddWithValue("@User_Code", customerCode)
+            Using cn As SqlConnection = DBModule.NewConn()
+                Dim query As String = "SELECT COUNT(*) FROM Users_TBL WHERE User_Code = @User_Code"
                 If excludeCustomerID <> -1 Then
-                    cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    query &= " AND CustomerID <> @id"
                 End If
 
-                Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
-                exists = (count > 0)
+                Using cmd As New SqlCommand(query, cn)
+                    cmd.Parameters.AddWithValue("@User_Code", customerCode)
+                    If excludeCustomerID <> -1 Then
+                        cmd.Parameters.AddWithValue("@id", excludeCustomerID)
+                    End If
+
+                    Dim count As Integer = Convert.ToInt32(cmd.ExecuteScalar())
+                    exists = (count > 0)
+                End Using
             End Using
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
         Return exists
@@ -688,8 +680,7 @@ Public Class Users
 
 
 
-            Using Conn
-                Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
                 Dim id As Integer = Convert.ToInt32(dgv_Users.SelectedRows(0).Cells("User_ID").Value)
                 Dim query As String = "
         UPDATE Users_TBL
@@ -705,7 +696,7 @@ Public Class Users
             User_photo_path = @User_photo_path
         WHERE User_ID = @User_ID;"
 
-                Using cmd As New SqlCommand(query, Conn)
+                Using cmd As New SqlCommand(query, cn)
                     cmd.Parameters.AddWithValue("@User_ID", id)
                     cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
@@ -726,8 +717,6 @@ Public Class Users
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء تعديل المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -745,12 +734,11 @@ Public Class Users
                 Return
             End If
 
-            Using Conn
-                Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
                 Dim id As Integer = Convert.ToInt32(dgv_Users.SelectedRows(0).Cells("User_ID").Value)
                 Dim query As String = "DELETE FROM Users_TBL WHERE User_ID = @User_ID"
 
-                Using cmd As New SqlCommand(query, Conn)
+                Using cmd As New SqlCommand(query, cn)
                     cmd.Parameters.AddWithValue("@User_ID", id)
                     cmd.ExecuteNonQuery()
                 End Using
@@ -762,8 +750,6 @@ Public Class Users
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء حذف المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -856,13 +842,13 @@ Public Class Users
         Return filePath
     End Function
     Private Sub UpdateBarcodePath(userID As Integer, path As String)
-        Connect()
-        Using cmd As New SqlCommand("UPDATE Users_TBL SET User_Barcode_path = @path WHERE User_ID = @id", Conn)
-            cmd.Parameters.AddWithValue("@path", path)
-            cmd.Parameters.AddWithValue("@id", userID)
-            cmd.ExecuteNonQuery()
+        Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand("UPDATE Users_TBL SET User_Barcode_path = @path WHERE User_ID = @id", cn)
+                cmd.Parameters.AddWithValue("@path", path)
+                cmd.Parameters.AddWithValue("@id", userID)
+                cmd.ExecuteNonQuery()
+            End Using
         End Using
-        Disconnect()
     End Sub
 
     Private Sub btn_delet_barcode_Click(sender As Object, e As EventArgs) Handles btn_delet_barcode.Click
@@ -887,12 +873,12 @@ Public Class Users
             End If
 
             ' تحديث قاعدة البيانات لإزالة المسار
-            Connect()
-            Using cmd As New SqlCommand("UPDATE Users_TBL SET User_Barcode_path = NULL WHERE User_ID = @userID", Conn)
-                cmd.Parameters.AddWithValue("@userID", id)
-                cmd.ExecuteNonQuery()
+            Using cn As SqlConnection = DBModule.NewConn()
+                Using cmd As New SqlCommand("UPDATE Users_TBL SET User_Barcode_path = NULL WHERE User_ID = @userID", cn)
+                    cmd.Parameters.AddWithValue("@userID", id)
+                    cmd.ExecuteNonQuery()
+                End Using
             End Using
-            Disconnect()
 
             MessageBox.Show("✅ تم حذف الباركود ومساره من قاعدة البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadUsers()
@@ -984,15 +970,12 @@ Public Class Users
 
                 ' نسخ الصورة
                 File.Copy(sourcePath, destinationPath, True)
-                Using Conn
-
-                    Connect()
-                    Using cmd As New SqlCommand("UPDATE Users_TBL SET User_photo_path = @User_photo_path WHERE User_ID = @userID", Conn)
+                Using cn As SqlConnection = DBModule.NewConn()
+                    Using cmd As New SqlCommand("UPDATE Users_TBL SET User_photo_path = @User_photo_path WHERE User_ID = @userID", cn)
                         cmd.Parameters.AddWithValue("@User_photo_path", destinationPath)
                         cmd.Parameters.AddWithValue("@userID", id)
                         cmd.ExecuteNonQuery()
                     End Using
-                    Disconnect()
                 End Using
                 ' عرض الصورة في PictureBox (لو عندك)
 

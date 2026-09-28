@@ -47,7 +47,7 @@ Module ReportsModule
         Dim Maxnum As Integer = 250
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim sql As String = $"
             SELECT TOP {Maxnum}
@@ -71,7 +71,7 @@ Module ReportsModule
             WHERE ISNULL(PH.IsDeleted, 0) = 0
             ORDER BY PH.PurchaseID DESC"
 
-            Using cmd As New SqlCommand(sql, Conn)
+            Using cmd As New SqlCommand(sql, cn)
                 cmd.CommandTimeout = 120
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -79,10 +79,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -92,7 +91,7 @@ Module ReportsModule
         Dim Maxnum As Integer = 250
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim sql As String = $"
             SELECT TOP {Maxnum}
@@ -115,7 +114,7 @@ Module ReportsModule
             ORDER BY SH.Invoice_ID DESC
 "
 
-            Using cmd As New SqlCommand(sql, Conn)
+            Using cmd As New SqlCommand(sql, cn)
                 cmd.CommandTimeout = 120
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -123,10 +122,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -135,7 +133,7 @@ Module ReportsModule
         Dim dt As New DataTable()
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim sql As String = "
                 SELECT 
@@ -157,7 +155,7 @@ Module ReportsModule
                 ORDER BY 
                     TotalQuantitySold DESC;"
 
-            Using cmd As New SqlCommand(sql, Conn)
+            Using cmd As New SqlCommand(sql, cn)
                 cmd.CommandTimeout = 120
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -165,10 +163,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -177,7 +174,7 @@ Module ReportsModule
         Dim dt As New DataTable()
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim sql As String = "
             SELECT 
@@ -194,7 +191,7 @@ Module ReportsModule
             FROM CustomerBalanceLog SH
             ORDER BY SH.LogID DESC"
 
-            Using cmd As New SqlCommand(sql, Conn)
+            Using cmd As New SqlCommand(sql, cn)
                 cmd.CommandTimeout = 120
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -202,10 +199,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -216,7 +212,7 @@ Module ReportsModule
         If invoiceID <= 0 Then Return dt
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim q As String = "
             SELECT 
@@ -241,7 +237,7 @@ Module ReportsModule
             LEFT JOIN Users U ON PH.UserID = U.UserID
             WHERE PH.PurchaseID = @ID"
 
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 SafeAddParam(cmd, "@ID", invoiceID)
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -249,10 +245,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -263,7 +258,7 @@ Module ReportsModule
         If invoiceID <= 0 Then Return dt
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim q As String = "
                                 SELECT 
@@ -284,7 +279,7 @@ Module ReportsModule
                                 LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID
                                 WHERE SH.Invoice_ID = @ID"
 
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 SafeAddParam(cmd, "@ID", invoiceID)
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -292,10 +287,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -305,7 +299,7 @@ Module ReportsModule
         If invoiceID <= 0 Then Return dt
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim q As String = "
                     SELECT 
@@ -320,7 +314,7 @@ Module ReportsModule
                     LEFT JOIN Units U ON PD.UnitID = U.UnitID
                     WHERE PD.PurchaseID = @ID"
 
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 SafeAddParam(cmd, "@ID", invoiceID)
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -328,10 +322,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -341,7 +334,7 @@ Module ReportsModule
         If invoiceID <= 0 Then Return dt
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim q As String = "
                                 SELECT 
@@ -355,7 +348,7 @@ Module ReportsModule
                                 FROM SalesDetails SD
                                 WHERE SD.Invoice_ID = @ID"
 
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 SafeAddParam(cmd, "@ID", invoiceID)
 
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -363,10 +356,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -384,7 +376,7 @@ Module ReportsModule
 
         Try
             NormalizeDateRange(fromDate, toDate)
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim sql As New Text.StringBuilder()
 
@@ -413,7 +405,7 @@ Module ReportsModule
             AND (@Pay IS NULL OR SH.Payment_Method = @Pay)
         ")
 
-            Using cmd As New SqlCommand(sql.ToString(), Conn)
+            Using cmd As New SqlCommand(sql.ToString(), cn)
                 cmd.CommandTimeout = 120
 
                 cmd.Parameters.AddWithValue("@D1", fromDate.Value)
@@ -428,10 +420,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -447,7 +438,7 @@ Module ReportsModule
 
         Try
             NormalizeDateRange(fromDate, toDate)
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim sql As New Text.StringBuilder()
 
@@ -485,7 +476,7 @@ Module ReportsModule
             AND (@UID IS NULL OR PH.UserID = @UID)
             AND (@Pay IS NULL OR PH.PaymentType = @Pay)")
 
-            Using cmd As New SqlCommand(sql.ToString(), Conn)
+            Using cmd As New SqlCommand(sql.ToString(), cn)
                 cmd.CommandTimeout = 120
 
                 cmd.Parameters.AddWithValue("@D1", fromDate.Value)
@@ -500,11 +491,10 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             MsgBox(ex.Message)
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -525,7 +515,7 @@ Module ReportsModule
         Try
             NormalizeDateRange(fromDate, toDate)
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim sql As New Text.StringBuilder()
             If includeDetails Then
                 sql.AppendLine("SELECT PH.PurchaseID AS Purchase_Id, PH.PurchaseDate AS Purchase_Date, S.SupplierName AS Supplier_Name, PH.TotalAmount AS Total_Amount, PH.Discount AS Discount_Value, PH.NetTotal AS Net_Amount,")
@@ -549,7 +539,7 @@ Module ReportsModule
             If Not String.IsNullOrWhiteSpace(paymentMethod) Then sql.AppendLine(" AND PH.PaymentType = @Pay")
             If userID > 0 Then sql.AppendLine(" AND PH.UserID = @UID")
 
-            Using cmd As New SqlCommand(sql.ToString(), Conn)
+            Using cmd As New SqlCommand(sql.ToString(), cn)
                 cmd.CommandTimeout = 120
                 cmd.Parameters.AddWithValue("@D1", fromDate.Value)
                 cmd.Parameters.AddWithValue("@D2", toDate.Value)
@@ -563,10 +553,9 @@ Module ReportsModule
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -580,24 +569,23 @@ Module ReportsModule
         If invoiceID <= 0 Then Return dt
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim q As String = "
 SELECT SD.Invoice_ID, P.Product_Name, SD.Quantity_Sold, SD.Sale_Price_Per_Unit, SD.Total_Line_Amount
 FROM SalesDetails SD
 LEFT JOIN Products P ON SD.Product_ID = P.Product_ID
 WHERE SD.Invoice_ID = @ID"
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 SafeAddParam(cmd, "@ID", invoiceID)
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
                     dt.Load(rdr)
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             ' LogError(ex)
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -611,24 +599,23 @@ WHERE SD.Invoice_ID = @ID"
         If purchaseID <= 0 Then Return dt
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim q As String = "
 SELECT PD.PurchaseID AS Purchase_Id, ISNULL(RM.MaterialName, N'صنف مشتريات') AS ProductName, PD.Quantity AS Quantity_Sold, PD.UnitPrice AS Purchase_Price_Per_Unit
 FROM PurchaseDetails PD
 LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID
 WHERE PD.PurchaseID = @ID"
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 SafeAddParam(cmd, "@ID", purchaseID)
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
                     dt.Load(rdr)
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             ' LogError(ex)
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -643,7 +630,7 @@ WHERE PD.PurchaseID = @ID"
         Try
             NormalizeDateRange(fromDate, toDate)
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim q As String = "
 SELECT 
     P.Product_ID,
@@ -655,7 +642,7 @@ FROM Products P
 LEFT JOIN Stock S ON S.Product_ID = P.Product_ID
 ORDER BY P.ProductName
 "
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 cmd.Parameters.AddWithValue("@D1", fromDate.Value)
                 cmd.Parameters.AddWithValue("@D2", toDate.Value)
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -663,11 +650,10 @@ ORDER BY P.ProductName
                 End Using
             End Using
 
+        End Using
         Catch ex As Exception
             ' LogError(ex)
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -682,13 +668,13 @@ ORDER BY P.ProductName
         Try
             NormalizeDateRange(fromDate, toDate)
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim q As String = "
 SELECT 
     ISNULL((SELECT SUM(Net_Amount) FROM SalesHeader WHERE Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSales,
     ISNULL((SELECT SUM(NetTotal) FROM PurchaseHeaders WHERE PurchaseDate BETWEEN @D1 AND @D2 AND ISNULL(IsDeleted, 0) = 0),0) AS TotalPurchases
 "
-            Using cmd As New SqlCommand(q, Conn)
+            Using cmd As New SqlCommand(q, cn)
                 cmd.Parameters.AddWithValue("@D1", fromDate.Value)
                 cmd.Parameters.AddWithValue("@D2", toDate.Value)
                 Using rdr As SqlDataReader = cmd.ExecuteReader()
@@ -707,11 +693,10 @@ SELECT
                 Next
             End If
 
+        End Using
         Catch ex As Exception
             ' LogError(ex)
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
 
         Return dt
@@ -724,14 +709,13 @@ SELECT
     Public Function GetCustomersList() As DataTable
         Dim dt As New DataTable()
         Try
-            Connect()
-            Using cmd As New SqlCommand("SELECT CustomerID, CustomerName FROM Customers ORDER BY CustomerName", Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand("SELECT CustomerID, CustomerName FROM Customers ORDER BY CustomerName", cn)
                 dt.Load(cmd.ExecuteReader())
             End Using
+        End Using
         Catch
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
         Return dt
     End Function
@@ -740,14 +724,13 @@ SELECT
 
         Dim dt As New DataTable()
         Try
-            Connect()
-            Using cmd As New SqlCommand("SELECT SuppliersID, SuppliersName FROM Suppliers ORDER BY SuppliersName", Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand("SELECT SuppliersID, SuppliersName FROM Suppliers ORDER BY SuppliersName", cn)
                 dt.Load(cmd.ExecuteReader())
             End Using
+        End Using
         Catch
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
         Return dt
     End Function
@@ -755,14 +738,13 @@ SELECT
     Public Function GetUsersList() As DataTable
         Dim dt As New DataTable()
         Try
-            Connect()
-            Using cmd As New SqlCommand("SELECT User_ID, User_Name FROM Users_TBL ORDER BY User_Name", Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand("SELECT User_ID, User_Name FROM Users_TBL ORDER BY User_Name", cn)
                 dt.Load(cmd.ExecuteReader())
             End Using
+        End Using
         Catch
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
         Return dt
     End Function
@@ -770,14 +752,13 @@ SELECT
     Public Function GetPaymentMethodsList() As DataTable
         Dim dt As New DataTable()
         Try
-            Connect()
-            Using cmd As New SqlCommand("SELECT DISTINCT Payment_Method FROM (SELECT Payment_Method FROM SalesHeader UNION ALL SELECT PaymentType AS Payment_Method FROM PurchaseHeaders) t WHERE Payment_Method IS NOT NULL", Conn)
+            Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand("SELECT DISTINCT Payment_Method FROM (SELECT Payment_Method FROM SalesHeader UNION ALL SELECT PaymentType AS Payment_Method FROM PurchaseHeaders) t WHERE Payment_Method IS NOT NULL", cn)
                 dt.Load(cmd.ExecuteReader())
             End Using
+        End Using
         Catch
             Return New DataTable()
-        Finally
-            Disconnect()
         End Try
         Return dt
     End Function
@@ -809,34 +790,29 @@ SELECT
         '           H.Amount_Paid, H.Remaining, H.Payment_Method
         '    FROM SalesHeader H INNER JOIN Customers C ON H.Customer_ID = C.CustomerID
         '    WHERE H.Invoice_ID = @id
-        Connect()
-
-        Using cmd As New SqlCommand(q, Conn)
-            cmd.Parameters.AddWithValue("@id", invoiceID)
-            Connect()
-
-            Using rd = cmd.ExecuteReader()
-                Connect()
-
-                If rd.Read() Then
-                    Dim currentBalance As Decimal = If(IsDBNull(rd("CurrentBalance")), 0D, CDec(rd("CurrentBalance")))
-                    Dim remaining As Decimal = CDec(rd("Remaining"))
-                    inv = New InvoiceHeader With {
-                    .InvoiceID = rd("Invoice_ID"),
-                    .InvoiceDate = rd("Invoice_Date"),
-                    .CustomerCode = rd("CustomerCode").ToString(),
-                    .CustomerName = rd("CustomerName").ToString(),
-                    .UserName = rd("User_Name").ToString(),
-                    .TotalAmount = rd("Total_Amount"),
-                    .Discount = rd("Discount_Value"),
-                    .NetAmount = rd("Net_Amount"),
-                    .Paid = rd("Amount_Paid"),
-                    .Remaining = remaining,
-                    .PaymentMethod = rd("Payment_Method").ToString(),
-                    .PreviousBalance = rd("PreviousBalance")
-                }
-
-                End If
+        Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand(q, cn)
+                cmd.Parameters.AddWithValue("@id", invoiceID)
+                Using rd = cmd.ExecuteReader()
+                    If rd.Read() Then
+                        Dim currentBalance As Decimal = If(IsDBNull(rd("CurrentBalance")), 0D, CDec(rd("CurrentBalance")))
+                        Dim remaining As Decimal = CDec(rd("Remaining"))
+                        inv = New InvoiceHeader With {
+                            .InvoiceID = rd("Invoice_ID"),
+                            .InvoiceDate = rd("Invoice_Date"),
+                            .CustomerCode = rd("CustomerCode").ToString(),
+                            .CustomerName = rd("CustomerName").ToString(),
+                            .UserName = rd("User_Name").ToString(),
+                            .TotalAmount = rd("Total_Amount"),
+                            .Discount = rd("Discount_Value"),
+                            .NetAmount = rd("Net_Amount"),
+                            .Paid = rd("Amount_Paid"),
+                            .Remaining = remaining,
+                            .PaymentMethod = rd("Payment_Method").ToString(),
+                            .PreviousBalance = rd("PreviousBalance")
+                        }
+                    End If
+                End Using
             End Using
         End Using
 
@@ -868,33 +844,29 @@ SELECT
                         LEFT JOIN Suppliers S ON PH.SupplierID = S.SupplierID
                         LEFT JOIN Users U ON PH.UserID = U.UserID
                         WHERE PH.PurchaseID = @id"
-        Connect()
-
-        Using cmd As New SqlCommand(q, Conn)
-            cmd.Parameters.AddWithValue("@id", invoiceID)
-            Connect()
-
-            Using rd = cmd.ExecuteReader()
-                Connect()
-
-                If rd.Read() Then
-                    inv = New InvoicePurchaseHeader With {
-                    .Purchase_Id = rd("Purchase_Id"),
-                    .Purchase_Date = rd("Purchase_Date"),
-                    .Supplier_ID = rd("SuppliersID"),
-                    .User_ID = rd("User_ID").ToString(),
-                    .User_Name = rd("User_Name").ToString(),
-                    .Net_Amount = rd("Net_Amount"),
-                    .Discount_Value = rd("Discount_Value"),
-                    .Total_Amount = rd("Total_Amount"),
-                    .Amount_Paid = rd("Amount_Paid"),
-                    .Remaining = rd("Remaining"),
-                    .Payment_Method = rd("Payment_Method").ToString(),
-                    .Purchase_type = rd("Purchase_type").ToString(),
-                    .Supplier_Code = rd("SuppliersCode").ToString(),
-                    .Supplier_Name = rd("SuppliersName").ToString()
-                    }
-                End If
+        Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand(q, cn)
+                cmd.Parameters.AddWithValue("@id", invoiceID)
+                Using rd = cmd.ExecuteReader()
+                    If rd.Read() Then
+                        inv = New InvoicePurchaseHeader With {
+                            .Purchase_Id = rd("Purchase_Id"),
+                            .Purchase_Date = rd("Purchase_Date"),
+                            .Supplier_ID = rd("SuppliersID"),
+                            .User_ID = rd("User_ID").ToString(),
+                            .User_Name = rd("User_Name").ToString(),
+                            .Net_Amount = rd("Net_Amount"),
+                            .Discount_Value = rd("Discount_Value"),
+                            .Total_Amount = rd("Total_Amount"),
+                            .Amount_Paid = rd("Amount_Paid"),
+                            .Remaining = rd("Remaining"),
+                            .Payment_Method = rd("Payment_Method").ToString(),
+                            .Purchase_type = rd("Purchase_type").ToString(),
+                            .Supplier_Code = rd("SuppliersCode").ToString(),
+                            .Supplier_Name = rd("SuppliersName").ToString()
+                        }
+                    End If
+                End Using
             End Using
         End Using
 
@@ -911,23 +883,19 @@ SELECT
                 Total_Line_Amount
             FROM SalesDetails
             WHERE Invoice_ID = @id"
-        Connect()
-
-        Using cmd As New SqlCommand(q, Conn)
-            cmd.Parameters.AddWithValue("@id", invoiceID)
-            Connect()
-
-            Using rd = cmd.ExecuteReader()
-                Connect()
-
-                While rd.Read()
-                    list.Add(New InvoiceItem With {
-                    .ProductName = rd("Product_Name").ToString(),
-                    .Quantity = rd("Quantity_Sold"),
-                    .Price = rd("Sale_Price_Per_Unit"),
-                    .Total = rd("Total_Line_Amount")
-                })
-                End While
+        Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand(q, cn)
+                cmd.Parameters.AddWithValue("@id", invoiceID)
+                Using rd = cmd.ExecuteReader()
+                    While rd.Read()
+                        list.Add(New InvoiceItem With {
+                            .ProductName = rd("Product_Name").ToString(),
+                            .Quantity = rd("Quantity_Sold"),
+                            .Price = rd("Sale_Price_Per_Unit"),
+                            .Total = rd("Total_Line_Amount")
+                        })
+                    End While
+                End Using
             End Using
         End Using
 
@@ -945,23 +913,19 @@ SELECT
               FROM PurchaseDetails PD
               LEFT JOIN RawMaterials RM ON PD.MaterialID = RM.MaterialID
               WHERE PD.PurchaseID = @id"
-        Connect()
-
-        Using cmd As New SqlCommand(q, Conn)
-            cmd.Parameters.AddWithValue("@id", invoiceID)
-            Connect()
-
-            Using rd = cmd.ExecuteReader()
-                Connect()
-
-                While rd.Read()
-                    list.Add(New InvoicePurchaseItem With {
-                  .Product_Name = If(rd("Product_Name") Is DBNull.Value, String.Empty, rd("Product_Name").ToString()),
-                  .Quantity_Sold = If(rd("Quantity_Sold") Is DBNull.Value, 0, Convert.ToInt32(rd("Quantity_Sold"))),
-                  .Purchase_Price_Per_Unit = If(rd("Purchase_Price_Per_Unit") Is DBNull.Value, 0D, Convert.ToDecimal(rd("Purchase_Price_Per_Unit"))),
-                  .Total_Line_Amount = If(rd("Total_Line_Amount") Is DBNull.Value, 0D, Convert.ToDecimal(rd("Total_Line_Amount")))
-                })
-                End While
+        Using cn As SqlConnection = DBModule.NewConn()
+            Using cmd As New SqlCommand(q, cn)
+                cmd.Parameters.AddWithValue("@id", invoiceID)
+                Using rd = cmd.ExecuteReader()
+                    While rd.Read()
+                        list.Add(New InvoicePurchaseItem With {
+                            .Product_Name = If(rd("Product_Name") Is DBNull.Value, String.Empty, rd("Product_Name").ToString()),
+                            .Quantity_Sold = If(rd("Quantity_Sold") Is DBNull.Value, 0, Convert.ToInt32(rd("Quantity_Sold"))),
+                            .Purchase_Price_Per_Unit = If(rd("Purchase_Price_Per_Unit") Is DBNull.Value, 0D, Convert.ToDecimal(rd("Purchase_Price_Per_Unit"))),
+                            .Total_Line_Amount = If(rd("Total_Line_Amount") Is DBNull.Value, 0D, Convert.ToDecimal(rd("Total_Line_Amount")))
+                        })
+                    End While
+                End Using
             End Using
         End Using
 
@@ -1174,7 +1138,6 @@ SELECT
             Return
         End If
 
-        Connect()
         Try
             Dim header = GetInvoiceHeaderfromDB(invoiceID)
             If header Is Nothing Then
@@ -1184,8 +1147,8 @@ SELECT
             Dim items = GetInvoiceItemsfromDB(invoiceID)
             Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
             RenderInvoiceReceiptStyle1(header, items, copiesCount, ShouldShowReportPreview(), "معاينة الفاتورة - استيل 1", printBarcode)
-        Finally
-            Disconnect()
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1532,7 +1495,6 @@ End Sub
     ' Wrapper: إعادة طباعة من قاعدة البيانات (شاشة التقارير) — تجلب البيانات ثم تستدعي الرسم الموحّد
     Public Sub PrintInvoiceFromDB_Style2(invoiceID As Integer, copiesCount As Integer)
         If copiesCount <= 0 Then copiesCount = 1
-        Connect()
         Try
             Dim header = GetInvoiceHeaderfromDB(invoiceID)
             If header Is Nothing Then
@@ -1542,8 +1504,8 @@ End Sub
             Dim items = GetInvoiceItemsfromDB(invoiceID)
             Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
             RenderInvoiceReceiptStyle2(header, items, copiesCount, ShouldShowReportPreview(), "معاينة الفاتورة - استيل 2", printBarcode)
-        Finally
-            Disconnect()
+        Catch ex As Exception
+            MessageBox.Show("خطأ أثناء طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

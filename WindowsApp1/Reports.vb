@@ -444,7 +444,7 @@ Public Class Reports
     Private Sub loadlogininfo()
 
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim query As String = "
                 SELECT User_Name 
@@ -452,7 +452,7 @@ Public Class Reports
                 WHERE User_ID = @ID
             "
 
-            Using cmd As New SqlCommand(query, Conn)
+            Using cmd As New SqlCommand(query, cn)
 
                 cmd.Parameters.AddWithValue("@ID", Session.CurrentUserID)
 
@@ -461,6 +461,7 @@ Public Class Reports
 
             End Using
 
+        End Using
         Catch ex As Exception
 
             MessageBox.Show("حدث خطأ أثناء التحقق من المستحدم: " & ex.Message,
@@ -468,8 +469,6 @@ Public Class Reports
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error)
 
-        Finally
-            Disconnect()
         End Try
 
     End Sub
@@ -503,10 +502,10 @@ Public Class Reports
                 Dim phone As String = String.Empty
                 Dim CustomerCode As String = String.Empty
                 Try
-                    Connect() ' فتح الاتصال بقاعدة البيانات
+                    Using cn As SqlConnection = DBModule.NewConn()
 
                     Dim query As String = "SELECT PhoneNumber , CustomerCode FROM Customers WHERE CustomerID = @CustomerID"
-                    Using cmd As New SqlCommand(query, Conn)
+                    Using cmd As New SqlCommand(query, cn)
                         cmd.Parameters.Add("@CustomerID", SqlDbType.NVarChar).Value = R("Customer_ID").ToString()
 
                         'Dim obj = cmd.ExecuteScalar()
@@ -523,11 +522,10 @@ Public Class Reports
                             End If
                         End Using
                     End Using
+                    End Using ' cn
 
                 Catch ex As Exception
                     MessageBox.Show("حدث خطأ أثناء البحث عن رقم الهاتف: " & ex.Message)
-                Finally
-                    Disconnect() ' غلق الاتصال
                 End Try
             End If
 
@@ -842,26 +840,25 @@ Public Class Reports
                 Return
             End If
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim queryDetails As String = "DELETE FROM SalesDetails WHERE Invoice_ID = @Invoice_ID"
-            Using cmdDetails As New SqlCommand(queryDetails, Conn)
+            Using cmdDetails As New SqlCommand(queryDetails, cn)
                 cmdDetails.Parameters.AddWithValue("@Invoice_ID", inv_id)
                 cmdDetails.ExecuteNonQuery()
             End Using
 
             Dim queryHeader As String = "DELETE FROM SalesHeader WHERE Invoice_ID = @Invoice_ID"
-            Using cmdHeader As New SqlCommand(queryHeader, Conn)
+            Using cmdHeader As New SqlCommand(queryHeader, cn)
                 cmdHeader.Parameters.AddWithValue("@Invoice_ID", inv_id)
                 cmdHeader.ExecuteNonQuery()
             End Using
 
-            Disconnect()
+            End Using
 
             MessageBox.Show("🗑️ تم حذف الفاتورة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadAllInvoices()
         Catch ex As Exception
-            Disconnect()
             MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub
@@ -879,27 +876,26 @@ Public Class Reports
                 Return
             End If
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim queryDetails As String = "DELETE FROM PurchaseDetails WHERE PurchaseID = @Invoice_ID"
-            Using cmdDetails As New SqlCommand(queryDetails, Conn)
+            Using cmdDetails As New SqlCommand(queryDetails, cn)
                 cmdDetails.Parameters.AddWithValue("@Invoice_ID", inv_id)
                 cmdDetails.ExecuteNonQuery()
             End Using
 
             Dim queryHeader As String = "DELETE FROM PurchaseHeaders WHERE PurchaseID = @Invoice_ID"
-            Using cmdHeader As New SqlCommand(queryHeader, Conn)
+            Using cmdHeader As New SqlCommand(queryHeader, cn)
                 cmdHeader.Parameters.AddWithValue("@Invoice_ID", inv_id)
                 cmdHeader.ExecuteNonQuery()
             End Using
 
 
-            Disconnect()
+            End Using
 
             MessageBox.Show("🗑️ تم حذف الفاتورة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadAllInvoicesPurchase()
         Catch ex As Exception
-            Disconnect()
             MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub

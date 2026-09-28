@@ -111,10 +111,10 @@ Public Class ProductUnits
 
     Private Sub btn_add_Click(sender As Object, e As EventArgs) Handles btn_add.Click
         Try
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             Dim query As String = "INSERT INTO ProductUnits (Product_ID, Unit_Name, Unit_Quantity, Barcode, Purchase_Price, Sale_Price, Notes)
                                VALUES (@Product_ID, @Unit_Name, @Unit_Quantity, @Barcode, @Purchase_Price, @Sale_Price, @Notes)"
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             cmd.Parameters.AddWithValue("@Product_ID", ProductUnit_ID.Text)
             cmd.Parameters.AddWithValue("@Unit_Name", Unit_Name.Text)
             cmd.Parameters.AddWithValue("@Unit_Quantity", Unit_Quantity.Text)
@@ -124,7 +124,7 @@ Public Class ProductUnits
             cmd.Parameters.AddWithValue("@Notes", Notes.Text)
             cmd.ExecuteNonQuery()
             MessageBox.Show("✅ تم إضافة الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Disconnect()
+            End Using
             btn_clear.PerformClick()
             LoadProductUnits() ' لإعادة تحميل البيانات
         Catch ex As Exception
@@ -403,7 +403,7 @@ Public Class ProductUnits
                 Return
             End If
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
             Dim query As String = "
             UPDATE ProductUnits SET 
@@ -416,7 +416,7 @@ Public Class ProductUnits
                 Notes           = @Notes
             WHERE ProductUnit_ID = @ProductUnit_ID"
 
-            Using cmd As New SqlCommand(query, Conn)
+            Using cmd As New SqlCommand(query, cn)
                 ' ✅ استخدام المتغير الصحيح في WHERE
                 cmd.Parameters.AddWithValue("@ProductUnit_ID", _currentUnitID)
                 cmd.Parameters.AddWithValue("@Product_ID", result.ProductID)
@@ -437,7 +437,7 @@ Public Class ProductUnits
                 End If
             End Using
 
-            Disconnect()
+            End Using
             _currentUnitID = 0
             btn_clear.PerformClick()
             LoadProductUnits()
@@ -476,12 +476,12 @@ Public Class ProductUnits
 
             If MessageBox.Show("هل أنت متأكد من حذف هذه الوحدة؟", "تأكيد الحذف",
                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-                Connect()
+                Using cn As SqlConnection = DBModule.NewConn()
                 Dim query As String = "DELETE FROM ProductUnits WHERE ProductUnit_ID = @ProductUnit_ID"
-                Dim cmd As New SqlCommand(query, Conn)
+                Dim cmd As New SqlCommand(query, cn)
                 cmd.Parameters.AddWithValue("@ProductUnit_ID", _currentUnitID)
                 cmd.ExecuteNonQuery()
-                Disconnect()
+                End Using
                 MessageBox.Show("🗑️ تم حذف الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 _currentUnitID = 0
                 btn_clear.PerformClick()
@@ -570,7 +570,7 @@ Public Class ProductUnits
             PU.Notes as 'الملاحظات'
             FROM ProductUnits AS PU
             LEFT JOIN dbo.Products AS P ON P.Product_ID = PU.Product_ID"
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             If filter <> "" Then
                 Dim columnName As String = ""
                 Select Case field
@@ -599,14 +599,14 @@ Public Class ProductUnits
                 End If
             End If
 
-            Dim cmd As New SqlCommand(query, Conn)
+            Dim cmd As New SqlCommand(query, cn)
             If filter <> "" Then cmd.Parameters.AddWithValue("@filter", "%" & filter & "%")
 
             Dim da As New SqlDataAdapter(cmd)
             Dim dt As New DataTable()
             da.Fill(dt)
             dgv_ProductUnits.DataSource = dt
-            Disconnect()
+            End Using
         End Using
     End Sub
 
@@ -821,9 +821,9 @@ End Sub
 
         Try
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             ' استعلام البحث
-            Dim cmd As New SqlCommand("SELECT Product_Name FROM Products WHERE Product_ID = @id", Conn)
+            Dim cmd As New SqlCommand("SELECT Product_Name FROM Products WHERE Product_ID = @id", cn)
             cmd.Parameters.AddWithValue("@id", ProductUnit_ID.Text)
 
             Dim reader As SqlDataReader = cmd.ExecuteReader()
@@ -836,7 +836,7 @@ End Sub
             End If
 
             reader.Close()
-            Disconnect()
+            End Using
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -852,9 +852,9 @@ End Sub
 
         Try
 
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
             ' استعلام البحث
-            Dim cmd As New SqlCommand("SELECT Product_ID FROM Products WHERE Product_Name = @name", Conn)
+            Dim cmd As New SqlCommand("SELECT Product_ID FROM Products WHERE Product_Name = @name", cn)
             cmd.Parameters.AddWithValue("@name", txt_Product_Name.Text)
 
             Dim reader As SqlDataReader = cmd.ExecuteReader()
@@ -867,7 +867,7 @@ End Sub
             End If
 
             reader.Close()
-            Disconnect()
+            End Using
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -885,8 +885,8 @@ End Sub
 
         Try
             Using Conn
-                Connect()
-                Dim cmd As New SqlCommand("SELECT Product_Name FROM Products WHERE Product_Name LIKE @name + '%'", Conn)
+                Using cn As SqlConnection = DBModule.NewConn()
+                Dim cmd As New SqlCommand("SELECT Product_Name FROM Products WHERE Product_Name LIKE @name + '%'", cn)
                 cmd.Parameters.AddWithValue("@name", searchText)
 
                 Dim reader As SqlDataReader = cmd.ExecuteReader()
@@ -894,7 +894,7 @@ End Sub
                     lstSuggestions.Items.Add(reader("Product_Name").ToString())
                 End While
                 reader.Close()
-                Disconnect()
+                End Using
             End Using
 
             lstSuggestions.Visible = lstSuggestions.Items.Count > 0
@@ -914,8 +914,8 @@ End Sub
         ' بعد اختيار الاسم نجيب الكود من قاعدة البيانات
         Try
             Using Conn
-                Connect()
-                Dim cmd As New SqlCommand("SELECT Product_ID FROM Products WHERE Product_Name = @name", Conn)
+                Using cn As SqlConnection = DBModule.NewConn()
+                Dim cmd As New SqlCommand("SELECT Product_ID FROM Products WHERE Product_Name = @name", cn)
                 cmd.Parameters.AddWithValue("@name", txt_Product_Name.Text)
 
                 Dim result = cmd.ExecuteScalar()
@@ -926,10 +926,9 @@ End Sub
                 End If
             End Using
 
+        End Using
         Catch ex As Exception
             MessageBox.Show("خطأ أثناء جلب كود المنتج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            Disconnect()
         End Try
     End Sub
 
@@ -964,9 +963,9 @@ End Sub
     "
 
             ' ✅ الاتصال بقاعدة البيانات
-            Connect()
+            Using cn As SqlConnection = DBModule.NewConn()
 
-            Using cmd As New SqlCommand(query, Conn)
+            Using cmd As New SqlCommand(query, cn)
                 ' ✅ تمرير القيمة بشكل آمن
                 cmd.Parameters.AddWithValue("@value", "%" & searchValue & "%")
 
@@ -983,15 +982,13 @@ End Sub
                 End If
             End Using
 
+        End Using
         Catch ex As SqlException
             MessageBox.Show("خطأ في الاتصال أو الاستعلام بقاعدة البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
         Catch ex As Exception
             MessageBox.Show("حدث خطأ غير متوقع أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
-        Finally
-            ' ✅ إغلاق الاتصال بأمان
-            Disconnect()
         End Try
 
     End Sub

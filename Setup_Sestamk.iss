@@ -6,7 +6,7 @@
 ; ==============================================================================
 
 #define MyAppName "Sestamk POS"
-#define MyAppVersion "1.2.2"
+#define MyAppVersion "1.2.3"
 #define MyAppPublisher "Sestamk Solutions"
 #define MyAppURL "https://sestamk.com"
 #define MyAppExeName "Sestamk.exe"

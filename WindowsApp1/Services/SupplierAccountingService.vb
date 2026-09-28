@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 ' All supplier postings use the same sign: credit increases the amount owed.
 Public NotInheritable Class SupplierAccountingService
@@ -122,8 +122,19 @@ ORDER BY S.SupplierName", New SqlParameter("@ID", supplierID), New SqlParameter(
             End Using
         End Using
     End Function
-    Public Shared Async Function SavePurchaseAsync(invNumber As String, supID As Integer, storeID As Integer, purchaseDate As Date, discount As Decimal, paid As Decimal, paymentCode As String, treasuryID As Integer?, notes As String, items As DataTable, updateCost As Boolean) As Task(Of Integer)
+    Public Shared Sub EnsurePurchaseHeadersBranchColumn()
+        Try
+            Dim sql As String = "IF OBJECT_ID('[dbo].[PurchaseHeaders]', 'U') IS NOT NULL AND COL_LENGTH('[dbo].[PurchaseHeaders]', 'BranchID') IS NULL " &
+                                "BEGIN ALTER TABLE [dbo].[PurchaseHeaders] ADD [BranchID] INT NULL; END"
+            DBModule.ExecuteNonQuery(sql)
+        Catch ex As Exception
+            Debug.WriteLine("EnsurePurchaseHeadersBranchColumn error: " & ex.Message)
+        End Try
+    End Sub
+
+    Public Shared Async Function SavePurchaseAsync(invNumber As String, supID As Integer, storeID As Integer, purchaseDate As Date, discount As Decimal, paid As Decimal, paymentCode As String, treasuryID As Integer?, notes As String, items As DataTable, updateCost As Boolean, Optional branchID As Integer? = Nothing) As Task(Of Integer)
         DemandPermission("frmPurchases", "CanAdd")
+        EnsurePurchaseHeadersBranchColumn()
         If items Is Nothing OrElse items.Rows.Count = 0 Then Throw New ArgumentException("الفاتورة فارغة.")
         If String.IsNullOrWhiteSpace(invNumber) OrElse invNumber.Length > 50 Then Throw New ArgumentException("رقم الفاتورة غير صالح.")
         If notes IsNot Nothing AndAlso notes.Length > 250 Then Throw New ArgumentException("البيان يتجاوز 250 حرفاً.")
@@ -157,6 +168,12 @@ ORDER BY S.SupplierName", New SqlParameter("@ID", supplierID), New SqlParameter(
                         storeCheck.Parameters.AddWithValue("@ID", storeID)
                         If Await storeCheck.ExecuteScalarAsync() Is Nothing Then Throw New ArgumentException("المخزن غير موجود.")
                     End Using
+                    If branchID.HasValue Then
+                        Using branchCheck As New SqlCommand("SELECT BranchID FROM Branches WHERE BranchID=@ID AND IsActive=1 AND ISNULL(IsDeleted,0)=0", conn, trans)
+                            branchCheck.Parameters.AddWithValue("@ID", branchID.Value)
+                            If Await branchCheck.ExecuteScalarAsync() Is Nothing Then Throw New ArgumentException("الفرع المحدد غير متاح.")
+                        End Using
+                    End If
                     Dim supBefore As Decimal
                     Using lockSupplier As New SqlCommand("SELECT CurrentBalance FROM Suppliers WITH(UPDLOCK,HOLDLOCK) WHERE SupplierID=@ID AND IsActive=1 AND ISNULL(IsDeleted,0)=0", conn, trans)
                         lockSupplier.Parameters.AddWithValue("@ID", supID)
@@ -174,9 +191,9 @@ ORDER BY S.SupplierName", New SqlParameter("@ID", supplierID), New SqlParameter(
                             If Await lockTreasury.ExecuteScalarAsync() Is Nothing Then Throw New ArgumentException("الخزينة غير متاحة.")
                         End Using
                     End If
-                    ' 1. حفظ رأس الفاتورة مع طريقة الدفع
-                    Dim sqlHeader As String = "INSERT INTO PurchaseHeaders (InvoiceNumber, SupplierID, StoreID, PurchaseDate, TotalAmount, Discount, NetTotal, PaidAmount, RemainingAmount, PaymentType, TreasuryID, Notes, UserID) " &
-                                              "VALUES (@InvNo, @SupID, @StoreID, @Date, @Total, @Disc, @Net, @Paid, @Rem, @PayType, @TreasuryID, @Notes, @User); " &
+                    ' 1. حفظ رأس الفاتورة مع طريقة الدفع والفرع
+                    Dim sqlHeader As String = "INSERT INTO PurchaseHeaders (InvoiceNumber, SupplierID, StoreID, BranchID, PurchaseDate, TotalAmount, Discount, NetTotal, PaidAmount, RemainingAmount, PaymentType, TreasuryID, Notes, UserID) " &
+                                              "VALUES (@InvNo, @SupID, @StoreID, @BranchID, @Date, @Total, @Disc, @Net, @Paid, @Rem, @PayType, @TreasuryID, @Notes, @User); " &
                                               "SELECT SCOPE_IDENTITY();"
 
                     Dim purchaseID As Integer = 0
@@ -185,6 +202,7 @@ ORDER BY S.SupplierName", New SqlParameter("@ID", supplierID), New SqlParameter(
                         cmdH.Parameters.AddWithValue("@InvNo", invNumber)
                         cmdH.Parameters.AddWithValue("@SupID", supID)
                         cmdH.Parameters.AddWithValue("@StoreID", storeID)
+                        cmdH.Parameters.AddWithValue("@BranchID", If(branchID.HasValue, CObj(branchID.Value), DBNull.Value))
                         cmdH.Parameters.AddWithValue("@Date", purchaseDate)
                         cmdH.Parameters.AddWithValue("@Total", total)
                         cmdH.Parameters.AddWithValue("@Disc", discount)

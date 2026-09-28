@@ -616,35 +616,28 @@ Public Class Login
 
         ' 5. زر الإغلاق والتصغير وعين كلمة المرور
         btnclose.FillColor = Color.Transparent
-        btnclose.ForeColor = If(ThemeManager.Instance.IsDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139))
+        btnclose.ForeColor = palette.TextMuted
         btnclose.HoverState.FillColor = palette.Danger
         btnclose.HoverState.ForeColor = Color.White
 
         If btnMinimize IsNot Nothing Then
             btnMinimize.FillColor = Color.Transparent
-            btnMinimize.ForeColor = If(ThemeManager.Instance.IsDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139))
-            btnMinimize.HoverState.FillColor = If(ThemeManager.Instance.IsDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240))
-            btnMinimize.HoverState.ForeColor = If(ThemeManager.Instance.IsDark, Color.White, Color.FromArgb(30, 41, 59))
+            btnMinimize.ForeColor = palette.TextMuted
+            btnMinimize.HoverState.FillColor = palette.SurfaceSecondary
+            btnMinimize.HoverState.ForeColor = palette.TextPrimary
         End If
 
         If btnTogglePassword IsNot Nothing Then
             btnTogglePassword.FillColor = Color.Transparent
-            btnTogglePassword.ForeColor = If(ThemeManager.Instance.IsDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139))
-            btnTogglePassword.HoverState.FillColor = If(ThemeManager.Instance.IsDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240))
+            btnTogglePassword.ForeColor = palette.TextMuted
+            btnTogglePassword.HoverState.FillColor = palette.SurfaceSecondary
         End If
 
         ' 6. زر الدعم الفني: زر ثانوي أنيق مع هوية بصرية واضحة
-        If ThemeManager.Instance.IsDark Then
-            btnsup.ForeColor = Color.FromArgb(96, 165, 250)
-            btnsup.BorderColor = Color.FromArgb(51, 65, 85)
-            btnsup.HoverState.BorderColor = Color.FromArgb(96, 165, 250)
-            btnsup.HoverState.FillColor = Color.FromArgb(30, 41, 59)
-        Else
-            btnsup.ForeColor = Color.FromArgb(37, 99, 175)
-            btnsup.BorderColor = Color.FromArgb(203, 213, 225)
-            btnsup.HoverState.BorderColor = Color.FromArgb(37, 99, 175)
-            btnsup.HoverState.FillColor = Color.FromArgb(239, 246, 255)
-        End If
+        btnsup.ForeColor = palette.InfoSubtleForeground
+        btnsup.BorderColor = palette.Border
+        btnsup.HoverState.BorderColor = palette.Info
+        btnsup.HoverState.FillColor = palette.InfoSubtleBackground
 
         ' 7. التسلسل الهرمي للنصوص التوضيحية
         Label2.ForeColor = palette.TextSecondary

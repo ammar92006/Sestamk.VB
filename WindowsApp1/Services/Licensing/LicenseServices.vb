@@ -11,8 +11,21 @@ Imports System.Threading.Tasks
 
 ' Central contract shared with Sestamk_App. Never add a service_role key here.
 Public NotInheritable Class LicenseSettings
-    Public Const SupabaseUrl As String = "https://axigicbiydhfbkfqogma.supabase.co"
-    Public Const PublishableKey As String = "sb_publishable__LRAn0WS56TL5LLa8Y3TLw_7yxI-UK7"
+    Public Shared ReadOnly Property SupabaseUrl As String
+        Get
+            Dim val = System.Configuration.ConfigurationManager.AppSettings("Supabase:Url")
+            If String.IsNullOrWhiteSpace(val) Then Return "https://axigicbiydhfbkfqogma.supabase.co"
+            Return val
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property PublishableKey As String  
+        Get
+            Dim val = System.Configuration.ConfigurationManager.AppSettings("Supabase:PublishableKey")
+            If String.IsNullOrWhiteSpace(val) Then Return "sb_publishable__LRAn0WS56TL5LLa8Y3TLw_7yxI-UK7"
+            Return val
+        End Get
+    End Property
     Public Const CheckLicenseRpc As String = "check_license"
     Public Const ProductId As String = "sestamk-vb"
     Public Const OfflineCacheDays As Integer = 7

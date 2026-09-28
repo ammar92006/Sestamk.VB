@@ -128,7 +128,7 @@ Public Class FrmModernUpdater
         _packagePath = packagePath
         _targetPath = targetPath
         _mainExe = mainExe
-        _newVersion = If(String.IsNullOrWhiteSpace(newVersion), "1.2.1", newVersion)
+        _newVersion = If(String.IsNullOrWhiteSpace(newVersion), "1.2.3", newVersion)
 
         InitializeUI()
     End Sub

@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Drawing.Printing
 Imports ClosedXML.Excel
 
@@ -112,11 +112,12 @@ Public NotInheritable Class PurchaseDocumentHelper
 
     Public Shared Sub ShowInvoice(owner As Form, purchaseID As Integer)
         SupplierAccountingService.DemandPermission("frmPurchaseReports", "CanOpen")
-        Dim header = SupplierAccountingService.Query("SELECT H.*, S.SupplierName, ST.StoreName FROM PurchaseHeaders H INNER JOIN Suppliers S ON S.SupplierID=H.SupplierID INNER JOIN Stores ST ON ST.StoreID=H.StoreID WHERE PurchaseID=@ID AND ISNULL(H.IsDeleted,0)=0", New SqlParameter("@ID", purchaseID))
+        Dim header = SupplierAccountingService.Query("SELECT H.*, S.SupplierName, ST.StoreName, B.BranchName FROM PurchaseHeaders H INNER JOIN Suppliers S ON S.SupplierID=H.SupplierID INNER JOIN Stores ST ON ST.StoreID=H.StoreID LEFT JOIN Branches B ON B.BranchID=H.BranchID WHERE PurchaseID=@ID AND ISNULL(H.IsDeleted,0)=0", New SqlParameter("@ID", purchaseID))
         If header.Rows.Count = 0 Then Throw New ArgumentException("الفاتورة غير موجودة.")
         Dim h = header.Rows(0)
+        Dim branchName = If(h("BranchName") IsNot Nothing AndAlso Not IsDBNull(h("BranchName")), CStr(h("BranchName")), "---")
         Dim title = "فاتورة مشتريات " & CStr(h("InvoiceNumber")) & " | " & CDate(h("PurchaseDate")).ToString("yyyy-MM-dd") & vbLf &
-            "المورد: " & CStr(h("SupplierName")) & " | المخزن: " & CStr(h("StoreName")) & " | الدفع: " & CStr(h("PaymentType")) & vbLf &
+            "المورد: " & CStr(h("SupplierName")) & " | الفرع: " & branchName & " | المخزن: " & CStr(h("StoreName")) & " | الدفع: " & CStr(h("PaymentType")) & vbLf &
             "الإجمالي: " & CDec(h("TotalAmount")).ToString("N2") & " | الخصم: " & CDec(h("Discount")).ToString("N2") & " | الصافي: " & CDec(h("NetTotal")).ToString("N2") &
             " | المدفوع: " & CDec(h("PaidAmount")).ToString("N2") & " | المتبقي عند الحفظ: " & CDec(h("RemainingAmount")).ToString("N2")
         Dim data = SupplierAccountingService.Query("SELECT M.MaterialName AS [الخامة], U.UnitName AS [الوحدة], D.Quantity AS [الكمية], D.ConversionFactor AS [معامل التحويل], D.UnitPrice AS [السعر], D.Quantity*D.UnitPrice AS [الإجمالي] FROM PurchaseDetails D INNER JOIN RawMaterials M ON M.MaterialID=D.MaterialID INNER JOIN Units U ON U.UnitID=D.UnitID WHERE D.PurchaseID=@ID ORDER BY D.DetailID", New SqlParameter("@ID", purchaseID))

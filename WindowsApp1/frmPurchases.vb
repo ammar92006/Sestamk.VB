@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmPurchases
     Private _dtItems As New DataTable()
@@ -20,6 +20,7 @@ Public Class frmPurchases
         AddHandler FormClosing, Sub(sender2, args)
                                     If savingInvoice Then args.Cancel = True
                                 End Sub
+        SupplierAccountingService.EnsurePurchaseHeadersBranchColumn()
         InitItemsTable()
         FillDropdowns()
         txtInvoiceNumber.Text = GetNextCode("PurchaseHeaders", "InvoiceNumber")
@@ -362,6 +363,11 @@ Public Class frmPurchases
             Exit Sub
         End If
 
+        If cmbBranches.SelectedIndex = -1 Then
+            MessageBox.Show("يرجى اختيار الفرع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+
         If cmbPaymentType.SelectedIndex = -1 Then
             MessageBox.Show("يرجى اختيار طريقة الدفع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
@@ -398,6 +404,7 @@ Public Class frmPurchases
 
         Dim supID As Integer = Convert.ToInt32(cmbSupplier.SelectedValue)
         Dim storeID As Integer = Convert.ToInt32(cmbStore.SelectedValue)
+        Dim branchID As Integer? = If(cmbBranches.SelectedValue IsNot Nothing AndAlso Integer.TryParse(cmbBranches.SelectedValue.ToString(), Nothing), Convert.ToInt32(cmbBranches.SelectedValue), CType(Nothing, Integer?))
         Dim treasuryID As Integer? = If(cmbTreasury.SelectedValue IsNot Nothing AndAlso paid > 0, Convert.ToInt32(cmbTreasury.SelectedValue), CType(Nothing, Integer?))
         Dim invNumber As String = txtInvoiceNumber.Text.Trim()
         Dim netTotal As Decimal = Convert.ToDecimal(txtNetTotal.Text)
@@ -431,7 +438,7 @@ Public Class frmPurchases
         savingInvoice = True
         Me.Enabled = False
         Try
-            lastPurchaseID = Await SupplierAccountingService.SavePurchaseAsync(invNumber, supID, storeID, dtpInvoiceDate.Value, discount, paid, paymentCode, treasuryID, txtNotes.Text.Trim(), _dtItems.Copy(), updateCost.Checked)
+            lastPurchaseID = Await SupplierAccountingService.SavePurchaseAsync(invNumber, supID, storeID, dtpInvoiceDate.Value, discount, paid, paymentCode, treasuryID, txtNotes.Text.Trim(), _dtItems.Copy(), updateCost.Checked, branchID)
             MessageBox.Show("تم حفظ فاتورة المشتريات وتوريد الأصناف للمخزن بنجاح!", "نجاح التوريد")
             Try
                 ClearForm()
@@ -519,6 +526,12 @@ Public Class frmPurchases
         ' 3. إعادة تعيين القوائم المنسدلة
         cmbSupplier.SelectedIndex = -1
         cmbStore.SelectedIndex = If(cmbStore.Items.Count > 0, 0, -1)
+        Dim defaultBranchID = If(SettingsManager.GetSetting("CurrentBranchID"), "")
+        If Not String.IsNullOrEmpty(defaultBranchID) AndAlso cmbBranches.Items.Count > 0 Then
+            cmbBranches.SelectedValue = Convert.ToInt32(defaultBranchID)
+        ElseIf cmbBranches.Items.Count > 0 Then
+            cmbBranches.SelectedIndex = 0
+        End If
         cmbMaterial.SelectedIndex = -1
         cmbUnit.DataSource = Nothing
         cmbTreasury.SelectedIndex = -1

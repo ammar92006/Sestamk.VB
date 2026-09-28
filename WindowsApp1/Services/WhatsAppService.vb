@@ -48,7 +48,8 @@ Namespace Services
             Get
                 Dim secret = SettingsManager.GetSetting(SettingsKeys.WhatsAppApiSecret)
                 If String.IsNullOrWhiteSpace(secret) Then
-                    Return "40ddff3e42dce8ecae15405ba523f572e526c673e0b40051a8d67aee1bdab190"
+                    Debug.WriteLine("⚠️ WhatsApp API Secret غير مُعدّ. يرجى إدخاله من شاشة الإعدادات.")
+                    Return String.Empty
                 End If
                 Return secret.Trim()
             End Get

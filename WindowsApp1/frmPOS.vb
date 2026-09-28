@@ -127,22 +127,22 @@ Public Class frmPOS
                 Label10.ForeColor = Color.FromArgb(203, 213, 225)
 
                 ' 3. شريط رقم الفاتورة والأصناف أعلى جدول المبيعات
-                Guna2Panel9.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
+                Guna2Panel9.FillColor = palette.SurfaceSecondary
                 Guna2Panel9.BorderColor = palette.Border
-                Label1.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
-                Label2.ForeColor = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(71, 85, 105))
-                lblInvoiceNumber.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(224, 231, 255))
-                lblInvoiceNumber.ForeColor = If(isDark, Color.FromArgb(56, 189, 248), Color.FromArgb(37, 99, 235))
+                Label1.ForeColor = palette.TextPrimary
+                Label2.ForeColor = palette.TextSecondary
+                lblInvoiceNumber.BackColor = palette.InfoSubtleBackground
+                lblInvoiceNumber.ForeColor = palette.InfoSubtleForeground
                 lblInvoiceNumber.BorderStyle = BorderStyle.None
 
                 ' 4. شريط نوع الطلب وأزرار التبديل
-                Guna2Panel12.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
-                lblOrderTypeStatus.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                Guna2Panel12.FillColor = palette.SurfaceSecondary
+                lblOrderTypeStatus.ForeColor = palette.TextPrimary
 
-                Dim summaryBorder As Color = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(203, 213, 225))
-                Dim orderBtnInactiveFill As Color = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
-                Dim orderBtnInactiveFore As Color = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(71, 85, 105))
-                Dim orderBtnActiveFill As Color = Color.FromArgb(37, 99, 235)
+                Dim summaryBorder As Color = palette.Border
+                Dim orderBtnInactiveFill As Color = palette.SurfaceSecondary
+                Dim orderBtnInactiveFore As Color = palette.TextSecondary
+                Dim orderBtnActiveFill As Color = palette.Primary
                 For Each btn As Guna.UI2.WinForms.Guna2Button In {btnTakeaway, btnDineIn, btnDelivery}
                     btn.CheckedState.FillColor = orderBtnActiveFill
                     btn.CheckedState.ForeColor = Color.White
@@ -156,10 +156,10 @@ Public Class frmPOS
                 ThemeHelper.ApplyDataGridViewTheme(dgvInvoice, palette)
 
                 ' 6. شبكة ملخص الإجماليات (المجموع، التوصيل، خدمة الصالة، الضريبة)
-                Dim titleBg As Color = If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249))
-                Dim titleFg As Color = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(71, 85, 105))
-                Dim valueBg As Color = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
-                Dim valueFg As Color = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                Dim titleBg As Color = palette.SurfaceSecondary
+                Dim titleFg As Color = palette.TextSecondary
+                Dim valueBg As Color = palette.InputBackground
+                Dim valueFg As Color = palette.TextPrimary
 
                 ' المجموع
                 Guna2Panel16.FillColor = valueBg
@@ -190,56 +190,56 @@ Public Class frmPOS
                 lblTax.ForeColor = valueFg
 
                 ' الإجمالي النهائي
-                Guna2Panel24.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(240, 253, 244))
-                Guna2Panel26.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(240, 253, 244))
+                Guna2Panel24.FillColor = palette.SuccessSubtleBackground
+                Guna2Panel26.FillColor = palette.SuccessSubtleBackground
                 Label25.BackColor = Color.Transparent
-                Label25.ForeColor = If(isDark, Color.FromArgb(203, 213, 225), Color.FromArgb(21, 128, 61))
+                Label25.ForeColor = palette.SuccessSubtleForeground
                 lblGrandTotal.BackColor = Color.Transparent
-                lblGrandTotal.ForeColor = If(isDark, Color.FromArgb(52, 211, 153), Color.FromArgb(16, 185, 129))
+                lblGrandTotal.ForeColor = If(isDark, palette.SuccessSubtleForeground, palette.Success)
 
                 ' 7. صف العميل
                 Guna2Panel21.FillColor = palette.Surface
                 Label6.BackColor = titleBg
-                Label6.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
-                txtCustomer.FillColor = If(isDark, Color.FromArgb(15, 23, 42), Color.White)
-                txtCustomer.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                Label6.ForeColor = palette.TextPrimary
+                txtCustomer.FillColor = palette.InputBackground
+                txtCustomer.ForeColor = palette.InputForeground
                 txtCustomer.BorderColor = summaryBorder
-                btnSelectCustomer.FillColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(71, 85, 105))
-                btnSelectCustomer.ForeColor = Color.White
+                btnSelectCustomer.FillColor = palette.ButtonSecondaryBackground
+                btnSelectCustomer.ForeColor = palette.ButtonSecondaryForeground
 
                 ' 8. أزرار الإجراءات السفلية
-                btnPay.FillColor = Color.FromArgb(16, 185, 129)
-                btnPay.ForeColor = Color.White
+                btnPay.FillColor = palette.Success
+                btnPay.ForeColor = palette.SuccessText
                 btnHoldInvoice.ForeColor = Color.White
                 UpdateHoldButtonText()
-                btntables.FillColor = Color.FromArgb(99, 102, 241)
-                btntables.ForeColor = Color.White
-                btnPendingInvoices.FillColor = Color.FromArgb(59, 130, 246)
-                btnPendingInvoices.ForeColor = Color.White
-                btnDeleteRow.FillColor = Color.FromArgb(239, 68, 68)
-                btnDeleteRow.ForeColor = Color.White
-                btnclear.FillColor = Color.FromArgb(100, 116, 139)
-                btnclear.ForeColor = Color.White
+                btntables.FillColor = palette.AccentIndigo
+                btntables.ForeColor = palette.AccentIndigoText
+                btnPendingInvoices.FillColor = palette.Primary
+                btnPendingInvoices.ForeColor = palette.TextOnPrimary
+                btnDeleteRow.FillColor = palette.Danger
+                btnDeleteRow.ForeColor = palette.DangerText
+                btnclear.FillColor = palette.ButtonSecondaryBackground
+                btnclear.ForeColor = palette.ButtonSecondaryForeground
 
                 ' 9. شريط أدوات شبكة الفئات (الأعمدة والصفوف)
-                pnlCategoryGridToolbar.FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White)
+                pnlCategoryGridToolbar.FillColor = palette.SurfaceSecondary
                 pnlCategoryGridToolbar.BorderColor = summaryBorder
                 lblRowTitle.ForeColor = titleFg
                 lblColTitle.ForeColor = titleFg
-                lblRowValue.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
-                lblColValue.ForeColor = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                lblRowValue.ForeColor = palette.TextPrimary
+                lblColValue.ForeColor = palette.TextPrimary
 
-                Dim btnGridFill As Color = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(241, 245, 249))
-                Dim btnGridFore As Color = If(isDark, Color.FromArgb(248, 250, 252), Color.FromArgb(15, 23, 42))
+                Dim btnGridFill As Color = palette.ButtonSecondaryBackground
+                Dim btnGridFore As Color = palette.ButtonSecondaryForeground
                 btnIncRow.FillColor = btnGridFill : btnIncRow.ForeColor = btnGridFore : btnIncRow.BorderThickness = 1 : btnIncRow.BorderColor = summaryBorder
                 btnDecRow.FillColor = btnGridFill : btnDecRow.ForeColor = btnGridFore : btnDecRow.BorderThickness = 1 : btnDecRow.BorderColor = summaryBorder
                 btnIncCol.FillColor = btnGridFill : btnIncCol.ForeColor = btnGridFore : btnIncCol.BorderThickness = 1 : btnIncCol.BorderColor = summaryBorder
                 btnDecCol.FillColor = btnGridFill : btnDecCol.ForeColor = btnGridFore : btnDecCol.BorderThickness = 1 : btnDecCol.BorderColor = summaryBorder
 
                 ' 10. حاويات الأصناف والفئات
-                flpProducts.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
-                flpCategories.BackColor = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
-                Dim bgSpacerColor As Color = If(isDark, Color.FromArgb(15, 23, 42), Color.FromArgb(241, 245, 249))
+                flpProducts.BackColor = palette.BackgroundSecondary
+                flpCategories.BackColor = palette.BackgroundSecondary
+                Dim bgSpacerColor As Color = palette.BackgroundSecondary
                 Guna2Panel5.BackColor = bgSpacerColor
                 Guna2Panel6.BackColor = bgSpacerColor
                 Guna2Panel7.BackColor = bgSpacerColor
