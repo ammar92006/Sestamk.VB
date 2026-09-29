@@ -27,6 +27,7 @@ Public NotInheritable Class LicenseSettings
         End Get
     End Property
     Public Const CheckLicenseRpc As String = "check_license"
+    Public Const CheckByHwidRpc As String = "check_license_by_hwid"
     Public Const ProductId As String = "sestamk-vb"
     Public Const OfflineCacheDays As Integer = 7
     Public Const GitHubRepo As String = "ammar92006/Sestamk.VB"
@@ -394,6 +395,14 @@ Public NotInheritable Class LicenseBootstrapper
     Public Shared Async Function CheckAsync(Optional forceOnlineCheck As Boolean = False) As Task(Of LicenseCheckResult)
         Dim cache = LicenseCache.Load()
         If cache Is Nothing OrElse String.IsNullOrWhiteSpace(Convert.ToString(cache("saved_serial"))) Then
+            ' محاولة التفعيل التلقائي الصامت عبر بصمة الجهاز HWID من السيرفر قبل مطالبة المستخدم بالتفعيل
+            Try
+                Dim hwidResult = Await CheckByHwidAsync()
+                If hwidResult.IsValid Then
+                    Return hwidResult
+                End If
+            Catch
+            End Try
             Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يرجى تفعيل البرنامج أولاً."}
         End If
 
@@ -467,6 +476,62 @@ Public NotInheritable Class LicenseBootstrapper
         Catch ex As Exception
             Return New LicenseCheckResult With {.Message = "تعذر الاتصال بخدمة التفعيل: " & ex.Message}
         End Try
+    End Function
+
+    ''' <summary>
+    ''' التحقق المباشر والتفعيل عبر بصمة الجهاز (HWID) دون الحاجة لإدخال كود يدوي
+    ''' </summary>
+    Public Shared Async Function CheckByHwidAsync() As Task(Of LicenseCheckResult)
+        Try
+            Dim response = Await RequestByHwidAsync()
+            If IsServerValid(response) Then
+                Dim serial = Convert.ToString(response("saved_serial"))
+                If Not String.IsNullOrWhiteSpace(serial) Then
+                    response("saved_serial") = serial.Trim()
+                End If
+                LicenseCache.Save(response)
+                Return New LicenseCheckResult With {
+                    .IsValid = True,
+                    .Payload = response,
+                    .Message = ReadMessage(response, "تم تفعيل البرنامج عبر السيرفر بنجاح.")
+                }
+            Else
+                Dim msg = ReadMessage(response, "لم يتم العثور على ترخيص نشط لهذا الجهاز.")
+                Return New LicenseCheckResult With {
+                    .RequiresActivation = True,
+                    .Payload = response,
+                    .Message = msg
+                }
+            End If
+        Catch ex As Exception
+            Return New LicenseCheckResult With {
+                .RequiresActivation = True,
+                .Message = "تعذر التحقق عبر السيرفر: " & ex.Message
+            }
+        End Try
+    End Function
+
+    Private Shared Async Function RequestByHwidAsync() As Task(Of JObject)
+        Dim ramGb = HardwareFingerprint.GetRamGB()
+        Dim payload As New Dictionary(Of String, Object) From {
+            {"p_hwid", HardwareFingerprint.GetCurrent()},
+            {"p_version", Application.ProductVersion},
+            {"p_device_name", Environment.MachineName},
+            {"p_os_info", HardwareFingerprint.GetOSInfo()},
+            {"p_processor", HardwareFingerprint.GetProcessorName()},
+            {"p_ram_gb", If(ramGb > 0, CObj(ramGb), Nothing)}
+        }
+        Dim jsonString = JsonConvert.SerializeObject(payload)
+        Using client As New HttpClient()
+            client.Timeout = TimeSpan.FromSeconds(12)
+            client.DefaultRequestHeaders.Add("apikey", LicenseSettings.PublishableKey)
+            client.DefaultRequestHeaders.Add("Authorization", "Bearer " & LicenseSettings.PublishableKey)
+            Dim content As New StringContent(jsonString, Encoding.UTF8, "application/json")
+            Dim response = Await client.PostAsync(LicenseSettings.SupabaseUrl.TrimEnd("/"c) & "/rest/v1/rpc/" & LicenseSettings.CheckByHwidRpc, content)
+            Dim text = Await response.Content.ReadAsStringAsync()
+            If Not response.IsSuccessStatusCode Then Throw New HttpRequestException("الخدمة أعادت " & CInt(response.StatusCode) & ".")
+            Return JObject.Parse(text)
+        End Using
     End Function
 
     Private Shared Async Function RequestAsync(serial As String) As Task(Of JObject)

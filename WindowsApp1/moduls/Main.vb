@@ -138,6 +138,41 @@ Module Main
         If btn IsNot Nothing Then btn.Checked = True
     End Sub
 
+    Public Sub OpenFormOnce(ByVal formType As Type, ByVal btn As Control)
+        ' 1. التحقق من صلاحية الفتح
+        If Not Session.HasPermission(formType.Name, "CanOpen") Then
+            Dim dispName As String = Session.GetScreenDisplayName(formType.Name)
+            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+
+        ' نبحث عن أي فورم من نفس النوع مفتوحة بالفعل
+        For Each f As Form In Application.OpenForms
+            If f.GetType() Is formType Then
+                f.Show()
+                f.BringToFront()
+                f.Activate()
+                Session.ApplyFormPermissions(f, formType.Name)
+                Return
+            End If
+        Next
+
+        ' لو مش موجودة: نفتح واحدة جديدة
+        Dim frm As Form = CType(Activator.CreateInstance(formType), Form)
+
+        AddHandler frm.Load, Sub(sender, e)
+                                 Session.ApplyFormPermissions(frm, formType.Name)
+                                 ThemeManager.Instance.ApplyTheme(frm)
+                             End Sub
+        AddHandler frm.Shown, Sub(sender, e)
+                                  Session.ApplyFormPermissions(frm, formType.Name)
+                                  ThemeManager.Instance.ApplyTheme(frm)
+                              End Sub
+
+        ThemeManager.Instance.ApplyTheme(frm)
+        frm.Show()
+    End Sub
+
     Public Sub InitializeShiftSession()
         Try
             Dim repo As New POSRepository(DBModule.ConnectionString)

@@ -51,6 +51,8 @@ Namespace UC_Settings
                 If logoutMinutes >= numAutoLogoutMinutes.Minimum AndAlso logoutMinutes <= numAutoLogoutMinutes.Maximum Then
                     numAutoLogoutMinutes.Value = logoutMinutes
                 End If
+                numAutoLogoutMinutes.Enabled = tglAutoLogout.Checked
+                lblAutoLogoutTimer.Enabled = tglAutoLogout.Checked
 
                 ' مظهر النظام (تحديث حالة أزرار الوضع الفاتح والداكن والتلقائي)
                 _selectedThemeMode = ThemeManager.Instance.CurrentMode
@@ -106,6 +108,9 @@ Namespace UC_Settings
                 SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutEnabled, tglAutoLogout.Checked.ToString().ToLower())
                 SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutTimer, CInt(numAutoLogoutMinutes.Value).ToString())
                 SettingsManager.SaveSetting(SettingsKeys.SystemBackupPath, txtBackupPath.Text.Trim())
+
+                ' تطبيق إعدادات القفل التلقائي للجلسة فوراً في الخلفية
+                WindowsApp1.Services.SessionLockService.Instance.ReloadSettings()
 
                 ' حفظ وتطبيق مظهر النظام الحالي
                 ThemeManager.Instance.SetThemeMode(_selectedThemeMode)
@@ -207,6 +212,11 @@ Namespace UC_Settings
             UpdateThemeButtonsUI(ThemeMode.System)
         End Sub
 
+        Private Sub tglAutoLogout_CheckedChanged(sender As Object, e As EventArgs) Handles tglAutoLogout.CheckedChanged
+            numAutoLogoutMinutes.Enabled = tglAutoLogout.Checked
+            lblAutoLogoutTimer.Enabled = tglAutoLogout.Checked
+        End Sub
+
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
             If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات النظام؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 cmbLanguage.SelectedIndex = 0
@@ -216,12 +226,17 @@ Namespace UC_Settings
                 txtMaxLoginAttempts.Text = "5"
                 tglAutoLogout.Checked = False
                 numAutoLogoutMinutes.Value = 15
+                numAutoLogoutMinutes.Enabled = False
+                lblAutoLogoutTimer.Enabled = False
                 txtBackupPath.Clear()
 
                 ' إعادة الوضع إلى التلقائي الافتراضي
                 _selectedThemeMode = ThemeMode.System
                 ThemeManager.Instance.SetThemeMode(ThemeMode.System)
                 UpdateThemeButtonsUI(ThemeMode.System)
+
+                ' تحديث خدمة القفل التلقائي
+                WindowsApp1.Services.SessionLockService.Instance.ReloadSettings()
             End If
         End Sub
 

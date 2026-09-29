@@ -45,21 +45,31 @@ Namespace UC_Settings
                     ' حساب وتحديد حالة الاشتراك وفترة السماح بدقة متناهية
                     If hasExpiry AndAlso DateTime.Today > effectiveExpiry Then
                         lblStatus.Text = "❌ منتهي الصلاحية"
-                        lblStatus.ForeColor = Color.FromArgb(239, 68, 68)
+                        lblStatus.ForeColor = Color.FromArgb(248, 113, 113)
+                        pnlStatusBadge.FillColor = Color.FromArgb(45, 20, 20)
+                        pnlStatusBadge.BorderColor = Color.FromArgb(239, 68, 68)
                     ElseIf hasExpiry AndAlso DateTime.Today > expiresAt.Date Then
                         Dim remainingGrace = Math.Max(0, (effectiveExpiry - DateTime.Today).Days)
-                        lblStatus.Text = $"⚠️ في فترة السماح (متبقي {remainingGrace} يوم)"
-                        lblStatus.ForeColor = Color.FromArgb(245, 158, 11)
+                        lblStatus.Text = $"⚠️ فترة سماح ({remainingGrace} يوم)"
+                        lblStatus.ForeColor = Color.FromArgb(251, 191, 36)
+                        pnlStatusBadge.FillColor = Color.FromArgb(48, 36, 12)
+                        pnlStatusBadge.BorderColor = Color.FromArgb(245, 158, 11)
                     ElseIf status = "grace_period" Then
                         Dim remainingGrace = If(hasExpiry, Math.Max(0, (effectiveExpiry - DateTime.Today).Days), graceDays)
-                        lblStatus.Text = $"⚠️ فترة سماح (متبقي {remainingGrace} يوم)"
-                        lblStatus.ForeColor = Color.FromArgb(245, 158, 11)
+                        lblStatus.Text = $"⚠️ فترة سماح ({remainingGrace} يوم)"
+                        lblStatus.ForeColor = Color.FromArgb(251, 191, 36)
+                        pnlStatusBadge.FillColor = Color.FromArgb(48, 36, 12)
+                        pnlStatusBadge.BorderColor = Color.FromArgb(245, 158, 11)
                     ElseIf status = "active" Then
-                        lblStatus.Text = "✅ مفعل (نشط)"
+                        lblStatus.Text = "● الترخيص نشط ومصرّح به"
                         lblStatus.ForeColor = Color.FromArgb(52, 211, 153)
+                        pnlStatusBadge.FillColor = Color.FromArgb(15, 47, 36)
+                        pnlStatusBadge.BorderColor = Color.FromArgb(16, 185, 129)
                     Else
                         lblStatus.Text = "غير مفعل (" & status & ")"
-                        lblStatus.ForeColor = Color.FromArgb(239, 68, 68)
+                        lblStatus.ForeColor = Color.FromArgb(248, 113, 113)
+                        pnlStatusBadge.FillColor = Color.FromArgb(45, 20, 20)
+                        pnlStatusBadge.BorderColor = Color.FromArgb(239, 68, 68)
                     End If
 
                     ' فترة السماح
@@ -85,11 +95,11 @@ Namespace UC_Settings
                     Dim serial = Convert.ToString(license("saved_serial"))
                     lblSerial.Text = If(String.IsNullOrWhiteSpace(serial), "غير متوفر", serial)
 
-                    ' اسم المنشأة
+                    ' اسم الشركة
                     Dim company = Convert.ToString(license("company_name"))
                     lblCompanyName.Text = If(String.IsNullOrWhiteSpace(company), "شركة عامة", company)
 
-                    ' كود / معرف المنشأة
+                    ' كود / معرف الشركة
                     Dim companyId = Convert.ToString(license("company_id"))
                     lblCompanyId.Text = If(String.IsNullOrWhiteSpace(companyId), "-", companyId)
 
@@ -99,35 +109,63 @@ Namespace UC_Settings
 
                     ' قناة التحديث
                     Dim channel = Convert.ToString(license("channel")).ToUpperInvariant()
+                    Dim channelDisplay = "قناة عامة مستقرة (PUBLIC)"
                     If channel = "BETA" Then
-                        lblChannel.Text = "قناة تجريبية (BETA)"
+                        channelDisplay = "قناة تجريبية (BETA)"
+                        lblChannel.Text = channelDisplay
                         lblChannel.ForeColor = Color.FromArgb(245, 158, 11)
                     Else
-                        lblChannel.Text = "قناة عامة مستقرة (PUBLIC)"
+                        lblChannel.Text = channelDisplay
                         lblChannel.ForeColor = Color.FromArgb(52, 211, 153)
                     End If
 
+                    ' تحديث شريط الملخص العلوي (Hero Banner)
+                    lblHeroCompany.Text = $"الشركة المرخصة: {lblCompanyName.Text}"
+                    lblHeroPlan.Text = $"الخطة السحابية: {lblPlanName.Text}  |  {channelDisplay}"
+                    lblHeroExpiry.Text = If(hasExpiry, $"تاريخ الانتهاء: {expiresAt:yyyy-MM-dd}", "تاريخ الانتهاء: دائم / غير محدد")
+                    lblHeroGrace.Text = $"فترة السماح: {lblGracePeriod.Text}"
+
                     ' الأجهزة والمستخدمين
                     Dim maxDevices = Convert.ToString(license("max_devices"))
-                    lblMaxDevices.Text = If(String.IsNullOrWhiteSpace(maxDevices), "-", maxDevices)
+                    lblMaxDevices.Text = If(String.IsNullOrWhiteSpace(maxDevices), "-", $"{maxDevices} أجهزة")
 
                     Dim maxUsers = Convert.ToString(license("max_users"))
-                    lblMaxUsers.Text = If(String.IsNullOrWhiteSpace(maxUsers), "-", maxUsers)
+                    lblMaxUsers.Text = If(String.IsNullOrWhiteSpace(maxUsers), "-", $"{maxUsers} مستخدمين")
 
-                    ' السعر
+                    ' التكلفة والعملة
                     If String.Equals(plan, "trial", StringComparison.OrdinalIgnoreCase) Then
                         lblPrice.Text = "نسخة تجريبية مجانية"
+                        lblPrice.ForeColor = Color.FromArgb(251, 191, 36)
                     Else
-                        Dim price = Convert.ToString(license("price"))
-                        Dim currency = Convert.ToString(license("currency"))
-                        If String.IsNullOrWhiteSpace(currency) Then currency = "USD"
-                        If String.IsNullOrWhiteSpace(price) Then price = "0.00"
-                        lblPrice.Text = price & " " & currency
+                        Dim priceVal As Decimal = 0
+                        Dim priceStr = Convert.ToString(license("price"))
+                        Decimal.TryParse(priceStr, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, priceVal)
+
+                        Dim rawCurrency = Convert.ToString(license("currency"))?.Trim()
+                        Dim displayCurrency = "ج.م"
+                        If Not String.IsNullOrWhiteSpace(rawCurrency) Then
+                            If rawCurrency.Equals("EGP", StringComparison.OrdinalIgnoreCase) OrElse rawCurrency.Contains("جني") OrElse rawCurrency.Contains("ج.م") Then
+                                displayCurrency = "ج.م"
+                            ElseIf rawCurrency.Equals("USD", StringComparison.OrdinalIgnoreCase) OrElse rawCurrency = "$" Then
+                                displayCurrency = "$"
+                            ElseIf rawCurrency.Equals("SAR", StringComparison.OrdinalIgnoreCase) OrElse rawCurrency.Contains("ريال") Then
+                                displayCurrency = "ر.س"
+                            Else
+                                displayCurrency = rawCurrency
+                            End If
+                        End If
+
+                        If priceVal > 0 Then
+                            lblPrice.Text = $"{priceVal:N2} {displayCurrency}"
+                        Else
+                            lblPrice.Text = $"0.00 {displayCurrency}"
+                        End If
+                        lblPrice.ForeColor = Color.White
                     End If
 
                     ' حالة الجهاز والإصدار
                     Dim appVer = Application.ProductVersion
-                    lblDeviceStatus.Text = $"الجهاز: {Environment.MachineName} | الحالة: نشط وغير محظور (Active) ✅ | الإصدار: v{appVer}"
+                    lblDeviceStatus.Text = $"الجهاز: {Environment.MachineName}  |  الحالة: نشط ومصرّح بالعمل ✅  |  الإصدار: v{appVer}"
                     lblDeviceStatus.ForeColor = Color.FromArgb(52, 211, 153)
 
                     ' آخر اتصال ومزامنة
@@ -141,7 +179,15 @@ Namespace UC_Settings
 
                 Else
                     lblStatus.Text = "⚠️ غير مفعل"
-                    lblStatus.ForeColor = Color.FromArgb(239, 68, 68)
+                    lblStatus.ForeColor = Color.FromArgb(248, 113, 113)
+                    pnlStatusBadge.FillColor = Color.FromArgb(45, 20, 20)
+                    pnlStatusBadge.BorderColor = Color.FromArgb(239, 68, 68)
+
+                    lblHeroCompany.Text = "الشركة المرخصة: -"
+                    lblHeroPlan.Text = "الخطة: غير محدد"
+                    lblHeroExpiry.Text = "تاريخ الانتهاء: -"
+                    lblHeroGrace.Text = "فترة السماح: -"
+
                     lblStartDate.Text = "-"
                     lblExpiryDate.Text = "-"
                     lblGracePeriod.Text = "-"
@@ -196,9 +242,9 @@ Namespace UC_Settings
                 If Not String.IsNullOrWhiteSpace(lblCompanyId.Text) AndAlso lblCompanyId.Text <> "-" Then
                     Clipboard.SetText(lblCompanyId.Text)
                     Try
-                        Notify.Toast("تم نسخ كود المنشأة إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
+                        Notify.Toast("تم نسخ معرّف الشركة إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("تم نسخ كود المنشأة بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        MessageBox.Show("تم نسخ معرّف الشركة بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception

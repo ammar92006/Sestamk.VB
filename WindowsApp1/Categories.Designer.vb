@@ -465,7 +465,6 @@ Partial Class Categories
         Me.txtDescription.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.txtDescription.Name = "txtDescription"
         Me.txtDescription.PlaceholderText = ""
-        Me.txtDescription.ReadOnly = True
         Me.txtDescription.SelectedText = ""
         Me.txtDescription.Size = New System.Drawing.Size(311, 45)
         Me.txtDescription.TabIndex = 5592
@@ -534,7 +533,6 @@ Partial Class Categories
         Me.txtCategoryNameEn.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.txtCategoryNameEn.Name = "txtCategoryNameEn"
         Me.txtCategoryNameEn.PlaceholderText = ""
-        Me.txtCategoryNameEn.ReadOnly = True
         Me.txtCategoryNameEn.SelectedText = ""
         Me.txtCategoryNameEn.Size = New System.Drawing.Size(311, 45)
         Me.txtCategoryNameEn.TabIndex = 5586
@@ -567,7 +565,6 @@ Partial Class Categories
         Me.txtCategoryNameAr.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.txtCategoryNameAr.Name = "txtCategoryNameAr"
         Me.txtCategoryNameAr.PlaceholderText = ""
-        Me.txtCategoryNameAr.ReadOnly = True
         Me.txtCategoryNameAr.SelectedText = ""
         Me.txtCategoryNameAr.Size = New System.Drawing.Size(311, 45)
         Me.txtCategoryNameAr.TabIndex = 5584

@@ -252,6 +252,7 @@ Namespace UC_Settings
             ' ضبط الافتراضيات لـ LocalDB
             txtDbServer.Text = "(localdb)\MSSQLLocalDB"
             chkWindowsAuth.Checked = True
+            DBModule.encryptConnection = False
             UpdateAuthFields()
 
             Dim chkTask = RefreshLocalDbStatusAsync()
@@ -489,6 +490,7 @@ Namespace UC_Settings
                         lblLocalDbStatusText.Text = $"[{p.Percentage}%] {p.CurrentStep}: {p.Message}"
                     End Sub)
 
+                DBModule.encryptConnection = False
                 Dim maint As New DatabaseMaintenanceService("(localdb)\MSSQLLocalDB", targetDb, "", "", True)
                 Dim report = Await maint.CheckAndRepairDatabaseAsync(progressIndicator)
 
@@ -510,6 +512,7 @@ Namespace UC_Settings
                     DBModule.useAttachDb = chkAttachDb.Checked
                     DBModule.attachDbPath = txtAttachDbPath.Text.Trim()
                     DBModule.localDbInstanceName = "MSSQLLocalDB"
+                    DBModule.encryptConnection = False
                     DBModule.SaveDbSettings()
 
                     lblLocalDbStatusText.Text = $"✅ قاعدة بيانات LocalDB [{targetDb}] جاهزة وتعمل بنشاط!"

@@ -4,7 +4,18 @@ Imports WindowsApp1.FrmTreasuryTransaction
 
 Public Class MainForm
 
+    <StructLayout(LayoutKind.Sequential)>
+    Private Structure LASTINPUTINFO
+        Public cbSize As UInteger
+        Public dwTime As UInteger
+    End Structure
+
+    <DllImport("user32.dll")>
+    Private Shared Function GetLastInputInfo(ByRef plii As LASTINPUTINFO) As Boolean
+    End Function
+
     Private _isLoggingOut As Boolean = False
+    Private _inactivityCounter As Integer = 0
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
         Application.Exit()
@@ -19,15 +30,19 @@ Public Class MainForm
     End Sub
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        TabControl1.RightToLeft = RightToLeft.Yes
+        TabControl1.RightToLeftLayout = False
+        TabControl1.Alignment = TabAlignment.Top
+        TabControl1.DrawMode = TabDrawMode.Normal
+        TabControl1.SizeMode = TabSizeMode.Normal
+
+        ReverseTabPages()
         Dim Drag As FormDragHelper
         Drag = New FormDragHelper(Me, panelHeader)
         Drag = New FormDragHelper(Me, lbltitle)
 
         ' تهيئة شريط الحالة وبيانات الجلسة
         InitializeStatusBar()
-
-        ' تعيين الشاشة النشطة الافتراضية
-        SetActiveNav(navDashboard, viewDashboard)
 
         ' تطبيق ثيم MainForm المتوافق مع الهوية الأصلية
         ApplyMainFormTheme()
@@ -40,9 +55,6 @@ Public Class MainForm
         tmrClock.Start()
         tmrDashboardRefresh.Start()
 
-        ' بدء خدمة القفل التلقائي للجلسة عند الخمول في الخلفية (أداء فائق وخفيف تماماً)
-        WindowsApp1.Services.SessionLockService.Instance.StartMonitoring(Me)
-
         ' استمرار مزامنة المستخدمين التلقائية في الخلفية
         WindowsApp1.Services.Sync.UserSyncService.StartBackgroundSync(25)
 
@@ -51,7 +63,6 @@ Public Class MainForm
             Dim tip As New ToolTip()
             tip.SetToolTip(btnLogout, "تسجيل الخروج من النظام وإغلاق كافة الشاشات المفتوحة (Ctrl+Q)")
             tip.SetToolTip(btnSupport, "فتح صفحة الدعم الفني على موقع سستمك الرسمي (https://sestamk.site.je/contact)")
-            tip.SetToolTip(txtGlobalSearch, "البحث السريع في كافة شاشات ووظائف النظام (Ctrl+K)")
         Catch
         End Try
 
@@ -62,13 +73,8 @@ Public Class MainForm
     Private Sub InitializeStatusBar()
         Try
             Dim displayName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, Session.CurrentUserName)
-            Dim userTitle As String = If(String.IsNullOrEmpty(displayName), "المدير العام", displayName)
-            Dim roleTitle As String = If(Session.CurrentRoleID = 1, "مدير النظام", "مستخدم نظام")
-            lblStatusUser.Text = "المستخدم: " & userTitle
-            lblStatusRole.Text = "الصلاحية: " & roleTitle
-            If lblStatusUserRole IsNot Nothing Then
-                lblStatusUserRole.Text = userTitle & " (" & roleTitle & ")"
-            End If
+            lblStatusUser.Text = "👤 المستخدم: " & If(String.IsNullOrEmpty(displayName), "المدير العام", displayName)
+            lblStatusRole.Text = "🛡️ الصلاحية: " & If(Session.CurrentRoleID = 1, "مدير النظام", "مستخدم نظام")
 
             Dim branchName As String = "الفرع الرئيسي"
             Try
@@ -78,10 +84,7 @@ Public Class MainForm
                 End If
             Catch
             End Try
-            lblStatusBranch.Text = "الفرع: " & branchName
-            If lblHeaderBranch IsNot Nothing Then
-                lblHeaderBranch.Text = "الفرع: " & branchName
-            End If
+            lblStatusBranch.Text = "🏢 الفرع: " & branchName
 
             UpdateDateTimeAndShift()
         Catch ex As Exception
@@ -92,7 +95,7 @@ Public Class MainForm
     Private Sub UpdateDateTimeAndShift()
         Try
             Dim nowTime As DateTime = DateTime.Now
-            lblStatusDateTime.Text = nowTime.ToString("dddd, dd MMMM yyyy - hh:mm:ss tt")
+            lblStatusDateTime.Text = "📅 " & nowTime.ToString("dddd, dd MMMM yyyy - hh:mm:ss tt")
 
             ' التحية الذكية حسب الوقت
             Dim hour As Integer = nowTime.Hour
@@ -106,17 +109,17 @@ Public Class MainForm
             End If
             Dim uName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, Session.CurrentUserName)
             If String.IsNullOrEmpty(uName) Then uName = "المدير العام"
-            lblWelcomeGreeting.Text = greeting & "، " & uName
+            lblWelcomeGreeting.Text = greeting & "، " & uName & " 👋"
 
             ' مدة الوردية النشطة
             If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
                 Dim shiftDuration As TimeSpan = nowTime - ShiftSession.CurrentShift.OpenDateTime
                 Dim durationStr As String = String.Format("{0:D2}:{1:D2}:{2:D2}", CInt(Math.Floor(shiftDuration.TotalHours)), shiftDuration.Minutes, shiftDuration.Seconds)
-                lblShiftDuration.Text = "مدة الوردية: " & durationStr
-                lblStatusShift.Text = "الوردية #" & ShiftSession.CurrentShift.ShiftNumber & " (" & durationStr & ")"
+                lblShiftDuration.Text = "⏱️ مدة الوردية: " & durationStr
+                lblStatusShift.Text = "⏰ الوردية #" & ShiftSession.CurrentShift.ShiftNumber & " (" & durationStr & ")"
             Else
-                lblShiftDuration.Text = "الوردية: مغلقة"
-                lblStatusShift.Text = "الوردية: لا توجد وردية نشطة"
+                lblShiftDuration.Text = "⏱️ الوردية: مغلقة"
+                lblStatusShift.Text = "⏰ الوردية: لا توجد وردية نشطة"
             End If
         Catch ex As Exception
         End Try
@@ -124,6 +127,44 @@ Public Class MainForm
 
     Private Sub tmrClock_Tick(sender As Object, e As EventArgs) Handles tmrClock.Tick
         UpdateDateTimeAndShift()
+
+        ' فحص خمول المستخدم كل 5 ثوانٍ
+        _inactivityCounter += 1
+        If _inactivityCounter >= 5 Then
+            _inactivityCounter = 0
+            CheckUserInactivity()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' فحص خمول المستخدم وقفل الشاشة تلقائياً حسب إعدادات النظام
+    ''' </summary>
+    Private Sub CheckUserInactivity()
+        Try
+            If _isLoggingOut Then Return
+
+            Dim isEnabled As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoLogoutEnabled, False)
+            If Not isEnabled Then Return
+
+            Dim timeoutMinutes As Integer = SettingsManager.GetIntSetting(SettingsKeys.SystemAutoLogoutTimer, 15)
+            If timeoutMinutes <= 0 Then Return
+
+            Dim lii As New LASTINPUTINFO()
+            lii.cbSize = CUInt(Marshal.SizeOf(GetType(LASTINPUTINFO)))
+
+            If GetLastInputInfo(lii) Then
+                Dim currentTicks As UInteger = CUInt(Environment.TickCount)
+                Dim idleTicks As UInteger = currentTicks - lii.dwTime
+                Dim timeoutMs As UInteger = CUInt(timeoutMinutes) * 60UI * 1000UI
+
+                If idleTicks >= timeoutMs Then
+                    _isLoggingOut = True
+                    PerformLogout(isAuto:=True)
+                End If
+            End If
+        Catch ex As Exception
+            Logger.LogError("CheckUserInactivity", ex)
+        End Try
     End Sub
 
     Private Sub tmrDashboardRefresh_Tick(sender As Object, e As EventArgs) Handles tmrDashboardRefresh.Tick
@@ -149,7 +190,7 @@ Public Class MainForm
             Logger.LogError("RefreshDashboardAsync", ex)
         Finally
             btnRefreshDashboard.Enabled = True
-            btnRefreshDashboard.Text = "تحديث البيانات"
+            btnRefreshDashboard.Text = "🔄 تحديث البيانات"
         End Try
     End Sub
 
@@ -302,22 +343,22 @@ Public Class MainForm
 
             ' التنبيهات الذكية
             If lowStockCnt > 0 Then
-                lblAlertStockTitle.Text = "نواقص المخزون (" & lowStockCnt & " صنف)"
+                lblAlertStockTitle.Text = "⚠️ نواقص المخزون (" & lowStockCnt & " صنف)"
                 lblAlertStockDesc.Text = "يوجد " & lowStockCnt & " أصناف وصلت أو تجاوزت حد الطلب الأدنى"
             Else
-                lblAlertStockTitle.Text = "المخزون سليم"
+                lblAlertStockTitle.Text = "✅ المخزون سليم"
                 lblAlertStockDesc.Text = "لا توجد أصناف تحت حد الطلب الأدنى حالياً"
             End If
 
             If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
-                lblAlertShiftTitle.Text = "وردية نشطة رقم #" & ShiftSession.CurrentShift.ShiftNumber
+                lblAlertShiftTitle.Text = "⏰ وردية نشطة رقم #" & ShiftSession.CurrentShift.ShiftNumber
                 lblAlertShiftDesc.Text = "بدأت في: " & ShiftSession.CurrentShift.OpenDateTime.ToString("hh:mm tt")
             Else
-                lblAlertShiftTitle.Text = "لا توجد وردية نشطة"
+                lblAlertShiftTitle.Text = "⚠️ لا توجد وردية نشطة"
                 lblAlertShiftDesc.Text = "يجب فتح وردية جديدة قبل بدء عمليات البيع"
             End If
 
-            lblAlertBackupTitle.Text = "حالة النسخ الاحتياطي"
+            lblAlertBackupTitle.Text = "💾 حالة النسخ الاحتياطي"
             lblAlertBackupDesc.Text = "النظام مؤمن بنسخ احتياطي يومي مجدول"
 
         Catch ex As Exception
@@ -327,198 +368,54 @@ Public Class MainForm
 
 
 
-    ''' <summary>
-    ''' التبديل السلس بين شاشات وأقسام النظام بالسايدبار وتحديث المظهر
-    ''' </summary>
-    Private Sub SetActiveNav(activeBtn As Guna.UI2.WinForms.Guna2Button, targetView As Control)
-        Dim navButtons() As Guna.UI2.WinForms.Guna2Button = {navDashboard, navSales, navSystem, navInventory, navPurchases, navCustomers, navSuppliers, navTreasury, navExpenses, navEmployees, navUsers, navSettings}
-        For Each btn In navButtons
-            If btn IsNot Nothing Then
-                btn.FillColor = Color.Transparent
-                btn.ForeColor = Color.FromArgb(209, 213, 219)
-            End If
+    Private Sub ReverseTabPages()
+        Dim pages As New List(Of TabPage)
+        For Each page As TabPage In TabControl1.TabPages
+            pages.Add(page)
         Next
-
-        If activeBtn IsNot Nothing Then
-            activeBtn.FillColor = Color.FromArgb(37, 99, 235)
-            activeBtn.ForeColor = Color.White
-        End If
-
-        Dim allViews() As Control = {viewDashboard, viewSales, viewSystem, viewInventory, viewPurchases, viewCustomers, viewSuppliers, viewTreasury, viewExpenses, viewEmployees, viewUsers, viewSettings}
-        For Each v In allViews
-            If v IsNot Nothing AndAlso v IsNot targetView Then
-                v.Visible = False
-            End If
+        TabControl1.TabPages.Clear()
+        For i As Integer = pages.Count - 1 To 0 Step -1
+            TabControl1.TabPages.Add(pages(i))
         Next
-
-        If targetView IsNot Nothing Then
-            targetView.Visible = True
-            targetView.BringToFront()
-        End If
-    End Sub
-
-    Private Sub navDashboard_Click(sender As Object, e As EventArgs) Handles navDashboard.Click
-        SetActiveNav(navDashboard, viewDashboard)
-    End Sub
-
-    Private Sub navSales_Click(sender As Object, e As EventArgs) Handles navSales.Click
-        SetActiveNav(navSales, viewSales)
-    End Sub
-
-    Private Sub navSystem_Click(sender As Object, e As EventArgs) Handles navSystem.Click
-        SetActiveNav(navSystem, viewSystem)
-    End Sub
-
-    Private Sub navInventory_Click(sender As Object, e As EventArgs) Handles navInventory.Click
-        SetActiveNav(navInventory, viewInventory)
-    End Sub
-
-    Private Sub navPurchases_Click(sender As Object, e As EventArgs) Handles navPurchases.Click
-        SetActiveNav(navPurchases, viewPurchases)
-    End Sub
-
-    Private Sub navCustomers_Click(sender As Object, e As EventArgs) Handles navCustomers.Click
-        SetActiveNav(navCustomers, viewCustomers)
-    End Sub
-
-    Private Sub navSuppliers_Click(sender As Object, e As EventArgs) Handles navSuppliers.Click
-        SetActiveNav(navSuppliers, viewSuppliers)
-    End Sub
-
-    Private Sub navTreasury_Click(sender As Object, e As EventArgs) Handles navTreasury.Click
-        SetActiveNav(navTreasury, viewTreasury)
-    End Sub
-
-    Private Sub navExpenses_Click(sender As Object, e As EventArgs) Handles navExpenses.Click
-        SetActiveNav(navExpenses, viewExpenses)
-    End Sub
-
-    Private Sub navEmployees_Click(sender As Object, e As EventArgs) Handles navEmployees.Click
-        SetActiveNav(navEmployees, viewEmployees)
-    End Sub
-
-    Private Sub navUsers_Click(sender As Object, e As EventArgs) Handles navUsers.Click
-        SetActiveNav(navUsers, viewUsers)
-    End Sub
-
-    Private Sub navSettings_Click(sender As Object, e As EventArgs) Handles navSettings.Click
-        SetActiveNav(navSettings, viewSettings)
-    End Sub
-
-    Private Sub btnBackToDashboard_Click(sender As Object, e As EventArgs) Handles btnBackSales.Click, btnBackSystem.Click, btnBackInventory.Click, btnBackPurchases.Click, btnBackCustomers.Click, btnBackSuppliers.Click, btnBackTreasury.Click, btnBackExpenses.Click, btnBackEmployees.Click, btnBackUsers.Click, btnBackSettings.Click
-        SetActiveNav(navDashboard, viewDashboard)
-    End Sub
-
-    Private Sub txtGlobalSearch_TextChanged(sender As Object, e As EventArgs) Handles txtGlobalSearch.TextChanged
-        Dim term As String = txtGlobalSearch.Text.Trim().ToLower()
-        If String.IsNullOrWhiteSpace(term) Then Return
-
-        If term.Contains("بيع") OrElse term.Contains("pos") OrElse term.Contains("كاشير") OrElse term.Contains("مطبخ") OrElse term.Contains("kds") OrElse term.Contains("هالك") OrElse term.Contains("طاول") OrElse term.Contains("مرتجع") Then
-            SetActiveNav(navSales, viewSales)
-        ElseIf term.Contains("صنف") OrElse term.Contains("فئة") OrElse term.Contains("منيو") OrElse term.Contains("وردية") OrElse term.Contains("فرع") OrElse term.Contains("طيار") OrElse term.Contains("توصيل") Then
-            SetActiveNav(navSystem, viewSystem)
-        ElseIf term.Contains("مخزن") OrElse term.Contains("خام") OrElse term.Contains("ريسيبي") OrElse term.Contains("مخزون") OrElse term.Contains("وحد") Then
-            SetActiveNav(navInventory, viewInventory)
-        ElseIf term.Contains("شراء") OrElse term.Contains("مشتريات") OrElse term.Contains("توريد") Then
-            SetActiveNav(navPurchases, viewPurchases)
-        ElseIf term.Contains("عميل") OrElse term.Contains("عملاء") OrElse term.Contains("دين") Then
-            SetActiveNav(navCustomers, viewCustomers)
-        ElseIf term.Contains("مورد") OrElse term.Contains("موردين") Then
-            SetActiveNav(navSuppliers, viewSuppliers)
-        ElseIf term.Contains("خزن") OrElse term.Contains("خزينة") OrElse term.Contains("سحب") OrElse term.Contains("إيداع") OrElse term.Contains("ايداع") Then
-            SetActiveNav(navTreasury, viewTreasury)
-        ElseIf term.Contains("مصروف") OrElse term.Contains("مصاريف") OrElse term.Contains("نثريات") Then
-            SetActiveNav(navExpenses, viewExpenses)
-        ElseIf term.Contains("موظف") OrElse term.Contains("راتب") OrElse term.Contains("رواتب") OrElse term.Contains("سلف") OrElse term.Contains("مرتب") Then
-            SetActiveNav(navEmployees, viewEmployees)
-        ElseIf term.Contains("مستخدم") OrElse term.Contains("صلاحي") OrElse term.Contains("دور") OrElse term.Contains("كلمة سر") Then
-            SetActiveNav(navUsers, viewUsers)
-        ElseIf term.Contains("طابع") OrElse term.Contains("نسخ") OrElse term.Contains("إعداد") OrElse term.Contains("اعداد") OrElse term.Contains("ألوان") Then
-            SetActiveNav(navSettings, viewSettings)
-        End If
-    End Sub
-
-    Private Sub txtGlobalSearch_KeyDown(sender As Object, e As KeyEventArgs) Handles txtGlobalSearch.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.Handled = True
-            e.SuppressKeyPress = True
-            Dim term As String = txtGlobalSearch.Text.Trim().ToLower()
-            If term.Contains("بيع") OrElse term.Contains("pos") OrElse term.Contains("كاشير") Then
-                btnfrmPOS.PerformClick()
-            ElseIf term.Contains("مطبخ") OrElse term.Contains("kds") Then
-                btnKds.PerformClick()
-            ElseIf term.Contains("صنف") OrElse term.Contains("منتج") Then
-                btnProducts.PerformClick()
-            ElseIf term.Contains("خزينة") OrElse term.Contains("خزن") Then
-                btnfrmTreasury.PerformClick()
-            ElseIf term.Contains("ايداع") OrElse term.Contains("إيداع") Then
-                btnDeposit.PerformClick()
-            ElseIf term.Contains("سحب") Then
-                btnWithdraw.PerformClick()
-            ElseIf term.Contains("عميل") Then
-                btnFrmCustomers.PerformClick()
-            ElseIf term.Contains("مورد") Then
-                ToolStripButton3.PerformClick()
-            ElseIf term.Contains("شراء") OrElse term.Contains("مشتريات") Then
-                btnfrmPurchases.PerformClick()
-            ElseIf term.Contains("مصروف") Then
-                btnform_Expenses.PerformClick()
-            ElseIf term.Contains("موظف") Then
-                btnfrmEmployees.PerformClick()
-            ElseIf term.Contains("طابع") Then
-                btnfrmPrinters.PerformClick()
-            ElseIf term.Contains("نسخ") Then
-                btnBackups.PerformClick()
-            ElseIf term.Contains("اعداد") OrElse term.Contains("إعداد") Then
-                btnSettings.PerformClick()
-            End If
-        End If
     End Sub
 
     Public Sub ApplyMainFormTheme()
         Try
             Dim pal = ThemeManager.Instance.CurrentPalette
 
-            ' خلفية الفورم والحاويات الرئيسية
+            ' خلفية الفورم والداشبورد
             Me.BackColor = pal.Background
-            pnlMainContainer.BackColor = pal.Background
+            pnlDashboard.BackColor = pal.Background
             pnlWelcome.BackColor = pal.Background
 
             ' الهيدر يظل داكناً بالهوية الأصلية
             panelHeader.FillColor = pal.SurfaceHeader
-            pnlSidebar.FillColor = pal.SurfaceHeader
-            lbltitle.BackColor = Color.Transparent
             lbltitle.ForeColor = pal.TextOnDark
-            If lblHeaderBranch IsNot Nothing Then
-                lblHeaderBranch.BackColor = Color.Transparent
-                lblHeaderBranch.ForeColor = Color.FromArgb(203, 213, 225)
-            End If
-            If lblStatusUserRole IsNot Nothing Then
-                lblStatusUserRole.BackColor = Color.Transparent
-                lblStatusUserRole.ForeColor = Color.FromArgb(147, 197, 253)
-            End If
-            If picLogo IsNot Nothing Then picLogo.BackColor = Color.Transparent
 
             ' أزرار التحكم بالنافذة
-            btn_min.FillColor = Color.Transparent
-            btn_min.ForeColor = pal.TextOnDark
-            btn_max.FillColor = Color.Transparent
-            btn_max.ForeColor = pal.TextOnDark
-            btn_close.FillColor = Color.Transparent
-            btn_close.ForeColor = pal.TextOnDark
+            btn_min.Appearance.BackColor = pal.SurfaceHeader
+            btn_min.Appearance.ForeColor = pal.TextOnDark
+            btn_min.Appearance.Options.UseBackColor = True
+            btn_min.Appearance.Options.UseForeColor = True
 
-            btnLogout.FillColor = pal.ButtonSecondaryBackground
-            btnLogout.ForeColor = pal.ButtonSecondaryForeground
-            btnLogout.BorderColor = pal.Border
-            btnSupport.FillColor = pal.ButtonSecondaryBackground
-            btnSupport.ForeColor = pal.ButtonSecondaryForeground
-            btnSupport.BorderColor = pal.Border
+            btn_max.Appearance.BackColor = pal.SurfaceHeader
+            btn_max.Appearance.ForeColor = pal.TextOnDark
+            btn_max.Appearance.Options.UseBackColor = True
+            btn_max.Appearance.Options.UseForeColor = True
 
-            ' شريط البحث في الهيدر متناسق مع الهيدر الداكن
-            txtGlobalSearch.FillColor = Color.FromArgb(23, 30, 44)
-            txtGlobalSearch.ForeColor = Color.White
-            txtGlobalSearch.PlaceholderForeColor = Color.FromArgb(148, 163, 184)
-            txtGlobalSearch.BorderColor = Color.FromArgb(38, 51, 72)
+            btn_close.Appearance.BackColor = pal.SurfaceHeader
+            btn_close.Appearance.ForeColor = pal.TextOnDark
+            btn_close.Appearance.Options.UseBackColor = True
+            btn_close.Appearance.Options.UseForeColor = True
+
+            ' شريط التبويبات
+            TabControl1.BackColor = pal.Background
+            For Each pg As TabPage In TabControl1.TabPages
+                pg.BackColor = pal.Background
+            Next
+
+            ' أشرطة الأدوات ToolStrip
+            ThemeHelper.ApplyToolStripRenderer(Me, pal)
 
             ' عناصر الترحيب والساعة
             lblWelcomeGreeting.ForeColor = pal.TextPrimary
@@ -603,10 +500,6 @@ Public Class MainForm
                 End If
             Next
 
-            lblAlertStockTitle.ForeColor = pal.TextPrimary
-            lblAlertShiftTitle.ForeColor = pal.TextPrimary
-            lblAlertBackupTitle.ForeColor = pal.TextPrimary
-
             lblAlertStockDesc.ForeColor = pal.TextSecondary
             lblAlertShiftDesc.ForeColor = pal.TextSecondary
             lblAlertBackupDesc.ForeColor = pal.TextSecondary
@@ -629,69 +522,6 @@ Public Class MainForm
                     qb.BorderThickness = 1
                     qb.BorderColor = pal.Border
                 End If
-            Next
-
-            ' أزرار الأقسام (Action Tiles)
-            Dim allTiles() As Guna.UI2.WinForms.Guna2Button = {
-                btnfrmPOS, btnSalesReturns, btnFrmSalesReport, btnFrmDriverReport, btnKds, btnWaste, btnRes,
-                btnCategories, btnProducts, btnfrmProductSizes, btnfrmProductAddons, btnfrmKitchenComments, btnfrmDeliveryAreas, btnfrmDeliveryDrivers, btnfrmShifts, btnShiftReports, btnfrmBranches,
-                btnfrmStoreStock, btnfrmRawMaterials, btnfrmRecipes, btnfrmStores, btnfrmUnits,
-                btnfrmPurchases, btnfrmPurchaseReports,
-                btnFrmCustomers, btnFrmCustomerStatement, btnCustomerBalanceDownload, ToolStripButton11,
-                ToolStripButton3, ToolStripButton4, ToolStripButton5,
-                btnfrmTreasury, btnFrmTreasuryTransfer, btnDeposit, btnWithdraw, btnFrmTreasuryTransactionsReport,
-                btnform_Expenses, btnExpensesReportForm,
-                btnfrmEmployees, btnfrmJobTitles, btnfrmDepartments, btnfrmSalarySystems, btnfrmSalaryPayment,
-                btnfrmUsers, btnfrmRolesAndPermissions,
-                btnSettings, btnfrmPrinters, btnBackups, btnfrmRestaurantSections, btnfrmRestaurantTables, btnfrmColors
-            }
-
-            For Each tile In allTiles
-                If tile IsNot Nothing Then
-                    tile.FillColor = pal.CardBackground
-                    tile.BorderColor = pal.Border
-                    tile.ForeColor = pal.TextPrimary
-                    tile.HoverState.FillColor = pal.Primary
-                    tile.HoverState.BorderColor = pal.PrimaryHover
-                    tile.HoverState.ForeColor = pal.TextOnPrimary
-                End If
-            Next
-
-            ' أزرار العودة في هيدر الأقسام
-            Dim backBtns() As Guna.UI2.WinForms.Guna2Button = {btnBackSales, btnBackSystem, btnBackInventory, btnBackPurchases, btnBackCustomers, btnBackSuppliers, btnBackTreasury, btnBackExpenses, btnBackEmployees, btnBackUsers, btnBackSettings}
-            For Each bb In backBtns
-                If bb IsNot Nothing Then
-                    bb.FillColor = pal.ButtonSecondaryBackground
-                    bb.ForeColor = pal.ButtonSecondaryForeground
-                    bb.BorderColor = pal.Border
-                End If
-            Next
-
-            ' عناوين ونصوص ووصف الأقسام
-            Dim secTitles() As Label = {lblTitleSales, lblTitleSystem, lblTitleInventory, lblTitlePurchases, lblTitleCustomers, lblTitleSuppliers, lblTitleTreasury, lblTitleExpenses, lblTitleEmployees, lblTitleUsers, lblTitleSettings}
-            For Each lt In secTitles
-                If lt IsNot Nothing Then lt.ForeColor = pal.TextPrimary
-            Next
-
-            Dim secDescs() As Label = {lblDescSales, lblDescSystem, lblDescInventory, lblDescPurchases, lblDescCustomers, lblDescSuppliers, lblDescTreasury, lblDescExpenses, lblDescEmployees, lblDescUsers, lblDescSettings}
-            For Each ld In secDescs
-                If ld IsNot Nothing Then ld.ForeColor = pal.TextSecondary
-            Next
-
-            ' خلفيات شاشات الأقسام وحاوياتها
-            Dim allSecViews() As Control = {viewSales, viewSystem, viewInventory, viewPurchases, viewCustomers, viewSuppliers, viewTreasury, viewExpenses, viewEmployees, viewUsers, viewSettings}
-            For Each sv In allSecViews
-                If sv IsNot Nothing Then sv.BackColor = pal.Background
-            Next
-
-            Dim secFlps() As FlowLayoutPanel = {flpSales, flpSystem, flpInventory, flpPurchases, flpCustomers, flpSuppliers, flpTreasury, flpExpenses, flpEmployees, flpUsers, flpSettings}
-            For Each fp In secFlps
-                If fp IsNot Nothing Then fp.BackColor = pal.Background
-            Next
-
-            Dim secHeaders() As Panel = {pnlHeaderSales, pnlHeaderSystem, pnlHeaderInventory, pnlHeaderPurchases, pnlHeaderCustomers, pnlHeaderSuppliers, pnlHeaderTreasury, pnlHeaderExpenses, pnlHeaderEmployees, pnlHeaderUsers, pnlHeaderSettings}
-            For Each hp In secHeaders
-                If hp IsNot Nothing Then hp.BackColor = pal.Background
             Next
 
             ' زر تسجيل الخروج الاحترافي في الهيدر
@@ -935,10 +765,11 @@ Public Class MainForm
         OpenFormOnce(GetType(Reports), ToolStripButton11)
     End Sub
 
-    Private Sub OpenTreasuryWithOperation(op As FrmTreasuryTransaction.TreasuryOperation, btn As Control)
+    Private Sub OpenTreasuryWithOperation(op As FrmTreasuryTransaction.TreasuryOperation, btn As ToolStripButton)
         If Not Session.HasPermission("FrmTreasuryTransaction", "CanOpen") Then
             Dim dispName As String = Session.GetScreenDisplayName("FrmTreasuryTransaction")
             MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            If btn IsNot Nothing Then btn.Checked = False
             Exit Sub
         End If
 
@@ -951,8 +782,12 @@ Public Class MainForm
                                   Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
                                   ThemeManager.Instance.ApplyTheme(frm)
                               End Sub
+        AddHandler frm.FormClosed, Sub(s, ev)
+                                       If btn IsNot Nothing Then btn.Checked = False
+                                   End Sub
         ThemeManager.Instance.ApplyTheme(frm)
         frm.Show()
+        If btn IsNot Nothing Then btn.Checked = True
     End Sub
 
     Private Sub btnfrmSalaryPayment_Click(sender As Object, e As EventArgs) Handles btnfrmSalaryPayment.Click
@@ -1043,8 +878,7 @@ Public Class MainForm
         Try
             _isLoggingOut = True
 
-            ' 1. إيقاف خدمة مراقبة الخمول ومؤقتات الداشبورد والساعة
-            WindowsApp1.Services.SessionLockService.Instance.StopMonitoring()
+            ' 1. إيقاف مؤقتات الداشبورد والساعة
             tmrClock.Stop()
             tmrDashboardRefresh.Stop()
 
@@ -1063,18 +897,17 @@ Public Class MainForm
                 End If
             Next
 
-            ' 4. تجميع كافة النوافذ المفتوحة عدا شاشة تسجيل الدخول والشاشة الرئيسية لإغلاقها
-            Dim otherForms As New List(Of Form)()
+            ' 4. تجميع كافة النوافذ المفتوحة عدا شاشة تسجيل الدخول لإغلاقها
+            Dim formsToClose As New List(Of Form)()
             For Each frm As Form In Application.OpenForms
-                If frm IsNot loginInstance AndAlso frm IsNot Me Then
-                    otherForms.Add(frm)
+                If frm IsNot loginInstance Then
+                    formsToClose.Add(frm)
                 End If
             Next
 
-            ' إغلاق النوافذ الفرعية بترتيب عكسي لتفكيك النوافذ الحوارية والمودال بأمان تام
-            For i As Integer = otherForms.Count - 1 To 0 Step -1
+            For Each frm In formsToClose
                 Try
-                    otherForms(i).Close()
+                    frm.Close()
                 Catch ex As Exception
                     Logger.LogError("PerformLogout.CloseForm", ex)
                 End Try
@@ -1082,24 +915,20 @@ Public Class MainForm
 
             ' 5. إعادة إظهار وتنشيط شاشة تسجيل الدخول
             If loginInstance IsNot Nothing AndAlso Not loginInstance.IsDisposed Then
-                loginInstance.ResetForLogout(isAutoLock:=isAuto)
+                loginInstance.ResetForLogout()
             Else
                 Dim newLogin As New Login()
                 newLogin.Show()
-                newLogin.ResetForLogout(isAutoLock:=isAuto)
             End If
 
             If isAuto Then
                 Try
-                    Notify.Toast("تم قفل الجلسة تلقائياً بسبب الخمول لعدم الاستخدام 🔒", Notify.ToastType.Warning)
+                    Notify.Toast("تم قفل الشاشة تلقائياً لعدم النشاط 🔒", Notify.ToastType.Warning)
                 Catch
                 End Try
             Else
-                Notify.Toast("تم تسجيل الخروج بنجاح ✅", Notify.ToastType.Info)
+                Notify.Toast("تم تسجيل الخروج بنجاح 👋", Notify.ToastType.Info)
             End If
-
-            ' 6. إغلاق الشاشة الرئيسية الحالية
-            Me.Close()
 
         Catch ex As Exception
             Logger.LogError("PerformLogout", ex)
@@ -1115,14 +944,6 @@ Public Class MainForm
         If e.Control AndAlso e.KeyCode = Keys.Q Then
             e.Handled = True
             PerformLogout()
-            Return
-        End If
-
-        ' اختصار البحث السريع Ctrl + K
-        If e.Control AndAlso e.KeyCode = Keys.K Then
-            e.Handled = True
-            txtGlobalSearch.Focus()
-            txtGlobalSearch.SelectAll()
             Return
         End If
 
@@ -1151,7 +972,7 @@ Public Class MainForm
     Public Sub ApplyPermissionsToMainForm()
         If Session.CurrentRoleID = 1 Then Return ' مدير النظام لديه وصول كامل
 
-        Dim mappings As New Dictionary(Of Control, String) From {
+        Dim mappings As New Dictionary(Of ToolStripButton, String) From {
             {btnCategories, "Categories"},
             {btnProducts, "Products"},
             {btnfrmProductSizes, "frmProductSizes"},
@@ -1210,9 +1031,7 @@ Public Class MainForm
                 Dim allowed As Boolean = Session.HasPermission(kvp.Value, "CanOpen")
                 kvp.Key.Enabled = allowed
                 If Not allowed Then
-                    If TypeOf kvp.Key Is Guna.UI2.WinForms.Guna2Button Then
-                        CType(kvp.Key, Guna.UI2.WinForms.Guna2Button).FillColor = Color.FromArgb(20, 24, 32)
-                    End If
+                    kvp.Key.ToolTipText = "غير مصرح لك بفتح هذه الشاشة"
                 End If
             End If
         Next

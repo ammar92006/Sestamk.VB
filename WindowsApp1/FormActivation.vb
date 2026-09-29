@@ -6,6 +6,7 @@ Imports System.Windows.Forms
 Public Class FormActivation
 
     Private _hwid As String = ""
+    Private _pollTimer As Windows.Forms.Timer
 
     Private Sub FormActivation_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
@@ -44,6 +45,9 @@ Public Class FormActivation
                 UpdateStatusBadge("يلزم التفعيل", isSuccess:=False)
             End If
 
+            ' 4. بدء فحص دوري تلقائي صامت في الخلفية في حال قام الأدمن بتفعيل الجهاز
+            StartBackgroundHwidPolling()
+
         Catch ex As Exception
             MessageBox.Show("حدث خطأ في تحميل بيانات بصمة الجهاز: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
@@ -71,6 +75,7 @@ Public Class FormActivation
         Try
             Dim result = Await LicenseBootstrapper.ActivateAsync(serial)
             If result.IsValid Then
+                StopBackgroundHwidPolling()
                 UpdateStatusBadge("تم التفعيل", isSuccess:=True)
                 lblStatusMessage.Text = "✅ تم تفعيل البرنامج بنجاح! جاري الدخول للنظام..."
                 lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
@@ -102,7 +107,7 @@ Public Class FormActivation
     End Sub
 
     ''' <summary>
-    ''' فحص مباشر لحالة الترخيص عبر السيرفر دون كتابة يدوي
+    ''' فحص مباشر لحالة الترخيص عبر السيرفر دون كتابة يدوي (HWID / Serial)
     ''' </summary>
     Private Async Sub btnCheckOnline_Click(sender As Object, e As EventArgs) Handles btnCheckOnline.Click
         btnCheckOnline.Enabled = False
@@ -112,6 +117,30 @@ Public Class FormActivation
         lblStatusMessage.ForeColor = Color.FromArgb(147, 197, 253)
 
         Try
+            ' 1. التحقق المباشر عبر بصمة الجهاز المسجلة مسبقاً في لوحة التحكم (HWID Zero-Touch)
+            Dim hwidResult = Await LicenseBootstrapper.CheckByHwidAsync()
+            If hwidResult.IsValid Then
+                StopBackgroundHwidPolling()
+                Dim newSerial = Convert.ToString(hwidResult.Payload("saved_serial"))
+                If Not String.IsNullOrWhiteSpace(newSerial) Then
+                    txtLicense.Text = newSerial.Trim().ToUpperInvariant()
+                End If
+                UpdateStatusBadge("مفعل أونلاين", isSuccess:=True)
+                lblStatusMessage.Text = "✅ تم استرداد وتفعيل الترخيص من السيرفر بنجاح!"
+                lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+
+                Try
+                    Notify.Toast("تم تفعيل الجهاز أونلاين بنجاح ✅", Notify.ToastType.Success)
+                Catch
+                End Try
+
+                Await Task.Delay(800)
+                DialogResult = DialogResult.OK
+                Close()
+                Return
+            End If
+
+            ' 2. في حال لم يعثر عليه بالبصمة، التحقق بواسطة السيريال المدخل أو المحفوظ
             Dim serialToCheck = txtLicense.Text.Trim()
             Dim cache = LicenseCache.Load()
             If String.IsNullOrWhiteSpace(serialToCheck) AndAlso cache IsNot Nothing Then
@@ -121,6 +150,7 @@ Public Class FormActivation
             If Not String.IsNullOrWhiteSpace(serialToCheck) Then
                 Dim actResult = Await LicenseBootstrapper.ActivateAsync(serialToCheck)
                 If actResult.IsValid Then
+                    StopBackgroundHwidPolling()
                     UpdateStatusBadge("مفعل أونلاين", isSuccess:=True)
                     lblStatusMessage.Text = "✅ الترخيص ساري ومسجل بالسيرفر بنجاح!"
                     lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
@@ -137,25 +167,13 @@ Public Class FormActivation
                 End If
             End If
 
-            Dim checkResult = Await LicenseBootstrapper.CheckAsync(forceOnlineCheck:=True)
-            If checkResult.IsValid Then
-                UpdateStatusBadge("مفعل أونلاين", isSuccess:=True)
-                lblStatusMessage.Text = "✅ تم تأكيد تفعيل البرنامج من السيرفر!"
-                lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+            ' 3. في حال عدم وجود ترخيص نشط
+            lblStatusMessage.Text = "⚠️ لم يتم العثور على ترخيص نشط مسجل لهذا الجهاز على السيرفر."
+            lblStatusMessage.ForeColor = Color.FromArgb(251, 191, 36)
+            MessageBox.Show("لا يوجد ترخيص نشط مسجل لهذا الجهاز على السيرفر حتى الآن." & vbCrLf & vbCrLf &
+                            "إذا قمت بإرسال معرف الجهاز للإدارة، يرجى الانتظار لحين التفعيل ثم الضغط على هذا الزر مرة أخرى.",
+                            "فحص السيرفر الأونلاين", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-                Try
-                    Notify.Toast("البرنامج مفعل ومسجل بالسيرفر ✅", Notify.ToastType.Success)
-                Catch
-                End Try
-
-                Await Task.Delay(800)
-                DialogResult = DialogResult.OK
-                Close()
-            Else
-                lblStatusMessage.Text = "⚠️ لم يتم العثور على ترخيص نشط مسجل لهذا الجهاز على السيرفر."
-                lblStatusMessage.ForeColor = Color.FromArgb(251, 191, 36)
-                MessageBox.Show("لا يوجد ترخيص نشط مسجل لهذا الجهاز على السيرفر. يرجى إدخال كود التفعيل أو التواصل مع الدعم الفني.", "فحص السيرفر", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
         Catch ex As Exception
             lblStatusMessage.Text = "❌ تعذر الاتصال بالسيرفر: " & ex.Message
             lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
@@ -164,6 +182,60 @@ Public Class FormActivation
             btn_Staff.Enabled = True
             progressActivation.Visible = False
         End Try
+    End Sub
+
+    ''' <summary>
+    ''' فحص دوري تلقائي صامت في الخلفية كل 10 ثوانٍ لتفعيل الجهاز فور قيام الأدمن بربطه
+    ''' </summary>
+    Private Sub StartBackgroundHwidPolling()
+        Try
+            If _pollTimer IsNot Nothing Then Return
+            _pollTimer = New Windows.Forms.Timer() With {.Interval = 10000}
+            AddHandler _pollTimer.Tick, Async Sub(s, ev)
+                                            Try
+                                                If Me.IsDisposed OrElse Not Me.IsHandleCreated Then
+                                                    StopBackgroundHwidPolling()
+                                                    Return
+                                                End If
+                                                Dim autoHwid = Await LicenseBootstrapper.CheckByHwidAsync()
+                                                If autoHwid.IsValid AndAlso Not Me.IsDisposed Then
+                                                    StopBackgroundHwidPolling()
+                                                    Dim newSerial = Convert.ToString(autoHwid.Payload("saved_serial"))
+                                                    If Not String.IsNullOrWhiteSpace(newSerial) Then
+                                                        txtLicense.Text = newSerial.Trim().ToUpperInvariant()
+                                                    End If
+                                                    UpdateStatusBadge("مفعل أونلاين", isSuccess:=True)
+                                                    lblStatusMessage.Text = "✅ تم استرداد وتفعيل الترخيص تلقائياً من السيرفر!"
+                                                    lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+                                                    Try
+                                                        Notify.Toast("تم تفعيل الجهاز أونلاين بنجاح ✅", Notify.ToastType.Success)
+                                                    Catch
+                                                    End Try
+                                                    Await Task.Delay(800)
+                                                    DialogResult = DialogResult.OK
+                                                    Close()
+                                                End If
+                                            Catch
+                                            End Try
+                                        End Sub
+            _pollTimer.Start()
+        Catch
+        End Try
+    End Sub
+
+    Private Sub StopBackgroundHwidPolling()
+        Try
+            If _pollTimer IsNot Nothing Then
+                _pollTimer.Stop()
+                _pollTimer.Dispose()
+                _pollTimer = Nothing
+            End If
+        Catch
+        End Try
+    End Sub
+
+    Private Sub FormActivation_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        StopBackgroundHwidPolling()
     End Sub
 
     Private Sub UpdateStatusBadge(badgeText As String, isSuccess As Boolean, Optional isWarning As Boolean = False)

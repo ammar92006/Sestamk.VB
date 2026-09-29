@@ -1169,10 +1169,10 @@ Public Class Login
     ''' <summary>
     ''' إعادة تهيئة شاشة تسجيل الدخول عند تسجيل الخروج من الشاشة الرئيسية
     ''' </summary>
-    Public Sub ResetForLogout()
+    Public Sub ResetForLogout(Optional isAutoLock As Boolean = False)
         Try
             Dim isRem As Boolean = SettingsManager.GetBoolSetting("RememberMe_Enabled", False)
-            If isRem Then
+            If isRem AndAlso Not isAutoLock Then
                 If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = True
                 Dim savedEncPass As String = SettingsManager.GetSetting("RememberMe_Pass")
                 If Not String.IsNullOrEmpty(savedEncPass) Then
@@ -1182,7 +1182,9 @@ Public Class Login
                 End If
             Else
                 txtpassword.Clear()
-                If chkRememberMe IsNot Nothing Then chkRememberMe.Checked = False
+                If chkRememberMe IsNot Nothing Then
+                    chkRememberMe.Checked = isRem
+                End If
             End If
 
             If DateTime.Now < _lockoutUntil Then

@@ -881,6 +881,7 @@
     <Compile Include="Services\DatabaseMaintenanceService.vb" />
     <Compile Include="Services\WhatsAppService.vb" />
     <Compile Include="Services\LocalDbManager.vb" />
+    <Compile Include="Services\SessionLockService.vb" />
     <Compile Include="Services\Cloud\TursoHttpClient.vb" />
     <Compile Include="Services\Cloud\TursoPlatformClient.vb" />
     <Compile Include="Services\Cloud\CloudSyncConfig.vb" />

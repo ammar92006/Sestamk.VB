@@ -85,6 +85,7 @@ Namespace UC_Settings
 
                                 Dim ver = Convert.ToString(item("version"))
                                 Dim title = Convert.ToString(item("title"))
+                                Dim titleAr = Convert.ToString(item("title_ar"))
                                 Dim desc = Convert.ToString(item("description"))
                                 Dim whatsNewArr = item("whats_new")
                                 If (String.IsNullOrWhiteSpace(desc) OrElse desc.Length < 10) AndAlso whatsNewArr IsNot Nothing AndAlso whatsNewArr.Type = JTokenType.Array Then
@@ -94,6 +95,10 @@ Namespace UC_Settings
                                     Next
                                     desc = sbNotes.ToString().TrimEnd()
                                 End If
+
+                                Dim healed = Await HealCorruptedReleaseInfoAsync(mUrl, title, desc, titleAr, whatsNewArr, ver)
+                                title = healed.Item1
+                                desc = healed.Item2
 
                                 Dim relDate = Convert.ToString(item("release_date"))
                                 If String.IsNullOrWhiteSpace(relDate) Then relDate = Convert.ToString(item("created_at"))
@@ -141,6 +146,7 @@ Namespace UC_Settings
 
                                     Dim ver = Convert.ToString(item("version"))
                                     Dim title = Convert.ToString(item("title"))
+                                    Dim titleAr = Convert.ToString(item("title_ar"))
                                     Dim desc = Convert.ToString(item("description"))
                                     Dim whatsNewArr = item("whats_new")
                                     If (String.IsNullOrWhiteSpace(desc) OrElse desc.Length < 10) AndAlso whatsNewArr IsNot Nothing AndAlso whatsNewArr.Type = JTokenType.Array Then
@@ -150,6 +156,10 @@ Namespace UC_Settings
                                         Next
                                         desc = sbNotes.ToString().TrimEnd()
                                     End If
+
+                                    Dim healed = Await HealCorruptedReleaseInfoAsync(mUrl, title, desc, titleAr, whatsNewArr, ver)
+                                    title = healed.Item1
+                                    desc = healed.Item2
 
                                     Dim relDate = Convert.ToString(item("release_date"))
                                     If String.IsNullOrWhiteSpace(relDate) Then relDate = Convert.ToString(item("created_at"))
@@ -496,7 +506,7 @@ Namespace UC_Settings
         End Function
 
         Private Function CleanReleaseTitle(title As String, version As String) As String
-            If String.IsNullOrWhiteSpace(title) Then Return "تحديث سستمك الشامل"
+            If String.IsNullOrWhiteSpace(title) OrElse title.Contains("???") Then Return "تحديث سستمك الشامل"
             Dim t = title.Trim()
             ' إزالة أي ذكر لـ VB.NET أو VB نهائياً من العناوين
             t = t.Replace("(VB.NET)", "").Replace("(vb.net)", "").Replace("VB.NET", "").Replace("vb.net", "")
@@ -507,8 +517,74 @@ Namespace UC_Settings
             t = t.Replace("V" & version, "")
             t = t.Replace(version, "")
             t = t.Trim(" "c, "-"c, "•"c, ":"c, "("c, ")"c).Trim()
-            If String.IsNullOrWhiteSpace(t) Then t = "تحديث سستمك الشامل"
+            If String.IsNullOrWhiteSpace(t) OrElse t.Contains("???") Then t = "تحديث سستمك الشامل"
             Return t
+        End Function
+
+        ''' <summary>
+        ''' إصلاح وترميم بيانات التحديثات المشوهة بعلامات الاستفهام (نظراً لاختلاف الترميز أثناء الرفع إلى Supabase)
+        ''' عبر جلب النصوص العربية الصحيحة مباشرة من ملف manifest.json المرفق بالإصدار
+        ''' </summary>
+        Private Async Function HealCorruptedReleaseInfoAsync(mUrl As String, title As String, desc As String, titleAr As String, whatsNewArr As JToken, ver As String) As Task(Of Tuple(Of String, String))
+            Dim healedTitle = title
+            Dim healedDesc = desc
+
+            ' 1. استخدام title_ar إن كان صالحاً
+            If (String.IsNullOrWhiteSpace(healedTitle) OrElse healedTitle.Contains("???")) AndAlso Not String.IsNullOrWhiteSpace(titleAr) AndAlso Not titleAr.Contains("???") Then
+                healedTitle = titleAr
+            End If
+
+            Dim isCorrupted = (Not String.IsNullOrEmpty(healedTitle) AndAlso healedTitle.Contains("???")) OrElse
+                              (Not String.IsNullOrEmpty(healedDesc) AndAlso healedDesc.Contains("???")) OrElse
+                              (whatsNewArr IsNot Nothing AndAlso whatsNewArr.ToString().Contains("???"))
+
+            If isCorrupted AndAlso Not String.IsNullOrWhiteSpace(mUrl) Then
+                Try
+                    Using manClient As New HttpClient()
+                        manClient.Timeout = TimeSpan.FromSeconds(5)
+                        manClient.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-App")
+                        Dim manifestJson = Await manClient.GetStringAsync(mUrl)
+                        If Not String.IsNullOrWhiteSpace(manifestJson) Then
+                            Dim mObj = JObject.Parse(manifestJson)
+                            Dim mTitle = Convert.ToString(mObj("title"))
+                            If Not String.IsNullOrWhiteSpace(mTitle) AndAlso Not mTitle.Contains("???") Then
+                                healedTitle = mTitle
+                            End If
+
+                            Dim mWhatsNew = mObj("whats_new")
+                            If mWhatsNew IsNot Nothing AndAlso mWhatsNew.Type = JTokenType.Array AndAlso mWhatsNew.Count > 0 Then
+                                Dim sbNotes As New StringBuilder()
+                                For Each w In mWhatsNew
+                                    Dim wStr = Convert.ToString(w)
+                                    If Not String.IsNullOrWhiteSpace(wStr) AndAlso Not wStr.Contains("???") Then
+                                        sbNotes.AppendLine("• " & wStr)
+                                    End If
+                                Next
+                                If sbNotes.Length > 0 Then
+                                    healedDesc = sbNotes.ToString().TrimEnd()
+                                End If
+                            Else
+                                Dim mNotes = Convert.ToString(mObj("notes"))
+                                If Not String.IsNullOrWhiteSpace(mNotes) AndAlso Not mNotes.Contains("???") Then
+                                    healedDesc = mNotes
+                                End If
+                            End If
+                        End If
+                    End Using
+                Catch exManifest As Exception
+                    Debug.WriteLine("HealCorruptedReleaseInfoAsync manifest fetch error: " & exManifest.Message)
+                End Try
+            End If
+
+            ' حماية نهائية في حال تعذر جلب المانيفست وبقي النص مشوهاً
+            If String.IsNullOrWhiteSpace(healedTitle) OrElse healedTitle.Contains("???") Then
+                healedTitle = "تحديث سستمك الشامل v" & ver
+            End If
+            If String.IsNullOrWhiteSpace(healedDesc) OrElse healedDesc.Contains("???") Then
+                healedDesc = "تحديث شامل ومستقر يتضمن تحسينات على الأداء والمزامنة السحابية وإصلاحات للنظام."
+            End If
+
+            Return Tuple.Create(healedTitle, healedDesc)
         End Function
 
         Private Class ReleaseNoteItem
@@ -519,11 +595,11 @@ Namespace UC_Settings
 
         Private Function ParseReleaseNotes(rawBody As String) As List(Of ReleaseNoteItem)
             Dim list As New List(Of ReleaseNoteItem)()
-            If String.IsNullOrWhiteSpace(rawBody) Then
+            If String.IsNullOrWhiteSpace(rawBody) OrElse rawBody.Contains("????") Then
                 list.Add(New ReleaseNoteItem With {
                     .Icon = "✨",
-                    .Title = "تحسينات عامة على النظام",
-                    .Description = "تحسينات دورية على الأداء والاستقرار وسرعة معالجة البيانات."
+                    .Title = "تحديث شامل وتحسينات على النظام",
+                    .Description = "تحسينات دورية على الأداء والاستقرار وسرعة معالجة البيانات والمزامنة."
                 })
                 Return list
             End If

@@ -60,12 +60,30 @@ Public Module DBModule
                        Not srv.Equals(".", StringComparison.OrdinalIgnoreCase) AndAlso
                        Not srv.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase)
 
-        Dim actualEncrypt = If(encrypt.HasValue, encrypt.Value, (encryptConnection OrElse isRemote))
+        Dim isLocalDb = Not String.IsNullOrEmpty(srv) AndAlso srv.ToLower().Contains("(localdb)")
+
+        ' محرك LocalDB لا يدعم التشفير نهائياً، واستخدام التشفير معه يسبب خطأ:
+        ' The instance of SQL Server you attempted to connect to does not support encryption.
+        Dim actualEncrypt As Boolean
+        If isLocalDb Then
+            actualEncrypt = False
+        ElseIf encrypt.HasValue Then
+            actualEncrypt = encrypt.Value
+        ElseIf isRemote Then
+            actualEncrypt = True
+        Else
+            actualEncrypt = encryptConnection
+        End If
+
         Dim actualTrust = If(trustServerCert.HasValue, trustServerCert.Value, trustServerCertificate)
 
         Dim sslPart As String = ""
-        If actualEncrypt OrElse isRemote Then
+        If isLocalDb Then
+            sslPart = "Encrypt=False;TrustServerCertificate=True;"
+        ElseIf actualEncrypt OrElse isRemote Then
             sslPart = $"Encrypt={If(actualEncrypt, "True", "False")};TrustServerCertificate={If(actualTrust, "True", "False")};"
+        Else
+            sslPart = "Encrypt=False;TrustServerCertificate=True;"
         End If
 
         Return $"Server={srv};{attachPart}Database={db};{auth}{sslPart}" &
@@ -229,6 +247,11 @@ Public Module DBModule
                 Else
                     dbEngineType = "sqlserver"
                 End If
+            End If
+
+            ' تعطيل التشفير حتماً لـ LocalDB لأن محرك LocalDB لا يدعم شهادات التشفير إطلاقاً
+            If dbEngineType = "localdb" OrElse (Not String.IsNullOrEmpty(server) AndAlso server.ToLower().Contains("(localdb)")) Then
+                encryptConnection = False
             End If
         Catch ex As Exception
             Logger.LogError("LoadDbSettings", ex)
