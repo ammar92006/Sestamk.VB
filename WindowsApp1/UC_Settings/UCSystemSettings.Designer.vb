@@ -44,7 +44,9 @@ Namespace UC_Settings
             Me.lblAutoLogout = New System.Windows.Forms.Label()
             Me.tglAutoLogout = New Guna.UI2.WinForms.Guna2ToggleSwitch()
             Me.lblAutoLogoutTimer = New System.Windows.Forms.Label()
-            Me.numAutoLogoutMinutes = New Guna.UI2.WinForms.Guna2NumericUpDown()
+            Me.btnMinusMinutes = New Guna.UI2.WinForms.Guna2Button()
+            Me.txtAutoLogoutMinutes = New Guna.UI2.WinForms.Guna2TextBox()
+            Me.btnPlusMinutes = New Guna.UI2.WinForms.Guna2Button()
             Me.cardPath = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblCardPathTitle = New System.Windows.Forms.Label()
             Me.lblBackupPath = New System.Windows.Forms.Label()
@@ -57,7 +59,6 @@ Namespace UC_Settings
             Me.cardLanguage.SuspendLayout()
             Me.cardBackup.SuspendLayout()
             Me.cardAutoLogout.SuspendLayout()
-            CType(Me.numAutoLogoutMinutes, System.ComponentModel.ISupportInitialize).BeginInit()
             Me.cardPath.SuspendLayout()
             Me.SuspendLayout()
             '
@@ -385,7 +386,9 @@ Namespace UC_Settings
             Me.cardAutoLogout.Controls.Add(Me.lblAutoLogout)
             Me.cardAutoLogout.Controls.Add(Me.tglAutoLogout)
             Me.cardAutoLogout.Controls.Add(Me.lblAutoLogoutTimer)
-            Me.cardAutoLogout.Controls.Add(Me.numAutoLogoutMinutes)
+            Me.cardAutoLogout.Controls.Add(Me.btnMinusMinutes)
+            Me.cardAutoLogout.Controls.Add(Me.txtAutoLogoutMinutes)
+            Me.cardAutoLogout.Controls.Add(Me.btnPlusMinutes)
             Me.cardAutoLogout.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardAutoLogout.Location = New System.Drawing.Point(30, 480)
             Me.cardAutoLogout.Name = "cardAutoLogout"
@@ -435,30 +438,63 @@ Namespace UC_Settings
             Me.lblAutoLogoutTimer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblAutoLogoutTimer.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblAutoLogoutTimer.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblAutoLogoutTimer.Location = New System.Drawing.Point(400, 62)
+            Me.lblAutoLogoutTimer.Location = New System.Drawing.Point(390, 62)
             Me.lblAutoLogoutTimer.Name = "lblAutoLogoutTimer"
-            Me.lblAutoLogoutTimer.Size = New System.Drawing.Size(250, 30)
+            Me.lblAutoLogoutTimer.Size = New System.Drawing.Size(240, 30)
             Me.lblAutoLogoutTimer.TabIndex = 3
             Me.lblAutoLogoutTimer.Text = "المهلة الزمنية (بالدقائق):"
             Me.lblAutoLogoutTimer.TextAlign = System.Drawing.ContentAlignment.MiddleRight
             '
-            'numAutoLogoutMinutes
+            'btnMinusMinutes
             '
-            Me.numAutoLogoutMinutes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.numAutoLogoutMinutes.BackColor = System.Drawing.Color.Transparent
-            Me.numAutoLogoutMinutes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
-            Me.numAutoLogoutMinutes.BorderRadius = 8
-            Me.numAutoLogoutMinutes.Cursor = System.Windows.Forms.Cursors.IBeam
-            Me.numAutoLogoutMinutes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
-            Me.numAutoLogoutMinutes.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-            Me.numAutoLogoutMinutes.ForeColor = System.Drawing.Color.White
-            Me.numAutoLogoutMinutes.Location = New System.Drawing.Point(210, 58)
-            Me.numAutoLogoutMinutes.Maximum = New Decimal(New Integer() {120, 0, 0, 0})
-            Me.numAutoLogoutMinutes.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
-            Me.numAutoLogoutMinutes.Name = "numAutoLogoutMinutes"
-            Me.numAutoLogoutMinutes.Size = New System.Drawing.Size(180, 38)
-            Me.numAutoLogoutMinutes.TabIndex = 4
-            Me.numAutoLogoutMinutes.Value = New Decimal(New Integer() {15, 0, 0, 0})
+            Me.btnMinusMinutes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnMinusMinutes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.btnMinusMinutes.BorderRadius = 8
+            Me.btnMinusMinutes.BorderThickness = 1
+            Me.btnMinusMinutes.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnMinusMinutes.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(36, Byte), Integer), CType(CType(49, Byte), Integer))
+            Me.btnMinusMinutes.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.btnMinusMinutes.ForeColor = System.Drawing.Color.White
+            Me.btnMinusMinutes.Location = New System.Drawing.Point(175, 58)
+            Me.btnMinusMinutes.Name = "btnMinusMinutes"
+            Me.btnMinusMinutes.Size = New System.Drawing.Size(38, 38)
+            Me.btnMinusMinutes.TabIndex = 4
+            Me.btnMinusMinutes.Text = "−"
+            '
+            'txtAutoLogoutMinutes
+            '
+            Me.txtAutoLogoutMinutes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.txtAutoLogoutMinutes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.txtAutoLogoutMinutes.BorderRadius = 8
+            Me.txtAutoLogoutMinutes.Cursor = System.Windows.Forms.Cursors.IBeam
+            Me.txtAutoLogoutMinutes.DefaultText = "15"
+            Me.txtAutoLogoutMinutes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(24, Byte), Integer), CType(CType(33, Byte), Integer))
+            Me.txtAutoLogoutMinutes.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.txtAutoLogoutMinutes.ForeColor = System.Drawing.Color.White
+            Me.txtAutoLogoutMinutes.Location = New System.Drawing.Point(219, 58)
+            Me.txtAutoLogoutMinutes.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
+            Me.txtAutoLogoutMinutes.Name = "txtAutoLogoutMinutes"
+            Me.txtAutoLogoutMinutes.PlaceholderText = "15"
+            Me.txtAutoLogoutMinutes.SelectedText = ""
+            Me.txtAutoLogoutMinutes.Size = New System.Drawing.Size(110, 38)
+            Me.txtAutoLogoutMinutes.TabIndex = 5
+            Me.txtAutoLogoutMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+            '
+            'btnPlusMinutes
+            '
+            Me.btnPlusMinutes.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.btnPlusMinutes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
+            Me.btnPlusMinutes.BorderRadius = 8
+            Me.btnPlusMinutes.BorderThickness = 1
+            Me.btnPlusMinutes.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnPlusMinutes.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(36, Byte), Integer), CType(CType(49, Byte), Integer))
+            Me.btnPlusMinutes.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.btnPlusMinutes.ForeColor = System.Drawing.Color.White
+            Me.btnPlusMinutes.Location = New System.Drawing.Point(335, 58)
+            Me.btnPlusMinutes.Name = "btnPlusMinutes"
+            Me.btnPlusMinutes.Size = New System.Drawing.Size(38, 38)
+            Me.btnPlusMinutes.TabIndex = 6
+            Me.btnPlusMinutes.Text = "+"
             '
             'cardPath
             '
@@ -589,7 +625,6 @@ Namespace UC_Settings
             Me.cardLanguage.ResumeLayout(False)
             Me.cardBackup.ResumeLayout(False)
             Me.cardAutoLogout.ResumeLayout(False)
-            CType(Me.numAutoLogoutMinutes, System.ComponentModel.ISupportInitialize).EndInit()
             Me.cardPath.ResumeLayout(False)
             Me.ResumeLayout(False)
 
@@ -621,7 +656,9 @@ Namespace UC_Settings
         Friend WithEvents lblAutoLogout As System.Windows.Forms.Label
         Friend WithEvents tglAutoLogout As Guna.UI2.WinForms.Guna2ToggleSwitch
         Friend WithEvents lblAutoLogoutTimer As System.Windows.Forms.Label
-        Friend WithEvents numAutoLogoutMinutes As Guna.UI2.WinForms.Guna2NumericUpDown
+        Friend WithEvents btnMinusMinutes As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents txtAutoLogoutMinutes As Guna.UI2.WinForms.Guna2TextBox
+        Friend WithEvents btnPlusMinutes As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents cardPath As Guna.UI2.WinForms.Guna2Panel
         Friend WithEvents lblCardPathTitle As System.Windows.Forms.Label
         Friend WithEvents lblBackupPath As System.Windows.Forms.Label

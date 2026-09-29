@@ -46,13 +46,16 @@ Namespace UC_Settings
                 txtMaxLoginAttempts.Text = SettingsManager.GetIntSetting(SettingsKeys.LoginMaxAttempts, 5).ToString()
 
                 ' القفل التلقائي
-                tglAutoLogout.Checked = SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoLogoutEnabled, False)
+                Dim isAutoLogout = SettingsManager.GetBoolSetting(SettingsKeys.SystemAutoLogoutEnabled, False)
+                tglAutoLogout.Checked = isAutoLogout
                 Dim logoutMinutes = SettingsManager.GetIntSetting(SettingsKeys.SystemAutoLogoutTimer, 15)
-                If logoutMinutes >= numAutoLogoutMinutes.Minimum AndAlso logoutMinutes <= numAutoLogoutMinutes.Maximum Then
-                    numAutoLogoutMinutes.Value = logoutMinutes
-                End If
-                numAutoLogoutMinutes.Enabled = tglAutoLogout.Checked
-                lblAutoLogoutTimer.Enabled = tglAutoLogout.Checked
+                If logoutMinutes < 1 Then logoutMinutes = 1
+                If logoutMinutes > 120 Then logoutMinutes = 120
+                txtAutoLogoutMinutes.Text = logoutMinutes.ToString()
+                txtAutoLogoutMinutes.Enabled = isAutoLogout
+                btnMinusMinutes.Enabled = isAutoLogout
+                btnPlusMinutes.Enabled = isAutoLogout
+                lblAutoLogoutTimer.Enabled = isAutoLogout
 
                 ' مظهر النظام (تحديث حالة أزرار الوضع الفاتح والداكن والتلقائي)
                 _selectedThemeMode = ThemeManager.Instance.CurrentMode
@@ -104,9 +107,16 @@ Namespace UC_Settings
                 StartupManager.SetRunAtStartup(runAtStartup)
                 SettingsManager.SaveSetting(SettingsKeys.SystemRunAtStartup, runAtStartup.ToString().ToLower())
                 
+                Dim logoutMinutes As Integer
+                If Not Integer.TryParse(txtAutoLogoutMinutes.Text.Trim(), logoutMinutes) OrElse logoutMinutes < 1 OrElse logoutMinutes > 120 Then
+                    MessageBox.Show("يرجى إدخال مهلة زمنية صحيحة بالدقائق (بين 1 و 120 دقيقة)", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    txtAutoLogoutMinutes.Focus()
+                    Return
+                End If
+
                 SettingsManager.SaveSetting(SettingsKeys.LoginMaxAttempts, attempts.ToString())
                 SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutEnabled, tglAutoLogout.Checked.ToString().ToLower())
-                SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutTimer, CInt(numAutoLogoutMinutes.Value).ToString())
+                SettingsManager.SaveSetting(SettingsKeys.SystemAutoLogoutTimer, logoutMinutes.ToString())
                 SettingsManager.SaveSetting(SettingsKeys.SystemBackupPath, txtBackupPath.Text.Trim())
 
                 ' تطبيق إعدادات القفل التلقائي للجلسة فوراً في الخلفية
@@ -213,8 +223,36 @@ Namespace UC_Settings
         End Sub
 
         Private Sub tglAutoLogout_CheckedChanged(sender As Object, e As EventArgs) Handles tglAutoLogout.CheckedChanged
-            numAutoLogoutMinutes.Enabled = tglAutoLogout.Checked
-            lblAutoLogoutTimer.Enabled = tglAutoLogout.Checked
+            Dim isChecked = tglAutoLogout.Checked
+            txtAutoLogoutMinutes.Enabled = isChecked
+            btnMinusMinutes.Enabled = isChecked
+            btnPlusMinutes.Enabled = isChecked
+            lblAutoLogoutTimer.Enabled = isChecked
+        End Sub
+
+        Private Sub btnPlusMinutes_Click(sender As Object, e As EventArgs) Handles btnPlusMinutes.Click
+            Dim val As Integer
+            If Integer.TryParse(txtAutoLogoutMinutes.Text.Trim(), val) Then
+                If val < 120 Then txtAutoLogoutMinutes.Text = (val + 1).ToString()
+            Else
+                txtAutoLogoutMinutes.Text = "15"
+            End If
+        End Sub
+
+        Private Sub btnMinusMinutes_Click(sender As Object, e As EventArgs) Handles btnMinusMinutes.Click
+            Dim val As Integer
+            If Integer.TryParse(txtAutoLogoutMinutes.Text.Trim(), val) Then
+                If val > 1 Then txtAutoLogoutMinutes.Text = (val - 1).ToString()
+            Else
+                txtAutoLogoutMinutes.Text = "15"
+            End If
+        End Sub
+
+        Private Sub txtAutoLogoutMinutes_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtAutoLogoutMinutes.KeyPress
+            ' السماح بالأرقام فقط وزر المسح (Backspace)
+            If Not Char.IsDigit(e.KeyChar) AndAlso Not Char.IsControl(e.KeyChar) Then
+                e.Handled = True
+            End If
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
@@ -225,8 +263,10 @@ Namespace UC_Settings
                 tglRunAtStartup.Checked = False
                 txtMaxLoginAttempts.Text = "5"
                 tglAutoLogout.Checked = False
-                numAutoLogoutMinutes.Value = 15
-                numAutoLogoutMinutes.Enabled = False
+                txtAutoLogoutMinutes.Text = "15"
+                txtAutoLogoutMinutes.Enabled = False
+                btnMinusMinutes.Enabled = False
+                btnPlusMinutes.Enabled = False
                 lblAutoLogoutTimer.Enabled = False
                 txtBackupPath.Clear()
 
