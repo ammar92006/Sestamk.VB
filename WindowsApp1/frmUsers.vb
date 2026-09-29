@@ -419,9 +419,15 @@ Public Class frmUsers
 
     Private Function Base64ToImage(base64 As String) As Image
         Try
-            Dim bytes As Byte() = Convert.FromBase64String(base64)
+            If String.IsNullOrWhiteSpace(base64) Then Return Nothing
+            Dim clean As String = base64.Trim()
+            Dim commaIdx As Integer = clean.IndexOf(","c)
+            If commaIdx >= 0 Then
+                clean = clean.Substring(commaIdx + 1).Trim()
+            End If
+            Dim bytes As Byte() = Convert.FromBase64String(clean)
             Using ms As New MemoryStream(bytes)
-                Return Image.FromStream(ms)
+                Return New Bitmap(ms)
             End Using
         Catch
             Return Nothing

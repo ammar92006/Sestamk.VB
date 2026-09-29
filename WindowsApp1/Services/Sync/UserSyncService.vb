@@ -51,6 +51,7 @@ Namespace Services.Sync
             Public Property Barcode As String = ""
             Public Property Notes As String = ""
             Public Property EmployeeId As Integer = 0
+            Public Property PhotoBase64 As String = ""
             Public Property IsActive As Boolean = True
             Public Property IsDeleted As Boolean = False
         End Class
@@ -64,6 +65,7 @@ Namespace Services.Sync
             Public Property email As String
             Public Property phone As String
             Public Property role As String
+            Public Property avatar_url As String
             Public Property is_active As Boolean?
             Public Property updated_at As String
         End Class
@@ -73,6 +75,7 @@ Namespace Services.Sync
             Public Property Password As String = ""
             Public Property FullName As String = ""
             Public Property Role As String = ""
+            Public Property PhotoBase64 As String = ""
             Public Property IsActive As Boolean = True
         End Class
 
@@ -217,6 +220,7 @@ Namespace Services.Sync
                         Dim cloudName = If(cu.full_name, "").Trim()
                         Dim cloudRole = If(cu.role, "user").Trim()
                         Dim cloudActive = If(cu.is_active.HasValue, cu.is_active.Value, True)
+                        Dim cloudAvatar = If(cu.avatar_url, "").Trim()
 
                         Dim lastSynced As SyncedUserState = Nothing
                         Dim hasLastSynced = _lastSyncedStates.TryGetValue(uname, lastSynced)
@@ -231,27 +235,31 @@ Namespace Services.Sync
                                 If cloudName <> lastSynced.FullName Then cloudChanged = True
                                 If cloudActive <> lastSynced.IsActive Then cloudChanged = True
                                 If cloudRole <> lastSynced.Role Then cloudChanged = True
+                                If cloudAvatar <> lastSynced.PhotoBase64 Then cloudChanged = True
 
                                 If lu.Password <> lastSynced.Password Then localChanged = True
                                 If lu.FullName <> lastSynced.FullName Then localChanged = True
                                 If lu.IsActive <> lastSynced.IsActive Then localChanged = True
                                 If lu.Role <> lastSynced.Role Then localChanged = True
+                                If lu.PhotoBase64 <> lastSynced.PhotoBase64 Then localChanged = True
                             Else
                                 ' عند أول تشغيل، إذا وُجد فرق بين السحابة والمحلي، نعتمد السحابة
                                 If Not String.IsNullOrEmpty(cloudPass) AndAlso cloudPass <> lu.Password Then cloudChanged = True
                                 If Not String.IsNullOrEmpty(cloudName) AndAlso cloudName <> lu.FullName Then cloudChanged = True
                                 If cloudActive <> lu.IsActive Then cloudChanged = True
+                                If Not String.IsNullOrEmpty(cloudAvatar) AndAlso cloudAvatar <> lu.PhotoBase64 Then cloudChanged = True
                             End If
 
                             ' إذا حدث التغيير على Supabase (أو عند التعارض) يتم تحديث السجل المحلي
                             If cloudChanged AndAlso (Not localChanged OrElse Not hasLastSynced) Then
-                                UpdateLocalUser(lu.UserId, lu.EmployeeId, uname, cloudPass, cloudName, cloudRole, cloudActive, cu.phone, cu.email)
+                                UpdateLocalUser(lu.UserId, lu.EmployeeId, uname, cloudPass, cloudName, cloudRole, cloudActive, cu.phone, cu.email, cloudAvatar)
                                 localModified = True
                                 _lastSyncedStates(uname) = New SyncedUserState With {
                                     .Username = uname,
                                     .Password = If(String.IsNullOrEmpty(cloudPass), lu.Password, cloudPass),
                                     .FullName = If(String.IsNullOrEmpty(cloudName), lu.FullName, cloudName),
                                     .Role = cloudRole,
+                                    .PhotoBase64 = If(String.IsNullOrEmpty(cloudAvatar), lu.PhotoBase64, cloudAvatar),
                                     .IsActive = cloudActive
                                 }
                             Else
@@ -261,18 +269,20 @@ Namespace Services.Sync
                                     .Password = lu.Password,
                                     .FullName = lu.FullName,
                                     .Role = lu.Role,
+                                    .PhotoBase64 = lu.PhotoBase64,
                                     .IsActive = lu.IsActive
                                 }
                             End If
                         Else
                             ' مستخدم جديد مضاف من Supabase ولم ينزل في المحلي بعد
-                            InsertLocalUser(uname, cloudPass, cloudName, cloudRole, cloudActive, cu.phone, cu.email)
+                            InsertLocalUser(uname, cloudPass, cloudName, cloudRole, cloudActive, cu.phone, cu.email, cloudAvatar)
                             localModified = True
                             _lastSyncedStates(uname) = New SyncedUserState With {
                                 .Username = uname,
                                 .Password = cloudPass,
                                 .FullName = cloudName,
                                 .Role = cloudRole,
+                                .PhotoBase64 = cloudAvatar,
                                 .IsActive = cloudActive
                             }
                         End If
@@ -312,7 +322,8 @@ Namespace Services.Sync
                         .role = u.Role,
                         .is_active = effectiveActive,
                         .password = u.Password,
-                        .password_hash = u.Password
+                        .password_hash = u.Password,
+                        .avatar_url = If(String.IsNullOrWhiteSpace(u.PhotoBase64), Nothing, u.PhotoBase64)
                     })
                 Next
 
@@ -343,6 +354,7 @@ Namespace Services.Sync
                         .Password = u.Password,
                         .FullName = u.FullName,
                         .Role = u.Role,
+                        .PhotoBase64 = u.PhotoBase64,
                         .IsActive = (u.IsActive AndAlso Not u.IsDeleted)
                     }
                 Next
@@ -370,6 +382,7 @@ Namespace Services.Sync
                     "       ISNULL(U.User_password, '') AS User_password, " &
                     "       ISNULL(U.UserBarcode, '') AS UserBarcode, " &
                     "       ISNULL(U.User_Note, '') AS User_Note, " &
+                    "       ISNULL(U.UserPhotobase64, '') AS PhotoBase64, " &
                     "       U.RoleID, " &
                     "       ISNULL(U.EmployeeID, 0) AS EmployeeID, " &
                     "       ISNULL(R.RoleName, ISNULL(U.User_Role, N'مستخدم')) AS RoleName, " &
@@ -392,6 +405,7 @@ Namespace Services.Sync
                         "       ISNULL(U.User_password, '') AS User_password, " &
                         "       ISNULL(U.UserBarcode, '') AS UserBarcode, " &
                         "       ISNULL(U.User_Note, '') AS User_Note, " &
+                        "       ISNULL(U.UserPhotobase64, '') AS PhotoBase64, " &
                         "       ISNULL(U.User_Role, N'مستخدم') AS RoleName, " &
                         "       ISNULL(U.IsActive, 1) AS IsActive, " &
                         "       ISNULL(U.IsDeleted, 0) AS IsDeleted, " &
@@ -437,6 +451,12 @@ Namespace Services.Sync
                 u.RoleName = rawRole
                 u.Role = MapRole(rawRole)
 
+                If row.Table.Columns.Contains("PhotoBase64") AndAlso Not Convert.IsDBNull(row("PhotoBase64")) Then
+                    u.PhotoBase64 = Convert.ToString(row("PhotoBase64")).Trim()
+                ElseIf row.Table.Columns.Contains("UserPhotobase64") AndAlso Not Convert.IsDBNull(row("UserPhotobase64")) Then
+                    u.PhotoBase64 = Convert.ToString(row("UserPhotobase64")).Trim()
+                End If
+
                 If row.Table.Columns.Contains("Phone") AndAlso Not Convert.IsDBNull(row("Phone")) Then
                     u.Phone = Convert.ToString(row("Phone")).Trim()
                 End If
@@ -480,7 +500,7 @@ Namespace Services.Sync
         ''' <summary>
         ''' تحديث بيانات المستخدم محلياً بناءً على ما ورد من Supabase
         ''' </summary>
-        Private Shared Sub UpdateLocalUser(userId As Integer, employeeId As Integer, username As String, newPass As String, newName As String, newRole As String, isActive As Boolean, Optional phone As String = Nothing, Optional email As String = Nothing)
+        Private Shared Sub UpdateLocalUser(userId As Integer, employeeId As Integer, username As String, newPass As String, newName As String, newRole As String, isActive As Boolean, Optional phone As String = Nothing, Optional email As String = Nothing, Optional photoBase64 As String = Nothing)
             Try
                 Using cn = DBModule.NewConn()
                     Dim roleName = MapToRoleName(newRole)
@@ -497,6 +517,9 @@ Namespace Services.Sync
                     If roleId > 0 Then
                         sql &= ", RoleID = @roleId "
                     End If
+                    If photoBase64 IsNot Nothing Then
+                        sql &= ", UserPhotobase64 = @photo "
+                    End If
                     sql &= "WHERE LOWER(User_username) = LOWER(@user)"
 
                     Using cmd As New SqlCommand(sql, cn)
@@ -509,6 +532,9 @@ Namespace Services.Sync
                         End If
                         If roleId > 0 Then
                             cmd.Parameters.AddWithValue("@roleId", roleId)
+                        End If
+                        If photoBase64 IsNot Nothing Then
+                            cmd.Parameters.Add("@photo", SqlDbType.NVarChar, -1).Value = If(String.IsNullOrWhiteSpace(photoBase64), DBNull.Value, photoBase64)
                         End If
                         cmd.ExecuteNonQuery()
                     End Using
@@ -550,15 +576,15 @@ Namespace Services.Sync
         ''' <summary>
         ''' إضافة مستخدم جديد محلياً ورد من Supabase
         ''' </summary>
-        Private Shared Sub InsertLocalUser(username As String, password As String, fullName As String, role As String, isActive As Boolean, phone As String, email As String)
+        Private Shared Sub InsertLocalUser(username As String, password As String, fullName As String, role As String, isActive As Boolean, phone As String, email As String, Optional photoBase64 As String = Nothing)
             Try
                 Using cn = DBModule.NewConn()
                     Dim nextCode = GetNextUserCode(cn)
                     Dim roleName = MapToRoleName(role)
                     Dim roleId = GetRoleId(roleName, cn)
 
-                    Dim sql = "INSERT INTO Users_TBL (User_Code, User_Name, User_username, User_password, User_Role, RoleID, IsActive, IsDeleted, CreatedAt) " &
-                              "VALUES (@code, @name, @uname, @pwd, @roleName, @roleId, @isActive, 0, GETDATE())"
+                    Dim sql = "INSERT INTO Users_TBL (User_Code, User_Name, User_username, User_password, User_Role, RoleID, IsActive, IsDeleted, UserPhotobase64, CreatedAt) " &
+                              "VALUES (@code, @name, @uname, @pwd, @roleName, @roleId, @isActive, 0, @photo, GETDATE())"
 
                     Using cmd As New SqlCommand(sql, cn)
                         cmd.Parameters.AddWithValue("@code", nextCode)
@@ -572,6 +598,7 @@ Namespace Services.Sync
                             cmd.Parameters.AddWithValue("@roleId", DBNull.Value)
                         End If
                         cmd.Parameters.AddWithValue("@isActive", isActive)
+                        cmd.Parameters.Add("@photo", SqlDbType.NVarChar, -1).Value = If(String.IsNullOrWhiteSpace(photoBase64), DBNull.Value, photoBase64)
                         cmd.ExecuteNonQuery()
                     End Using
                 End Using
@@ -746,6 +773,7 @@ Namespace Services.Sync
                             }
                             If Not String.IsNullOrWhiteSpace(u.Phone) Then changes("phone") = u.Phone
                             If Not String.IsNullOrWhiteSpace(u.Email) Then changes("email") = u.Email
+                            If Not String.IsNullOrWhiteSpace(u.PhotoBase64) Then changes("avatar_url") = u.PhotoBase64
 
                             Dim updateData = New With {
                                 .token = token,
