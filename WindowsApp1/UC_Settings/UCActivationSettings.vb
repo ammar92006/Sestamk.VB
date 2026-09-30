@@ -312,7 +312,7 @@ Namespace UC_Settings
                 If result.IsValid Then
                     Dim syncMsg = If(syncedUsers, "وتمت مزامنة بيانات المستخدمين وكلمات المرور بنجاح ✅", "والترخيص متصل بالسيرفر بنجاح ✅")
                     Try
-                        Notify.Toast($"الترخيص ساري ومفعل، {syncMsg}", Notify.ToastType.Success)
+                        Notify.Toast($"الترخيص ساري ومفعل", Notify.ToastType.Success)
                     Catch
                         MessageBox.Show($"الترخيص ساري ومفعل بنجاح، {syncMsg}", "تم التحديث", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
@@ -323,7 +323,7 @@ Namespace UC_Settings
                 MessageBox.Show("تعذر الاتصال بخادم التراخيص: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Finally
                 btnRefresh.Enabled = True
-                btnRefresh.Text = "🔄 تحديث الترخيص ومزامنة المستخدمين"
+                btnRefresh.Text = "🔄 فحص وتحديث الترخيص"
             End Try
         End Sub
 

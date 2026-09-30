@@ -303,7 +303,7 @@ Namespace UC_Settings
             Me.lblSerial.Size = New System.Drawing.Size(438, 34)
             Me.lblSerial.TabIndex = 0
             Me.lblSerial.Text = "SSTM-PRO-2026517"
-            Me.lblSerial.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblSerial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
             '
             'lblStartDateHeader
             '

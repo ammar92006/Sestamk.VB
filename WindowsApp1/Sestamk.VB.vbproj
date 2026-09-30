@@ -950,6 +950,12 @@
     <Compile Include="UC_Settings\UCDatabaseSettings.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UC_Main\UCDashboard.Designer.vb">
+      <DependentUpon>UCDashboard.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCDashboard.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UC_Settings\UCNotificationsSettings.Designer.vb">
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
     </Compile>
@@ -1333,6 +1339,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCActivationSettings.resx">
       <DependentUpon>UCActivationSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCDashboard.resx">
+      <DependentUpon>UCDashboard.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCNotificationsSettings.resx">
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>

@@ -37,9 +37,9 @@ Namespace UC_Settings
             Me.btnWebHome = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWebAbout = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWebSupport = New Guna.UI2.WinForms.Guna2Button()
+            Me.btnWebUpdates = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWebTerms = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWebPrivacy = New Guna.UI2.WinForms.Guna2Button()
-            Me.btnWebUpdates = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWebAcademy = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWebPortal = New Guna.UI2.WinForms.Guna2Button()
             Me.pnlMain.SuspendLayout()
@@ -69,7 +69,7 @@ Namespace UC_Settings
             Me.lblTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblTitle.Font = New System.Drawing.Font("Segoe UI", 18.0!, System.Drawing.FontStyle.Bold)
             Me.lblTitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(229, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(235, Byte), Integer))
-            Me.lblTitle.Location = New System.Drawing.Point(833, 20)
+            Me.lblTitle.Location = New System.Drawing.Point(816, 20)
             Me.lblTitle.Name = "lblTitle"
             Me.lblTitle.Size = New System.Drawing.Size(358, 35)
             Me.lblTitle.TabIndex = 0
@@ -81,7 +81,7 @@ Namespace UC_Settings
             Me.lblSubtitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblSubtitle.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
-            Me.lblSubtitle.Location = New System.Drawing.Point(583, 58)
+            Me.lblSubtitle.Location = New System.Drawing.Point(566, 58)
             Me.lblSubtitle.Name = "lblSubtitle"
             Me.lblSubtitle.Size = New System.Drawing.Size(608, 25)
             Me.lblSubtitle.TabIndex = 1
@@ -102,7 +102,7 @@ Namespace UC_Settings
             Me.cardApp.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardApp.Location = New System.Drawing.Point(30, 95)
             Me.cardApp.Name = "cardApp"
-            Me.cardApp.Size = New System.Drawing.Size(1161, 175)
+            Me.cardApp.Size = New System.Drawing.Size(1144, 175)
             Me.cardApp.TabIndex = 2
             '
             'lblAppName
@@ -110,7 +110,7 @@ Namespace UC_Settings
             Me.lblAppName.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblAppName.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
             Me.lblAppName.ForeColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
-            Me.lblAppName.Location = New System.Drawing.Point(533, 20)
+            Me.lblAppName.Location = New System.Drawing.Point(516, 20)
             Me.lblAppName.Name = "lblAppName"
             Me.lblAppName.Size = New System.Drawing.Size(600, 36)
             Me.lblAppName.TabIndex = 0
@@ -122,7 +122,7 @@ Namespace UC_Settings
             Me.lblVersion.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblVersion.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
             Me.lblVersion.ForeColor = System.Drawing.Color.Gainsboro
-            Me.lblVersion.Location = New System.Drawing.Point(733, 62)
+            Me.lblVersion.Location = New System.Drawing.Point(716, 62)
             Me.lblVersion.Name = "lblVersion"
             Me.lblVersion.Size = New System.Drawing.Size(400, 30)
             Me.lblVersion.TabIndex = 1
@@ -137,7 +137,7 @@ Namespace UC_Settings
             Me.lblDescription.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
             Me.lblDescription.Location = New System.Drawing.Point(30, 100)
             Me.lblDescription.Name = "lblDescription"
-            Me.lblDescription.Size = New System.Drawing.Size(1103, 55)
+            Me.lblDescription.Size = New System.Drawing.Size(1086, 55)
             Me.lblDescription.TabIndex = 2
             Me.lblDescription.Text = "نظام متكامل لإدارة نقاط البيع والمطاعم والكافيهات والمتاجر، متابعة حركة المبيعات " &
     "والمخازن والخزائن، الفواتير الحرارية، وقارئات الباركود."
@@ -158,7 +158,7 @@ Namespace UC_Settings
             Me.cardDev.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardDev.Location = New System.Drawing.Point(30, 285)
             Me.cardDev.Name = "cardDev"
-            Me.cardDev.Size = New System.Drawing.Size(1161, 185)
+            Me.cardDev.Size = New System.Drawing.Size(1144, 185)
             Me.cardDev.TabIndex = 3
             '
             'lblCardDevTitle
@@ -166,7 +166,7 @@ Namespace UC_Settings
             Me.lblCardDevTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblCardDevTitle.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
             Me.lblCardDevTitle.ForeColor = System.Drawing.Color.White
-            Me.lblCardDevTitle.Location = New System.Drawing.Point(833, 15)
+            Me.lblCardDevTitle.Location = New System.Drawing.Point(816, 15)
             Me.lblCardDevTitle.Name = "lblCardDevTitle"
             Me.lblCardDevTitle.Size = New System.Drawing.Size(300, 28)
             Me.lblCardDevTitle.TabIndex = 0
@@ -178,7 +178,7 @@ Namespace UC_Settings
             Me.lblDeveloper.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblDeveloper.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
             Me.lblDeveloper.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
-            Me.lblDeveloper.Location = New System.Drawing.Point(633, 55)
+            Me.lblDeveloper.Location = New System.Drawing.Point(616, 55)
             Me.lblDeveloper.Name = "lblDeveloper"
             Me.lblDeveloper.Size = New System.Drawing.Size(500, 30)
             Me.lblDeveloper.TabIndex = 1
@@ -190,7 +190,7 @@ Namespace UC_Settings
             Me.lblContact.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblContact.Font = New System.Drawing.Font("Segoe UI", 11.0!)
             Me.lblContact.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
-            Me.lblContact.Location = New System.Drawing.Point(633, 92)
+            Me.lblContact.Location = New System.Drawing.Point(616, 92)
             Me.lblContact.Name = "lblContact"
             Me.lblContact.Size = New System.Drawing.Size(500, 30)
             Me.lblContact.TabIndex = 2
@@ -202,7 +202,7 @@ Namespace UC_Settings
             Me.lblRights.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblRights.Font = New System.Drawing.Font("Segoe UI", 10.5!)
             Me.lblRights.ForeColor = System.Drawing.Color.FromArgb(CType(CType(107, Byte), Integer), CType(CType(114, Byte), Integer), CType(CType(128, Byte), Integer))
-            Me.lblRights.Location = New System.Drawing.Point(633, 130)
+            Me.lblRights.Location = New System.Drawing.Point(616, 130)
             Me.lblRights.Name = "lblRights"
             Me.lblRights.Size = New System.Drawing.Size(500, 30)
             Me.lblRights.TabIndex = 3
@@ -244,7 +244,7 @@ Namespace UC_Settings
             Me.cardWebLinks.FillColor = System.Drawing.Color.FromArgb(CType(CType(26, Byte), Integer), CType(CType(31, Byte), Integer), CType(CType(43, Byte), Integer))
             Me.cardWebLinks.Location = New System.Drawing.Point(30, 485)
             Me.cardWebLinks.Name = "cardWebLinks"
-            Me.cardWebLinks.Size = New System.Drawing.Size(1161, 215)
+            Me.cardWebLinks.Size = New System.Drawing.Size(1144, 215)
             Me.cardWebLinks.TabIndex = 4
             '
             'lblCardWebTitle
@@ -252,24 +252,25 @@ Namespace UC_Settings
             Me.lblCardWebTitle.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblCardWebTitle.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
             Me.lblCardWebTitle.ForeColor = System.Drawing.Color.White
-            Me.lblCardWebTitle.Location = New System.Drawing.Point(536, 16)
+            Me.lblCardWebTitle.Location = New System.Drawing.Point(716, 16)
             Me.lblCardWebTitle.Name = "lblCardWebTitle"
-            Me.lblCardWebTitle.Size = New System.Drawing.Size(600, 28)
+            Me.lblCardWebTitle.Size = New System.Drawing.Size(403, 28)
             Me.lblCardWebTitle.TabIndex = 0
-            Me.lblCardWebTitle.Text = "صفحات وخدمات موقع سستمك الرسمي (sestamk.site.je)"
-            Me.lblCardWebTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardWebTitle.Text = "صفحات وخدمات موقع سستمك (sestamk.site.je)"
+            Me.lblCardWebTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'lblCardWebSub
             '
             Me.lblCardWebSub.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
             Me.lblCardWebSub.Font = New System.Drawing.Font("Segoe UI", 10.5!)
             Me.lblCardWebSub.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
-            Me.lblCardWebSub.Location = New System.Drawing.Point(236, 48)
+            Me.lblCardWebSub.Location = New System.Drawing.Point(219, 48)
             Me.lblCardWebSub.Name = "lblCardWebSub"
             Me.lblCardWebSub.Size = New System.Drawing.Size(900, 24)
             Me.lblCardWebSub.TabIndex = 1
-            Me.lblCardWebSub.Text = "تصفح الروابط المباشرة لخدمات النظام الرسمية، الدعم الفني، شروط الاستخدام، وسياسة الخصوصية:"
-            Me.lblCardWebSub.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            Me.lblCardWebSub.Text = "تصفح الروابط المباشرة لخدمات النظام الرسمية، الدعم الفني، شروط الاستخدام، وسياسة " &
+    "الخصوصية:"
+            Me.lblCardWebSub.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'btnWebHome
             '
@@ -284,7 +285,7 @@ Namespace UC_Settings
             Me.btnWebHome.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebHome.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebHome.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebHome.Location = New System.Drawing.Point(871, 85)
+            Me.btnWebHome.Location = New System.Drawing.Point(854, 85)
             Me.btnWebHome.Name = "btnWebHome"
             Me.btnWebHome.Size = New System.Drawing.Size(260, 46)
             Me.btnWebHome.TabIndex = 2
@@ -303,7 +304,7 @@ Namespace UC_Settings
             Me.btnWebAbout.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebAbout.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebAbout.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebAbout.Location = New System.Drawing.Point(591, 85)
+            Me.btnWebAbout.Location = New System.Drawing.Point(574, 85)
             Me.btnWebAbout.Name = "btnWebAbout"
             Me.btnWebAbout.Size = New System.Drawing.Size(260, 46)
             Me.btnWebAbout.TabIndex = 3
@@ -322,7 +323,7 @@ Namespace UC_Settings
             Me.btnWebSupport.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebSupport.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebSupport.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebSupport.Location = New System.Drawing.Point(311, 85)
+            Me.btnWebSupport.Location = New System.Drawing.Point(294, 85)
             Me.btnWebSupport.Name = "btnWebSupport"
             Me.btnWebSupport.Size = New System.Drawing.Size(260, 46)
             Me.btnWebSupport.TabIndex = 4
@@ -341,7 +342,7 @@ Namespace UC_Settings
             Me.btnWebUpdates.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebUpdates.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebUpdates.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebUpdates.Location = New System.Drawing.Point(31, 85)
+            Me.btnWebUpdates.Location = New System.Drawing.Point(14, 85)
             Me.btnWebUpdates.Name = "btnWebUpdates"
             Me.btnWebUpdates.Size = New System.Drawing.Size(260, 46)
             Me.btnWebUpdates.TabIndex = 5
@@ -360,7 +361,7 @@ Namespace UC_Settings
             Me.btnWebTerms.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebTerms.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebTerms.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebTerms.Location = New System.Drawing.Point(871, 145)
+            Me.btnWebTerms.Location = New System.Drawing.Point(854, 145)
             Me.btnWebTerms.Name = "btnWebTerms"
             Me.btnWebTerms.Size = New System.Drawing.Size(260, 46)
             Me.btnWebTerms.TabIndex = 6
@@ -379,7 +380,7 @@ Namespace UC_Settings
             Me.btnWebPrivacy.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebPrivacy.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebPrivacy.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebPrivacy.Location = New System.Drawing.Point(591, 145)
+            Me.btnWebPrivacy.Location = New System.Drawing.Point(574, 145)
             Me.btnWebPrivacy.Name = "btnWebPrivacy"
             Me.btnWebPrivacy.Size = New System.Drawing.Size(260, 46)
             Me.btnWebPrivacy.TabIndex = 7
@@ -398,7 +399,7 @@ Namespace UC_Settings
             Me.btnWebAcademy.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebAcademy.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebAcademy.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebAcademy.Location = New System.Drawing.Point(311, 145)
+            Me.btnWebAcademy.Location = New System.Drawing.Point(294, 145)
             Me.btnWebAcademy.Name = "btnWebAcademy"
             Me.btnWebAcademy.Size = New System.Drawing.Size(260, 46)
             Me.btnWebAcademy.TabIndex = 8
@@ -417,7 +418,7 @@ Namespace UC_Settings
             Me.btnWebPortal.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebPortal.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
             Me.btnWebPortal.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnWebPortal.Location = New System.Drawing.Point(31, 145)
+            Me.btnWebPortal.Location = New System.Drawing.Point(14, 145)
             Me.btnWebPortal.Name = "btnWebPortal"
             Me.btnWebPortal.Size = New System.Drawing.Size(260, 46)
             Me.btnWebPortal.TabIndex = 9

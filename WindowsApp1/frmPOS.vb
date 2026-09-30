@@ -1556,7 +1556,7 @@ Public Class frmPOS
             finalInvoiceTotal = Math.Max(0, finalInvoiceTotal - CurrentReservationDeposit)
         End If
 
-        Using frmPay As New FrmQuickPayment(finalInvoiceTotal, CurrentCustomer)
+        Using frmPay As New FrmQuickPayment(finalInvoiceTotal, CurrentCustomer, CurrentOrderType)
             If frmPay.ShowDialog() = DialogResult.OK Then
 
                 Dim custID As Integer? = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?))
