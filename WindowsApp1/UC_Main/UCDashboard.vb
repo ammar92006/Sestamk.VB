@@ -29,6 +29,7 @@ Namespace UC_Main
 
         Public Sub New()
             InitializeComponent()
+            ApplyDashboardTheme()
         End Sub
 
         Private Sub UCDashboard_Load(sender As Object, e As EventArgs) Handles MyBase.Load

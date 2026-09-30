@@ -10,6 +10,7 @@ Namespace UC_Main
 
         Public Sub New()
             InitializeComponent()
+            ApplyTheme()
         End Sub
 
         Private Sub btnBackCustomers_Click(sender As Object, e As EventArgs) Handles btnBackCustomers.Click
@@ -48,7 +49,12 @@ Namespace UC_Main
                     kvp.Key.Enabled = allowed
                     If Not allowed Then
                         If TypeOf kvp.Key Is Guna.UI2.WinForms.Guna2Button Then
-                            CType(kvp.Key, Guna.UI2.WinForms.Guna2Button).FillColor = Color.FromArgb(20, 24, 32)
+                            Dim gBtn = CType(kvp.Key, Guna.UI2.WinForms.Guna2Button)
+                            Dim isDark As Boolean = ThemeManager.Instance.IsDark
+                            Dim pal = ThemeManager.Instance.CurrentPalette
+                            gBtn.FillColor = If(isDark, Color.FromArgb(20, 24, 32), If(pal IsNot Nothing, pal.ButtonDisabledBackground, Color.FromArgb(241, 245, 249)))
+                            gBtn.ForeColor = If(pal IsNot Nothing, pal.TextDisabled, Color.FromArgb(148, 163, 184))
+                            gBtn.BorderColor = If(isDark, Color.FromArgb(35, 45, 63), If(pal IsNot Nothing, pal.Border, Color.FromArgb(226, 232, 240)))
                         End If
                     End If
                 End If
@@ -59,23 +65,38 @@ Namespace UC_Main
             Try
                 Dim pal = ThemeManager.Instance.CurrentPalette
                 If pal Is Nothing Then Return
+                Dim isDark As Boolean = ThemeManager.Instance.IsDark
 
                 Me.BackColor = pal.Background
                 flpCustomers.BackColor = pal.Background
 
-                pnlHeaderCustomers.BackColor = pal.CardBackground
+                ' بطاقة الهيدر العلوية
+                pnlHeaderCustomers.FillColor = pal.CardBackground
+                pnlHeaderCustomers.BackColor = Color.Transparent
+                pnlHeaderCustomers.BorderColor = pal.Border
+                pnlHeaderCustomers.BorderThickness = 1
+                pnlHeaderCustomers.BorderRadius = 10
+
                 lblTitleCustomers.ForeColor = pal.TextPrimary
+                lblTitleCustomers.BackColor = Color.Transparent
                 lblDescCustomers.ForeColor = pal.TextSecondary
+                lblDescCustomers.BackColor = Color.Transparent
 
+                ' زر العودة
                 btnBackCustomers.FillColor = pal.ButtonSecondaryBackground
-                btnBackCustomers.ForeColor = pal.ButtonSecondaryForeground
+                btnBackCustomers.ForeColor = If(isDark, Color.FromArgb(96, 165, 250), pal.Primary)
                 btnBackCustomers.BorderColor = pal.Border
+                btnBackCustomers.BorderThickness = 1
+                btnBackCustomers.HoverState.FillColor = pal.ButtonSecondaryHover
+                btnBackCustomers.HoverState.ForeColor = If(isDark, Color.White, pal.Primary)
 
+                ' أزرار وظائف القسم
                 Dim buttons() As Guna.UI2.WinForms.Guna2Button = {btnFrmCustomers, btnFrmCustomerStatement, btnCustomerBalanceDownload, ToolStripButton11}
                 For Each btn In buttons
                     If btn IsNot Nothing Then
                         btn.FillColor = pal.CardBackground
                         btn.BorderColor = pal.Border
+                        btn.BorderThickness = 1
                         btn.ForeColor = pal.TextPrimary
                         btn.HoverState.FillColor = pal.Primary
                         btn.HoverState.BorderColor = pal.PrimaryHover

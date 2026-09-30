@@ -10,6 +10,7 @@ Namespace UC_Main
 
         Public Sub New()
             InitializeComponent()
+            ApplyTheme()
         End Sub
 
         Private Sub btnBackTreasury_Click(sender As Object, e As EventArgs) Handles btnBackTreasury.Click
@@ -73,7 +74,12 @@ Namespace UC_Main
                     kvp.Key.Enabled = allowed
                     If Not allowed Then
                         If TypeOf kvp.Key Is Guna.UI2.WinForms.Guna2Button Then
-                            CType(kvp.Key, Guna.UI2.WinForms.Guna2Button).FillColor = Color.FromArgb(20, 24, 32)
+                            Dim gBtn = CType(kvp.Key, Guna.UI2.WinForms.Guna2Button)
+                            Dim isDark As Boolean = ThemeManager.Instance.IsDark
+                            Dim pal = ThemeManager.Instance.CurrentPalette
+                            gBtn.FillColor = If(isDark, Color.FromArgb(20, 24, 32), If(pal IsNot Nothing, pal.ButtonDisabledBackground, Color.FromArgb(241, 245, 249)))
+                            gBtn.ForeColor = If(pal IsNot Nothing, pal.TextDisabled, Color.FromArgb(148, 163, 184))
+                            gBtn.BorderColor = If(isDark, Color.FromArgb(35, 45, 63), If(pal IsNot Nothing, pal.Border, Color.FromArgb(226, 232, 240)))
                         End If
                     End If
                 End If
@@ -84,23 +90,38 @@ Namespace UC_Main
             Try
                 Dim pal = ThemeManager.Instance.CurrentPalette
                 If pal Is Nothing Then Return
+                Dim isDark As Boolean = ThemeManager.Instance.IsDark
 
                 Me.BackColor = pal.Background
                 flpTreasury.BackColor = pal.Background
 
-                pnlHeaderTreasury.BackColor = pal.CardBackground
+                ' بطاقة الهيدر العلوية
+                pnlHeaderTreasury.FillColor = pal.CardBackground
+                pnlHeaderTreasury.BackColor = Color.Transparent
+                pnlHeaderTreasury.BorderColor = pal.Border
+                pnlHeaderTreasury.BorderThickness = 1
+                pnlHeaderTreasury.BorderRadius = 10
+
                 lblTitleTreasury.ForeColor = pal.TextPrimary
+                lblTitleTreasury.BackColor = Color.Transparent
                 lblDescTreasury.ForeColor = pal.TextSecondary
+                lblDescTreasury.BackColor = Color.Transparent
 
+                ' زر العودة
                 btnBackTreasury.FillColor = pal.ButtonSecondaryBackground
-                btnBackTreasury.ForeColor = pal.ButtonSecondaryForeground
+                btnBackTreasury.ForeColor = If(isDark, Color.FromArgb(96, 165, 250), pal.Primary)
                 btnBackTreasury.BorderColor = pal.Border
+                btnBackTreasury.BorderThickness = 1
+                btnBackTreasury.HoverState.FillColor = pal.ButtonSecondaryHover
+                btnBackTreasury.HoverState.ForeColor = If(isDark, Color.White, pal.Primary)
 
+                ' أزرار وظائف القسم
                 Dim buttons() As Guna.UI2.WinForms.Guna2Button = {btnfrmTreasury, btnFrmTreasuryTransfer, btnDeposit, btnWithdraw, btnFrmTreasuryTransactionsReport}
                 For Each btn In buttons
                     If btn IsNot Nothing Then
                         btn.FillColor = pal.CardBackground
                         btn.BorderColor = pal.Border
+                        btn.BorderThickness = 1
                         btn.ForeColor = pal.TextPrimary
                         btn.HoverState.FillColor = pal.Primary
                         btn.HoverState.BorderColor = pal.PrimaryHover

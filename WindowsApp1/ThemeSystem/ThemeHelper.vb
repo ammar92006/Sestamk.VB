@@ -259,8 +259,20 @@ Public NotInheritable Class ThemeHelper
     Private Shared Sub ApplyGuna2Panel(pnl As Guna2Panel, palette As ThemePalette)
         Dim nameLower As String = pnl.Name.ToLower()
 
-        If nameLower.Contains("header") OrElse nameLower = "panelheader" OrElse nameLower = "pnlheader" Then
+        If nameLower = "panelheader" OrElse nameLower = "pnlheader" Then
             pnl.FillColor = palette.SurfaceHeader
+            pnl.BackColor = Color.Transparent
+            If palette.ThemeType = AppTheme.Light Then
+                pnl.BorderColor = palette.Border
+                pnl.BorderThickness = 1
+            End If
+            Return
+        End If
+
+        If nameLower.StartsWith("pnlheader") Then
+            pnl.FillColor = palette.CardBackground
+            pnl.BorderColor = palette.Border
+            pnl.BorderThickness = 1
             pnl.BackColor = Color.Transparent
             Return
         End If
@@ -268,6 +280,10 @@ Public NotInheritable Class ThemeHelper
         If nameLower.Contains("nav") OrElse nameLower.Contains("sidebar") Then
             pnl.FillColor = palette.NavBackground
             pnl.BackColor = Color.Transparent
+            If palette.ThemeType = AppTheme.Light Then
+                pnl.BorderColor = palette.Border
+                pnl.BorderThickness = 1
+            End If
             Return
         End If
 
@@ -310,8 +326,14 @@ Public NotInheritable Class ThemeHelper
         Dim parent As Control = lbl.Parent
         If parent IsNot Nothing Then
             Dim parentName As String = parent.Name.ToLower()
-            If parentName.Contains("header") OrElse parentName = "panelheader" OrElse parentName = "pnlheader" Then
-                lbl.ForeColor = palette.TextOnDark
+            If parentName = "panelheader" Then
+                lbl.ForeColor = If(palette.ThemeType = AppTheme.Dark, palette.TextOnDark, palette.TextPrimary)
+                lbl.BackColor = Color.Transparent
+                Return
+            End If
+            If parentName.StartsWith("pnlheader") Then
+                Dim isDesc As Boolean = lbl.Name.ToLower().Contains("desc")
+                lbl.ForeColor = If(isDesc, palette.TextSecondary, palette.TextPrimary)
                 lbl.BackColor = Color.Transparent
                 Return
             End If

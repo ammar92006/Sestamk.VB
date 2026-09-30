@@ -35,7 +35,7 @@ Public NotInheritable Class LightThemePalette
 
     Public Overrides ReadOnly Property SurfaceHeader As Color
         Get
-            Return H("#243342")
+            Return H("#FFFFFF")
         End Get
     End Property
 
@@ -107,13 +107,13 @@ Public NotInheritable Class LightThemePalette
 
     Public Overrides ReadOnly Property NavBackground As Color
         Get
-            Return H("#1E293B")
+            Return H("#FFFFFF")
         End Get
     End Property
 
     Public Overrides ReadOnly Property NavHover As Color
         Get
-            Return H("#334155")
+            Return H("#F1F5F9")
         End Get
     End Property
 
@@ -125,7 +125,7 @@ Public NotInheritable Class LightThemePalette
 
     Public Overrides ReadOnly Property NavText As Color
         Get
-            Return H("#E2E8F0")
+            Return H("#475569")
         End Get
     End Property
 

@@ -10,6 +10,7 @@ Namespace UC_Main
 
         Public Sub New()
             InitializeComponent()
+            ApplyTheme()
         End Sub
 
         Private Sub btnBackEmployees_Click(sender As Object, e As EventArgs) Handles btnBackEmployees.Click
@@ -53,7 +54,12 @@ Namespace UC_Main
                     kvp.Key.Enabled = allowed
                     If Not allowed Then
                         If TypeOf kvp.Key Is Guna.UI2.WinForms.Guna2Button Then
-                            CType(kvp.Key, Guna.UI2.WinForms.Guna2Button).FillColor = Color.FromArgb(20, 24, 32)
+                            Dim gBtn = CType(kvp.Key, Guna.UI2.WinForms.Guna2Button)
+                            Dim isDark As Boolean = ThemeManager.Instance.IsDark
+                            Dim pal = ThemeManager.Instance.CurrentPalette
+                            gBtn.FillColor = If(isDark, Color.FromArgb(20, 24, 32), If(pal IsNot Nothing, pal.ButtonDisabledBackground, Color.FromArgb(241, 245, 249)))
+                            gBtn.ForeColor = If(pal IsNot Nothing, pal.TextDisabled, Color.FromArgb(148, 163, 184))
+                            gBtn.BorderColor = If(isDark, Color.FromArgb(35, 45, 63), If(pal IsNot Nothing, pal.Border, Color.FromArgb(226, 232, 240)))
                         End If
                     End If
                 End If
@@ -64,23 +70,38 @@ Namespace UC_Main
             Try
                 Dim pal = ThemeManager.Instance.CurrentPalette
                 If pal Is Nothing Then Return
+                Dim isDark As Boolean = ThemeManager.Instance.IsDark
 
                 Me.BackColor = pal.Background
                 flpEmployees.BackColor = pal.Background
 
-                pnlHeaderEmployees.BackColor = pal.CardBackground
+                ' بطاقة الهيدر العلوية
+                pnlHeaderEmployees.FillColor = pal.CardBackground
+                pnlHeaderEmployees.BackColor = Color.Transparent
+                pnlHeaderEmployees.BorderColor = pal.Border
+                pnlHeaderEmployees.BorderThickness = 1
+                pnlHeaderEmployees.BorderRadius = 10
+
                 lblTitleEmployees.ForeColor = pal.TextPrimary
+                lblTitleEmployees.BackColor = Color.Transparent
                 lblDescEmployees.ForeColor = pal.TextSecondary
+                lblDescEmployees.BackColor = Color.Transparent
 
+                ' زر العودة
                 btnBackEmployees.FillColor = pal.ButtonSecondaryBackground
-                btnBackEmployees.ForeColor = pal.ButtonSecondaryForeground
+                btnBackEmployees.ForeColor = If(isDark, Color.FromArgb(96, 165, 250), pal.Primary)
                 btnBackEmployees.BorderColor = pal.Border
+                btnBackEmployees.BorderThickness = 1
+                btnBackEmployees.HoverState.FillColor = pal.ButtonSecondaryHover
+                btnBackEmployees.HoverState.ForeColor = If(isDark, Color.White, pal.Primary)
 
+                ' أزرار وظائف القسم
                 Dim buttons() As Guna.UI2.WinForms.Guna2Button = {btnfrmEmployees, btnfrmJobTitles, btnfrmDepartments, btnfrmSalarySystems, btnfrmSalaryPayment}
                 For Each btn In buttons
                     If btn IsNot Nothing Then
                         btn.FillColor = pal.CardBackground
                         btn.BorderColor = pal.Border
+                        btn.BorderThickness = 1
                         btn.ForeColor = pal.TextPrimary
                         btn.HoverState.FillColor = pal.Primary
                         btn.HoverState.BorderColor = pal.PrimaryHover

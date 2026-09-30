@@ -10,6 +10,7 @@ Namespace UC_Main
 
         Public Sub New()
             InitializeComponent()
+            ApplyTheme()
         End Sub
 
         Private Sub btnBackExpenses_Click(sender As Object, e As EventArgs) Handles btnBackExpenses.Click
@@ -38,7 +39,12 @@ Namespace UC_Main
                     kvp.Key.Enabled = allowed
                     If Not allowed Then
                         If TypeOf kvp.Key Is Guna.UI2.WinForms.Guna2Button Then
-                            CType(kvp.Key, Guna.UI2.WinForms.Guna2Button).FillColor = Color.FromArgb(20, 24, 32)
+                            Dim gBtn = CType(kvp.Key, Guna.UI2.WinForms.Guna2Button)
+                            Dim isDark As Boolean = ThemeManager.Instance.IsDark
+                            Dim pal = ThemeManager.Instance.CurrentPalette
+                            gBtn.FillColor = If(isDark, Color.FromArgb(20, 24, 32), If(pal IsNot Nothing, pal.ButtonDisabledBackground, Color.FromArgb(241, 245, 249)))
+                            gBtn.ForeColor = If(pal IsNot Nothing, pal.TextDisabled, Color.FromArgb(148, 163, 184))
+                            gBtn.BorderColor = If(isDark, Color.FromArgb(35, 45, 63), If(pal IsNot Nothing, pal.Border, Color.FromArgb(226, 232, 240)))
                         End If
                     End If
                 End If
@@ -49,23 +55,38 @@ Namespace UC_Main
             Try
                 Dim pal = ThemeManager.Instance.CurrentPalette
                 If pal Is Nothing Then Return
+                Dim isDark As Boolean = ThemeManager.Instance.IsDark
 
                 Me.BackColor = pal.Background
                 flpExpenses.BackColor = pal.Background
 
-                pnlHeaderExpenses.BackColor = pal.CardBackground
+                ' بطاقة الهيدر العلوية
+                pnlHeaderExpenses.FillColor = pal.CardBackground
+                pnlHeaderExpenses.BackColor = Color.Transparent
+                pnlHeaderExpenses.BorderColor = pal.Border
+                pnlHeaderExpenses.BorderThickness = 1
+                pnlHeaderExpenses.BorderRadius = 10
+
                 lblTitleExpenses.ForeColor = pal.TextPrimary
+                lblTitleExpenses.BackColor = Color.Transparent
                 lblDescExpenses.ForeColor = pal.TextSecondary
+                lblDescExpenses.BackColor = Color.Transparent
 
+                ' زر العودة
                 btnBackExpenses.FillColor = pal.ButtonSecondaryBackground
-                btnBackExpenses.ForeColor = pal.ButtonSecondaryForeground
+                btnBackExpenses.ForeColor = If(isDark, Color.FromArgb(96, 165, 250), pal.Primary)
                 btnBackExpenses.BorderColor = pal.Border
+                btnBackExpenses.BorderThickness = 1
+                btnBackExpenses.HoverState.FillColor = pal.ButtonSecondaryHover
+                btnBackExpenses.HoverState.ForeColor = If(isDark, Color.White, pal.Primary)
 
+                ' أزرار وظائف القسم
                 Dim buttons() As Guna.UI2.WinForms.Guna2Button = {btnform_Expenses, btnExpensesReportForm}
                 For Each btn In buttons
                     If btn IsNot Nothing Then
                         btn.FillColor = pal.CardBackground
                         btn.BorderColor = pal.Border
+                        btn.BorderThickness = 1
                         btn.ForeColor = pal.TextPrimary
                         btn.HoverState.FillColor = pal.Primary
                         btn.HoverState.BorderColor = pal.PrimaryHover

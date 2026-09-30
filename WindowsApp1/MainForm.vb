@@ -315,9 +315,11 @@ Public Class MainForm
     ''' </summary>
     Private Sub SetActiveNav(activeBtn As Guna.UI2.WinForms.Guna2Button, targetView As Control)
         Dim pal = ThemeManager.Instance.CurrentPalette
+        Dim isDark As Boolean = If(pal IsNot Nothing, (pal.ThemeType = AppTheme.Dark), True)
         Dim selColor As Color = If(pal IsNot Nothing, pal.NavSelected, Color.FromArgb(37, 99, 235))
         Dim selTextColor As Color = If(pal IsNot Nothing, pal.NavSelectedText, Color.White)
-        Dim normalTextColor As Color = If(pal IsNot Nothing, pal.NavText, Color.FromArgb(209, 213, 219))
+        Dim normalTextColor As Color = If(pal IsNot Nothing, pal.NavText, If(isDark, Color.FromArgb(209, 213, 219), Color.FromArgb(71, 85, 105)))
+        Dim hoverBgColor As Color = If(pal IsNot Nothing, pal.NavHover, If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249)))
 
         Dim navButtons() As Guna.UI2.WinForms.Guna2Button = {navDashboard, navSales, navSystem, navInventory, navPurchases, navCustomers, navSuppliers, navTreasury, navExpenses, navEmployees, navUsers, navSettings}
         For Each btn In navButtons
@@ -325,6 +327,8 @@ Public Class MainForm
                 btn.Checked = False
                 btn.FillColor = Color.Transparent
                 btn.ForeColor = normalTextColor
+                btn.HoverState.FillColor = hoverBgColor
+                btn.HoverState.ForeColor = If(isDark, Color.White, If(pal IsNot Nothing, pal.Primary, Color.FromArgb(37, 99, 235)))
             End If
         Next
 
@@ -332,6 +336,8 @@ Public Class MainForm
             activeBtn.Checked = True
             activeBtn.FillColor = selColor
             activeBtn.ForeColor = selTextColor
+            activeBtn.HoverState.FillColor = selColor
+            activeBtn.HoverState.ForeColor = selTextColor
         End If
 
         Dim allViews() As Control = {_ucDashboard, _ucSales, _ucSystem, _ucInventory, _ucPurchases, _ucCustomers, _ucSuppliers, _ucTreasury, _ucExpenses, _ucEmployees, _ucUsers, _ucSettings}
@@ -484,46 +490,129 @@ Public Class MainForm
     Public Sub ApplyMainFormTheme()
         Try
             Dim pal = ThemeManager.Instance.CurrentPalette
+            If pal Is Nothing Then Return
+            Dim isDark As Boolean = ThemeManager.Instance.IsDark
 
             ' خلفية الفورم والحاويات الرئيسية
             Me.BackColor = pal.Background
             pnlMainContainer.BackColor = pal.Background
 
-            ' الهيدر يظل داكناً بالهوية الأصلية
+            ' الهيدر العلوي
             panelHeader.FillColor = pal.SurfaceHeader
-            pnlSidebar.FillColor = pal.SurfaceHeader
+            If Not isDark Then
+                panelHeader.BorderColor = pal.Border
+                panelHeader.BorderThickness = 1
+                lbltitle.ForeColor = pal.TextPrimary
+                If lblHeaderBranch IsNot Nothing Then
+                    lblHeaderBranch.ForeColor = pal.TextSecondary
+                End If
+                If lblStatusUserRole IsNot Nothing Then
+                    lblStatusUserRole.ForeColor = pal.Primary
+                End If
+            Else
+                panelHeader.BorderThickness = 0
+                lbltitle.ForeColor = pal.TextOnDark
+                If lblHeaderBranch IsNot Nothing Then
+                    lblHeaderBranch.ForeColor = Color.FromArgb(203, 213, 225)
+                End If
+                If lblStatusUserRole IsNot Nothing Then
+                    lblStatusUserRole.ForeColor = Color.FromArgb(147, 197, 253)
+                End If
+            End If
+
             lbltitle.BackColor = Color.Transparent
-            lbltitle.ForeColor = pal.TextOnDark
-            If lblHeaderBranch IsNot Nothing Then
-                lblHeaderBranch.BackColor = Color.Transparent
-                lblHeaderBranch.ForeColor = Color.FromArgb(203, 213, 225)
-            End If
-            If lblStatusUserRole IsNot Nothing Then
-                lblStatusUserRole.BackColor = Color.Transparent
-                lblStatusUserRole.ForeColor = Color.FromArgb(147, 197, 253)
-            End If
+            If lblHeaderBranch IsNot Nothing Then lblHeaderBranch.BackColor = Color.Transparent
+            If lblStatusUserRole IsNot Nothing Then lblStatusUserRole.BackColor = Color.Transparent
             If picLogo IsNot Nothing Then picLogo.BackColor = Color.Transparent
 
             ' أزرار التحكم بالنافذة
+            Dim ctrlBoxFore As Color = If(isDark, pal.TextOnDark, pal.TextSecondary)
             btn_min.FillColor = Color.Transparent
-            btn_min.ForeColor = pal.TextOnDark
+            btn_min.ForeColor = ctrlBoxFore
+            btn_min.HoverState.FillColor = If(isDark, Color.FromArgb(30, 41, 59), pal.NavHover)
+            btn_min.HoverState.ForeColor = If(isDark, Color.White, pal.TextPrimary)
+
             btn_max.FillColor = Color.Transparent
-            btn_max.ForeColor = pal.TextOnDark
+            btn_max.ForeColor = ctrlBoxFore
+            btn_max.HoverState.FillColor = If(isDark, Color.FromArgb(30, 41, 59), pal.NavHover)
+            btn_max.HoverState.ForeColor = If(isDark, Color.White, pal.TextPrimary)
+
             btn_close.FillColor = Color.Transparent
-            btn_close.ForeColor = pal.TextOnDark
+            btn_close.ForeColor = ctrlBoxFore
+            btn_close.HoverState.FillColor = pal.Danger
+            btn_close.HoverState.ForeColor = Color.White
 
-            btnLogout.FillColor = pal.ButtonSecondaryBackground
-            btnLogout.ForeColor = pal.ButtonSecondaryForeground
-            btnLogout.BorderColor = pal.Border
-            btnSupport.FillColor = pal.ButtonSecondaryBackground
-            btnSupport.ForeColor = pal.ButtonSecondaryForeground
-            btnSupport.BorderColor = pal.Border
+            ' شريط البحث في الهيدر
+            If isDark Then
+                txtGlobalSearch.FillColor = Color.FromArgb(23, 30, 44)
+                txtGlobalSearch.ForeColor = Color.White
+                txtGlobalSearch.PlaceholderForeColor = Color.FromArgb(148, 163, 184)
+                txtGlobalSearch.BorderColor = Color.FromArgb(38, 51, 72)
+            Else
+                txtGlobalSearch.FillColor = Color.FromArgb(241, 245, 249)
+                txtGlobalSearch.ForeColor = pal.TextPrimary
+                txtGlobalSearch.PlaceholderForeColor = pal.TextMuted
+                txtGlobalSearch.BorderColor = pal.Border
+            End If
 
-            ' شريط البحث في الهيدر متناسق مع الهيدر الداكن
-            txtGlobalSearch.FillColor = Color.FromArgb(23, 30, 44)
-            txtGlobalSearch.ForeColor = Color.White
-            txtGlobalSearch.PlaceholderForeColor = Color.FromArgb(148, 163, 184)
-            txtGlobalSearch.BorderColor = Color.FromArgb(38, 51, 72)
+            ' القائمة الجانبية وحاوية الأزرار
+            pnlSidebar.FillColor = pal.NavBackground
+            If Not isDark Then
+                pnlSidebar.BorderColor = pal.Border
+                pnlSidebar.BorderThickness = 1
+            Else
+                pnlSidebar.BorderThickness = 0
+            End If
+            flpNav.BackColor = pal.NavBackground
+
+            ' تحديث ستايل أزرار السايدبار
+            Dim navButtons() As Guna.UI2.WinForms.Guna2Button = {navDashboard, navSales, navSystem, navInventory, navPurchases, navCustomers, navSuppliers, navTreasury, navExpenses, navEmployees, navUsers, navSettings}
+            Dim navNormalFore As Color = If(pal IsNot Nothing, pal.NavText, If(isDark, Color.FromArgb(209, 213, 219), Color.FromArgb(71, 85, 105)))
+            Dim navHoverBg As Color = If(pal IsNot Nothing, pal.NavHover, If(isDark, Color.FromArgb(30, 41, 59), Color.FromArgb(241, 245, 249)))
+            For Each btn In navButtons
+                If btn IsNot Nothing Then
+                    btn.HoverState.FillColor = navHoverBg
+                    btn.HoverState.ForeColor = If(isDark, Color.White, pal.Primary)
+                    If btn.Checked Then
+                        btn.FillColor = pal.NavSelected
+                        btn.ForeColor = pal.NavSelectedText
+                    Else
+                        btn.FillColor = Color.Transparent
+                        btn.ForeColor = navNormalFore
+                    End If
+                End If
+            Next
+
+            ' أزرار الهيدر
+            If btnLogout IsNot Nothing Then
+                btnLogout.BorderRadius = 8
+                btnLogout.BorderThickness = 1
+                btnLogout.FillColor = pal.DangerSubtleBackground
+                btnLogout.ForeColor = pal.DangerSubtleForeground
+                btnLogout.BorderColor = pal.DangerSubtleBorder
+                btnLogout.HoverState.FillColor = pal.Danger
+                btnLogout.HoverState.ForeColor = Color.White
+                btnLogout.HoverState.BorderColor = pal.Danger
+            End If
+
+            If btnSupport IsNot Nothing Then
+                btnSupport.BorderRadius = 8
+                btnSupport.BorderThickness = 1
+                btnSupport.FillColor = pal.InfoSubtleBackground
+                btnSupport.ForeColor = pal.InfoSubtleForeground
+                btnSupport.BorderColor = pal.InfoSubtleBorder
+                btnSupport.HoverState.FillColor = pal.Info
+                btnSupport.HoverState.ForeColor = Color.White
+                btnSupport.HoverState.BorderColor = pal.Info
+            End If
+
+            ' شريط الحالة السفلي
+            statusStripMain.BackColor = If(isDark, pal.SurfaceHeader, pal.SurfaceSecondary)
+            Dim statusFore As Color = If(isDark, pal.TextOnDark, pal.TextSecondary)
+            statusStripMain.ForeColor = statusFore
+            For Each item As ToolStripItem In statusStripMain.Items
+                item.ForeColor = statusFore
+            Next
 
             ' تطبيق ثيم شاشة الداشبورد المستقلة
             If _ucDashboard IsNot Nothing Then
@@ -541,37 +630,6 @@ Public Class MainForm
             If _ucEmployees IsNot Nothing Then _ucEmployees.ApplyTheme()
             If _ucUsers IsNot Nothing Then _ucUsers.ApplyTheme()
             If _ucSettings IsNot Nothing Then _ucSettings.ApplyTheme()
-
-            ' زر تسجيل الخروج الاحترافي في الهيدر
-            If btnLogout IsNot Nothing Then
-                btnLogout.BorderRadius = 8
-                btnLogout.BorderThickness = 1
-                btnLogout.FillColor = pal.DangerSubtleBackground
-                btnLogout.ForeColor = pal.DangerSubtleForeground
-                btnLogout.BorderColor = pal.DangerSubtleBorder
-                btnLogout.HoverState.FillColor = pal.Danger
-                btnLogout.HoverState.ForeColor = Color.White
-                btnLogout.HoverState.BorderColor = pal.Danger
-            End If
-
-            ' زر الدعم الفني في الهيدر
-            If btnSupport IsNot Nothing Then
-                btnSupport.BorderRadius = 8
-                btnSupport.BorderThickness = 1
-                btnSupport.FillColor = pal.InfoSubtleBackground
-                btnSupport.ForeColor = pal.InfoSubtleForeground
-                btnSupport.BorderColor = pal.InfoSubtleBorder
-                btnSupport.HoverState.FillColor = pal.Info
-                btnSupport.HoverState.ForeColor = Color.White
-                btnSupport.HoverState.BorderColor = pal.Info
-            End If
-
-            ' شريط الحالة السفلي
-            statusStripMain.BackColor = pal.SurfaceHeader
-            statusStripMain.ForeColor = pal.TextOnDark
-            For Each item As ToolStripItem In statusStripMain.Items
-                item.ForeColor = pal.TextOnDark
-            Next
 
         Catch ex As Exception
             Logger.LogError("ApplyMainFormTheme", ex)
