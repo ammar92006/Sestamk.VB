@@ -161,8 +161,9 @@ Namespace UC_Settings
                                     title = healed.Item1
                                     desc = healed.Item2
 
-                                    Dim relDate = Convert.ToString(item("release_date"))
-                                    If String.IsNullOrWhiteSpace(relDate) Then relDate = Convert.ToString(item("created_at"))
+                                    Dim relDate = Convert.ToString(item("created_at"))
+                                    If String.IsNullOrWhiteSpace(relDate) Then relDate = Convert.ToString(item("release_date"))
+
 
                                     Dim pkgSize As Long = 0
                                     Long.TryParse(Convert.ToString(item("delta_size_bytes")), pkgSize)
@@ -251,8 +252,8 @@ Namespace UC_Settings
 
                     lblLatestVersion.Text = If(String.IsNullOrWhiteSpace(latestVerStr), "-", latestVerStr)
 
-                    Dim dateStr = Convert.ToString(latest("release_date"))
-                    If String.IsNullOrWhiteSpace(dateStr) Then dateStr = Convert.ToString(latest("created_at"))
+                    Dim dateStr = Convert.ToString(latest("created_at"))
+                    If String.IsNullOrWhiteSpace(dateStr) Then dateStr = Convert.ToString(latest("release_date"))
 
                     Dim parsedDate As DateTime
                     If DateTime.TryParse(dateStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal, parsedDate) OrElse DateTime.TryParse(dateStr, parsedDate) Then
@@ -428,51 +429,56 @@ Namespace UC_Settings
                 pnlHeader.Controls.Add(pnlCurrent)
             End If
 
-            ' عنوان الإصدار النظيف بجانب الشارة
-            Dim cleanTitle = CleanReleaseTitle(rawTitle, ver)
-            Dim rightBound = If(isCurrent, pnlBadge.Left - currentBadgeWidth - 16, pnlBadge.Left - 10)
-            Dim leftBound = 220
-            Dim titleWidth = Math.Max(150, rightBound - leftBound)
-
-            Dim lblCardTitle As New Label With {
-                .Text = cleanTitle,
-                .Font = New Font("Segoe UI", 12.0!, FontStyle.Bold),
-                .ForeColor = Color.FromArgb(248, 250, 252),
-                .Location = New Point(leftBound, 3),
-                .Size = New Size(titleWidth, 28),
-                .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right,
-                .TextAlign = ContentAlignment.MiddleLeft,
-                .RightToLeft = RightToLeft.Yes
-            }
-            pnlHeader.Controls.Add(lblCardTitle)
-
-            ' تاريخ الإصدار على أقصى اليسار مع أيقونة تقويم منفصلة
+            ' 1.1 تاريخ الإصدار على أقصى اليسار مع أيقونة تقويم منسقة
             Dim formattedDate = FormatReleaseDateArabic(releaseDate)
+            Dim dateTextFont As New Font("Segoe UI", 8.75!, FontStyle.Regular)
+            Dim measuredDate = TextRenderer.MeasureText(formattedDate, dateTextFont)
+            Dim datePanelWidth = Math.Max(135, measuredDate.Width + 26)
+
             Dim pnlDate As New Panel With {
                 .Location = New Point(0, 4),
-                .Size = New Size(220, 26),
+                .Size = New Size(datePanelWidth, 26),
                 .Anchor = AnchorStyles.Top Or AnchorStyles.Left,
                 .BackColor = Color.Transparent
             }
             Dim lblDateIcon As New Label With {
                 .Text = "📅",
-                .Font = New Font("Segoe UI Emoji", 9.5!, FontStyle.Regular),
+                .Font = New Font("Segoe UI Emoji", 9.0!, FontStyle.Regular),
                 .ForeColor = Color.FromArgb(96, 165, 250),
                 .Location = New Point(0, 0),
-                .Size = New Size(24, 26),
+                .Size = New Size(22, 26),
                 .TextAlign = ContentAlignment.MiddleCenter
             }
             Dim lblDateText As New Label With {
                 .Text = formattedDate,
-                .Font = New Font("Segoe UI", 9.25!, FontStyle.Regular),
+                .Font = dateTextFont,
                 .ForeColor = Color.FromArgb(148, 163, 184),
-                .Location = New Point(26, 0),
-                .Size = New Size(190, 26),
+                .Location = New Point(22, 0),
+                .Size = New Size(datePanelWidth - 22, 26),
                 .TextAlign = ContentAlignment.MiddleLeft
             }
             pnlDate.Controls.Add(lblDateIcon)
             pnlDate.Controls.Add(lblDateText)
             pnlHeader.Controls.Add(pnlDate)
+
+            ' 1.2 عنوان الإصدار النظيف بين التاريخ والشارات
+            Dim cleanTitle = CleanReleaseTitle(rawTitle, ver)
+            Dim titleRightBound = If(isCurrent, pnlBadge.Left - currentBadgeWidth - 16, pnlBadge.Left - 10)
+            Dim titleLeftBound = pnlDate.Right + 12
+            Dim titleWidth = Math.Max(160, titleRightBound - titleLeftBound)
+
+            Dim lblCardTitle As New Label With {
+                .Text = cleanTitle,
+                .Font = New Font("Segoe UI", 11.0!, FontStyle.Bold),
+                .ForeColor = Color.FromArgb(248, 250, 252),
+                .Location = New Point(titleLeftBound, 4),
+                .Size = New Size(titleWidth, 26),
+                .Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right,
+                .TextAlign = ContentAlignment.MiddleRight,
+                .RightToLeft = RightToLeft.Yes,
+                .AutoEllipsis = True
+            }
+            pnlHeader.Controls.Add(lblCardTitle)
             card.Controls.Add(pnlHeader)
 
             ' خط فاصل ناعم تحت الترويسة
@@ -516,6 +522,7 @@ Namespace UC_Settings
             t = t.Replace("v" & version, "")
             t = t.Replace("V" & version, "")
             t = t.Replace(version, "")
+            t = System.Text.RegularExpressions.Regex.Replace(t, "\s+", " ")
             t = t.Trim(" "c, "-"c, "•"c, ":"c, "("c, ")"c).Trim()
             If String.IsNullOrWhiteSpace(t) OrElse t.Contains("???") Then t = "تحديث سستمك الشامل"
             Return t
@@ -877,30 +884,46 @@ Namespace UC_Settings
         Private Function FormatReleaseDateArabic(rawDate As String) As String
             If String.IsNullOrWhiteSpace(rawDate) Then Return "غير محدد"
 
-            ' إذا كان النص منسقاً بالفعل بالتوقيت العربي
-            If rawDate.Contains("صباحاً") OrElse rawDate.Contains("مساءً") Then
+            ' إذا كان النص منسقاً بالفعل بالتوقيت العربي ويحتوي على وقت
+            If (rawDate.Contains("ص") OrElse rawDate.Contains("م") OrElse rawDate.Contains("صباحاً") OrElse rawDate.Contains("مساءً")) AndAlso rawDate.Contains(":") Then
                 Return rawDate
             End If
 
-            ' محاولة القراءة الدقيقة كـ DateTimeOffset للتعامل مع الـ TimeZone الصريح (Z أو فارق الساعات)
+            Dim trimmed = rawDate.Trim()
+
+            ' فحص ما إذا كان النص مجرد تاريخ فقط (بدون وقت): مثلاً "2026-09-30" أو "2026/09/30" بطول 10 أحرف
+            If trimmed.Length <= 10 AndAlso Not trimmed.Contains("T") AndAlso Not trimmed.Contains(":") Then
+                Dim dOnly As DateTime
+                If DateTime.TryParse(trimmed, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, dOnly) OrElse DateTime.TryParse(trimmed, dOnly) Then
+                    Return dOnly.ToString("yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture)
+                End If
+                Return trimmed
+            End If
+
+            ' محاولة القراءة الدقيقة كـ DateTimeOffset للتعامل مع الـ TimeZone الصريح (Z أو فارق الساعات +00:00)
             Dim dto As DateTimeOffset
-            If rawDate.Contains("Z") OrElse rawDate.Contains("+") OrElse (rawDate.Length > 10 AndAlso rawDate.Substring(10).Contains("-")) Then
-                If DateTimeOffset.TryParse(rawDate, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, dto) Then
+            If trimmed.Contains("Z") OrElse trimmed.Contains("+") OrElse (trimmed.Length > 10 AndAlso trimmed.Substring(10).Contains("-")) Then
+                If DateTimeOffset.TryParse(trimmed, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, dto) Then
                     Dim localDt = dto.ToLocalTime().DateTime
                     Return localDt.ToString("yyyy/MM/dd  hh:mm tt", System.Globalization.CultureInfo.InvariantCulture) _
-                                  .Replace("AM", "صباحاً").Replace("PM", "مساءً")
+                                  .Replace("AM", "ص").Replace("PM", "م")
                 End If
             End If
 
             ' محاولة القراءة كـ DateTime والتحويل الصريح للتوقيت المحلي
             Dim dt As DateTime
-            If DateTime.TryParse(rawDate, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal, dt) OrElse DateTime.TryParse(rawDate, dt) Then
+            If DateTime.TryParse(trimmed, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal, dt) OrElse DateTime.TryParse(trimmed, dt) Then
+                ' إذا كان الوقت أصفاراً تماماً (Midnight) ولم يكن المصدر يحتوي على وقت صريح
+                If dt.TimeOfDay = TimeSpan.Zero AndAlso Not trimmed.Contains(":") Then
+                    Return dt.ToString("yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture)
+                End If
+
                 If dt.Kind = DateTimeKind.Unspecified Then
                     dt = DateTime.SpecifyKind(dt, DateTimeKind.Utc)
                 End If
                 Dim localDt = dt.ToLocalTime()
                 Return localDt.ToString("yyyy/MM/dd  hh:mm tt", System.Globalization.CultureInfo.InvariantCulture) _
-                              .Replace("AM", "صباحاً").Replace("PM", "مساءً")
+                              .Replace("AM", "ص").Replace("PM", "م")
             End If
 
             Return rawDate
