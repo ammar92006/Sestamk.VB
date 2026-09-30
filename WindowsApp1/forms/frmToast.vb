@@ -44,6 +44,13 @@ Public Class frmToast
         Dim accentColor As Color = GetAccentColor(model.Type)
         pnlAccent.BackColor = accentColor
         lblIcon.ForeColor = accentColor
+
+        If model.ClickAction IsNot Nothing Then
+            guna2Panel1.Cursor = Cursors.Hand
+            lblTitle.Cursor = Cursors.Hand
+            lblMessage.Cursor = Cursors.Hand
+            lblIcon.Cursor = Cursors.Hand
+        End If
     End Sub
 
     Private Function GetDefaultTitle(type As Notify.ToastType) As String
@@ -86,7 +93,13 @@ Public Class frmToast
     End Sub
 
     Private Sub Card_Click(sender As Object, e As EventArgs) Handles guna2Panel1.Click, lblMessage.Click, lblTitle.Click, lblIcon.Click
-        ' النقر على الكرت يغلقه بسلاسة
+        Try
+            If Model IsNot Nothing AndAlso Model.ClickAction IsNot Nothing Then
+                Model.ClickAction.Invoke()
+            End If
+        Catch ex As Exception
+            Debug.WriteLine("Toast ClickAction error: " & ex.Message)
+        End Try
         StartClose()
     End Sub
 

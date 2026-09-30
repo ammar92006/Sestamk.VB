@@ -19,6 +19,7 @@ Public Class ToastModel
     Public Property Duration As Integer = 3800
     Public Property AutoClose As Boolean = True
     Public Property CreatedAt As DateTime = DateTime.Now
+    Public Property ClickAction As Action = Nothing
 End Class
 
 Public Class ToastOptions

@@ -46,6 +46,9 @@ Public Class MainForm
         ' استمرار مزامنة المستخدمين التلقائية في الخلفية
         WindowsApp1.Services.Sync.UserSyncService.StartBackgroundSync(25)
 
+        ' بدء فحص التحديثات التلقائية في الخلفية بدون أي تأثير على الأداء نهائياً (كل 3 دقائق مع تأخير إقلاع 30 ثانية)
+        WindowsApp1.Services.Updates.BackgroundUpdateService.StartMonitoring(3)
+
         ' إعداد التلميح لأزرار الهيدر
         Try
             Dim tip As New ToolTip()
@@ -1216,6 +1219,13 @@ Public Class MainForm
                 End If
             End If
         Next
+    End Sub
+
+    Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Try
+            WindowsApp1.Services.Updates.BackgroundUpdateService.StopMonitoring()
+        Catch
+        End Try
     End Sub
 
 End Class

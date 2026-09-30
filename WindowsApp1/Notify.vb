@@ -48,6 +48,25 @@ Public Module Notify
         End Try
     End Sub
 
+    ''' <summary>
+    ''' إشعار مخصص مع إجراء تفاعلي قابل للنقر (Click Action)
+    ''' </summary>
+    Public Sub ToastWithAction(title As String, message As String, action As Action, Optional type As ToastType = ToastType.Info, Optional ms As Integer = 10000)
+        Try
+            PlayNotificationSound(type)
+
+            Dim model As New ToastModel With {
+                .Type = type,
+                .Title = title,
+                .Message = message,
+                .Duration = ms,
+                .ClickAction = action
+            }
+            ToastManager.Show(model)
+        Catch
+        End Try
+    End Sub
+
     Public Sub ShowSuccess(message As String, Optional title As String = "تمت العملية بنجاح")
         Toast(title, message, ToastType.Success)
     End Sub

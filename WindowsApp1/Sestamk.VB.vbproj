@@ -433,6 +433,7 @@
     <Compile Include="CheckActivation.vb" />
     <Compile Include="Services\Licensing\LicenseServices.vb" />
     <Compile Include="Services\Updates\UpdateCoordinator.vb" />
+    <Compile Include="Services\Updates\BackgroundUpdateService.vb" />
     <Compile Include="Services\Sync\UserSyncService.vb" />
     <Compile Include="Forms\FormUpdateNotifier.Designer.vb">
       <DependentUpon>FormUpdateNotifier.vb</DependentUpon>
