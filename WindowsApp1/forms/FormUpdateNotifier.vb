@@ -5,7 +5,8 @@ Imports System.Threading.Tasks
 Imports System.Windows.Forms
 Imports Guna.UI2.WinForms
 
-Partial Class FormUpdateNotifier
+Public Class FormUpdateNotifier
+    Inherits System.Windows.Forms.Form
 
     Private ReadOnly _manifest As VbUpdateManifest
 
