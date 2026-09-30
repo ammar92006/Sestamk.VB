@@ -28,9 +28,6 @@ Namespace UC_Main
             Me.pnlDashboardBody = New System.Windows.Forms.Panel()
             Me.tlpMainContent = New System.Windows.Forms.TableLayoutPanel()
             Me.cardRecentInvoices = New Guna.UI2.WinForms.Guna2Panel()
-            Me.pnlInvoicesHeader = New System.Windows.Forms.Panel()
-            Me.lblRecentInvoicesTitle = New System.Windows.Forms.Label()
-            Me.btnViewAllInvoices = New Guna.UI2.WinForms.Guna2Button()
             Me.dgvRecentInvoices = New Guna.UI2.WinForms.Guna2DataGridView()
             Me.colInvNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
             Me.colInvTime = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -38,9 +35,10 @@ Namespace UC_Main
             Me.colInvType = New System.Windows.Forms.DataGridViewTextBoxColumn()
             Me.colInvTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
             Me.colInvPayment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+            Me.pnlInvoicesHeader = New System.Windows.Forms.Panel()
+            Me.lblRecentInvoicesTitle = New System.Windows.Forms.Label()
+            Me.btnViewAllInvoices = New Guna.UI2.WinForms.Guna2Button()
             Me.cardAlerts = New Guna.UI2.WinForms.Guna2Panel()
-            Me.pnlAlertsHeader = New System.Windows.Forms.Panel()
-            Me.lblAlertsTitle = New System.Windows.Forms.Label()
             Me.pnlAlertsContainer = New System.Windows.Forms.Panel()
             Me.cardAlertBackup = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblAlertBackupDesc = New System.Windows.Forms.Label()
@@ -51,6 +49,8 @@ Namespace UC_Main
             Me.cardAlertStock = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblAlertStockDesc = New System.Windows.Forms.Label()
             Me.lblAlertStockTitle = New System.Windows.Forms.Label()
+            Me.pnlAlertsHeader = New System.Windows.Forms.Panel()
+            Me.lblAlertsTitle = New System.Windows.Forms.Label()
             Me.tlpStats = New System.Windows.Forms.TableLayoutPanel()
             Me.cardSales = New Guna.UI2.WinForms.Guna2Panel()
             Me.lblCardSalesSub = New System.Windows.Forms.Label()
@@ -93,14 +93,14 @@ Namespace UC_Main
             Me.pnlDashboardBody.SuspendLayout()
             Me.tlpMainContent.SuspendLayout()
             Me.cardRecentInvoices.SuspendLayout()
-            Me.pnlInvoicesHeader.SuspendLayout()
             CType(Me.dgvRecentInvoices, System.ComponentModel.ISupportInitialize).BeginInit()
+            Me.pnlInvoicesHeader.SuspendLayout()
             Me.cardAlerts.SuspendLayout()
-            Me.pnlAlertsHeader.SuspendLayout()
             Me.pnlAlertsContainer.SuspendLayout()
             Me.cardAlertBackup.SuspendLayout()
             Me.cardAlertShift.SuspendLayout()
             Me.cardAlertStock.SuspendLayout()
+            Me.pnlAlertsHeader.SuspendLayout()
             Me.tlpStats.SuspendLayout()
             Me.cardSales.SuspendLayout()
             CType(Me.picCardSales, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -238,44 +238,6 @@ Namespace UC_Main
             Me.cardRecentInvoices.Size = New System.Drawing.Size(731, 350)
             Me.cardRecentInvoices.TabIndex = 0
             '
-            'pnlInvoicesHeader
-            '
-            Me.pnlInvoicesHeader.Controls.Add(Me.lblRecentInvoicesTitle)
-            Me.pnlInvoicesHeader.Controls.Add(Me.btnViewAllInvoices)
-            Me.pnlInvoicesHeader.Dock = System.Windows.Forms.DockStyle.Top
-            Me.pnlInvoicesHeader.Location = New System.Drawing.Point(12, 12)
-            Me.pnlInvoicesHeader.Name = "pnlInvoicesHeader"
-            Me.pnlInvoicesHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.pnlInvoicesHeader.Size = New System.Drawing.Size(707, 35)
-            Me.pnlInvoicesHeader.TabIndex = 1
-            '
-            'lblRecentInvoicesTitle
-            '
-            Me.lblRecentInvoicesTitle.Dock = System.Windows.Forms.DockStyle.Right
-            Me.lblRecentInvoicesTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-            Me.lblRecentInvoicesTitle.ForeColor = System.Drawing.Color.White
-            Me.lblRecentInvoicesTitle.Location = New System.Drawing.Point(607, 0)
-            Me.lblRecentInvoicesTitle.Name = "lblRecentInvoicesTitle"
-            Me.lblRecentInvoicesTitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.lblRecentInvoicesTitle.Size = New System.Drawing.Size(100, 35)
-            Me.lblRecentInvoicesTitle.TabIndex = 0
-            Me.lblRecentInvoicesTitle.Text = "آخر فواتير المبيعات الصادرة"
-            '
-            'btnViewAllInvoices
-            '
-            Me.btnViewAllInvoices.BorderRadius = 6
-            Me.btnViewAllInvoices.Cursor = System.Windows.Forms.Cursors.Hand
-            Me.btnViewAllInvoices.Dock = System.Windows.Forms.DockStyle.Left
-            Me.btnViewAllInvoices.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-            Me.btnViewAllInvoices.Font = New System.Drawing.Font("Segoe UI", 8.5!, System.Drawing.FontStyle.Bold)
-            Me.btnViewAllInvoices.ForeColor = System.Drawing.Color.White
-            Me.btnViewAllInvoices.Location = New System.Drawing.Point(0, 0)
-            Me.btnViewAllInvoices.Name = "btnViewAllInvoices"
-            Me.btnViewAllInvoices.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.btnViewAllInvoices.Size = New System.Drawing.Size(110, 35)
-            Me.btnViewAllInvoices.TabIndex = 1
-            Me.btnViewAllInvoices.Text = "عرض الكل ↗"
-            '
             'dgvRecentInvoices
             '
             Me.dgvRecentInvoices.AllowUserToAddRows = False
@@ -309,6 +271,11 @@ Namespace UC_Main
             Me.dgvRecentInvoices.RowHeadersVisible = False
             Me.dgvRecentInvoices.Size = New System.Drawing.Size(707, 291)
             Me.dgvRecentInvoices.TabIndex = 0
+            Me.dgvRecentInvoices.ThemeStyle.BackColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(21, Byte), Integer), CType(CType(30, Byte), Integer))
+            Me.dgvRecentInvoices.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 9.75!)
+            Me.dgvRecentInvoices.ThemeStyle.HeaderStyle.Height = 50
+            Me.dgvRecentInvoices.ThemeStyle.ReadOnly = True
+            Me.dgvRecentInvoices.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 9.75!)
             '
             'colInvNum
             '
@@ -347,6 +314,44 @@ Namespace UC_Main
             Me.colInvPayment.Name = "colInvPayment"
             Me.colInvPayment.ReadOnly = True
             '
+            'pnlInvoicesHeader
+            '
+            Me.pnlInvoicesHeader.Controls.Add(Me.lblRecentInvoicesTitle)
+            Me.pnlInvoicesHeader.Controls.Add(Me.btnViewAllInvoices)
+            Me.pnlInvoicesHeader.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlInvoicesHeader.Location = New System.Drawing.Point(12, 12)
+            Me.pnlInvoicesHeader.Name = "pnlInvoicesHeader"
+            Me.pnlInvoicesHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.pnlInvoicesHeader.Size = New System.Drawing.Size(707, 35)
+            Me.pnlInvoicesHeader.TabIndex = 1
+            '
+            'lblRecentInvoicesTitle
+            '
+            Me.lblRecentInvoicesTitle.Dock = System.Windows.Forms.DockStyle.Right
+            Me.lblRecentInvoicesTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+            Me.lblRecentInvoicesTitle.ForeColor = System.Drawing.Color.White
+            Me.lblRecentInvoicesTitle.Location = New System.Drawing.Point(607, 0)
+            Me.lblRecentInvoicesTitle.Name = "lblRecentInvoicesTitle"
+            Me.lblRecentInvoicesTitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblRecentInvoicesTitle.Size = New System.Drawing.Size(100, 35)
+            Me.lblRecentInvoicesTitle.TabIndex = 0
+            Me.lblRecentInvoicesTitle.Text = "آخر فواتير المبيعات الصادرة"
+            '
+            'btnViewAllInvoices
+            '
+            Me.btnViewAllInvoices.BorderRadius = 6
+            Me.btnViewAllInvoices.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnViewAllInvoices.Dock = System.Windows.Forms.DockStyle.Left
+            Me.btnViewAllInvoices.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnViewAllInvoices.Font = New System.Drawing.Font("Segoe UI", 8.5!, System.Drawing.FontStyle.Bold)
+            Me.btnViewAllInvoices.ForeColor = System.Drawing.Color.White
+            Me.btnViewAllInvoices.Location = New System.Drawing.Point(0, 0)
+            Me.btnViewAllInvoices.Name = "btnViewAllInvoices"
+            Me.btnViewAllInvoices.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnViewAllInvoices.Size = New System.Drawing.Size(110, 35)
+            Me.btnViewAllInvoices.TabIndex = 1
+            Me.btnViewAllInvoices.Text = "عرض الكل ↗"
+            '
             'cardAlerts
             '
             Me.cardAlerts.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
@@ -363,28 +368,6 @@ Namespace UC_Main
             Me.cardAlerts.RightToLeft = System.Windows.Forms.RightToLeft.Yes
             Me.cardAlerts.Size = New System.Drawing.Size(389, 350)
             Me.cardAlerts.TabIndex = 1
-            '
-            'pnlAlertsHeader
-            '
-            Me.pnlAlertsHeader.Controls.Add(Me.lblAlertsTitle)
-            Me.pnlAlertsHeader.Dock = System.Windows.Forms.DockStyle.Top
-            Me.pnlAlertsHeader.Location = New System.Drawing.Point(12, 12)
-            Me.pnlAlertsHeader.Name = "pnlAlertsHeader"
-            Me.pnlAlertsHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.pnlAlertsHeader.Size = New System.Drawing.Size(365, 35)
-            Me.pnlAlertsHeader.TabIndex = 1
-            '
-            'lblAlertsTitle
-            '
-            Me.lblAlertsTitle.Dock = System.Windows.Forms.DockStyle.Right
-            Me.lblAlertsTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
-            Me.lblAlertsTitle.ForeColor = System.Drawing.Color.White
-            Me.lblAlertsTitle.Location = New System.Drawing.Point(265, 0)
-            Me.lblAlertsTitle.Name = "lblAlertsTitle"
-            Me.lblAlertsTitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.lblAlertsTitle.Size = New System.Drawing.Size(100, 35)
-            Me.lblAlertsTitle.TabIndex = 0
-            Me.lblAlertsTitle.Text = "تنبيهات وحالة النظام"
             '
             'pnlAlertsContainer
             '
@@ -523,6 +506,28 @@ Namespace UC_Main
             Me.lblAlertStockTitle.Size = New System.Drawing.Size(345, 23)
             Me.lblAlertStockTitle.TabIndex = 1
             Me.lblAlertStockTitle.Text = "المخزون سليم"
+            '
+            'pnlAlertsHeader
+            '
+            Me.pnlAlertsHeader.Controls.Add(Me.lblAlertsTitle)
+            Me.pnlAlertsHeader.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlAlertsHeader.Location = New System.Drawing.Point(12, 12)
+            Me.pnlAlertsHeader.Name = "pnlAlertsHeader"
+            Me.pnlAlertsHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.pnlAlertsHeader.Size = New System.Drawing.Size(365, 35)
+            Me.pnlAlertsHeader.TabIndex = 1
+            '
+            'lblAlertsTitle
+            '
+            Me.lblAlertsTitle.Dock = System.Windows.Forms.DockStyle.Right
+            Me.lblAlertsTitle.Font = New System.Drawing.Font("Segoe UI", 10.0!, System.Drawing.FontStyle.Bold)
+            Me.lblAlertsTitle.ForeColor = System.Drawing.Color.White
+            Me.lblAlertsTitle.Location = New System.Drawing.Point(265, 0)
+            Me.lblAlertsTitle.Name = "lblAlertsTitle"
+            Me.lblAlertsTitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblAlertsTitle.Size = New System.Drawing.Size(100, 35)
+            Me.lblAlertsTitle.TabIndex = 0
+            Me.lblAlertsTitle.Text = "تنبيهات وحالة النظام"
             '
             'tlpStats
             '
@@ -978,10 +983,10 @@ Namespace UC_Main
             Me.tlpQuickBtns.Controls.Add(Me.btnQuickCustomers, 2, 0)
             Me.tlpQuickBtns.Controls.Add(Me.btnQuickBackup, 3, 0)
             Me.tlpQuickBtns.Dock = System.Windows.Forms.DockStyle.Fill
-            Me.tlpQuickBtns.Location = New System.Drawing.Point(0, 25)
+            Me.tlpQuickBtns.Location = New System.Drawing.Point(0, 36)
             Me.tlpQuickBtns.Name = "tlpQuickBtns"
             Me.tlpQuickBtns.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.tlpQuickBtns.Size = New System.Drawing.Size(1140, 65)
+            Me.tlpQuickBtns.Size = New System.Drawing.Size(1140, 54)
             Me.tlpQuickBtns.TabIndex = 0
             '
             'btnQuickPOS
@@ -1084,9 +1089,10 @@ Namespace UC_Main
             Me.lblQuickTitle.Location = New System.Drawing.Point(0, 0)
             Me.lblQuickTitle.Name = "lblQuickTitle"
             Me.lblQuickTitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-            Me.lblQuickTitle.Size = New System.Drawing.Size(1140, 25)
+            Me.lblQuickTitle.Size = New System.Drawing.Size(1140, 36)
             Me.lblQuickTitle.TabIndex = 1
             Me.lblQuickTitle.Text = "عمليات الوصول السريع:"
+            Me.lblQuickTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
             '
             'UCDashboard
             '
@@ -1104,14 +1110,14 @@ Namespace UC_Main
             Me.pnlDashboardBody.ResumeLayout(False)
             Me.tlpMainContent.ResumeLayout(False)
             Me.cardRecentInvoices.ResumeLayout(False)
-            Me.pnlInvoicesHeader.ResumeLayout(False)
             CType(Me.dgvRecentInvoices, System.ComponentModel.ISupportInitialize).EndInit()
+            Me.pnlInvoicesHeader.ResumeLayout(False)
             Me.cardAlerts.ResumeLayout(False)
-            Me.pnlAlertsHeader.ResumeLayout(False)
             Me.pnlAlertsContainer.ResumeLayout(False)
             Me.cardAlertBackup.ResumeLayout(False)
             Me.cardAlertShift.ResumeLayout(False)
             Me.cardAlertStock.ResumeLayout(False)
+            Me.pnlAlertsHeader.ResumeLayout(False)
             Me.tlpStats.ResumeLayout(False)
             Me.cardSales.ResumeLayout(False)
             CType(Me.picCardSales, System.ComponentModel.ISupportInitialize).EndInit()

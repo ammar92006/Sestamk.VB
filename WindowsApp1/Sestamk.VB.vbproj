@@ -956,6 +956,72 @@
     <Compile Include="UC_Main\UCDashboard.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="UC_Main\UCSalesHub.Designer.vb">
+      <DependentUpon>UCSalesHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCSalesHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCSystemHub.Designer.vb">
+      <DependentUpon>UCSystemHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCSystemHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCInventoryHub.Designer.vb">
+      <DependentUpon>UCInventoryHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCInventoryHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCPurchasesHub.Designer.vb">
+      <DependentUpon>UCPurchasesHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCPurchasesHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCCustomersHub.Designer.vb">
+      <DependentUpon>UCCustomersHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCCustomersHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCSuppliersHub.Designer.vb">
+      <DependentUpon>UCSuppliersHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCSuppliersHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCTreasuryHub.Designer.vb">
+      <DependentUpon>UCTreasuryHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCTreasuryHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCExpensesHub.Designer.vb">
+      <DependentUpon>UCExpensesHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCExpensesHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCEmployeesHub.Designer.vb">
+      <DependentUpon>UCEmployeesHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCEmployeesHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCUsersHub.Designer.vb">
+      <DependentUpon>UCUsersHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCUsersHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Main\UCSettingsHub.Designer.vb">
+      <DependentUpon>UCSettingsHub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Main\UCSettingsHub.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="UC_Settings\UCNotificationsSettings.Designer.vb">
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
     </Compile>
@@ -1342,6 +1408,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Main\UCDashboard.resx">
       <DependentUpon>UCDashboard.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCSalesHub.resx">
+      <DependentUpon>UCSalesHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCSystemHub.resx">
+      <DependentUpon>UCSystemHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCInventoryHub.resx">
+      <DependentUpon>UCInventoryHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCPurchasesHub.resx">
+      <DependentUpon>UCPurchasesHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCCustomersHub.resx">
+      <DependentUpon>UCCustomersHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCSuppliersHub.resx">
+      <DependentUpon>UCSuppliersHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCTreasuryHub.resx">
+      <DependentUpon>UCTreasuryHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCExpensesHub.resx">
+      <DependentUpon>UCExpensesHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCEmployeesHub.resx">
+      <DependentUpon>UCEmployeesHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCUsersHub.resx">
+      <DependentUpon>UCUsersHub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UC_Main\UCSettingsHub.resx">
+      <DependentUpon>UCSettingsHub.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UC_Settings\UCNotificationsSettings.resx">
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>

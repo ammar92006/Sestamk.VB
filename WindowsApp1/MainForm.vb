@@ -6,28 +6,173 @@ Public Class MainForm
 
     Private _isLoggingOut As Boolean = False
     Private _ucDashboard As UC_Main.UCDashboard = Nothing
+    Private _ucSales As UC_Main.UCSalesHub = Nothing
+    Private _ucSystem As UC_Main.UCSystemHub = Nothing
+    Private _ucInventory As UC_Main.UCInventoryHub = Nothing
+    Private _ucPurchases As UC_Main.UCPurchasesHub = Nothing
+    Private _ucCustomers As UC_Main.UCCustomersHub = Nothing
+    Private _ucSuppliers As UC_Main.UCSuppliersHub = Nothing
+    Private _ucTreasury As UC_Main.UCTreasuryHub = Nothing
+    Private _ucExpenses As UC_Main.UCExpensesHub = Nothing
+    Private _ucEmployees As UC_Main.UCEmployeesHub = Nothing
+    Private _ucUsers As UC_Main.UCUsersHub = Nothing
+    Private _ucSettings As UC_Main.UCSettingsHub = Nothing
 
-    ''' <summary>
-    ''' جلب أو إنشاء مثيل عنصر تحكم الداشبورد المستقل UCDashboard مع ربط أحداثه والتخزين المؤقت
-    ''' </summary>
+    Private Sub OpenFormDirectly(formType As Type)
+        OpenFormOnce(formType, CType(Nothing, Control))
+    End Sub
+
     Public Function GetDashboardControl() As UC_Main.UCDashboard
         If _ucDashboard Is Nothing Then
             _ucDashboard = New UC_Main.UCDashboard()
             _ucDashboard.Dock = DockStyle.Fill
-            AddHandler _ucDashboard.OpenSalesRequested, Sub() btnfrmPOS.PerformClick()
-            AddHandler _ucDashboard.OpenProductsRequested, Sub() btnProducts.PerformClick()
-            AddHandler _ucDashboard.OpenCustomersRequested, Sub() btnFrmCustomers.PerformClick()
-            AddHandler _ucDashboard.OpenBackupsRequested, Sub() btnBackups.PerformClick()
-            AddHandler _ucDashboard.OpenSalesReportRequested, Sub() btnFrmSalesReport.PerformClick()
-            AddHandler _ucDashboard.OpenPurchaseReportsRequested, Sub() btnfrmPurchaseReports.PerformClick()
-            AddHandler _ucDashboard.OpenTreasuryReportRequested, Sub() btnFrmTreasuryTransactionsReport.PerformClick()
-            AddHandler _ucDashboard.OpenSuppliersRequested, Sub() ToolStripButton3.PerformClick()
-            AddHandler _ucDashboard.OpenStoreStockRequested, Sub() btnfrmStoreStock.PerformClick()
-            AddHandler _ucDashboard.OpenShiftsRequested, Sub() btnfrmShifts.PerformClick()
-            ThemeManager.Instance.ApplyToControl(_ucDashboard)
+            AddHandler _ucDashboard.OpenSalesRequested, Sub() OpenFormDirectly(GetType(frmPOS))
+            AddHandler _ucDashboard.OpenProductsRequested, Sub() OpenFormDirectly(GetType(Products))
+            AddHandler _ucDashboard.OpenCustomersRequested, Sub() OpenFormDirectly(GetType(FrmCustomers))
+            AddHandler _ucDashboard.OpenBackupsRequested, Sub() OpenFormDirectly(GetType(Backup))
+            AddHandler _ucDashboard.OpenSalesReportRequested, Sub() OpenFormDirectly(GetType(FrmSalesReport))
+            AddHandler _ucDashboard.OpenPurchaseReportsRequested, Sub() OpenFormDirectly(GetType(frmPurchaseReports))
+            AddHandler _ucDashboard.OpenTreasuryReportRequested, Sub() OpenFormDirectly(GetType(FrmTreasuryTransactionsReport))
+            AddHandler _ucDashboard.OpenSuppliersRequested, Sub() OpenFormDirectly(GetType(FrmSuppliers))
+            AddHandler _ucDashboard.OpenStoreStockRequested, Sub() OpenFormDirectly(GetType(frmStoreStock))
+            AddHandler _ucDashboard.OpenShiftsRequested, Sub() OpenFormDirectly(GetType(frmShifts))
             pnlMainContainer.Controls.Add(_ucDashboard)
+            _ucDashboard.ApplyDashboardTheme()
+            _ucDashboard.ApplyPermissions()
         End If
         Return _ucDashboard
+    End Function
+
+    Public Function GetSalesControl() As UC_Main.UCSalesHub
+        If _ucSales Is Nothing Then
+            _ucSales = New UC_Main.UCSalesHub()
+            _ucSales.Dock = DockStyle.Fill
+            AddHandler _ucSales.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucSales)
+            _ucSales.ApplyTheme()
+            _ucSales.ApplyPermissions()
+        End If
+        Return _ucSales
+    End Function
+
+    Public Function GetSystemControl() As UC_Main.UCSystemHub
+        If _ucSystem Is Nothing Then
+            _ucSystem = New UC_Main.UCSystemHub()
+            _ucSystem.Dock = DockStyle.Fill
+            AddHandler _ucSystem.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucSystem)
+            _ucSystem.ApplyTheme()
+            _ucSystem.ApplyPermissions()
+        End If
+        Return _ucSystem
+    End Function
+
+    Public Function GetInventoryControl() As UC_Main.UCInventoryHub
+        If _ucInventory Is Nothing Then
+            _ucInventory = New UC_Main.UCInventoryHub()
+            _ucInventory.Dock = DockStyle.Fill
+            AddHandler _ucInventory.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucInventory)
+            _ucInventory.ApplyTheme()
+            _ucInventory.ApplyPermissions()
+        End If
+        Return _ucInventory
+    End Function
+
+    Public Function GetPurchasesControl() As UC_Main.UCPurchasesHub
+        If _ucPurchases Is Nothing Then
+            _ucPurchases = New UC_Main.UCPurchasesHub()
+            _ucPurchases.Dock = DockStyle.Fill
+            AddHandler _ucPurchases.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucPurchases)
+            _ucPurchases.ApplyTheme()
+            _ucPurchases.ApplyPermissions()
+        End If
+        Return _ucPurchases
+    End Function
+
+    Public Function GetCustomersControl() As UC_Main.UCCustomersHub
+        If _ucCustomers Is Nothing Then
+            _ucCustomers = New UC_Main.UCCustomersHub()
+            _ucCustomers.Dock = DockStyle.Fill
+            AddHandler _ucCustomers.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucCustomers)
+            _ucCustomers.ApplyTheme()
+            _ucCustomers.ApplyPermissions()
+        End If
+        Return _ucCustomers
+    End Function
+
+    Public Function GetSuppliersControl() As UC_Main.UCSuppliersHub
+        If _ucSuppliers Is Nothing Then
+            _ucSuppliers = New UC_Main.UCSuppliersHub()
+            _ucSuppliers.Dock = DockStyle.Fill
+            AddHandler _ucSuppliers.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucSuppliers)
+            _ucSuppliers.ApplyTheme()
+            _ucSuppliers.ApplyPermissions()
+        End If
+        Return _ucSuppliers
+    End Function
+
+    Public Function GetTreasuryControl() As UC_Main.UCTreasuryHub
+        If _ucTreasury Is Nothing Then
+            _ucTreasury = New UC_Main.UCTreasuryHub()
+            _ucTreasury.Dock = DockStyle.Fill
+            AddHandler _ucTreasury.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucTreasury)
+            _ucTreasury.ApplyTheme()
+            _ucTreasury.ApplyPermissions()
+        End If
+        Return _ucTreasury
+    End Function
+
+    Public Function GetExpensesControl() As UC_Main.UCExpensesHub
+        If _ucExpenses Is Nothing Then
+            _ucExpenses = New UC_Main.UCExpensesHub()
+            _ucExpenses.Dock = DockStyle.Fill
+            AddHandler _ucExpenses.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucExpenses)
+            _ucExpenses.ApplyTheme()
+            _ucExpenses.ApplyPermissions()
+        End If
+        Return _ucExpenses
+    End Function
+
+    Public Function GetEmployeesControl() As UC_Main.UCEmployeesHub
+        If _ucEmployees Is Nothing Then
+            _ucEmployees = New UC_Main.UCEmployeesHub()
+            _ucEmployees.Dock = DockStyle.Fill
+            AddHandler _ucEmployees.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucEmployees)
+            _ucEmployees.ApplyTheme()
+            _ucEmployees.ApplyPermissions()
+        End If
+        Return _ucEmployees
+    End Function
+
+    Public Function GetUsersControl() As UC_Main.UCUsersHub
+        If _ucUsers Is Nothing Then
+            _ucUsers = New UC_Main.UCUsersHub()
+            _ucUsers.Dock = DockStyle.Fill
+            AddHandler _ucUsers.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucUsers)
+            _ucUsers.ApplyTheme()
+            _ucUsers.ApplyPermissions()
+        End If
+        Return _ucUsers
+    End Function
+
+    Public Function GetSettingsControl() As UC_Main.UCSettingsHub
+        If _ucSettings Is Nothing Then
+            _ucSettings = New UC_Main.UCSettingsHub()
+            _ucSettings.Dock = DockStyle.Fill
+            AddHandler _ucSettings.BackRequested, Sub(s, e) SetActiveNav(navDashboard, GetDashboardControl())
+            pnlMainContainer.Controls.Add(_ucSettings)
+            _ucSettings.ApplyTheme()
+            _ucSettings.ApplyPermissions()
+        End If
+        Return _ucSettings
     End Function
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
@@ -189,7 +334,7 @@ Public Class MainForm
             activeBtn.ForeColor = selTextColor
         End If
 
-        Dim allViews() As Control = {_ucDashboard, viewSales, viewSystem, viewInventory, viewPurchases, viewCustomers, viewSuppliers, viewTreasury, viewExpenses, viewEmployees, viewUsers, viewSettings}
+        Dim allViews() As Control = {_ucDashboard, _ucSales, _ucSystem, _ucInventory, _ucPurchases, _ucCustomers, _ucSuppliers, _ucTreasury, _ucExpenses, _ucEmployees, _ucUsers, _ucSettings}
         For Each v In allViews
             If v IsNot Nothing AndAlso v IsNot targetView Then
                 v.Visible = False
@@ -208,51 +353,47 @@ Public Class MainForm
     End Sub
 
     Private Sub navSales_Click(sender As Object, e As EventArgs) Handles navSales.Click
-        SetActiveNav(navSales, viewSales)
+        SetActiveNav(navSales, GetSalesControl())
     End Sub
 
     Private Sub navSystem_Click(sender As Object, e As EventArgs) Handles navSystem.Click
-        SetActiveNav(navSystem, viewSystem)
+        SetActiveNav(navSystem, GetSystemControl())
     End Sub
 
     Private Sub navInventory_Click(sender As Object, e As EventArgs) Handles navInventory.Click
-        SetActiveNav(navInventory, viewInventory)
+        SetActiveNav(navInventory, GetInventoryControl())
     End Sub
 
     Private Sub navPurchases_Click(sender As Object, e As EventArgs) Handles navPurchases.Click
-        SetActiveNav(navPurchases, viewPurchases)
+        SetActiveNav(navPurchases, GetPurchasesControl())
     End Sub
 
     Private Sub navCustomers_Click(sender As Object, e As EventArgs) Handles navCustomers.Click
-        SetActiveNav(navCustomers, viewCustomers)
+        SetActiveNav(navCustomers, GetCustomersControl())
     End Sub
 
     Private Sub navSuppliers_Click(sender As Object, e As EventArgs) Handles navSuppliers.Click
-        SetActiveNav(navSuppliers, viewSuppliers)
+        SetActiveNav(navSuppliers, GetSuppliersControl())
     End Sub
 
     Private Sub navTreasury_Click(sender As Object, e As EventArgs) Handles navTreasury.Click
-        SetActiveNav(navTreasury, viewTreasury)
+        SetActiveNav(navTreasury, GetTreasuryControl())
     End Sub
 
     Private Sub navExpenses_Click(sender As Object, e As EventArgs) Handles navExpenses.Click
-        SetActiveNav(navExpenses, viewExpenses)
+        SetActiveNav(navExpenses, GetExpensesControl())
     End Sub
 
     Private Sub navEmployees_Click(sender As Object, e As EventArgs) Handles navEmployees.Click
-        SetActiveNav(navEmployees, viewEmployees)
+        SetActiveNav(navEmployees, GetEmployeesControl())
     End Sub
 
     Private Sub navUsers_Click(sender As Object, e As EventArgs) Handles navUsers.Click
-        SetActiveNav(navUsers, viewUsers)
+        SetActiveNav(navUsers, GetUsersControl())
     End Sub
 
     Private Sub navSettings_Click(sender As Object, e As EventArgs) Handles navSettings.Click
-        SetActiveNav(navSettings, viewSettings)
-    End Sub
-
-    Private Sub btnBackToDashboard_Click(sender As Object, e As EventArgs) Handles btnBackSales.Click, btnBackSystem.Click, btnBackInventory.Click, btnBackPurchases.Click, btnBackCustomers.Click, btnBackSuppliers.Click, btnBackTreasury.Click, btnBackExpenses.Click, btnBackEmployees.Click, btnBackUsers.Click, btnBackSettings.Click
-        SetActiveNav(navDashboard, GetDashboardControl())
+        SetActiveNav(navSettings, GetSettingsControl())
     End Sub
 
     Private Sub txtGlobalSearch_TextChanged(sender As Object, e As EventArgs) Handles txtGlobalSearch.TextChanged
@@ -260,27 +401,27 @@ Public Class MainForm
         If String.IsNullOrWhiteSpace(term) Then Return
 
         If term.Contains("بيع") OrElse term.Contains("pos") OrElse term.Contains("كاشير") OrElse term.Contains("مطبخ") OrElse term.Contains("kds") OrElse term.Contains("هالك") OrElse term.Contains("طاول") OrElse term.Contains("مرتجع") Then
-            SetActiveNav(navSales, viewSales)
+            SetActiveNav(navSales, GetSalesControl())
         ElseIf term.Contains("صنف") OrElse term.Contains("فئة") OrElse term.Contains("منيو") OrElse term.Contains("وردية") OrElse term.Contains("فرع") OrElse term.Contains("طيار") OrElse term.Contains("توصيل") Then
-            SetActiveNav(navSystem, viewSystem)
+            SetActiveNav(navSystem, GetSystemControl())
         ElseIf term.Contains("مخزن") OrElse term.Contains("خام") OrElse term.Contains("ريسيبي") OrElse term.Contains("مخزون") OrElse term.Contains("وحد") Then
-            SetActiveNav(navInventory, viewInventory)
+            SetActiveNav(navInventory, GetInventoryControl())
         ElseIf term.Contains("شراء") OrElse term.Contains("مشتريات") OrElse term.Contains("توريد") Then
-            SetActiveNav(navPurchases, viewPurchases)
+            SetActiveNav(navPurchases, GetPurchasesControl())
         ElseIf term.Contains("عميل") OrElse term.Contains("عملاء") OrElse term.Contains("دين") Then
-            SetActiveNav(navCustomers, viewCustomers)
+            SetActiveNav(navCustomers, GetCustomersControl())
         ElseIf term.Contains("مورد") OrElse term.Contains("موردين") Then
-            SetActiveNav(navSuppliers, viewSuppliers)
+            SetActiveNav(navSuppliers, GetSuppliersControl())
         ElseIf term.Contains("خزن") OrElse term.Contains("خزينة") OrElse term.Contains("سحب") OrElse term.Contains("إيداع") OrElse term.Contains("ايداع") Then
-            SetActiveNav(navTreasury, viewTreasury)
+            SetActiveNav(navTreasury, GetTreasuryControl())
         ElseIf term.Contains("مصروف") OrElse term.Contains("مصاريف") OrElse term.Contains("نثريات") Then
-            SetActiveNav(navExpenses, viewExpenses)
+            SetActiveNav(navExpenses, GetExpensesControl())
         ElseIf term.Contains("موظف") OrElse term.Contains("راتب") OrElse term.Contains("رواتب") OrElse term.Contains("سلف") OrElse term.Contains("مرتب") Then
-            SetActiveNav(navEmployees, viewEmployees)
+            SetActiveNav(navEmployees, GetEmployeesControl())
         ElseIf term.Contains("مستخدم") OrElse term.Contains("صلاحي") OrElse term.Contains("دور") OrElse term.Contains("كلمة سر") Then
-            SetActiveNav(navUsers, viewUsers)
+            SetActiveNav(navUsers, GetUsersControl())
         ElseIf term.Contains("طابع") OrElse term.Contains("نسخ") OrElse term.Contains("إعداد") OrElse term.Contains("اعداد") OrElse term.Contains("ألوان") Then
-            SetActiveNav(navSettings, viewSettings)
+            SetActiveNav(navSettings, GetSettingsControl())
         End If
     End Sub
 
@@ -290,35 +431,54 @@ Public Class MainForm
             e.SuppressKeyPress = True
             Dim term As String = txtGlobalSearch.Text.Trim().ToLower()
             If term.Contains("بيع") OrElse term.Contains("pos") OrElse term.Contains("كاشير") Then
-                btnfrmPOS.PerformClick()
+                OpenFormDirectly(GetType(frmPOS))
             ElseIf term.Contains("مطبخ") OrElse term.Contains("kds") Then
-                btnKds.PerformClick()
+                OpenFormDirectly(GetType(FrmKitchenDisplay))
             ElseIf term.Contains("صنف") OrElse term.Contains("منتج") Then
-                btnProducts.PerformClick()
+                OpenFormDirectly(GetType(Products))
             ElseIf term.Contains("خزينة") OrElse term.Contains("خزن") Then
-                btnfrmTreasury.PerformClick()
+                OpenFormDirectly(GetType(frmTreasury))
             ElseIf term.Contains("ايداع") OrElse term.Contains("إيداع") Then
-                btnDeposit.PerformClick()
+                OpenTreasuryTransaction(FrmTreasuryTransaction.TreasuryOperation.Deposit)
             ElseIf term.Contains("سحب") Then
-                btnWithdraw.PerformClick()
+                OpenTreasuryTransaction(FrmTreasuryTransaction.TreasuryOperation.Withdraw)
             ElseIf term.Contains("عميل") Then
-                btnFrmCustomers.PerformClick()
+                OpenFormDirectly(GetType(FrmCustomers))
             ElseIf term.Contains("مورد") Then
-                ToolStripButton3.PerformClick()
+                OpenFormDirectly(GetType(FrmSuppliers))
             ElseIf term.Contains("شراء") OrElse term.Contains("مشتريات") Then
-                btnfrmPurchases.PerformClick()
+                OpenFormDirectly(GetType(frmPurchases))
             ElseIf term.Contains("مصروف") Then
-                btnform_Expenses.PerformClick()
+                OpenFormDirectly(GetType(form_Expenses))
             ElseIf term.Contains("موظف") Then
-                btnfrmEmployees.PerformClick()
+                OpenFormDirectly(GetType(frmEmployees))
             ElseIf term.Contains("طابع") Then
-                btnfrmPrinters.PerformClick()
+                OpenFormDirectly(GetType(frmPrinters))
             ElseIf term.Contains("نسخ") Then
-                btnBackups.PerformClick()
+                OpenFormDirectly(GetType(Backup))
             ElseIf term.Contains("اعداد") OrElse term.Contains("إعداد") Then
-                btnSettings.PerformClick()
+                OpenFormDirectly(GetType(Settings))
             End If
         End If
+    End Sub
+
+    Private Sub OpenTreasuryTransaction(op As FrmTreasuryTransaction.TreasuryOperation)
+        If Not Session.HasPermission("FrmTreasuryTransaction", "CanOpen") Then
+            Dim dispName As String = Session.GetScreenDisplayName("FrmTreasuryTransaction")
+            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+        Dim frm As New FrmTreasuryTransaction(op)
+        AddHandler frm.Load, Sub(s, ev)
+                                 Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
+                                 ThemeManager.Instance.ApplyTheme(frm)
+                             End Sub
+        AddHandler frm.Shown, Sub(s, ev)
+                                  Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
+                                  ThemeManager.Instance.ApplyTheme(frm)
+                              End Sub
+        ThemeManager.Instance.ApplyTheme(frm)
+        frm.Show()
     End Sub
 
     Public Sub ApplyMainFormTheme()
@@ -370,68 +530,17 @@ Public Class MainForm
                 _ucDashboard.ApplyDashboardTheme()
             End If
 
-            ' أزرار الأقسام (Action Tiles)
-            Dim allTiles() As Guna.UI2.WinForms.Guna2Button = {
-                btnfrmPOS, btnSalesReturns, btnFrmSalesReport, btnFrmDriverReport, btnKds, btnWaste, btnRes,
-                btnCategories, btnProducts, btnfrmProductSizes, btnfrmProductAddons, btnfrmKitchenComments, btnfrmDeliveryAreas, btnfrmDeliveryDrivers, btnfrmShifts, btnShiftReports, btnfrmBranches,
-                btnfrmStoreStock, btnfrmRawMaterials, btnfrmRecipes, btnfrmStores, btnfrmUnits,
-                btnfrmPurchases, btnfrmPurchaseReports,
-                btnFrmCustomers, btnFrmCustomerStatement, btnCustomerBalanceDownload, ToolStripButton11,
-                ToolStripButton3, ToolStripButton4, ToolStripButton5,
-                btnfrmTreasury, btnFrmTreasuryTransfer, btnDeposit, btnWithdraw, btnFrmTreasuryTransactionsReport,
-                btnform_Expenses, btnExpensesReportForm,
-                btnfrmEmployees, btnfrmJobTitles, btnfrmDepartments, btnfrmSalarySystems, btnfrmSalaryPayment,
-                btnfrmUsers, btnfrmRolesAndPermissions,
-                btnSettings, btnfrmPrinters, btnBackups, btnfrmRestaurantSections, btnfrmRestaurantTables, btnfrmColors
-            }
-
-            For Each tile In allTiles
-                If tile IsNot Nothing Then
-                    tile.FillColor = pal.CardBackground
-                    tile.BorderColor = pal.Border
-                    tile.ForeColor = pal.TextPrimary
-                    tile.HoverState.FillColor = pal.Primary
-                    tile.HoverState.BorderColor = pal.PrimaryHover
-                    tile.HoverState.ForeColor = pal.TextOnPrimary
-                End If
-            Next
-
-            ' أزرار العودة في هيدر الأقسام
-            Dim backBtns() As Guna.UI2.WinForms.Guna2Button = {btnBackSales, btnBackSystem, btnBackInventory, btnBackPurchases, btnBackCustomers, btnBackSuppliers, btnBackTreasury, btnBackExpenses, btnBackEmployees, btnBackUsers, btnBackSettings}
-            For Each bb In backBtns
-                If bb IsNot Nothing Then
-                    bb.FillColor = pal.ButtonSecondaryBackground
-                    bb.ForeColor = pal.ButtonSecondaryForeground
-                    bb.BorderColor = pal.Border
-                End If
-            Next
-
-            ' عناوين ونصوص ووصف الأقسام
-            Dim secTitles() As Label = {lblTitleSales, lblTitleSystem, lblTitleInventory, lblTitlePurchases, lblTitleCustomers, lblTitleSuppliers, lblTitleTreasury, lblTitleExpenses, lblTitleEmployees, lblTitleUsers, lblTitleSettings}
-            For Each lt In secTitles
-                If lt IsNot Nothing Then lt.ForeColor = pal.TextPrimary
-            Next
-
-            Dim secDescs() As Label = {lblDescSales, lblDescSystem, lblDescInventory, lblDescPurchases, lblDescCustomers, lblDescSuppliers, lblDescTreasury, lblDescExpenses, lblDescEmployees, lblDescUsers, lblDescSettings}
-            For Each ld In secDescs
-                If ld IsNot Nothing Then ld.ForeColor = pal.TextSecondary
-            Next
-
-            ' خلفيات شاشات الأقسام وحاوياتها
-            Dim allSecViews() As Control = {viewSales, viewSystem, viewInventory, viewPurchases, viewCustomers, viewSuppliers, viewTreasury, viewExpenses, viewEmployees, viewUsers, viewSettings}
-            For Each sv In allSecViews
-                If sv IsNot Nothing Then sv.BackColor = pal.Background
-            Next
-
-            Dim secFlps() As FlowLayoutPanel = {flpSales, flpSystem, flpInventory, flpPurchases, flpCustomers, flpSuppliers, flpTreasury, flpExpenses, flpEmployees, flpUsers, flpSettings}
-            For Each fp In secFlps
-                If fp IsNot Nothing Then fp.BackColor = pal.Background
-            Next
-
-            Dim secHeaders() As Panel = {pnlHeaderSales, pnlHeaderSystem, pnlHeaderInventory, pnlHeaderPurchases, pnlHeaderCustomers, pnlHeaderSuppliers, pnlHeaderTreasury, pnlHeaderExpenses, pnlHeaderEmployees, pnlHeaderUsers, pnlHeaderSettings}
-            For Each hp In secHeaders
-                If hp IsNot Nothing Then hp.BackColor = pal.Background
-            Next
+            If _ucSales IsNot Nothing Then _ucSales.ApplyTheme()
+            If _ucSystem IsNot Nothing Then _ucSystem.ApplyTheme()
+            If _ucInventory IsNot Nothing Then _ucInventory.ApplyTheme()
+            If _ucPurchases IsNot Nothing Then _ucPurchases.ApplyTheme()
+            If _ucCustomers IsNot Nothing Then _ucCustomers.ApplyTheme()
+            If _ucSuppliers IsNot Nothing Then _ucSuppliers.ApplyTheme()
+            If _ucTreasury IsNot Nothing Then _ucTreasury.ApplyTheme()
+            If _ucExpenses IsNot Nothing Then _ucExpenses.ApplyTheme()
+            If _ucEmployees IsNot Nothing Then _ucEmployees.ApplyTheme()
+            If _ucUsers IsNot Nothing Then _ucUsers.ApplyTheme()
+            If _ucSettings IsNot Nothing Then _ucSettings.ApplyTheme()
 
             ' زر تسجيل الخروج الاحترافي في الهيدر
             If btnLogout IsNot Nothing Then
@@ -477,240 +586,6 @@ Public Class MainForm
             ApplyMainFormTheme()
         End If
     End Sub
-
-    ' ─── أزرار شريط الأدوات (ToolStrip Buttons) ───
-    Private Sub btnCategories_Click(sender As Object, e As EventArgs) Handles btnCategories.Click
-        OpenFormOnce(GetType(Categories), btnCategories)
-    End Sub
-
-    Private Sub btnProducts_Click(sender As Object, e As EventArgs) Handles btnProducts.Click
-        OpenFormOnce(GetType(Products), btnProducts)
-    End Sub
-
-    Private Sub btnfrmProductSizes_Click(sender As Object, e As EventArgs) Handles btnfrmProductSizes.Click
-        OpenFormOnce(GetType(frmProductSizes), btnfrmProductSizes)
-    End Sub
-
-    Private Sub btnfrmProductAddons_Click(sender As Object, e As EventArgs) Handles btnfrmProductAddons.Click
-        OpenFormOnce(GetType(frmProductAddons), btnfrmProductAddons)
-    End Sub
-
-    Private Sub btnfrmKitchenComments_Click(sender As Object, e As EventArgs) Handles btnfrmKitchenComments.Click
-        OpenFormOnce(GetType(frmKitchenComments), btnfrmKitchenComments)
-    End Sub
-
-    Private Sub btnfrmPOS_Click(sender As Object, e As EventArgs) Handles btnfrmPOS.Click
-        OpenFormOnce(GetType(frmPOS), btnfrmPOS)
-    End Sub
-
-    Private Sub btnSalesReturns_Click(sender As Object, e As EventArgs) Handles btnSalesReturns.Click
-        OpenFormOnce(GetType(Sales_Returns), btnSalesReturns)
-    End Sub
-
-    Private Sub btnfrmEmployees_Click(sender As Object, e As EventArgs) Handles btnfrmEmployees.Click
-        OpenFormOnce(GetType(frmEmployees), btnfrmEmployees)
-    End Sub
-
-    Private Sub btnfrmJobTitles_Click(sender As Object, e As EventArgs) Handles btnfrmJobTitles.Click
-        OpenFormOnce(GetType(frmJobTitles), btnfrmJobTitles)
-    End Sub
-
-    Private Sub btnfrmDepartments_Click(sender As Object, e As EventArgs) Handles btnfrmDepartments.Click
-        OpenFormOnce(GetType(frmDepartments), btnfrmDepartments)
-    End Sub
-
-    Private Sub btnfrmSalarySystems_Click(sender As Object, e As EventArgs) Handles btnfrmSalarySystems.Click
-        OpenFormOnce(GetType(frmSalarySystems), btnfrmSalarySystems)
-    End Sub
-
-    Private Sub btnfrmColors_Click(sender As Object, e As EventArgs) Handles btnfrmColors.Click
-        OpenFormOnce(GetType(frmColors), btnfrmColors)
-    End Sub
-
-    Private Sub btnfrmDeliveryAreas_Click(sender As Object, e As EventArgs) Handles btnfrmDeliveryAreas.Click
-        OpenFormOnce(GetType(frmDeliveryAreas), btnfrmDeliveryAreas)
-    End Sub
-
-    Private Sub btnfrmDeliveryDrivers_Click(sender As Object, e As EventArgs) Handles btnfrmDeliveryDrivers.Click
-        OpenFormOnce(GetType(frmDeliveryDrivers), btnfrmDeliveryDrivers)
-    End Sub
-
-    Private Sub btnfrmTreasury_Click(sender As Object, e As EventArgs) Handles btnfrmTreasury.Click
-        OpenFormOnce(GetType(frmTreasury), btnfrmTreasury)
-    End Sub
-
-    Private Sub btnFrmTreasuryTransfer_Click(sender As Object, e As EventArgs) Handles btnFrmTreasuryTransfer.Click
-        OpenFormOnce(GetType(FrmTreasuryTransfer), btnFrmTreasuryTransfer)
-    End Sub
-
-    Private Sub btnFrmTreasuryTransactionsReport_Click(sender As Object, e As EventArgs) Handles btnFrmTreasuryTransactionsReport.Click
-        OpenFormOnce(GetType(FrmTreasuryTransactionsReport), btnFrmTreasuryTransactionsReport)
-    End Sub
-
-    Private Sub btnfrmPrinters_Click(sender As Object, e As EventArgs) Handles btnfrmPrinters.Click
-        OpenFormOnce(GetType(frmPrinters), btnfrmPrinters)
-    End Sub
-
-    Private Sub btnfrmRestaurantSections_Click(sender As Object, e As EventArgs) Handles btnfrmRestaurantSections.Click
-        OpenFormOnce(GetType(frmRestaurantSections), btnfrmRestaurantSections)
-    End Sub
-
-    Private Sub btnfrmRestaurantTables_Click(sender As Object, e As EventArgs) Handles btnfrmRestaurantTables.Click
-        OpenFormOnce(GetType(frmRestaurantTables), btnfrmRestaurantTables)
-    End Sub
-
-    Private Sub btnfrmShifts_Click(sender As Object, e As EventArgs) Handles btnfrmShifts.Click
-        OpenFormOnce(GetType(frmShifts), btnfrmShifts)
-    End Sub
-
-    Private Sub btnShiftReports_Click(sender As Object, e As EventArgs) Handles btnShiftReports.Click
-        OpenFormOnce(GetType(FrmShiftReports), btnShiftReports)
-    End Sub
-
-    Private Sub btnfrmBranches_Click(sender As Object, e As EventArgs) Handles btnfrmBranches.Click
-        OpenFormOnce(GetType(frmBranches), btnfrmBranches)
-    End Sub
-
-    Private Sub btnCustomers_Click(sender As Object, e As EventArgs) Handles btnFrmCustomers.Click
-        OpenFormOnce(GetType(FrmCustomers), btnFrmCustomers)
-    End Sub
-
-    Private Sub btnSettings_Click(sender As Object, e As EventArgs) Handles btnSettings.Click
-        OpenFormOnce(GetType(Settings), btnSettings)
-    End Sub
-
-    Private Sub btnBackups_Click(sender As Object, e As EventArgs) Handles btnBackups.Click
-        OpenFormOnce(GetType(Backup), btnBackups)
-    End Sub
-
-    Private Sub btnFrmCustomerStatement_Click(sender As Object, e As EventArgs) Handles btnFrmCustomerStatement.Click
-        OpenFormOnce(GetType(FrmCustomerStatement), btnFrmCustomerStatement)
-    End Sub
-
-    Private Sub btnCustomerBalanceDownload_Click(sender As Object, e As EventArgs) Handles btnCustomerBalanceDownload.Click
-        OpenFormOnce(GetType(Customer_Balance_Download), btnCustomerBalanceDownload)
-    End Sub
-
-    Private Sub btnFrmSalesReport_Click(sender As Object, e As EventArgs) Handles btnFrmSalesReport.Click
-        OpenFormOnce(GetType(FrmSalesReport), btnFrmSalesReport)
-    End Sub
-
-    Private Sub btnFrmDriverReport_Click(sender As Object, e As EventArgs) Handles btnFrmDriverReport.Click
-        OpenFormOnce(GetType(FrmDriverReport), btnFrmDriverReport)
-    End Sub
-
-    Private Sub btnKds_Click(sender As Object, e As EventArgs) Handles btnKds.Click
-        OpenFormOnce(GetType(FrmKitchenDisplay), btnKds)
-    End Sub
-
-    Private Sub btnWaste_Click(sender As Object, e As EventArgs) Handles btnWaste.Click
-        OpenFormOnce(GetType(FrmKitchenWaste), btnWaste)
-    End Sub
-
-    Private Sub btnRes_Click(sender As Object, e As EventArgs) Handles btnRes.Click
-        OpenFormOnce(GetType(FrmTableReservations), btnRes)
-    End Sub
-
-    Private Sub btnDeposit_Click(sender As Object, e As EventArgs) Handles btnDeposit.Click
-        OpenTreasuryWithOperation(FrmTreasuryTransaction.TreasuryOperation.Deposit, btnDeposit)
-    End Sub
-
-    Private Sub btnWithdraw_Click(sender As Object, e As EventArgs) Handles btnWithdraw.Click
-        OpenTreasuryWithOperation(FrmTreasuryTransaction.TreasuryOperation.Withdraw, btnWithdraw)
-    End Sub
-
-    Private Sub btnform_Expenses_Click(sender As Object, e As EventArgs) Handles btnform_Expenses.Click
-        OpenFormOnce(GetType(form_Expenses), btnform_Expenses)
-    End Sub
-
-    Private Sub btnExpensesReportForm_Click(sender As Object, e As EventArgs) Handles btnExpensesReportForm.Click
-        OpenFormOnce(GetType(ExpensesReportForm), btnExpensesReportForm)
-    End Sub
-
-    Private Sub btnfrmUnits_Click(sender As Object, e As EventArgs) Handles btnfrmUnits.Click
-        OpenFormOnce(GetType(frmUnits), btnfrmUnits)
-    End Sub
-
-    Private Sub btnfrmStores_Click(sender As Object, e As EventArgs) Handles btnfrmStores.Click
-        OpenFormOnce(GetType(FrmStores), btnfrmStores)
-    End Sub
-
-    Private Sub btnfrmStoreStock_Click(sender As Object, e As EventArgs) Handles btnfrmStoreStock.Click
-        OpenFormOnce(GetType(frmStoreStock), btnfrmStoreStock)
-    End Sub
-
-    Private Sub btnfrmRawMaterials_Click(sender As Object, e As EventArgs) Handles btnfrmRawMaterials.Click
-        OpenFormOnce(GetType(frmRawMaterials), btnfrmRawMaterials)
-    End Sub
-
-    Private Sub btnfrmRecipes_Click(sender As Object, e As EventArgs) Handles btnfrmRecipes.Click
-        OpenFormOnce(GetType(frmRecipes), btnfrmRecipes)
-    End Sub
-
-    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
-        OpenFormOnce(GetType(FrmSuppliers), ToolStripButton3)
-    End Sub
-
-    Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
-        OpenFormOnce(GetType(FrmSupplierTransactions), ToolStripButton4)
-    End Sub
-
-    Private Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton5.Click
-        If Not Session.HasPermission("frmPurchaseReports", "CanOpen") Then
-            MessageBox.Show("ليس لديك صلاحية فتح تقارير الموردين.")
-            Return
-        End If
-        Using report As New frmPurchaseReports With {.ShowSupplierBalances = True}
-            ThemeManager.Instance.ApplyTheme(report)
-            report.ShowDialog(Me)
-        End Using
-    End Sub
-
-    Private Sub ToolStripButton13_Click(sender As Object, e As EventArgs) Handles btnfrmPurchases.Click
-        OpenFormOnce(GetType(frmPurchases), btnfrmPurchases)
-    End Sub
-
-    Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
-        OpenFormOnce(GetType(Reports), ToolStripButton11)
-    End Sub
-
-    Private Sub OpenTreasuryWithOperation(op As FrmTreasuryTransaction.TreasuryOperation, btn As Control)
-        If Not Session.HasPermission("FrmTreasuryTransaction", "CanOpen") Then
-            Dim dispName As String = Session.GetScreenDisplayName("FrmTreasuryTransaction")
-            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Exit Sub
-        End If
-
-        Dim frm As New FrmTreasuryTransaction(op)
-        AddHandler frm.Load, Sub(s, ev)
-                                 Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
-                                 ThemeManager.Instance.ApplyTheme(frm)
-                             End Sub
-        AddHandler frm.Shown, Sub(s, ev)
-                                  Session.ApplyFormPermissions(frm, "FrmTreasuryTransaction")
-                                  ThemeManager.Instance.ApplyTheme(frm)
-                              End Sub
-        ThemeManager.Instance.ApplyTheme(frm)
-        frm.Show()
-    End Sub
-
-    Private Sub btnfrmSalaryPayment_Click(sender As Object, e As EventArgs) Handles btnfrmSalaryPayment.Click
-        OpenFormOnce(GetType(frmSalaryPayment), btnfrmSalaryPayment)
-    End Sub
-
-    Private Sub btnfrmUsers_Click(sender As Object, e As EventArgs) Handles btnfrmUsers.Click
-        OpenFormOnce(GetType(frmUsers), btnfrmUsers)
-    End Sub
-
-    Private Sub btnfrmRolesAndPermissions_Click(sender As Object, e As EventArgs) Handles btnfrmRolesAndPermissions.Click
-        OpenFormOnce(GetType(frmRolesAndPermissions), btnfrmRolesAndPermissions)
-    End Sub
-
-    Private Sub btnfrmPurchaseReports_Click(sender As Object, e As EventArgs) Handles btnfrmPurchaseReports.Click
-        OpenFormOnce(GetType(frmPurchaseReports), btnfrmPurchaseReports)
-    End Sub
-
-
 
     Private Sub btnLogout_Click(sender As Object, e As EventArgs) Handles btnLogout.Click
         PerformLogout()
@@ -813,16 +688,16 @@ Public Class MainForm
         Select Case e.KeyCode
             Case Keys.F1
                 e.Handled = True
-                btnfrmPOS.PerformClick()
+                OpenFormDirectly(GetType(frmPOS))
             Case Keys.F2
                 e.Handled = True
-                btnProducts.PerformClick()
+                OpenFormDirectly(GetType(Products))
             Case Keys.F3
                 e.Handled = True
-                btnFrmCustomers.PerformClick()
+                OpenFormDirectly(GetType(FrmCustomers))
             Case Keys.F4
                 e.Handled = True
-                btnBackups.PerformClick()
+                OpenFormDirectly(GetType(Backup))
             Case Keys.F5
                 e.Handled = True
                 RefreshDashboardAsync(isManual:=True)
@@ -833,77 +708,20 @@ Public Class MainForm
     ''' تطبيق الصلاحيات على أزرار القائمة الرئيسية في MainForm
     ''' </summary>
     Public Sub ApplyPermissionsToMainForm()
-        If Session.CurrentRoleID = 1 Then Return ' مدير النظام لديه وصول كامل
+        If Session.CurrentRoleID = 1 Then Return
 
-        Dim mappings As New Dictionary(Of Control, String) From {
-            {btnCategories, "Categories"},
-            {btnProducts, "Products"},
-            {btnfrmProductSizes, "frmProductSizes"},
-            {btnfrmProductAddons, "frmProductAddons"},
-            {btnfrmKitchenComments, "frmKitchenComments"},
-            {btnfrmPOS, "frmPOS"},
-            {btnSalesReturns, "Sales_Returns"},
-            {btnfrmEmployees, "frmEmployees"},
-            {btnfrmJobTitles, "frmJobTitles"},
-            {btnfrmDepartments, "frmDepartments"},
-            {btnfrmSalarySystems, "frmSalarySystems"},
-            {btnfrmColors, "frmColors"},
-            {btnfrmDeliveryAreas, "frmDeliveryAreas"},
-            {btnfrmDeliveryDrivers, "frmDeliveryDrivers"},
-            {btnfrmTreasury, "frmTreasury"},
-            {btnFrmTreasuryTransfer, "FrmTreasuryTransfer"},
-            {btnFrmTreasuryTransactionsReport, "FrmTreasuryTransactionsReport"},
-            {btnfrmPrinters, "frmPrinters"},
-            {btnfrmRestaurantSections, "frmRestaurantSections"},
-            {btnfrmRestaurantTables, "frmRestaurantTables"},
-            {btnfrmShifts, "frmShifts"},
-            {btnShiftReports, "FrmShiftReports"},
-            {btnfrmBranches, "frmBranches"},
-            {btnFrmCustomers, "FrmCustomers"},
-            {btnSettings, "Settings"},
-            {btnBackups, "Backup"},
-            {btnFrmCustomerStatement, "FrmCustomerStatement"},
-            {btnCustomerBalanceDownload, "Customer_Balance_Download"},
-            {btnFrmSalesReport, "FrmSalesReport"},
-            {btnFrmDriverReport, "FrmDriverReport"},
-            {btnDeposit, "FrmTreasuryTransaction"},
-            {btnWithdraw, "FrmTreasuryTransaction"},
-            {btnform_Expenses, "form_Expenses"},
-            {btnExpensesReportForm, "ExpensesReportForm"},
-            {btnfrmUnits, "frmUnits"},
-            {btnfrmStores, "FrmStores"},
-            {btnfrmStoreStock, "frmStoreStock"},
-            {btnfrmRawMaterials, "frmRawMaterials"},
-            {btnfrmRecipes, "frmRecipes"},
-            {ToolStripButton3, "FrmSuppliers"},
-            {ToolStripButton4, "FrmSupplierTransactions"},
-            {ToolStripButton5, "frmPurchaseReports"},
-            {btnfrmPurchases, "frmPurchases"},
-            {btnfrmPurchaseReports, "frmPurchaseReports"},
-            {ToolStripButton11, "Reports"},
-            {btnfrmSalaryPayment, "frmSalaryPayment"},
-            {btnfrmUsers, "frmUsers"},
-            {btnfrmRolesAndPermissions, "frmRolesAndPermissions"},
-            {btnKds, "FrmKitchenDisplay"},
-            {btnWaste, "FrmKitchenWaste"},
-            {btnRes, "FrmTableReservations"}
-        }
-
-        For Each kvp In mappings
-            If kvp.Key IsNot Nothing Then
-                Dim allowed As Boolean = Session.HasPermission(kvp.Value, "CanOpen")
-                kvp.Key.Enabled = allowed
-                If Not allowed Then
-                    If TypeOf kvp.Key Is Guna.UI2.WinForms.Guna2Button Then
-                        CType(kvp.Key, Guna.UI2.WinForms.Guna2Button).FillColor = Color.FromArgb(20, 24, 32)
-                    End If
-                End If
-            End If
-        Next
-
-        If _ucDashboard IsNot Nothing Then
-            _ucDashboard.ApplyPermissions()
-        End If
+        If _ucDashboard IsNot Nothing Then _ucDashboard.ApplyPermissions()
+        If _ucSales IsNot Nothing Then _ucSales.ApplyPermissions()
+        If _ucSystem IsNot Nothing Then _ucSystem.ApplyPermissions()
+        If _ucInventory IsNot Nothing Then _ucInventory.ApplyPermissions()
+        If _ucPurchases IsNot Nothing Then _ucPurchases.ApplyPermissions()
+        If _ucCustomers IsNot Nothing Then _ucCustomers.ApplyPermissions()
+        If _ucSuppliers IsNot Nothing Then _ucSuppliers.ApplyPermissions()
+        If _ucTreasury IsNot Nothing Then _ucTreasury.ApplyPermissions()
+        If _ucExpenses IsNot Nothing Then _ucExpenses.ApplyPermissions()
+        If _ucEmployees IsNot Nothing Then _ucEmployees.ApplyPermissions()
+        If _ucUsers IsNot Nothing Then _ucUsers.ApplyPermissions()
+        If _ucSettings IsNot Nothing Then _ucSettings.ApplyPermissions()
     End Sub
 
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
