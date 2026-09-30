@@ -31,188 +31,181 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpPurchases = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderPurchases = New System.Windows.Forms.Panel()
-            Me.picHeaderPurchases = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitlePurchases = New System.Windows.Forms.Label()
-            Me.lblDescPurchases = New System.Windows.Forms.Label()
+            Me.pnlHeaderPurchases = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackPurchases = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescPurchases = New System.Windows.Forms.Label()
+            Me.lblTitlePurchases = New System.Windows.Forms.Label()
             Me.btnfrmPurchases = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmPurchaseReports = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderPurchases = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpPurchases.SuspendLayout()
             Me.pnlHeaderPurchases.SuspendLayout()
             CType(Me.picHeaderPurchases, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpPurchases.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderPurchases
-        '
-        Me.pnlHeaderPurchases.Controls.Add(Me.btnBackPurchases)
-        Me.pnlHeaderPurchases.Controls.Add(Me.lblDescPurchases)
-        Me.pnlHeaderPurchases.Controls.Add(Me.lblTitlePurchases)
-        Me.pnlHeaderPurchases.Controls.Add(Me.picHeaderPurchases)
-        Me.pnlHeaderPurchases.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderPurchases.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderPurchases.Name = "pnlHeaderPurchases"
-        Me.pnlHeaderPurchases.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderPurchases.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderPurchases.TabIndex = 1
-
-        '
-        'btnBackPurchases
-        '
-        Me.btnBackPurchases.BorderRadius = 8
-        Me.btnBackPurchases.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackPurchases.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackPurchases.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackPurchases.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackPurchases.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackPurchases.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackPurchases.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackPurchases.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackPurchases.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackPurchases.Name = "btnBackPurchases"
-        Me.btnBackPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackPurchases.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackPurchases.TabIndex = 0
-        Me.btnBackPurchases.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescPurchases
-        '
-        Me.lblDescPurchases.AutoSize = True
-        Me.lblDescPurchases.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescPurchases.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescPurchases.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescPurchases.Location = New System.Drawing.Point(549, 0)
-        Me.lblDescPurchases.Name = "lblDescPurchases"
-        Me.lblDescPurchases.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescPurchases.Size = New System.Drawing.Size(315, 24)
-        Me.lblDescPurchases.TabIndex = 1
-        Me.lblDescPurchases.Text = "فواتير الشراء، توريدات الخامات، وحسابات المشتريات الشهرية"
-
-        '
-        'lblTitlePurchases
-        '
-        Me.lblTitlePurchases.AutoSize = True
-        Me.lblTitlePurchases.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitlePurchases.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitlePurchases.ForeColor = System.Drawing.Color.White
-        Me.lblTitlePurchases.Location = New System.Drawing.Point(864, 0)
-        Me.lblTitlePurchases.Name = "lblTitlePurchases"
-        Me.lblTitlePurchases.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitlePurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitlePurchases.Size = New System.Drawing.Size(240, 30)
-        Me.lblTitlePurchases.TabIndex = 2
-        Me.lblTitlePurchases.Text = "قسم المشتريات والتوريدات"
-
-        '
-        'picHeaderPurchases
-        '
-        Me.picHeaderPurchases.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
-        Me.picHeaderPurchases.ImageRotate = 0!
-        Me.picHeaderPurchases.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderPurchases.Name = "picHeaderPurchases"
-        Me.picHeaderPurchases.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderPurchases.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderPurchases.TabIndex = 3
-        Me.picHeaderPurchases.TabStop = False
-
-        '
-        'flpPurchases
-        '
-        Me.flpPurchases.AutoScroll = True
-        Me.flpPurchases.Controls.Add(Me.btnfrmPurchases)
-        Me.flpPurchases.Controls.Add(Me.btnfrmPurchaseReports)
-        Me.flpPurchases.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpPurchases.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpPurchases.Location = New System.Drawing.Point(20, 80)
-        Me.flpPurchases.Name = "flpPurchases"
-        Me.flpPurchases.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpPurchases.Size = New System.Drawing.Size(1140, 658)
-        Me.flpPurchases.TabIndex = 0
-
-        '
-        'btnfrmPurchases
-        '
-        Me.btnfrmPurchases.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmPurchases.BorderRadius = 12
-        Me.btnfrmPurchases.BorderThickness = 1
-        Me.btnfrmPurchases.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmPurchases.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmPurchases.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmPurchases.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPurchases.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmPurchases.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmPurchases.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
-        Me.btnfrmPurchases.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmPurchases.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmPurchases.Location = New System.Drawing.Point(18, 18)
-        Me.btnfrmPurchases.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmPurchases.Name = "btnfrmPurchases"
-        Me.btnfrmPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmPurchases.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmPurchases.TabIndex = 0
-        Me.btnfrmPurchases.Text = "فاتورة مشتريات جديدة" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "توريد خامات ومستلزمات من الموردين"
-        Me.btnfrmPurchases.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmPurchases.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmPurchaseReports
-        '
-        Me.btnfrmPurchaseReports.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmPurchaseReports.BorderRadius = 12
-        Me.btnfrmPurchaseReports.BorderThickness = 1
-        Me.btnfrmPurchaseReports.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmPurchaseReports.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmPurchaseReports.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmPurchaseReports.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPurchaseReports.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmPurchaseReports.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmPurchaseReports.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPurchaseReports.Image = Global.WindowsApp1.My.Resources.Resources.financial
-        Me.btnfrmPurchaseReports.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmPurchaseReports.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmPurchaseReports.Location = New System.Drawing.Point(374, 18)
-        Me.btnfrmPurchaseReports.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmPurchaseReports.Name = "btnfrmPurchaseReports"
-        Me.btnfrmPurchaseReports.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmPurchaseReports.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmPurchaseReports.TabIndex = 1
-        Me.btnfrmPurchaseReports.Text = "تقارير المشتريات والصرف" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحليل تكاليف المشتريات وفواتير الموردين"
-        Me.btnfrmPurchaseReports.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmPurchaseReports.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCPurchasesHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpPurchases)
-        Me.Controls.Add(Me.pnlHeaderPurchases)
-        Me.Name = "UCPurchasesHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderPurchases, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderPurchases.ResumeLayout(False)
-            Me.pnlHeaderPurchases.PerformLayout()
+            '
+            'flpPurchases
+            '
+            Me.flpPurchases.AutoScroll = True
+            Me.flpPurchases.Controls.Add(Me.btnfrmPurchases)
+            Me.flpPurchases.Controls.Add(Me.btnfrmPurchaseReports)
+            Me.flpPurchases.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpPurchases.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpPurchases.Location = New System.Drawing.Point(17, 97)
+            Me.flpPurchases.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpPurchases.Name = "flpPurchases"
+            Me.flpPurchases.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpPurchases.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpPurchases.Size = New System.Drawing.Size(977, 503)
+            Me.flpPurchases.TabIndex = 0
+            '
+            'pnlHeaderPurchases
+            '
+            Me.pnlHeaderPurchases.BorderRadius = 10
+            Me.pnlHeaderPurchases.Controls.Add(Me.btnBackPurchases)
+            Me.pnlHeaderPurchases.Controls.Add(Me.lblDescPurchases)
+            Me.pnlHeaderPurchases.Controls.Add(Me.lblTitlePurchases)
+            Me.pnlHeaderPurchases.Controls.Add(Me.picHeaderPurchases)
+            Me.pnlHeaderPurchases.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderPurchases.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderPurchases.Name = "pnlHeaderPurchases"
+            Me.pnlHeaderPurchases.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderPurchases.TabIndex = 1
+            '
+            'btnBackPurchases
+            '
+            Me.btnBackPurchases.BorderRadius = 8
+            Me.btnBackPurchases.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackPurchases.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackPurchases.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackPurchases.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackPurchases.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackPurchases.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackPurchases.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackPurchases.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackPurchases.Name = "btnBackPurchases"
+            Me.btnBackPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackPurchases.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackPurchases.TabIndex = 4
+            Me.btnBackPurchases.Text = "  العودة للرئيسية"
+            '
+            'lblDescPurchases
+            '
+            Me.lblDescPurchases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescPurchases.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescPurchases.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescPurchases.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescPurchases.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescPurchases.Name = "lblDescPurchases"
+            Me.lblDescPurchases.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescPurchases.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescPurchases.TabIndex = 5
+            Me.lblDescPurchases.Text = "فواتير الشراء، توريدات الخامات، وحسابات المشتريات الشهرية"
+            Me.lblDescPurchases.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitlePurchases
+            '
+            Me.lblTitlePurchases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitlePurchases.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitlePurchases.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitlePurchases.ForeColor = System.Drawing.Color.White
+            Me.lblTitlePurchases.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitlePurchases.Name = "lblTitlePurchases"
+            Me.lblTitlePurchases.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitlePurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitlePurchases.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitlePurchases.TabIndex = 6
+            Me.lblTitlePurchases.Text = "قسم المشتريات والتوريدات"
+            Me.lblTitlePurchases.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnfrmPurchases
+            '
+            Me.btnfrmPurchases.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmPurchases.BorderRadius = 12
+            Me.btnfrmPurchases.BorderThickness = 1
+            Me.btnfrmPurchases.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmPurchases.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmPurchases.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmPurchases.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPurchases.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmPurchases.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmPurchases.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
+            Me.btnfrmPurchases.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmPurchases.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmPurchases.Location = New System.Drawing.Point(661, 14)
+            Me.btnfrmPurchases.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmPurchases.Name = "btnfrmPurchases"
+            Me.btnfrmPurchases.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmPurchases.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmPurchases.TabIndex = 0
+            Me.btnfrmPurchases.Text = "فاتورة مشتريات جديدة" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "توريد خامات ومستلزمات من الموردين"
+            Me.btnfrmPurchases.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmPurchases.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmPurchaseReports
+            '
+            Me.btnfrmPurchaseReports.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmPurchaseReports.BorderRadius = 12
+            Me.btnfrmPurchaseReports.BorderThickness = 1
+            Me.btnfrmPurchaseReports.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmPurchaseReports.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmPurchaseReports.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmPurchaseReports.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPurchaseReports.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmPurchaseReports.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmPurchaseReports.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPurchaseReports.Image = Global.WindowsApp1.My.Resources.Resources.financial
+            Me.btnfrmPurchaseReports.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmPurchaseReports.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmPurchaseReports.Location = New System.Drawing.Point(356, 14)
+            Me.btnfrmPurchaseReports.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmPurchaseReports.Name = "btnfrmPurchaseReports"
+            Me.btnfrmPurchaseReports.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmPurchaseReports.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmPurchaseReports.TabIndex = 1
+            Me.btnfrmPurchaseReports.Text = "تقارير المشتريات والصرف" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحليل تكاليف المشتريات وفواتير الموردين"
+            Me.btnfrmPurchaseReports.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmPurchaseReports.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderPurchases
+            '
+            Me.picHeaderPurchases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
+            Me.picHeaderPurchases.ImageRotate = 0!
+            Me.picHeaderPurchases.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderPurchases.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderPurchases.Name = "picHeaderPurchases"
+            Me.picHeaderPurchases.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderPurchases.TabIndex = 7
+            Me.picHeaderPurchases.TabStop = False
+            '
+            'UCPurchasesHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpPurchases)
+            Me.Controls.Add(Me.pnlHeaderPurchases)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCPurchasesHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpPurchases.ResumeLayout(False)
+            Me.pnlHeaderPurchases.ResumeLayout(False)
+            CType(Me.picHeaderPurchases, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpPurchases As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderPurchases As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderPurchases As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitlePurchases As System.Windows.Forms.Label
-        Friend WithEvents lblDescPurchases As System.Windows.Forms.Label
-        Friend WithEvents btnBackPurchases As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmPurchases As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmPurchaseReports As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderPurchases As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackPurchases As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescPurchases As Label
+        Friend WithEvents lblTitlePurchases As Label
+        Friend WithEvents picHeaderPurchases As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

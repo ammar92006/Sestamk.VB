@@ -31,304 +31,293 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpSettings = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderSettings = New System.Windows.Forms.Panel()
-            Me.picHeaderSettings = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleSettings = New System.Windows.Forms.Label()
-            Me.lblDescSettings = New System.Windows.Forms.Label()
+            Me.pnlHeaderSettings = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackSettings = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescSettings = New System.Windows.Forms.Label()
+            Me.lblTitleSettings = New System.Windows.Forms.Label()
             Me.btnSettings = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmPrinters = New Guna.UI2.WinForms.Guna2Button()
             Me.btnBackups = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmRestaurantSections = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmRestaurantTables = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmColors = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderSettings = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpSettings.SuspendLayout()
             Me.pnlHeaderSettings.SuspendLayout()
             CType(Me.picHeaderSettings, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpSettings.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderSettings
-        '
-        Me.pnlHeaderSettings.Controls.Add(Me.btnBackSettings)
-        Me.pnlHeaderSettings.Controls.Add(Me.lblDescSettings)
-        Me.pnlHeaderSettings.Controls.Add(Me.lblTitleSettings)
-        Me.pnlHeaderSettings.Controls.Add(Me.picHeaderSettings)
-        Me.pnlHeaderSettings.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderSettings.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderSettings.Name = "pnlHeaderSettings"
-        Me.pnlHeaderSettings.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderSettings.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderSettings.TabIndex = 1
-
-        '
-        'btnBackSettings
-        '
-        Me.btnBackSettings.BorderRadius = 8
-        Me.btnBackSettings.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackSettings.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackSettings.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackSettings.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackSettings.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackSettings.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackSettings.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackSettings.Name = "btnBackSettings"
-        Me.btnBackSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackSettings.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackSettings.TabIndex = 0
-        Me.btnBackSettings.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescSettings
-        '
-        Me.lblDescSettings.AutoSize = True
-        Me.lblDescSettings.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescSettings.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescSettings.Location = New System.Drawing.Point(412, 0)
-        Me.lblDescSettings.Name = "lblDescSettings"
-        Me.lblDescSettings.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescSettings.Size = New System.Drawing.Size(365, 24)
-        Me.lblDescSettings.TabIndex = 1
-        Me.lblDescSettings.Text = "إعدادات الفواتير، الطابعات والبونات، توزيع الطاولات، والنسخ الاحتياطي"
-
-        '
-        'lblTitleSettings
-        '
-        Me.lblTitleSettings.AutoSize = True
-        Me.lblTitleSettings.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleSettings.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleSettings.ForeColor = System.Drawing.Color.White
-        Me.lblTitleSettings.Location = New System.Drawing.Point(777, 0)
-        Me.lblTitleSettings.Name = "lblTitleSettings"
-        Me.lblTitleSettings.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleSettings.Size = New System.Drawing.Size(327, 30)
-        Me.lblTitleSettings.TabIndex = 2
-        Me.lblTitleSettings.Text = "قسم إعدادات النظام والطابعات والنسخ"
-
-        '
-        'picHeaderSettings
-        '
-        Me.picHeaderSettings.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderSettings.Image = Global.WindowsApp1.My.Resources.Resources.settings__3_
-        Me.picHeaderSettings.ImageRotate = 0!
-        Me.picHeaderSettings.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderSettings.Name = "picHeaderSettings"
-        Me.picHeaderSettings.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderSettings.TabIndex = 3
-        Me.picHeaderSettings.TabStop = False
-
-        '
-        'flpSettings
-        '
-        Me.flpSettings.AutoScroll = True
-        Me.flpSettings.Controls.Add(Me.btnSettings)
-        Me.flpSettings.Controls.Add(Me.btnfrmPrinters)
-        Me.flpSettings.Controls.Add(Me.btnBackups)
-        Me.flpSettings.Controls.Add(Me.btnfrmRestaurantSections)
-        Me.flpSettings.Controls.Add(Me.btnfrmRestaurantTables)
-        Me.flpSettings.Controls.Add(Me.btnfrmColors)
-        Me.flpSettings.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpSettings.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpSettings.Location = New System.Drawing.Point(20, 80)
-        Me.flpSettings.Name = "flpSettings"
-        Me.flpSettings.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpSettings.Size = New System.Drawing.Size(1140, 658)
-        Me.flpSettings.TabIndex = 0
-
-        '
-        'btnSettings
-        '
-        Me.btnSettings.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnSettings.BorderRadius = 12
-        Me.btnSettings.BorderThickness = 1
-        Me.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnSettings.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnSettings.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnSettings.ForeColor = System.Drawing.Color.White
-        Me.btnSettings.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnSettings.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnSettings.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnSettings.Image = Global.WindowsApp1.My.Resources.Resources.setting
-        Me.btnSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnSettings.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnSettings.Location = New System.Drawing.Point(18, 18)
-        Me.btnSettings.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnSettings.Name = "btnSettings"
-        Me.btnSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSettings.Size = New System.Drawing.Size(340, 95)
-        Me.btnSettings.TabIndex = 0
-        Me.btnSettings.Text = "لوحة إعدادات النظام" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "الضريبة والعملة والهوية التجارية"
-        Me.btnSettings.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnSettings.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmPrinters
-        '
-        Me.btnfrmPrinters.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmPrinters.BorderRadius = 12
-        Me.btnfrmPrinters.BorderThickness = 1
-        Me.btnfrmPrinters.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmPrinters.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmPrinters.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmPrinters.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPrinters.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmPrinters.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmPrinters.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPrinters.Image = Global.WindowsApp1.My.Resources.Resources.printer
-        Me.btnfrmPrinters.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmPrinters.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmPrinters.Location = New System.Drawing.Point(374, 18)
-        Me.btnfrmPrinters.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmPrinters.Name = "btnfrmPrinters"
-        Me.btnfrmPrinters.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmPrinters.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmPrinters.TabIndex = 1
-        Me.btnfrmPrinters.Text = "إعدادات الطابعات والبونات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "طابعات الكاشير والمطبخ والبار"
-        Me.btnfrmPrinters.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmPrinters.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnBackups
-        '
-        Me.btnBackups.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnBackups.BorderRadius = 12
-        Me.btnBackups.BorderThickness = 1
-        Me.btnBackups.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackups.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnBackups.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnBackups.ForeColor = System.Drawing.Color.White
-        Me.btnBackups.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnBackups.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnBackups.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnBackups.Image = Global.WindowsApp1.My.Resources.Resources.backup
-        Me.btnBackups.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackups.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnBackups.Location = New System.Drawing.Point(730, 18)
-        Me.btnBackups.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnBackups.Name = "btnBackups"
-        Me.btnBackups.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackups.Size = New System.Drawing.Size(340, 95)
-        Me.btnBackups.TabIndex = 2
-        Me.btnBackups.Text = "النسخ الاحتياطي والأمان" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "أخذ واستعادة النسخ الاحتياطية"
-        Me.btnBackups.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnBackups.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmRestaurantSections
-        '
-        Me.btnfrmRestaurantSections.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmRestaurantSections.BorderRadius = 12
-        Me.btnfrmRestaurantSections.BorderThickness = 1
-        Me.btnfrmRestaurantSections.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmRestaurantSections.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmRestaurantSections.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmRestaurantSections.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRestaurantSections.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmRestaurantSections.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmRestaurantSections.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRestaurantSections.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
-        Me.btnfrmRestaurantSections.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmRestaurantSections.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmRestaurantSections.Location = New System.Drawing.Point(18, 129)
-        Me.btnfrmRestaurantSections.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmRestaurantSections.Name = "btnfrmRestaurantSections"
-        Me.btnfrmRestaurantSections.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmRestaurantSections.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmRestaurantSections.TabIndex = 3
-        Me.btnfrmRestaurantSections.Text = "أقسام المطعم" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "صالة العائلات، الأفراد، التيك أواي"
-        Me.btnfrmRestaurantSections.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmRestaurantSections.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmRestaurantTables
-        '
-        Me.btnfrmRestaurantTables.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmRestaurantTables.BorderRadius = 12
-        Me.btnfrmRestaurantTables.BorderThickness = 1
-        Me.btnfrmRestaurantTables.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmRestaurantTables.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmRestaurantTables.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmRestaurantTables.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRestaurantTables.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmRestaurantTables.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmRestaurantTables.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRestaurantTables.Image = Global.WindowsApp1.My.Resources.Resources.round_table
-        Me.btnfrmRestaurantTables.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmRestaurantTables.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmRestaurantTables.Location = New System.Drawing.Point(374, 129)
-        Me.btnfrmRestaurantTables.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmRestaurantTables.Name = "btnfrmRestaurantTables"
-        Me.btnfrmRestaurantTables.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmRestaurantTables.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmRestaurantTables.TabIndex = 4
-        Me.btnfrmRestaurantTables.Text = "طاولات المطعم وتوزيعها" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تسمية وتوزيع طاولات الصالة"
-        Me.btnfrmRestaurantTables.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmRestaurantTables.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmColors
-        '
-        Me.btnfrmColors.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmColors.BorderRadius = 12
-        Me.btnfrmColors.BorderThickness = 1
-        Me.btnfrmColors.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmColors.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmColors.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmColors.ForeColor = System.Drawing.Color.White
-        Me.btnfrmColors.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmColors.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmColors.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmColors.Image = Global.WindowsApp1.My.Resources.Resources.color_palette
-        Me.btnfrmColors.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmColors.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmColors.Location = New System.Drawing.Point(730, 129)
-        Me.btnfrmColors.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmColors.Name = "btnfrmColors"
-        Me.btnfrmColors.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmColors.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmColors.TabIndex = 5
-        Me.btnfrmColors.Text = "ألوان ومظهر الشاشات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تخصيص ثيم وألوان شاشات النظام"
-        Me.btnfrmColors.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmColors.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCSettingsHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpSettings)
-        Me.Controls.Add(Me.pnlHeaderSettings)
-        Me.Name = "UCSettingsHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderSettings, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderSettings.ResumeLayout(False)
-            Me.pnlHeaderSettings.PerformLayout()
+            '
+            'flpSettings
+            '
+            Me.flpSettings.AutoScroll = True
+            Me.flpSettings.Controls.Add(Me.btnSettings)
+            Me.flpSettings.Controls.Add(Me.btnfrmPrinters)
+            Me.flpSettings.Controls.Add(Me.btnBackups)
+            Me.flpSettings.Controls.Add(Me.btnfrmRestaurantSections)
+            Me.flpSettings.Controls.Add(Me.btnfrmRestaurantTables)
+            Me.flpSettings.Controls.Add(Me.btnfrmColors)
+            Me.flpSettings.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpSettings.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpSettings.Location = New System.Drawing.Point(17, 97)
+            Me.flpSettings.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpSettings.Name = "flpSettings"
+            Me.flpSettings.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpSettings.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpSettings.Size = New System.Drawing.Size(977, 503)
+            Me.flpSettings.TabIndex = 0
+            '
+            'pnlHeaderSettings
+            '
+            Me.pnlHeaderSettings.BorderRadius = 10
+            Me.pnlHeaderSettings.Controls.Add(Me.btnBackSettings)
+            Me.pnlHeaderSettings.Controls.Add(Me.lblDescSettings)
+            Me.pnlHeaderSettings.Controls.Add(Me.lblTitleSettings)
+            Me.pnlHeaderSettings.Controls.Add(Me.picHeaderSettings)
+            Me.pnlHeaderSettings.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderSettings.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderSettings.Name = "pnlHeaderSettings"
+            Me.pnlHeaderSettings.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderSettings.TabIndex = 1
+            '
+            'btnBackSettings
+            '
+            Me.btnBackSettings.BorderRadius = 8
+            Me.btnBackSettings.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackSettings.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackSettings.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackSettings.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackSettings.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackSettings.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackSettings.Name = "btnBackSettings"
+            Me.btnBackSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackSettings.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackSettings.TabIndex = 4
+            Me.btnBackSettings.Text = "  العودة للرئيسية"
+            '
+            'lblDescSettings
+            '
+            Me.lblDescSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescSettings.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescSettings.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescSettings.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescSettings.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescSettings.Name = "lblDescSettings"
+            Me.lblDescSettings.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescSettings.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescSettings.TabIndex = 5
+            Me.lblDescSettings.Text = "إعدادات الفواتير، الطابعات والبونات، توزيع الطاولات، والنسخ الاحتياطي"
+            Me.lblDescSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleSettings
+            '
+            Me.lblTitleSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleSettings.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleSettings.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleSettings.ForeColor = System.Drawing.Color.White
+            Me.lblTitleSettings.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitleSettings.Name = "lblTitleSettings"
+            Me.lblTitleSettings.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleSettings.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitleSettings.TabIndex = 6
+            Me.lblTitleSettings.Text = "قسم إعدادات النظام والطابعات والنسخ"
+            Me.lblTitleSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnSettings
+            '
+            Me.btnSettings.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnSettings.BorderRadius = 12
+            Me.btnSettings.BorderThickness = 1
+            Me.btnSettings.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnSettings.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnSettings.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnSettings.ForeColor = System.Drawing.Color.White
+            Me.btnSettings.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnSettings.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnSettings.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnSettings.Image = Global.WindowsApp1.My.Resources.Resources.setting
+            Me.btnSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnSettings.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnSettings.Location = New System.Drawing.Point(661, 14)
+            Me.btnSettings.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnSettings.Name = "btnSettings"
+            Me.btnSettings.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnSettings.Size = New System.Drawing.Size(291, 77)
+            Me.btnSettings.TabIndex = 0
+            Me.btnSettings.Text = "لوحة إعدادات النظام" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "الضريبة والعملة والهوية التجارية"
+            Me.btnSettings.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnSettings.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmPrinters
+            '
+            Me.btnfrmPrinters.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmPrinters.BorderRadius = 12
+            Me.btnfrmPrinters.BorderThickness = 1
+            Me.btnfrmPrinters.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmPrinters.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmPrinters.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmPrinters.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPrinters.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmPrinters.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmPrinters.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPrinters.Image = Global.WindowsApp1.My.Resources.Resources.printer
+            Me.btnfrmPrinters.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmPrinters.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmPrinters.Location = New System.Drawing.Point(356, 14)
+            Me.btnfrmPrinters.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmPrinters.Name = "btnfrmPrinters"
+            Me.btnfrmPrinters.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmPrinters.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmPrinters.TabIndex = 1
+            Me.btnfrmPrinters.Text = "إعدادات الطابعات والبونات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "طابعات الكاشير والمطبخ والبار"
+            Me.btnfrmPrinters.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmPrinters.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnBackups
+            '
+            Me.btnBackups.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnBackups.BorderRadius = 12
+            Me.btnBackups.BorderThickness = 1
+            Me.btnBackups.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackups.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnBackups.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnBackups.ForeColor = System.Drawing.Color.White
+            Me.btnBackups.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnBackups.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnBackups.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnBackups.Image = Global.WindowsApp1.My.Resources.Resources.backup
+            Me.btnBackups.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackups.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnBackups.Location = New System.Drawing.Point(51, 14)
+            Me.btnBackups.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnBackups.Name = "btnBackups"
+            Me.btnBackups.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackups.Size = New System.Drawing.Size(291, 77)
+            Me.btnBackups.TabIndex = 2
+            Me.btnBackups.Text = "النسخ الاحتياطي والأمان" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "أخذ واستعادة النسخ الاحتياطية"
+            Me.btnBackups.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnBackups.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmRestaurantSections
+            '
+            Me.btnfrmRestaurantSections.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmRestaurantSections.BorderRadius = 12
+            Me.btnfrmRestaurantSections.BorderThickness = 1
+            Me.btnfrmRestaurantSections.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmRestaurantSections.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmRestaurantSections.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmRestaurantSections.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRestaurantSections.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmRestaurantSections.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmRestaurantSections.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRestaurantSections.Image = Global.WindowsApp1.My.Resources.Resources.dinning_hall
+            Me.btnfrmRestaurantSections.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmRestaurantSections.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmRestaurantSections.Location = New System.Drawing.Point(661, 103)
+            Me.btnfrmRestaurantSections.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmRestaurantSections.Name = "btnfrmRestaurantSections"
+            Me.btnfrmRestaurantSections.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmRestaurantSections.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmRestaurantSections.TabIndex = 3
+            Me.btnfrmRestaurantSections.Text = "أقسام المطعم" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "صالة العائلات، الأفراد، التيك أواي"
+            Me.btnfrmRestaurantSections.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmRestaurantSections.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmRestaurantTables
+            '
+            Me.btnfrmRestaurantTables.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmRestaurantTables.BorderRadius = 12
+            Me.btnfrmRestaurantTables.BorderThickness = 1
+            Me.btnfrmRestaurantTables.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmRestaurantTables.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmRestaurantTables.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmRestaurantTables.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRestaurantTables.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmRestaurantTables.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmRestaurantTables.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRestaurantTables.Image = Global.WindowsApp1.My.Resources.Resources.round_table
+            Me.btnfrmRestaurantTables.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmRestaurantTables.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmRestaurantTables.Location = New System.Drawing.Point(356, 103)
+            Me.btnfrmRestaurantTables.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmRestaurantTables.Name = "btnfrmRestaurantTables"
+            Me.btnfrmRestaurantTables.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmRestaurantTables.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmRestaurantTables.TabIndex = 4
+            Me.btnfrmRestaurantTables.Text = "طاولات المطعم وتوزيعها" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تسمية وتوزيع طاولات الصالة"
+            Me.btnfrmRestaurantTables.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmRestaurantTables.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmColors
+            '
+            Me.btnfrmColors.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmColors.BorderRadius = 12
+            Me.btnfrmColors.BorderThickness = 1
+            Me.btnfrmColors.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmColors.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmColors.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmColors.ForeColor = System.Drawing.Color.White
+            Me.btnfrmColors.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmColors.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmColors.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmColors.Image = Global.WindowsApp1.My.Resources.Resources.color_palette
+            Me.btnfrmColors.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmColors.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmColors.Location = New System.Drawing.Point(51, 103)
+            Me.btnfrmColors.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmColors.Name = "btnfrmColors"
+            Me.btnfrmColors.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmColors.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmColors.TabIndex = 5
+            Me.btnfrmColors.Text = "ألوان ومظهر الشاشات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تخصيص ثيم وألوان شاشات النظام"
+            Me.btnfrmColors.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmColors.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderSettings
+            '
+            Me.picHeaderSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderSettings.Image = Global.WindowsApp1.My.Resources.Resources.settings__3_
+            Me.picHeaderSettings.ImageRotate = 0!
+            Me.picHeaderSettings.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderSettings.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderSettings.Name = "picHeaderSettings"
+            Me.picHeaderSettings.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderSettings.TabIndex = 7
+            Me.picHeaderSettings.TabStop = False
+            '
+            'UCSettingsHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpSettings)
+            Me.Controls.Add(Me.pnlHeaderSettings)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCSettingsHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpSettings.ResumeLayout(False)
+            Me.pnlHeaderSettings.ResumeLayout(False)
+            CType(Me.picHeaderSettings, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpSettings As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderSettings As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderSettings As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleSettings As System.Windows.Forms.Label
-        Friend WithEvents lblDescSettings As System.Windows.Forms.Label
-        Friend WithEvents btnBackSettings As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnSettings As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmPrinters As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnBackups As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmRestaurantSections As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmRestaurantTables As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmColors As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderSettings As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackSettings As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescSettings As Label
+        Friend WithEvents lblTitleSettings As Label
+        Friend WithEvents picHeaderSettings As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

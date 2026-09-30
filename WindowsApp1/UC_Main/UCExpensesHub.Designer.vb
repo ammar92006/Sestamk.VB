@@ -31,188 +31,181 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpExpenses = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderExpenses = New System.Windows.Forms.Panel()
-            Me.picHeaderExpenses = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleExpenses = New System.Windows.Forms.Label()
-            Me.lblDescExpenses = New System.Windows.Forms.Label()
+            Me.pnlHeaderExpenses = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackExpenses = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescExpenses = New System.Windows.Forms.Label()
+            Me.lblTitleExpenses = New System.Windows.Forms.Label()
             Me.btnform_Expenses = New Guna.UI2.WinForms.Guna2Button()
             Me.btnExpensesReportForm = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderExpenses = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpExpenses.SuspendLayout()
             Me.pnlHeaderExpenses.SuspendLayout()
             CType(Me.picHeaderExpenses, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpExpenses.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderExpenses
-        '
-        Me.pnlHeaderExpenses.Controls.Add(Me.btnBackExpenses)
-        Me.pnlHeaderExpenses.Controls.Add(Me.lblDescExpenses)
-        Me.pnlHeaderExpenses.Controls.Add(Me.lblTitleExpenses)
-        Me.pnlHeaderExpenses.Controls.Add(Me.picHeaderExpenses)
-        Me.pnlHeaderExpenses.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderExpenses.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderExpenses.Name = "pnlHeaderExpenses"
-        Me.pnlHeaderExpenses.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderExpenses.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderExpenses.TabIndex = 1
-
-        '
-        'btnBackExpenses
-        '
-        Me.btnBackExpenses.BorderRadius = 8
-        Me.btnBackExpenses.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackExpenses.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackExpenses.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackExpenses.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackExpenses.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackExpenses.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackExpenses.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackExpenses.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackExpenses.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackExpenses.Name = "btnBackExpenses"
-        Me.btnBackExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackExpenses.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackExpenses.TabIndex = 0
-        Me.btnBackExpenses.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescExpenses
-        '
-        Me.lblDescExpenses.AutoSize = True
-        Me.lblDescExpenses.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescExpenses.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescExpenses.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescExpenses.Location = New System.Drawing.Point(442, 0)
-        Me.lblDescExpenses.Name = "lblDescExpenses"
-        Me.lblDescExpenses.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescExpenses.Size = New System.Drawing.Size(364, 24)
-        Me.lblDescExpenses.TabIndex = 1
-        Me.lblDescExpenses.Text = "تسجيل النثريات، فواتير المرافق، الإيجارات، ومصروفات التشغيل المباشرة"
-
-        '
-        'lblTitleExpenses
-        '
-        Me.lblTitleExpenses.AutoSize = True
-        Me.lblTitleExpenses.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleExpenses.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleExpenses.ForeColor = System.Drawing.Color.White
-        Me.lblTitleExpenses.Location = New System.Drawing.Point(806, 0)
-        Me.lblTitleExpenses.Name = "lblTitleExpenses"
-        Me.lblTitleExpenses.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleExpenses.Size = New System.Drawing.Size(298, 30)
-        Me.lblTitleExpenses.TabIndex = 2
-        Me.lblTitleExpenses.Text = "قسم المصروفات التشغيلية واليومية"
-
-        '
-        'picHeaderExpenses
-        '
-        Me.picHeaderExpenses.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderExpenses.Image = Global.WindowsApp1.My.Resources.Resources.discount
-        Me.picHeaderExpenses.ImageRotate = 0!
-        Me.picHeaderExpenses.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderExpenses.Name = "picHeaderExpenses"
-        Me.picHeaderExpenses.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderExpenses.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderExpenses.TabIndex = 3
-        Me.picHeaderExpenses.TabStop = False
-
-        '
-        'flpExpenses
-        '
-        Me.flpExpenses.AutoScroll = True
-        Me.flpExpenses.Controls.Add(Me.btnform_Expenses)
-        Me.flpExpenses.Controls.Add(Me.btnExpensesReportForm)
-        Me.flpExpenses.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpExpenses.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpExpenses.Location = New System.Drawing.Point(20, 80)
-        Me.flpExpenses.Name = "flpExpenses"
-        Me.flpExpenses.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpExpenses.Size = New System.Drawing.Size(1140, 658)
-        Me.flpExpenses.TabIndex = 0
-
-        '
-        'btnform_Expenses
-        '
-        Me.btnform_Expenses.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnform_Expenses.BorderRadius = 12
-        Me.btnform_Expenses.BorderThickness = 1
-        Me.btnform_Expenses.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnform_Expenses.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnform_Expenses.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnform_Expenses.ForeColor = System.Drawing.Color.White
-        Me.btnform_Expenses.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnform_Expenses.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnform_Expenses.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnform_Expenses.Image = Global.WindowsApp1.My.Resources.Resources.money
-        Me.btnform_Expenses.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnform_Expenses.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnform_Expenses.Location = New System.Drawing.Point(18, 18)
-        Me.btnform_Expenses.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnform_Expenses.Name = "btnform_Expenses"
-        Me.btnform_Expenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnform_Expenses.Size = New System.Drawing.Size(340, 95)
-        Me.btnform_Expenses.TabIndex = 0
-        Me.btnform_Expenses.Text = "تسجيل مصروف جديد" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "صرف نثريات وخصمها من خزينة الوردية"
-        Me.btnform_Expenses.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnform_Expenses.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnExpensesReportForm
-        '
-        Me.btnExpensesReportForm.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnExpensesReportForm.BorderRadius = 12
-        Me.btnExpensesReportForm.BorderThickness = 1
-        Me.btnExpensesReportForm.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnExpensesReportForm.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnExpensesReportForm.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnExpensesReportForm.ForeColor = System.Drawing.Color.White
-        Me.btnExpensesReportForm.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnExpensesReportForm.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnExpensesReportForm.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnExpensesReportForm.Image = Global.WindowsApp1.My.Resources.Resources.report
-        Me.btnExpensesReportForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnExpensesReportForm.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnExpensesReportForm.Location = New System.Drawing.Point(374, 18)
-        Me.btnExpensesReportForm.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnExpensesReportForm.Name = "btnExpensesReportForm"
-        Me.btnExpensesReportForm.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnExpensesReportForm.Size = New System.Drawing.Size(340, 95)
-        Me.btnExpensesReportForm.TabIndex = 1
-        Me.btnExpensesReportForm.Text = "تقارير المصروفات الشهرية" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "مقارنة بنود الصرف ومسوغات الإنفاق"
-        Me.btnExpensesReportForm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnExpensesReportForm.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCExpensesHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpExpenses)
-        Me.Controls.Add(Me.pnlHeaderExpenses)
-        Me.Name = "UCExpensesHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderExpenses, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderExpenses.ResumeLayout(False)
-            Me.pnlHeaderExpenses.PerformLayout()
+            '
+            'flpExpenses
+            '
+            Me.flpExpenses.AutoScroll = True
+            Me.flpExpenses.Controls.Add(Me.btnform_Expenses)
+            Me.flpExpenses.Controls.Add(Me.btnExpensesReportForm)
+            Me.flpExpenses.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpExpenses.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpExpenses.Location = New System.Drawing.Point(17, 97)
+            Me.flpExpenses.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpExpenses.Name = "flpExpenses"
+            Me.flpExpenses.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpExpenses.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpExpenses.Size = New System.Drawing.Size(977, 503)
+            Me.flpExpenses.TabIndex = 0
+            '
+            'pnlHeaderExpenses
+            '
+            Me.pnlHeaderExpenses.BorderRadius = 10
+            Me.pnlHeaderExpenses.Controls.Add(Me.btnBackExpenses)
+            Me.pnlHeaderExpenses.Controls.Add(Me.lblDescExpenses)
+            Me.pnlHeaderExpenses.Controls.Add(Me.lblTitleExpenses)
+            Me.pnlHeaderExpenses.Controls.Add(Me.picHeaderExpenses)
+            Me.pnlHeaderExpenses.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderExpenses.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderExpenses.Name = "pnlHeaderExpenses"
+            Me.pnlHeaderExpenses.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderExpenses.TabIndex = 1
+            '
+            'btnBackExpenses
+            '
+            Me.btnBackExpenses.BorderRadius = 8
+            Me.btnBackExpenses.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackExpenses.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackExpenses.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackExpenses.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackExpenses.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackExpenses.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackExpenses.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackExpenses.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackExpenses.Name = "btnBackExpenses"
+            Me.btnBackExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackExpenses.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackExpenses.TabIndex = 4
+            Me.btnBackExpenses.Text = "  العودة للرئيسية"
+            '
+            'lblDescExpenses
+            '
+            Me.lblDescExpenses.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescExpenses.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescExpenses.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescExpenses.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescExpenses.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescExpenses.Name = "lblDescExpenses"
+            Me.lblDescExpenses.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescExpenses.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescExpenses.TabIndex = 5
+            Me.lblDescExpenses.Text = "تسجيل النثريات، فواتير المرافق، الإيجارات، ومصروفات التشغيل المباشرة"
+            Me.lblDescExpenses.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleExpenses
+            '
+            Me.lblTitleExpenses.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleExpenses.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleExpenses.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleExpenses.ForeColor = System.Drawing.Color.White
+            Me.lblTitleExpenses.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitleExpenses.Name = "lblTitleExpenses"
+            Me.lblTitleExpenses.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleExpenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleExpenses.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitleExpenses.TabIndex = 6
+            Me.lblTitleExpenses.Text = "قسم المصروفات التشغيلية واليومية"
+            Me.lblTitleExpenses.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnform_Expenses
+            '
+            Me.btnform_Expenses.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnform_Expenses.BorderRadius = 12
+            Me.btnform_Expenses.BorderThickness = 1
+            Me.btnform_Expenses.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnform_Expenses.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnform_Expenses.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnform_Expenses.ForeColor = System.Drawing.Color.White
+            Me.btnform_Expenses.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnform_Expenses.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnform_Expenses.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnform_Expenses.Image = Global.WindowsApp1.My.Resources.Resources.money
+            Me.btnform_Expenses.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnform_Expenses.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnform_Expenses.Location = New System.Drawing.Point(661, 14)
+            Me.btnform_Expenses.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnform_Expenses.Name = "btnform_Expenses"
+            Me.btnform_Expenses.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnform_Expenses.Size = New System.Drawing.Size(291, 77)
+            Me.btnform_Expenses.TabIndex = 0
+            Me.btnform_Expenses.Text = "تسجيل مصروف جديد" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "صرف نثريات وخصمها من خزينة الوردية"
+            Me.btnform_Expenses.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnform_Expenses.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnExpensesReportForm
+            '
+            Me.btnExpensesReportForm.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnExpensesReportForm.BorderRadius = 12
+            Me.btnExpensesReportForm.BorderThickness = 1
+            Me.btnExpensesReportForm.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnExpensesReportForm.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnExpensesReportForm.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnExpensesReportForm.ForeColor = System.Drawing.Color.White
+            Me.btnExpensesReportForm.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnExpensesReportForm.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnExpensesReportForm.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnExpensesReportForm.Image = Global.WindowsApp1.My.Resources.Resources.report
+            Me.btnExpensesReportForm.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnExpensesReportForm.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnExpensesReportForm.Location = New System.Drawing.Point(356, 14)
+            Me.btnExpensesReportForm.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnExpensesReportForm.Name = "btnExpensesReportForm"
+            Me.btnExpensesReportForm.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnExpensesReportForm.Size = New System.Drawing.Size(291, 77)
+            Me.btnExpensesReportForm.TabIndex = 1
+            Me.btnExpensesReportForm.Text = "تقارير المصروفات الشهرية" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "مقارنة بنود الصرف ومسوغات الإنفاق"
+            Me.btnExpensesReportForm.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnExpensesReportForm.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderExpenses
+            '
+            Me.picHeaderExpenses.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderExpenses.Image = Global.WindowsApp1.My.Resources.Resources.discount
+            Me.picHeaderExpenses.ImageRotate = 0!
+            Me.picHeaderExpenses.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderExpenses.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderExpenses.Name = "picHeaderExpenses"
+            Me.picHeaderExpenses.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderExpenses.TabIndex = 7
+            Me.picHeaderExpenses.TabStop = False
+            '
+            'UCExpensesHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpExpenses)
+            Me.Controls.Add(Me.pnlHeaderExpenses)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCExpensesHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpExpenses.ResumeLayout(False)
+            Me.pnlHeaderExpenses.ResumeLayout(False)
+            CType(Me.picHeaderExpenses, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpExpenses As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderExpenses As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderExpenses As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleExpenses As System.Windows.Forms.Label
-        Friend WithEvents lblDescExpenses As System.Windows.Forms.Label
-        Friend WithEvents btnBackExpenses As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnform_Expenses As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnExpensesReportForm As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderExpenses As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackExpenses As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescExpenses As Label
+        Friend WithEvents lblTitleExpenses As Label
+        Friend WithEvents picHeaderExpenses As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

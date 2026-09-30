@@ -31,217 +31,209 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpSuppliers = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderSuppliers = New System.Windows.Forms.Panel()
-            Me.picHeaderSuppliers = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleSuppliers = New System.Windows.Forms.Label()
-            Me.lblDescSuppliers = New System.Windows.Forms.Label()
+            Me.pnlHeaderSuppliers = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackSuppliers = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescSuppliers = New System.Windows.Forms.Label()
+            Me.lblTitleSuppliers = New System.Windows.Forms.Label()
             Me.ToolStripButton3 = New Guna.UI2.WinForms.Guna2Button()
             Me.ToolStripButton4 = New Guna.UI2.WinForms.Guna2Button()
             Me.ToolStripButton5 = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderSuppliers = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpSuppliers.SuspendLayout()
             Me.pnlHeaderSuppliers.SuspendLayout()
             CType(Me.picHeaderSuppliers, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpSuppliers.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderSuppliers
-        '
-        Me.pnlHeaderSuppliers.Controls.Add(Me.btnBackSuppliers)
-        Me.pnlHeaderSuppliers.Controls.Add(Me.lblDescSuppliers)
-        Me.pnlHeaderSuppliers.Controls.Add(Me.lblTitleSuppliers)
-        Me.pnlHeaderSuppliers.Controls.Add(Me.picHeaderSuppliers)
-        Me.pnlHeaderSuppliers.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderSuppliers.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderSuppliers.Name = "pnlHeaderSuppliers"
-        Me.pnlHeaderSuppliers.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderSuppliers.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderSuppliers.TabIndex = 1
-
-        '
-        'btnBackSuppliers
-        '
-        Me.btnBackSuppliers.BorderRadius = 8
-        Me.btnBackSuppliers.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackSuppliers.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackSuppliers.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackSuppliers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackSuppliers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackSuppliers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackSuppliers.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackSuppliers.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackSuppliers.Name = "btnBackSuppliers"
-        Me.btnBackSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackSuppliers.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackSuppliers.TabIndex = 0
-        Me.btnBackSuppliers.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescSuppliers
-        '
-        Me.lblDescSuppliers.AutoSize = True
-        Me.lblDescSuppliers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescSuppliers.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescSuppliers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescSuppliers.Location = New System.Drawing.Point(489, 0)
-        Me.lblDescSuppliers.Name = "lblDescSuppliers"
-        Me.lblDescSuppliers.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescSuppliers.Size = New System.Drawing.Size(350, 24)
-        Me.lblDescSuppliers.TabIndex = 1
-        Me.lblDescSuppliers.Text = "دليل الشركات الموردة، مسيرات الدفعات، وكشوفات الحسابات والآجل"
-
-        '
-        'lblTitleSuppliers
-        '
-        Me.lblTitleSuppliers.AutoSize = True
-        Me.lblTitleSuppliers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleSuppliers.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleSuppliers.ForeColor = System.Drawing.Color.White
-        Me.lblTitleSuppliers.Location = New System.Drawing.Point(839, 0)
-        Me.lblTitleSuppliers.Name = "lblTitleSuppliers"
-        Me.lblTitleSuppliers.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleSuppliers.Size = New System.Drawing.Size(265, 30)
-        Me.lblTitleSuppliers.TabIndex = 2
-        Me.lblTitleSuppliers.Text = "قسم الموردين والشركات والآجل"
-
-        '
-        'picHeaderSuppliers
-        '
-        Me.picHeaderSuppliers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.supplier
-        Me.picHeaderSuppliers.ImageRotate = 0!
-        Me.picHeaderSuppliers.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderSuppliers.Name = "picHeaderSuppliers"
-        Me.picHeaderSuppliers.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderSuppliers.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderSuppliers.TabIndex = 3
-        Me.picHeaderSuppliers.TabStop = False
-
-        '
-        'flpSuppliers
-        '
-        Me.flpSuppliers.AutoScroll = True
-        Me.flpSuppliers.Controls.Add(Me.ToolStripButton3)
-        Me.flpSuppliers.Controls.Add(Me.ToolStripButton4)
-        Me.flpSuppliers.Controls.Add(Me.ToolStripButton5)
-        Me.flpSuppliers.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpSuppliers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpSuppliers.Location = New System.Drawing.Point(20, 80)
-        Me.flpSuppliers.Name = "flpSuppliers"
-        Me.flpSuppliers.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpSuppliers.Size = New System.Drawing.Size(1140, 658)
-        Me.flpSuppliers.TabIndex = 0
-
-        '
-        'ToolStripButton3
-        '
-        Me.ToolStripButton3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.ToolStripButton3.BorderRadius = 12
-        Me.ToolStripButton3.BorderThickness = 1
-        Me.ToolStripButton3.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.ToolStripButton3.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.ToolStripButton3.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.ToolStripButton3.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton3.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.ToolStripButton3.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.ToolStripButton3.HoverState.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton3.Image = Global.WindowsApp1.My.Resources.Resources.supplier
-        Me.ToolStripButton3.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.ToolStripButton3.ImageSize = New System.Drawing.Size(32, 32)
-        Me.ToolStripButton3.Location = New System.Drawing.Point(18, 18)
-        Me.ToolStripButton3.Margin = New System.Windows.Forms.Padding(8)
-        Me.ToolStripButton3.Name = "ToolStripButton3"
-        Me.ToolStripButton3.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ToolStripButton3.Size = New System.Drawing.Size(340, 95)
-        Me.ToolStripButton3.TabIndex = 0
-        Me.ToolStripButton3.Text = "دليل الموردين والشركات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "بيانات الموردين وشركات الأغذية"
-        Me.ToolStripButton3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.ToolStripButton3.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'ToolStripButton4
-        '
-        Me.ToolStripButton4.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.ToolStripButton4.BorderRadius = 12
-        Me.ToolStripButton4.BorderThickness = 1
-        Me.ToolStripButton4.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.ToolStripButton4.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.ToolStripButton4.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.ToolStripButton4.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton4.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.ToolStripButton4.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.ToolStripButton4.HoverState.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton4.Image = Global.WindowsApp1.My.Resources.Resources.file
-        Me.ToolStripButton4.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.ToolStripButton4.ImageSize = New System.Drawing.Size(32, 32)
-        Me.ToolStripButton4.Location = New System.Drawing.Point(374, 18)
-        Me.ToolStripButton4.Margin = New System.Windows.Forms.Padding(8)
-        Me.ToolStripButton4.Name = "ToolStripButton4"
-        Me.ToolStripButton4.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ToolStripButton4.Size = New System.Drawing.Size(340, 95)
-        Me.ToolStripButton4.TabIndex = 1
-        Me.ToolStripButton4.Text = "كشف حساب مورد" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "سجل التوريدات والمبالغ المستحقة"
-        Me.ToolStripButton4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.ToolStripButton4.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'ToolStripButton5
-        '
-        Me.ToolStripButton5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.ToolStripButton5.BorderRadius = 12
-        Me.ToolStripButton5.BorderThickness = 1
-        Me.ToolStripButton5.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.ToolStripButton5.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.ToolStripButton5.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.ToolStripButton5.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton5.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.ToolStripButton5.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.ToolStripButton5.HoverState.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton5.Image = Global.WindowsApp1.My.Resources.Resources.market_analysis
-        Me.ToolStripButton5.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.ToolStripButton5.ImageSize = New System.Drawing.Size(32, 32)
-        Me.ToolStripButton5.Location = New System.Drawing.Point(730, 18)
-        Me.ToolStripButton5.Margin = New System.Windows.Forms.Padding(8)
-        Me.ToolStripButton5.Name = "ToolStripButton5"
-        Me.ToolStripButton5.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ToolStripButton5.Size = New System.Drawing.Size(340, 95)
-        Me.ToolStripButton5.TabIndex = 2
-        Me.ToolStripButton5.Text = "تقارير الموردين والآجل" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "جدول التزامات الدفع والديون المستحقة"
-        Me.ToolStripButton5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.ToolStripButton5.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCSuppliersHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpSuppliers)
-        Me.Controls.Add(Me.pnlHeaderSuppliers)
-        Me.Name = "UCSuppliersHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderSuppliers, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderSuppliers.ResumeLayout(False)
-            Me.pnlHeaderSuppliers.PerformLayout()
+            '
+            'flpSuppliers
+            '
+            Me.flpSuppliers.AutoScroll = True
+            Me.flpSuppliers.Controls.Add(Me.ToolStripButton3)
+            Me.flpSuppliers.Controls.Add(Me.ToolStripButton4)
+            Me.flpSuppliers.Controls.Add(Me.ToolStripButton5)
+            Me.flpSuppliers.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpSuppliers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpSuppliers.Location = New System.Drawing.Point(17, 97)
+            Me.flpSuppliers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpSuppliers.Name = "flpSuppliers"
+            Me.flpSuppliers.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpSuppliers.Size = New System.Drawing.Size(977, 503)
+            Me.flpSuppliers.TabIndex = 0
+            '
+            'pnlHeaderSuppliers
+            '
+            Me.pnlHeaderSuppliers.BorderRadius = 10
+            Me.pnlHeaderSuppliers.Controls.Add(Me.btnBackSuppliers)
+            Me.pnlHeaderSuppliers.Controls.Add(Me.lblDescSuppliers)
+            Me.pnlHeaderSuppliers.Controls.Add(Me.lblTitleSuppliers)
+            Me.pnlHeaderSuppliers.Controls.Add(Me.picHeaderSuppliers)
+            Me.pnlHeaderSuppliers.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderSuppliers.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderSuppliers.Name = "pnlHeaderSuppliers"
+            Me.pnlHeaderSuppliers.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderSuppliers.TabIndex = 1
+            '
+            'btnBackSuppliers
+            '
+            Me.btnBackSuppliers.BorderRadius = 8
+            Me.btnBackSuppliers.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackSuppliers.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackSuppliers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackSuppliers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackSuppliers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackSuppliers.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackSuppliers.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackSuppliers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackSuppliers.Name = "btnBackSuppliers"
+            Me.btnBackSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackSuppliers.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackSuppliers.TabIndex = 4
+            Me.btnBackSuppliers.Text = "  العودة للرئيسية"
+            '
+            'lblDescSuppliers
+            '
+            Me.lblDescSuppliers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescSuppliers.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescSuppliers.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescSuppliers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescSuppliers.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescSuppliers.Name = "lblDescSuppliers"
+            Me.lblDescSuppliers.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescSuppliers.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescSuppliers.TabIndex = 5
+            Me.lblDescSuppliers.Text = "دليل الشركات الموردة، مسيرات الدفعات، وكشوفات الحسابات والآجل"
+            Me.lblDescSuppliers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleSuppliers
+            '
+            Me.lblTitleSuppliers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleSuppliers.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleSuppliers.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleSuppliers.ForeColor = System.Drawing.Color.White
+            Me.lblTitleSuppliers.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitleSuppliers.Name = "lblTitleSuppliers"
+            Me.lblTitleSuppliers.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleSuppliers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleSuppliers.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitleSuppliers.TabIndex = 6
+            Me.lblTitleSuppliers.Text = "قسم الموردين والشركات والآجل"
+            Me.lblTitleSuppliers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'ToolStripButton3
+            '
+            Me.ToolStripButton3.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.ToolStripButton3.BorderRadius = 12
+            Me.ToolStripButton3.BorderThickness = 1
+            Me.ToolStripButton3.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.ToolStripButton3.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.ToolStripButton3.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.ToolStripButton3.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton3.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.ToolStripButton3.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.ToolStripButton3.HoverState.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton3.Image = Global.WindowsApp1.My.Resources.Resources.supplier
+            Me.ToolStripButton3.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.ToolStripButton3.ImageSize = New System.Drawing.Size(32, 32)
+            Me.ToolStripButton3.Location = New System.Drawing.Point(661, 14)
+            Me.ToolStripButton3.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.ToolStripButton3.Name = "ToolStripButton3"
+            Me.ToolStripButton3.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.ToolStripButton3.Size = New System.Drawing.Size(291, 77)
+            Me.ToolStripButton3.TabIndex = 0
+            Me.ToolStripButton3.Text = "دليل الموردين والشركات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "بيانات الموردين وشركات الأغذية"
+            Me.ToolStripButton3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.ToolStripButton3.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'ToolStripButton4
+            '
+            Me.ToolStripButton4.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.ToolStripButton4.BorderRadius = 12
+            Me.ToolStripButton4.BorderThickness = 1
+            Me.ToolStripButton4.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.ToolStripButton4.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.ToolStripButton4.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.ToolStripButton4.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton4.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.ToolStripButton4.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.ToolStripButton4.HoverState.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton4.Image = Global.WindowsApp1.My.Resources.Resources.file
+            Me.ToolStripButton4.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.ToolStripButton4.ImageSize = New System.Drawing.Size(32, 32)
+            Me.ToolStripButton4.Location = New System.Drawing.Point(356, 14)
+            Me.ToolStripButton4.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.ToolStripButton4.Name = "ToolStripButton4"
+            Me.ToolStripButton4.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.ToolStripButton4.Size = New System.Drawing.Size(291, 77)
+            Me.ToolStripButton4.TabIndex = 1
+            Me.ToolStripButton4.Text = "كشف حساب مورد" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "سجل التوريدات والمبالغ المستحقة"
+            Me.ToolStripButton4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.ToolStripButton4.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'ToolStripButton5
+            '
+            Me.ToolStripButton5.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.ToolStripButton5.BorderRadius = 12
+            Me.ToolStripButton5.BorderThickness = 1
+            Me.ToolStripButton5.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.ToolStripButton5.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.ToolStripButton5.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.ToolStripButton5.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton5.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.ToolStripButton5.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.ToolStripButton5.HoverState.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton5.Image = Global.WindowsApp1.My.Resources.Resources.market_analysis
+            Me.ToolStripButton5.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.ToolStripButton5.ImageSize = New System.Drawing.Size(32, 32)
+            Me.ToolStripButton5.Location = New System.Drawing.Point(51, 14)
+            Me.ToolStripButton5.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.ToolStripButton5.Name = "ToolStripButton5"
+            Me.ToolStripButton5.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.ToolStripButton5.Size = New System.Drawing.Size(291, 77)
+            Me.ToolStripButton5.TabIndex = 2
+            Me.ToolStripButton5.Text = "تقارير الموردين والآجل" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "جدول التزامات الدفع والديون المستحقة"
+            Me.ToolStripButton5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.ToolStripButton5.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderSuppliers
+            '
+            Me.picHeaderSuppliers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.supplier
+            Me.picHeaderSuppliers.ImageRotate = 0!
+            Me.picHeaderSuppliers.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderSuppliers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderSuppliers.Name = "picHeaderSuppliers"
+            Me.picHeaderSuppliers.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderSuppliers.TabIndex = 7
+            Me.picHeaderSuppliers.TabStop = False
+            '
+            'UCSuppliersHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpSuppliers)
+            Me.Controls.Add(Me.pnlHeaderSuppliers)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCSuppliersHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpSuppliers.ResumeLayout(False)
+            Me.pnlHeaderSuppliers.ResumeLayout(False)
+            CType(Me.picHeaderSuppliers, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpSuppliers As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderSuppliers As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderSuppliers As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleSuppliers As System.Windows.Forms.Label
-        Friend WithEvents lblDescSuppliers As System.Windows.Forms.Label
-        Friend WithEvents btnBackSuppliers As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents ToolStripButton3 As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents ToolStripButton4 As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents ToolStripButton5 As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderSuppliers As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackSuppliers As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescSuppliers As Label
+        Friend WithEvents lblTitleSuppliers As Label
+        Friend WithEvents picHeaderSuppliers As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

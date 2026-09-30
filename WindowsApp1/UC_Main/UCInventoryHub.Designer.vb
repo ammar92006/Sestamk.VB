@@ -31,275 +31,265 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpInventory = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderInventory = New System.Windows.Forms.Panel()
-            Me.picHeaderInventory = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleInventory = New System.Windows.Forms.Label()
-            Me.lblDescInventory = New System.Windows.Forms.Label()
+            Me.pnlHeaderInventory = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackInventory = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescInventory = New System.Windows.Forms.Label()
+            Me.lblTitleInventory = New System.Windows.Forms.Label()
             Me.btnfrmStoreStock = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmRawMaterials = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmRecipes = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmStores = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmUnits = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderInventory = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpInventory.SuspendLayout()
             Me.pnlHeaderInventory.SuspendLayout()
             CType(Me.picHeaderInventory, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpInventory.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderInventory
-        '
-        Me.pnlHeaderInventory.Controls.Add(Me.btnBackInventory)
-        Me.pnlHeaderInventory.Controls.Add(Me.lblDescInventory)
-        Me.pnlHeaderInventory.Controls.Add(Me.lblTitleInventory)
-        Me.pnlHeaderInventory.Controls.Add(Me.picHeaderInventory)
-        Me.pnlHeaderInventory.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderInventory.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderInventory.Name = "pnlHeaderInventory"
-        Me.pnlHeaderInventory.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderInventory.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderInventory.TabIndex = 1
-
-        '
-        'btnBackInventory
-        '
-        Me.btnBackInventory.BorderRadius = 8
-        Me.btnBackInventory.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackInventory.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackInventory.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackInventory.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackInventory.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackInventory.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackInventory.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackInventory.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackInventory.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackInventory.Name = "btnBackInventory"
-        Me.btnBackInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackInventory.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackInventory.TabIndex = 0
-        Me.btnBackInventory.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescInventory
-        '
-        Me.lblDescInventory.AutoSize = True
-        Me.lblDescInventory.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescInventory.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescInventory.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescInventory.Location = New System.Drawing.Point(441, 0)
-        Me.lblDescInventory.Name = "lblDescInventory"
-        Me.lblDescInventory.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescInventory.Size = New System.Drawing.Size(376, 24)
-        Me.lblDescInventory.TabIndex = 1
-        Me.lblDescInventory.Text = "جرد المخزون، مستلزمات التشغيل، المواد الخام، الريسيبي وتكاليف الوجبات"
-
-        '
-        'lblTitleInventory
-        '
-        Me.lblTitleInventory.AutoSize = True
-        Me.lblTitleInventory.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleInventory.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleInventory.ForeColor = System.Drawing.Color.White
-        Me.lblTitleInventory.Location = New System.Drawing.Point(817, 0)
-        Me.lblTitleInventory.Name = "lblTitleInventory"
-        Me.lblTitleInventory.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleInventory.Size = New System.Drawing.Size(287, 30)
-        Me.lblTitleInventory.TabIndex = 2
-        Me.lblTitleInventory.Text = "قسم المخازن والخامات والريسيبي"
-
-        '
-        'picHeaderInventory
-        '
-        Me.picHeaderInventory.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderInventory.Image = Global.WindowsApp1.My.Resources.Resources.stock
-        Me.picHeaderInventory.ImageRotate = 0!
-        Me.picHeaderInventory.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderInventory.Name = "picHeaderInventory"
-        Me.picHeaderInventory.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderInventory.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderInventory.TabIndex = 3
-        Me.picHeaderInventory.TabStop = False
-
-        '
-        'flpInventory
-        '
-        Me.flpInventory.AutoScroll = True
-        Me.flpInventory.Controls.Add(Me.btnfrmStoreStock)
-        Me.flpInventory.Controls.Add(Me.btnfrmRawMaterials)
-        Me.flpInventory.Controls.Add(Me.btnfrmRecipes)
-        Me.flpInventory.Controls.Add(Me.btnfrmStores)
-        Me.flpInventory.Controls.Add(Me.btnfrmUnits)
-        Me.flpInventory.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpInventory.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpInventory.Location = New System.Drawing.Point(20, 80)
-        Me.flpInventory.Name = "flpInventory"
-        Me.flpInventory.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpInventory.Size = New System.Drawing.Size(1140, 658)
-        Me.flpInventory.TabIndex = 0
-
-        '
-        'btnfrmStoreStock
-        '
-        Me.btnfrmStoreStock.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmStoreStock.BorderRadius = 12
-        Me.btnfrmStoreStock.BorderThickness = 1
-        Me.btnfrmStoreStock.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmStoreStock.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmStoreStock.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmStoreStock.ForeColor = System.Drawing.Color.White
-        Me.btnfrmStoreStock.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmStoreStock.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmStoreStock.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmStoreStock.Image = Global.WindowsApp1.My.Resources.Resources.in_stock
-        Me.btnfrmStoreStock.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmStoreStock.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmStoreStock.Location = New System.Drawing.Point(18, 18)
-        Me.btnfrmStoreStock.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmStoreStock.Name = "btnfrmStoreStock"
-        Me.btnfrmStoreStock.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmStoreStock.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmStoreStock.TabIndex = 0
-        Me.btnfrmStoreStock.Text = "أرصدة المخزون والجرد" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "متابعة الكميات وتنبيهات النواقص"
-        Me.btnfrmStoreStock.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmStoreStock.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmRawMaterials
-        '
-        Me.btnfrmRawMaterials.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmRawMaterials.BorderRadius = 12
-        Me.btnfrmRawMaterials.BorderThickness = 1
-        Me.btnfrmRawMaterials.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmRawMaterials.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmRawMaterials.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmRawMaterials.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRawMaterials.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmRawMaterials.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmRawMaterials.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRawMaterials.Image = Global.WindowsApp1.My.Resources.Resources.raw_materials
-        Me.btnfrmRawMaterials.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmRawMaterials.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmRawMaterials.Location = New System.Drawing.Point(374, 18)
-        Me.btnfrmRawMaterials.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmRawMaterials.Name = "btnfrmRawMaterials"
-        Me.btnfrmRawMaterials.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmRawMaterials.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmRawMaterials.TabIndex = 1
-        Me.btnfrmRawMaterials.Text = "المواد الخام والمستلزمات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "اللحوم والدواجن ومواد التغليف"
-        Me.btnfrmRawMaterials.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmRawMaterials.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmRecipes
-        '
-        Me.btnfrmRecipes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmRecipes.BorderRadius = 12
-        Me.btnfrmRecipes.BorderThickness = 1
-        Me.btnfrmRecipes.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmRecipes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmRecipes.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmRecipes.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRecipes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmRecipes.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmRecipes.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRecipes.Image = Global.WindowsApp1.My.Resources.Resources.cubes
-        Me.btnfrmRecipes.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmRecipes.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmRecipes.Location = New System.Drawing.Point(730, 18)
-        Me.btnfrmRecipes.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmRecipes.Name = "btnfrmRecipes"
-        Me.btnfrmRecipes.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmRecipes.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmRecipes.TabIndex = 2
-        Me.btnfrmRecipes.Text = "الريسيبي وتصنيع المكونات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "ربط الوجبات بالخامات لخصم الهالك"
-        Me.btnfrmRecipes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmRecipes.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmStores
-        '
-        Me.btnfrmStores.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmStores.BorderRadius = 12
-        Me.btnfrmStores.BorderThickness = 1
-        Me.btnfrmStores.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmStores.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmStores.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmStores.ForeColor = System.Drawing.Color.White
-        Me.btnfrmStores.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmStores.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmStores.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmStores.Image = Global.WindowsApp1.My.Resources.Resources.box
-        Me.btnfrmStores.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmStores.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmStores.Location = New System.Drawing.Point(18, 129)
-        Me.btnfrmStores.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmStores.Name = "btnfrmStores"
-        Me.btnfrmStores.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmStores.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmStores.TabIndex = 3
-        Me.btnfrmStores.Text = "إدارة المخازن والمستودعات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "المخزن الرئيسي والمطبخ والبار"
-        Me.btnfrmStores.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmStores.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmUnits
-        '
-        Me.btnfrmUnits.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmUnits.BorderRadius = 12
-        Me.btnfrmUnits.BorderThickness = 1
-        Me.btnfrmUnits.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmUnits.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmUnits.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmUnits.ForeColor = System.Drawing.Color.White
-        Me.btnfrmUnits.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmUnits.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmUnits.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmUnits.Image = Global.WindowsApp1.My.Resources.Resources.unit
-        Me.btnfrmUnits.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmUnits.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmUnits.Location = New System.Drawing.Point(374, 129)
-        Me.btnfrmUnits.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmUnits.Name = "btnfrmUnits"
-        Me.btnfrmUnits.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmUnits.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmUnits.TabIndex = 4
-        Me.btnfrmUnits.Text = "وحدات القياس والتحويل" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "كيلو، جرام، لتر، كرتونة، علبة"
-        Me.btnfrmUnits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmUnits.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCInventoryHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpInventory)
-        Me.Controls.Add(Me.pnlHeaderInventory)
-        Me.Name = "UCInventoryHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderInventory, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderInventory.ResumeLayout(False)
-            Me.pnlHeaderInventory.PerformLayout()
+            '
+            'flpInventory
+            '
+            Me.flpInventory.AutoScroll = True
+            Me.flpInventory.Controls.Add(Me.btnfrmStoreStock)
+            Me.flpInventory.Controls.Add(Me.btnfrmRawMaterials)
+            Me.flpInventory.Controls.Add(Me.btnfrmRecipes)
+            Me.flpInventory.Controls.Add(Me.btnfrmStores)
+            Me.flpInventory.Controls.Add(Me.btnfrmUnits)
+            Me.flpInventory.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpInventory.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpInventory.Location = New System.Drawing.Point(17, 97)
+            Me.flpInventory.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpInventory.Name = "flpInventory"
+            Me.flpInventory.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpInventory.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpInventory.Size = New System.Drawing.Size(977, 503)
+            Me.flpInventory.TabIndex = 0
+            '
+            'pnlHeaderInventory
+            '
+            Me.pnlHeaderInventory.BorderRadius = 10
+            Me.pnlHeaderInventory.Controls.Add(Me.btnBackInventory)
+            Me.pnlHeaderInventory.Controls.Add(Me.lblDescInventory)
+            Me.pnlHeaderInventory.Controls.Add(Me.lblTitleInventory)
+            Me.pnlHeaderInventory.Controls.Add(Me.picHeaderInventory)
+            Me.pnlHeaderInventory.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderInventory.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderInventory.Name = "pnlHeaderInventory"
+            Me.pnlHeaderInventory.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderInventory.TabIndex = 1
+            '
+            'btnBackInventory
+            '
+            Me.btnBackInventory.BorderRadius = 8
+            Me.btnBackInventory.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackInventory.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackInventory.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackInventory.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackInventory.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackInventory.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackInventory.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackInventory.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackInventory.Name = "btnBackInventory"
+            Me.btnBackInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackInventory.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackInventory.TabIndex = 4
+            Me.btnBackInventory.Text = "  العودة للرئيسية"
+            '
+            'lblDescInventory
+            '
+            Me.lblDescInventory.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescInventory.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescInventory.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescInventory.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescInventory.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescInventory.Name = "lblDescInventory"
+            Me.lblDescInventory.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescInventory.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescInventory.TabIndex = 5
+            Me.lblDescInventory.Text = "جرد المخزون، مستلزمات التشغيل، المواد الخام، الريسيبي وتكاليف الوجبات"
+            Me.lblDescInventory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleInventory
+            '
+            Me.lblTitleInventory.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleInventory.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleInventory.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleInventory.ForeColor = System.Drawing.Color.White
+            Me.lblTitleInventory.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitleInventory.Name = "lblTitleInventory"
+            Me.lblTitleInventory.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleInventory.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleInventory.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitleInventory.TabIndex = 6
+            Me.lblTitleInventory.Text = "قسم المخازن والخامات والريسيبي"
+            Me.lblTitleInventory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnfrmStoreStock
+            '
+            Me.btnfrmStoreStock.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmStoreStock.BorderRadius = 12
+            Me.btnfrmStoreStock.BorderThickness = 1
+            Me.btnfrmStoreStock.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmStoreStock.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmStoreStock.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmStoreStock.ForeColor = System.Drawing.Color.White
+            Me.btnfrmStoreStock.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmStoreStock.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmStoreStock.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmStoreStock.Image = Global.WindowsApp1.My.Resources.Resources.in_stock
+            Me.btnfrmStoreStock.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmStoreStock.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmStoreStock.Location = New System.Drawing.Point(661, 14)
+            Me.btnfrmStoreStock.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmStoreStock.Name = "btnfrmStoreStock"
+            Me.btnfrmStoreStock.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmStoreStock.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmStoreStock.TabIndex = 0
+            Me.btnfrmStoreStock.Text = "أرصدة المخزون والجرد" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "متابعة الكميات وتنبيهات النواقص"
+            Me.btnfrmStoreStock.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmStoreStock.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmRawMaterials
+            '
+            Me.btnfrmRawMaterials.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmRawMaterials.BorderRadius = 12
+            Me.btnfrmRawMaterials.BorderThickness = 1
+            Me.btnfrmRawMaterials.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmRawMaterials.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmRawMaterials.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmRawMaterials.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRawMaterials.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmRawMaterials.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmRawMaterials.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRawMaterials.Image = Global.WindowsApp1.My.Resources.Resources.raw_materials
+            Me.btnfrmRawMaterials.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmRawMaterials.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmRawMaterials.Location = New System.Drawing.Point(356, 14)
+            Me.btnfrmRawMaterials.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmRawMaterials.Name = "btnfrmRawMaterials"
+            Me.btnfrmRawMaterials.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmRawMaterials.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmRawMaterials.TabIndex = 1
+            Me.btnfrmRawMaterials.Text = "المواد الخام والمستلزمات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "اللحوم والدواجن ومواد التغليف"
+            Me.btnfrmRawMaterials.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmRawMaterials.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmRecipes
+            '
+            Me.btnfrmRecipes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmRecipes.BorderRadius = 12
+            Me.btnfrmRecipes.BorderThickness = 1
+            Me.btnfrmRecipes.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmRecipes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmRecipes.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmRecipes.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRecipes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmRecipes.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmRecipes.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRecipes.Image = Global.WindowsApp1.My.Resources.Resources.cubes
+            Me.btnfrmRecipes.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmRecipes.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmRecipes.Location = New System.Drawing.Point(51, 14)
+            Me.btnfrmRecipes.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmRecipes.Name = "btnfrmRecipes"
+            Me.btnfrmRecipes.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmRecipes.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmRecipes.TabIndex = 2
+            Me.btnfrmRecipes.Text = "الريسيبي وتصنيع المكونات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "ربط الوجبات بالخامات لخصم الهالك"
+            Me.btnfrmRecipes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmRecipes.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmStores
+            '
+            Me.btnfrmStores.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmStores.BorderRadius = 12
+            Me.btnfrmStores.BorderThickness = 1
+            Me.btnfrmStores.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmStores.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmStores.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmStores.ForeColor = System.Drawing.Color.White
+            Me.btnfrmStores.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmStores.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmStores.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmStores.Image = Global.WindowsApp1.My.Resources.Resources.box
+            Me.btnfrmStores.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmStores.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmStores.Location = New System.Drawing.Point(661, 103)
+            Me.btnfrmStores.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmStores.Name = "btnfrmStores"
+            Me.btnfrmStores.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmStores.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmStores.TabIndex = 3
+            Me.btnfrmStores.Text = "إدارة المخازن والمستودعات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "المخزن الرئيسي والمطبخ والبار"
+            Me.btnfrmStores.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmStores.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmUnits
+            '
+            Me.btnfrmUnits.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmUnits.BorderRadius = 12
+            Me.btnfrmUnits.BorderThickness = 1
+            Me.btnfrmUnits.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmUnits.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmUnits.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmUnits.ForeColor = System.Drawing.Color.White
+            Me.btnfrmUnits.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmUnits.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmUnits.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmUnits.Image = Global.WindowsApp1.My.Resources.Resources.unit
+            Me.btnfrmUnits.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmUnits.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmUnits.Location = New System.Drawing.Point(356, 103)
+            Me.btnfrmUnits.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmUnits.Name = "btnfrmUnits"
+            Me.btnfrmUnits.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmUnits.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmUnits.TabIndex = 4
+            Me.btnfrmUnits.Text = "وحدات القياس والتحويل" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "كيلو، جرام، لتر، كرتونة، علبة"
+            Me.btnfrmUnits.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmUnits.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderInventory
+            '
+            Me.picHeaderInventory.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderInventory.Image = Global.WindowsApp1.My.Resources.Resources.stock
+            Me.picHeaderInventory.ImageRotate = 0!
+            Me.picHeaderInventory.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderInventory.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderInventory.Name = "picHeaderInventory"
+            Me.picHeaderInventory.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderInventory.TabIndex = 7
+            Me.picHeaderInventory.TabStop = False
+            '
+            'UCInventoryHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpInventory)
+            Me.Controls.Add(Me.pnlHeaderInventory)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCInventoryHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpInventory.ResumeLayout(False)
+            Me.pnlHeaderInventory.ResumeLayout(False)
+            CType(Me.picHeaderInventory, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpInventory As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderInventory As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderInventory As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleInventory As System.Windows.Forms.Label
-        Friend WithEvents lblDescInventory As System.Windows.Forms.Label
-        Friend WithEvents btnBackInventory As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmStoreStock As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmRawMaterials As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmRecipes As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmStores As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmUnits As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderInventory As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackInventory As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescInventory As Label
+        Friend WithEvents lblTitleInventory As Label
+        Friend WithEvents picHeaderInventory As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

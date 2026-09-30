@@ -31,246 +31,237 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpCustomers = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderCustomers = New System.Windows.Forms.Panel()
-            Me.picHeaderCustomers = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleCustomers = New System.Windows.Forms.Label()
-            Me.lblDescCustomers = New System.Windows.Forms.Label()
+            Me.pnlHeaderCustomers = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackCustomers = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescCustomers = New System.Windows.Forms.Label()
+            Me.lblTitleCustomers = New System.Windows.Forms.Label()
             Me.btnFrmCustomers = New Guna.UI2.WinForms.Guna2Button()
             Me.btnFrmCustomerStatement = New Guna.UI2.WinForms.Guna2Button()
             Me.btnCustomerBalanceDownload = New Guna.UI2.WinForms.Guna2Button()
             Me.ToolStripButton11 = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderCustomers = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpCustomers.SuspendLayout()
             Me.pnlHeaderCustomers.SuspendLayout()
             CType(Me.picHeaderCustomers, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpCustomers.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderCustomers
-        '
-        Me.pnlHeaderCustomers.Controls.Add(Me.btnBackCustomers)
-        Me.pnlHeaderCustomers.Controls.Add(Me.lblDescCustomers)
-        Me.pnlHeaderCustomers.Controls.Add(Me.lblTitleCustomers)
-        Me.pnlHeaderCustomers.Controls.Add(Me.picHeaderCustomers)
-        Me.pnlHeaderCustomers.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderCustomers.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderCustomers.Name = "pnlHeaderCustomers"
-        Me.pnlHeaderCustomers.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderCustomers.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderCustomers.TabIndex = 1
-
-        '
-        'btnBackCustomers
-        '
-        Me.btnBackCustomers.BorderRadius = 8
-        Me.btnBackCustomers.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackCustomers.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackCustomers.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackCustomers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackCustomers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackCustomers.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackCustomers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackCustomers.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackCustomers.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackCustomers.Name = "btnBackCustomers"
-        Me.btnBackCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackCustomers.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackCustomers.TabIndex = 0
-        Me.btnBackCustomers.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescCustomers
-        '
-        Me.lblDescCustomers.AutoSize = True
-        Me.lblDescCustomers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescCustomers.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescCustomers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescCustomers.Location = New System.Drawing.Point(472, 0)
-        Me.lblDescCustomers.Name = "lblDescCustomers"
-        Me.lblDescCustomers.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescCustomers.Size = New System.Drawing.Size(371, 24)
-        Me.lblDescCustomers.TabIndex = 1
-        Me.lblDescCustomers.Text = "سجل العملاء، كشوفات الحساب، سداد المديونيات وتقارير المبيعات الآجلة"
-
-        '
-        'lblTitleCustomers
-        '
-        Me.lblTitleCustomers.AutoSize = True
-        Me.lblTitleCustomers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleCustomers.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleCustomers.ForeColor = System.Drawing.Color.White
-        Me.lblTitleCustomers.Location = New System.Drawing.Point(843, 0)
-        Me.lblTitleCustomers.Name = "lblTitleCustomers"
-        Me.lblTitleCustomers.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleCustomers.Size = New System.Drawing.Size(261, 30)
-        Me.lblTitleCustomers.TabIndex = 2
-        Me.lblTitleCustomers.Text = "قسم العملاء والحسابات والآجل"
-
-        '
-        'picHeaderCustomers
-        '
-        Me.picHeaderCustomers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.picHeaderCustomers.ImageRotate = 0!
-        Me.picHeaderCustomers.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderCustomers.Name = "picHeaderCustomers"
-        Me.picHeaderCustomers.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderCustomers.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderCustomers.TabIndex = 3
-        Me.picHeaderCustomers.TabStop = False
-
-        '
-        'flpCustomers
-        '
-        Me.flpCustomers.AutoScroll = True
-        Me.flpCustomers.Controls.Add(Me.btnFrmCustomers)
-        Me.flpCustomers.Controls.Add(Me.btnFrmCustomerStatement)
-        Me.flpCustomers.Controls.Add(Me.btnCustomerBalanceDownload)
-        Me.flpCustomers.Controls.Add(Me.ToolStripButton11)
-        Me.flpCustomers.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpCustomers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpCustomers.Location = New System.Drawing.Point(20, 80)
-        Me.flpCustomers.Name = "flpCustomers"
-        Me.flpCustomers.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpCustomers.Size = New System.Drawing.Size(1140, 658)
-        Me.flpCustomers.TabIndex = 0
-
-        '
-        'btnFrmCustomers
-        '
-        Me.btnFrmCustomers.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnFrmCustomers.BorderRadius = 12
-        Me.btnFrmCustomers.BorderThickness = 1
-        Me.btnFrmCustomers.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnFrmCustomers.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnFrmCustomers.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnFrmCustomers.ForeColor = System.Drawing.Color.White
-        Me.btnFrmCustomers.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnFrmCustomers.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnFrmCustomers.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnFrmCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
-        Me.btnFrmCustomers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnFrmCustomers.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnFrmCustomers.Location = New System.Drawing.Point(18, 18)
-        Me.btnFrmCustomers.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnFrmCustomers.Name = "btnFrmCustomers"
-        Me.btnFrmCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnFrmCustomers.Size = New System.Drawing.Size(340, 95)
-        Me.btnFrmCustomers.TabIndex = 0
-        Me.btnFrmCustomers.Text = "دليل العملاء والعناوين" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "بيانات العملاء وأرقام الهواتف والعناوين"
-        Me.btnFrmCustomers.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnFrmCustomers.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnFrmCustomerStatement
-        '
-        Me.btnFrmCustomerStatement.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnFrmCustomerStatement.BorderRadius = 12
-        Me.btnFrmCustomerStatement.BorderThickness = 1
-        Me.btnFrmCustomerStatement.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnFrmCustomerStatement.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnFrmCustomerStatement.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnFrmCustomerStatement.ForeColor = System.Drawing.Color.White
-        Me.btnFrmCustomerStatement.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnFrmCustomerStatement.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnFrmCustomerStatement.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnFrmCustomerStatement.Image = Global.WindowsApp1.My.Resources.Resources.invoice
-        Me.btnFrmCustomerStatement.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnFrmCustomerStatement.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnFrmCustomerStatement.Location = New System.Drawing.Point(374, 18)
-        Me.btnFrmCustomerStatement.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnFrmCustomerStatement.Name = "btnFrmCustomerStatement"
-        Me.btnFrmCustomerStatement.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnFrmCustomerStatement.Size = New System.Drawing.Size(340, 95)
-        Me.btnFrmCustomerStatement.TabIndex = 1
-        Me.btnFrmCustomerStatement.Text = "كشف حساب عميل" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "حركات الفواتير والمدفوعات والرصيد"
-        Me.btnFrmCustomerStatement.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnFrmCustomerStatement.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnCustomerBalanceDownload
-        '
-        Me.btnCustomerBalanceDownload.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnCustomerBalanceDownload.BorderRadius = 12
-        Me.btnCustomerBalanceDownload.BorderThickness = 1
-        Me.btnCustomerBalanceDownload.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnCustomerBalanceDownload.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnCustomerBalanceDownload.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnCustomerBalanceDownload.ForeColor = System.Drawing.Color.White
-        Me.btnCustomerBalanceDownload.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnCustomerBalanceDownload.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnCustomerBalanceDownload.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnCustomerBalanceDownload.Image = Global.WindowsApp1.My.Resources.Resources.payment
-        Me.btnCustomerBalanceDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnCustomerBalanceDownload.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnCustomerBalanceDownload.Location = New System.Drawing.Point(730, 18)
-        Me.btnCustomerBalanceDownload.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnCustomerBalanceDownload.Name = "btnCustomerBalanceDownload"
-        Me.btnCustomerBalanceDownload.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnCustomerBalanceDownload.Size = New System.Drawing.Size(340, 95)
-        Me.btnCustomerBalanceDownload.TabIndex = 2
-        Me.btnCustomerBalanceDownload.Text = "سداد رصيد عميل (سند قبض)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحصيل مديونية وإيداعها في الخزينة"
-        Me.btnCustomerBalanceDownload.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnCustomerBalanceDownload.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'ToolStripButton11
-        '
-        Me.ToolStripButton11.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.ToolStripButton11.BorderRadius = 12
-        Me.ToolStripButton11.BorderThickness = 1
-        Me.ToolStripButton11.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.ToolStripButton11.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.ToolStripButton11.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.ToolStripButton11.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton11.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.ToolStripButton11.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.ToolStripButton11.HoverState.ForeColor = System.Drawing.Color.White
-        Me.ToolStripButton11.Image = Global.WindowsApp1.My.Resources.Resources.graph
-        Me.ToolStripButton11.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.ToolStripButton11.ImageSize = New System.Drawing.Size(32, 32)
-        Me.ToolStripButton11.Location = New System.Drawing.Point(18, 129)
-        Me.ToolStripButton11.Margin = New System.Windows.Forms.Padding(8)
-        Me.ToolStripButton11.Name = "ToolStripButton11"
-        Me.ToolStripButton11.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ToolStripButton11.Size = New System.Drawing.Size(340, 95)
-        Me.ToolStripButton11.TabIndex = 3
-        Me.ToolStripButton11.Text = "تقارير مديونيات العملاء" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "حصر العملاء الآجل ومواعيد التحصيل"
-        Me.ToolStripButton11.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.ToolStripButton11.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCCustomersHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpCustomers)
-        Me.Controls.Add(Me.pnlHeaderCustomers)
-        Me.Name = "UCCustomersHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderCustomers, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderCustomers.ResumeLayout(False)
-            Me.pnlHeaderCustomers.PerformLayout()
+            '
+            'flpCustomers
+            '
+            Me.flpCustomers.AutoScroll = True
+            Me.flpCustomers.Controls.Add(Me.btnFrmCustomers)
+            Me.flpCustomers.Controls.Add(Me.btnFrmCustomerStatement)
+            Me.flpCustomers.Controls.Add(Me.btnCustomerBalanceDownload)
+            Me.flpCustomers.Controls.Add(Me.ToolStripButton11)
+            Me.flpCustomers.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpCustomers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpCustomers.Location = New System.Drawing.Point(17, 97)
+            Me.flpCustomers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpCustomers.Name = "flpCustomers"
+            Me.flpCustomers.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpCustomers.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpCustomers.Size = New System.Drawing.Size(977, 503)
+            Me.flpCustomers.TabIndex = 0
+            '
+            'pnlHeaderCustomers
+            '
+            Me.pnlHeaderCustomers.BorderRadius = 10
+            Me.pnlHeaderCustomers.Controls.Add(Me.btnBackCustomers)
+            Me.pnlHeaderCustomers.Controls.Add(Me.lblDescCustomers)
+            Me.pnlHeaderCustomers.Controls.Add(Me.lblTitleCustomers)
+            Me.pnlHeaderCustomers.Controls.Add(Me.picHeaderCustomers)
+            Me.pnlHeaderCustomers.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderCustomers.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderCustomers.Name = "pnlHeaderCustomers"
+            Me.pnlHeaderCustomers.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderCustomers.TabIndex = 1
+            '
+            'btnBackCustomers
+            '
+            Me.btnBackCustomers.BorderRadius = 8
+            Me.btnBackCustomers.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackCustomers.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackCustomers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackCustomers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackCustomers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackCustomers.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackCustomers.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackCustomers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackCustomers.Name = "btnBackCustomers"
+            Me.btnBackCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackCustomers.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackCustomers.TabIndex = 4
+            Me.btnBackCustomers.Text = "  العودة للرئيسية"
+            '
+            'lblDescCustomers
+            '
+            Me.lblDescCustomers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescCustomers.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescCustomers.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescCustomers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescCustomers.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescCustomers.Name = "lblDescCustomers"
+            Me.lblDescCustomers.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescCustomers.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescCustomers.TabIndex = 5
+            Me.lblDescCustomers.Text = "سجل العملاء، كشوفات الحساب، سداد المديونيات وتقارير المبيعات الآجلة"
+            Me.lblDescCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleCustomers
+            '
+            Me.lblTitleCustomers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleCustomers.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleCustomers.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleCustomers.ForeColor = System.Drawing.Color.White
+            Me.lblTitleCustomers.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitleCustomers.Name = "lblTitleCustomers"
+            Me.lblTitleCustomers.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleCustomers.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitleCustomers.TabIndex = 6
+            Me.lblTitleCustomers.Text = "قسم العملاء والحسابات والآجل"
+            Me.lblTitleCustomers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnFrmCustomers
+            '
+            Me.btnFrmCustomers.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnFrmCustomers.BorderRadius = 12
+            Me.btnFrmCustomers.BorderThickness = 1
+            Me.btnFrmCustomers.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnFrmCustomers.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnFrmCustomers.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnFrmCustomers.ForeColor = System.Drawing.Color.White
+            Me.btnFrmCustomers.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnFrmCustomers.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnFrmCustomers.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnFrmCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+            Me.btnFrmCustomers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnFrmCustomers.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnFrmCustomers.Location = New System.Drawing.Point(661, 14)
+            Me.btnFrmCustomers.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnFrmCustomers.Name = "btnFrmCustomers"
+            Me.btnFrmCustomers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnFrmCustomers.Size = New System.Drawing.Size(291, 77)
+            Me.btnFrmCustomers.TabIndex = 0
+            Me.btnFrmCustomers.Text = "دليل العملاء والعناوين" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "بيانات العملاء وأرقام الهواتف والعناوين"
+            Me.btnFrmCustomers.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnFrmCustomers.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnFrmCustomerStatement
+            '
+            Me.btnFrmCustomerStatement.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnFrmCustomerStatement.BorderRadius = 12
+            Me.btnFrmCustomerStatement.BorderThickness = 1
+            Me.btnFrmCustomerStatement.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnFrmCustomerStatement.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnFrmCustomerStatement.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnFrmCustomerStatement.ForeColor = System.Drawing.Color.White
+            Me.btnFrmCustomerStatement.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnFrmCustomerStatement.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnFrmCustomerStatement.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnFrmCustomerStatement.Image = Global.WindowsApp1.My.Resources.Resources.invoice
+            Me.btnFrmCustomerStatement.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnFrmCustomerStatement.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnFrmCustomerStatement.Location = New System.Drawing.Point(356, 14)
+            Me.btnFrmCustomerStatement.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnFrmCustomerStatement.Name = "btnFrmCustomerStatement"
+            Me.btnFrmCustomerStatement.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnFrmCustomerStatement.Size = New System.Drawing.Size(291, 77)
+            Me.btnFrmCustomerStatement.TabIndex = 1
+            Me.btnFrmCustomerStatement.Text = "كشف حساب عميل" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "حركات الفواتير والمدفوعات والرصيد"
+            Me.btnFrmCustomerStatement.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnFrmCustomerStatement.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnCustomerBalanceDownload
+            '
+            Me.btnCustomerBalanceDownload.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnCustomerBalanceDownload.BorderRadius = 12
+            Me.btnCustomerBalanceDownload.BorderThickness = 1
+            Me.btnCustomerBalanceDownload.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnCustomerBalanceDownload.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnCustomerBalanceDownload.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnCustomerBalanceDownload.ForeColor = System.Drawing.Color.White
+            Me.btnCustomerBalanceDownload.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnCustomerBalanceDownload.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnCustomerBalanceDownload.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnCustomerBalanceDownload.Image = Global.WindowsApp1.My.Resources.Resources.payment
+            Me.btnCustomerBalanceDownload.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnCustomerBalanceDownload.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnCustomerBalanceDownload.Location = New System.Drawing.Point(51, 14)
+            Me.btnCustomerBalanceDownload.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnCustomerBalanceDownload.Name = "btnCustomerBalanceDownload"
+            Me.btnCustomerBalanceDownload.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnCustomerBalanceDownload.Size = New System.Drawing.Size(291, 77)
+            Me.btnCustomerBalanceDownload.TabIndex = 2
+            Me.btnCustomerBalanceDownload.Text = "سداد رصيد عميل (سند قبض)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحصيل مديونية وإيداعها في الخزينة"
+            Me.btnCustomerBalanceDownload.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnCustomerBalanceDownload.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'ToolStripButton11
+            '
+            Me.ToolStripButton11.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.ToolStripButton11.BorderRadius = 12
+            Me.ToolStripButton11.BorderThickness = 1
+            Me.ToolStripButton11.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.ToolStripButton11.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.ToolStripButton11.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.ToolStripButton11.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton11.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.ToolStripButton11.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.ToolStripButton11.HoverState.ForeColor = System.Drawing.Color.White
+            Me.ToolStripButton11.Image = Global.WindowsApp1.My.Resources.Resources.graph
+            Me.ToolStripButton11.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.ToolStripButton11.ImageSize = New System.Drawing.Size(32, 32)
+            Me.ToolStripButton11.Location = New System.Drawing.Point(661, 103)
+            Me.ToolStripButton11.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.ToolStripButton11.Name = "ToolStripButton11"
+            Me.ToolStripButton11.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.ToolStripButton11.Size = New System.Drawing.Size(291, 77)
+            Me.ToolStripButton11.TabIndex = 3
+            Me.ToolStripButton11.Text = "تقارير مديونيات العملاء" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "حصر العملاء الآجل ومواعيد التحصيل"
+            Me.ToolStripButton11.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.ToolStripButton11.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderCustomers
+            '
+            Me.picHeaderCustomers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+            Me.picHeaderCustomers.ImageRotate = 0!
+            Me.picHeaderCustomers.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderCustomers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderCustomers.Name = "picHeaderCustomers"
+            Me.picHeaderCustomers.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderCustomers.TabIndex = 7
+            Me.picHeaderCustomers.TabStop = False
+            '
+            'UCCustomersHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpCustomers)
+            Me.Controls.Add(Me.pnlHeaderCustomers)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCCustomersHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpCustomers.ResumeLayout(False)
+            Me.pnlHeaderCustomers.ResumeLayout(False)
+            CType(Me.picHeaderCustomers, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpCustomers As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderCustomers As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderCustomers As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleCustomers As System.Windows.Forms.Label
-        Friend WithEvents lblDescCustomers As System.Windows.Forms.Label
-        Friend WithEvents btnBackCustomers As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnFrmCustomers As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnFrmCustomerStatement As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnCustomerBalanceDownload As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents ToolStripButton11 As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderCustomers As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackCustomers As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescCustomers As Label
+        Friend WithEvents lblTitleCustomers As Label
+        Friend WithEvents picHeaderCustomers As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

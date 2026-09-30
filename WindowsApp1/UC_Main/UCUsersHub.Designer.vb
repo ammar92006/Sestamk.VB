@@ -31,188 +31,181 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpUsers = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderUsers = New System.Windows.Forms.Panel()
-            Me.picHeaderUsers = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleUsers = New System.Windows.Forms.Label()
-            Me.lblDescUsers = New System.Windows.Forms.Label()
+            Me.pnlHeaderUsers = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackUsers = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescUsers = New System.Windows.Forms.Label()
+            Me.lblTitleUsers = New System.Windows.Forms.Label()
             Me.btnfrmUsers = New Guna.UI2.WinForms.Guna2Button()
             Me.btnfrmRolesAndPermissions = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderUsers = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpUsers.SuspendLayout()
             Me.pnlHeaderUsers.SuspendLayout()
             CType(Me.picHeaderUsers, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpUsers.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderUsers
-        '
-        Me.pnlHeaderUsers.Controls.Add(Me.btnBackUsers)
-        Me.pnlHeaderUsers.Controls.Add(Me.lblDescUsers)
-        Me.pnlHeaderUsers.Controls.Add(Me.lblTitleUsers)
-        Me.pnlHeaderUsers.Controls.Add(Me.picHeaderUsers)
-        Me.pnlHeaderUsers.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderUsers.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderUsers.Name = "pnlHeaderUsers"
-        Me.pnlHeaderUsers.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderUsers.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderUsers.TabIndex = 1
-
-        '
-        'btnBackUsers
-        '
-        Me.btnBackUsers.BorderRadius = 8
-        Me.btnBackUsers.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackUsers.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackUsers.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackUsers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackUsers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackUsers.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackUsers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackUsers.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackUsers.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackUsers.Name = "btnBackUsers"
-        Me.btnBackUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackUsers.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackUsers.TabIndex = 0
-        Me.btnBackUsers.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescUsers
-        '
-        Me.lblDescUsers.AutoSize = True
-        Me.lblDescUsers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescUsers.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescUsers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescUsers.Location = New System.Drawing.Point(448, 0)
-        Me.lblDescUsers.Name = "lblDescUsers"
-        Me.lblDescUsers.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescUsers.Size = New System.Drawing.Size(341, 24)
-        Me.lblDescUsers.TabIndex = 1
-        Me.lblDescUsers.Text = "حسابات الدخول، كلمات المرور، مصفوفة الصلاحيات، وتأمين النظام"
-
-        '
-        'lblTitleUsers
-        '
-        Me.lblTitleUsers.AutoSize = True
-        Me.lblTitleUsers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleUsers.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleUsers.ForeColor = System.Drawing.Color.White
-        Me.lblTitleUsers.Location = New System.Drawing.Point(789, 0)
-        Me.lblTitleUsers.Name = "lblTitleUsers"
-        Me.lblTitleUsers.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleUsers.Size = New System.Drawing.Size(315, 30)
-        Me.lblTitleUsers.TabIndex = 2
-        Me.lblTitleUsers.Text = "قسم المستخدمين والصلاحيات والأمان"
-
-        '
-        'picHeaderUsers
-        '
-        Me.picHeaderUsers.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderUsers.Image = Global.WindowsApp1.My.Resources.Resources.lock
-        Me.picHeaderUsers.ImageRotate = 0!
-        Me.picHeaderUsers.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderUsers.Name = "picHeaderUsers"
-        Me.picHeaderUsers.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderUsers.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderUsers.TabIndex = 3
-        Me.picHeaderUsers.TabStop = False
-
-        '
-        'flpUsers
-        '
-        Me.flpUsers.AutoScroll = True
-        Me.flpUsers.Controls.Add(Me.btnfrmUsers)
-        Me.flpUsers.Controls.Add(Me.btnfrmRolesAndPermissions)
-        Me.flpUsers.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpUsers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpUsers.Location = New System.Drawing.Point(20, 80)
-        Me.flpUsers.Name = "flpUsers"
-        Me.flpUsers.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpUsers.Size = New System.Drawing.Size(1140, 658)
-        Me.flpUsers.TabIndex = 0
-
-        '
-        'btnfrmUsers
-        '
-        Me.btnfrmUsers.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmUsers.BorderRadius = 12
-        Me.btnfrmUsers.BorderThickness = 1
-        Me.btnfrmUsers.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmUsers.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmUsers.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmUsers.ForeColor = System.Drawing.Color.White
-        Me.btnfrmUsers.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmUsers.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmUsers.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmUsers.Image = Global.WindowsApp1.My.Resources.Resources.user
-        Me.btnfrmUsers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmUsers.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmUsers.Location = New System.Drawing.Point(18, 18)
-        Me.btnfrmUsers.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmUsers.Name = "btnfrmUsers"
-        Me.btnfrmUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmUsers.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmUsers.TabIndex = 0
-        Me.btnfrmUsers.Text = "إدارة حسابات المستخدمين" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "إنشاء وتعديل حسابات الكاشير والمشرفين"
-        Me.btnfrmUsers.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmUsers.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnfrmRolesAndPermissions
-        '
-        Me.btnfrmRolesAndPermissions.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmRolesAndPermissions.BorderRadius = 12
-        Me.btnfrmRolesAndPermissions.BorderThickness = 1
-        Me.btnfrmRolesAndPermissions.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmRolesAndPermissions.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmRolesAndPermissions.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmRolesAndPermissions.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRolesAndPermissions.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmRolesAndPermissions.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmRolesAndPermissions.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmRolesAndPermissions.Image = Global.WindowsApp1.My.Resources.Resources.lock
-        Me.btnfrmRolesAndPermissions.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmRolesAndPermissions.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmRolesAndPermissions.Location = New System.Drawing.Point(374, 18)
-        Me.btnfrmRolesAndPermissions.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmRolesAndPermissions.Name = "btnfrmRolesAndPermissions"
-        Me.btnfrmRolesAndPermissions.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmRolesAndPermissions.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmRolesAndPermissions.TabIndex = 1
-        Me.btnfrmRolesAndPermissions.Text = "الأدوار ومصفوفة الصلاحيات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "صلاحيات الخصم والإلغاء والتقارير"
-        Me.btnfrmRolesAndPermissions.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmRolesAndPermissions.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCUsersHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpUsers)
-        Me.Controls.Add(Me.pnlHeaderUsers)
-        Me.Name = "UCUsersHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderUsers, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderUsers.ResumeLayout(False)
-            Me.pnlHeaderUsers.PerformLayout()
+            '
+            'flpUsers
+            '
+            Me.flpUsers.AutoScroll = True
+            Me.flpUsers.Controls.Add(Me.btnfrmUsers)
+            Me.flpUsers.Controls.Add(Me.btnfrmRolesAndPermissions)
+            Me.flpUsers.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpUsers.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpUsers.Location = New System.Drawing.Point(17, 97)
+            Me.flpUsers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpUsers.Name = "flpUsers"
+            Me.flpUsers.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpUsers.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpUsers.Size = New System.Drawing.Size(977, 503)
+            Me.flpUsers.TabIndex = 0
+            '
+            'pnlHeaderUsers
+            '
+            Me.pnlHeaderUsers.BorderRadius = 10
+            Me.pnlHeaderUsers.Controls.Add(Me.btnBackUsers)
+            Me.pnlHeaderUsers.Controls.Add(Me.lblDescUsers)
+            Me.pnlHeaderUsers.Controls.Add(Me.lblTitleUsers)
+            Me.pnlHeaderUsers.Controls.Add(Me.picHeaderUsers)
+            Me.pnlHeaderUsers.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderUsers.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderUsers.Name = "pnlHeaderUsers"
+            Me.pnlHeaderUsers.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderUsers.TabIndex = 2
+            '
+            'btnBackUsers
+            '
+            Me.btnBackUsers.BorderRadius = 8
+            Me.btnBackUsers.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackUsers.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackUsers.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackUsers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackUsers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackUsers.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackUsers.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackUsers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackUsers.Name = "btnBackUsers"
+            Me.btnBackUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackUsers.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackUsers.TabIndex = 4
+            Me.btnBackUsers.Text = "  العودة للرئيسية"
+            '
+            'lblDescUsers
+            '
+            Me.lblDescUsers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescUsers.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescUsers.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescUsers.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescUsers.Location = New System.Drawing.Point(598, 38)
+            Me.lblDescUsers.Name = "lblDescUsers"
+            Me.lblDescUsers.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescUsers.Size = New System.Drawing.Size(292, 31)
+            Me.lblDescUsers.TabIndex = 5
+            Me.lblDescUsers.Text = "حسابات الدخول، كلمات المرور، مصفوفة الصلاحيات، وتأمين النظام"
+            Me.lblDescUsers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleUsers
+            '
+            Me.lblTitleUsers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleUsers.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleUsers.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleUsers.ForeColor = System.Drawing.Color.White
+            Me.lblTitleUsers.Location = New System.Drawing.Point(598, 8)
+            Me.lblTitleUsers.Name = "lblTitleUsers"
+            Me.lblTitleUsers.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleUsers.Size = New System.Drawing.Size(292, 30)
+            Me.lblTitleUsers.TabIndex = 6
+            Me.lblTitleUsers.Text = "قسم المستخدمين والصلاحيات والأمان"
+            Me.lblTitleUsers.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnfrmUsers
+            '
+            Me.btnfrmUsers.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmUsers.BorderRadius = 12
+            Me.btnfrmUsers.BorderThickness = 1
+            Me.btnfrmUsers.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmUsers.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmUsers.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmUsers.ForeColor = System.Drawing.Color.White
+            Me.btnfrmUsers.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmUsers.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmUsers.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmUsers.Image = Global.WindowsApp1.My.Resources.Resources.user
+            Me.btnfrmUsers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmUsers.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmUsers.Location = New System.Drawing.Point(661, 14)
+            Me.btnfrmUsers.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmUsers.Name = "btnfrmUsers"
+            Me.btnfrmUsers.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmUsers.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmUsers.TabIndex = 0
+            Me.btnfrmUsers.Text = "إدارة حسابات المستخدمين" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "إنشاء وتعديل حسابات الكاشير والمشرفين"
+            Me.btnfrmUsers.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmUsers.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnfrmRolesAndPermissions
+            '
+            Me.btnfrmRolesAndPermissions.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmRolesAndPermissions.BorderRadius = 12
+            Me.btnfrmRolesAndPermissions.BorderThickness = 1
+            Me.btnfrmRolesAndPermissions.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmRolesAndPermissions.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmRolesAndPermissions.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmRolesAndPermissions.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRolesAndPermissions.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmRolesAndPermissions.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmRolesAndPermissions.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmRolesAndPermissions.Image = Global.WindowsApp1.My.Resources.Resources.lock
+            Me.btnfrmRolesAndPermissions.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmRolesAndPermissions.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmRolesAndPermissions.Location = New System.Drawing.Point(356, 14)
+            Me.btnfrmRolesAndPermissions.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmRolesAndPermissions.Name = "btnfrmRolesAndPermissions"
+            Me.btnfrmRolesAndPermissions.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmRolesAndPermissions.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmRolesAndPermissions.TabIndex = 1
+            Me.btnfrmRolesAndPermissions.Text = "الأدوار ومصفوفة الصلاحيات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "صلاحيات الخصم والإلغاء والتقارير"
+            Me.btnfrmRolesAndPermissions.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmRolesAndPermissions.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderUsers
+            '
+            Me.picHeaderUsers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderUsers.Image = Global.WindowsApp1.My.Resources.Resources.user2
+            Me.picHeaderUsers.ImageRotate = 0!
+            Me.picHeaderUsers.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderUsers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderUsers.Name = "picHeaderUsers"
+            Me.picHeaderUsers.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderUsers.TabIndex = 7
+            Me.picHeaderUsers.TabStop = False
+            '
+            'UCUsersHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpUsers)
+            Me.Controls.Add(Me.pnlHeaderUsers)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCUsersHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpUsers.ResumeLayout(False)
+            Me.pnlHeaderUsers.ResumeLayout(False)
+            CType(Me.picHeaderUsers, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpUsers As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderUsers As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderUsers As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleUsers As System.Windows.Forms.Label
-        Friend WithEvents lblDescUsers As System.Windows.Forms.Label
-        Friend WithEvents btnBackUsers As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmUsers As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmRolesAndPermissions As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderUsers As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackUsers As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescUsers As Label
+        Friend WithEvents lblTitleUsers As Label
+        Friend WithEvents picHeaderUsers As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace

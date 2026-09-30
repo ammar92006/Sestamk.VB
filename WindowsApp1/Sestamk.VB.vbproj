@@ -1519,6 +1519,8 @@
     <None Include="Resources\switch %281%29.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\finance.png" />
+    <None Include="Resources\user2.png" />
     <None Include="Resources\518348218_1434214821335102_4304040704815404944_n %281%29.jpg" />
     <None Include="Resources\518348218_1434214821335102_4304040704815404944_n %281%291.jpg" />
     <None Include="Resources\new-hire.png" />

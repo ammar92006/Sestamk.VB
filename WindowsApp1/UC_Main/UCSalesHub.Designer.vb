@@ -31,11 +31,10 @@ Namespace UC_Main
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
             Me.flpSales = New System.Windows.Forms.FlowLayoutPanel()
-            Me.pnlHeaderSales = New System.Windows.Forms.Panel()
-            Me.picHeaderSales = New Guna.UI2.WinForms.Guna2PictureBox()
-            Me.lblTitleSales = New System.Windows.Forms.Label()
-            Me.lblDescSales = New System.Windows.Forms.Label()
+            Me.pnlHeaderSales = New Guna.UI2.WinForms.Guna2Panel()
             Me.btnBackSales = New Guna.UI2.WinForms.Guna2Button()
+            Me.lblDescSales = New System.Windows.Forms.Label()
+            Me.lblTitleSales = New System.Windows.Forms.Label()
             Me.btnfrmPOS = New Guna.UI2.WinForms.Guna2Button()
             Me.btnSalesReturns = New Guna.UI2.WinForms.Guna2Button()
             Me.btnFrmSalesReport = New Guna.UI2.WinForms.Guna2Button()
@@ -43,314 +42,298 @@ Namespace UC_Main
             Me.btnKds = New Guna.UI2.WinForms.Guna2Button()
             Me.btnWaste = New Guna.UI2.WinForms.Guna2Button()
             Me.btnRes = New Guna.UI2.WinForms.Guna2Button()
+            Me.picHeaderSales = New Guna.UI2.WinForms.Guna2PictureBox()
+            Me.flpSales.SuspendLayout()
             Me.pnlHeaderSales.SuspendLayout()
             CType(Me.picHeaderSales, System.ComponentModel.ISupportInitialize).BeginInit()
-            Me.flpSales.SuspendLayout()
             Me.SuspendLayout()
-
-        '
-        'pnlHeaderSales
-        '
-        Me.pnlHeaderSales.Controls.Add(Me.btnBackSales)
-        Me.pnlHeaderSales.Controls.Add(Me.lblDescSales)
-        Me.pnlHeaderSales.Controls.Add(Me.lblTitleSales)
-        Me.pnlHeaderSales.Controls.Add(Me.picHeaderSales)
-        Me.pnlHeaderSales.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnlHeaderSales.Location = New System.Drawing.Point(20, 20)
-        Me.pnlHeaderSales.Name = "pnlHeaderSales"
-        Me.pnlHeaderSales.Padding = New System.Windows.Forms.Padding(0, 0, 0, 10)
-        Me.pnlHeaderSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlHeaderSales.Size = New System.Drawing.Size(1140, 60)
-        Me.pnlHeaderSales.TabIndex = 1
-
-        '
-        'btnBackSales
-        '
-        Me.btnBackSales.BorderRadius = 8
-        Me.btnBackSales.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnBackSales.Dock = System.Windows.Forms.DockStyle.Left
-        Me.btnBackSales.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btnBackSales.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
-        Me.btnBackSales.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
-        Me.btnBackSales.Image = Global.WindowsApp1.My.Resources.Resources.arrow
-        Me.btnBackSales.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnBackSales.ImageSize = New System.Drawing.Size(16, 16)
-        Me.btnBackSales.Location = New System.Drawing.Point(0, 0)
-        Me.btnBackSales.Name = "btnBackSales"
-        Me.btnBackSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnBackSales.Size = New System.Drawing.Size(145, 50)
-        Me.btnBackSales.TabIndex = 0
-        Me.btnBackSales.Text = "  العودة للرئيسية"
-
-        '
-        'lblDescSales
-        '
-        Me.lblDescSales.AutoSize = True
-        Me.lblDescSales.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblDescSales.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.lblDescSales.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
-        Me.lblDescSales.Location = New System.Drawing.Point(435, 0)
-        Me.lblDescSales.Name = "lblDescSales"
-        Me.lblDescSales.Padding = New System.Windows.Forms.Padding(0, 9, 15, 0)
-        Me.lblDescSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblDescSales.Size = New System.Drawing.Size(428, 24)
-        Me.lblDescSales.TabIndex = 1
-        Me.lblDescSales.Text = "نظام الكاشير السريع، المطبخ KDS، الطاولات والحجوزات، المرتجعات وتقارير المبيعات"
-
-        '
-        'lblTitleSales
-        '
-        Me.lblTitleSales.AutoSize = True
-        Me.lblTitleSales.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lblTitleSales.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
-        Me.lblTitleSales.ForeColor = System.Drawing.Color.White
-        Me.lblTitleSales.Location = New System.Drawing.Point(863, 0)
-        Me.lblTitleSales.Name = "lblTitleSales"
-        Me.lblTitleSales.Padding = New System.Windows.Forms.Padding(10, 5, 10, 0)
-        Me.lblTitleSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblTitleSales.Size = New System.Drawing.Size(241, 30)
-        Me.lblTitleSales.TabIndex = 2
-        Me.lblTitleSales.Text = "قسم المبيعات وإدارة الصالة"
-
-        '
-        'picHeaderSales
-        '
-        Me.picHeaderSales.Dock = System.Windows.Forms.DockStyle.Right
-        Me.picHeaderSales.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
-        Me.picHeaderSales.ImageRotate = 0!
-        Me.picHeaderSales.Location = New System.Drawing.Point(1104, 0)
-        Me.picHeaderSales.Name = "picHeaderSales"
-        Me.picHeaderSales.Size = New System.Drawing.Size(36, 50)
-        Me.picHeaderSales.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picHeaderSales.TabIndex = 3
-        Me.picHeaderSales.TabStop = False
-
-        '
-        'flpSales
-        '
-        Me.flpSales.AutoScroll = True
-        Me.flpSales.Controls.Add(Me.btnfrmPOS)
-        Me.flpSales.Controls.Add(Me.btnSalesReturns)
-        Me.flpSales.Controls.Add(Me.btnFrmSalesReport)
-        Me.flpSales.Controls.Add(Me.btnFrmDriverReport)
-        Me.flpSales.Controls.Add(Me.btnKds)
-        Me.flpSales.Controls.Add(Me.btnWaste)
-        Me.flpSales.Controls.Add(Me.btnRes)
-        Me.flpSales.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.flpSales.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.flpSales.Location = New System.Drawing.Point(20, 80)
-        Me.flpSales.Name = "flpSales"
-        Me.flpSales.Padding = New System.Windows.Forms.Padding(10)
-        Me.flpSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpSales.Size = New System.Drawing.Size(1140, 658)
-        Me.flpSales.TabIndex = 0
-
-        '
-        'btnfrmPOS
-        '
-        Me.btnfrmPOS.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnfrmPOS.BorderRadius = 12
-        Me.btnfrmPOS.BorderThickness = 1
-        Me.btnfrmPOS.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnfrmPOS.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnfrmPOS.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnfrmPOS.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPOS.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnfrmPOS.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnfrmPOS.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnfrmPOS.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
-        Me.btnfrmPOS.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnfrmPOS.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnfrmPOS.Location = New System.Drawing.Point(18, 18)
-        Me.btnfrmPOS.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnfrmPOS.Name = "btnfrmPOS"
-        Me.btnfrmPOS.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnfrmPOS.Size = New System.Drawing.Size(340, 95)
-        Me.btnfrmPOS.TabIndex = 0
-        Me.btnfrmPOS.Text = "شاشة البيع الكاشير (POS F1)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "طلبات الصالة والدليفري والتيك أواي"
-        Me.btnfrmPOS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnfrmPOS.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnSalesReturns
-        '
-        Me.btnSalesReturns.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnSalesReturns.BorderRadius = 12
-        Me.btnSalesReturns.BorderThickness = 1
-        Me.btnSalesReturns.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnSalesReturns.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnSalesReturns.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnSalesReturns.ForeColor = System.Drawing.Color.White
-        Me.btnSalesReturns.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnSalesReturns.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnSalesReturns.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnSalesReturns.Image = Global.WindowsApp1.My.Resources.Resources.exchange__1_
-        Me.btnSalesReturns.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnSalesReturns.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnSalesReturns.Location = New System.Drawing.Point(374, 18)
-        Me.btnSalesReturns.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnSalesReturns.Name = "btnSalesReturns"
-        Me.btnSalesReturns.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSalesReturns.Size = New System.Drawing.Size(340, 95)
-        Me.btnSalesReturns.TabIndex = 1
-        Me.btnSalesReturns.Text = "مرتجع المبيعات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "استرجاع واستبدال الفواتير والأصناف"
-        Me.btnSalesReturns.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnSalesReturns.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnFrmSalesReport
-        '
-        Me.btnFrmSalesReport.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnFrmSalesReport.BorderRadius = 12
-        Me.btnFrmSalesReport.BorderThickness = 1
-        Me.btnFrmSalesReport.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnFrmSalesReport.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnFrmSalesReport.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnFrmSalesReport.ForeColor = System.Drawing.Color.White
-        Me.btnFrmSalesReport.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnFrmSalesReport.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnFrmSalesReport.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnFrmSalesReport.Image = Global.WindowsApp1.My.Resources.Resources.report
-        Me.btnFrmSalesReport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnFrmSalesReport.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnFrmSalesReport.Location = New System.Drawing.Point(730, 18)
-        Me.btnFrmSalesReport.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnFrmSalesReport.Name = "btnFrmSalesReport"
-        Me.btnFrmSalesReport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnFrmSalesReport.Size = New System.Drawing.Size(340, 95)
-        Me.btnFrmSalesReport.TabIndex = 2
-        Me.btnFrmSalesReport.Text = "تقارير المبيعات والأرباح" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحليل المبيعات والأصناف الأكثر طلباً"
-        Me.btnFrmSalesReport.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnFrmSalesReport.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnFrmDriverReport
-        '
-        Me.btnFrmDriverReport.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnFrmDriverReport.BorderRadius = 12
-        Me.btnFrmDriverReport.BorderThickness = 1
-        Me.btnFrmDriverReport.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnFrmDriverReport.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnFrmDriverReport.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnFrmDriverReport.ForeColor = System.Drawing.Color.White
-        Me.btnFrmDriverReport.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnFrmDriverReport.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnFrmDriverReport.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnFrmDriverReport.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike__1_
-        Me.btnFrmDriverReport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnFrmDriverReport.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnFrmDriverReport.Location = New System.Drawing.Point(18, 129)
-        Me.btnFrmDriverReport.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnFrmDriverReport.Name = "btnFrmDriverReport"
-        Me.btnFrmDriverReport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnFrmDriverReport.Size = New System.Drawing.Size(340, 95)
-        Me.btnFrmDriverReport.TabIndex = 3
-        Me.btnFrmDriverReport.Text = "تقارير طيارين الديليفري" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "حسابات وأوردرات وعمولات الطيارين"
-        Me.btnFrmDriverReport.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnFrmDriverReport.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnKds
-        '
-        Me.btnKds.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnKds.BorderRadius = 12
-        Me.btnKds.BorderThickness = 1
-        Me.btnKds.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnKds.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnKds.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnKds.ForeColor = System.Drawing.Color.White
-        Me.btnKds.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnKds.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnKds.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnKds.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
-        Me.btnKds.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnKds.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnKds.Location = New System.Drawing.Point(374, 129)
-        Me.btnKds.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnKds.Name = "btnKds"
-        Me.btnKds.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnKds.Size = New System.Drawing.Size(340, 95)
-        Me.btnKds.TabIndex = 4
-        Me.btnKds.Text = "شاشة عرض المطبخ (KDS)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحضير الطلبات في المطبخ لحظياً"
-        Me.btnKds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnKds.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnWaste
-        '
-        Me.btnWaste.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnWaste.BorderRadius = 12
-        Me.btnWaste.BorderThickness = 1
-        Me.btnWaste.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnWaste.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnWaste.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnWaste.ForeColor = System.Drawing.Color.White
-        Me.btnWaste.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnWaste.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnWaste.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnWaste.Image = Global.WindowsApp1.My.Resources.Resources.bin
-        Me.btnWaste.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnWaste.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnWaste.Location = New System.Drawing.Point(730, 129)
-        Me.btnWaste.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnWaste.Name = "btnWaste"
-        Me.btnWaste.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnWaste.Size = New System.Drawing.Size(340, 95)
-        Me.btnWaste.TabIndex = 5
-        Me.btnWaste.Text = "هالك وتالف المطبخ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تسجيل الهدر والتالف أثناء التشغيل"
-        Me.btnWaste.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnWaste.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'btnRes
-        '
-        Me.btnRes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
-        Me.btnRes.BorderRadius = 12
-        Me.btnRes.BorderThickness = 1
-        Me.btnRes.Cursor = System.Windows.Forms.Cursors.Hand
-        Me.btnRes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
-        Me.btnRes.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
-        Me.btnRes.ForeColor = System.Drawing.Color.White
-        Me.btnRes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
-        Me.btnRes.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
-        Me.btnRes.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnRes.Image = Global.WindowsApp1.My.Resources.Resources.round_table
-        Me.btnRes.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
-        Me.btnRes.ImageSize = New System.Drawing.Size(32, 32)
-        Me.btnRes.Location = New System.Drawing.Point(18, 240)
-        Me.btnRes.Margin = New System.Windows.Forms.Padding(8)
-        Me.btnRes.Name = "btnRes"
-        Me.btnRes.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnRes.Size = New System.Drawing.Size(340, 95)
-        Me.btnRes.TabIndex = 6
-        Me.btnRes.Text = "طاولات وحجوزات الصالة" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "متابعة الطاولات الشاغرة والمحجوزة"
-        Me.btnRes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.btnRes.TextOffset = New System.Drawing.Point(5, 0)
-
-        '
-        'UCSalesHub
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(7.0!, 16.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.flpSales)
-        Me.Controls.Add(Me.pnlHeaderSales)
-        Me.Name = "UCSalesHub"
-        Me.Padding = New System.Windows.Forms.Padding(20)
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.Size = New System.Drawing.Size(1180, 758)
-            CType(Me.picHeaderSales, System.ComponentModel.ISupportInitialize).EndInit()
-            Me.pnlHeaderSales.ResumeLayout(False)
-            Me.pnlHeaderSales.PerformLayout()
+            '
+            'flpSales
+            '
+            Me.flpSales.AutoScroll = True
+            Me.flpSales.Controls.Add(Me.btnfrmPOS)
+            Me.flpSales.Controls.Add(Me.btnSalesReturns)
+            Me.flpSales.Controls.Add(Me.btnFrmSalesReport)
+            Me.flpSales.Controls.Add(Me.btnFrmDriverReport)
+            Me.flpSales.Controls.Add(Me.btnKds)
+            Me.flpSales.Controls.Add(Me.btnWaste)
+            Me.flpSales.Controls.Add(Me.btnRes)
+            Me.flpSales.Dock = System.Windows.Forms.DockStyle.Fill
+            Me.flpSales.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+            Me.flpSales.Location = New System.Drawing.Point(17, 97)
+            Me.flpSales.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.flpSales.Name = "flpSales"
+            Me.flpSales.Padding = New System.Windows.Forms.Padding(9, 8, 9, 8)
+            Me.flpSales.RightToLeft = System.Windows.Forms.RightToLeft.No
+            Me.flpSales.Size = New System.Drawing.Size(977, 503)
+            Me.flpSales.TabIndex = 0
+            '
+            'pnlHeaderSales
+            '
+            Me.pnlHeaderSales.BorderRadius = 10
+            Me.pnlHeaderSales.Controls.Add(Me.btnBackSales)
+            Me.pnlHeaderSales.Controls.Add(Me.lblDescSales)
+            Me.pnlHeaderSales.Controls.Add(Me.lblTitleSales)
+            Me.pnlHeaderSales.Controls.Add(Me.picHeaderSales)
+            Me.pnlHeaderSales.Dock = System.Windows.Forms.DockStyle.Top
+            Me.pnlHeaderSales.Location = New System.Drawing.Point(17, 16)
+            Me.pnlHeaderSales.Name = "pnlHeaderSales"
+            Me.pnlHeaderSales.Size = New System.Drawing.Size(977, 81)
+            Me.pnlHeaderSales.TabIndex = 1
+            '
+            'btnBackSales
+            '
+            Me.btnBackSales.BorderRadius = 8
+            Me.btnBackSales.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnBackSales.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+            Me.btnBackSales.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+            Me.btnBackSales.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(165, Byte), Integer), CType(CType(250, Byte), Integer))
+            Me.btnBackSales.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnBackSales.ImageSize = New System.Drawing.Size(16, 16)
+            Me.btnBackSales.Location = New System.Drawing.Point(15, 19)
+            Me.btnBackSales.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.btnBackSales.Name = "btnBackSales"
+            Me.btnBackSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnBackSales.Size = New System.Drawing.Size(124, 41)
+            Me.btnBackSales.TabIndex = 4
+            Me.btnBackSales.Text = "  العودة للرئيسية"
+            '
+            'lblDescSales
+            '
+            Me.lblDescSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblDescSales.BackColor = System.Drawing.Color.Transparent
+            Me.lblDescSales.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+            Me.lblDescSales.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+            Me.lblDescSales.Location = New System.Drawing.Point(240, 38)
+            Me.lblDescSales.Name = "lblDescSales"
+            Me.lblDescSales.Padding = New System.Windows.Forms.Padding(0, 7, 13, 0)
+            Me.lblDescSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblDescSales.Size = New System.Drawing.Size(650, 31)
+            Me.lblDescSales.TabIndex = 5
+            Me.lblDescSales.Text = "نظام الكاشير السريع، المطبخ KDS، الطاولات والحجوزات، المرتجعات وتقارير المبيعات"
+            Me.lblDescSales.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'lblTitleSales
+            '
+            Me.lblTitleSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblTitleSales.BackColor = System.Drawing.Color.Transparent
+            Me.lblTitleSales.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+            Me.lblTitleSales.ForeColor = System.Drawing.Color.White
+            Me.lblTitleSales.Location = New System.Drawing.Point(398, 8)
+            Me.lblTitleSales.Name = "lblTitleSales"
+            Me.lblTitleSales.Padding = New System.Windows.Forms.Padding(9, 4, 9, 0)
+            Me.lblTitleSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.lblTitleSales.Size = New System.Drawing.Size(492, 30)
+            Me.lblTitleSales.TabIndex = 6
+            Me.lblTitleSales.Text = "قسم المبيعات وإدارة الصالة"
+            Me.lblTitleSales.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+            '
+            'btnfrmPOS
+            '
+            Me.btnfrmPOS.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnfrmPOS.BorderRadius = 12
+            Me.btnfrmPOS.BorderThickness = 1
+            Me.btnfrmPOS.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnfrmPOS.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnfrmPOS.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnfrmPOS.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPOS.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnfrmPOS.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnfrmPOS.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnfrmPOS.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
+            Me.btnfrmPOS.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnfrmPOS.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnfrmPOS.Location = New System.Drawing.Point(661, 14)
+            Me.btnfrmPOS.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnfrmPOS.Name = "btnfrmPOS"
+            Me.btnfrmPOS.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnfrmPOS.Size = New System.Drawing.Size(291, 77)
+            Me.btnfrmPOS.TabIndex = 0
+            Me.btnfrmPOS.Text = "شاشة البيع الكاشير (POS F1)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "طلبات الصالة والدليفري والتيك أواي"
+            Me.btnfrmPOS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnfrmPOS.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnSalesReturns
+            '
+            Me.btnSalesReturns.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnSalesReturns.BorderRadius = 12
+            Me.btnSalesReturns.BorderThickness = 1
+            Me.btnSalesReturns.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnSalesReturns.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnSalesReturns.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnSalesReturns.ForeColor = System.Drawing.Color.White
+            Me.btnSalesReturns.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnSalesReturns.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnSalesReturns.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnSalesReturns.Image = Global.WindowsApp1.My.Resources.Resources.exchange__1_
+            Me.btnSalesReturns.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnSalesReturns.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnSalesReturns.Location = New System.Drawing.Point(356, 14)
+            Me.btnSalesReturns.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnSalesReturns.Name = "btnSalesReturns"
+            Me.btnSalesReturns.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnSalesReturns.Size = New System.Drawing.Size(291, 77)
+            Me.btnSalesReturns.TabIndex = 1
+            Me.btnSalesReturns.Text = "مرتجع المبيعات" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "استرجاع واستبدال الفواتير والأصناف"
+            Me.btnSalesReturns.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnSalesReturns.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnFrmSalesReport
+            '
+            Me.btnFrmSalesReport.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnFrmSalesReport.BorderRadius = 12
+            Me.btnFrmSalesReport.BorderThickness = 1
+            Me.btnFrmSalesReport.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnFrmSalesReport.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnFrmSalesReport.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnFrmSalesReport.ForeColor = System.Drawing.Color.White
+            Me.btnFrmSalesReport.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnFrmSalesReport.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnFrmSalesReport.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnFrmSalesReport.Image = Global.WindowsApp1.My.Resources.Resources.report
+            Me.btnFrmSalesReport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnFrmSalesReport.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnFrmSalesReport.Location = New System.Drawing.Point(51, 14)
+            Me.btnFrmSalesReport.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnFrmSalesReport.Name = "btnFrmSalesReport"
+            Me.btnFrmSalesReport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnFrmSalesReport.Size = New System.Drawing.Size(291, 77)
+            Me.btnFrmSalesReport.TabIndex = 2
+            Me.btnFrmSalesReport.Text = "تقارير المبيعات والأرباح" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحليل المبيعات والأصناف الأكثر طلباً"
+            Me.btnFrmSalesReport.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnFrmSalesReport.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnFrmDriverReport
+            '
+            Me.btnFrmDriverReport.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnFrmDriverReport.BorderRadius = 12
+            Me.btnFrmDriverReport.BorderThickness = 1
+            Me.btnFrmDriverReport.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnFrmDriverReport.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnFrmDriverReport.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnFrmDriverReport.ForeColor = System.Drawing.Color.White
+            Me.btnFrmDriverReport.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnFrmDriverReport.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnFrmDriverReport.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnFrmDriverReport.Image = Global.WindowsApp1.My.Resources.Resources.delivery_bike__1_
+            Me.btnFrmDriverReport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnFrmDriverReport.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnFrmDriverReport.Location = New System.Drawing.Point(661, 103)
+            Me.btnFrmDriverReport.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnFrmDriverReport.Name = "btnFrmDriverReport"
+            Me.btnFrmDriverReport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnFrmDriverReport.Size = New System.Drawing.Size(291, 77)
+            Me.btnFrmDriverReport.TabIndex = 3
+            Me.btnFrmDriverReport.Text = "تقارير طيارين الديليفري" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "حسابات وأوردرات وعمولات الطيارين"
+            Me.btnFrmDriverReport.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnFrmDriverReport.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnKds
+            '
+            Me.btnKds.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnKds.BorderRadius = 12
+            Me.btnKds.BorderThickness = 1
+            Me.btnKds.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnKds.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnKds.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnKds.ForeColor = System.Drawing.Color.White
+            Me.btnKds.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnKds.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnKds.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnKds.Image = Global.WindowsApp1.My.Resources.Resources.dining_room
+            Me.btnKds.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnKds.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnKds.Location = New System.Drawing.Point(356, 103)
+            Me.btnKds.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnKds.Name = "btnKds"
+            Me.btnKds.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnKds.Size = New System.Drawing.Size(291, 77)
+            Me.btnKds.TabIndex = 4
+            Me.btnKds.Text = "شاشة عرض المطبخ (KDS)" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تحضير الطلبات في المطبخ لحظياً"
+            Me.btnKds.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnKds.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnWaste
+            '
+            Me.btnWaste.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnWaste.BorderRadius = 12
+            Me.btnWaste.BorderThickness = 1
+            Me.btnWaste.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnWaste.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnWaste.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnWaste.ForeColor = System.Drawing.Color.White
+            Me.btnWaste.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnWaste.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnWaste.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnWaste.Image = Global.WindowsApp1.My.Resources.Resources.bin
+            Me.btnWaste.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnWaste.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnWaste.Location = New System.Drawing.Point(51, 103)
+            Me.btnWaste.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnWaste.Name = "btnWaste"
+            Me.btnWaste.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnWaste.Size = New System.Drawing.Size(291, 77)
+            Me.btnWaste.TabIndex = 5
+            Me.btnWaste.Text = "هالك وتالف المطبخ" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "تسجيل الهدر والتالف أثناء التشغيل"
+            Me.btnWaste.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnWaste.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'btnRes
+            '
+            Me.btnRes.BorderColor = System.Drawing.Color.FromArgb(CType(CType(35, Byte), Integer), CType(CType(45, Byte), Integer), CType(CType(63, Byte), Integer))
+            Me.btnRes.BorderRadius = 12
+            Me.btnRes.BorderThickness = 1
+            Me.btnRes.Cursor = System.Windows.Forms.Cursors.Hand
+            Me.btnRes.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(36, Byte), Integer))
+            Me.btnRes.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+            Me.btnRes.ForeColor = System.Drawing.Color.White
+            Me.btnRes.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
+            Me.btnRes.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+            Me.btnRes.HoverState.ForeColor = System.Drawing.Color.White
+            Me.btnRes.Image = Global.WindowsApp1.My.Resources.Resources.round_table
+            Me.btnRes.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+            Me.btnRes.ImageSize = New System.Drawing.Size(32, 32)
+            Me.btnRes.Location = New System.Drawing.Point(661, 192)
+            Me.btnRes.Margin = New System.Windows.Forms.Padding(7, 6, 7, 6)
+            Me.btnRes.Name = "btnRes"
+            Me.btnRes.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.btnRes.Size = New System.Drawing.Size(291, 77)
+            Me.btnRes.TabIndex = 6
+            Me.btnRes.Text = "طاولات وحجوزات الصالة" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "متابعة الطاولات الشاغرة والمحجوزة"
+            Me.btnRes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+            Me.btnRes.TextOffset = New System.Drawing.Point(5, 0)
+            '
+            'picHeaderSales
+            '
+            Me.picHeaderSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.picHeaderSales.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
+            Me.picHeaderSales.ImageRotate = 0!
+            Me.picHeaderSales.Location = New System.Drawing.Point(898, 9)
+            Me.picHeaderSales.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.picHeaderSales.Name = "picHeaderSales"
+            Me.picHeaderSales.Size = New System.Drawing.Size(64, 64)
+            Me.picHeaderSales.TabIndex = 7
+            Me.picHeaderSales.TabStop = False
+            '
+            'UCSalesHub
+            '
+            Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+            Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+            Me.Controls.Add(Me.flpSales)
+            Me.Controls.Add(Me.pnlHeaderSales)
+            Me.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+            Me.Name = "UCSalesHub"
+            Me.Padding = New System.Windows.Forms.Padding(17, 16, 17, 16)
+            Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+            Me.Size = New System.Drawing.Size(1011, 616)
             Me.flpSales.ResumeLayout(False)
+            Me.pnlHeaderSales.ResumeLayout(False)
+            CType(Me.picHeaderSales, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
+
         End Sub
 
         Friend WithEvents flpSales As System.Windows.Forms.FlowLayoutPanel
-        Friend WithEvents pnlHeaderSales As System.Windows.Forms.Panel
-        Friend WithEvents picHeaderSales As Guna.UI2.WinForms.Guna2PictureBox
-        Friend WithEvents lblTitleSales As System.Windows.Forms.Label
-        Friend WithEvents lblDescSales As System.Windows.Forms.Label
-        Friend WithEvents btnBackSales As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnfrmPOS As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnSalesReturns As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnFrmSalesReport As Guna.UI2.WinForms.Guna2Button
@@ -358,6 +341,11 @@ Namespace UC_Main
         Friend WithEvents btnKds As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnWaste As Guna.UI2.WinForms.Guna2Button
         Friend WithEvents btnRes As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents pnlHeaderSales As Guna.UI2.WinForms.Guna2Panel
+        Friend WithEvents btnBackSales As Guna.UI2.WinForms.Guna2Button
+        Friend WithEvents lblDescSales As Label
+        Friend WithEvents lblTitleSales As Label
+        Friend WithEvents picHeaderSales As Guna.UI2.WinForms.Guna2PictureBox
     End Class
 
 End Namespace
