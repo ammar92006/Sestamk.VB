@@ -3,6 +3,7 @@ Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Windows.Forms
 Imports Guna.UI2.WinForms
+Imports WindowsApp1.frmPOS
 
 Public Class FrmQuickPayment
 
@@ -11,6 +12,7 @@ Public Class FrmQuickPayment
     ' ==========================================
     Private ReadOnly _totalAmount As Decimal
     Private ReadOnly _customer As CustomerModel
+    Private ReadOnly _orderType As OrderType
 
     ' ==========================================
     ' النتائج المرتجعة لشاشة البيع
@@ -29,10 +31,11 @@ Public Class FrmQuickPayment
     ' ==========================================
     ' Constructor
     ' ==========================================
-    Public Sub New(totalAmount As Decimal, customer As CustomerModel)
+    Public Sub New(totalAmount As Decimal, customer As CustomerModel, Order As OrderType)
         InitializeComponent()
         _totalAmount = totalAmount
         _customer = customer
+        _orderType = Order
     End Sub
 
     Private Async Sub FrmQuickPayment_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -50,13 +53,24 @@ Public Class FrmQuickPayment
 
         ' 4. ضبط طريقة الدفع الافتراضية (نقدي)
         rdoCash.Checked = True
-        txtPaidInput.Text = "0"
 
         ' 5. ربط أزرار الآلة الحاسبة
         RegisterNumPadEvents()
 
-        ' 6. أول عملية حسابية تلقائية
+        ' 6. أول عملية حسابية تلقائية لحساب الخصومات وصافي المطلوب (NetTotal)
         CalculateAll()
+
+        ' 7. إذا كان الطلب تيك أواي، يتم ضبط المبلغ المدفوع تلقائياً ليكون المبلغ بالضبط
+        If _orderType = OrderType.Takeaway Then
+            btnExactAmount.PerformClick()
+        Else
+            txtPaidInput.Text = "0"
+            CalculateAll()
+        End If
+
+        ' تحديد النص لتسهيل إدخال الكاشير لمبلغ آخر مباشرة إذا رغب في ذلك
+        txtPaidInput.Select()
+        txtPaidInput.SelectAll()
 
         Dim Drag As New FormDragHelper(Me, panelHeader)
     End Sub
