@@ -376,7 +376,7 @@ Public NotInheritable Class ThemeHelper
             End While
 
             If isNavButton Then
-                btn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.ToogleButton
+                btn.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
                 btn.CheckedState.FillColor = palette.NavSelected
                 btn.CheckedState.ForeColor = palette.NavSelectedText
                 btn.HoverState.FillColor = palette.NavHover

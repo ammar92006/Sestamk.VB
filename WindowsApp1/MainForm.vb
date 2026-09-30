@@ -37,7 +37,11 @@ Public Class MainForm
         ApplyPermissionsToMainForm()
 
         ' بدء تشغيل مؤقتات الساعة وتحديث الداشبورد
+        tmrClock.Interval = 1000
         tmrClock.Start()
+
+        ' مؤقت التحديث التلقائي للداشبورد (كل 3 دقائق = 180,000 مللي ثانية بدون وميض الزر)
+        tmrDashboardRefresh.Interval = 180000
         tmrDashboardRefresh.Start()
 
         ' بدء خدمة القفل التلقائي للجلسة عند الخمول في الخلفية (أداء فائق وخفيف تماماً)
@@ -58,8 +62,8 @@ Public Class MainForm
         Catch
         End Try
 
-        ' تحميل بيانات الداشبورد فور فتح الشاشة
-        RefreshDashboardAsync()
+        ' تحميل بيانات الداشبورد فور فتح الشاشة بهدوء
+        RefreshDashboardAsync(isManual:=False)
     End Sub
 
     Private Sub InitializeStatusBar()
@@ -129,21 +133,33 @@ Public Class MainForm
         UpdateDateTimeAndShift()
     End Sub
 
+    Private _isRefreshingDashboard As Integer = 0
+
     Private Sub tmrDashboardRefresh_Tick(sender As Object, e As EventArgs) Handles tmrDashboardRefresh.Tick
-        RefreshDashboardAsync()
+        ' التحديث التلقائي الدوري في الخلفية (صامت تماماً وبدون أي وميض للزر، وفقط إذا كانت شاشة الداشبورد معروضة حالياً)
+        If viewDashboard IsNot Nothing AndAlso viewDashboard.Visible Then
+            RefreshDashboardAsync(isManual:=False)
+        End If
     End Sub
 
     Private Sub btnRefreshDashboard_Click(sender As Object, e As EventArgs) Handles btnRefreshDashboard.Click
-        RefreshDashboardAsync()
+        ' التحديث اليدوي المباشر عند نقر المستخدم على الزر
+        RefreshDashboardAsync(isManual:=True)
     End Sub
 
     ''' <summary>
-    ''' جلب وتحديث مؤشرات الداشبورد في الخلفية بشكل غير تزامني لمنع تجميد الواجهة
+    ''' جلب وتحديث مؤشرات الداشبورد في الخلفية بشكل غير تزامني لمنع تجميد الواجهة وبدون إزعاج المستخدم
     ''' </summary>
-    Public Async Sub RefreshDashboardAsync()
+    Public Async Sub RefreshDashboardAsync(Optional isManual As Boolean = False)
+        ' منع أي استدعاءات متزامنة في نفس الوقت (Thread-safe concurrency guard)
+        If System.Threading.Interlocked.CompareExchange(_isRefreshingDashboard, 1, 0) <> 0 Then Return
+
         Try
-            btnRefreshDashboard.Enabled = False
-            btnRefreshDashboard.Text = "⏳ جاري التحديث..."
+            ' إظهار حالة التحميل للزر فقط عند التحديث اليدوي المباشر
+            If isManual AndAlso btnRefreshDashboard IsNot Nothing Then
+                btnRefreshDashboard.Enabled = False
+                btnRefreshDashboard.Text = "⏳ جاري التحديث..."
+            End If
 
             Await Task.Run(Sub()
                                LoadDashboardData()
@@ -151,8 +167,11 @@ Public Class MainForm
         Catch ex As Exception
             Logger.LogError("RefreshDashboardAsync", ex)
         Finally
-            btnRefreshDashboard.Enabled = True
-            btnRefreshDashboard.Text = "تحديث البيانات"
+            If isManual AndAlso btnRefreshDashboard IsNot Nothing Then
+                btnRefreshDashboard.Enabled = True
+                btnRefreshDashboard.Text = "تحديث البيانات"
+            End If
+            System.Threading.Interlocked.Exchange(_isRefreshingDashboard, 0)
         End Try
     End Sub
 
@@ -334,17 +353,24 @@ Public Class MainForm
     ''' التبديل السلس بين شاشات وأقسام النظام بالسايدبار وتحديث المظهر
     ''' </summary>
     Private Sub SetActiveNav(activeBtn As Guna.UI2.WinForms.Guna2Button, targetView As Control)
+        Dim pal = ThemeManager.Instance.CurrentPalette
+        Dim selColor As Color = If(pal IsNot Nothing, pal.NavSelected, Color.FromArgb(37, 99, 235))
+        Dim selTextColor As Color = If(pal IsNot Nothing, pal.NavSelectedText, Color.White)
+        Dim normalTextColor As Color = If(pal IsNot Nothing, pal.NavText, Color.FromArgb(209, 213, 219))
+
         Dim navButtons() As Guna.UI2.WinForms.Guna2Button = {navDashboard, navSales, navSystem, navInventory, navPurchases, navCustomers, navSuppliers, navTreasury, navExpenses, navEmployees, navUsers, navSettings}
         For Each btn In navButtons
             If btn IsNot Nothing Then
+                btn.Checked = False
                 btn.FillColor = Color.Transparent
-                btn.ForeColor = Color.FromArgb(209, 213, 219)
+                btn.ForeColor = normalTextColor
             End If
         Next
 
         If activeBtn IsNot Nothing Then
-            activeBtn.FillColor = Color.FromArgb(37, 99, 235)
-            activeBtn.ForeColor = Color.White
+            activeBtn.Checked = True
+            activeBtn.FillColor = selColor
+            activeBtn.ForeColor = selTextColor
         End If
 
         Dim allViews() As Control = {viewDashboard, viewSales, viewSystem, viewInventory, viewPurchases, viewCustomers, viewSuppliers, viewTreasury, viewExpenses, viewEmployees, viewUsers, viewSettings}
@@ -362,6 +388,7 @@ Public Class MainForm
 
     Private Sub navDashboard_Click(sender As Object, e As EventArgs) Handles navDashboard.Click
         SetActiveNav(navDashboard, viewDashboard)
+        RefreshDashboardAsync(isManual:=False)
     End Sub
 
     Private Sub navSales_Click(sender As Object, e As EventArgs) Handles navSales.Click
@@ -1144,7 +1171,7 @@ Public Class MainForm
                 btnBackups.PerformClick()
             Case Keys.F5
                 e.Handled = True
-                RefreshDashboardAsync()
+                RefreshDashboardAsync(isManual:=True)
         End Select
     End Sub
 
