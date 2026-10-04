@@ -104,7 +104,7 @@ Public Class FrmSelectCustomer
             Me.DialogResult = DialogResult.OK
             Me.Close()
         Else
-            MessageBox.Show("برجاء اختيار عميل أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء اختيار عميل أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
     End Sub
 

@@ -1,4 +1,4 @@
-Imports System.Data
+﻿Imports System.Data
 Imports System.Drawing
 Imports System.Threading
 Imports System.Threading.Tasks
@@ -206,6 +206,7 @@ Namespace UC_Main
                     lblShiftDuration.Text = "الوردية: مغلقة"
                 End If
             Catch ex As Exception
+                Logger.LogError("UCDashboard.vb:208", ex)
             End Try
         End Sub
 
@@ -248,7 +249,8 @@ Namespace UC_Main
                         salesAmount = Convert.ToDecimal(dtSales.Rows(0)("TotalSales"))
                         salesCount = Convert.ToInt32(dtSales.Rows(0)("InvoicesCount"))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:252", __logEx)
                 End Try
 
                 ' 2. مشتريات اليوم
@@ -260,7 +262,8 @@ Namespace UC_Main
                         purchasesAmount = Convert.ToDecimal(dtPurchases.Rows(0)("TotalPurchases"))
                         purchasesCount = Convert.ToInt32(dtPurchases.Rows(0)("PurchasesCount"))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:265", __logEx)
                 End Try
 
                 ' 3. مصروفات اليوم
@@ -270,7 +273,8 @@ Namespace UC_Main
                     If dtExp IsNot Nothing AndAlso dtExp.Rows.Count > 0 Then
                         expensesAmount = Convert.ToDecimal(dtExp.Rows(0)("TotalExpenses"))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:276", __logEx)
                 End Try
 
                 ' 4. إجمالي الأصناف
@@ -280,7 +284,8 @@ Namespace UC_Main
                     If dtProd IsNot Nothing AndAlso dtProd.Rows.Count > 0 Then
                         productsCount = Convert.ToInt32(dtProd.Rows(0)(0))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:287", __logEx)
                 End Try
 
                 ' 5. إجمالي العملاء
@@ -290,7 +295,8 @@ Namespace UC_Main
                     If dtCust IsNot Nothing AndAlso dtCust.Rows.Count > 0 Then
                         customersCount = Convert.ToInt32(dtCust.Rows(0)(0))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:298", __logEx)
                 End Try
 
                 ' 6. إجمالي الموردين
@@ -300,14 +306,16 @@ Namespace UC_Main
                     If dtSup IsNot Nothing AndAlso dtSup.Rows.Count > 0 Then
                         suppliersCount = Convert.ToInt32(dtSup.Rows(0)(0))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:309", __logEx)
                 End Try
 
                 ' 7. آخر 10 فواتير مبيعات
                 Dim dtRecentInvoices As DataTable = Nothing
                 Try
                     dtRecentInvoices = DBModule.ExecuteQuery("SELECT TOP 10 ISNULL(i.InvoiceNumber, CAST(i.InvoiceID AS VARCHAR)) AS InvoiceNumber, CONVERT(VARCHAR(5), i.InvoiceDate, 108) AS InvoiceTime, ISNULL(c.CustomerName, N'عميل نقدي') AS CustomerName, CASE i.OrderType WHEN 1 THEN N'تيك أواي' WHEN 2 THEN N'صالة' WHEN 3 THEN N'توصيل' ELSE N'مبيعات' END AS OrderTypeName, i.NetTotal, CASE WHEN i.IsCredit = 1 THEN N'آجل' ELSE N'نقدي' END AS PaymentTypeName FROM SalesInvoices i LEFT JOIN Customers c ON i.CustomerID = c.CustomerID WHERE (i.IsDeleted = 0 OR i.IsDeleted IS NULL) ORDER BY i.InvoiceID DESC")
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:317", __logEx)
                 End Try
 
                 ' 8. نواقص المخزون
@@ -323,7 +331,8 @@ Namespace UC_Main
                         If dtLow2 IsNot Nothing AndAlso dtLow2.Rows.Count > 0 Then
                             lowStockCount = Convert.ToInt32(dtLow2.Rows(0)(0))
                         End If
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCDashboard.vb:334", __logEx)
                     End Try
                 End Try
 
@@ -345,7 +354,8 @@ Namespace UC_Main
                 Try
                     Dim curr = SettingsManager.GetSetting("Currency")
                     If Not String.IsNullOrEmpty(curr) Then currency = " " & curr
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDashboard.vb:357", __logEx)
                 End Try
 
                 lblCardSalesVal.Text = salesAmt.ToString("N2") & currency

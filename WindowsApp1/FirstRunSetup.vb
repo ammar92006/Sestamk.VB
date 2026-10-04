@@ -24,15 +24,15 @@ Partial Class FirstRunSetup
     Private Sub btnSave_Click(sender As Object, e As EventArgs)
         ' تحقق من الحقول المطلوبة
         If String.IsNullOrWhiteSpace(txtShopName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم المحل / النشاط.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم المحل / النشاط.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         If String.IsNullOrWhiteSpace(txtAdminUser.Text) OrElse String.IsNullOrWhiteSpace(txtAdminPass.Text) Then
-            MessageBox.Show("يرجى إدخال اسم مستخدم المدير وكلمة المرور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم مستخدم المدير وكلمة المرور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         If txtAdminPass.Text <> txtAdminPass2.Text Then
-            MessageBox.Show("كلمتا المرور غير متطابقتين.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("كلمتا المرور غير متطابقتين.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -46,19 +46,21 @@ Partial Class FirstRunSetup
             SettingsManager.SaveSetting(SettingsKeys.LogoPath, txtLogoPath.Text.Trim())
 
             SettingsManager.SaveSetting(SettingsKeys.AdminUsername, txtAdminUser.Text.Trim())
-            SettingsManager.SaveSetting(SettingsKeys.AdminPassword, txtAdminPass.Text)
+            ' لا يخزن النص الصريح أبداً - تجزئة PBKDF2 فقط، ومسح أي نص صريح قديم
+            SettingsManager.SaveSetting(SettingsKeys.AdminPasswordHash, PasswordHasher.Hash(txtAdminPass.Text))
+            SettingsManager.SaveSetting(SettingsKeys.AdminPassword, "")
 
             SettingsManager.SaveSetting(SettingsKeys.SetupCompleted, "true")
 
             ' تطبيق بيانات المدير فوراً على الجلسة الحالية
             Settingsall.usernameadmin = txtAdminUser.Text.Trim()
-            Settingsall.passwordadmin = txtAdminPass.Text
+            Settingsall.passwordadminHash = PasswordHasher.Hash(txtAdminPass.Text)
 
-            MessageBox.Show("✅ تم حفظ بيانات نشاطك. يمكنك الآن تسجيل الدخول.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم حفظ بيانات نشاطك. يمكنك الآن تسجيل الدخول.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Me.DialogResult = DialogResult.OK
             Me.Close()
         Catch ex As Exception
-            MessageBox.Show("تعذّر حفظ البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("تعذّر حفظ البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 End Class

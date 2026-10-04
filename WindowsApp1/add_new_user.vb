@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class add_new_user
     Dim x, y As Integer
@@ -24,7 +24,7 @@ Public Class add_new_user
 
         Catch ex As Exception
             Logger.LogError(ex)
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
         End Try
     End Sub
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
@@ -47,22 +47,22 @@ Public Class add_new_user
             ' 🔍 التحقق من الحقول المطلوبة
             '===========================
             If String.IsNullOrWhiteSpace(txtUser_Code.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كود المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كود المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtUser_Name.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال الاسم كامل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال الاسم كامل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtUser_username.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال اسم المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال اسم المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtUser_password.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كلمة المرور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كلمة المرور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -70,7 +70,7 @@ Public Class add_new_user
             ' 🔍 التحقق من عدم تكرار الكود
             '===========================
             If IsUserCodeExists(txtUser_Code.Text.Trim()) Then
-                MessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -89,7 +89,8 @@ Public Class add_new_user
                     cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
-                    cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
+                    ' تخزين تجزئة PBKDF2 بدلاً من النص الصريح
+                    cmd.Parameters.AddWithValue("@User_password", PasswordHasher.Hash(txtUser_password.Text.Trim()))
                     cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
                     cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
                     cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
@@ -106,20 +107,21 @@ Public Class add_new_user
             Task.Run(Async Function()
                          Try
                              Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
-                         Catch
+                         Catch __logEx As Exception
+                             Logger.LogError("add_new_user.vb:110", __logEx)
                          End Try
                      End Function)
 
             '===========================
             ' ✔ نجاح العملية
             '===========================
-            MessageBox.Show("✅ تم إضافة المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم إضافة المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ClearFields()
 
         Catch ex As Exception
             Logger.LogError(ex)
-            MessageBox.Show("حدث خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
     Private Function IsUserCodeExists(customerCode As String, Optional excludeCustomerID As Integer = -1) As Boolean
@@ -144,7 +146,7 @@ Public Class add_new_user
             End Using
         Catch ex As Exception
             Logger.LogError(ex)
-            MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
         Return exists
@@ -222,11 +224,11 @@ Public Class add_new_user
                 ' لو عايز تخزنها في TextBox مثلاً
                 'txtImagePath.Text = imagePath
 
-                MessageBox.Show("✅ تم تحديد الصورة بنجاح:" & vbCrLf, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تحديد الصورة بنجاح:" & vbCrLf, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء حفظ الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء حفظ الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             'LoadProducts()
             'ClearAllFields()

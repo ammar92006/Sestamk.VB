@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Threading.Tasks
@@ -87,6 +87,7 @@ Public NotInheritable Class ThemeManager
         Try
             AddHandler SystemEvents.UserPreferenceChanged, AddressOf OnUserPreferenceChanged
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:89", ex)
         End Try
 
         If _currentMode = ThemeMode.System Then
@@ -98,6 +99,7 @@ Public NotInheritable Class ThemeManager
             AddHandler Application.Idle, AddressOf OnApplicationIdle
             AddHandler Application.EnterThreadModal, AddressOf OnEnterThreadModal
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:101", ex)
         End Try
     End Sub
 
@@ -138,7 +140,8 @@ Public NotInheritable Class ThemeManager
                     AddHandler targetForm.Shown, Sub()
                                                      Try
                                                          ApplyTheme(targetForm)
-                                                     Catch
+                                                     Catch __logEx As Exception
+                                                         Logger.LogError("ThemeManager.vb:143", __logEx)
                                                      End Try
                                                  End Sub
 
@@ -146,6 +149,7 @@ Public NotInheritable Class ThemeManager
                 Next
             End If
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:151", ex)
         End Try
     End Sub
 
@@ -209,6 +213,7 @@ Public NotInheritable Class ThemeManager
                 End If
             End Using
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:215", ex)
         End Try
         Return AppTheme.Light
     End Function
@@ -224,6 +229,7 @@ Public NotInheritable Class ThemeManager
                 _systemThemeTimer.Start()
             End If
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:231", ex)
         End Try
     End Sub
 
@@ -233,6 +239,7 @@ Public NotInheritable Class ThemeManager
                 _systemThemeTimer.Stop()
             End If
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:241", ex)
         End Try
     End Sub
 
@@ -265,6 +272,7 @@ Public NotInheritable Class ThemeManager
                 ApplySystemThemeChange(detected)
             End If
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:274", ex)
         End Try
     End Sub
 
@@ -331,13 +339,15 @@ Public NotInheritable Class ThemeManager
                 End Try
             End If
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:341", ex)
         End Try
 
         ' 2. مزامنة قاعدة البيانات في خلفية غير حاجبة
         Task.Run(Sub()
                      Try
                          SettingsManager.SaveSetting(SettingsKeys.AppTheme, _currentMode.ToString())
-                     Catch
+                     Catch __logEx As Exception
+                         Logger.LogError("ThemeManager.vb:349", __logEx)
                      End Try
                  End Sub)
     End Sub
@@ -351,7 +361,8 @@ Public NotInheritable Class ThemeManager
             If Not String.IsNullOrEmpty(cfgPath) AndAlso File.Exists(cfgPath) Then
                 loadedTheme = File.ReadAllText(cfgPath).Trim()
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeManager.vb:364", __logEx)
         End Try
 
         ' 2. تفسير الوضع المحفوظ
@@ -365,7 +376,8 @@ Public NotInheritable Class ThemeManager
                 If Not String.IsNullOrEmpty(cfgPath) Then
                     File.WriteAllText(cfgPath, "System")
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeManager.vb:379", __logEx)
             End Try
         End If
 
@@ -404,10 +416,12 @@ Public NotInheritable Class ThemeManager
             For Each frm In openFormsList
                 Try
                     ThemeHelper.ApplyToForm(frm, _currentPalette)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("ThemeManager.vb:419", __logEx)
                 End Try
             Next
         Catch ex As Exception
+            Logger.LogError("ThemeManager.vb:423", ex)
         End Try
     End Sub
 

@@ -39,6 +39,9 @@ Public Class InvoiceDetailModel
     Public Property Quantity As Integer
     Public Property TotalPrice As Decimal
     Public Property Notes As String
+
+    ''' <summary>نسبة ضريبة السطر (%) — تُحفظ مع الفواتير المعلقة (JSON) ويتم تجاهلها عند التخزين في SalesInvoiceDetails</summary>
+    Public Property TaxPercent As Decimal
 End Class
 
 ' موديل الفاتورة المعلقة

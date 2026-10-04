@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -1298,7 +1298,8 @@ Namespace Services
                                 stCmd.Parameters.AddWithValue("@Qty", qty)
                                 stCmd.ExecuteNonQuery()
                             End Using
-                        Catch
+                        Catch __logEx As Exception
+                            Logger.LogError("DataExportImportService.vb:1301", __logEx)
                         End Try
 
                         result.UpdatedCount += 1
@@ -1328,7 +1329,8 @@ Namespace Services
                 Next
                 dr("سبب الرفض / الخطأ") = errorReason
                 dtErrors.Rows.Add(dr)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("DataExportImportService.vb:1332", __logEx)
             End Try
         End Sub
 

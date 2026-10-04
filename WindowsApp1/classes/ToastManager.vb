@@ -1,14 +1,7 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Linq
 Imports System.Windows.Forms
-
-Public Enum ToastPriority
-    Low = 0
-    Normal = 1
-    High = 2
-    Critical = 3
-End Enum
 
 Public Class ToastModel
     Public Property Id As Guid = Guid.NewGuid()
@@ -81,8 +74,21 @@ Public NotInheritable Class ToastManager
     End Sub
 
     Public Shared Sub Show(type As Notify.ToastType, title As String, message As String, Optional duration As Integer = 3800)
-        Show(New ToastModel With {
-            .Type = type,
+        ' استخدام النظام المتطور بدلاً من القديم
+        Dim advancedType As ToastType
+        Select Case type
+            Case Notify.ToastType.Success
+                advancedType = ToastType.Success
+            Case Notify.ToastType.Error
+                advancedType = ToastType.Error
+            Case Notify.ToastType.Warning
+                advancedType = ToastType.Warning
+            Case Else
+                advancedType = ToastType.Info
+        End Select
+
+        ToastManagerAdvanced.Show(New ToastModelAdvanced With {
+            .Type = advancedType,
             .Title = title,
             .Message = message,
             .Duration = duration
@@ -106,7 +112,8 @@ Public NotInheritable Class ToastManager
             UpdateLayout(targetScreen)
 
             toastItem.Show()
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ToastManager.vb:115", __logEx)
         End Try
     End Sub
 
@@ -190,7 +197,8 @@ Public NotInheritable Class ToastManager
                 Try
                     toastItem.Close()
                     toastItem.Dispose()
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("ToastManager.vb:200", __logEx)
                 End Try
             Next
             _visibleToasts.Clear()

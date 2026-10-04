@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -39,7 +39,8 @@ Namespace Services.Cloud
                         Using cmdContext As New SqlCommand("SET CONTEXT_INFO 0x53594E43000000000000000000000000;", conn)
                             Await cmdContext.ExecuteNonQueryAsync().ConfigureAwait(False)
                         End Using
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("SyncPullHandler.vb:42", __logEx)
                     End Try
 
                     For tableIdx = 0 To tables.Count - 1
@@ -209,7 +210,8 @@ Namespace Services.Cloud
                         Using cmdResetContext As New SqlCommand("SET CONTEXT_INFO 0x0;", conn)
                             Await cmdResetContext.ExecuteNonQueryAsync().ConfigureAwait(False)
                         End Using
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("SyncPullHandler.vb:213", __logEx)
                     End Try
 
                 End Using

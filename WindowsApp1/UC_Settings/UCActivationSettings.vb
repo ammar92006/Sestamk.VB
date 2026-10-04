@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports Newtonsoft.Json.Linq
 Imports WindowsApp1.Services.Sync
@@ -214,11 +214,11 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم نسخ بصمة الجهاز إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("تم نسخ بصمة الجهاز (HWID) بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم نسخ بصمة الجهاز (HWID) بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception
-                MessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -229,11 +229,11 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم نسخ مفتاح الترخيص إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("تم نسخ مفتاح الترخيص بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم نسخ مفتاح الترخيص بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception
-                MessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -244,11 +244,11 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم نسخ معرّف الشركة إلى الحافظة بنجاح ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("تم نسخ معرّف الشركة بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم نسخ معرّف الشركة بنجاح.", "تم النسخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception
-                MessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذر النسخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -261,17 +261,19 @@ Namespace UC_Settings
                         Task.Run(Async Function()
                                      Try
                                          Await UserSyncService.SyncAsync()
-                                     Catch
+                                     Catch __logEx As Exception
+                                         Logger.LogError("UCActivationSettings.vb:264", __logEx)
                                      End Try
                                  End Function)
                         Try
                             Notify.Toast("تم تحديث بيانات التفعيل والربط السحابي بنجاح ✅", Notify.ToastType.Success)
-                        Catch
+                        Catch __logEx As Exception
+                            Logger.LogError("UCActivationSettings.vb:270", __logEx)
                         End Try
                     End If
                 End Using
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء فتح نافذة التفعيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء فتح نافذة التفعيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -285,11 +287,11 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("أنت تستخدم أحدث إصدار متوفر بالفعل! 🎉", Notify.ToastType.Info)
                     Catch
-                        MessageBox.Show("أنت تستخدم أحدث إصدار متوفر بالفعل من البرنامج.", "لا يوجد تحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("أنت تستخدم أحدث إصدار متوفر بالفعل من البرنامج.", "لا يوجد تحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء فحص التحديثات: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("خطأ أثناء فحص التحديثات: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Finally
                 btnCheckUpdate.Enabled = True
                 btnCheckUpdate.Text = "🚀 البحث عن تحديثات للبرنامج"
@@ -314,13 +316,13 @@ Namespace UC_Settings
                     Try
                         Notify.Toast($"الترخيص ساري ومفعل", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show($"الترخيص ساري ومفعل بنجاح، {syncMsg}", "تم التحديث", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show($"الترخيص ساري ومفعل بنجاح، {syncMsg}", "تم التحديث", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 Else
-                    MessageBox.Show(result.Message, "حالة الترخيص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show(result.Message, "حالة الترخيص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End If
             Catch ex As Exception
-                MessageBox.Show("تعذر الاتصال بخادم التراخيص: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذر الاتصال بخادم التراخيص: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Finally
                 btnRefresh.Enabled = True
                 btnRefresh.Text = "🔄 فحص وتحديث الترخيص"

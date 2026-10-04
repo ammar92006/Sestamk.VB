@@ -42,7 +42,7 @@ Public Class Users
             If Session.HasPermission("Users", "CanEdit") = False Then btnEdit.Visible = False
             If Session.HasPermission("Users", "CanDelete") = False Then btnDelete.Visible = False
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل صلاحيات المنتجات: " & ex.Message)
+            SmartMessageBox.Show("خطأ في تحميل صلاحيات المنتجات: " & ex.Message)
         End Try
         Me.KeyPreview = True
         cmbSearchField.Items.AddRange({
@@ -98,12 +98,12 @@ Public Class Users
         '    cmd.Parameters.AddWithValue("@User_Role", txt_role.Text)
         '    cmd.Parameters.AddWithValue("@User_Note", txt_nots.Text)
         '    cmd.ExecuteNonQuery()
-        '    MessageBox.Show("✅ تم إضافة الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    SmartMessageBox.Show("✅ تم إضافة الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '    Disconnect()
         '    LoadData() ' لإعادة تحميل البيانات
         '    dgvUsers.CurrentCell = Nothing
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
         'End Try
     End Sub
 
@@ -115,19 +115,19 @@ Public Class Users
         'End If
 
         'Try
-        '    If MessageBox.Show("هل أنت متأكد من حذف هذا المستخدم ؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        '    If SmartMessageBox.Show("هل أنت متأكد من حذف هذا المستخدم ؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
         '        Connect()
         '        Dim query As String = "DELETE FROM Users_TBL WHERE User_ID=@txt_iduser"
         '        Dim cmd As New SqlCommand(query, Conn)
         '        cmd.Parameters.AddWithValue("@txt_iduser", txt_iduser.Text.Trim())
         '        cmd.ExecuteNonQuery()
         '        Disconnect()
-        '        MessageBox.Show("🗑️ تم حذف المستخدم بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '        SmartMessageBox.Show("🗑️ تم حذف المستخدم بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '        LoadData()
         '        dgvUsers.ClearSelection()
         '    End If
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         '    dgvUsers.ClearSelection()
         'End Try
 
@@ -188,7 +188,7 @@ Public Class Users
     Private Sub Button3_Click(sender As Object, e As EventArgs)
         'Try
         '    If txt_iduser.Text = "" Then
-        '        MessageBox.Show("من فضلك اختر المستخدم أولاً")
+        '        SmartMessageBox.Show("من فضلك اختر المستخدم أولاً")
         '        Return
         '    End If
 
@@ -214,12 +214,12 @@ Public Class Users
         '    cmd.Parameters.AddWithValue("@Role", txt_role.Text)
         '    cmd.Parameters.AddWithValue("@Note", txt_nots.Text)
         '    cmd.ExecuteNonQuery()
-        '    MessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    SmartMessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '    Disconnect()
         '    LoadData()
         '    dgvUsers.ClearSelection()
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
         '    dgvUsers.ClearSelection()
         'End Try
     End Sub
@@ -302,10 +302,10 @@ Public Class Users
         '            cmd.ExecuteNonQuery()
         '            Disconnect()
 
-        '            MessageBox.Show("تم إنشاء الباركود وحفظه بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '            SmartMessageBox.Show("تم إنشاء الباركود وحفظه بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '            LoadData()
         '        Catch ex As Exception
-        '            MessageBox.Show("حدث خطأ أثناء حفظ الباركود: " & ex.Message)
+        '            SmartMessageBox.Show("حدث خطأ أثناء حفظ الباركود: " & ex.Message)
         '        End Try
 
     End Sub
@@ -324,10 +324,10 @@ Public Class Users
         '    If File.Exists(filepathdb) Then
         '        File.Delete(filepathdb)
         '    End If
-        '    MessageBox.Show("تم حذف الباركود بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    SmartMessageBox.Show("تم حذف الباركود بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '    LoadData()
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء حذف الباركود: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء حذف الباركود: " & ex.Message)
         'End Try
     End Sub
 
@@ -371,19 +371,19 @@ Public Class Users
             cmbRoleName.TextAlign = HorizontalAlignment.Center
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
         End Try
     End Sub
 
 
     Private Sub LoadUsers(Optional filter As String = "", Optional field As String = "")
         Using cn As SqlConnection = DBModule.NewConn()
-            Dim query As String = "SELECT   
+            ' ملاحظة أمنية: لا يتم جلب User_password إلى الواجهة إطلاقاً
+            Dim query As String = "SELECT
                                         U.User_ID,
                                         U.User_Code,
                                         U.User_Name,
                                         U.User_username,
-                                        U.User_password,
                                         U.User_Stats,
                                         U.User_Note,
                                         U.RoleID,
@@ -402,8 +402,6 @@ Public Class Users
                         columnName = "User_Name"
                     Case "اسم المستخدم"
                         columnName = "User_username"
-                    Case "كلمة المرور"
-                        columnName = "User_password"
                     Case "الحالة"
                         columnName = "User_Stats"
                     Case "الملاحظات"
@@ -450,7 +448,7 @@ Public Class Users
             txtUser_Code.Text = If(selectedRow.Cells(0).Value IsNot Nothing, selectedRow.Cells("User_Code").Value.ToString(), "")  ' العمود الأول
             txtUser_Name.Text = If(selectedRow.Cells(1).Value IsNot Nothing, selectedRow.Cells("User_Name").Value.ToString(), "")  ' العمود الأول
             txtUser_username.Text = If(selectedRow.Cells(3).Value IsNot Nothing, selectedRow.Cells("User_username").Value.ToString(), "") ' العمود الثاني
-            txtUser_password.Text = If(selectedRow.Cells(4).Value IsNot Nothing, selectedRow.Cells("User_password").Value.ToString(), "")
+            txtUser_password.Clear() ' لأمان: كلمة المرور لا تُعرض — اتركها فارغة للاحتفاظ بالقيمة الحالية عند التعديل
 
             If value IsNot Nothing AndAlso Not IsDBNull(value) Then
                 Dim strValue As String = value.ToString().Trim().ToLower()
@@ -538,22 +536,22 @@ Public Class Users
             ' 🔍 التحقق من الحقول المطلوبة
             '===========================
             If String.IsNullOrWhiteSpace(txtUser_Code.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كود المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كود المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtUser_Name.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال الاسم كامل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال الاسم كامل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtUser_username.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال اسم المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال اسم المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtUser_password.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كلمة المرور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كلمة المرور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -561,7 +559,7 @@ Public Class Users
             ' 🔍 التحقق من عدم تكرار الكود
             '===========================
             If IsUserCodeExists(txtUser_Code.Text.Trim()) Then
-                MessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -579,7 +577,8 @@ Public Class Users
                     cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
-                    cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
+                    ' تخزين تجزئة PBKDF2 بدلاً من النص الصريح
+                    cmd.Parameters.AddWithValue("@User_password", PasswordHasher.Hash(txtUser_password.Text.Trim()))
                     cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
                     cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
                     cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
@@ -595,13 +594,13 @@ Public Class Users
             '===========================
             ' ✔ نجاح العملية
             '===========================
-            MessageBox.Show("✅ تم إضافة المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم إضافة المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ClearFields()
             LoadUsers()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
 
@@ -646,7 +645,7 @@ Public Class Users
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
         Return exists
@@ -661,20 +660,20 @@ Public Class Users
         Try
             ' التحقق من الحقول المطلوبة
             If String.IsNullOrWhiteSpace(txtUser_Code.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كود المستخدم .", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كود المستخدم .", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
             If String.IsNullOrWhiteSpace(txtUser_Name.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال الاسم كامل .", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال الاسم كامل .", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
             If String.IsNullOrWhiteSpace(txtUser_username.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال اسم المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال اسم المستخدم.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             'If IsUserCodeExists(txtUser_Code.Text.Trim()) Then
-            '    MessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            '    SmartMessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             '    Return
             'End If
 
@@ -682,7 +681,11 @@ Public Class Users
 
             Using cn As SqlConnection = DBModule.NewConn()
                 Dim id As Integer = Convert.ToInt32(dgv_Users.SelectedRows(0).Cells("User_ID").Value)
-                Dim query As String = "
+                ' إذا تُركت كلمة المرور فارغة تُحافظ على القيمة الحالية المخزنة (تجزئة) دون تغيير
+                Dim changePassword As Boolean = Not String.IsNullOrWhiteSpace(txtUser_password.Text)
+                Dim query As String
+                If changePassword Then
+                    query = "
         UPDATE Users_TBL
         SET 
             User_Code = @User_Code,
@@ -695,13 +698,30 @@ Public Class Users
             User_Barcode_path = @User_Barcode_path,
             User_photo_path = @User_photo_path
         WHERE User_ID = @User_ID;"
+                Else
+                    query = "
+        UPDATE Users_TBL
+        SET 
+            User_Code = @User_Code,
+            User_Name = @User_Name,
+            User_username = @User_username,
+            User_Stats = @User_Stats,
+            User_Note = @User_Note,
+            RoleID = @RoleID,
+            User_Barcode_path = @User_Barcode_path,
+            User_photo_path = @User_photo_path
+        WHERE User_ID = @User_ID;"
+                End If
 
                 Using cmd As New SqlCommand(query, cn)
                     cmd.Parameters.AddWithValue("@User_ID", id)
                     cmd.Parameters.AddWithValue("@User_Code", txtUser_Code.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_Name", txtUser_Name.Text.Trim())
                     cmd.Parameters.AddWithValue("@User_username", txtUser_username.Text.Trim())
-                    cmd.Parameters.AddWithValue("@User_password", txtUser_password.Text.Trim())
+                    If changePassword Then
+                        ' تخزين تجزئة PBKDF2 بدلاً من النص الصريح
+                        cmd.Parameters.AddWithValue("@User_password", PasswordHasher.Hash(txtUser_password.Text.Trim()))
+                    End If
                     cmd.Parameters.AddWithValue("@User_Stats", chkUser_Stats.Checked)
                     cmd.Parameters.AddWithValue("@User_Note", txtUser_Note.Text.Trim())
                     cmd.Parameters.AddWithValue("@RoleID", Convert.ToInt32(cmbRoleName.SelectedValue))
@@ -711,12 +731,12 @@ Public Class Users
                 End Using
             End Using
 
-            MessageBox.Show("✅ تم تعديل بيانات المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم تعديل بيانات المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             ClearFields()
             LoadUsers()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تعديل المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تعديل المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub
@@ -725,12 +745,12 @@ Public Class Users
         Try
             ' التحقق من اختيار المستخدم
             If String.IsNullOrWhiteSpace(txtUser_Code.Text) Then
-                MessageBox.Show("⚠️ يرجى اختيار المستخدم الذي تريد حذفه.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى اختيار المستخدم الذي تريد حذفه.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             ' تأكيد الحذف
-            If MessageBox.Show("هل أنت متأكد من حذف هذا المستخدم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            If SmartMessageBox.Show("هل أنت متأكد من حذف هذا المستخدم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                 Return
             End If
 
@@ -744,12 +764,12 @@ Public Class Users
                 End Using
             End Using
 
-            MessageBox.Show("✅ تم حذف المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم حذف المستخدم بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             ClearFields()
             LoadUsers()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء حذف المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء حذف المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub
@@ -761,13 +781,12 @@ Public Class Users
             ' ----------------------------
             Dim userID As Integer = Convert.ToInt32(dgv_Users.SelectedRows(0).Cells("User_ID").Value)
             Dim username As String = txtUser_username.Text.Trim()
-            Dim password As String = txtUser_password.Text.Trim()
             Dim displayName As String = txtUser_Name.Text.Trim()
 
             ' ----------------------------
             ' 2) توليد الباركود النهائي
             ' ----------------------------
-            Dim barcodeImage As Bitmap = GenerateBarcode(username, password, displayName)
+            Dim barcodeImage As Bitmap = GenerateBarcode(username, displayName)
 
             ' ----------------------------
             ' 3) حفظ الصورة
@@ -782,18 +801,18 @@ Public Class Users
             ' ----------------------------
             ' 5) رسالة نجاح
             ' ----------------------------
-            MessageBox.Show("✔ تم إنشاء الباركود بنجاح وتحديث المسار في قاعدة البيانات.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✔ تم إنشاء الباركود بنجاح وتحديث المسار في قاعدة البيانات.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         Catch ex As Exception
-            MessageBox.Show("❌ خطأ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("❌ خطأ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             LoadUsers()
             ClearFields()
         End Try
     End Sub
-    Private Function GenerateBarcode(username As String, password As String, displayName As String) As Bitmap
-        ' النص الذي سيدخل في الباركود
-        Dim barcodeContent As String = username.Trim() & ":" & password.Trim()
+    Private Function GenerateBarcode(username As String, displayName As String) As Bitmap
+        ' النص الذي سيدخل في الباركود — اسم المستخدم فقط (لا يوضع باسورد في الباركود لأمان)
+        Dim barcodeContent As String = username.Trim()
 
         ' إعداد مولد الباركود
         Dim writer As New BarcodeWriter With {
@@ -855,7 +874,7 @@ Public Class Users
         Try
             ' التحقق من اختيار المستخدم
             If dgv_Users.SelectedRows.Count = 0 Then
-                MessageBox.Show("⚠️ يرجى اختيار المستخدم أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى اختيار المستخدم أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -863,7 +882,7 @@ Public Class Users
             Dim filePath As String = Convert.ToString(dgv_Users.SelectedRows(0).Cells("User_Barcode_path").Value)
 
             ' تأكيد الحذف
-            If MessageBox.Show("هل أنت متأكد من حذف الباركود لهذا المستخدم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            If SmartMessageBox.Show("هل أنت متأكد من حذف الباركود لهذا المستخدم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                 Return
             End If
 
@@ -880,11 +899,11 @@ Public Class Users
                 End Using
             End Using
 
-            MessageBox.Show("✅ تم حذف الباركود ومساره من قاعدة البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم حذف الباركود ومساره من قاعدة البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadUsers()
 
         Catch ex As Exception
-            MessageBox.Show("❌ حدث خطأ أثناء حذف الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("❌ حدث خطأ أثناء حذف الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -934,10 +953,10 @@ Public Class Users
         '        End Using
         '    End Using
 
-        '    MessageBox.Show("✅ تم إنشاء الباركود الجديد واستبداله بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    SmartMessageBox.Show("✅ تم إنشاء الباركود الجديد واستبداله بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         'Catch ex As Exception
-        '    MessageBox.Show("❌ حدث خطأ أثناء حفظ الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    SmartMessageBox.Show("❌ حدث خطأ أثناء حفظ الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         'Finally
         '    LoadUsers()
         '    ClearFields()
@@ -988,11 +1007,11 @@ Public Class Users
                 ' لو عايز تخزنها في TextBox مثلاً
                 'txtImagePath.Text = imagePath
 
-                MessageBox.Show("✅ تم حفظ الصورة بنجاح في المسار:" & vbCrLf & imagePath, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم حفظ الصورة بنجاح في المسار:" & vbCrLf & imagePath, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء حفظ الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء حفظ الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             LoadUsers()
             ClearFields()
@@ -1022,7 +1041,7 @@ Public Class Users
 
         Select Case e.KeyCode
             Case Keys.F1
-                MessageBox.Show("الاختصارات المتاحة:" & vbCrLf &
+                SmartMessageBox.Show("الاختصارات المتاحة:" & vbCrLf &
                     "F2 / Ctrl+N : إضافة جديد" & vbCrLf &
                     "F3 : تعديل" & vbCrLf &
                     "F4 : حذف" & vbCrLf &
@@ -1066,11 +1085,6 @@ Public Class Users
                 Exit Sub
             End If
 
-            If String.IsNullOrWhiteSpace(txtUser_password.Text) Then
-                MsgBox("من فضلك أدخل كلمة المرور.", vbExclamation)
-                Exit Sub
-            End If
-
             If String.IsNullOrWhiteSpace(txtUser_Name.Text) Then
                 MsgBox("من فضلك أدخل الاسم الكامل للمستخدم.", vbExclamation)
                 Exit Sub
@@ -1080,9 +1094,9 @@ Public Class Users
             ' 2) تكوين قيمة الباركود
             ' ==============================
             Dim username As String = txtUser_username.Text.Trim()
-            Dim password As String = txtUser_password.Text.Trim()
             Dim fullName As String = txtUser_Name.Text.Trim()
-            Dim barcodeValue As String = $"{username}:{password}"
+            ' لأمان: الباركود يحتوي اسم المستخدم فقط (سيطلب البرنامج كلمة المرور عند الدخول)
+            Dim barcodeValue As String = username
 
             ' الفوتر (النص الذي يظهر أسفل من الإعدادات)
             Dim shopName = SettingsManager.GetSettingDual(SettingsKeys.ShopName, SettingsKeys.StoreName, "سستمك")
@@ -1241,11 +1255,10 @@ End Sub
             .Columns("User_ID").Visible = False
             .Columns("User_photo_path").Visible = False
 
-            ' ✅ عناوين الأعمدة
+            ' ✅ عناوين الأعمدة (لا يوجد عمود كلمة المرور - لأمان)
             .Columns("User_Code").HeaderText = "كود المستخدم"
             .Columns("User_Name").HeaderText = "الاسم كامل"
             .Columns("User_username").HeaderText = "اسم المستخدم"
-            .Columns("User_password").HeaderText = "كلمة المرور"
             .Columns("User_Stats").HeaderText = "الحالة"
             .Columns("User_Note").HeaderText = "الملاحظات"
             .Columns("RoleName").HeaderText = "الموظف"
@@ -1255,11 +1268,10 @@ End Sub
             .Columns("User_Code").DisplayIndex = 0
             .Columns("User_Name").DisplayIndex = 1
             .Columns("User_username").DisplayIndex = 2
-            .Columns("User_password").DisplayIndex = 3
-            .Columns("RoleName").DisplayIndex = 4
-            .Columns("User_Note").DisplayIndex = 5
-            .Columns("User_Barcode_path").DisplayIndex = 6
-            .Columns("User_Stats").DisplayIndex = 7
+            .Columns("RoleName").DisplayIndex = 3
+            .Columns("User_Note").DisplayIndex = 4
+            .Columns("User_Barcode_path").DisplayIndex = 5
+            .Columns("User_Stats").DisplayIndex = 6
             '.Columns("Product_State").DisplayIndex = 8
             '.Columns("CustomerName").Width = 300
             '.Columns("IsActive").Width = 60

@@ -60,7 +60,7 @@ Public Class frmRestaurantTables
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل بيانات الطاولات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل بيانات الطاولات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -80,7 +80,7 @@ Public Class frmRestaurantTables
     ' 5. التحقق من صحة البيانات
     Private Function IsValidData() As Boolean
         If String.IsNullOrWhiteSpace(txtTableNumber.Text) OrElse cmbSection.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى إدخال رقم الطاولة وااختيار القسم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال رقم الطاولة وااختيار القسم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         Return True
@@ -147,12 +147,12 @@ Public Class frmRestaurantTables
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ الطاولة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الطاولة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedTables = Nothing
                     LoadTablesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -185,12 +185,12 @@ Public Class frmRestaurantTables
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل الطاولة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الطاولة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedTables = Nothing
                     LoadTablesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -200,7 +200,7 @@ Public Class frmRestaurantTables
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvTables.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذه الطاولة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الطاولة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvTables.SelectedRows(0).Cells("TableID").Value)
             Dim query As String = "UPDATE RestaurantTables SET IsDeleted = 1 WHERE TableID = @TableID"
 
@@ -210,12 +210,12 @@ Public Class frmRestaurantTables
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الطاولة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الطاولة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedTables = Nothing
                         LoadTablesGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

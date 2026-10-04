@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Threading.Tasks
 Imports System.Diagnostics
@@ -97,7 +97,8 @@ Public Class Backup
             dgv.DataSource = Nothing
             Try
                 oldDt?.Dispose()
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("Backup.vb:100", __logEx)
             End Try
 
             Dim dt As New DataTable
@@ -138,7 +139,7 @@ Public Class Backup
 
         Catch ex As Exception
             Logger.LogError("LoadBackupLog error: ", ex)
-            MessageBox.Show("تعذر تحميل سجل النسخ الاحتياطي: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("تعذر تحميل سجل النسخ الاحتياطي: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
 
@@ -210,12 +211,12 @@ Public Class Backup
             Try
                 Notify.Toast("تم إنشاء النسخة الاحتياطية بنجاح", Notify.ToastType.Success)
             Catch
-                MessageBox.Show("تم إنشاء النسخة الاحتياطية بنجاح في:" & vbCrLf & targetFolder, "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم إنشاء النسخة الاحتياطية بنجاح في:" & vbCrLf & targetFolder, "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Try
         Catch ex As Exception
             lblStatus.Text = "حدث خطأ أثناء أخذ النسخة"
             Logger.LogError("btn_Backup_Click error: ", ex)
-            MessageBox.Show("تعذر إنشاء النسخة الاحتياطية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("تعذر إنشاء النسخة الاحتياطية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             SetUiBusy(False, "جاهز للعمل...")
         End Try
@@ -223,7 +224,7 @@ Public Class Backup
 
     Private Async Sub btn_Restore_Click(sender As Object, e As EventArgs) Handles btn_Restore.Click
         If dgv_backup.CurrentRow Is Nothing Then
-            MessageBox.Show("يرجى تحديد نسخة احتياطية من الجدول أولاً لاستعادتها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد نسخة احتياطية من الجدول أولاً لاستعادتها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -231,7 +232,7 @@ Public Class Backup
         Dim backupDate As String = Convert.ToString(dgv_backup.CurrentRow.Cells("Backup_Date").Value)
 
         If Not File.Exists(filePath) Then
-            MessageBox.Show("ملف النسخة الاحتياطية غير موجود في المسار المحدد:" & vbCrLf & filePath, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("ملف النسخة الاحتياطية غير موجود في المسار المحدد:" & vbCrLf & filePath, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
         End If
 
@@ -240,7 +241,7 @@ Public Class Backup
                          "سيتم استبدال جميع البيانات الحالية بالبيانات الموجودة في هذه النسخة." & vbCrLf & vbCrLf &
                          "هل أنت متأكد تماماً من متابعة الاستعادة؟"
 
-        If MessageBox.Show(confirmMsg, "تأكيد استعادة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
+        If SmartMessageBox.Show(confirmMsg, "تأكيد استعادة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
             Try
                 SetUiBusy(True, "جاري استعادة قاعدة البيانات من النسخة الاحتياطية...")
 
@@ -250,12 +251,12 @@ Public Class Backup
                 Try
                     Notify.Toast("تمت استعادة النسخة الاحتياطية بنجاح", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("تمت عملية الاستعادة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت عملية الاستعادة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
                 lblStatus.Text = "فشلت عملية استعادة النسخة"
                 Logger.LogError("btn_Restore_Click error: ", ex)
-                MessageBox.Show("حدث خطأ أثناء استعادة النسخة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ أثناء استعادة النسخة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 SetUiBusy(False, "جاهز للعمل...")
             End Try
@@ -264,7 +265,7 @@ Public Class Backup
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgv_backup.CurrentRow Is Nothing Then
-            MessageBox.Show("يرجى اختيار النسخة المراد حذفها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار النسخة المراد حذفها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -276,7 +277,7 @@ Public Class Backup
                          "التاريخ: " & backupDate & vbCrLf &
                          "سيتم حذف الملف وسجل العملية نهائياً."
 
-        If MessageBox.Show(confirmMsg, "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show(confirmMsg, "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Try
                 If File.Exists(filePath) Then
                     Try
@@ -297,11 +298,12 @@ Public Class Backup
                 LoadBackupLog(dgv_backup)
                 Try
                     Notify.Toast("تم حذف النسخة الاحتياطية بنجاح", Notify.ToastType.Success)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("Backup.vb:301", __logEx)
                 End Try
             Catch ex As Exception
                 Logger.LogError("btnDelete_Click error: ", ex)
-                MessageBox.Show("تعذر حذف النسخة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("تعذر حذف النسخة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
     End Sub
@@ -312,7 +314,7 @@ Public Class Backup
             If Directory.Exists(folder) Then
                 Process.Start(New ProcessStartInfo("explorer.exe", folder) With {.UseShellExecute = True})
             Else
-                MessageBox.Show("مجلد النسخ الاحتياطية غير متوفر حالياً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("مجلد النسخ الاحتياطية غير متوفر حالياً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
             Logger.LogError("btnOpenFolder_Click error: ", ex)

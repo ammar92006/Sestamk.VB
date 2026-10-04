@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -309,7 +309,8 @@ Namespace Services.Cloud
             _syncTimer = New Timer(Async Sub(state)
                                        Try
                                            Await TriggerSyncAsync().ConfigureAwait(False)
-                                       Catch
+                                       Catch __logEx As Exception
+                                           Logger.LogError("CloudSyncService.vb:312", __logEx)
                                        End Try
                                    End Sub, Nothing, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(intervalSeconds))
         End Sub

@@ -1,4 +1,4 @@
-
+﻿
 
 Imports System.Data
 Imports System.Data.SqlClient
@@ -358,6 +358,7 @@ Public Class Reports
             txt_Total_Profit_dgv.Text = sumValue
         Catch ex As Exception
 
+            Logger.LogError("Reports.vb:359", ex)
         End Try
 
     End Sub
@@ -374,7 +375,7 @@ Public Class Reports
             LoadSelectedInvoice(invoiceID)
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح تفاصيل الفاتورة: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء فتح تفاصيل الفاتورة: " & ex.Message)
         End Try
     End Sub
     Public Sub scannerInvoice_DataReceived(code As String)
@@ -385,11 +386,11 @@ Public Class Reports
                               If Integer.TryParse(code, invoiceID) Then
                                   LoadSelectedInvoice(invoiceID)
                               Else
-                                  MessageBox.Show("رقم الفاتورة غير صالح: " & code, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                  SmartMessageBox.Show("رقم الفاتورة غير صالح: " & code, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                               End If
                           End Sub)
             Catch ex As Exception
-                MessageBox.Show("حدث خطأ أثناء استقبال البيانات من السكانر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ أثناء استقبال البيانات من السكانر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
 
@@ -401,7 +402,7 @@ Public Class Reports
     '        Dim dt As DataTable = ReportsModule.GetSalesDetails(invoiceID)
 
     '        If dt Is Nothing OrElse dt.Rows.Count = 0 Then
-    '            MessageBox.Show("لا توجد تفاصيل لهذه الفاتورة.")
+    '            SmartMessageBox.Show("لا توجد تفاصيل لهذه الفاتورة.")
     '            Exit Sub
     '        End If
 
@@ -415,7 +416,7 @@ Public Class Reports
     '        dgvInvoiceDetails.Focus()
 
     '    Catch ex As Exception
-    '        MessageBox.Show("خطأ أثناء تحميل تفاصيل الفاتورة: " & ex.Message)
+    '        SmartMessageBox.Show("خطأ أثناء تحميل تفاصيل الفاتورة: " & ex.Message)
     '    End Try
     'End Sub
     'Private Sub LoadAllInvoices()
@@ -464,7 +465,7 @@ Public Class Reports
         End Using
         Catch ex As Exception
 
-            MessageBox.Show("حدث خطأ أثناء التحقق من المستحدم: " & ex.Message,
+            SmartMessageBox.Show("حدث خطأ أثناء التحقق من المستحدم: " & ex.Message,
                             "خطأ",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error)
@@ -480,7 +481,7 @@ Public Class Reports
             ' ========== هـــيــدر ==========
             Dim dtHeader As DataTable = GetInvoiceHeader(invoiceID)
             If dtHeader Is Nothing OrElse dtHeader.Rows.Count = 0 Then
-                MessageBox.Show("لا توجد تفاصيل لهذه الفاتورة.")
+                SmartMessageBox.Show("لا توجد تفاصيل لهذه الفاتورة.")
                 Exit Sub
             End If
             If dtHeader.Rows.Count > 0 Then
@@ -525,7 +526,7 @@ Public Class Reports
                     End Using ' cn
 
                 Catch ex As Exception
-                    MessageBox.Show("حدث خطأ أثناء البحث عن رقم الهاتف: " & ex.Message)
+                    SmartMessageBox.Show("حدث خطأ أثناء البحث عن رقم الهاتف: " & ex.Message)
                 End Try
             End If
 
@@ -539,6 +540,7 @@ Public Class Reports
 
         Catch ex As Exception
 
+            Logger.LogError("Reports.vb:541", ex)
         End Try
 
     End Sub
@@ -548,7 +550,7 @@ Public Class Reports
             ' ========== هـــيــدر ==========
             Dim dtHeaderPurchase As DataTable = GetInvoiceHeaderpurchases(invoiceID)
             If dtHeaderPurchase Is Nothing OrElse dtHeaderPurchase.Rows.Count = 0 Then
-                MessageBox.Show("لا توجد تفاصيل لهذه الفاتورة.")
+                SmartMessageBox.Show("لا توجد تفاصيل لهذه الفاتورة.")
                 Exit Sub
             End If
             If dtHeaderPurchase.Rows.Count > 0 Then
@@ -576,6 +578,7 @@ Public Class Reports
 
         Catch ex As Exception
 
+            Logger.LogError("Reports.vb:579", ex)
         End Try
 
     End Sub
@@ -607,7 +610,8 @@ Public Class Reports
                     End If
                 Next
             End With
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Reports.vb:613", __logEx)
         End Try
     End Sub
 
@@ -632,7 +636,8 @@ Public Class Reports
                     End If
                 Next
             End With
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Reports.vb:639", __logEx)
         End Try
     End Sub
 
@@ -653,7 +658,7 @@ Public Class Reports
         Dim phone As String = txtCustomerPhone.Text.Trim()
         Dim invoiceID As Integer = txtInvID.Text.Trim
         If String.IsNullOrWhiteSpace(phone) Then
-            MessageBox.Show("رقم الهاتف غير صالح.")
+            SmartMessageBox.Show("رقم الهاتف غير صالح.")
             Return
         End If
 
@@ -664,9 +669,9 @@ Public Class Reports
         Dim success As Boolean = Await WhatsAppAPI.SendText(phone, message)
 
         If success Then
-            MessageBox.Show("✅ تم إرسال الفاتورة على واتساب بنجاح")
+            SmartMessageBox.Show("✅ تم إرسال الفاتورة على واتساب بنجاح")
         Else
-            MessageBox.Show("❌ فشل إرسال الفاتورة على واتساب")
+            SmartMessageBox.Show("❌ فشل إرسال الفاتورة على واتساب")
         End If
     End Sub
 
@@ -708,6 +713,7 @@ Public Class Reports
 
         Catch ex As Exception
             ' تجاهل أي خطأ
+            Logger.LogError("Reports.vb:714", ex)
         End Try
     End Sub
 
@@ -722,7 +728,7 @@ Public Class Reports
             LoadSelectedInvoicePurchase(invoiceID)
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح تفاصيل الفاتورة: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء فتح تفاصيل الفاتورة: " & ex.Message)
         End Try
     End Sub
 
@@ -750,6 +756,7 @@ Public Class Reports
 
         Catch ex As Exception
             ' تجاهل أي خطأ
+            Logger.LogError("Reports.vb:757", ex)
         End Try
     End Sub
 
@@ -815,6 +822,7 @@ Public Class Reports
 
         Catch ex As Exception
             ' تجاهل أي خطأ
+            Logger.LogError("Reports.vb:823", ex)
         End Try
     End Sub
 
@@ -830,13 +838,13 @@ Public Class Reports
     Private Sub btn_inv_delete_Click(sender As Object, e As EventArgs) Handles btn_inv_delete.Click
         Try
             If dgvSales.CurrentRow Is Nothing Then
-                MessageBox.Show("من فضلك اختر فاتورة لحذفها أولاً")
+                SmartMessageBox.Show("من فضلك اختر فاتورة لحذفها أولاً")
                 Return
             End If
 
             Dim inv_id As Integer = Convert.ToInt32(dgvSales.CurrentRow.Cells("Invoice_ID").Value)
 
-            If MessageBox.Show("هل أنت متأكد من حذف هذه الفاتورة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الفاتورة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
                 Return
             End If
 
@@ -856,23 +864,23 @@ Public Class Reports
 
             End Using
 
-            MessageBox.Show("🗑️ تم حذف الفاتورة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("🗑️ تم حذف الفاتورة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadAllInvoices()
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub
 
     Private Sub btn_inv_purchases_del_Click(sender As Object, e As EventArgs) Handles btn_inv_purchases_del.Click
         Try
             If dgvPurchase.CurrentRow Is Nothing Then
-                MessageBox.Show("من فضلك اختر فاتورة لحذفها أولاً")
+                SmartMessageBox.Show("من فضلك اختر فاتورة لحذفها أولاً")
                 Return
             End If
 
             Dim inv_id As Integer = Convert.ToInt32(dgvPurchase.CurrentRow.Cells("Purchase_Id").Value)
 
-            If MessageBox.Show("هل أنت متأكد من حذف هذه الفاتورة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الفاتورة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
                 Return
             End If
 
@@ -893,10 +901,10 @@ Public Class Reports
 
             End Using
 
-            MessageBox.Show("🗑️ تم حذف الفاتورة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("🗑️ تم حذف الفاتورة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadAllInvoicesPurchase()
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub
 
@@ -904,7 +912,7 @@ Public Class Reports
         Dim phone As String = txtSupplier_Num.Text.Trim()
         Dim invoiceID As Integer = txtInvID2.Text.Trim
         If String.IsNullOrWhiteSpace(phone) Then
-            MessageBox.Show("رقم الهاتف غير صالح.")
+            SmartMessageBox.Show("رقم الهاتف غير صالح.")
             Return
         End If
 
@@ -915,9 +923,9 @@ Public Class Reports
         Dim success As Boolean = Await WhatsAppAPI.SendText(phone, message)
 
         If success Then
-            MessageBox.Show("✅ تم إرسال الفاتورة على واتساب بنجاح")
+            SmartMessageBox.Show("✅ تم إرسال الفاتورة على واتساب بنجاح")
         Else
-            MessageBox.Show("❌ فشل إرسال الفاتورة على واتساب")
+            SmartMessageBox.Show("❌ فشل إرسال الفاتورة على واتساب")
         End If
     End Sub
 

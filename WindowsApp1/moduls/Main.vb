@@ -97,7 +97,7 @@ Module Main
         ' 1. التحقق من صلاحية الفتح
         If Not Session.HasPermission(formType.Name, "CanOpen") Then
             Dim dispName As String = Session.GetScreenDisplayName(formType.Name)
-            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             If btn IsNot Nothing Then btn.Checked = False
             Exit Sub
         End If
@@ -142,7 +142,7 @@ Module Main
         ' 1. التحقق من صلاحية الفتح
         If Not Session.HasPermission(formType.Name, "CanOpen") Then
             Dim dispName As String = Session.GetScreenDisplayName(formType.Name)
-            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -193,6 +193,11 @@ Module Main
         End Try
     End Sub
 
+    ''' <summary>
+    ''' جلب الكود/الرقم التالي لجدول عمود معين.
+    ''' ملاحظة: لا يزال MAX+1 — الأفضل للجداول الحرجة (مثل أرقام الفواتير) استخدام نمط
+    ''' SELECT ... WITH (UPDLOCK, HOLDLOCK) داخل نفس معاملة الحفظ كما في POSRepository.SaveInvoiceAsync.
+    ''' </summary>
     Public Function GetNextCode(tableName As String, codeColumn As String) As Integer
         Dim nextCode As Integer = 1
 
@@ -202,7 +207,7 @@ Module Main
 
                 Dim sql As String = $"
                 SELECT ISNULL(MAX(TRY_CONVERT(INT, [{codeColumn}])), 0) + 1
-                FROM [{tableName}]"
+                FROM [{tableName}] WITH (UPDLOCK, HOLDLOCK)"
 
                 Using cmd As New SqlCommand(sql, con)
                     nextCode = Convert.ToInt32(cmd.ExecuteScalar())
@@ -210,7 +215,7 @@ Module Main
             End Using
 
         Catch ex As Exception
-            'MessageBox.Show("حدث خطأ أثناء جلب الكود التالي:" & vbCrLf & ex.Message)
+            Logger.LogError($"GetNextCode({tableName}.{codeColumn})", ex)
         End Try
 
         Return nextCode

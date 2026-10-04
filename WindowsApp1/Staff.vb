@@ -358,7 +358,7 @@ Public Class Staff
                 Next
             End Using
             Catch ex As Exception
-                MessageBox.Show("حدث خطأ أثناء جلب الصلاحيات: " & ex.Message)
+                SmartMessageBox.Show("حدث خطأ أثناء جلب الصلاحيات: " & ex.Message)
             End Try
         End If
     End Sub
@@ -471,7 +471,7 @@ Public Class Staff
         Try
             ' التحقق من البيانات المطلوبة
             If String.IsNullOrWhiteSpace(txtUser_Name.Text) Then
-                MessageBox.Show("يرجى إدخال اسم الدور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى إدخال اسم الدور.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -512,17 +512,17 @@ Public Class Staff
                 cmdPermission.ExecuteNonQuery()
             Next
 
-            MessageBox.Show("✅ تم إضافة الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم إضافة الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         End Using
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
         End Try
     End Sub
     Private Sub UpdateRoleAndPermissions()
         Try
             If String.IsNullOrWhiteSpace(txtUser_Code.Text) Then
-                MessageBox.Show("يرجى اختيار الدور المراد تعديله.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار الدور المراد تعديله.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -566,10 +566,10 @@ Public Class Staff
                 cmdPermission.ExecuteNonQuery()
             Next
 
-            MessageBox.Show("✅ تم تحديث الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم تحديث الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Using
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
         End Try
 
 
@@ -577,11 +577,11 @@ Public Class Staff
     Private Sub DeleteRoleAndPermissions()
         Try
             If String.IsNullOrWhiteSpace(txtUser_Code.Text) Then
-                MessageBox.Show("يرجى اختيار الدور المراد حذفه.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار الدور المراد حذفه.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
-            If MessageBox.Show("هل أنت متأكد من حذف هذا الدور وجميع صلاحياته؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            If SmartMessageBox.Show("هل أنت متأكد من حذف هذا الدور وجميع صلاحياته؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                 Return
             End If
 
@@ -603,10 +603,10 @@ Public Class Staff
             txtUser_Name.Clear()
             txtUser_Note.Clear()
 
-            MessageBox.Show("🗑️ تم حذف الدور وجميع صلاحياته بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("🗑️ تم حذف الدور وجميع صلاحياته بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Using
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub
 

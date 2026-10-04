@@ -65,7 +65,7 @@ Namespace UC_Settings
                 txtFooterText.Text = SettingsManager.GetSettingDual(SettingsKeys.FooterText, SettingsKeys.ReceiptFooter, "شكراً لزيارتكم - نتمنى لكم يوماً سعيداً")
                 txtDeliveryText.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.DeliveryText, "يوجد توصيل للمنازل")
             Catch ex As Exception
-                MessageBox.Show("خطأ في قراءة إعدادات الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في قراءة إعدادات الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -137,7 +137,7 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات الفاتورة بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات الفاتورة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات الفاتورة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             End If
         End Sub
@@ -146,12 +146,12 @@ Namespace UC_Settings
             Try
                 SaveSettingsInternal(showToast:=True)
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الفاتورة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الفاتورة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 cmbFontSize.SelectedIndex = 1
                 cmbReceiptStyle.SelectedIndex = 0
                 tglShowLogo.Checked = True
@@ -219,7 +219,7 @@ Namespace UC_Settings
                     forcePreview:=True
                 )
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء تجربة طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء تجربة طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 

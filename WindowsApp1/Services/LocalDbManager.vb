@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Diagnostics
 Imports System.IO
@@ -136,7 +136,8 @@ Namespace Services
                 Using key2 = Registry.LocalMachine.OpenSubKey("SOFTWARE\WOW6432Node\Microsoft\Microsoft SQL Server Local DB\Installed Versions")
                     If key2 IsNot Nothing AndAlso key2.SubKeyCount > 0 Then Return True
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LocalDbManager.vb:139", __logEx)
             End Try
 
             Return False
@@ -325,7 +326,8 @@ Namespace Services
                         End If
                     End If
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LocalDbManager.vb:329", __logEx)
             End Try
 
             ' فحص مجلد التنزيلات وسطح المكتب للمستخدم الحالي
@@ -337,7 +339,8 @@ Namespace Services
                     searchPaths.Add(Path.Combine(userProfile, "Desktop", "SqlLocalDB.msi"))
                     searchPaths.Add(Path.Combine(userProfile, "Desktop", "V1.0", "SqlLocalDB.msi"))
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LocalDbManager.vb:342", __logEx)
             End Try
 
             ' فحص جذور وحدات التخزين والفلاشات المتصلة (Removable & Fixed Drives)
@@ -349,14 +352,16 @@ Namespace Services
                         searchPaths.Add(Path.Combine(drive.RootDirectory.FullName, "redist", "SqlLocalDB.msi"))
                     End If
                 Next
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LocalDbManager.vb:355", __logEx)
             End Try
 
             For Each p In searchPaths
                 Try
                     Dim fullPath = Path.GetFullPath(p)
                     If File.Exists(fullPath) Then Return fullPath
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("LocalDbManager.vb:363", __logEx)
                 End Try
             Next
 

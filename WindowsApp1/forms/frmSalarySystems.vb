@@ -22,7 +22,7 @@ Public Class frmSalarySystems
                 dgvSalarySystems.ClearSelection()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل أنظمة الرواتب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل أنظمة الرواتب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -31,7 +31,7 @@ Public Class frmSalarySystems
             txtSalarySystemCode.Text = GetNextCode("SalarySystems", "SalarySystemCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtSalarySystemName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم نظام الرواتب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم نظام الرواتب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         Return True
@@ -95,9 +95,9 @@ Public Class frmSalarySystems
                     _cachedSalaries = Nothing
                     LoadGrid()
                     ClearFields()
-                    MessageBox.Show("تم حفظ نظام الرواتب بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ نظام الرواتب بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -121,9 +121,9 @@ Public Class frmSalarySystems
                     _cachedSalaries = Nothing
                     LoadGrid()
                     ClearFields()
-                    MessageBox.Show("تم تعديل نظام الرواتب بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل نظام الرواتب بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -131,7 +131,7 @@ Public Class frmSalarySystems
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvSalarySystems.SelectedRows.Count = 0 Then Exit Sub
-        If MessageBox.Show("هل أنت متأكد من حذف هذا النظام؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا النظام؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvSalarySystems.SelectedRows(0).Cells("SalarySystemID").Value)
             Dim query As String = "UPDATE SalarySystems SET IsDeleted = 1 WHERE SalarySystemID = @ID"
             Using conn As New SqlConnection(DBModule.ConnectionString)
@@ -140,12 +140,12 @@ Public Class frmSalarySystems
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف نظام الرواتب بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف نظام الرواتب بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedSalaries = Nothing
                         LoadGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

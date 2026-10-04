@@ -42,8 +42,9 @@ Public Class form_Expenses
     End Sub
 
     Private Function ValidateSecurity() As Boolean
-        If txtUserPassword.Text <> Session.CurrentUserPassword Then
-            MessageBox.Show("فشل التحقق من الأمان. كلمة المرور غير صحيحة.", "دخول غير مصرح", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+        ' مقارنة عبر تجزئة PBKDF2 المخزنة في الجلسة (لا تخزن كلمة المرور نفسها)
+        If Not PasswordHasher.Verify(txtUserPassword.Text, Session.CurrentUserPasswordHash) Then
+            SmartMessageBox.Show("فشل التحقق من الأمان. كلمة المرور غير صحيحة.", "دخول غير مصرح", MessageBoxButtons.OK, MessageBoxIcon.Stop)
             Return False
         End If
         Return True
@@ -63,34 +64,34 @@ Public Class form_Expenses
         ' التحقق من إدخال المبلغ وصحته
         Dim amount As Decimal
         If Not Decimal.TryParse(txtAmount.Text, amount) OrElse amount <= 0 Then
-            MessageBox.Show("يرجى إدخال مبلغ صحيح أكبر من صفر.", "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال مبلغ صحيح أكبر من صفر.", "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtAmount.Focus()
             Return False
         End If
 
         ' التحقق من اختيار التصنيف
         If String.IsNullOrWhiteSpace(cmbCategory.Text) Then
-            MessageBox.Show("يرجى اختيار تصنيف المصروف.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار تصنيف المصروف.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbCategory.Focus()
             Return False
         End If
 
         ' التحقق من إدخال الجهة المستلمة
         If String.IsNullOrWhiteSpace(txtPayee.Text) Then
-            MessageBox.Show("يرجى إدخال اسم الجهة المستلمة (المحل/الشخص).", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم الجهة المستلمة (المحل/الشخص).", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtPayee.Focus()
             Return False
         End If
 
         ' التحقق من اختيار طريقة الدفع
         If String.IsNullOrWhiteSpace(cmbPaymentMethod.Text) Then
-            MessageBox.Show("يرجى اختيار طريقة الدفع.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار طريقة الدفع.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbPaymentMethod.Focus()
             Return False
         End If
         ' التحقق من اختيار الخزنة
         If cmbTreasury.SelectedValue Is Nothing Then
-            MessageBox.Show("يرجى اختيار الخزنة المراد الصرف منها.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخزنة المراد الصرف منها.", "بيانات ناقصة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbTreasury.Focus()
             Return False
         End If
@@ -107,7 +108,7 @@ Public Class form_Expenses
     Private Async Function SaveExpenseAsync() As Task
         ' 1. تأكد أولاً أن نص الاتصال ليس فارغاً
         If String.IsNullOrEmpty(ConnectionString) Then
-            MessageBox.Show("خطأ: نص الاتصال (ConnectionString) غير معرف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ: نص الاتصال (ConnectionString) غير معرف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End If
 
@@ -182,18 +183,26 @@ Public Class form_Expenses
                         ' إذا نجحت العمليات نقوم بالتثبيت النهائي
                         trans.Commit()
 
-                        MessageBox.Show("تم حفظ بيانات المصروف وخصمه من الخزنة بنجاح", "تأكيد الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        Try
+                            Dim notesStr As String = If(Not String.IsNullOrWhiteSpace(txtNotes.Text), " - " & txtNotes.Text.Trim(), "")
+                            Dim expDesc As String = cmbCategory.Text & notesStr
+                            NotificationManager.Instance.NotifyExpense("تسجيل مصروف جديد 💸", $"تم تسجيل مصروف بقيمة {expenseAmount:N2} ج.م ({expDesc})")
+                        Catch exNotif As Exception
+                            Logger.LogError("form_Expenses.btnSave_Click - Notification", exNotif)
+                        End Try
+
+                        SmartMessageBox.Show("تم حفظ بيانات المصروف وخصمه من الخزنة بنجاح", "تأكيد الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' استدعاء دالة تفريغ الحقول
                         ResetForm()
 
                     Catch ex As SqlException
                         trans.Rollback()
-                        MessageBox.Show($"خطأ في قاعدة البيانات: {ex.Message}", "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show($"خطأ في قاعدة البيانات: {ex.Message}", "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Catch ex As Exception
                         trans.Rollback()
                         ' هنا ستظهر رسالة "عذراً، لا يمكن إتمام العملية نظراً لعدم وجود رصيد كافٍ في الخزنة" في حال حدوثها
-                        MessageBox.Show(ex.Message, "خطأ في الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show(ex.Message, "خطأ في الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -258,7 +267,7 @@ Public Class form_Expenses
 
         Catch ex As Exception
 
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
 
         End Try
 

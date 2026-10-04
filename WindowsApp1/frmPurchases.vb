@@ -268,25 +268,25 @@ Public Class frmPurchases
 
     Private Sub btnAddItem_Click(sender As Object, e As EventArgs) Handles btnAddItem.Click
         If cmbMaterial.SelectedIndex = -1 OrElse cmbUnit.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الخامة والوحدة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخامة والوحدة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim qty As Decimal = 0, price As Decimal = 0
         If Not Decimal.TryParse(txtQuantity.Text.Trim(), qty) OrElse qty <= 0 Then
-            MessageBox.Show("يرجى إدخال كمية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال كمية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If Not Decimal.TryParse(txtPrice.Text.Trim(), price) OrElse price <= 0 Then
-            MessageBox.Show("يرجى إدخال سعر صحيح!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال سعر صحيح!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim drvUnit As DataRowView = CType(cmbUnit.SelectedItem, DataRowView)
         Dim factor As Decimal = Convert.ToDecimal(drvUnit("ConversionFactor"))
         If factor <= 0D Then
-            MessageBox.Show("معامل تحويل الوحدة غير صالح.")
+            SmartMessageBox.Show("معامل تحويل الوحدة غير صالح.")
             Return
         End If
         Dim baseQty As Decimal = qty * factor
@@ -350,31 +350,31 @@ Public Class frmPurchases
     Private Async Sub btnSaveInvoice_Click(sender As Object, e As EventArgs) Handles btnSaveInvoice.Click
         If savingInvoice Then Return
         If Session.CurrentUserID <= 0 OrElse Not Session.HasPermission("frmPurchases", "CanAdd") Then
-            MessageBox.Show("ليس لديك صلاحية إضافة فاتورة مشتريات.")
+            SmartMessageBox.Show("ليس لديك صلاحية إضافة فاتورة مشتريات.")
             Return
         End If
         If cmbSupplier.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار المورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار المورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If cmbStore.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار المخزن المستلم!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار المخزن المستلم!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If cmbBranches.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الفرع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الفرع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If cmbPaymentType.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار طريقة الدفع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار طريقة الدفع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If _dtItems.Rows.Count = 0 Then
-            MessageBox.Show("الفاتورة فارغة، يرجى إضافة أصناف أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("الفاتورة فارغة، يرجى إضافة أصناف أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -392,13 +392,13 @@ Public Class frmPurchases
 
         ' التحقق من الخزينة عند وجود مبلغ نقدي مدفوع
         If paid > 0 AndAlso cmbTreasury.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى تحديد الخزينة التي تم الصرف منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الخزينة التي تم الصرف منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         ' التحقق من المبلغ الجزئي
         If paymentCode = "PARTIAL" AndAlso paid <= 0 Then
-            MessageBox.Show("في حالة الدفع الجزئي، يرجى إدخال المبلغ المدفوع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("في حالة الدفع الجزئي، يرجى إدخال المبلغ المدفوع!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -413,41 +413,46 @@ Public Class frmPurchases
         Dim total As Decimal = 0D
         For Each row As DataRow In _dtItems.Rows
             If CDec(row("Quantity")) <= 0 OrElse CDec(row("UnitPrice")) <= 0 OrElse CDec(row("ConversionFactor")) <= 0 Then
-                MessageBox.Show("راجع كميات وأسعار ومعاملات تحويل الأصناف.")
+                SmartMessageBox.Show("راجع كميات وأسعار ومعاملات تحويل الأصناف.")
                 Return
             End If
             total += CDec(row("Quantity")) * CDec(row("UnitPrice"))
         Next
         Dim discount As Decimal
         If Not Decimal.TryParse(If(String.IsNullOrWhiteSpace(txtDiscount.Text), "0", txtDiscount.Text), discount) OrElse discount < 0 OrElse discount > total Then
-            MessageBox.Show("الخصم يجب أن يكون بين صفر وإجمالي الفاتورة.")
+            SmartMessageBox.Show("الخصم يجب أن يكون بين صفر وإجمالي الفاتورة.")
             Return
         End If
         netTotal = Decimal.Round(total - discount, 2, MidpointRounding.AwayFromZero)
         If paymentCode = "CASH" Then paid = netTotal
         If paymentCode = "CREDIT" Then paid = 0D
         If paid < 0D OrElse paid > netTotal OrElse Decimal.Round(paid, 2) <> paid Then
-            MessageBox.Show("المبلغ المدفوع غير صالح أو يتجاوز صافي الفاتورة.")
+            SmartMessageBox.Show("المبلغ المدفوع غير صالح أو يتجاوز صافي الفاتورة.")
             Return
         End If
         remaining = netTotal - paid
         If String.IsNullOrWhiteSpace(invNumber) OrElse invNumber.Length > 50 Then
-            MessageBox.Show("أدخل رقم فاتورة لا يتجاوز 50 حرفاً.")
+            SmartMessageBox.Show("أدخل رقم فاتورة لا يتجاوز 50 حرفاً.")
             Return
         End If
         savingInvoice = True
         Me.Enabled = False
         Try
             lastPurchaseID = Await SupplierAccountingService.SavePurchaseAsync(invNumber, supID, storeID, dtpInvoiceDate.Value, discount, paid, paymentCode, treasuryID, txtNotes.Text.Trim(), _dtItems.Copy(), updateCost.Checked, branchID)
-            MessageBox.Show("تم حفظ فاتورة المشتريات وتوريد الأصناف للمخزن بنجاح!", "نجاح التوريد")
+            Try
+                NotificationManager.Instance.NotifyPurchase(invNumber, netTotal)
+            Catch exNotif As Exception
+                Logger.LogError("frmPurchases.btnSaveInvoice_Click - Notification", exNotif)
+            End Try
+            SmartMessageBox.Show("تم حفظ فاتورة المشتريات وتوريد الأصناف للمخزن بنجاح!", "نجاح التوريد")
             Try
                 ClearForm()
             Catch ex As Exception
-                MessageBox.Show("تم الحفظ، لكن تعذر تهيئة فاتورة جديدة: " & ex.Message)
+                SmartMessageBox.Show("تم الحفظ، لكن تعذر تهيئة فاتورة جديدة: " & ex.Message)
             End Try
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "تعذر حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show(ex.Message, "تعذر حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         Finally
             savingInvoice = False
             Me.Enabled = True
@@ -650,7 +655,7 @@ Public Class frmPurchases
                             txtQuantity.Focus()
                             txtQuantity.SelectAll()
                         Else
-                            MessageBox.Show("لم يتم العثور على خامة بهذا الباركود!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            SmartMessageBox.Show("لم يتم العثور على خامة بهذا الباركود!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                             txtBarcode.SelectAll()
                             txtBarcode.Focus()
                         End If
@@ -658,7 +663,7 @@ Public Class frmPurchases
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء البحث بالباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء البحث بالباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 End Class

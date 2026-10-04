@@ -1,4 +1,4 @@
-Imports System.Linq
+﻿Imports System.Linq
 Imports System.Net.Http
 Imports System.Net.NetworkInformation
 Imports System.Text
@@ -95,7 +95,8 @@ Namespace Services.Updates
                             userChannel = ch.Trim().ToLowerInvariant()
                         End If
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("BackgroundUpdateService.vb:98", __logEx)
                 End Try
 
                 ' 4. استعلام REST سريع وخفيف جداً من Supabase (~500 بايت فقط)
@@ -185,6 +186,23 @@ Namespace Services.Updates
                     If(isMandatory, Notify.ToastType.Warning, Notify.ToastType.Info),
                     If(isMandatory, 15000, 10000))
 
+                ' إضافة الإشعار أيضاً في مركز الإشعارات (الجرس) ليبقى محفوظاً ومتاحاً للمستخدم في أي وقت
+                Try
+                    NotificationManager.Instance.CreateNotification(
+                        If(isMandatory, NotificationManager.NotificationType.Warning, NotificationManager.NotificationType.System),
+                        title,
+                        message,
+                        If(isMandatory, NotificationManager.NotificationPriority.Critical, NotificationManager.NotificationPriority.High),
+                        Nothing,
+                        icon:="settings",
+                        isActionable:=True,
+                        actionType:="OpenUpdate",
+                        actionData:=manifestUrl
+                    )
+                Catch exNotif As Exception
+                    Debug.WriteLine("[BackgroundUpdateService] NotificationManager error: " & exNotif.Message)
+                End Try
+
                 ' إذا كان التحديث إلزامياً، يتم فتح نافذة التحديث مباشرة بعد فترة بسيطة إن لم يتفاعل
                 If isMandatory Then
                     OpenUpdatePrompt(manifestUrl, row)
@@ -194,7 +212,7 @@ Namespace Services.Updates
             End Try
         End Sub
 
-        Private Shared Async Sub OpenUpdatePrompt(manifestUrl As String, updateRow As JObject)
+        Public Shared Async Sub OpenUpdatePrompt(Optional manifestUrl As String = "", Optional updateRow As JObject = Nothing)
             Try
                 ' منع تكرار فتح النافذة إن كانت مفتوحة
                 Dim openNotifier = Application.OpenForms.OfType(Of FormUpdateNotifier)().FirstOrDefault()

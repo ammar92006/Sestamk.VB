@@ -235,7 +235,7 @@ Public Class FrmQuickPayment
 
         ' 2. في حالة وجود متبقي، يجب أن يكون هناك عميل مسجل
         If _customer Is Nothing Then
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "⚠️ تنبيه:" & vbCrLf &
                 "لا يمكن ترك متبقي على الفاتورة لعميل نقدي غير مسجل!" & vbCrLf & vbCrLf &
                 "برجاء سداد كامل المبلغ المطلوب أو اختيار عميل مسجل أولاً من شاشة البيع.",
@@ -246,7 +246,7 @@ Public Class FrmQuickPayment
         ' 3. فحص صلاحية البيع الآجل للعميل (AllowCredit)
         Dim allowCredit As Boolean = If(_customer.AllowCredit.HasValue, _customer.AllowCredit.Value, False)
         If Not allowCredit Then
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 $"⚠️ تنبيه خاص بالعميل: [{_customer.CustomerName}]" & vbCrLf & vbCrLf &
                 "هذا العميل غير مسموح له بالتعامل الآجل أو ترك متبقي (خاصية البيع الآجل معطلة في حسابه)." & vbCrLf &
                 "يرجى سداد كامل قيمة الفاتورة نقداً.",
@@ -284,7 +284,7 @@ Public Class FrmQuickPayment
                 $"⚠️ المبلغ المتجاوز لحد الائتمان: {exceededAmount:N2} ج.م" & vbCrLf & vbCrLf &
                 "يرجى سداد مبلغ نقدي أكبر لتغطية الفارق أو مراجعة إدارة الحسابات لزيادة حد الائتمان."
 
-            MessageBox.Show(msg, "تجاوز حد الائتمان المسموح", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            SmartMessageBox.Show(msg, "تجاوز حد الائتمان المسموح", MessageBoxButtons.OK, MessageBoxIcon.Stop)
             Return False
         End If
 
@@ -383,7 +383,7 @@ Public Class FrmQuickPayment
         IsCreditOrder = rdoCredit.Checked
 
         If rdoCredit.Checked AndAlso _customer Is Nothing Then
-            MessageBox.Show("عفواً! لا يمكن اختيار البيع الآجل لعميل نقدي/افتراضي غير مسجل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عفواً! لا يمكن اختيار البيع الآجل لعميل نقدي/افتراضي غير مسجل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             rdoCash.Checked = True
             Return
         End If

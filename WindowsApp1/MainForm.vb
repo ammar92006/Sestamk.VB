@@ -1,4 +1,4 @@
-Imports System.Runtime.InteropServices
+﻿Imports System.Runtime.InteropServices
 Imports System.Threading.Tasks
 Imports WindowsApp1.FrmTreasuryTransaction
 
@@ -18,6 +18,12 @@ Public Class MainForm
     Private _ucUsers As UC_Main.UCUsersHub = Nothing
     Private _ucSettings As UC_Main.UCSettingsHub = Nothing
 
+    ' لوحة الإشعارات والـ Badge
+    Private _notificationPanel As NotificationPanel = Nothing
+    Private _notificationBadge As Label = Nothing
+    Private _isNotificationPanelVisible As Boolean = False
+    Private WithEvents _tmrNotificationUpdate As Timer
+
     Private Sub OpenFormDirectly(formType As Type)
         OpenFormOnce(formType, CType(Nothing, Control))
     End Sub
@@ -33,7 +39,7 @@ Public Class MainForm
             AddHandler _ucDashboard.OpenSalesReportRequested, Sub() OpenFormDirectly(GetType(FrmSalesReport))
             AddHandler _ucDashboard.OpenPurchaseReportsRequested, Sub() OpenFormDirectly(GetType(frmPurchaseReports))
             AddHandler _ucDashboard.OpenTreasuryReportRequested, Sub() OpenFormDirectly(GetType(FrmTreasuryTransactionsReport))
-            AddHandler _ucDashboard.OpenSuppliersRequested, Sub() OpenFormDirectly(GetType(FrmSuppliers))
+            AddHandler _ucDashboard.OpenSuppliersRequested, Sub() OpenFormDirectly(GetType(frmSuppliers))
             AddHandler _ucDashboard.OpenStoreStockRequested, Sub() OpenFormDirectly(GetType(frmStoreStock))
             AddHandler _ucDashboard.OpenShiftsRequested, Sub() OpenFormDirectly(GetType(frmShifts))
             pnlMainContainer.Controls.Add(_ucDashboard)
@@ -195,6 +201,9 @@ Public Class MainForm
         ' تهيئة شريط الحالة وبيانات الجلسة
         InitializeStatusBar()
 
+        ' تهيئة نظام الإشعارات
+        InitializeNotifications()
+
         ' تعيين الشاشة النشطة الافتراضية
         SetActiveNav(navDashboard, GetDashboardControl())
 
@@ -228,7 +237,10 @@ Public Class MainForm
             tip.SetToolTip(btnLogout, "تسجيل الخروج من النظام وإغلاق كافة الشاشات المفتوحة (Ctrl+Q)")
             tip.SetToolTip(btnSupport, "فتح صفحة الدعم الفني على موقع سستمك الرسمي (https://sestamk.site.je/contact)")
             tip.SetToolTip(txtGlobalSearch, "البحث السريع في كافة شاشات ووظائف النظام (Ctrl+K)")
-        Catch
+            tip.SetToolTip(btnNotifications, "عرض الإشعارات والتنبيهات")
+            tip.SetToolTip(pnlUserInfo, "معلومات الحساب الشخصي")
+        Catch __logEx As Exception
+            Logger.LogError("MainForm.vb:242", __logEx)
         End Try
 
         ' تحميل بيانات الداشبورد فور فتح الشاشة بهدوء
@@ -237,14 +249,29 @@ Public Class MainForm
 
     Private Sub InitializeStatusBar()
         Try
+            ' رقم الإصدار يُقرأ من إصدار الملف — لا يُترك نصاً ثابتاً في الـ Designer
+            Dim verText As String = Application.ProductVersion
+            If verText.EndsWith(".0") Then verText = verText.Substring(0, verText.Length - 2)
+            lblStatusVersion.Text = "النسخة: v" & verText
+
             Dim displayName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, Session.CurrentUserName)
             Dim userTitle As String = If(String.IsNullOrEmpty(displayName), "المدير العام", displayName)
             Dim roleTitle As String = If(Session.CurrentRoleID = 1, "مدير النظام", "مستخدم نظام")
+
+            ' تحديث معلومات المستخدم في الـ StatusBar السفلي
             lblStatusUser.Text = "المستخدم: " & userTitle
             lblStatusRole.Text = "الصلاحية: " & roleTitle
-            If lblStatusUserRole IsNot Nothing Then
-                lblStatusUserRole.Text = userTitle & " (" & roleTitle & ")"
+
+            ' تحديث بطاقة معلومات المستخدم الجديدة في الهيدر
+            If lblUserName IsNot Nothing Then
+                lblUserName.Text = userTitle
             End If
+            If lblUserRole IsNot Nothing Then
+                lblUserRole.Text = roleTitle
+            End If
+
+            ' تحميل صورة المستخدم إن وُجدت
+            LoadUserAvatar()
 
             Dim branchName As String = "الفرع الرئيسي"
             Try
@@ -252,7 +279,8 @@ Public Class MainForm
                 If dtBranch IsNot Nothing AndAlso dtBranch.Rows.Count > 0 Then
                     branchName = dtBranch.Rows(0)("BranchName").ToString()
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("MainForm.vb:277", __logEx)
             End Try
             lblStatusBranch.Text = "الفرع: " & branchName
             If lblHeaderBranch IsNot Nothing Then
@@ -262,6 +290,57 @@ Public Class MainForm
             UpdateDateTimeAndShift()
         Catch ex As Exception
             Logger.LogError("InitializeStatusBar", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' تحميل صورة المستخدم من الجلسة أو قاعدة البيانات أو استخدام الصورة الافتراضية
+    ''' </summary>
+    Private Sub LoadUserAvatar()
+        Try
+            If picUserAvatar Is Nothing Then Return
+
+            ' 1. استخدام الصورة المحملة مسبقاً في الجلسة إن وُجدت
+            If Session.CurrentUserImage IsNot Nothing Then
+                picUserAvatar.Image = Session.CurrentUserImage
+                Return
+            End If
+
+            ' 2. محاولة تحميل ملف تعريف المستخدم إن كان مسجلاً
+            If Session.CurrentUserID > 0 OrElse Not String.IsNullOrEmpty(Session.CurrentUserName) Then
+                Session.LoadUserProfile(Session.CurrentUserID, Session.CurrentRoleID, Session.CurrentUserName)
+                If Session.CurrentUserImage IsNot Nothing Then
+                    picUserAvatar.Image = Session.CurrentUserImage
+                    Return
+                End If
+            End If
+
+            ' 3. محاولة مباشرة من Users_TBL
+            If Session.CurrentUserID > 0 Then
+                Dim query As String = "SELECT TOP 1 UserPhotobase64 FROM Users_TBL WHERE User_ID = @UserID"
+                Dim dt As DataTable = DBModule.ExecuteQuery(query, New Dictionary(Of String, Object) From {{"@UserID", Session.CurrentUserID}})
+
+                If dt IsNot Nothing AndAlso dt.Rows.Count > 0 AndAlso Not IsDBNull(dt.Rows(0)("UserPhotobase64")) Then
+                    Dim b64 As String = dt.Rows(0)("UserPhotobase64").ToString().Trim()
+                    If Not String.IsNullOrEmpty(b64) Then
+                        Dim img As Image = DBModule.Base64ToImage(b64)
+                        If img IsNot Nothing Then
+                            picUserAvatar.Image = img
+                            Return
+                        End If
+                    End If
+                End If
+            End If
+
+            ' استخدام الصورة الافتراضية
+            picUserAvatar.Image = My.Resources.Resources.user__1_
+        Catch ex As Exception
+            ' في حالة الخطأ، استخدام الصورة الافتراضية
+            Try
+                picUserAvatar.Image = My.Resources.Resources.user__1_
+            Catch __logEx As Exception
+                Logger.LogError("MainForm.vb:336", __logEx)
+            End Try
         End Try
     End Sub
 
@@ -283,6 +362,7 @@ Public Class MainForm
                 _ucDashboard.UpdateDateTimeAndShift()
             End If
         Catch ex As Exception
+            Logger.LogError("MainForm.vb:359", ex)
         End Try
     End Sub
 
@@ -451,7 +531,7 @@ Public Class MainForm
             ElseIf term.Contains("عميل") Then
                 OpenFormDirectly(GetType(FrmCustomers))
             ElseIf term.Contains("مورد") Then
-                OpenFormDirectly(GetType(FrmSuppliers))
+                OpenFormDirectly(GetType(frmSuppliers))
             ElseIf term.Contains("شراء") OrElse term.Contains("مشتريات") Then
                 OpenFormDirectly(GetType(frmPurchases))
             ElseIf term.Contains("مصروف") Then
@@ -471,7 +551,7 @@ Public Class MainForm
     Private Sub OpenTreasuryTransaction(op As FrmTreasuryTransaction.TreasuryOperation)
         If Not Session.HasPermission("FrmTreasuryTransaction", "CanOpen") Then
             Dim dispName As String = Session.GetScreenDisplayName("FrmTreasuryTransaction")
-            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
         Dim frm As New FrmTreasuryTransaction(op)
@@ -502,28 +582,47 @@ Public Class MainForm
             If Not isDark Then
                 panelHeader.BorderColor = pal.Border
                 panelHeader.BorderThickness = 1
-                lbltitle.ForeColor = pal.TextPrimary
                 If lblHeaderBranch IsNot Nothing Then
                     lblHeaderBranch.ForeColor = pal.TextSecondary
                 End If
-                If lblStatusUserRole IsNot Nothing Then
-                    lblStatusUserRole.ForeColor = pal.Primary
-                End If
             Else
                 panelHeader.BorderThickness = 0
-                lbltitle.ForeColor = pal.TextOnDark
                 If lblHeaderBranch IsNot Nothing Then
                     lblHeaderBranch.ForeColor = Color.FromArgb(203, 213, 225)
                 End If
-                If lblStatusUserRole IsNot Nothing Then
-                    lblStatusUserRole.ForeColor = Color.FromArgb(147, 197, 253)
-                End If
             End If
 
-            lbltitle.BackColor = Color.Transparent
             If lblHeaderBranch IsNot Nothing Then lblHeaderBranch.BackColor = Color.Transparent
-            If lblStatusUserRole IsNot Nothing Then lblStatusUserRole.BackColor = Color.Transparent
             If picLogo IsNot Nothing Then picLogo.BackColor = Color.Transparent
+
+            ' بطاقة معلومات المستخدم الجديدة
+            If pnlUserInfo IsNot Nothing Then
+                pnlUserInfo.FillColor = If(isDark, Color.FromArgb(23, 30, 44), Color.FromArgb(241, 245, 249))
+                pnlUserInfo.BorderColor = If(isDark, Color.FromArgb(38, 51, 72), pal.Border)
+                pnlUserInfo.BorderThickness = 1
+            End If
+
+            If lblUserName IsNot Nothing Then
+                lblUserName.ForeColor = If(isDark, Color.White, pal.TextPrimary)
+                lblUserName.BackColor = Color.Transparent
+            End If
+
+            If lblUserRole IsNot Nothing Then
+                lblUserRole.ForeColor = If(isDark, Color.FromArgb(148, 163, 184), pal.TextMuted)
+                lblUserRole.BackColor = Color.Transparent
+            End If
+
+            If picUserAvatar IsNot Nothing Then
+                picUserAvatar.BackColor = Color.Transparent
+            End If
+
+            ' زر الإشعارات
+            If btnNotifications IsNot Nothing Then
+                btnNotifications.FillColor = Color.Transparent
+                btnNotifications.ForeColor = If(isDark, Color.FromArgb(209, 213, 219), pal.TextSecondary)
+                btnNotifications.HoverState.FillColor = If(isDark, Color.FromArgb(30, 41, 59), pal.NavHover)
+                btnNotifications.HoverState.ForeColor = If(isDark, Color.White, pal.Primary)
+            End If
 
             ' أزرار التحكم بالنافذة
             Dim ctrlBoxFore As Color = If(isDark, pal.TextOnDark, pal.TextSecondary)
@@ -653,6 +752,294 @@ Public Class MainForm
         WebLinks.OpenContact()
     End Sub
 
+    Private Sub btnNotifications_Click(sender As Object, e As EventArgs) Handles btnNotifications.Click
+        ToggleNotificationPanel()
+    End Sub
+
+    Private Sub pnlUserInfo_Click(sender As Object, e As EventArgs) Handles pnlUserInfo.Click
+        ' TODO: فتح قائمة إعدادات المستخدم (البروفايل، تغيير كلمة السر، إلخ)
+        Notify.Toast("قريباً: إعدادات الحساب الشخصي 👤", Notify.ToastType.Info)
+    End Sub
+
+#Region "نظام الإشعارات"
+    ''' <summary>
+    ''' تهيئة نظام الإشعارات والـ Badge
+    ''' </summary>
+    Private Sub InitializeNotifications()
+        Try
+            ' إنشاء Badge لعرض عدد الإشعارات غير المقروءة
+            CreateNotificationBadge()
+
+            ' تحديث العداد فوراً
+            UpdateNotificationBadge()
+
+            ' مؤقت التحديث التلقائي كل دقيقة
+            _tmrNotificationUpdate = New Timer With {.Interval = 60000}
+            _tmrNotificationUpdate.Start()
+
+            ' الاشتراك في أحداث الإشعارات
+            AddHandler NotificationManager.Instance.NotificationReceived, AddressOf OnNotificationReceived
+            AddHandler NotificationManager.Instance.NotificationRead, AddressOf OnNotificationRead
+
+            ' فحص أولي لنواقص المخزون في الخلفية عند الإقلاع
+            Task.Run(Function() NotificationManager.Instance.CheckAndNotifyLowStockAsync())
+        Catch ex As Exception
+            Logger.LogError("MainForm.InitializeNotifications", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' إنشاء Badge لعرض عدد الإشعارات غير المقروءة
+    ''' </summary>
+    Private Sub CreateNotificationBadge()
+        Try
+            If btnNotifications Is Nothing Then Return
+
+            ' إنشاء Label للـ Badge
+            _notificationBadge = New Label With {
+                .AutoSize = False,
+                .Size = New Size(20, 20),
+                .TextAlign = ContentAlignment.MiddleCenter,
+                .Font = New Font("Segoe UI", 7, FontStyle.Bold),
+                .ForeColor = Color.White,
+                .BackColor = Color.FromArgb(220, 38, 38),
+                .Text = "0",
+                .Visible = False
+            }
+
+            ' وضع Badge في الزاوية العلوية اليسرى من الزر
+            _notificationBadge.Location = New Point(
+                btnNotifications.Left + btnNotifications.Width - 15,
+                btnNotifications.Top + 5
+            )
+
+            ' إضافة حواف دائرية
+            Dim path As New System.Drawing.Drawing2D.GraphicsPath()
+            path.AddEllipse(0, 0, _notificationBadge.Width, _notificationBadge.Height)
+            _notificationBadge.Region = New Region(path)
+
+            ' إضافة Badge إلى الهيدر
+            panelHeader.Controls.Add(_notificationBadge)
+            _notificationBadge.BringToFront()
+        Catch ex As Exception
+            Logger.LogError("MainForm.CreateNotificationBadge", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' تحديث عداد Badge الإشعارات
+    ''' </summary>
+    Private Sub UpdateNotificationBadge()
+        Try
+            If _notificationBadge Is Nothing Then Return
+
+            Dim count As Integer = NotificationManager.Instance.GetUnreadCount()
+
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(New MethodInvoker(Sub()
+                                                     If count > 0 Then
+                                                         _notificationBadge.Text = If(count > 99, "99+", count.ToString())
+                                                         _notificationBadge.Visible = True
+                                                     Else
+                                                         _notificationBadge.Visible = False
+                                                     End If
+                                                 End Sub))
+            Else
+                If count > 0 Then
+                    _notificationBadge.Text = If(count > 99, "99+", count.ToString())
+                    _notificationBadge.Visible = True
+                Else
+                    _notificationBadge.Visible = False
+                End If
+            End If
+        Catch ex As Exception
+            Logger.LogError("MainForm.UpdateNotificationBadge", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' فتح/إغلاق لوحة الإشعارات
+    ''' </summary>
+    Private Sub ToggleNotificationPanel()
+        Try
+            If _isNotificationPanelVisible Then
+                HideNotificationPanel()
+            Else
+                ShowNotificationPanel()
+            End If
+        Catch ex As Exception
+            Logger.LogError("MainForm.ToggleNotificationPanel", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' عرض لوحة الإشعارات
+    ''' </summary>
+    Private Sub ShowNotificationPanel()
+        Try
+            ' إنشاء اللوحة إذا لم تكن موجودة
+            If _notificationPanel Is Nothing Then
+                _notificationPanel = New NotificationPanel()
+                AddHandler _notificationPanel.NotificationClicked, AddressOf OnNotificationPanelClicked
+                Me.Controls.Add(_notificationPanel)
+                _notificationPanel.BringToFront()
+            End If
+
+            ' تحديد الموقع (أسفل زر الإشعارات)
+            _notificationPanel.Location = New Point(
+                btnNotifications.Left - _notificationPanel.Width + btnNotifications.Width,
+                panelHeader.Bottom + 5
+            )
+
+            ' عرض اللوحة
+            _notificationPanel.Visible = True
+            _notificationPanel.BringToFront()
+            _isNotificationPanelVisible = True
+
+            ' تطبيق الثيم
+            _notificationPanel.ApplyTheme()
+
+            ' تحديث البيانات
+            _notificationPanel.LoadNotifications()
+
+            ' إضافة معالج لإخفاء اللوحة عند الضغط خارجها
+            AddHandler Me.Click, AddressOf HideNotificationPanelOnOutsideClick
+        Catch ex As Exception
+            Logger.LogError("MainForm.ShowNotificationPanel", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' إخفاء لوحة الإشعارات
+    ''' </summary>
+    Private Sub HideNotificationPanel()
+        Try
+            If _notificationPanel IsNot Nothing Then
+                _notificationPanel.Visible = False
+                _isNotificationPanelVisible = False
+            End If
+
+            ' إزالة معالج الإخفاء
+            RemoveHandler Me.Click, AddressOf HideNotificationPanelOnOutsideClick
+        Catch ex As Exception
+            Logger.LogError("MainForm.HideNotificationPanel", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' إخفاء لوحة الإشعارات عند الضغط خارجها
+    ''' </summary>
+    Private Sub HideNotificationPanelOnOutsideClick(sender As Object, e As EventArgs)
+        Try
+            If _notificationPanel IsNot Nothing AndAlso _isNotificationPanelVisible Then
+                Dim mousePos As Point = Me.PointToClient(Cursor.Position)
+                If Not _notificationPanel.Bounds.Contains(mousePos) AndAlso
+                   Not btnNotifications.Bounds.Contains(mousePos) Then
+                    HideNotificationPanel()
+                End If
+            End If
+        Catch ex As Exception
+            Logger.LogError("MainForm.HideNotificationPanelOnOutsideClick", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' معالج حدث الضغط على إشعار في اللوحة
+    ''' </summary>
+    Private Sub OnNotificationPanelClicked(sender As Object, e As NotificationClickedEventArgs)
+        Try
+            ' إخفاء لوحة الإشعارات
+            HideNotificationPanel()
+
+            ' تنفيذ الإجراء المطلوب حسب نوع الإشعار
+            If Not String.IsNullOrEmpty(e.ActionType) Then
+                Select Case e.ActionType
+                    Case "OpenOrder"
+                        ' فتح شاشة الطلب
+                        OpenFormDirectly(GetType(frmPOS))
+
+                    Case "OpenProduct"
+                        ' فتح شاشة المنتجات
+                        OpenFormDirectly(GetType(Products))
+
+                    Case "OpenPrinterSettings"
+                        ' فتح شاشة إعدادات الطابعات
+                        OpenFormDirectly(GetType(frmPrinters))
+
+                    Case "OpenPurchases"
+                        ' فتح شاشة المشتريات
+                        OpenFormDirectly(GetType(frmPurchases))
+
+                    Case "OpenShifts"
+                        ' فتح شاشة الورديات
+                        OpenFormDirectly(GetType(frmShifts))
+
+                    Case "OpenExpenses"
+                        ' فتح شاشة المصروفات
+                        OpenFormDirectly(GetType(form_Expenses))
+
+                    Case "OpenStoreStock"
+                        ' فتح شاشة جرد المخزن
+                        OpenFormDirectly(GetType(frmStoreStock))
+
+                    Case "OpenUpdate"
+                        ' فتح نافذة التحديث
+                        WindowsApp1.Services.Updates.BackgroundUpdateService.OpenUpdatePrompt(e.ActionData, Nothing)
+
+                    Case Else
+                        ' إجراء غير معروف
+                        Notify.Toast("تم فتح الإشعار ✅", Notify.ToastType.Info)
+                End Select
+            End If
+        Catch ex As Exception
+            Logger.LogError("MainForm.OnNotificationPanelClicked", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' حدث وصول إشعار جديد
+    ''' </summary>
+    Private Sub OnNotificationReceived(sender As Object, e As NotificationEventArgs)
+        Try
+            ' تحديث Badge
+            UpdateNotificationBadge()
+
+            ' إذا كانت لوحة الإشعارات مفتوحة، قم بتحديثها
+            If _isNotificationPanelVisible AndAlso _notificationPanel IsNot Nothing Then
+                _notificationPanel.LoadNotifications()
+            End If
+
+            ' عرض Toast للإشعارات الهامة
+            If e.Priority = NotificationManager.NotificationPriority.High OrElse
+               e.Priority = NotificationManager.NotificationPriority.Critical Then
+                Notify.Toast(e.Title & " - " & e.Message, Notify.ToastType.Warning)
+            End If
+        Catch ex As Exception
+            Logger.LogError("MainForm.OnNotificationReceived", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' حدث قراءة إشعار
+    ''' </summary>
+    Private Sub OnNotificationRead(sender As Object, e As NotificationEventArgs)
+        Try
+            ' تحديث Badge
+            UpdateNotificationBadge()
+        Catch ex As Exception
+            Logger.LogError("MainForm.OnNotificationRead", ex)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' تحديث تلقائي دوري للإشعارات وفحص نواقص المخزون
+    ''' </summary>
+    Private Async Sub _tmrNotificationUpdate_Tick(sender As Object, e As EventArgs) Handles _tmrNotificationUpdate.Tick
+        UpdateNotificationBadge()
+        Await NotificationManager.Instance.CheckAndNotifyLowStockAsync()
+    End Sub
+#End Region
+
     ''' <summary>
     ''' تسجيل خروج فوري واحترافي: إغلاق كافة الشاشات المفتوحة والعودة لشاشة تسجيل الدخول مباشرة
     ''' </summary>
@@ -709,7 +1096,8 @@ Public Class MainForm
             If isAuto Then
                 Try
                     Notify.Toast("تم قفل الجلسة تلقائياً بسبب الخمول لعدم الاستخدام 🔒", Notify.ToastType.Warning)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("MainForm.vb:1094", __logEx)
                 End Try
             Else
                 Notify.Toast("تم تسجيل الخروج بنجاح ✅", Notify.ToastType.Info)
@@ -720,7 +1108,7 @@ Public Class MainForm
 
         Catch ex As Exception
             Logger.LogError("PerformLogout", ex)
-            MessageBox.Show("حدث خطأ أثناء محاولة تسجيل الخروج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء محاولة تسجيل الخروج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             _isLoggingOut = False
         End Try
@@ -785,7 +1173,8 @@ Public Class MainForm
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Try
             WindowsApp1.Services.Updates.BackgroundUpdateService.StopMonitoring()
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("MainForm.vb:1171", __logEx)
         End Try
     End Sub
 

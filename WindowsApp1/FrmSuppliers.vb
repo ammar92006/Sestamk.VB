@@ -12,7 +12,7 @@ Public Class frmSuppliers
                                             End If
                                         End Using
                                     Catch ex As Exception
-                                        MessageBox.Show(ex.Message)
+                                        SmartMessageBox.Show(ex.Message)
                                     End Try
                                 End Sub
         LoadSuppliersGrid()
@@ -29,13 +29,16 @@ Public Class frmSuppliers
             Dim query As String = "SELECT SupplierID, SupplierCode, SupplierName, Phone, Address, CurrentBalance, IsActive, Notes " &
                                   "FROM Suppliers WHERE (IsDeleted = 0 OR IsDeleted IS NULL) "
 
+            ' باراميترز بدل الدمج النصي (منع SQL Injection)
+            Dim params As New Dictionary(Of String, Object)
             If Not String.IsNullOrWhiteSpace(search) Then
-                query &= $"AND (SupplierName LIKE '%{search.Replace("'", "''")}%' OR SupplierCode LIKE '%{search.Replace("'", "''")}%' OR Phone LIKE '%{search.Replace("'", "''")}%') "
+                query &= "AND (SupplierName LIKE @Search OR SupplierCode LIKE @Search OR Phone LIKE @Search) "
+                params("@Search") = "%" & search & "%"
             End If
 
             query &= "ORDER BY SupplierID DESC"
 
-            _cachedSuppliers = DBModule.ExecuteQuery(query)
+            _cachedSuppliers = DBModule.ExecuteQuery(query, params)
             dgvSuppliers.DataSource = _cachedSuppliers
 
             If dgvSuppliers.Columns.Contains("SupplierID") Then dgvSuppliers.Columns("SupplierID").Visible = False
@@ -48,7 +51,7 @@ Public Class frmSuppliers
             If dgvSuppliers.Columns.Contains("Notes") Then dgvSuppliers.Columns("Notes").HeaderText = "ملاحظات"
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في جلب بيانات الموردين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في جلب بيانات الموردين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -79,12 +82,12 @@ Public Class frmSuppliers
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         If String.IsNullOrWhiteSpace(txtSupplierName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSupplierName.Focus()
             Exit Sub
         End If
         If String.IsNullOrWhiteSpace(txtPhone.Text) Then
-            MessageBox.Show("يرجى إدخال رقم الهاتف للمورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال رقم الهاتف للمورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtPhone.Focus()
             Exit Sub
         End If
@@ -126,11 +129,11 @@ Public Class frmSuppliers
                             Throw
                         End Try
                     End Using
-                    MessageBox.Show("تم حفظ بيانات المورد بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ بيانات المورد بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadSuppliersGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -139,12 +142,12 @@ Public Class frmSuppliers
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvSuppliers.SelectedRows.Count = 0 Then Exit Sub
         If String.IsNullOrWhiteSpace(txtSupplierName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSupplierName.Focus()
             Exit Sub
         End If
         If String.IsNullOrWhiteSpace(txtPhone.Text) Then
-            MessageBox.Show("يرجى إدخال رقم الهاتف للمورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال رقم الهاتف للمورد!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtPhone.Focus()
             Exit Sub
         End If
@@ -167,11 +170,11 @@ Public Class frmSuppliers
                     SupplierAccountingService.DemandPermission("FrmSuppliers", "CanEdit")
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل بيانات المورد بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل بيانات المورد بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadSuppliersGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -183,11 +186,11 @@ Public Class frmSuppliers
         Dim balance As Decimal = Convert.ToDecimal(dgvSuppliers.SelectedRows(0).Cells("CurrentBalance").Value)
 
         If balance <> 0 Then
-            MessageBox.Show("لا يمكن حذف المورد نظراً لوجود رصيد مالي معلق بحسابه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن حذف المورد نظراً لوجود رصيد مالي معلق بحسابه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا المورد؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا المورد؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Try
                 SupplierAccountingService.DemandPermission("FrmSuppliers", "CanDelete")
                 Using cn As New SqlConnection(DBModule.ConnectionString), cmd As New SqlCommand("UPDATE Suppliers SET IsDeleted=1 WHERE SupplierID=@ID AND CurrentBalance=0", cn)
@@ -196,7 +199,7 @@ Public Class frmSuppliers
                     If cmd.ExecuteNonQuery() <> 1 Then Throw New Exception("تغير رصيد المورد؛ حدّث البيانات وأعد المحاولة.")
                 End Using
             Catch ex As Exception
-                MessageBox.Show(ex.Message)
+                SmartMessageBox.Show(ex.Message)
                 Return
             End Try
             LoadSuppliersGrid()
@@ -207,7 +210,7 @@ Public Class frmSuppliers
     ' فتح شاشة حركات الموردين وكشف الحساب مباشرة
     Private Sub btnOpenAccountStatement_Click(sender As Object, e As EventArgs) Handles btnOpenAccountStatement.Click
         If dgvSuppliers.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد مورد من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد مورد من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -215,7 +218,7 @@ Public Class frmSuppliers
         Dim supName As String = dgvSuppliers.SelectedRows(0).Cells("SupplierName").Value.ToString()
 
         If Not Session.HasPermission("FrmSupplierTransactions", "CanOpen") Then
-            MessageBox.Show("ليس لديك صلاحية فتح كشف حساب المورد.")
+            SmartMessageBox.Show("ليس لديك صلاحية فتح كشف حساب المورد.")
             Return
         End If
         Using frm As New FrmSupplierTransactions(supID, supName)

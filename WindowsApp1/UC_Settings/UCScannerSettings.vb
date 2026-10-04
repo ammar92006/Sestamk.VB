@@ -56,7 +56,7 @@ Namespace UC_Settings
         Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
             Dim portName As String = ComboBoxPorts.Text.Trim()
             If String.IsNullOrEmpty(portName) Then
-                MessageBox.Show("يرجى اختيار المنفذ أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار المنفذ أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -74,10 +74,10 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات الاسكنر بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات الاسكنر بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات الاسكنر بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات الاسكنر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات الاسكنر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -88,7 +88,7 @@ Namespace UC_Settings
             End If
 
             If String.IsNullOrEmpty(ComboBoxPorts.Text) Then
-                MessageBox.Show("يرجى اختيار المنفذ أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار المنفذ أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -113,7 +113,7 @@ Namespace UC_Settings
                 lblStatus.Text = "حالة الاسكنر: 🟢 جاري التجربة"
                 lblStatus.ForeColor = Color.LightGreen
             Catch ex As Exception
-                MessageBox.Show("تعذّر فتح المنفذ للتجربة: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذّر فتح المنفذ للتجربة: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 
@@ -121,7 +121,8 @@ Namespace UC_Settings
             Try
                 If serial IsNot Nothing AndAlso serial.IsOpen Then serial.Close()
                 If serial IsNot Nothing Then serial.Dispose()
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCScannerSettings.vb:124", __logEx)
             End Try
             serial = Nothing
             _scannerTesting = False
@@ -156,7 +157,7 @@ Namespace UC_Settings
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الاسكنر؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الاسكنر؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 cmbBaudRate.Text = "9600"
                 cmbDataBits.Text = "8"
                 cmbParity.Text = "None"

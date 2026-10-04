@@ -25,7 +25,7 @@ Public Class frmWorkShifts
             If dgvWorkShifts.Columns.Contains("Notes") Then dgvWorkShifts.Columns("Notes").HeaderText = "ملاحظات"
             If dgvWorkShifts.Columns.Contains("IsActive") Then dgvWorkShifts.Columns("IsActive").HeaderText = "نشط"
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل بيانات الورديات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل بيانات الورديات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -35,7 +35,7 @@ Public Class frmWorkShifts
             txtWorkShiftCode.Text = GetNextCode("WorkShifts", "WorkShiftCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtWorkShiftName.Text) Then
-            MessageBox.Show("يرجى كتابة اسم الوردية أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى كتابة اسم الوردية أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtWorkShiftName.Focus()
             Return False
         End If
@@ -135,12 +135,12 @@ Public Class frmWorkShifts
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedWorkShifts = Nothing
                     LoadWorkShiftsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -149,7 +149,7 @@ Public Class frmWorkShifts
     ' 7. زر تعديل بيانات وردية
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvWorkShifts.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد الوردية المراد تعديلها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الوردية المراد تعديلها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
         If Not IsValidData() Then Exit Sub
@@ -171,12 +171,12 @@ Public Class frmWorkShifts
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedWorkShifts = Nothing
                     LoadWorkShiftsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -184,11 +184,11 @@ Public Class frmWorkShifts
     ' 8. زر الحذف الناعم (Soft Delete)
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvWorkShifts.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد الوردية المراد حذفها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الوردية المراد حذفها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذه الوردية؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الوردية؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvWorkShifts.SelectedRows(0).Cells("WorkShiftID").Value)
             Dim query As String = "UPDATE WorkShifts SET IsDeleted = 1 WHERE WorkShiftID = @WorkShiftID"
 
@@ -198,12 +198,12 @@ Public Class frmWorkShifts
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedWorkShifts = Nothing
                         LoadWorkShiftsGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

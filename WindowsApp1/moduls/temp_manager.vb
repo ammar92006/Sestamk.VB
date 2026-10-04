@@ -44,7 +44,7 @@ Public Class temp_manager
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء جلب بيانات منتج الميزان: " & ex.Message,
+            SmartMessageBox.Show("خطأ أثناء جلب بيانات منتج الميزان: " & ex.Message,
                             "خطأ قاعدة بيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
@@ -143,7 +143,7 @@ Public Class temp_manager
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء تحميل وحدات المنتج: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء تحميل وحدات المنتج: " & ex.Message)
         End Try
 
         Return dt
@@ -175,7 +175,7 @@ Public Class temp_manager
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء تحميل وحدات المنتج: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء تحميل وحدات المنتج: " & ex.Message)
         End Try
 
         Return dt
@@ -211,7 +211,7 @@ Public Class temp_manager
             End If
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ في تحميل وحدات المنتج: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ في تحميل وحدات المنتج: " & ex.Message)
         End Try
     End Sub
     Public Sub LoadUnitsAndSetDefaultPrice2(ByVal productId As Integer,
@@ -241,7 +241,7 @@ Public Class temp_manager
             End If
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ في تحميل وحدات المنتج: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ في تحميل وحدات المنتج: " & ex.Message)
         End Try
     End Sub
 
@@ -262,7 +262,7 @@ Public Class temp_manager
             txtSalePrice.Text = CurrentSalePriceVar.ToString("N2")
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ 
+            SmartMessageBox.Show("⚠️ 
 السعر ومعامل التحويل: " & ex.Message)
         End Try
     End Sub
@@ -280,7 +280,7 @@ Public Class temp_manager
             txtSalePrice.Text = CurrentSalePriceVar.ToString("N2")
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ 
+            SmartMessageBox.Show("⚠️ 
 السعر ومعامل التحويل: " & ex.Message)
         End Try
     End Sub
@@ -319,7 +319,7 @@ Public Class temp_manager
             End If
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء تغيير الوحدة: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء تغيير الوحدة: " & ex.Message)
         End Try
     End Sub
     Public Sub cmbUnit_SelectedIndexChanged2(sender As Object, e As EventArgs,
@@ -353,7 +353,7 @@ Public Class temp_manager
             End If
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء تغيير الوحدة: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء تغيير الوحدة: " & ex.Message)
         End Try
     End Sub
 
@@ -377,7 +377,7 @@ Public Class temp_manager
             lstProductSuggestions.ValueMember = "Product_ID"
             lstProductSuggestions.Visible = (resultsTable.Rows.Count > 0)
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء البحث بالكود: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء البحث بالكود: " & ex.Message)
         Finally
             isFillingList = False
         End Try
@@ -407,7 +407,7 @@ Public Class temp_manager
             lstProductSuggestions.ClearSelected()
             lstProductSuggestions.Visible = (resultsTable.Rows.Count > 0)
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء البحث بالاسم: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء البحث بالاسم: " & ex.Message)
         Finally
             isFillingList = False
         End Try
@@ -433,7 +433,7 @@ Public Class temp_manager
             lstProductSuggestions.ClearSelected()
             lstProductSuggestions.Visible = (resultsTable.Rows.Count > 0)
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء البحث بالاسم: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء البحث بالاسم: " & ex.Message)
         Finally
             isFillingList = False
         End Try
@@ -467,7 +467,7 @@ Public Class temp_manager
                                         tempSalePrice, tempConversionFactor)
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالكود: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ عند اختيار المنتج بالكود: " & ex.Message)
         End Try
     End Sub
 
@@ -505,7 +505,7 @@ Public Class temp_manager
                                         tempSalePrice2, tempConversionFactor2)
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
         Finally
             txtQuantity.Focus()
         End Try
@@ -540,7 +540,7 @@ Public Class temp_manager
                                          tempSalePrice3, tempConversionFactor3)
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
         Finally
             txtQuantity.Focus()
         End Try
@@ -570,7 +570,7 @@ Public Class temp_manager
     '                                sales.CurrentSalePrice, sales.CurrentConversionFactor)
 
     '    Catch ex As Exception
-    '        MessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
+    '        SmartMessageBox.Show("⚠️ خطأ عند اختيار المنتج بالاسم: " & ex.Message)
     '    End Try
     'End Sub
 
@@ -600,7 +600,7 @@ Public Class temp_manager
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء فحص المخزون: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء فحص المخزون: " & ex.Message)
         End Try
 
         Return currentStock - (requiredQuantity * conversionFactor)
@@ -636,7 +636,7 @@ Public Class temp_manager
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء البحث بالباركود: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء البحث بالباركود: " & ex.Message)
         End Try
 
         Return dt
@@ -668,7 +668,7 @@ Public Class temp_manager
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء البحث بالباركود: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء البحث بالباركود: " & ex.Message)
         End Try
 
         Return dt

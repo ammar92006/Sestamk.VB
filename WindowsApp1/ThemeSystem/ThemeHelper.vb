@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Windows.Forms
 Imports Guna.UI2.WinForms
 
@@ -217,6 +217,7 @@ Public NotInheritable Class ThemeHelper
 
         Catch ex As Exception
             ' Never block theme application due to a single control error
+            Logger.LogError("ThemeHelper.vb:218", ex)
         End Try
 
         ' ── Recurse into children ────────────────────────────────
@@ -315,7 +316,8 @@ Public NotInheritable Class ThemeHelper
                 box.HoverState.FillColor = palette.SurfaceSecondary
                 box.HoverState.IconColor = palette.TextPrimary
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:319", __logEx)
         End Try
     End Sub
 
@@ -380,7 +382,8 @@ Public NotInheritable Class ThemeHelper
                 Try
                     btn.HoverState.FillColor = palette.Danger
                     btn.HoverState.ForeColor = Color.White
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("ThemeHelper.vb:385", __logEx)
                 End Try
                 Return
             End If
@@ -467,12 +470,14 @@ Public NotInheritable Class ThemeHelper
 
             Try
                 btn.HoverState.FillColor = targetHover
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:473", __logEx)
             End Try
 
             Try
                 btn.PressedColor = targetPressed
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:479", __logEx)
             End Try
 
             btn.DisabledState.FillColor = palette.ButtonDisabledBackground
@@ -480,6 +485,7 @@ Public NotInheritable Class ThemeHelper
             btn.DisabledState.BorderColor = palette.Border
 
         Catch ex As Exception
+            Logger.LogError("ThemeHelper.vb:487", ex)
         End Try
     End Sub
 
@@ -524,17 +530,20 @@ Public NotInheritable Class ThemeHelper
 
             Try
                 txt.FocusedState.BorderColor = palette.InputFocusBorder
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:533", __logEx)
             End Try
             Try
                 txt.HoverState.BorderColor = palette.InputHoverBorder
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:538", __logEx)
             End Try
 
             txt.DisabledState.FillColor = palette.InputDisabledBackground
             txt.DisabledState.ForeColor = palette.InputDisabledForeground
             txt.DisabledState.BorderColor = palette.Border
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:545", __logEx)
         End Try
     End Sub
 
@@ -549,11 +558,13 @@ Public NotInheritable Class ThemeHelper
 
             Try
                 cmb.FocusedState.BorderColor = palette.InputFocusBorder
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:561", __logEx)
             End Try
             Try
                 cmb.HoverState.BorderColor = palette.InputHoverBorder
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:566", __logEx)
             End Try
 
             Try
@@ -563,12 +574,14 @@ Public NotInheritable Class ThemeHelper
                     cmb.ItemsAppearance.SelectedBackColor = palette.SelectionBackground
                     cmb.ItemsAppearance.SelectedForeColor = palette.SelectionForeground
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:577", __logEx)
             End Try
 
             cmb.DisabledState.FillColor = palette.InputDisabledBackground
             cmb.DisabledState.ForeColor = palette.InputDisabledForeground
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:583", __logEx)
         End Try
     End Sub
 
@@ -584,14 +597,17 @@ Public NotInheritable Class ThemeHelper
             Try
                 dtp.CheckedState.FillColor = palette.InputBackground
                 dtp.CheckedState.BorderColor = palette.InputBorder
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:600", __logEx)
             End Try
 
             Try
                 dtp.HoverState.BorderColor = palette.InputHoverBorder
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ThemeHelper.vb:606", __logEx)
             End Try
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:609", __logEx)
         End Try
     End Sub
 
@@ -605,7 +621,8 @@ Public NotInheritable Class ThemeHelper
             num.BorderColor = palette.InputBorder
             num.UpDownButtonFillColor = palette.SurfaceSecondary
             num.UpDownButtonForeColor = palette.TextPrimary
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:624", __logEx)
         End Try
     End Sub
 
@@ -619,7 +636,8 @@ Public NotInheritable Class ThemeHelper
             rb.CheckedState.FillColor = palette.Primary
             rb.UncheckedState.BorderColor = palette.Border
             rb.UncheckedState.FillColor = palette.Surface
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:639", __logEx)
         End Try
     End Sub
 
@@ -631,7 +649,8 @@ Public NotInheritable Class ThemeHelper
             grp.FillColor = palette.Surface
             grp.ForeColor = palette.TextPrimary
             grp.CustomBorderColor = palette.SurfaceSecondary
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:652", __logEx)
         End Try
     End Sub
 
@@ -648,7 +667,8 @@ Public NotInheritable Class ThemeHelper
             Else
                 lbl.ForeColor = palette.TextPrimary
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:670", __logEx)
         End Try
     End Sub
 
@@ -664,7 +684,8 @@ Public NotInheritable Class ThemeHelper
             tg.UncheckedState.FillColor = palette.ToggleUncheckedFill
             tg.UncheckedState.BorderColor = palette.ToggleUncheckedFill
             tg.UncheckedState.InnerColor = palette.ToggleInnerColor
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:687", __logEx)
         End Try
     End Sub
 
@@ -678,7 +699,8 @@ Public NotInheritable Class ThemeHelper
             chk.UncheckedState.FillColor = palette.ToggleUncheckedFill
             chk.UncheckedState.BorderColor = palette.ToggleUncheckedFill
             chk.ForeColor = palette.TextPrimary
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:702", __logEx)
         End Try
     End Sub
 
@@ -688,7 +710,8 @@ Public NotInheritable Class ThemeHelper
     Private Shared Sub ApplyGuna2TabControl(tab As Guna2TabControl, palette As ThemePalette)
         Try
             tab.BackColor = palette.TabBackground
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:713", __logEx)
         End Try
 
         For Each pg As TabPage In tab.TabPages
@@ -753,6 +776,7 @@ Public NotInheritable Class ThemeHelper
             TryApplyGuna2DGVTheme(dgv, palette)
 
         Catch ex As Exception
+            Logger.LogError("ThemeHelper.vb:778", ex)
         End Try
     End Sub
 
@@ -790,7 +814,8 @@ Public NotInheritable Class ThemeHelper
                 SetReflProp(altStyle, ar, "BackColor", palette.GridAlternateBackground)
                 SetReflProp(altStyle, ar, "ForeColor", palette.GridForeground)
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:817", __logEx)
         End Try
     End Sub
 
@@ -798,7 +823,8 @@ Public NotInheritable Class ThemeHelper
         Try
             Dim p = t.GetProperty(propName)
             If p IsNot Nothing Then Return p.GetValue(obj)
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:826", __logEx)
         End Try
         Return Nothing
     End Function
@@ -807,7 +833,8 @@ Public NotInheritable Class ThemeHelper
         Try
             Dim p = t.GetProperty(propName)
             If p IsNot Nothing Then p.SetValue(obj, value)
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:836", __logEx)
         End Try
     End Sub
 
@@ -853,7 +880,8 @@ Public NotInheritable Class ThemeHelper
             btn.Appearance.ForeColor = targetFore
             btn.Appearance.Options.UseBackColor = True
             btn.Appearance.Options.UseForeColor = True
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:883", __logEx)
         End Try
     End Sub
 
@@ -866,7 +894,8 @@ Public NotInheritable Class ThemeHelper
             pnl.Appearance.ForeColor = palette.TextPrimary
             pnl.Appearance.Options.UseBackColor = True
             pnl.Appearance.Options.UseForeColor = True
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:897", __logEx)
         End Try
     End Sub
 
@@ -877,7 +906,8 @@ Public NotInheritable Class ThemeHelper
         Try
             Dim renderer As New ThemeToolStripRenderer(palette)
             ApplyRendererToForm(frm, renderer)
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ThemeHelper.vb:909", __logEx)
         End Try
     End Sub
 

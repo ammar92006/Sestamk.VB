@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Diagnostics
 Imports System.Drawing
 Imports System.Net.Http
@@ -47,10 +47,11 @@ Namespace UC_Settings
                 SettingsManager.SaveSetting("AutoUpdate_Enabled", tglAutoUpdate.Checked.ToString().ToLower())
                 Try
                     Notify.Toast("تم حفظ إعدادات التحديث التلقائي بنجاح ✅", Notify.ToastType.Success)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCUpdatesSettings.vb:50", __logEx)
                 End Try
             Catch ex As Exception
-                MessageBox.Show("فشل حفظ إعداد التحديث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("فشل حفظ إعداد التحديث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -318,7 +319,8 @@ Namespace UC_Settings
                         ctrl.Width = targetWidth
                     End If
                 Next
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCUpdatesSettings.vb:322", __logEx)
             End Try
         End Sub
 
@@ -989,7 +991,7 @@ Namespace UC_Settings
                     Try
                         Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show($"أنت تستخدم أحدث إصدار متاح حالياً لقناة {channel.ToUpperInvariant()}.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show($"أنت تستخدم أحدث إصدار متاح حالياً لقناة {channel.ToUpperInvariant()}.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                     Return
                 End If
@@ -1003,7 +1005,8 @@ Namespace UC_Settings
                 If String.IsNullOrWhiteSpace(manifestUrl) Then
                     Try
                         Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCUpdatesSettings.vb:1008", __logEx)
                     End Try
                     Return
                 End If
@@ -1021,7 +1024,8 @@ Namespace UC_Settings
                         If Not String.Equals(manifestChannel, channel, StringComparison.OrdinalIgnoreCase) Then
                             Try
                                 Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
-                            Catch
+                            Catch __logEx As Exception
+                                Logger.LogError("UCUpdatesSettings.vb:1027", __logEx)
                             End Try
                             Return
                         End If
@@ -1051,18 +1055,19 @@ Namespace UC_Settings
                             Try
                                 Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
                             Catch
-                                MessageBox.Show($"أنت تستخدم أحدث إصدار متاح حالياً لقناة {channel.ToUpperInvariant()}.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                SmartMessageBox.Show($"أنت تستخدم أحدث إصدار متاح حالياً لقناة {channel.ToUpperInvariant()}.", "التحديثات", MessageBoxButtons.OK, MessageBoxIcon.Information)
                             End Try
                         End If
                     Else
                         Try
                             Notify.Toast($"أنت تستخدم أحدث إصدار لقناة {channel.ToUpperInvariant()} حالياً ✅", Notify.ToastType.Success)
-                        Catch
+                        Catch __logEx As Exception
+                            Logger.LogError("UCUpdatesSettings.vb:1064", __logEx)
                         End Try
                     End If
                 End Using
             Catch ex As Exception
-                MessageBox.Show("حدث خطأ أثناء فحص التحديثات: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("حدث خطأ أثناء فحص التحديثات: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Finally
                 btnCheckForUpdates.Enabled = True
                 btnCheckForUpdates.Text = originalText

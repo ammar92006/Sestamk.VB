@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Diagnostics
 Imports System.Runtime.InteropServices
 Imports System.Windows.Forms
@@ -347,7 +347,8 @@ Namespace Services
                 For i As Integer = toClose.Count - 1 To 0 Step -1
                     Try
                         toClose(i).Close()
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("SessionLockService.vb:350", __logEx)
                     End Try
                 Next
 
@@ -360,7 +361,8 @@ Namespace Services
 
                 Try
                     Notify.Toast("تم قفل الجلسة تلقائياً لعدم النشاط 🔒", Notify.ToastType.Warning)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("SessionLockService.vb:364", __logEx)
                 End Try
             Catch ex As Exception
                 Logger.LogError("SessionLockService.ExecuteFallbackLogout", ex)

@@ -23,7 +23,7 @@ Public Class frmProductAddons
                 cmbAddon.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

@@ -23,7 +23,7 @@ Public Class frmDeliveryAreas
             If dgvDeliveryAreas.Columns.Contains("Notes") Then dgvDeliveryAreas.Columns("Notes").HeaderText = "ملاحظات"
             If dgvDeliveryAreas.Columns.Contains("IsActive") Then dgvDeliveryAreas.Columns("IsActive").HeaderText = "نشط"
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل قائمة المناطق: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل قائمة المناطق: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -32,7 +32,7 @@ Public Class frmDeliveryAreas
             txtAreaCode.Text = GetNextCode("DeliveryAreas", "AreaCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtAreaName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم المنطقة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم المنطقة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtAreaName.Focus()
             Return False
         End If
@@ -88,12 +88,12 @@ Public Class frmDeliveryAreas
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ المنطقة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ المنطقة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedAreas = Nothing
                     LoadAreasGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -119,12 +119,12 @@ Public Class frmDeliveryAreas
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل المنطقة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل المنطقة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedAreas = Nothing
                     LoadAreasGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -133,7 +133,7 @@ Public Class frmDeliveryAreas
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvDeliveryAreas.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذه المنطقة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه المنطقة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvDeliveryAreas.SelectedRows(0).Cells("AreaID").Value)
             Dim query As String = "UPDATE DeliveryAreas SET IsDeleted = 1 WHERE AreaID = @ID"
 
@@ -143,12 +143,12 @@ Public Class frmDeliveryAreas
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف المنطقة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف المنطقة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedAreas = Nothing
                         LoadAreasGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

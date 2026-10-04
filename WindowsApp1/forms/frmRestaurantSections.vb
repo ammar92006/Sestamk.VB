@@ -24,7 +24,7 @@ Public Class frmRestaurantSections
             If dgvRestaurantSections.Columns.Contains("Notes") Then dgvRestaurantSections.Columns("Notes").HeaderText = "ملاحظات"
             If dgvRestaurantSections.Columns.Contains("IsActive") Then dgvRestaurantSections.Columns("IsActive").HeaderText = "نشط"
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل بيانات أقسام المطعم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل بيانات أقسام المطعم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -34,7 +34,7 @@ Public Class frmRestaurantSections
             txtSectionCode.Text = GetNextCode("RestaurantSections", "SectionCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtSectionName.Text) Then
-            MessageBox.Show("يرجى كتابة اسم القسم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى كتابة اسم القسم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSectionName.Focus()
             Return False
         End If
@@ -104,12 +104,12 @@ Public Class frmRestaurantSections
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedSections = Nothing
                     LoadSectionsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -118,7 +118,7 @@ Public Class frmRestaurantSections
     ' 7. زر تعديل بيانات قسم
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvRestaurantSections.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد القسم المراد تعديله من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد القسم المراد تعديله من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
         If Not IsValidData() Then Exit Sub
@@ -138,12 +138,12 @@ Public Class frmRestaurantSections
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedSections = Nothing
                     LoadSectionsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -152,11 +152,11 @@ Public Class frmRestaurantSections
     ' 8. زر الحذف الناعم (Soft Delete)
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvRestaurantSections.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد القسم المراد حذفه من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد القسم المراد حذفه من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا القسم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا القسم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvRestaurantSections.SelectedRows(0).Cells("SectionID").Value)
             Dim query As String = "UPDATE RestaurantSections SET IsDeleted = 1 WHERE SectionID = @SectionID"
 
@@ -166,12 +166,12 @@ Public Class frmRestaurantSections
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedSections = Nothing
                         LoadSectionsGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

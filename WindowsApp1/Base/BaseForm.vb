@@ -1,4 +1,4 @@
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 Imports System.Windows.Forms
 
 Public Class BaseForm
@@ -26,6 +26,7 @@ Public Class BaseForm
             ThemeManager.Instance.ApplyTheme(Me)
             ApplyCustomTheme()
         Catch ex As Exception
+            Logger.LogError("BaseForm.vb:28", ex)
         End Try
     End Sub
 

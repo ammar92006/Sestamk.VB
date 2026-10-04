@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class frmUnits
     Private _cachedUnits As DataTable = Nothing
@@ -38,7 +38,7 @@ Public Class frmUnits
                 dgvUnits.Columns("IsActive").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الوحدات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل الوحدات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -80,7 +80,7 @@ Public Class frmUnits
     ' ──────────────────────────────────────────────────────────
     Private Function IsValidData() As Boolean
         If String.IsNullOrWhiteSpace(txtUnitName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم الوحدة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم الوحدة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtUnitName.Focus()
             Return False
         End If
@@ -146,8 +146,9 @@ Public Class frmUnits
                     If Convert.ToInt32(cmd.ExecuteScalar()) > 0 Then Return True
                 End Using
             End Using
-        Catch
+        Catch __logEx As Exception
             ' في حال عدم توفر أحد الجداول لا نعيق الإجراء
+            Logger.LogError("frmUnits.vb:149", __logEx)
         End Try
         Return False
     End Function
@@ -185,7 +186,7 @@ Public Class frmUnits
 
         ' منع تكرار اسم الوحدة
         If IsDuplicateUnitName(txtUnitName.Text.Trim()) Then
-            MessageBox.Show("اسم الوحدة مسجل مسبقاً! يرجى إدخال اسم آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("اسم الوحدة مسجل مسبقاً! يرجى إدخال اسم آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtUnitName.Focus()
             Exit Sub
         End If
@@ -201,12 +202,12 @@ Public Class frmUnits
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تمت إضافة الوحدة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت إضافة الوحدة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedUnits = Nothing
                     LoadUnitsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء إضافة الوحدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء إضافة الوحدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -217,7 +218,7 @@ Public Class frmUnits
     ' ──────────────────────────────────────────────────────────
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvUnits.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد الوحدة المراد تعديلها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الوحدة المراد تعديلها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -227,7 +228,7 @@ Public Class frmUnits
 
         ' منع تكرار اسم الوحدة لوحدة أخرى
         If IsDuplicateUnitName(txtUnitName.Text.Trim(), currentID) Then
-            MessageBox.Show("اسم الوحدة مسجل مسبقاً لوحدة أخرى! يرجى إدخال اسم مختلف.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("اسم الوحدة مسجل مسبقاً لوحدة أخرى! يرجى إدخال اسم مختلف.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtUnitName.Focus()
             Exit Sub
         End If
@@ -244,12 +245,12 @@ Public Class frmUnits
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل الوحدة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الوحدة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedUnits = Nothing
                     LoadUnitsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء تعديل الوحدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء تعديل الوحدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -260,20 +261,20 @@ Public Class frmUnits
     ' ──────────────────────────────────────────────────────────
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvUnits.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد الوحدة المراد حذفها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الوحدة المراد حذفها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim currentID As Integer = Convert.ToInt32(dgvUnits.SelectedRows(0).Cells("UnitID").Value)
         Dim unitName As String = If(dgvUnits.SelectedRows(0).Cells("UnitName").Value IsNot Nothing, dgvUnits.SelectedRows(0).Cells("UnitName").Value.ToString(), "")
 
-        If MessageBox.Show($"هل أنت متأكد من حذف الوحدة ({unitName})؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+        If SmartMessageBox.Show($"هل أنت متأكد من حذف الوحدة ({unitName})؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
             Exit Sub
         End If
 
         ' فحص ارتباط الوحدة
         If IsUnitInUse(currentID, unitName) Then
-            MessageBox.Show("لا يمكن حذف هذه الوحدة لأنها مرتبطة بخامات أو منتجات أو أرصدة مسجلة بالنظام!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن حذف هذه الوحدة لأنها مرتبطة بخامات أو منتجات أو أرصدة مسجلة بالنظام!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -286,12 +287,12 @@ Public Class frmUnits
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حذف الوحدة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حذف الوحدة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedUnits = Nothing
                     LoadUnitsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء حذف الوحدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء حذف الوحدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using

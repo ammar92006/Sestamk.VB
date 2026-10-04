@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Threading.Tasks
@@ -134,14 +134,14 @@ Public Class SplashScreen
                     ' المحرك غير مثبت: نبحث عن حزمة التثبيت المرفقة
                     Dim msiPath = LocalDbManager.FindLocalDbMsiInstaller()
                     If Not String.IsNullOrEmpty(msiPath) Then
-                        Dim ask = MessageBox.Show("محرك SQL Server LocalDB غير مثبت على هذا الجهاز." & vbCrLf &
+                        Dim ask = SmartMessageBox.Show("محرك SQL Server LocalDB غير مثبت على هذا الجهاز." & vbCrLf &
                                                   "تم العثور على حزمة التثبيت المرفقة. هل تريد تثبيت المحرك الآن تلقائياً؟",
                                                   "تثبيت محرك قاعدة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                         If ask = DialogResult.Yes Then
                             UpdateStatus("جاري تثبيت محرك LocalDB صامتاً، يرجى الانتظار...", 50)
                             Dim installed = Await LocalDbManager.InstallLocalDbSilentlyAsync(msiPath)
                             If Not installed Then
-                                MessageBox.Show("تعذر تثبيت محرك LocalDB تلقائياً. يرجى تثبيت ملف SqlLocalDB.msi كمسؤول.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                SmartMessageBox.Show("تعذر تثبيت محرك LocalDB تلقائياً. يرجى تثبيت ملف SqlLocalDB.msi كمسؤول.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                             End If
                         End If
                     End If
@@ -171,7 +171,8 @@ Public Class SplashScreen
                     If cmdArgs IsNot Nothing Then
                         isPostUpdate = cmdArgs.Any(Function(a) String.Equals(a, "--post-update", StringComparison.OrdinalIgnoreCase))
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("SplashScreen.vb:174", __logEx)
                 End Try
 
                 If isPostUpdate Then
@@ -221,7 +222,7 @@ Public Class SplashScreen
                     "• إذا كان هذا أول تشغيل على جهاز جديد، يمكنك ضبط الاتصال أو تهيئة محرك LocalDB الداخلي من شاشة الإعدادات." & vbCrLf &
                     "• هل ترغب في فتح شاشة إعدادات قاعدة البيانات الآن؟"
 
-                Dim choice = MessageBox.Show(Me, msg, "إعداد الاتصال بقاعدة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+                Dim choice = SmartMessageBox.Show(Me, msg, "إعداد الاتصال بقاعدة البيانات", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                 If choice = DialogResult.Yes Then
                     Global.WindowsApp1.Settings.OpenDatabaseSettings(owner:=Me, databaseOnly:=True)
                     If DBModule.TestConnection() Then

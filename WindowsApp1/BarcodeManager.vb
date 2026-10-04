@@ -22,7 +22,7 @@ Public Module BarcodeManager
             Return True
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ في فتح المنفذ: " & ex.Message, "Barcode", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("⚠️ خطأ في فتح المنفذ: " & ex.Message, "Barcode", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
         End Try
     End Function
@@ -33,7 +33,8 @@ Public Module BarcodeManager
             If serial IsNot Nothing AndAlso serial.IsOpen Then
                 serial.Close()
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("BarcodeManager.vb:36", __logEx)
         End Try
     End Sub
 
@@ -44,7 +45,8 @@ Public Module BarcodeManager
             If data <> "" Then
                 RaiseEvent BarcodeReceived(data)
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("BarcodeManager.vb:48", __logEx)
         End Try
     End Sub
 End Module

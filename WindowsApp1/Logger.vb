@@ -80,6 +80,17 @@ Public Module Logger
         WriteLog(LogLevel.Warning, message, caller, filePath)
     End Sub
 
+    ''' <summary>تسجيل تحذير (اسم بديل)</summary>
+    Public Sub LogWarning(message As String,
+                          <CallerMemberName> Optional caller As String = "",
+                          <CallerFilePath> Optional filePath As String = "")
+        WriteLog(LogLevel.Warning, message, caller, filePath)
+    End Sub
+
+    Public Sub LogWarning(context As String, message As String)
+        WriteLog(LogLevel.Warning, If(String.IsNullOrEmpty(context), message, $"[{context}] {message}"), context, "")
+    End Sub
+
     ''' <summary>تسجيل خطأ مع Exception</summary>
     Public Sub LogError(context As String, ex As Exception,
                         <CallerMemberName> Optional caller As String = "",
@@ -122,7 +133,7 @@ Public Module Logger
 
         ' عرض رسالة للمستخدم (الأخطاء الحرجة فقط تستحق MessageBox)
         Try
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 message & If(ex IsNot Nothing, vbCrLf & ex.Message, ""),
                 "خطأ حرج",
                 MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -160,7 +171,7 @@ Public Module Logger
                           <CallerFilePath> Optional filePath As String = "")
         WriteLog(level, message, caller, filePath)
         Try
-            MessageBox.Show(message, title, MessageBoxButtons.OK, icon)
+            SmartMessageBox.Show(message, title, MessageBoxButtons.OK, icon)
         Catch
         End Try
     End Sub

@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports System.IO
 Imports Guna.UI2.WinForms
@@ -134,7 +134,7 @@ Public Class Customer
             txtCustomerCode.Text = (maxCode + 1).ToString()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء جلب كود المنتج: " & ex.Message,
+            SmartMessageBox.Show("حدث خطأ أثناء جلب كود المنتج: " & ex.Message,
                         "خطأ",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error)
@@ -456,7 +456,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         'Try
         '    If String.IsNullOrWhiteSpace(txtCustomerCode.Text) OrElse String.IsNullOrWhiteSpace(txtCustomerName.Text) Then
-        '        MessageBox.Show("يرجى إدخال كود العميل واسم العميل.", "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '        SmartMessageBox.Show("يرجى إدخال كود العميل واسم العميل.", "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         '        Exit Sub
         '    End If
 
@@ -477,23 +477,23 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         '        cmd.ExecuteNonQuery()
         '    End Using
 
-        '    MessageBox.Show("✅ تم إضافة العميل بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    SmartMessageBox.Show("✅ تم إضافة العميل بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '    ClearFields()
         '    LoadCustomers()
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
         'End Try
 
         Try
             ' التحقق من الحقول المطلوبة
             If String.IsNullOrWhiteSpace(txtCustomerCode.Text) OrElse String.IsNullOrWhiteSpace(txtCustomerName.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كود واسم العميل على الأقل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كود واسم العميل على الأقل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             ' تحقق من وجود كود العميل مسبقًا
             If IsCustomerCodeExists(txtCustomerCode.Text.Trim()) Then
-                MessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -516,12 +516,12 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 End Using
             End Using
 
-            MessageBox.Show("✅ تم إضافة العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم إضافة العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             ClearFields()
             LoadCustomers()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء إضافة العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء إضافة العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub
@@ -548,7 +548,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
         Return exists
@@ -613,14 +613,14 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvCustomers.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار العميل أولاً من الجدول.")
+            SmartMessageBox.Show("يرجى اختيار العميل أولاً من الجدول.")
             Return
         End If
 
         Dim id As Integer = Convert.ToInt32(dgvCustomers.SelectedRows(0).Cells("CustomerID").Value)
         Dim name As String = dgvCustomers.SelectedRows(0).Cells("CustomerName").Value.ToString()
 
-        If MessageBox.Show($"هل أنت متأكد من حذف العميل '{name}'؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
+        If SmartMessageBox.Show($"هل أنت متأكد من حذف العميل '{name}'؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
             Using con As New SqlConnection(ConnectionString)
                 con.Open()
                 Dim cmd As New SqlCommand("DELETE FROM Customers WHERE CustomerID=@ID", con)
@@ -628,7 +628,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 cmd.ExecuteNonQuery()
             End Using
 
-            MessageBox.Show("🗑️ تم حذف العميل بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("🗑️ تم حذف العميل بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadCustomers()
             ClearFields()
         End If
@@ -636,7 +636,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         '   If dgvCustomers.SelectedRows.Count = 0 Then
-        '       MessageBox.Show("يرجى اختيار العميل أولاً من الجدول.")
+        '       SmartMessageBox.Show("يرجى اختيار العميل أولاً من الجدول.")
         '       Return
         '   End If
 
@@ -662,13 +662,13 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         '       cmd.ExecuteNonQuery()
         '   End Using
 
-        '   MessageBox.Show("✅ تم تعديل بيانات العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '   SmartMessageBox.Show("✅ تم تعديل بيانات العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '   ClearFields()
         '   LoadCustomers()
 
         Try
             If dgvCustomers.SelectedRows.Count = 0 Then
-                MessageBox.Show("⚠️ يرجى اختيار العميل أولاً من الجدول.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى اختيار العميل أولاً من الجدول.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -677,7 +677,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
             ' تحقق من وجود كود العميل مكرر لكود آخر
             If IsCustomerCodeExists(code, id) Then
-                MessageBox.Show("⚠️ هذا الكود مستخدم بواسطة عميل آخر، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ هذا الكود مستخدم بواسطة عميل آخر، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -711,12 +711,12 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 End Using
             End Using
 
-            MessageBox.Show("✅ تم تعديل بيانات العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم تعديل بيانات العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             ClearFields()
             LoadCustomers()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تعديل العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تعديل العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub
@@ -774,7 +774,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                     wb.SaveAs(sfd.FileName)
                 End Using
 
-                MessageBox.Show("✅ تم تصدير بيانات العملاء إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تصدير بيانات العملاء إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                 ' 5️⃣ فتح المجلد تلقائيًا
                 Dim folderPath As String = Path.GetDirectoryName(sfd.FileName)
@@ -782,7 +782,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             End If
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء التصدير: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء التصدير: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -844,7 +844,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         '    End If
 
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    SmartMessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         'End Try
         'Try
         '    Dim ofd As New OpenFileDialog()
@@ -860,7 +860,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         '    End If
 
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    SmartMessageBox.Show("حدث خطأ أثناء الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         'End Try
 
     End Sub
@@ -886,17 +886,17 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 Next
             End Using
 
-            MessageBox.Show("💾 تم حفظ البيانات المستوردة في قاعدة العملاء بنجاح!", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("💾 تم حفظ البيانات المستوردة في قاعدة العملاء بنجاح!", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         Catch ex As Exception
-            MessageBox.Show("⚠️ خطأ أثناء حفظ البيانات في القاعدة: " & ex.Message)
+            SmartMessageBox.Show("⚠️ خطأ أثناء حفظ البيانات في القاعدة: " & ex.Message)
         End Try
     End Sub
 
     Private Sub SimpleButton1_Click(sender As Object, e As EventArgs)
         Try
             If dgvCustomers.Rows.Count = 0 Then
-                MessageBox.Show("لا توجد بيانات للمعاينة.", "تنبيه")
+                SmartMessageBox.Show("لا توجد بيانات للمعاينة.", "تنبيه")
                 Return
             End If
 
@@ -915,7 +915,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             previewForm.ShowDialog()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء المعاينة: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء المعاينة: " & ex.Message)
         End Try
     End Sub
     Private Sub ClearFields()
@@ -943,7 +943,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
 
         Select Case e.KeyCode
             Case System.Windows.Forms.Keys.F1
-                MessageBox.Show("الاختصارات المتاحة:" & vbCrLf &
+                SmartMessageBox.Show("الاختصارات المتاحة:" & vbCrLf &
                     "F2 / Ctrl+N : إضافة جديد" & vbCrLf &
                     "F3 : تعديل" & vbCrLf &
                     "F4 : حذف" & vbCrLf &
@@ -1020,15 +1020,15 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
         Dim message As String = txtMessage.Text.Trim()
 
         If String.IsNullOrEmpty(phone) OrElse String.IsNullOrEmpty(message) Then
-            MessageBox.Show("من فضلك أدخل الرقم والرسالة.")
+            SmartMessageBox.Show("من فضلك أدخل الرقم والرسالة.")
             Return
         End If
         Dim success As Boolean = Await WhatsAppAPI.SendText(phone, message)
 
         If success Then
-            MessageBox.Show("✅ تم إرسال الرسالة")
+            SmartMessageBox.Show("✅ تم إرسال الرسالة")
         Else
-            MessageBox.Show("❌ فشل الإرسال")
+            SmartMessageBox.Show("❌ فشل الإرسال")
         End If
     End Sub
 
@@ -1079,11 +1079,13 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
                 frm.cboSalesCustomer.Text = sectionName
                 'frm.btnSearchSales_Click(frm.cboSalesCustomer, EventArgs.Empty)
                 frm.btnSearchSales.PerformClick()
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("Customer.vb:1082", __logEx)
             End Try
 
         Catch ex As Exception
             ' تجاهل أي خطأ بصمت
+            Logger.LogError("Customer.vb:1086", ex)
         End Try
     End Sub
 
@@ -1128,7 +1130,7 @@ $"السلام عليكم ورحمة الله وبركاته الأستاذ/ {na
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء قراءة الملف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء قراءة الملف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
         Return dt

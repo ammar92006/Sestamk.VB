@@ -42,7 +42,7 @@ Public Class frmProductSizes
                 cmbSize.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل القوائم: " & ex.Message)
+            SmartMessageBox.Show("خطأ في تحميل القوائم: " & ex.Message)
         Finally
             _isLoading = False
         End Try
@@ -69,7 +69,7 @@ Public Class frmProductSizes
     ' 3. زر إضافة حجم للصنف
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
         If cmbProduct.SelectedIndex = -1 OrElse cmbSize.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الصنف والحجم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الصنف والحجم أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -90,11 +90,11 @@ Public Class frmProductSizes
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadProductSizesGrid()
                     ClearFields(preserveProduct:=True)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -123,11 +123,11 @@ Public Class frmProductSizes
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadProductSizesGrid()
                     ClearFields(preserveProduct:=True)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -137,7 +137,7 @@ Public Class frmProductSizes
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvProductSizes.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من رغبتك في إزالة هذا الحجم من الصنف؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من رغبتك في إزالة هذا الحجم من الصنف؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvProductSizes.SelectedRows(0).Cells("ProductSizeID").Value)
             Dim query As String = "UPDATE ProductSizes SET IsDeleted = 1 WHERE ProductSizeID = @ProductSizeID"
 
@@ -147,11 +147,11 @@ Public Class frmProductSizes
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         LoadProductSizesGrid()
                         ClearFields(preserveProduct:=True)
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -304,4 +304,4 @@ Public Class frmProductSizes
         FillDropdowns() ' إعادة شحن الكومبو بوكس بعد إضافة حجم جديد
     End Sub
 End Class
-
+

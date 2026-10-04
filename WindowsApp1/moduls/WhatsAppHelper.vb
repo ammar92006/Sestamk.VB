@@ -32,15 +32,15 @@ Public Class WhatsAppAPI
                 LogMessage(phone, message, "text")
                 Return True
             ElseIf responseText.Contains("""notRegistered"":true") Then
-                MessageBox.Show("⚠️ الرقم غير مسجّل على واتساب")
+                SmartMessageBox.Show("⚠️ الرقم غير مسجّل على واتساب")
                 Return False
             Else
-                MessageBox.Show("❌ فشل الإرسال" & vbCrLf & responseText)
+                SmartMessageBox.Show("❌ فشل الإرسال" & vbCrLf & responseText)
                 Return False
             End If
 
         Catch ex As Exception
-            MessageBox.Show($"المشكلة هنا : {ex.Message}")
+            SmartMessageBox.Show($"المشكلة هنا : {ex.Message}")
             Return False
         End Try
     End Function
@@ -50,7 +50,7 @@ Public Class WhatsAppAPI
     ' =======================
     Public Shared Async Function SendMedia(phone As String, filePath As String, Optional caption As String = "") As Task(Of Boolean)
         If Not File.Exists(filePath) Then
-            MessageBox.Show("❌ الملف غير موجود: " & filePath)
+            SmartMessageBox.Show("❌ الملف غير موجود: " & filePath)
             Return False
         End If
 
@@ -76,15 +76,15 @@ Public Class WhatsAppAPI
                 LogMessage(phone, caption & " [" & Path.GetFileName(filePath) & "]", "media")
                 Return True
             ElseIf responseText.Contains("""notRegistered"":true") Then
-                MessageBox.Show("⚠️ الرقم غير مسجّل على واتساب")
+                SmartMessageBox.Show("⚠️ الرقم غير مسجّل على واتساب")
                 Return False
             Else
-                MessageBox.Show("❌ فشل الإرسال" & vbCrLf & responseText)
+                SmartMessageBox.Show("❌ فشل الإرسال" & vbCrLf & responseText)
                 Return False
             End If
 
         Catch ex As Exception
-            MessageBox.Show($"المشكلة هنا : {ex.Message}")
+            SmartMessageBox.Show($"المشكلة هنا : {ex.Message}")
             Return False
         End Try
     End Function

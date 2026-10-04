@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class frmShifts
 
@@ -16,7 +16,7 @@ Public Class frmShifts
                 cmbWorkShift.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل قائمة الورديات المرجعية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل قائمة الورديات المرجعية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -39,6 +39,7 @@ Public Class frmShifts
 
             SetDefaultUserSelections()
         Catch ex As Exception
+            Logger.LogError("frmShifts.vb:41", ex)
         End Try
     End Sub
 
@@ -181,7 +182,7 @@ Public Class frmShifts
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل بيانات الورديات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل بيانات الورديات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -322,12 +323,12 @@ Public Class frmShifts
     ' 6. زر فتح وردية جديدة
     Private Sub btnOpenShift_Click(sender As Object, e As EventArgs) Handles btnOpenShift.Click
         If _activeShiftID.HasValue Then
-            MessageBox.Show("توجد وردية مفتوحة بالفعل! يجب إغلاق الوردية الحالية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("توجد وردية مفتوحة بالفعل! يجب إغلاق الوردية الحالية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If cmbWorkShift.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الوردية المرجعية (صباحية/مسائية) أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الوردية المرجعية (صباحية/مسائية) أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -351,11 +352,16 @@ Public Class frmShifts
                     conn.Open()
                     cmd.ExecuteNonQuery()
                     InitializeShiftSession()
-                    MessageBox.Show("تم فتح الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Try
+                        NotificationManager.Instance.NotifyShift("فتح وردية جديدة 🕒", $"تم فتح وردية جديدة رقم #{shiftNum} برصيد افتتاحي {openingFloat:N2} ج.م")
+                    Catch __logEx As Exception
+                        Logger.LogError("frmShifts.vb:357", __logEx)
+                    End Try
+                    SmartMessageBox.Show("تم فتح الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     txtOpeningCash.Clear()
                     LoadShiftsGridAndActiveStatus()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء فتح الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء فتح الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -384,12 +390,12 @@ Public Class frmShifts
     ' 8. زر إغلاق الوردية الحالية
     Private Sub btnCloseShift_Click(sender As Object, e As EventArgs) Handles btnCloseShift.Click
         If Not _activeShiftID.HasValue Then
-            MessageBox.Show("لا توجد وردية مفتوحة لإغلاقها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد وردية مفتوحة لإغلاقها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If String.IsNullOrWhiteSpace(txtClosingCash.Text) Then
-            MessageBox.Show("يرجى إدخال المبلغ المجرود فعلياً بالدرج قبل الإغلاق!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال المبلغ المجرود فعلياً بالدرج قبل الإغلاق!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtClosingCash.Focus()
             Exit Sub
         End If
@@ -399,7 +405,7 @@ Public Class frmShifts
         Dim diff As Decimal = actualCash - expectedCash
         Dim currentUserID As Integer = If(cmbCloseUser.SelectedValue IsNot Nothing AndAlso Not IsDBNull(cmbCloseUser.SelectedValue), Convert.ToInt32(cmbCloseUser.SelectedValue), If(Session.CurrentUserID > 0, Session.CurrentUserID, 1))
 
-        If MessageBox.Show($"هل أنت متأكد من إغلاق الوردية؟" & vbCrLf &
+        If SmartMessageBox.Show($"هل أنت متأكد من إغلاق الوردية؟" & vbCrLf &
                             $"المبلغ المفترض: {expectedCash:N2}" & vbCrLf &
                             $"المبلغ المجرود: {actualCash:N2}" & vbCrLf &
                             $"الفارق: {diff:N2}", "تأكيد الإغلاق", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
@@ -424,7 +430,13 @@ Public Class frmShifts
                         conn.Open()
                         cmd.ExecuteNonQuery()
                         ShiftSession.ClearSession()
-                        MessageBox.Show("تم إغلاق الوردية المالية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        Try
+                            Dim diffText As String = If(diff = 0, "مطابق", If(diff > 0, $"+{diff:N2} زيادة", $"{diff:N2} عجز"))
+                            NotificationManager.Instance.NotifyShift("إغلاق وردية 🕒", $"تم إغلاق الوردية رقم #{closedShiftID} بنقدية {actualCash:N2} ج.م (الفارق: {diffText})")
+                        Catch __logEx As Exception
+                            Logger.LogError("frmShifts.vb:436", __logEx)
+                        End Try
+                        SmartMessageBox.Show("تم إغلاق الوردية المالية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' طباعة تقرير تقفيل الوردية الحراري (Z-Report) تلقائياً
                         PrintZReportForShift(closedShiftID, actualCash, expectedCash, diff, closeNotes)
@@ -433,7 +445,7 @@ Public Class frmShifts
                         txtNotes.Clear()
                         LoadShiftsGridAndActiveStatus()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء إغلاق الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء إغلاق الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -603,12 +615,12 @@ Public Class frmShifts
     Private Sub btnSuspendShift_Click(sender As Object, e As EventArgs) Handles btnSuspendShift.Click
         ' 1. التحقق من وجود وردية نشطة مفتوحة حالياً
         If Not _activeShiftID.HasValue Then
-            MessageBox.Show("لا توجد وردية نشطة حالياً لتعليقها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد وردية نشطة حالياً لتعليقها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         ' 2. تأكيد التعليق من المستخدم
-        If MessageBox.Show("هل أنت متأكد من تعليق الوردية الحالية؟" & vbCrLf &
+        If SmartMessageBox.Show("هل أنت متأكد من تعليق الوردية الحالية؟" & vbCrLf &
                         "سيتم إيقاف العمل عليها مؤقتاً ويمكنك استكمالها لاحقاً.",
                         "تأكيد تعليق الوردية", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
 
@@ -626,14 +638,14 @@ Public Class frmShifts
                         ' 4. تفريغ الوردية المعلقة من كاش الذاكرة لمنع استخدامها في البيع
                         ShiftSession.ClearSession()
 
-                        MessageBox.Show("تم تعليق الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم تعليق الوردية بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' 5. إعادة تحديث واجهة الورديات والجريد فيو
                         LoadShiftsGridAndActiveStatus()
                         ClearFields()
 
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء تعليق الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء تعليق الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -645,13 +657,13 @@ Public Class frmShifts
     Private Sub btnResumeShift_Click(sender As Object, e As EventArgs) Handles btnResumeShift.Click
         ' 1. التحقق من عدم وجود وردية مفتوحة ونشطة بالفعل
         If _activeShiftID.HasValue Then
-            MessageBox.Show("توجد وردية نشطة بالفعل! يجب تعليقها أو إغلاقها أولاً قبل استكمال وردية أخرى.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("توجد وردية نشطة بالفعل! يجب تعليقها أو إغلاقها أولاً قبل استكمال وردية أخرى.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         ' 2. التأكد من تحديد وردية من DataGridView
         If dgvShiftsHistory.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد الوردية المعلقة المراد استكمالها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الوردية المعلقة المراد استكمالها من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -661,12 +673,12 @@ Public Class frmShifts
 
         ' 3. التأكد من أن الوردية المحددة حالتها معلقة (Status = 3)
         If statusVal <> 3 Then
-            MessageBox.Show("يمكنك استكمال الورديات المعلقة فقط!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يمكنك استكمال الورديات المعلقة فقط!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         ' 4. تأكيد الاستكمال
-        If MessageBox.Show("هل تريد استكمال العمل على هذه الوردية الآن؟", "تأكيد الاستكمال", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل تريد استكمال العمل على هذه الوردية الآن؟", "تأكيد الاستكمال", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
 
             ' 5. تحويل حالة الوردية إلى نشطة (Status = 1)
             Dim query As String = "UPDATE Shifts SET Status = 1 WHERE ShiftID = @ShiftID"
@@ -679,14 +691,14 @@ Public Class frmShifts
                         conn.Open()
                         cmd.ExecuteNonQuery()
 
-                        MessageBox.Show("تم استكمال الوردية بنجاح وأصبحت هي الوردية النشطة الآن!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم استكمال الوردية بنجاح وأصبحت هي الوردية النشطة الآن!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' 6. تحديث الواجهة وتحميل الوردية المستكملة في الذاكرة (Cache)
                         LoadShiftsGridAndActiveStatus()
                         InitializeShiftSession()
 
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء استكمال الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء استكمال الوردية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -709,7 +721,7 @@ Public Class frmShifts
 
     Private Sub PrintSelectedShiftZReport()
         If dgvShiftsHistory.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار وردية من الجدول أولاً لطباعة تقريرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("يرجى اختيار وردية من الجدول أولاً لطباعة تقريرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return
         End If
 
@@ -802,7 +814,7 @@ Public Class frmShifts
 
         Catch ex As Exception
             Logger.LogError("PrintZReportForShift", ex)
-            MessageBox.Show("حدث خطأ أثناء طباعة تقرير الوردية (Z-Report): " & ex.Message, "خطأ طباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء طباعة تقرير الوردية (Z-Report): " & ex.Message, "خطأ طباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.Drawing.Printing
 Imports System.IO
@@ -22,7 +22,7 @@ Public Module ThermalTestReceiptHelper
                                 Optional usePreview As Boolean = False)
 
         If String.IsNullOrWhiteSpace(printerName) Then
-            MessageBox.Show("يرجى اختيار الطابعة الحرارية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الطابعة الحرارية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -66,12 +66,12 @@ Public Module ThermalTestReceiptHelper
                 Try
                     Notify.Toast("تم إرسال ورقة اختبار الطابعة بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم إرسال صفحة الاختبار للطابعة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم إرسال صفحة الاختبار للطابعة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             End If
 
         Catch ex As Exception
-            MessageBox.Show("❌ خطأ أثناء اختبار الطابعة: " & ex.Message, "خطأ في الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("❌ خطأ أثناء اختبار الطابعة: " & ex.Message, "خطأ في الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -104,16 +104,16 @@ Public Module ThermalTestReceiptHelper
 
         ' تنسيقات النصوص والخطوط
         Using sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center},
-              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
               sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center},
               fontShopName As New Font("Segoe UI", If(is80mm, 13.0!, 11.0!), FontStyle.Bold),
               fontBannerTitle As New Font("Segoe UI", If(is80mm, 11.0!, 9.5!), FontStyle.Bold),
-              fontBannerSub As New Font("Segoe UI", If(is80mm, 8.0!, 7.0!), FontStyle.Regular),
-              fontSectionHeader As New Font("Segoe UI", If(is80mm, 9.5!, 8.0!), FontStyle.Bold),
-              fontBold As New Font("Segoe UI", If(is80mm, 9.0!, 7.5!), FontStyle.Bold),
-              fontRegular As New Font("Segoe UI", If(is80mm, 8.5!, 7.0!), FontStyle.Regular),
-              fontSmall As New Font("Segoe UI", If(is80mm, 7.5!, 6.5!), FontStyle.Regular),
-              fontTotal As New Font("Segoe UI", If(is80mm, 11.0!, 9.0!), FontStyle.Bold)
+              fontBannerSub As New Font("Segoe UI", If(is80mm, 8.5!, 7.0!), FontStyle.Regular),
+              fontSectionHeader As New Font("Segoe UI", If(is80mm, 10.0!, 8.5!), FontStyle.Bold),
+              fontBold As New Font("Segoe UI", If(is80mm, 9.5!, 8.0!), FontStyle.Bold),
+              fontRegular As New Font("Segoe UI", If(is80mm, 9.0!, 7.5!), FontStyle.Regular),
+              fontSmall As New Font("Segoe UI", If(is80mm, 8.0!, 7.0!), FontStyle.Regular),
+              fontTotal As New Font("Segoe UI", If(is80mm, 12.0!, 10.0!), FontStyle.Bold)
 
             ' ══════════════════════════════════════════════════════
             ' 1. الشعار (Logo)
@@ -129,7 +129,8 @@ Public Module ThermalTestReceiptHelper
                         g.DrawImage(originalLogo, New Rectangle(logoX, yPos, logoW, logoH))
                         yPos += logoH + 6
                     End Using
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("ThermalTestReceiptHelper.vb:132", __logEx)
                 End Try
             End If
 
@@ -256,13 +257,13 @@ Public Module ThermalTestReceiptHelper
             DrawKeyValue(g, vatLabel, "16.66 ج.م", fontRegular, fontRegular, sfRight, sfLeft, yPos, pageWidth, is80mm)
             yPos += 19
 
-            ' برواز الصافي المطلوب
+            ' برواز الصافي المطلوب - [FIX] توزيع نسبي بدلاً من قيم ثابتة
             Dim netBoxH As Integer = If(is80mm, 26, 22)
             Using pNet As New Pen(Color.Black, 1.5!)
                 g.DrawRectangle(pNet, 1, yPos, pageWidth - 2, netBoxH)
             End Using
             Dim netTitle As String = If(is80mm, "الصافي الإجمالي:", "الصافي:")
-            Dim splitNet As Integer = If(is80mm, 100, 80)
+            Dim splitNet As Integer = CInt(pageWidth * 0.35)
             g.DrawString(netTitle, fontTotal, Brushes.Black, New RectangleF(splitNet, yPos + 2, pageWidth - splitNet - 4, netBoxH - 4), sfRight)
             g.DrawString("135.66 ج.م", fontTotal, Brushes.Black, New RectangleF(4, yPos + 2, splitNet - 4, netBoxH - 4), sfLeft)
             yPos += netBoxH + 6
@@ -373,9 +374,11 @@ Public Module ThermalTestReceiptHelper
                              fontLabel As Font, fontValue As Font,
                              sfRight As StringFormat, sfLeft As StringFormat,
                              y As Integer, w As Integer, is80mm As Boolean)
-        Dim splitX As Integer = If(is80mm, CInt(w * 0.52), CInt(w * 0.54))
-        g.DrawString(label, fontLabel, Brushes.Black, New RectangleF(splitX, y, w - splitX, 17), sfRight)
-        g.DrawString(value, fontValue, Brushes.Black, New RectangleF(0, y, splitX, 17), sfLeft)
+        ' [FIX] تحسين التوزيع النسبي وزيادة ارتفاع السطر
+        Dim splitX As Integer = If(is80mm, CInt(w * 0.48), CInt(w * 0.50))
+        Dim rowH As Integer = 19
+        g.DrawString(label, fontLabel, Brushes.Black, New RectangleF(splitX, y, w - splitX, rowH), sfRight)
+        g.DrawString(value, fontValue, Brushes.Black, New RectangleF(0, y, splitX, rowH), sfLeft)
     End Sub
 
     Private Sub DrawItemRow(g As Graphics, itemName As String, qty As String, price As String, total As String,

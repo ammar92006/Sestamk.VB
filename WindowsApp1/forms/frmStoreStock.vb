@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Text
 
 Public Class frmStoreStock
@@ -107,6 +107,7 @@ Public Class frmStoreStock
 
         Catch ex As Exception
             'Debug.WriteLine("LoadMaterialUnits Error: " & ex.Message)
+            Logger.LogError("frmStoreStock.vb:108", ex)
         End Try
 
     End Sub
@@ -355,7 +356,7 @@ Public Class frmStoreStock
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ في تحميل أرصدة المخزن:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,
@@ -515,30 +516,30 @@ Public Class frmStoreStock
     Private Function IsValidInput() As Boolean
 
         If cmbStore.SelectedIndex = -1 OrElse cmbStore.SelectedValue Is Nothing Then
-            MessageBox.Show("يرجى اختيار المخزن.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار المخزن.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
         If cmbMaterial.SelectedIndex = -1 OrElse cmbMaterial.SelectedValue Is Nothing Then
-            MessageBox.Show("يرجى اختيار الخامة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخامة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
         Dim stock As Decimal
         If Not Decimal.TryParse(txtCurrentStock.Text, stock) Then
-            MessageBox.Show("الرصيد الحالي يجب أن يكون رقماً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("الرصيد الحالي يجب أن يكون رقماً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
         Dim minVal As Decimal
         If Not String.IsNullOrWhiteSpace(txtMinStock.Text) AndAlso Not Decimal.TryParse(txtMinStock.Text, minVal) Then
-            MessageBox.Show("الحد الأدنى يجب أن يكون رقماً صحيحاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("الحد الأدنى يجب أن يكون رقماً صحيحاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
         Dim maxVal As Decimal
         If Not String.IsNullOrWhiteSpace(txtMaxStock.Text) AndAlso Not Decimal.TryParse(txtMaxStock.Text, maxVal) Then
-            MessageBox.Show("الحد الأقصى يجب أن يكون رقماً صحيحاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("الحد الأقصى يجب أن يكون رقماً صحيحاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
@@ -611,7 +612,7 @@ Public Class frmStoreStock
                     cmdCheck.Parameters.Add("@MaterialID", SqlDbType.Int).Value = materialID
 
                     If Convert.ToInt32(cmdCheck.ExecuteScalar()) > 0 Then
-                        MessageBox.Show(
+                        SmartMessageBox.Show(
                             "هذه الخامة موجودة بالفعل في هذا المخزن." & Environment.NewLine &
                             "استخدم زر التعديل لتحديث الرصيد والحدود.",
                             "تنبيه",
@@ -651,13 +652,13 @@ Public Class frmStoreStock
 
             End Using
 
-            MessageBox.Show("تمت الإضافة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تمت الإضافة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             _cachedStock = Nothing
             LoadStockGrid(storeID)
             ClearFields()
 
         Catch ex As Exception
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء الإضافة:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,
@@ -673,7 +674,7 @@ Public Class frmStoreStock
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
 
         If _selectedStockID = -1 Then
-            MessageBox.Show("يرجى تحديد صف من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد صف من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -738,7 +739,7 @@ Public Class frmStoreStock
 
             End Using
 
-            MessageBox.Show("تم التعديل بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم التعديل بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             Dim storeID As Integer = If(cmbStore.SelectedIndex >= 0, Convert.ToInt32(cmbStore.SelectedValue), -1)
             _cachedStock = Nothing
@@ -746,7 +747,7 @@ Public Class frmStoreStock
             ClearFields()
 
         Catch ex As Exception
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء التعديل:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,
@@ -762,7 +763,7 @@ Public Class frmStoreStock
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
 
         If _selectedStockID = -1 Then
-            MessageBox.Show("يرجى تحديد صف من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد صف من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -772,7 +773,7 @@ Public Class frmStoreStock
             If cell.Value IsNot Nothing Then materialName = cell.Value.ToString()
         End If
 
-        Dim confirm As DialogResult = MessageBox.Show(
+        Dim confirm As DialogResult = SmartMessageBox.Show(
             $"هل أنت متأكد من حذف سجل الخامة ""{materialName}"" من المخزن؟" & Environment.NewLine &
             "هذا الإجراء لا يمكن التراجع عنه.",
             "تأكيد الحذف النهائي",
@@ -797,7 +798,7 @@ Public Class frmStoreStock
 
             End Using
 
-            MessageBox.Show("تم الحذف بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم الحذف بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             Dim storeID As Integer = If(cmbStore.SelectedIndex >= 0, Convert.ToInt32(cmbStore.SelectedValue), -1)
             _cachedStock = Nothing
@@ -805,7 +806,7 @@ Public Class frmStoreStock
             ClearFields()
 
         Catch ex As Exception
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء الحذف:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,
@@ -1127,7 +1128,7 @@ Public Class frmStoreStock
             Dim Drag As New FormDragHelper(Me, panelHeader)
 
         Catch ex As Exception
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء فتح شاشة المخزون:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,
@@ -1198,7 +1199,7 @@ Public Class frmStoreStock
             ClearFields()
             txtSearch.Text = ""
         Catch ex As Exception
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء التحديث:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,

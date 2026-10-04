@@ -1,4 +1,4 @@
-Imports System.Windows.Forms
+﻿Imports System.Windows.Forms
 Imports System.Drawing
 
 Namespace UC_Main
@@ -98,7 +98,8 @@ Namespace UC_Main
                         btn.HoverState.ForeColor = pal.TextOnPrimary
                     End If
                 Next
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCSuppliersHub.vb:101", __logEx)
             End Try
         End Sub
 

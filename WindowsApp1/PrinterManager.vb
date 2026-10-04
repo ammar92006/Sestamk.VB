@@ -58,12 +58,14 @@ Module PrinterManager
                         ElseIf TypeOf frm Is ProductUnits Then
                             frm.Invoke(Sub() DirectCast(frm, ProductUnits).scannerPort_DataReceived(code))
                         End If
-                    Catch
+                    Catch __logEx As Exception
                         ' الفورم قد يكون في طور الإغلاق - تجاهل
+                        Logger.LogError("PrinterManager.vb:61", __logEx)
                     End Try
                 Next
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("PrinterManager.vb:67", __logEx)
         End Try
     End Sub
 
@@ -73,12 +75,14 @@ Module PrinterManager
                 If PrinterPort IsNot Nothing Then
                     Try
                         RemoveHandler PrinterPort.DataReceived, AddressOf PrinterPort_DataReceived
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("PrinterManager.vb:78", __logEx)
                     End Try
                     If PrinterPort.IsOpen Then
                         Try
                             PrinterPort.DiscardInBuffer()
-                        Catch
+                        Catch __logEx As Exception
+                            Logger.LogError("PrinterManager.vb:84", __logEx)
                         End Try
                         PrinterPort.Close()
                     End If
@@ -86,7 +90,8 @@ Module PrinterManager
                     PrinterPort = Nothing
                 End If
                 buffer = ""
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("PrinterManager.vb:93", __logEx)
             End Try
         End SyncLock
     End Sub

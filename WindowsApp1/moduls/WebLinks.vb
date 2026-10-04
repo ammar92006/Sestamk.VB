@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Diagnostics
 Imports System.Windows.Forms
 
@@ -29,7 +29,8 @@ Public Module WebLinks
                         End If
                         Return custom
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("WebLinks.vb:32", __logEx)
                 End Try
                 Return DefaultDomain
             End Get
@@ -72,12 +73,13 @@ Public Module WebLinks
 
                 Try
                     Notify.Toast("جاري فتح الرابط في المتصفح... 🌐", Notify.ToastType.Info)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("WebLinks.vb:76", __logEx)
                 End Try
 
             Catch ex As Exception
                 Logger.LogError("WebLinks.OpenUrl", ex)
-                MessageBox.Show("تعذر فتح الرابط في المتصفح:" & vbCrLf & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذر فتح الرابط في المتصفح:" & vbCrLf & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End Try
         End Sub
 

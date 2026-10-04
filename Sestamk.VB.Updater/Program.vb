@@ -128,7 +128,7 @@ Public Class FrmModernUpdater
         _packagePath = packagePath
         _targetPath = targetPath
         _mainExe = mainExe
-        _newVersion = If(String.IsNullOrWhiteSpace(newVersion), "1.2.4", newVersion)
+        _newVersion = If(String.IsNullOrWhiteSpace(newVersion), "1.2.6", newVersion)
 
         InitializeUI()
     End Sub
@@ -294,8 +294,10 @@ Public Class FrmModernUpdater
                                        currentIndex += 1
                                        Dim destPath = Path.GetFullPath(Path.Combine(_targetPath, entry.FullName))
 
-                                       ' حماية ضد Zip Slip
-                                       If Not destPath.StartsWith(_targetPath, StringComparison.OrdinalIgnoreCase) Then
+                                       ' حماية ضد Zip Slip — يجب أن يقع المسار داخل مجلد الهدف نفسه
+                                       ' (المقارنة بالبادئة وحدها تسمح بمجلد مجاور مثل C:\AppEvil يطابق C:\App)
+                                       Dim targetRoot = Path.GetFullPath(_targetPath).TrimEnd("\"c)
+                                       If Not destPath.StartsWith(targetRoot & "\", StringComparison.OrdinalIgnoreCase) Then
                                            Continue For
                                        End If
 
@@ -425,13 +427,27 @@ Public Class FrmModernUpdater
         Dim pName = Path.GetFileNameWithoutExtension(mainExe)
         Dim sw = Stopwatch.StartNew()
 
+        ' 1) محاولة إغلاق آمن: إرسال WM_CLOSE للنوافذ الرئيسية ليتوقف النظام بأمان (حفظ الفاتورة الجارية)
+        Try
+            For Each p As Process In Process.GetProcessesByName(pName)
+                Try
+                    If Not p.HasExited AndAlso p.MainWindowHandle <> IntPtr.Zero Then
+                        p.CloseMainWindow()
+                    End If
+                Catch
+                End Try
+            Next
+        Catch
+        End Try
+
+        ' 2) الانتظار حتى تخرج العملية بنفسها
         While sw.Elapsed.TotalSeconds < timeoutSec
             Dim list = Process.GetProcessesByName(pName)
             If list.Length = 0 Then Return
             Thread.Sleep(500)
         End While
 
-        ' إنهاء قسري إذا لم يغلق
+        ' 3) إنهاء قسري كحل أخير فقط إذا لم تغلق بعد المهلة كاملة
         Try
             For Each p As Process In Process.GetProcessesByName(pName)
                 Try

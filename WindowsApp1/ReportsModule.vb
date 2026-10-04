@@ -1,4 +1,4 @@
-Imports System.Data
+﻿Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Drawing.Printing
 Imports System.Text
@@ -937,7 +937,7 @@ SELECT
 
     '    Dim header = GetInvoiceHeaderfromDB(invoiceID)
     '    If header Is Nothing Then
-    '        MessageBox.Show("الفاتورة غير موجودة")
+    '        SmartMessageBox.Show("الفاتورة غير موجودة")
     '        Exit Sub
     '    End If
 
@@ -1031,7 +1031,7 @@ SELECT
 
     '    Dim header = GetInvoiceHeaderfromDB(invoiceID)
     '    If header Is Nothing Then
-    '        MessageBox.Show("الفاتورة غير موجودة")
+    '        SmartMessageBox.Show("الفاتورة غير موجودة")
     '        Exit Sub
     '    End If
 
@@ -1141,14 +1141,14 @@ SELECT
         Try
             Dim header = GetInvoiceHeaderfromDB(invoiceID)
             If header Is Nothing Then
-                MessageBox.Show("الفاتورة غير موجودة")
+                SmartMessageBox.Show("الفاتورة غير موجودة")
                 Return
             End If
             Dim items = GetInvoiceItemsfromDB(invoiceID)
             Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
             RenderInvoiceReceiptStyle1(header, items, copiesCount, ShouldShowReportPreview(), "معاينة الفاتورة - استيل 1", printBarcode)
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1196,7 +1196,7 @@ Sub(sender, e)
             .FormatFlags = StringFormatFlags.DirectionRightToLeft
         }
     Dim fmtR As New StringFormat With {
-            .Alignment = StringAlignment.Far,
+            .Alignment = StringAlignment.Near,
             .LineAlignment = StringAlignment.Center,
             .FormatFlags = StringFormatFlags.DirectionRightToLeft
         }
@@ -1276,7 +1276,8 @@ Sub(sender, e)
         If shouldPrintLogo AndAlso Not String.IsNullOrEmpty(logoPath) AndAlso IO.File.Exists(logoPath) Then
             logoImg = System.Drawing.Image.FromFile(logoPath)
         End If
-    Catch
+    Catch __logEx As Exception
+        Logger.LogError("ReportsModule.vb:1279", __logEx)
     End Try
 
     Dim logoW As Integer = 180
@@ -1457,7 +1458,7 @@ End Sub
                 pd.Print()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub
@@ -1484,7 +1485,7 @@ End Sub
                 dlg.Dispose()
             End Try
         Catch ex As Exception
-            MessageBox.Show("خطأ في عرض المعاينة: " & ex.Message,
+            SmartMessageBox.Show("خطأ في عرض المعاينة: " & ex.Message,
                             "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
@@ -1498,14 +1499,14 @@ End Sub
         Try
             Dim header = GetInvoiceHeaderfromDB(invoiceID)
             If header Is Nothing Then
-                MessageBox.Show("الفاتورة غير موجودة")
+                SmartMessageBox.Show("الفاتورة غير موجودة")
                 Return
             End If
             Dim items = GetInvoiceItemsfromDB(invoiceID)
             Dim printBarcode As Boolean = (If(SettingsManager.GetSetting("PrintBarcode"), "true").Trim().ToLower() = "true")
             RenderInvoiceReceiptStyle2(header, items, copiesCount, ShouldShowReportPreview(), "معاينة الفاتورة - استيل 2", printBarcode)
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء طباعة الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1779,7 +1780,7 @@ End Sub
     '            pd.Print()
     '        End If
     '    Catch ex As Exception
-    '        MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '        SmartMessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '    Finally
     '        If logoImg IsNot Nothing Then logoImg.Dispose()
     '    End Try
@@ -1812,7 +1813,8 @@ End Sub
             If shouldPrintLogo AndAlso Not String.IsNullOrEmpty(logoPath) AndAlso IO.File.Exists(logoPath) Then
                 logoImg = System.Drawing.Image.FromFile(logoPath)
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ReportsModule.vb:1816", __logEx)
         End Try
 
         ' ─── [جديد] تقسيم الأصناف على أكتر من صفحة ───
@@ -1877,7 +1879,7 @@ End Sub
                 .LineAlignment = StringAlignment.Center,
                 .FormatFlags = StringFormatFlags.DirectionRightToLeft}
             Dim fmtR As New StringFormat With {
-                .Alignment = StringAlignment.Far,
+                .Alignment = StringAlignment.Near,
                 .LineAlignment = StringAlignment.Center,
                 .FormatFlags = StringFormatFlags.DirectionRightToLeft}
             Dim fmtWrap As New StringFormat With {
@@ -2079,7 +2081,8 @@ End Sub
                         Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
                         g.DrawImage(qr, leftX + (usableW - qr.Width) \ 2, Y)
                         Y += qr.Height + 5
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("ReportsModule.vb:2084", __logEx)
                     End Try
                 End If
                 centerLine("* " & FooterMsg & " *", fBold)
@@ -2104,7 +2107,7 @@ End Sub
                 pd.Print()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             If logoImg IsNot Nothing Then logoImg.Dispose()
         End Try

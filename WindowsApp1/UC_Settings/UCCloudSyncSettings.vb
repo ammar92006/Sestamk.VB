@@ -1,4 +1,4 @@
-Imports System.Data
+﻿Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
@@ -23,13 +23,15 @@ Namespace UC_Settings
                 AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
             Catch ex As Exception
                 ' تجاهل الأخطاء عند التحميل الأول
+                Logger.LogError("UCCloudSyncSettings.vb:24", ex)
             End Try
         End Sub
 
         Private Sub UCCloudSyncSettings_Disposed(sender As Object, e As EventArgs) Handles MyBase.Disposed
             Try
                 RemoveHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCCloudSyncSettings.vb:33", __logEx)
             End Try
         End Sub
 
@@ -38,7 +40,8 @@ Namespace UC_Settings
                 Dim palette = ThemeManager.Instance.CurrentPalette
                 If palette Is Nothing Then Return
                 ' يمكن إضافة تخصيص ألوان إضافي هنا
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCCloudSyncSettings.vb:43", __logEx)
             End Try
         End Sub
 
@@ -65,8 +68,9 @@ Namespace UC_Settings
                 txtPlatformToken.Text = If(config.PlatformToken, "")
                 txtOrgSlug.Text = If(config.OrganizationSlug, "")
                 txtDbName.Text = If(config.DatabaseName, "")
-            Catch
+            Catch __logEx As Exception
                 ' تجاهل إذا لم يوجد ملف إعدادات بعد
+                Logger.LogError("UCCloudSyncSettings.vb:71", __logEx)
             End Try
         End Sub
 
@@ -99,7 +103,7 @@ Namespace UC_Settings
 
                 Notify.Toast("تم حفظ إعدادات المزامنة السحابية بنجاح ✅", Notify.ToastType.Success)
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء حفظ الإعدادات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء حفظ الإعدادات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -220,8 +224,9 @@ Namespace UC_Settings
                         End Using
                     End Using
                 End Using
-            Catch
+            Catch __logEx As Exception
                 ' تجاهل إذا الجدول غير موجود بعد
+                Logger.LogError("UCCloudSyncSettings.vb:227", __logEx)
             End Try
         End Sub
 
@@ -239,7 +244,7 @@ Namespace UC_Settings
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من إعادة ضبط إعدادات المزامنة السحابية؟",
+            If SmartMessageBox.Show("هل أنت متأكد من إعادة ضبط إعدادات المزامنة السحابية؟",
                                "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
                 txtTursoUrl.Clear()
                 txtAuthToken.Clear()
@@ -267,13 +272,13 @@ Namespace UC_Settings
                 ElseIf result.Status = SyncStatus.PartialSuccess Then
                     Notify.Toast($"اكتملت المزامنة مع تنبيهات ⚠️ (مرسل: {result.TotalPushed}، مستلم: {result.TotalPulled})", Notify.ToastType.Warning)
                 ElseIf result.Status = SyncStatus.Offline Then
-                    MessageBox.Show("لا يوجد اتصال بالإنترنت حالياً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("لا يوجد اتصال بالإنترنت حالياً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Else
                     Dim err = If(result.Errors.Count > 0, String.Join(Environment.NewLine, result.Errors), "فشلت المزامنة.")
-                    MessageBox.Show(err, "خطأ في المزامنة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show(err, "خطأ في المزامنة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End If
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء المزامنة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء المزامنة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 btnSyncNow.Enabled = True
             End Try
@@ -285,7 +290,7 @@ Namespace UC_Settings
         End Sub
 
         Private Sub btnClearLog_Click(sender As Object, e As EventArgs) Handles btnClearLog.Click
-            If MessageBox.Show("هل أنت متأكد من مسح سجل المزامنة بالكامل؟",
+            If SmartMessageBox.Show("هل أنت متأكد من مسح سجل المزامنة بالكامل؟",
                                "تأكيد المسح", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes Then
                 Try
                     Using conn = DBModule.NewConn()
@@ -297,7 +302,7 @@ Namespace UC_Settings
                     LoadSyncLog()
                     Notify.Toast("تم مسح سجل المزامنة ✅", Notify.ToastType.Success)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء مسح السجل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء مسح السجل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End If
         End Sub

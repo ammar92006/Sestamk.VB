@@ -39,7 +39,7 @@ Public Class add_new_customer
             End Using
         Catch ex As Exception
             Logger.LogError(ex)
-            MessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء التحقق من الكود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
         Return exists
@@ -48,13 +48,13 @@ Public Class add_new_customer
         Try
             ' التحقق من الحقول المطلوبة
             If String.IsNullOrWhiteSpace(txtCustomerCode.Text) OrElse String.IsNullOrWhiteSpace(txtCustomerName.Text) Then
-                MessageBox.Show("⚠️ يرجى إدخال كود واسم العميل على الأقل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ يرجى إدخال كود واسم العميل على الأقل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             ' تحقق من وجود كود العميل مسبقًا
             If IsCustomerCodeExists(txtCustomerCode.Text.Trim()) Then
-                MessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("⚠️ هذا الكود موجود بالفعل، لا يمكن تكراره.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -77,12 +77,12 @@ Public Class add_new_customer
                 End Using
             End Using
 
-            MessageBox.Show("✅ تم إضافة العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم إضافة العميل بنجاح", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             ClearFields()
 
         Catch ex As Exception
             Logger.LogError(ex)
-            MessageBox.Show("حدث خطأ أثناء إضافة العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء إضافة العميل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub

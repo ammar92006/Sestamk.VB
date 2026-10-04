@@ -61,7 +61,7 @@ Public Class frmStores
                 dgvStores.ClearSelection()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل قائمة المخازن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل قائمة المخازن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -70,7 +70,7 @@ Public Class frmStores
     ' ──────────────────────────────────────────────────────────
     Private Function IsValidData() As Boolean
         If String.IsNullOrWhiteSpace(txtStoreName.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم المخزن أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم المخزن أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtStoreName.Focus()
             Return False
         End If
@@ -224,12 +224,12 @@ Public Class frmStores
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تمت إضافة المخزن بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت إضافة المخزن بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedStores = Nothing
                     LoadStoresGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الإضافة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الإضافة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -240,7 +240,7 @@ Public Class frmStores
     ' ──────────────────────────────────────────────────────────
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvStores.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد المخزن المراد تعديله من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد المخزن المراد تعديله من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -280,12 +280,12 @@ Public Class frmStores
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل بيانات المخزن بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل بيانات المخزن بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedStores = Nothing
                     LoadStoresGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -296,11 +296,11 @@ Public Class frmStores
     ' ──────────────────────────────────────────────────────────
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvStores.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد المخزن المراد حذفه من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد المخزن المراد حذفه من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا المخزن؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا المخزن؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvStores.SelectedRows(0).Cells("StoreID").Value)
             Dim query As String = ""
 
@@ -316,12 +316,12 @@ Public Class frmStores
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف المخزن بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف المخزن بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedStores = Nothing
                         LoadStoresGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("لا يمكن حذف هذا المخزن لارتباطه بعمليات أو خامات مسجلة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        SmartMessageBox.Show("لا يمكن حذف هذا المخزن لارتباطه بعمليات أو خامات مسجلة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     End Try
                 End Using
             End Using

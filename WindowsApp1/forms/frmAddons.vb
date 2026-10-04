@@ -24,7 +24,7 @@ Public Class frmAddons
             If dgvAddons.Columns.Contains("AddonNameEn") Then dgvAddons.Columns("AddonNameEn").HeaderText = "اسم الإضافة (إنجليزي)"
             If dgvAddons.Columns.Contains("IsActive") Then dgvAddons.Columns("IsActive").HeaderText = "نشط"
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل قائمة الإضافات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل قائمة الإضافات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -34,7 +34,7 @@ Public Class frmAddons
             txtAddonCode.Text = GetNextCode("Addons", "AddonCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtAddonNameAr.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم الإضافة بالعربي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم الإضافة بالعربي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtAddonNameAr.Focus()
             Return False
         End If
@@ -92,12 +92,12 @@ Public Class frmAddons
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ الإضافة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الإضافة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedAddons = Nothing
                     LoadAddonsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -121,12 +121,12 @@ Public Class frmAddons
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedAddons = Nothing
                     LoadAddonsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -136,7 +136,7 @@ Public Class frmAddons
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvAddons.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذه الإضافة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الإضافة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvAddons.SelectedRows(0).Cells("AddonID").Value)
             Dim query As String = "UPDATE Addons SET IsDeleted = 1 WHERE AddonID = @AddonID"
 
@@ -146,12 +146,12 @@ Public Class frmAddons
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الإضافة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الإضافة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedAddons = Nothing
                         LoadAddonsGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

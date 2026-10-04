@@ -35,7 +35,7 @@ Public Class frmJobTitles
                 dgvJobTitles.ClearSelection()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل المسميات الوظيفية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل المسميات الوظيفية: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -44,11 +44,11 @@ Public Class frmJobTitles
             txtJobTitleCode.Text = GetNextCode("JobTitles", "JobTitleCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtJobTitleName.Text) Then
-            MessageBox.Show("يرجى إدخال المسمى الوظيفي!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال المسمى الوظيفي!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         If cmbDepartment.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى تحديد القسم التابع له الوظيفة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد القسم التابع له الوظيفة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
         Return True
@@ -113,9 +113,9 @@ Public Class frmJobTitles
                     _cachedJobs = Nothing
                     LoadGrid()
                     ClearFields()
-                    MessageBox.Show("تم حفظ الوظيفة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الوظيفة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -139,9 +139,9 @@ Public Class frmJobTitles
                     _cachedJobs = Nothing
                     LoadGrid()
                     ClearFields()
-                    MessageBox.Show("تم تعديل الوظيفة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الوظيفة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -149,7 +149,7 @@ Public Class frmJobTitles
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvJobTitles.SelectedRows.Count = 0 Then Exit Sub
-        If MessageBox.Show("هل أنت متأكد من حذف هذه الوظيفة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الوظيفة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvJobTitles.SelectedRows(0).Cells("JobTitleID").Value)
             Dim query As String = "UPDATE JobTitles SET IsDeleted = 1 WHERE JobTitleID = @ID"
             Using conn As New SqlConnection(DBModule.ConnectionString)
@@ -158,12 +158,12 @@ Public Class frmJobTitles
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الوظيفة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الوظيفة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedJobs = Nothing
                         LoadGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

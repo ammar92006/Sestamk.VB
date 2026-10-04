@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.Drawing.Drawing2D
@@ -59,7 +59,8 @@ Namespace Global.WindowsApp1
             ' دعم سحب النافذة عبر الهيدر
             Try
                 Dim drag As New FormDragHelper(Me, panelHeader)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("FrmKitchenDisplay.vb:62", __logEx)
             End Try
         End Sub
 
@@ -400,7 +401,8 @@ Namespace Global.WindowsApp1
         Private Sub PlayNotificationSound()
             Try
                 SystemSounds.Asterisk.Play()
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("FrmKitchenDisplay.vb:404", __logEx)
             End Try
         End Sub
 

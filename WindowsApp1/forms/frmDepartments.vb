@@ -21,7 +21,7 @@ Public Class frmDepartments
                 dgvDepartments.ClearSelection()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الأقسام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل الأقسام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -30,7 +30,7 @@ Public Class frmDepartments
             txtDepartmentCode.Text = GetNextCode("Departments", "DepartmentCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtDepartmentName.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم القسم أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم القسم أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtDepartmentName.Focus()
             Return False
         End If
@@ -92,9 +92,9 @@ Public Class frmDepartments
                     _cachedDepts = Nothing
                     LoadGrid()
                     ClearFields()
-                    MessageBox.Show("تم حفظ القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -117,9 +117,9 @@ Public Class frmDepartments
                     _cachedDepts = Nothing
                     LoadGrid()
                     ClearFields()
-                    MessageBox.Show("تم تعديل القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -127,7 +127,7 @@ Public Class frmDepartments
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvDepartments.SelectedRows.Count = 0 Then Exit Sub
-        If MessageBox.Show("هل أنت متأكد من حذف هذا القسم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا القسم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvDepartments.SelectedRows(0).Cells("DepartmentID").Value)
             Dim query As String = "UPDATE Departments SET IsDeleted = 1 WHERE DepartmentID = @ID"
             Using conn As New SqlConnection(DBModule.ConnectionString)
@@ -136,12 +136,12 @@ Public Class frmDepartments
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف القسم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedDepts = Nothing
                         LoadGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

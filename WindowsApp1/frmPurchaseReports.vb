@@ -31,7 +31,7 @@ Public Class frmPurchaseReports
                                                                         If Not balancesMode.Checked AndAlso rbInvoicesSummary.Checked AndAlso dgvReport.CurrentRow IsNot Nothing Then
                                                                             PurchaseDocumentHelper.ShowInvoice(Me, CInt(dgvReport.CurrentRow.Cells("PurchaseID").Value))
                                                                         Else
-                                                                            MessageBox.Show("اختر فاتورة من تقرير إجمالي الفواتير.")
+                                                                            SmartMessageBox.Show("اختر فاتورة من تقرير إجمالي الفواتير.")
                                                                         End If
                                                                     End Sub)
         FillFilterDropdowns()
@@ -96,7 +96,7 @@ Public Class frmPurchaseReports
             cmbPaymentType.SelectedIndex = 0
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في جلب بيانات الفلاتر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في جلب بيانات الفلاتر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -232,7 +232,7 @@ Public Class frmPurchaseReports
             CalculateReportTotals(dtResult)
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء استخراج التقرير: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء استخراج التقرير: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

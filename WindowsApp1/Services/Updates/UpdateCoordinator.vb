@@ -1,4 +1,4 @@
-Imports Newtonsoft.Json.Linq
+﻿Imports Newtonsoft.Json.Linq
 Imports System.Diagnostics
 Imports System.IO
 Imports System.Net.Http
@@ -95,8 +95,13 @@ Public NotInheritable Class UpdateCoordinator
 
     Public Shared Async Function DownloadAndLaunchAsync(manifest As VbUpdateManifest, progress As IProgress(Of Integer)) As Task(Of String)
         If manifest Is Nothing OrElse Not Uri.IsWellFormedUriString(manifest.PackageUrl, UriKind.Absolute) OrElse Not manifest.PackageUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase) Then Return "رابط حزمة التحديث غير صالح أو غير متوفر."
-        
+
+        ' أمان: التحقق من البصمة الرقمية SHA-256 إلزامي — الحزم بدون بصمة تُرفض ولا تُثبّت
         Dim hasSha = Not String.IsNullOrWhiteSpace(manifest.PackageSha256) AndAlso manifest.PackageSha256.Length = 64
+        If Not hasSha Then
+            Logger.LogError("UpdateCoordinator", New InvalidOperationException("حزمة التحديث " & manifest.Version & " لا تحتوي بصمة SHA-256 — تم رفض التثبيت."))
+            Return "حزمة التحديث غير موقعة ببصمة رقمية (SHA-256) — تم رفض التحديث لأسباب أمنية."
+        End If
 
         Dim updateDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "updates", manifest.Version)
         Directory.CreateDirectory(updateDir)
@@ -152,8 +157,9 @@ Public NotInheritable Class UpdateCoordinator
                 File.Copy(updater, externalRunner, True)
                 launchTarget = externalRunner
                 launchArgs = "--shadow-runner --pending " & ChrW(34) & pendingPath & ChrW(34)
-            Catch
+            Catch __logEx As Exception
                 ' في حال تعذر النسخ يتم التشغيل المباشر من مسار الأداة الأصلي
+                Logger.LogError("UpdateCoordinator.vb:160", __logEx)
             End Try
 
             Dim psi As New ProcessStartInfo(launchTarget, launchArgs) With {

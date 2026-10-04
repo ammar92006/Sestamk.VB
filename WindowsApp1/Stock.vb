@@ -73,7 +73,7 @@ Public Class Stock
     '                txtSearch.SelectAll()
     '                Return True
     '            Else
-    '                MessageBox.Show($"لا يوجد منتج مرتبط بالباركود: {barcodeValue}",
+    '                SmartMessageBox.Show($"لا يوجد منتج مرتبط بالباركود: {barcodeValue}",
     '                                "منتج غير موجود",
     '                                MessageBoxButtons.OK,
     '                                MessageBoxIcon.Warning)
@@ -81,7 +81,7 @@ Public Class Stock
     '                Return False
     '            End If
     '        Catch ex As Exception
-    '            MessageBox.Show("خطأ في البحث عن الباركود: " & ex.Message,
+    '            SmartMessageBox.Show("خطأ في البحث عن الباركود: " & ex.Message,
     '                            "خطأ قاعدة بيانات",
     '                            MessageBoxButtons.OK,
     '                            MessageBoxIcon.Error)
@@ -163,7 +163,7 @@ Public Class Stock
     '    '        Dim dataList As List(Of StockDisplayItem) = manager.GetDecomposedStockData()
 
     '    '        If dataList Is Nothing OrElse dataList.Count = 0 Then
-    '    '            MessageBox.Show("لا توجد بيانات لعرضها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    '    '            SmartMessageBox.Show("لا توجد بيانات لعرضها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
     '    '            Exit Sub
     '    '        End If
 
@@ -176,7 +176,7 @@ Public Class Stock
 
 
     '    '    Catch ex As Exception
-    '    '        MessageBox.Show(ex.Message, "خطأ في تحميل البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '    '        SmartMessageBox.Show(ex.Message, "خطأ في تحميل البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '    '    End Try
     '    'End Sub
     '    Private Sub LoadStockData(Optional filter As String = "", Optional field As String = "")
@@ -208,7 +208,7 @@ Public Class Stock
 
     '            'SetupDataGridView(dgvProducts)
     '        Catch ex As Exception
-    '            MessageBox.Show(ex.Message, "خطأ في تحميل البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '            SmartMessageBox.Show(ex.Message, "خطأ في تحميل البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '        Finally
     '            Disconnect()
     '        End Try
@@ -440,7 +440,7 @@ Public Class Stock
     '        Try
     '            ' التحقق من وجود بيانات
     '            If String.IsNullOrWhiteSpace(txtStockID.Text) Then
-    '                MessageBox.Show("❌ يرجى اختيار منتج لتعديله.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    '                SmartMessageBox.Show("❌ يرجى اختيار منتج لتعديله.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
     '                Exit Sub
     '            End If
 
@@ -449,52 +449,52 @@ Public Class Stock
     '            Dim minQty As Decimal
 
     '            If Not Decimal.TryParse(txtQty.Text, qty) Then
-    '                MessageBox.Show("❌ الكمية غير صالحة.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '                SmartMessageBox.Show("❌ الكمية غير صالحة.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '                Exit Sub
     '            End If
 
     '            If Not Decimal.TryParse(txtMinQty.Text, minQty) Then
-    '                MessageBox.Show("❌ الحد الأدنى غير صالح.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '                SmartMessageBox.Show("❌ الحد الأدنى غير صالح.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '                Exit Sub
     '            End If
 
     '            Dim m As New StockManager()
 
     '            If m.UpdateStock(stockId, qty, minQty) Then
-    '                MessageBox.Show("✔ تم تعديل بيانات المخزون بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    '                SmartMessageBox.Show("✔ تم تعديل بيانات المخزون بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
     '                LoadStockData()
     '            Else
-    '                MessageBox.Show("❌ فشل في تعديل المخزون.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '                SmartMessageBox.Show("❌ فشل في تعديل المخزون.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '            End If
 
     '        Catch ex As Exception
-    '            MessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '            SmartMessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '        End Try
     '    End Sub
 
     '    Private Sub btn_delet_Click(sender As Object, e As EventArgs) Handles btn_delet.Click
     '        Try
     '            If String.IsNullOrWhiteSpace(txtStockID.Text) Then
-    '                MessageBox.Show("❌ اختر منتجًا لحذفه.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+    '                SmartMessageBox.Show("❌ اختر منتجًا لحذفه.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
     '                Exit Sub
     '            End If
 
     '            Dim stockId As Integer = CInt(txtStockID.Text)
 
-    '            If MessageBox.Show("هل تريد حذف سجل المخزون لهذا المنتج؟", "تأكيد",
+    '            If SmartMessageBox.Show("هل تريد حذف سجل المخزون لهذا المنتج؟", "تأكيد",
     '                           MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
 
     '            Dim m As New StockManager()
 
     '            If m.DeleteStock(stockId) Then
-    '                MessageBox.Show("✔ تم حذف المخزون.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+    '                SmartMessageBox.Show("✔ تم حذف المخزون.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
     '                LoadStockData()
     '            Else
-    '                MessageBox.Show("❌ فشل في حذف المخزون.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '                SmartMessageBox.Show("❌ فشل في حذف المخزون.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '            End If
 
     '        Catch ex As Exception
-    '            MessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    '            SmartMessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     '        End Try
     '    End Sub
 
@@ -709,7 +709,7 @@ Public Class Stock
     '            End Using
 
     '        Catch ex As Exception
-    '            MessageBox.Show("خطأ في جلب الاقتراحات: " & ex.Message)
+    '            SmartMessageBox.Show("خطأ في جلب الاقتراحات: " & ex.Message)
     '        End Try
 
     '        Return list
@@ -835,7 +835,7 @@ Public Class Stock
     '                End Using
     '            End If
     '        Catch ex As Exception
-    '            MessageBox.Show("خطأ: " & ex.Message)
+    '            SmartMessageBox.Show("خطأ: " & ex.Message)
     '        End Try
     '    End Sub
 

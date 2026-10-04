@@ -59,7 +59,7 @@ Public Class FrmShiftReports
             LoadReportData()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح شاشة تقارير الورديات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء فتح شاشة تقارير الورديات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             _isLoading = False
         End Try
@@ -144,7 +144,7 @@ Public Class FrmShiftReports
             ApplySearchFilter()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء استعلام التقرير: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء استعلام التقرير: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -616,7 +616,7 @@ Public Class FrmShiftReports
     ' تصدير إلى Excel بتنسيق راقٍ
     Private Sub btnExportExcel_Click(sender As Object, e As EventArgs) Handles btnExportExcel.Click
         If dgvReport.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد بيانات معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد بيانات معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -682,13 +682,13 @@ Public Class FrmShiftReports
                     wb.SaveAs(sfd.FileName)
                 End Using
 
-                MessageBox.Show("✅ تم تصدير التقرير إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تصدير التقرير إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Dim folderPath As String = Path.GetDirectoryName(sfd.FileName)
                 Process.Start("explorer.exe", folderPath)
             End If
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تصدير ملف الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تصدير ملف الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -696,7 +696,7 @@ Public Class FrmShiftReports
     Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
         Try
             If dgvReport.Rows.Count = 0 Then
-                MessageBox.Show("لا توجد بيانات معروضة للطباعة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("لا توجد بيانات معروضة للطباعة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 
@@ -713,14 +713,14 @@ Public Class FrmShiftReports
             prevDlg.ShowDialog()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     ' تصدير إلى PDF بتنسيق راقٍ ومباشر
     Private Sub btnExportPdf_Click(sender As Object, e As EventArgs) Handles btnExportPdf.Click
         If dgvReport.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد بيانات معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد بيانات معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -742,7 +742,7 @@ Public Class FrmShiftReports
                 Next
 
                 If Not isPdfPrinterFound Then
-                    MessageBox.Show("طابعة 'Microsoft Print to PDF' غير محددة كطابعة افتراضية. سيتم فتح نافذة اختيار الطابعة لحفظ الملف كـ PDF.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("طابعة 'Microsoft Print to PDF' غير محددة كطابعة افتراضية. سيتم فتح نافذة اختيار الطابعة لحفظ الملف كـ PDF.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Using printDlg As New PrintDialog()
                         printDlg.Document = doc
                         If printDlg.ShowDialog() <> DialogResult.OK Then Exit Sub
@@ -760,7 +760,7 @@ Public Class FrmShiftReports
 
                 doc.Print()
 
-                MessageBox.Show("✅ تم تصدير تقرير الوردية إلى PDF بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تصدير تقرير الوردية إلى PDF بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 If File.Exists(sfd.FileName) Then
                     Dim folderPath As String = Path.GetDirectoryName(sfd.FileName)
                     Process.Start("explorer.exe", folderPath)
@@ -768,7 +768,7 @@ Public Class FrmShiftReports
             End If
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تصدير ملف الـ PDF: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تصدير ملف الـ PDF: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

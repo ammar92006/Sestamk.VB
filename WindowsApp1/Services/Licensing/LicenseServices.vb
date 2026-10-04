@@ -1,4 +1,4 @@
-Imports Microsoft.Win32
+﻿Imports Microsoft.Win32
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports System.IO
@@ -68,7 +68,8 @@ Public NotInheritable Class HardwareFingerprint
                     End If
                 End Using
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("LicenseServices.vb:71", __logEx)
         End Try
         Try
             Using key = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Cryptography")
@@ -77,7 +78,8 @@ Public NotInheritable Class HardwareFingerprint
                     If Not String.IsNullOrWhiteSpace(val) Then Return val
                 End If
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("LicenseServices.vb:81", __logEx)
         End Try
         Return "UNKNOWN_GUID"
     End Function
@@ -89,7 +91,8 @@ Public NotInheritable Class HardwareFingerprint
                     Return If(Convert.ToString(item(propertyName)), "UNKNOWN")
                 Next
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("LicenseServices.vb:94", __logEx)
         End Try
         Return "UNKNOWN"
     End Function
@@ -126,7 +129,8 @@ Public NotInheritable Class HardwareFingerprint
                     Return _cachedRamGb
                 Next
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("LicenseServices.vb:132", __logEx)
         End Try
         _cachedRamGb = 0
         Return 0
@@ -165,21 +169,24 @@ Public NotInheritable Class LicenseCache
             Try
                 Directory.CreateDirectory(Path.GetDirectoryName(PrimaryCachePath))
                 File.WriteAllBytes(PrimaryCachePath, encrypted)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:172", __logEx)
             End Try
 
             ' 2) الحفظ في مجلد LocalAppData الخاص بالمستخدم الحالي
             Try
                 Directory.CreateDirectory(Path.GetDirectoryName(LocalAppCachePath))
                 File.WriteAllBytes(LocalAppCachePath, encrypted)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:180", __logEx)
             End Try
 
             ' 3) الحفظ في مجلد Roaming AppData
             Try
                 Directory.CreateDirectory(Path.GetDirectoryName(RoamingAppCachePath))
                 File.WriteAllBytes(RoamingAppCachePath, encrypted)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:188", __logEx)
             End Try
 
             ' 4) الحفظ الاحتياطي في سجل النظام (Registry HKCU)
@@ -191,10 +198,13 @@ Public NotInheritable Class LicenseCache
                         If Not String.IsNullOrWhiteSpace(s) Then regKey.SetValue("SavedSerial", s.Trim())
                     End If
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:201", __logEx)
             End Try
 
             ' 5) الحفظ الاحتياطي في سجل النظام (Registry HKLM) إن توفرت الصلاحيات
+            '    الكتابة في HKLM تفشل طبيعياً بدون صلاحيات admin — الكاش الفعلي هو HKCU أعلاه،
+            '    لذلك يُسجل كتصحيح (Debug) لا كخطأ حتى لا يظهر فشل وهمي في اللوج عند كل تشغيل
             Try
                 Using baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
                     Using regKey = baseKey.CreateSubKey(RegistryKeyPath)
@@ -205,7 +215,8 @@ Public NotInheritable Class LicenseCache
                         End If
                     End Using
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogDebug("LicenseCache.Save: HKLM backup skipped (no admin rights) — HKCU cache is authoritative")
             End Try
 
         Catch ex As Exception
@@ -231,7 +242,8 @@ Public NotInheritable Class LicenseCache
                         foundObject = obj
                     End If
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:243", __logEx)
             End Try
         Next
 
@@ -246,14 +258,17 @@ Public NotInheritable Class LicenseCache
                             Dim plain = ProtectedData.Unprotect(raw, Nothing, DataProtectionScope.LocalMachine)
                             foundObject = JObject.Parse(Encoding.UTF8.GetString(plain))
                         Else
+                            ' أمان: وجود SavedSerial وحده لا يكفي للتفعيل — بدون حزمة مشفرة موقعة من السيرفر
+                            ' يبقى السيريال "قيد التحقق" ويجب التحقق منه من السيرفر قبل السماح بالعمل
                             Dim savedSerial = Convert.ToString(regKey.GetValue("SavedSerial"))
                             If Not String.IsNullOrWhiteSpace(savedSerial) Then
-                                foundObject = New JObject From {{"saved_serial", savedSerial.Trim()}, {"status", "active"}}
+                                foundObject = New JObject From {{"saved_serial", savedSerial.Trim()}, {"status", "pending"}}
                             End If
                         End If
                     End If
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:268", __logEx)
             End Try
         End If
 
@@ -272,37 +287,14 @@ Public NotInheritable Class LicenseCache
                         End If
                     End Using
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:288", __logEx)
             End Try
         End If
 
-        ' التوافق التلقائي الذاتي والترقية مع النظام القديم (sys.dat)
-        If foundObject Is Nothing Then
-            Try
-                Dim legacyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "sys.dat")
-                If File.Exists(legacyPath) Then
-                    Dim enc = File.ReadAllText(legacyPath)
-                    Using aes As Aes = Aes.Create()
-                        aes.Key = Encoding.UTF8.GetBytes("MySuperSecretKey123!".PadRight(32, "0"c))
-                        aes.IV = Encoding.UTF8.GetBytes("1234567890123456")
-                        Using decryptor = aes.CreateDecryptor()
-                            Dim cipherBytes = Convert.FromBase64String(enc)
-                            Dim plainBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length)
-                            Dim legacyText = Encoding.UTF8.GetString(plainBytes)
-                            Dim parts = legacyText.Split("|"c)
-                            If parts.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(parts(0)) Then
-                                foundObject = New JObject From {
-                                    {"saved_serial", parts(0).Trim()},
-                                    {"status", "active"},
-                                    {"expires_at", DateTime.Today.AddYears(1).ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}
-                                }
-                            End If
-                        End Using
-                    End Using
-                End If
-            Catch
-            End Try
-        End If
+        ' أمان: تم إزالة مسار التوافق مع النظام القديم (sys.dat) بالكامل —
+        ' كان يعتمد على مفتاح AES ثابت في الكود ويسمح بتزوير تفعيل دائم من أي سكربت خارجي.
+        ' التفعيل يصبح فقط عبر السيرفر (check_license / check_license_by_hwid) أو كاش DPAPI سليم.
 
         ' المعالجة التلقائية الذاتية (Self-Healing): إذا وجد في مكان واحد ولم يوجد في باقي الأماكن نقوم بمزامنته فوراً
         If foundObject IsNot Nothing Then
@@ -311,7 +303,8 @@ Public NotInheritable Class LicenseCache
                 If needHealing Then
                     Save(foundObject)
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:304", __logEx)
             End Try
         End If
 
@@ -338,33 +331,44 @@ Public NotInheritable Class LicenseCache
                 Using regKey = Registry.CurrentUser.OpenSubKey("Software\Sestamk", True)
                     If regKey IsNot Nothing Then regKey.DeleteSubKeyTree("License", False)
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:332", __logEx)
             End Try
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("LicenseServices.vb:335", __logEx)
         End Try
     End Sub
 
+    ''' <summary>
+    ''' هل يسمح بالعمل دون اتصال بالاعتماد على الكاش المحلي؟
+    ''' أمان: يشترط status صالح + تاريخ انتهاء مستقبلي + مزامنة ناجحة حديثة مع السيرفر.
+    ''' أي حقل ناقص أو مزيّف يمنع العمل دون اتصال ويحوّل للتحقق الفوري من السيرفر.
+    ''' </summary>
     Public Shared Function IsOfflineAllowed(cache As JObject) As Boolean
         If cache Is Nothing Then Return False
         Dim status = Convert.ToString(cache("status")).ToLowerInvariant()
         If status <> "active" AndAlso status <> "grace_period" Then Return False
 
+        ' يجب وجود تاريخ انتهاء صالح صادر من السيرفر (كاش بدون تاريخ = غير موثوق)
         Dim expiresAt As DateTime
         Dim expStr = Convert.ToString(cache("expires_at"))
-        If DateTime.TryParse(expStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, expiresAt) OrElse DateTime.TryParse(expStr, expiresAt) Then
-            Dim graceDays = 0
-            Dim graceToken = cache("grace_days")
-            If graceToken IsNot Nothing Then Integer.TryParse(Convert.ToString(graceToken), graceDays)
-            Dim effectiveExpiry = expiresAt.Date.AddDays(graceDays)
-            If DateTime.Today > effectiveExpiry Then Return False
+        If Not (DateTime.TryParse(expStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, expiresAt) OrElse DateTime.TryParse(expStr, expiresAt)) Then
+            Return False
         End If
+        Dim graceDays = 0
+        Dim graceToken = cache("grace_days")
+        If graceToken IsNot Nothing Then Integer.TryParse(Convert.ToString(graceToken), graceDays)
+        Dim effectiveExpiry = expiresAt.Date.AddDays(graceDays)
+        If DateTime.Today > effectiveExpiry Then Return False
 
+        ' يجب وجود مزامنة ناجحة حديثة مع السيرفر (ضمن نافذة العمل دون اتصال)
         Dim lastSync As DateTime
         Dim syncStr = Convert.ToString(If(cache("last_successful_sync_utc"), cache("last_successful_sync")))
-        If DateTime.TryParse(syncStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, lastSync) OrElse DateTime.TryParse(syncStr, lastSync) Then
-            If DateTime.UtcNow.Subtract(lastSync.ToUniversalTime()).TotalDays > LicenseSettings.OfflineCacheDays Then
-                Return False
-            End If
+        If Not (DateTime.TryParse(syncStr, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, lastSync) OrElse DateTime.TryParse(syncStr, lastSync)) Then
+            Return False
+        End If
+        If DateTime.UtcNow.Subtract(lastSync.ToUniversalTime()).TotalDays > LicenseSettings.OfflineCacheDays Then
+            Return False
         End If
 
         Return True
@@ -385,7 +389,8 @@ Public NotInheritable Class LicenseBootstrapper
     Shared Sub New()
         Try
             ServicePointManager.SecurityProtocol = ServicePointManager.SecurityProtocol Or SecurityProtocolType.Tls12 Or SecurityProtocolType.Tls11
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("LicenseServices.vb:390", __logEx)
         End Try
     End Sub
 
@@ -401,7 +406,8 @@ Public NotInheritable Class LicenseBootstrapper
                 If hwidResult.IsValid Then
                     Return hwidResult
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("LicenseServices.vb:407", __logEx)
             End Try
             Return New LicenseCheckResult With {.RequiresActivation = True, .Message = "يرجى تفعيل البرنامج أولاً."}
         End If
@@ -425,8 +431,9 @@ Public NotInheritable Class LicenseBootstrapper
                                      RaiseEvent LicenseInvalidated(revokedMsg)
                                  End If
                              End If
-                         Catch
+                         Catch __logEx As Exception
                              ' في حال انقطاع الاتصال أو بطء الشبكة في الخلفية، يستمر العمل دون تعطيل
+                             Logger.LogError("LicenseServices.vb:432", __logEx)
                          End Try
                      End Function)
 

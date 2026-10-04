@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.IO
 Imports System.Windows.Forms
 
@@ -64,7 +64,7 @@ Namespace UC_Settings
                 ' مسار النسخ الاحتياطي
                 txtBackupPath.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.SystemBackupPath, "")
             Catch ex As Exception
-                MessageBox.Show("خطأ في تحميل إعدادات النظام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في تحميل إعدادات النظام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -81,7 +81,7 @@ Namespace UC_Settings
             Try
                 Dim attempts As Integer
                 If Not Integer.TryParse(txtMaxLoginAttempts.Text.Trim(), attempts) OrElse attempts <= 0 Then
-                    MessageBox.Show("يرجى إدخال عدد محاولات دخول صحيح (أكبر من 0)", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("يرجى إدخال عدد محاولات دخول صحيح (أكبر من 0)", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtMaxLoginAttempts.Focus()
                     Return
                 End If
@@ -109,7 +109,7 @@ Namespace UC_Settings
                 
                 Dim logoutMinutes As Integer
                 If Not Integer.TryParse(txtAutoLogoutMinutes.Text.Trim(), logoutMinutes) OrElse logoutMinutes < 1 OrElse logoutMinutes > 120 Then
-                    MessageBox.Show("يرجى إدخال مهلة زمنية صحيحة بالدقائق (بين 1 و 120 دقيقة)", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("يرجى إدخال مهلة زمنية صحيحة بالدقائق (بين 1 و 120 دقيقة)", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtAutoLogoutMinutes.Focus()
                     Return
                 End If
@@ -129,10 +129,10 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات النظام بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات النظام بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات النظام بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات النظام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات النظام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -201,6 +201,7 @@ Namespace UC_Settings
                 End If
             Catch ex As Exception
                 ' حماية أثناء التحديث أو الإغلاق
+                Logger.LogError("UCSystemSettings.vb:202", ex)
             End Try
         End Sub
 
@@ -256,7 +257,7 @@ Namespace UC_Settings
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات النظام؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات النظام؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 cmbLanguage.SelectedIndex = 0
                 cmbCurrency.SelectedIndex = 0
                 tglAutoBackup.Checked = False

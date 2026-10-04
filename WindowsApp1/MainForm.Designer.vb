@@ -15,10 +15,15 @@ Partial Class MainForm
 
     Private components As System.ComponentModel.IContainer
 
-    <System.Diagnostics.DebuggerStepThrough()> 
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
+        Me.pnlUserInfo = New Guna.UI2.WinForms.Guna2Panel()
+        Me.lblUserName = New System.Windows.Forms.Label()
+        Me.lblUserRole = New System.Windows.Forms.Label()
+        Me.picUserAvatar = New Guna.UI2.WinForms.Guna2CirclePictureBox()
+        Me.btnNotifications = New Guna.UI2.WinForms.Guna2Button()
         Me.lblHeaderBranch = New System.Windows.Forms.Label()
         Me.txtGlobalSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblProBadge = New Guna.UI2.WinForms.Guna2Button()
@@ -62,6 +67,8 @@ Partial Class MainForm
         Me.tmrClock = New System.Windows.Forms.Timer(Me.components)
         Me.tmrDashboardRefresh = New System.Windows.Forms.Timer(Me.components)
         Me.panelHeader.SuspendLayout()
+        Me.pnlUserInfo.SuspendLayout()
+        CType(Me.picUserAvatar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picLogo, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlSidebar.SuspendLayout()
         Me.flpNav.SuspendLayout()
@@ -71,6 +78,8 @@ Partial Class MainForm
         '
         'panelHeader
         '
+        Me.panelHeader.Controls.Add(Me.pnlUserInfo)
+        Me.panelHeader.Controls.Add(Me.btnNotifications)
         Me.panelHeader.Controls.Add(Me.lblHeaderBranch)
         Me.panelHeader.Controls.Add(Me.txtGlobalSearch)
         Me.panelHeader.Controls.Add(Me.lblProBadge)
@@ -86,10 +95,90 @@ Partial Class MainForm
         Me.panelHeader.FillColor = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(22, Byte), Integer), CType(CType(34, Byte), Integer))
         Me.panelHeader.Location = New System.Drawing.Point(0, 0)
         Me.panelHeader.Name = "panelHeader"
-        Me.panelHeader.Padding = New System.Windows.Forms.Padding(10, 8, 10, 8)
+        Me.panelHeader.Padding = New System.Windows.Forms.Padding(10, 10, 10, 10)
         Me.panelHeader.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.panelHeader.Size = New System.Drawing.Size(1400, 70)
+        Me.panelHeader.Size = New System.Drawing.Size(1400, 85)
         Me.panelHeader.TabIndex = 3
+        '
+        'pnlUserInfo
+        '
+        Me.pnlUserInfo.BackColor = System.Drawing.Color.Transparent
+        Me.pnlUserInfo.BorderColor = System.Drawing.Color.FromArgb(CType(CType(38, Byte), Integer), CType(CType(51, Byte), Integer), CType(CType(72, Byte), Integer))
+        Me.pnlUserInfo.BorderRadius = 12
+        Me.pnlUserInfo.BorderThickness = 1
+        Me.pnlUserInfo.Controls.Add(Me.lblUserName)
+        Me.pnlUserInfo.Controls.Add(Me.lblUserRole)
+        Me.pnlUserInfo.Controls.Add(Me.picUserAvatar)
+        Me.pnlUserInfo.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.pnlUserInfo.Dock = System.Windows.Forms.DockStyle.Left
+        Me.pnlUserInfo.FillColor = System.Drawing.Color.FromArgb(CType(CType(23, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(44, Byte), Integer))
+        Me.pnlUserInfo.Location = New System.Drawing.Point(623, 10)
+        Me.pnlUserInfo.Margin = New System.Windows.Forms.Padding(8, 3, 8, 3)
+        Me.pnlUserInfo.Name = "pnlUserInfo"
+        Me.pnlUserInfo.Padding = New System.Windows.Forms.Padding(8, 6, 12, 6)
+        Me.pnlUserInfo.Size = New System.Drawing.Size(220, 65)
+        Me.pnlUserInfo.TabIndex = 11
+        '
+        'lblUserName
+        '
+        Me.lblUserName.AutoSize = True
+        Me.lblUserName.BackColor = System.Drawing.Color.Transparent
+        Me.lblUserName.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.lblUserName.ForeColor = System.Drawing.Color.White
+        Me.lblUserName.Location = New System.Drawing.Point(70, 12)
+        Me.lblUserName.Name = "lblUserName"
+        Me.lblUserName.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblUserName.Size = New System.Drawing.Size(80, 17)
+        Me.lblUserName.TabIndex = 1
+        Me.lblUserName.Text = "المدير العام"
+        Me.lblUserName.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'lblUserRole
+        '
+        Me.lblUserRole.AutoSize = True
+        Me.lblUserRole.BackColor = System.Drawing.Color.Transparent
+        Me.lblUserRole.Font = New System.Drawing.Font("Segoe UI", 8.5!)
+        Me.lblUserRole.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+        Me.lblUserRole.Location = New System.Drawing.Point(70, 34)
+        Me.lblUserRole.Name = "lblUserRole"
+        Me.lblUserRole.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblUserRole.Size = New System.Drawing.Size(75, 15)
+        Me.lblUserRole.TabIndex = 2
+        Me.lblUserRole.Text = "مدير النظام"
+        Me.lblUserRole.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'picUserAvatar
+        '
+        Me.picUserAvatar.BackColor = System.Drawing.Color.Transparent
+        Me.picUserAvatar.Dock = System.Windows.Forms.DockStyle.Right
+        Me.picUserAvatar.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+        Me.picUserAvatar.Image = Global.WindowsApp1.My.Resources.Resources.user__1_
+        Me.picUserAvatar.ImageRotate = 0!
+        Me.picUserAvatar.Location = New System.Drawing.Point(158, 6)
+        Me.picUserAvatar.Name = "picUserAvatar"
+        Me.picUserAvatar.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle
+        Me.picUserAvatar.Size = New System.Drawing.Size(50, 53)
+        Me.picUserAvatar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.picUserAvatar.TabIndex = 0
+        Me.picUserAvatar.TabStop = False
+        '
+        'btnNotifications
+        '
+        Me.btnNotifications.BackColor = System.Drawing.Color.Transparent
+        Me.btnNotifications.BorderRadius = 10
+        Me.btnNotifications.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnNotifications.Dock = System.Windows.Forms.DockStyle.Left
+        Me.btnNotifications.FillColor = System.Drawing.Color.Transparent
+        Me.btnNotifications.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.btnNotifications.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+        Me.btnNotifications.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.btnNotifications.HoverState.ForeColor = System.Drawing.Color.White
+        Me.btnNotifications.Image = Global.WindowsApp1.My.Resources.Resources.notification
+        Me.btnNotifications.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btnNotifications.Location = New System.Drawing.Point(573, 10)
+        Me.btnNotifications.Name = "btnNotifications"
+        Me.btnNotifications.Size = New System.Drawing.Size(50, 65)
+        Me.btnNotifications.TabIndex = 12
         '
         'lblHeaderBranch
         '
@@ -97,11 +186,11 @@ Partial Class MainForm
         Me.lblHeaderBranch.Dock = System.Windows.Forms.DockStyle.Right
         Me.lblHeaderBranch.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.lblHeaderBranch.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
-        Me.lblHeaderBranch.Location = New System.Drawing.Point(579, 8)
+        Me.lblHeaderBranch.Location = New System.Drawing.Point(843, 10)
         Me.lblHeaderBranch.Name = "lblHeaderBranch"
         Me.lblHeaderBranch.Padding = New System.Windows.Forms.Padding(0, 10, 10, 0)
         Me.lblHeaderBranch.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblHeaderBranch.Size = New System.Drawing.Size(159, 54)
+        Me.lblHeaderBranch.Size = New System.Drawing.Size(159, 65)
         Me.lblHeaderBranch.TabIndex = 0
         Me.lblHeaderBranch.Text = "الفرع الرئيسي"
         Me.lblHeaderBranch.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -110,7 +199,7 @@ Partial Class MainForm
         '
         Me.txtGlobalSearch.BackColor = System.Drawing.Color.Transparent
         Me.txtGlobalSearch.BorderColor = System.Drawing.Color.FromArgb(CType(CType(38, Byte), Integer), CType(CType(51, Byte), Integer), CType(CType(72, Byte), Integer))
-        Me.txtGlobalSearch.BorderRadius = 10
+        Me.txtGlobalSearch.BorderRadius = 12
         Me.txtGlobalSearch.Cursor = System.Windows.Forms.Cursors.IBeam
         Me.txtGlobalSearch.DefaultText = ""
         Me.txtGlobalSearch.Dock = System.Windows.Forms.DockStyle.Right
@@ -119,14 +208,14 @@ Partial Class MainForm
         Me.txtGlobalSearch.ForeColor = System.Drawing.Color.White
         Me.txtGlobalSearch.IconLeft = Global.WindowsApp1.My.Resources.Resources.search
         Me.txtGlobalSearch.IconLeftSize = New System.Drawing.Size(16, 16)
-        Me.txtGlobalSearch.Location = New System.Drawing.Point(738, 8)
+        Me.txtGlobalSearch.Location = New System.Drawing.Point(1002, 10)
         Me.txtGlobalSearch.Margin = New System.Windows.Forms.Padding(12, 3, 12, 3)
         Me.txtGlobalSearch.Name = "txtGlobalSearch"
         Me.txtGlobalSearch.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
         Me.txtGlobalSearch.PlaceholderText = "بحث سريع في الشاشات (Ctrl+K)..."
         Me.txtGlobalSearch.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.txtGlobalSearch.SelectedText = ""
-        Me.txtGlobalSearch.Size = New System.Drawing.Size(300, 54)
+        Me.txtGlobalSearch.Size = New System.Drawing.Size(320, 65)
         Me.txtGlobalSearch.TabIndex = 1
         '
         'lblProBadge
@@ -137,27 +226,29 @@ Partial Class MainForm
         Me.lblProBadge.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
         Me.lblProBadge.Font = New System.Drawing.Font("Segoe UI", 7.5!, System.Drawing.FontStyle.Bold)
         Me.lblProBadge.ForeColor = System.Drawing.Color.White
-        Me.lblProBadge.Location = New System.Drawing.Point(1038, 8)
-        Me.lblProBadge.Margin = New System.Windows.Forms.Padding(10, 8, 10, 8)
+        Me.lblProBadge.Location = New System.Drawing.Point(1322, 10)
+        Me.lblProBadge.Margin = New System.Windows.Forms.Padding(10, 10, 10, 10)
         Me.lblProBadge.Name = "lblProBadge"
-        Me.lblProBadge.Size = New System.Drawing.Size(85, 54)
+        Me.lblProBadge.Size = New System.Drawing.Size(5, 65)
         Me.lblProBadge.TabIndex = 2
-        Me.lblProBadge.Text = "PRO EDITION"
+        Me.lblProBadge.Text = "PRO"
+        Me.lblProBadge.Visible = False
         '
         'lbltitle
         '
         Me.lbltitle.AutoSize = True
         Me.lbltitle.BackColor = System.Drawing.Color.Transparent
         Me.lbltitle.Dock = System.Windows.Forms.DockStyle.Right
-        Me.lbltitle.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.lbltitle.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lbltitle.ForeColor = System.Drawing.Color.White
-        Me.lbltitle.Location = New System.Drawing.Point(1123, 8)
+        Me.lbltitle.Location = New System.Drawing.Point(1327, 10)
         Me.lbltitle.Name = "lbltitle"
-        Me.lbltitle.Padding = New System.Windows.Forms.Padding(10, 8, 10, 0)
+        Me.lbltitle.Padding = New System.Windows.Forms.Padding(8, 18, 8, 0)
         Me.lbltitle.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lbltitle.Size = New System.Drawing.Size(214, 29)
+        Me.lbltitle.Size = New System.Drawing.Size(16, 39)
         Me.lbltitle.TabIndex = 3
-        Me.lbltitle.Text = "سستمك POS لإدارة المطاعم"
+        Me.lbltitle.Text = ""
+        Me.lbltitle.Visible = False
         '
         'picLogo
         '
@@ -165,10 +256,10 @@ Partial Class MainForm
         Me.picLogo.Dock = System.Windows.Forms.DockStyle.Right
         Me.picLogo.Image = Global.WindowsApp1.My.Resources.Resources.restaurant_building
         Me.picLogo.ImageRotate = 0!
-        Me.picLogo.Location = New System.Drawing.Point(1337, 8)
+        Me.picLogo.Location = New System.Drawing.Point(1343, 10)
         Me.picLogo.Margin = New System.Windows.Forms.Padding(5)
         Me.picLogo.Name = "picLogo"
-        Me.picLogo.Size = New System.Drawing.Size(53, 54)
+        Me.picLogo.Size = New System.Drawing.Size(47, 65)
         Me.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.picLogo.TabIndex = 4
         Me.picLogo.TabStop = False
@@ -177,7 +268,7 @@ Partial Class MainForm
         '
         Me.btnLogout.BackColor = System.Drawing.Color.Transparent
         Me.btnLogout.BorderColor = System.Drawing.Color.FromArgb(CType(CType(127, Byte), Integer), CType(CType(29, Byte), Integer), CType(CType(29, Byte), Integer))
-        Me.btnLogout.BorderRadius = 8
+        Me.btnLogout.BorderRadius = 10
         Me.btnLogout.BorderThickness = 1
         Me.btnLogout.Dock = System.Windows.Forms.DockStyle.Left
         Me.btnLogout.FillColor = System.Drawing.Color.FromArgb(CType(CType(50, Byte), Integer), CType(CType(20, Byte), Integer), CType(CType(25, Byte), Integer))
@@ -188,11 +279,11 @@ Partial Class MainForm
         Me.btnLogout.Image = Global.WindowsApp1.My.Resources.Resources.logout
         Me.btnLogout.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnLogout.ImageSize = New System.Drawing.Size(18, 18)
-        Me.btnLogout.Location = New System.Drawing.Point(417, 8)
+        Me.btnLogout.Location = New System.Drawing.Point(494, 10)
         Me.btnLogout.Margin = New System.Windows.Forms.Padding(6, 2, 6, 2)
         Me.btnLogout.Name = "btnLogout"
         Me.btnLogout.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnLogout.Size = New System.Drawing.Size(123, 54)
+        Me.btnLogout.Size = New System.Drawing.Size(123, 65)
         Me.btnLogout.TabIndex = 8
         Me.btnLogout.Text = "  خروج"
         '
@@ -200,7 +291,7 @@ Partial Class MainForm
         '
         Me.btnSupport.BackColor = System.Drawing.Color.Transparent
         Me.btnSupport.BorderColor = System.Drawing.Color.FromArgb(CType(CType(3, Byte), Integer), CType(CType(105, Byte), Integer), CType(CType(161, Byte), Integer))
-        Me.btnSupport.BorderRadius = 8
+        Me.btnSupport.BorderRadius = 10
         Me.btnSupport.BorderThickness = 1
         Me.btnSupport.Dock = System.Windows.Forms.DockStyle.Left
         Me.btnSupport.FillColor = System.Drawing.Color.FromArgb(CType(CType(20, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(55, Byte), Integer))
@@ -211,11 +302,11 @@ Partial Class MainForm
         Me.btnSupport.Image = Global.WindowsApp1.My.Resources.Resources.customer_support
         Me.btnSupport.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
         Me.btnSupport.ImageSize = New System.Drawing.Size(18, 18)
-        Me.btnSupport.Location = New System.Drawing.Point(285, 8)
+        Me.btnSupport.Location = New System.Drawing.Point(362, 10)
         Me.btnSupport.Margin = New System.Windows.Forms.Padding(6, 2, 6, 2)
         Me.btnSupport.Name = "btnSupport"
         Me.btnSupport.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.btnSupport.Size = New System.Drawing.Size(132, 54)
+        Me.btnSupport.Size = New System.Drawing.Size(132, 65)
         Me.btnSupport.TabIndex = 9
         Me.btnSupport.Text = "  دعم فني"
         '
@@ -225,14 +316,15 @@ Partial Class MainForm
         Me.lblStatusUserRole.Dock = System.Windows.Forms.DockStyle.Left
         Me.lblStatusUserRole.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblStatusUserRole.ForeColor = System.Drawing.Color.FromArgb(CType(CType(147, Byte), Integer), CType(CType(197, Byte), Integer), CType(CType(253, Byte), Integer))
-        Me.lblStatusUserRole.Location = New System.Drawing.Point(139, 8)
+        Me.lblStatusUserRole.Location = New System.Drawing.Point(139, 10)
         Me.lblStatusUserRole.Name = "lblStatusUserRole"
         Me.lblStatusUserRole.Padding = New System.Windows.Forms.Padding(8, 10, 8, 0)
         Me.lblStatusUserRole.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblStatusUserRole.Size = New System.Drawing.Size(146, 54)
+        Me.lblStatusUserRole.Size = New System.Drawing.Size(223, 65)
         Me.lblStatusUserRole.TabIndex = 10
-        Me.lblStatusUserRole.Text = "المدير العام (مدير النظام)"
+        Me.lblStatusUserRole.Text = ""
         Me.lblStatusUserRole.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.lblStatusUserRole.Visible = False
         '
         'btn_min
         '
@@ -243,9 +335,9 @@ Partial Class MainForm
         Me.btn_min.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btn_min.ForeColor = System.Drawing.Color.White
         Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btn_min.Location = New System.Drawing.Point(101, 8)
+        Me.btn_min.Location = New System.Drawing.Point(101, 10)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.Size = New System.Drawing.Size(38, 54)
+        Me.btn_min.Size = New System.Drawing.Size(38, 65)
         Me.btn_min.TabIndex = 7
         Me.btn_min.Text = "—"
         '
@@ -258,9 +350,9 @@ Partial Class MainForm
         Me.btn_max.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btn_max.ForeColor = System.Drawing.Color.White
         Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
-        Me.btn_max.Location = New System.Drawing.Point(63, 8)
+        Me.btn_max.Location = New System.Drawing.Point(63, 10)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.Size = New System.Drawing.Size(38, 54)
+        Me.btn_max.Size = New System.Drawing.Size(38, 65)
         Me.btn_max.TabIndex = 6
         Me.btn_max.Text = "▢"
         '
@@ -273,9 +365,9 @@ Partial Class MainForm
         Me.btn_close.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btn_close.ForeColor = System.Drawing.Color.White
         Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(220, Byte), Integer), CType(CType(38, Byte), Integer), CType(CType(38, Byte), Integer))
-        Me.btn_close.Location = New System.Drawing.Point(10, 8)
+        Me.btn_close.Location = New System.Drawing.Point(10, 10)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.Size = New System.Drawing.Size(53, 54)
+        Me.btn_close.Size = New System.Drawing.Size(53, 65)
         Me.btn_close.TabIndex = 5
         Me.btn_close.Text = "✕"
         '
@@ -284,10 +376,10 @@ Partial Class MainForm
         Me.pnlSidebar.Controls.Add(Me.flpNav)
         Me.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Right
         Me.pnlSidebar.FillColor = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(22, Byte), Integer), CType(CType(34, Byte), Integer))
-        Me.pnlSidebar.Location = New System.Drawing.Point(1180, 70)
+        Me.pnlSidebar.Location = New System.Drawing.Point(1180, 85)
         Me.pnlSidebar.Name = "pnlSidebar"
         Me.pnlSidebar.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlSidebar.Size = New System.Drawing.Size(220, 758)
+        Me.pnlSidebar.Size = New System.Drawing.Size(220, 743)
         Me.pnlSidebar.TabIndex = 1
         '
         'flpNav
@@ -311,7 +403,7 @@ Partial Class MainForm
         Me.flpNav.Name = "flpNav"
         Me.flpNav.Padding = New System.Windows.Forms.Padding(6, 10, 6, 10)
         Me.flpNav.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.flpNav.Size = New System.Drawing.Size(220, 758)
+        Me.flpNav.Size = New System.Drawing.Size(220, 743)
         Me.flpNav.TabIndex = 0
         Me.flpNav.WrapContents = False
         '
@@ -660,10 +752,10 @@ Partial Class MainForm
         '
         Me.pnlMainContainer.BackColor = System.Drawing.Color.FromArgb(CType(CType(11, Byte), Integer), CType(CType(14, Byte), Integer), CType(CType(20, Byte), Integer))
         Me.pnlMainContainer.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlMainContainer.Location = New System.Drawing.Point(0, 70)
+        Me.pnlMainContainer.Location = New System.Drawing.Point(0, 85)
         Me.pnlMainContainer.Name = "pnlMainContainer"
         Me.pnlMainContainer.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.pnlMainContainer.Size = New System.Drawing.Size(1180, 758)
+        Me.pnlMainContainer.Size = New System.Drawing.Size(1180, 743)
         Me.pnlMainContainer.TabIndex = 0
         '
         'tmrClock
@@ -693,6 +785,9 @@ Partial Class MainForm
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
+        Me.pnlUserInfo.ResumeLayout(False)
+        Me.pnlUserInfo.PerformLayout()
+        CType(Me.picUserAvatar, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.picLogo, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlSidebar.ResumeLayout(False)
         Me.flpNav.ResumeLayout(False)
@@ -706,6 +801,11 @@ Partial Class MainForm
 
     ' Declarations
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents pnlUserInfo As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents lblUserName As System.Windows.Forms.Label
+    Friend WithEvents lblUserRole As System.Windows.Forms.Label
+    Friend WithEvents picUserAvatar As Guna.UI2.WinForms.Guna2CirclePictureBox
+    Friend WithEvents btnNotifications As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents picLogo As Guna.UI2.WinForms.Guna2PictureBox
     Friend WithEvents lbltitle As System.Windows.Forms.Label
     Friend WithEvents lblProBadge As Guna.UI2.WinForms.Guna2Button

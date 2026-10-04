@@ -32,7 +32,7 @@ Public Class FrmTreasuryTransfer
 
         ' 1. التحقق من اختيار الخزن
         If cmbFromTreasury.SelectedValue Is Nothing OrElse cmbToTreasury.SelectedValue Is Nothing Then
-            MessageBox.Show("يرجى اختيار الخزنة المصدر والخزنة الهدف أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخزنة المصدر والخزنة الهدف أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -41,14 +41,14 @@ Public Class FrmTreasuryTransfer
 
         ' 2. منع التحويل لنفس الخزنة
         If fromId = toId Then
-            MessageBox.Show("عذراً، لا يمكن التحويل من وإلى نفس الخزنة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، لا يمكن التحويل من وإلى نفس الخزنة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         ' 3. التحقق من صحة المبلغ
         Dim amount As Decimal = 0
         If Not Decimal.TryParse(txtAmount.Text, amount) OrElse amount <= 0 Then
-            MessageBox.Show("يرجى إدخال مبلغ تحويل صحيح أكبر من الصفر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال مبلغ تحويل صحيح أكبر من الصفر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -66,10 +66,10 @@ Public Class FrmTreasuryTransfer
         )
 
             ' نجاح العملية
-            MessageBox.Show("تمت عملية التحويل بنجاح وتحديث أرصدة الخزائن بنجاح.", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تمت عملية التحويل بنجاح وتحديث أرصدة الخزائن بنجاح.", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
 
-            ' ضع هذا السطر بعد MessageBox.Show("تم الحفظ بنجاح") مباشرة في الفورم الفرعي
+            ' ضع هذا السطر بعد SmartMessageBox.Show("تم الحفظ بنجاح") مباشرة في الفورم الفرعي
             Me.DialogResult = DialogResult.OK
             Me.Close()
 
@@ -82,7 +82,7 @@ Public Class FrmTreasuryTransfer
         Catch ex As Exception
             ' هنا ستظهر رسالة "عذراً، لا يمكن إتمام العملية نظراً لعدم وجود رصيد كافٍ" 
             ' القادمة من دالة UpdateBalanceAsync التي قمنا بتعديلها سابقاً
-            MessageBox.Show(ex.Message, "خطأ أثناء العملية", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show(ex.Message, "خطأ أثناء العملية", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             ' إعادة تفعيل الزر في كل الأحوال
             btnTransfer.Enabled = True
@@ -136,7 +136,7 @@ Public Class FrmTreasuryTransfer
 
         Catch ex As Exception
             ' يفضل دائماً إظهار الخطأ حتى لا تختفي المشاكل أثناء التطوير
-            MessageBox.Show("خطأ أثناء تحميل الخزن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل الخزن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 End Class

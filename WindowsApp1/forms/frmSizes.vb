@@ -25,7 +25,7 @@ Public Class frmSizes
             If dgvSizes.Columns.Contains("Notes") Then dgvSizes.Columns("Notes").HeaderText = "ملاحظات"
             If dgvSizes.Columns.Contains("IsActive") Then dgvSizes.Columns("IsActive").HeaderText = "نشط"
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل قائمة الأحجام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل قائمة الأحجام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -35,7 +35,7 @@ Public Class frmSizes
             txtSizeCode.Text = GetNextCode("Sizes", "SizeCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtSizeNameAr.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم الحجم بالعربي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم الحجم بالعربي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSizeNameAr.Focus()
             Return False
         End If
@@ -95,12 +95,12 @@ Public Class frmSizes
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedSizes = Nothing
                     LoadSizesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -125,12 +125,12 @@ Public Class frmSizes
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedSizes = Nothing
                     LoadSizesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -140,7 +140,7 @@ Public Class frmSizes
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvSizes.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا الحجم؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا الحجم؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvSizes.SelectedRows(0).Cells("SizeID").Value)
             Dim query As String = "UPDATE Sizes SET IsDeleted = 1 WHERE SizeID = @SizeID"
 
@@ -150,12 +150,12 @@ Public Class frmSizes
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الحجم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _cachedSizes = Nothing
                         LoadSizesGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

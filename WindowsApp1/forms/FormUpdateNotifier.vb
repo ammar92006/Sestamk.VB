@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Linq
 Imports System.Net.Http
 Imports System.Threading.Tasks
@@ -79,7 +79,8 @@ Public Class FormUpdateNotifier
                     End If
                 End Using
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("FormUpdateNotifier.vb:82", __logEx)
         End Try
     End Sub
 
@@ -269,7 +270,7 @@ Public Class FormUpdateNotifier
             Await Task.Delay(1000)
             Application.Exit()
         Else
-            MessageBox.Show(errorMessage, "فشل التحديث", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show(errorMessage, "فشل التحديث", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             btnUpdate.Enabled = True
             btnLater.Enabled = Not _manifest.Mandatory
             btnClose.Enabled = Not _manifest.Mandatory

@@ -130,7 +130,7 @@ Public NotInheritable Class PurchaseDocumentHelper
         Try
             action()
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "تعذر إتمام العملية", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show(ex.Message, "تعذر إتمام العملية", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
 End Class

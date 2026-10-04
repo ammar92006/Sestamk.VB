@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Windows.Forms
 
@@ -58,23 +58,23 @@ Public Class frmConfirmMessage
 
             txtNotes.Text = Notes
 
-            If String.IsNullOrEmpty(Session.CurrentUserPassword) Then
+            If String.IsNullOrEmpty(Session.CurrentUserPasswordHash) Then
                 lblPasswordTitle.Visible = False
                 txtPassword.Visible = False
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تحميل بيانات السند: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل بيانات السند: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Async Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         EnteredPassword = txtPassword.Text.Trim()
 
-        ' التحقق من كلمة السر إذا كان للمستخدم كلمة سر مسجلة
-        If Not String.IsNullOrEmpty(Session.CurrentUserPassword) AndAlso txtPassword.Visible Then
-            If EnteredPassword <> Session.CurrentUserPassword Then
-                MessageBox.Show("كلمة المرور غير صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        ' التحقق من كلمة السر إذا كان للمستخدم كلمة سر مسجلة (مقارنة عبر تجزئة PBKDF2)
+        If Not String.IsNullOrEmpty(Session.CurrentUserPasswordHash) AndAlso txtPassword.Visible Then
+            If Not PasswordHasher.Verify(EnteredPassword, Session.CurrentUserPasswordHash) Then
+                SmartMessageBox.Show("كلمة المرور غير صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 txtPassword.Focus()
                 txtPassword.SelectAll()
                 Exit Sub
@@ -88,12 +88,12 @@ Public Class frmConfirmMessage
             Dim finalNotes As String = txtNotes.Text.Trim()
             Await SavePaymentToDatabaseAsync(CustomerID, CustomerCode, CustomerName, BalanceBefore, AmountPaid, BalanceAfter, finalNotes, TargetTreasuryID)
 
-            MessageBox.Show("✅ تم تسجيل سند القبض وإيداع المبلغ في الخزينة وتحديث كشف حساب العميل بنجاح!", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم تسجيل سند القبض وإيداع المبلغ في الخزينة وتحديث كشف حساب العميل بنجاح!", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Me.DialogResult = DialogResult.OK
             Me.Close()
 
         Catch ex As Exception
-            MessageBox.Show("فشلت عملية حفظ سند القبض: " & ex.Message, "خطأ في الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("فشلت عملية حفظ سند القبض: " & ex.Message, "خطأ في الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             btnOK.Enabled = True
             btnCancel.Enabled = True
@@ -188,7 +188,8 @@ Public Class frmConfirmMessage
                 Catch ex As Exception
                     Try
                         trans.Rollback()
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("frmConfirmMessage.vb:191", __logEx)
                     End Try
                     Throw
                 End Try

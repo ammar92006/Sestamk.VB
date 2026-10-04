@@ -48,7 +48,7 @@ Public Class frmColors
 
 
                     Catch ex As Exception
-                        MessageBox.Show("خطأ في جلب الألوان: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ في جلب الألوان: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -72,7 +72,8 @@ Public Class frmColors
                             e.Graphics.FillRectangle(br, rect)
                             e.Graphics.DrawRectangle(Pens.Gray, rect)
                         End Using
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("frmColors.vb:75", __logEx)
                     End Try
                 End If
             End If
@@ -171,13 +172,13 @@ Public Class frmColors
     ' 1. إضافة لون جديد
     Private Sub btnAddColor_Click(sender As Object, e As EventArgs) Handles btnAddColor.Click
         If String.IsNullOrWhiteSpace(txtColorName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم اللون!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم اللون!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtColorName.Focus()
             Exit Sub
         End If
 
         If String.IsNullOrWhiteSpace(_currentColorHex) Then
-            MessageBox.Show("يرجى اختيار اللون بالضغط على زر (اختر اللون)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار اللون بالضغط على زر (اختر اللون)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -195,10 +196,10 @@ Public Class frmColors
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ اللون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ اللون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadColorsGrid()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -210,7 +211,7 @@ Public Class frmColors
         Dim currentID As Integer = Convert.ToInt32(dgvColors.SelectedRows(0).Cells("ColorID").Value)
 
         If String.IsNullOrWhiteSpace(txtColorName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم اللون!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم اللون!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -229,10 +230,10 @@ Public Class frmColors
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل اللون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل اللون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadColorsGrid()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -242,7 +243,7 @@ Public Class frmColors
     Private Sub btnDeleteColor_Click(sender As Object, e As EventArgs) Handles btnDeleteColor.Click
         If dgvColors.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا اللون؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا اللون؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvColors.SelectedRows(0).Cells("ColorID").Value)
             Dim query As String = "UPDATE Colors SET IsDeleted = 1 WHERE ColorID = @ColorID"
 
@@ -252,10 +253,10 @@ Public Class frmColors
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف اللون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف اللون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         LoadColorsGrid()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

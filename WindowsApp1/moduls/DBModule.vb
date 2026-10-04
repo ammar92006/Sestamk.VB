@@ -1,5 +1,7 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
+Imports System.Security.Cryptography
+Imports System.Text
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports Guna.UI2.WinForms
@@ -8,6 +10,40 @@ Imports System.Drawing.Imaging
 Imports WinFormsTimer = System.Windows.Forms.Timer
 
 Public Module DBModule
+
+    ' ──────────────────────────────────────────────────────────
+    ' تشفير كلمة مرور قاعدة البيانات في db_config.ini بـ DPAPI
+    ' (Windows Auth أو غيره لا يحتاجها) — البادئة enc: تعني قيمة مشفرة
+    ' ──────────────────────────────────────────────────────────
+    Private Const DbPasswordPrefix As String = "enc:"
+
+    ''' <summary>تشفير كلمة مرور SQL قبل كتابتها في db_config.ini (DPAPI - LocalMachine)</summary>
+    Public Function EncryptDbPassword(plain As String) As String
+        If String.IsNullOrEmpty(plain) Then Return ""
+        Try
+            Dim bytes = Encoding.UTF8.GetBytes(plain)
+            Dim encrypted = System.Security.Cryptography.ProtectedData.Protect(bytes, Nothing, DataProtectionScope.LocalMachine)
+            Return DbPasswordPrefix & Convert.ToBase64String(encrypted)
+        Catch ex As Exception
+            ' في حال فشل DPAPI نرجع النص الصريح (السلوك القديم) حتى لا يتعطل الاتصال
+            Logger.LogError("EncryptDbPassword", ex)
+            Return plain
+        End Try
+    End Function
+
+    ''' <summary>فك تشفير كلمة مرور SQL المقروءة من db_config.ini — يقبل القيم القديمة غير المشفرة (توافق رجعي)</summary>
+    Public Function DecryptDbPassword(stored As String) As String
+        If String.IsNullOrEmpty(stored) Then Return ""
+        If Not stored.StartsWith(DbPasswordPrefix, StringComparison.Ordinal) Then Return stored
+        Try
+            Dim bytes = Convert.FromBase64String(stored.Substring(DbPasswordPrefix.Length))
+            Dim plain = System.Security.Cryptography.ProtectedData.Unprotect(bytes, Nothing, DataProtectionScope.LocalMachine)
+            Return Encoding.UTF8.GetString(plain)
+        Catch ex As Exception
+            Logger.LogError("DecryptDbPassword", ex)
+            Return ""
+        End Try
+    End Function
 
     ' ──────────────────────────────────────────────────────────
     ' متغير الاتصال العام — للحفاظ على التوافق مع الكود القديم
@@ -121,9 +157,51 @@ Public Module DBModule
             End Using
         End Using
     End Function
+
+    Public Function ExecuteQuery(query As String, parameters As Dictionary(Of String, Object)) As DataTable
+        Dim dt As New DataTable()
+        Using conn As New SqlConnection(ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                If parameters IsNot Nothing Then
+                    For Each kvp In parameters
+                        cmd.Parameters.AddWithValue(kvp.Key, If(kvp.Value, DBNull.Value))
+                    Next
+                End If
+                Using da As New SqlDataAdapter(cmd)
+                    Try
+                        conn.Open()
+                        da.Fill(dt)
+                        Return dt
+                    Catch ex As Exception
+                        Logger.LogError("ExecuteQuery: " & query, ex)
+                        Return Nothing
+                    End Try
+                End Using
+            End Using
+        End Using
+    End Function
     Public Function ExecuteNonQuery(query As String) As Integer
         Using conn As New SqlConnection(ConnectionString)
             Using cmd As New SqlCommand(query, conn)
+                Try
+                    conn.Open()
+                    Return cmd.ExecuteNonQuery()
+                Catch ex As Exception
+                    Logger.LogError("ExecuteNonQuery: " & query, ex)
+                    Return -1
+                End Try
+            End Using
+        End Using
+    End Function
+
+    Public Function ExecuteNonQuery(query As String, parameters As Dictionary(Of String, Object)) As Integer
+        Using conn As New SqlConnection(ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                If parameters IsNot Nothing Then
+                    For Each kvp In parameters
+                        cmd.Parameters.AddWithValue(kvp.Key, If(kvp.Value, DBNull.Value))
+                    Next
+                End If
                 Try
                     conn.Open()
                     Return cmd.ExecuteNonQuery()
@@ -142,6 +220,25 @@ Public Module DBModule
                     conn.Open()
                     Return cmd.ExecuteScalar()
                 Catch ex As Exception
+                    Return Nothing
+                End Try
+            End Using
+        End Using
+    End Function
+
+    Public Function ExecuteScalar(query As String, parameters As Dictionary(Of String, Object)) As Object
+        Using conn As New SqlConnection(ConnectionString)
+            Using cmd As New SqlCommand(query, conn)
+                If parameters IsNot Nothing Then
+                    For Each kvp In parameters
+                        cmd.Parameters.AddWithValue(kvp.Key, If(kvp.Value, DBNull.Value))
+                    Next
+                End If
+                Try
+                    conn.Open()
+                    Return cmd.ExecuteScalar()
+                Catch ex As Exception
+                    Logger.LogError("ExecuteScalar: " & query, ex)
                     Return Nothing
                 End Try
             End Using
@@ -229,7 +326,8 @@ Public Module DBModule
                     Case "server" : server = val
                     Case "database" : database = val
                     Case "username" : username = val
-                    Case "password" : password = val
+                    ' كلمة المرور مخزنة مشفرة DPAPI (enc:...) — والقيم القديمة النصية تُقبل للتوافق ثم تُشفّر عند أول حفظ
+                    Case "password" : password = DecryptDbPassword(val)
                     Case "windowsauth" : useWindowsAuth = (val.ToLower() = "true")
                     Case "dbengine" : dbEngineType = val.ToLower()
                     Case "useattachdb" : useAttachDb = (val.ToLower() = "true")
@@ -266,7 +364,7 @@ Public Module DBModule
                 "server=" & server,
                 "database=" & database,
                 "username=" & username,
-                "password=" & password,
+                "password=" & EncryptDbPassword(password),
                 "windowsauth=" & useWindowsAuth.ToString().ToLower(),
                 "dbengine=" & dbEngineType,
                 "useattachdb=" & useAttachDb.ToString().ToLower(),
@@ -346,7 +444,8 @@ Public Module DBModule
                     If inst <> "" Then found.Add("(localdb)\" & inst)
                 Next
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("DBModule.vb:447", __logEx)
         End Try
 
         ' التأكد من وجود النسخة الافتراضية لـ LocalDB دائماً
@@ -370,7 +469,8 @@ Public Module DBModule
                     Next
                 End If
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("DBModule.vb:472", __logEx)
         End Try
 
         ' (3) افتراضيات شائعة كحل أخير
@@ -431,7 +531,8 @@ Public Module DBModule
                         Dim installTask = Task.Run(Function() Services.LocalDbManager.InstallLocalDbSilentlyAsync(msiPath))
                         installTask.Wait(TimeSpan.FromMinutes(2))
                         isLocalDbAvailable = Services.LocalDbManager.IsLocalDbInstalled()
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("DBModule.vb:534", __logEx)
                     End Try
                 End If
             End If
@@ -440,7 +541,8 @@ Public Module DBModule
                 Try
                     Dim startTask = Task.Run(Function() Services.LocalDbManager.EnsureInstanceRunningAsync(localDbInstanceName))
                     startTask.Wait(TimeSpan.FromSeconds(10))
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("DBModule.vb:544", __logEx)
                 End Try
 
                 If TestConnection(fastCs) Then Return True
@@ -452,7 +554,8 @@ Public Module DBModule
                     If rep IsNot Nothing AndAlso rep.IsSuccess AndAlso TestConnection(fastCs) Then
                         Return True
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("DBModule.vb:557", __logEx)
                 End Try
             End If
         End If
@@ -473,7 +576,8 @@ Public Module DBModule
                 End If
                 Try
                     SaveDbSettings()
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("DBModule.vb:579", __logEx)
                 End Try
                 Return True
             End If
@@ -487,7 +591,8 @@ Public Module DBModule
             If TestConnection(fastCs) Then
                 Try
                     SaveDbSettings()
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("DBModule.vb:594", __logEx)
                 End Try
                 Return True
             End If
@@ -512,7 +617,8 @@ Public Module DBModule
                         .CreateNoWindow = True, .UseShellExecute = False,
                         .WindowStyle = ProcessWindowStyle.Hidden}
                     Process.Start(psi).WaitForExit(8000)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("DBModule.vb:620", __logEx)
                 End Try
             Next
 
@@ -600,8 +706,9 @@ Public Module DBModule
                         If Conn.State = ConnectionState.Open Then
                             Exit Sub
                         End If
-                    Catch
+                    Catch __logEx As Exception
                         ' Conn قد يكون disposed أو في حالة غير صالحة - أنشئ جديد
+                        Logger.LogError("DBModule.vb:709", __logEx)
                     End Try
                 End If
 
@@ -719,7 +826,7 @@ Public Module DBModule
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("❌ Error loading column names: " & ex.Message)
+            SmartMessageBox.Show("❌ Error loading column names: " & ex.Message)
         End Try
 
         Return columns
@@ -812,7 +919,8 @@ Public Module DBModule
         ' لو لزم الأمر يمكن استبدال instance:
         Try
             t.Stop()
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("DBModule.vb:922", __logEx)
         End Try
     End Sub
 
@@ -822,7 +930,8 @@ Public Module DBModule
             Try
                 cts.Cancel()
                 cts.Dispose()
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("DBModule.vb:933", __logEx)
             End Try
             _searchCts.Remove(txt)
         End If
@@ -833,7 +942,7 @@ Public Module DBModule
         Dim formName As String = GetType(T).Name
         If Not Session.HasPermission(formName, "CanOpen") Then
             Dim dispName As String = Session.GetScreenDisplayName(formName)
-            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح هذه الشاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عفواً، ليس لديك صلاحية لفتح هذه الشاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -923,7 +1032,8 @@ Public Module DBModule
                 lst.Items.Add(item)
             Next
             lst.Visible = (lst.Items.Count > 0)
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("DBModule.vb:1035", __logEx)
         End Try
     End Sub
 
@@ -962,7 +1072,8 @@ Public Module DBModule
             If pi IsNot Nothing Then
                 pi.SetValue(dgv, True, Nothing)
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("DBModule.vb:1075", __logEx)
         End Try
     End Sub
 

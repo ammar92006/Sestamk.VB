@@ -156,7 +156,7 @@ Public Module BackupModule
             End If
 
             ' تأكيد من المستخدم قبل الاستعادة
-            Dim result = MessageBox.Show(
+            Dim result = SmartMessageBox.Show(
                 "⚠️ استعادة النسخة الاحتياطية ستحل محل قاعدة البيانات الحالية بالكامل." & vbCrLf &
                 "الملف: " & IO.Path.GetFileName(backupFile) & vbCrLf &
                 "الحجم: " & Math.Round(fileInfo.Length / 1024.0 / 1024.0, 2) & " MB" & vbCrLf & vbCrLf &
@@ -168,8 +168,19 @@ Public Module BackupModule
 
             DBModule.Disconnect()
 
-            Dim masterConnStr As String =
-                $"Server={DBModule.server};Database=master;Integrated Security=True;"
+            ' بناء اتصال master وفق إعدادات المصادقة الفعلية (Windows أو SQL Auth) بدلاً من Integrated Security الثابتة
+            Dim masterBuilder As New SqlConnectionStringBuilder With {
+                .DataSource = DBModule.server,
+                .InitialCatalog = "master"
+            }
+            If DBModule.useWindowsAuth Then
+                masterBuilder.IntegratedSecurity = True
+            Else
+                masterBuilder.IntegratedSecurity = False
+                masterBuilder.UserID = DBModule.username
+                masterBuilder.Password = DBModule.password
+            End If
+            Dim masterConnStr As String = masterBuilder.ConnectionString
 
             Using conn As New SqlConnection(masterConnStr)
                 conn.Open()

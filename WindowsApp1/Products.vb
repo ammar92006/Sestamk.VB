@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.IO
 Imports System.Windows.Forms
@@ -157,7 +157,7 @@ Public Class Products
 
         Catch ex As Exception
             Logger.LogError("LoadProductsGrid", ex)
-            MessageBox.Show("خطأ أثناء تحميل المنتجات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل المنتجات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -366,7 +366,8 @@ Public Class Products
                 row.DefaultCellStyle.BackColor = Color.FromArgb(254, 242, 242) ' خلفية وردية خفيفة للنواقص
                 row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(254, 202, 202)
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Products.vb:369", __logEx)
         End Try
     End Sub
 
@@ -486,20 +487,20 @@ Public Class Products
     ' ═══════════════════════════════════════════════════════════
     Private Function ValidateProductInputs() As Boolean
         If String.IsNullOrWhiteSpace(txtProductNameAr.Text) Then
-            MessageBox.Show("يرجى إدخال اسم الصنف باللغة العربية!", "بيان ناقص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم الصنف باللغة العربية!", "بيان ناقص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtProductNameAr.Focus()
             Return False
         End If
 
         If cmbCategory.SelectedIndex = -1 OrElse cmbCategory.SelectedValue Is Nothing Then
-            MessageBox.Show("يرجى اختيار القسم أو الفئة التابع لها الصنف!", "بيان ناقص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار القسم أو الفئة التابع لها الصنف!", "بيان ناقص", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbCategory.Focus()
             Return False
         End If
 
         Dim salePrice As Decimal = 0
         If Not Decimal.TryParse(txtSalePrice.Text, salePrice) OrElse salePrice < 0 Then
-            MessageBox.Show("يرجى إدخال سعر بيع صحيح!", "قيمة خاطئة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال سعر بيع صحيح!", "قيمة خاطئة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtSalePrice.Focus()
             Return False
         End If
@@ -516,9 +517,12 @@ Public Class Products
 
             Dim barcode As String = txtBarcode.Text.Trim()
             If Not String.IsNullOrEmpty(barcode) Then
-                Dim chkBarcode = DBModule.ExecuteScalar($"SELECT COUNT(1) FROM Products WHERE Barcode = N'{barcode.Replace("'", "''")}' AND (IsDeleted = 0 OR IsDeleted IS NULL)")
+                ' باراميترز بدل الدمج النصي (منع SQL Injection)
+                Dim chkBarcode = DBModule.ExecuteScalar(
+                    "SELECT COUNT(1) FROM Products WHERE Barcode = @Barcode AND (IsDeleted = 0 OR IsDeleted IS NULL)",
+                    New Dictionary(Of String, Object) From {{"@Barcode", barcode}})
                 If chkBarcode IsNot Nothing AndAlso Convert.ToInt32(chkBarcode) > 0 Then
-                    MessageBox.Show("هذا الباركود مسجل لصنف آخر بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("هذا الباركود مسجل لصنف آخر بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtBarcode.Focus()
                     Exit Sub
                 End If
@@ -573,19 +577,19 @@ Public Class Products
                 End Using
             End Using
 
-            MessageBox.Show("تم إضافة الصنف بنجاح!", "تم الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم إضافة الصنف بنجاح!", "تم الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadProductsGrid()
             ClearFields()
 
         Catch ex As Exception
             Logger.LogError("btnAdd_Click", ex)
-            MessageBox.Show("خطأ أثناء إضافة الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء إضافة الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvProducts.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار الصنف المراد تعديله من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الصنف المراد تعديله من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -596,9 +600,12 @@ Public Class Products
             Dim barcode As String = txtBarcode.Text.Trim()
 
             If Not String.IsNullOrEmpty(barcode) Then
-                Dim chkBarcode = DBModule.ExecuteScalar($"SELECT COUNT(1) FROM Products WHERE Barcode = N'{barcode.Replace("'", "''")}' AND Product_ID <> {currentID} AND (IsDeleted = 0 OR IsDeleted IS NULL)")
+                ' باراميترز بدل الدمج النصي (منع SQL Injection)
+                Dim chkBarcode = DBModule.ExecuteScalar(
+                    "SELECT COUNT(1) FROM Products WHERE Barcode = @Barcode AND Product_ID <> @ID AND (IsDeleted = 0 OR IsDeleted IS NULL)",
+                    New Dictionary(Of String, Object) From {{"@Barcode", barcode}, {"@ID", currentID}})
                 If chkBarcode IsNot Nothing AndAlso Convert.ToInt32(chkBarcode) > 0 Then
-                    MessageBox.Show("هذا الباركود مسجل لصنف آخر بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("هذا الباركود مسجل لصنف آخر بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtBarcode.Focus()
                     Exit Sub
                 End If
@@ -668,23 +675,23 @@ Public Class Products
                 End Using
             End Using
 
-            MessageBox.Show("تم تعديل بيانات الصنف بنجاح!", "تم التعديل", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم تعديل بيانات الصنف بنجاح!", "تم التعديل", MessageBoxButtons.OK, MessageBoxIcon.Information)
             LoadProductsGrid()
 
         Catch ex As Exception
             Logger.LogError("btnEdit_Click", ex)
-            MessageBox.Show("خطأ أثناء تعديل الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تعديل الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvProducts.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد الصنف المراد حذفه من الجدول!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الصنف المراد حذفه من الجدول!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim prodName As String = dgvProducts.SelectedRows(0).Cells("ProductNameAr").Value?.ToString()
-        Dim result = MessageBox.Show($"هل أنت متأكد من رغبتك في حذف الصنف '{prodName}'؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        Dim result = SmartMessageBox.Show($"هل أنت متأكد من رغبتك في حذف الصنف '{prodName}'؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
 
         If result = DialogResult.Yes Then
             Try
@@ -699,13 +706,13 @@ Public Class Products
                     End Using
                 End Using
 
-                MessageBox.Show("تم حذف الصنف بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم حذف الصنف بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 LoadProductsGrid()
                 ClearFields()
 
             Catch ex As Exception
                 Logger.LogError("btnDelete_Click", ex)
-                MessageBox.Show("خطأ أثناء حذف الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء حذف الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End If
     End Sub
@@ -844,7 +851,7 @@ Public Class Products
                     picProduct.Image = Image.FromFile(ofd.FileName)
                     picProduct.SizeMode = PictureBoxSizeMode.Zoom
                 Catch ex As Exception
-                    MessageBox.Show("تعذر تحميل الصورة المختارة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("تعذر تحميل الصورة المختارة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End If
         End Using
@@ -888,7 +895,8 @@ Public Class Products
                     Return Convert.ToInt32(val)
                 End If
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Products.vb:898", __logEx)
         End Try
         Return 0
     End Function
@@ -958,7 +966,7 @@ Public Class Products
 
     Private Sub btnExportExcel_Click(sender As Object, e As EventArgs) Handles btnExportExcel.Click
         If dgvProducts.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد أصناف معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد أصناف معروضة لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -1014,11 +1022,11 @@ Public Class Products
                         wb.SaveAs(sfd.FileName)
                     End Using
 
-                    MessageBox.Show("تم تصدير ملف الإكسيل بنجاح!", "تم التصدير", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تصدير ملف الإكسيل بنجاح!", "تم التصدير", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                 Catch ex As Exception
                     Logger.LogError("btnExportExcel_Click", ex)
-                    MessageBox.Show("خطأ أثناء تصدير الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء تصدير الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End If
         End Using

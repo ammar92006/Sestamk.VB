@@ -1,0 +1,36 @@
+name: Build Sestamk POS
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages (packages.config)
+        run: nuget restore Sestamk.sln -NonInteractive
+
+      - name: Build solution (Release)
+        run: msbuild Sestamk.sln /p:Configuration=Release /p:RestorePackagesConfig=true /m /nologo /v:m /p:GenerateManifests=false /p:SignManifests=false
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sestamk-Release
+          path: |
+            WindowsApp1/bin/Release/Sestamk.exe
+            Sestamk.VB.Updater/bin/Release/**
+          if-no-files-found: warn
+          retention-days: 7

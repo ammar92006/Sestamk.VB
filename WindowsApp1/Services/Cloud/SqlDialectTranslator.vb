@@ -1,4 +1,4 @@
-Imports System.Text
+﻿Imports System.Text
 Imports System.Linq
 
 Namespace Services.Cloud
@@ -94,37 +94,43 @@ Namespace Services.Cloud
                 Dim colName As String = ""
                 Try
                     colName = Convert.ToString(col.Name)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("SqlDialectTranslator.vb:97", __logEx)
                 End Try
                 If String.IsNullOrEmpty(colName) Then
                     Try
                         colName = Convert.ToString(col.ColumnName)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("SqlDialectTranslator.vb:103", __logEx)
                     End Try
                 End If
 
                 Dim colType As String = ""
                 Try
                     colType = Convert.ToString(col.SqlType)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("SqlDialectTranslator.vb:111", __logEx)
                 End Try
                 If String.IsNullOrEmpty(colType) Then
                     Try
                         colType = Convert.ToString(col.DataType)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("SqlDialectTranslator.vb:117", __logEx)
                     End Try
                 End If
 
                 Dim isNullable As Boolean = True
                 Try
                     isNullable = CBool(col.IsNullable)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("SqlDialectTranslator.vb:125", __logEx)
                 End Try
 
                 Dim isPrimaryKey As Boolean = False
                 Try
                     isPrimaryKey = CBool(col.IsPrimaryKey)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("SqlDialectTranslator.vb:132", __logEx)
                 End Try
                 
                 Dim defaultVal As String = String.Empty
@@ -132,6 +138,7 @@ Namespace Services.Cloud
                     defaultVal = col.DefaultValue
                 Catch ex As Exception
                     ' قد لا تكون الخاصية موجودة
+                    Logger.LogError("SqlDialectTranslator.vb:139", ex)
                 End Try
                 
                 Dim sqliteType = TranslateDataType(colType)

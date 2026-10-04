@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Windows.Forms
 
 ''' <summary>
@@ -44,7 +44,8 @@ Public Module Notify
                 .Duration = ms
             }
             ToastManager.Show(model)
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Notify.vb:47", __logEx)
         End Try
     End Sub
 
@@ -63,7 +64,8 @@ Public Module Notify
                 .ClickAction = action
             }
             ToastManager.Show(model)
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Notify.vb:67", __logEx)
         End Try
     End Sub
 
@@ -98,18 +100,21 @@ Public Module Notify
                     System.Media.SystemSounds.Exclamation.Play()
                 End If
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Notify.vb:103", __logEx)
         End Try
     End Sub
 
     ''' <summary>رسالة تأكيد (نعم/لا) موحّدة — ترجع True لو وافق المستخدم</summary>
     Public Function Confirm(message As String, Optional title As String = "تأكيد") As Boolean
-        Return MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes
+        ' استخدام Toast بدلاً من MessageBox
+        Return MessageBoxReplacer.Confirm(message, title)
     End Function
 
     ''' <summary>رسالة خطأ موحّدة (للأخطاء التي يجب أن يراها المستخدم)</summary>
     Public Sub [Error](message As String, Optional title As String = "خطأ")
-        MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        ' استخدام Toast بدلاً من MessageBox
+        ToastHelper.ShowToast(title, message, ToastType.Error)
     End Sub
 
 End Module

@@ -8,6 +8,9 @@ Public Class OrderItemModel
     Public Property Quantity As Integer = 1
     Public Property Notes As String = ""
 
+    ''' <summary>نسبة الضريبة الخاصة بالصنف (%) — تُطبق عند تفعيل إعداد EnableTax</summary>
+    Public Property TaxPercent As Decimal = 0D
+
     ' حساب السعر الإجمالي الصافي بناءً على الأحجام والإضافات المحددة
     Public ReadOnly Property TotalPrice As Decimal
         Get

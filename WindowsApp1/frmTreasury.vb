@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Threading.Tasks
 Imports Guna.UI2.WinForms
 Imports WindowsApp1.FrmTreasuryTransaction
@@ -201,7 +201,7 @@ Public Class frmTreasury
 
     '        End Using
 
-    '        MessageBox.Show("تم إضافة الخزنة بنجاح.",
+    '        SmartMessageBox.Show("تم إضافة الخزنة بنجاح.",
     '                    "نجاح",
     '                    MessageBoxButtons.OK,
     '                    MessageBoxIcon.Information)
@@ -212,7 +212,7 @@ Public Class frmTreasury
 
     '    Catch ex As Exception
 
-    '        MessageBox.Show(ex.Message,
+    '        SmartMessageBox.Show(ex.Message,
     '                    "خطأ",
     '                    MessageBoxButtons.OK,
     '                    MessageBoxIcon.Error)
@@ -283,58 +283,27 @@ Public Class frmTreasury
                         End Using
 
 
-                        ' لو فيه رصيد افتتاحى
-                        If Convert.ToDecimal(txtOpeningBalance.Text) > 0 Then
+                        ' الرصيد الافتتاحي يُحفظ في عمود OpeningBalance فقط (لا يُسجل كحركة إيداع
+                        ' حتى لا يُحسب مرتين في معادلة TreasuryService: الافتتاحي + مجموع الحركات)
 
-                            Dim sqlTransaction As String =
-                            "INSERT INTO TreasuryTransactions
-                            (
-                            TreasuryID,
-                            TransactionDate,
-                            TransactionType,
-                            ReferenceID,
-                            ReferenceNo,
-                            Amount,
-                            IsDeposit,
-                            Notes,
-                            CreatedDate
-                            )
-                            VALUES
-                            (
-                            @TreasuryID,
-                            GETDATE(),
-                            @TransactionType,
-                            NULL,
-                            NULL,
-                            @Amount,
-                            1,
-                            @Notes,
-                            GETDATE()
-                            )"
-
-                            Using cmd As New SqlCommand(sqlTransaction, cn, trans)
-                                cmd.Parameters.AddWithValue("@TreasuryID", TreasuryID)
-                                cmd.Parameters.AddWithValue("@TransactionType", 1) ' Opening Balance
-                                cmd.Parameters.AddWithValue("@Amount", Convert.ToDecimal(txtOpeningBalance.Text))
-                                cmd.Parameters.AddWithValue("@Notes", "الرصيد الافتتاحى للخزنة")
-
-                                Await cmd.ExecuteNonQueryAsync()
-                            End Using
-
-                        End If
-
+                        ' إعادة حساب الرصيد بنفس معادلة الخدمة المركزية: الافتتاحي + مجموع الحركات
                         Dim UpdateBalance As String =
                         "UPDATE Treasury
                         SET CurrentBalance=
                         (
+                        SELECT ISNULL(T.OpeningBalance,0) +
+                        (
                         SELECT
                         ISNULL(SUM(
                         CASE
-                        WHEN IsDeposit=1 THEN Amount
-                        ELSE -Amount
+                        WHEN TT.IsDeposit=1 THEN TT.Amount
+                        ELSE -TT.Amount
                         END),0)
-                        FROM TreasuryTransactions
-                        WHERE TreasuryID=@TreasuryID
+                        FROM TreasuryTransactions TT
+                        WHERE TT.TreasuryID=T.TreasuryID
+                        )
+                        FROM Treasury T
+                        WHERE T.TreasuryID=@TreasuryID
                         )
                         WHERE TreasuryID=@TreasuryID"
 
@@ -353,7 +322,7 @@ Public Class frmTreasury
                 End Using
             End Using
 
-            MessageBox.Show("تم إضافة الخزنة بنجاح.",
+            SmartMessageBox.Show("تم إضافة الخزنة بنجاح.",
                     "نجاح",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information)
@@ -363,7 +332,7 @@ Public Class frmTreasury
             Await RefreshDataAsync()
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message,
+            SmartMessageBox.Show(ex.Message,
                     "خطأ",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error)
@@ -375,7 +344,7 @@ Public Class frmTreasury
 
         If _treasuryId = 0 Then
 
-            MessageBox.Show("يرجى اختيار خزنة أولاً.")
+            SmartMessageBox.Show("يرجى اختيار خزنة أولاً.")
 
             Exit Sub
 
@@ -451,13 +420,13 @@ WHERE TreasuryID=@TreasuryID
 
             End Using
 
-            MessageBox.Show("تم تعديل الخزنة بنجاح.")
+            SmartMessageBox.Show("تم تعديل الخزنة بنجاح.")
 
             Await RefreshDataAsync()
 
         Catch ex As Exception
 
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
 
         End Try
 
@@ -467,7 +436,7 @@ WHERE TreasuryID=@TreasuryID
 
         If _treasuryId = 0 Then
 
-            MessageBox.Show("يرجى اختيار خزنة أولاً.",
+            SmartMessageBox.Show("يرجى اختيار خزنة أولاً.",
                         "تنبيه",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning)
@@ -478,7 +447,7 @@ WHERE TreasuryID=@TreasuryID
 
         'If chkIsDefault.Checked Then
 
-        '    MessageBox.Show("لا يمكن حذف الخزنة الافتراضية.",
+        '    SmartMessageBox.Show("لا يمكن حذف الخزنة الافتراضية.",
         '                "تنبيه",
         '                MessageBoxButtons.OK,
         '                MessageBoxIcon.Warning)
@@ -489,7 +458,7 @@ WHERE TreasuryID=@TreasuryID
 
         If Await TreasuryService.HasTransactionsAsync(_treasuryId) Then
 
-            MessageBox.Show("لا يمكن حذف الخزنة لأنها تحتوي على حركات مالية.",
+            SmartMessageBox.Show("لا يمكن حذف الخزنة لأنها تحتوي على حركات مالية.",
                         "تنبيه",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning)
@@ -498,7 +467,7 @@ WHERE TreasuryID=@TreasuryID
 
         End If
 
-        If MessageBox.Show("هل تريد حذف الخزنة؟",
+        If SmartMessageBox.Show("هل تريد حذف الخزنة؟",
                        "تأكيد الحذف",
                        MessageBoxButtons.YesNo,
                        MessageBoxIcon.Question) = DialogResult.No Then
@@ -528,7 +497,7 @@ WHERE TreasuryID = @TreasuryID"
 
             End Using
 
-            MessageBox.Show("تم حذف الخزنة بنجاح.",
+            SmartMessageBox.Show("تم حذف الخزنة بنجاح.",
                         "نجاح",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information)
@@ -539,7 +508,7 @@ WHERE TreasuryID = @TreasuryID"
 
         Catch ex As Exception
 
-            MessageBox.Show(ex.Message,
+            SmartMessageBox.Show(ex.Message,
                         "خطأ",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error)
@@ -589,8 +558,9 @@ WHERE TreasuryID = @TreasuryID"
 
             txtCurrentBalance.ReadOnly = True
 
-        Catch
+        Catch __logEx As Exception
 
+            Logger.LogError("frmTreasury.vb:592", __logEx)
         End Try
 
     End Sub
@@ -636,7 +606,7 @@ WHERE TreasuryID = @TreasuryID"
             dgvTreasury.ClearSelection()
         Catch ex As Exception
 
-            MessageBox.Show(ex.Message,
+            SmartMessageBox.Show(ex.Message,
                             "خطأ",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Error)
@@ -882,7 +852,7 @@ WHERE TreasuryID = @TreasuryID"
 
         Catch ex As Exception
 
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
 
         End Try
 
@@ -937,7 +907,7 @@ WHERE TreasuryID = @TreasuryID"
             frm.Show()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح شاشة الحركات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء فتح شاشة الحركات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -947,7 +917,7 @@ WHERE TreasuryID = @TreasuryID"
         End If
 
         If String.IsNullOrWhiteSpace(txtTreasuryCode.Text) Then
-            MessageBox.Show("يرجى إدخال كود الخزنة.",
+            SmartMessageBox.Show("يرجى إدخال كود الخزنة.",
                             "تنبيه",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning)
@@ -957,7 +927,7 @@ WHERE TreasuryID = @TreasuryID"
         End If
 
         If String.IsNullOrWhiteSpace(txtTreasuryNameAr.Text) Then
-            MessageBox.Show("يرجى إدخال اسم الخزنة.",
+            SmartMessageBox.Show("يرجى إدخال اسم الخزنة.",
                             "تنبيه",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning)
@@ -970,7 +940,7 @@ WHERE TreasuryID = @TreasuryID"
 
         If Not Decimal.TryParse(txtOpeningBalance.Text, OpeningBalance) Then
 
-            MessageBox.Show("الرصيد الافتتاحى غير صحيح.",
+            SmartMessageBox.Show("الرصيد الافتتاحى غير صحيح.",
                             "تنبيه",
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning)
@@ -996,7 +966,7 @@ AND TreasuryID<>@ID"
 
                 If Convert.ToInt32(Await cmd.ExecuteScalarAsync()) > 0 Then
 
-                    MessageBox.Show("كود الخزنة مستخدم من قبل.",
+                    SmartMessageBox.Show("كود الخزنة مستخدم من قبل.",
                                     "تنبيه",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning)
@@ -1022,7 +992,7 @@ AND TreasuryID<>@ID"
 
                 If Convert.ToInt32(Await cmd.ExecuteScalarAsync()) > 0 Then
 
-                    MessageBox.Show("اسم الخزنة موجود بالفعل.",
+                    SmartMessageBox.Show("اسم الخزنة موجود بالفعل.",
                                     "تنبيه",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning)

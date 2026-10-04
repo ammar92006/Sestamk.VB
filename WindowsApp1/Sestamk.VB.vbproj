@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -80,18 +80,8 @@
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <PropertyGroup>
-    <ManifestCertificateThumbprint>780234278F46359D3CBAA7CE4E54B9120907E592</ManifestCertificateThumbprint>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ManifestKeyFile>WindowsApp1_TemporaryKey.pfx</ManifestKeyFile>
-  </PropertyGroup>
-  <PropertyGroup>
-    <GenerateManifests>true</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignManifests>true</SignManifests>
-  </PropertyGroup>
+  <!-- أمان: تم إزالة توقيع ClickOnce بمفتاح Test (WindowsApp1_TemporaryKey.pfx) من المستودع.
+       التوزيع يتم عبر Inno Setup + المحدث المخصص؛ للتوقيع الحقيقي استخدم شهادة Authenticode (signtool) عبر CI. -->
   <ItemGroup>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
       <HintPath>..\packages\BouncyCastle.Cryptography.2.6.2\lib\net461\BouncyCastle.Cryptography.dll</HintPath>
@@ -271,8 +261,8 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
-    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.Xml.8.0.2\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
+    <Reference Include="System.Security.Cryptography.Xml, Version=8.0.0.4, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Xml.8.0.4\lib\net462\System.Security.Cryptography.Xml.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encoding.CodePages, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encoding.CodePages.10.0.0\lib\net462\System.Text.Encoding.CodePages.dll</HintPath>
@@ -444,7 +434,21 @@
     <Compile Include="forms\frmToast.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\frmToastAdvanced.Designer.vb">
+      <DependentUpon>frmToastAdvanced.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\frmToastAdvanced.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="classes\ToastAnimationHelper.vb" />
+    <Compile Include="classes\ToastEnums.vb" />
+    <Compile Include="classes\ToastManagerAdvanced.vb" />
+    <Compile Include="classes\ToastModelAdvanced.vb" />
+    <Compile Include="classes\ToastSoundManager.vb" />
+    <Compile Include="classes\ToastHelper.vb" />
     <Compile Include="classes\ToastManager.vb" />
+    <Compile Include="classes\SmartMessageBox.vb" />
+    <Compile Include="classes\MessageBoxReplacer.vb" />
     <Compile Include="chkpassword.Designer.vb">
       <DependentUpon>chkpassword.vb</DependentUpon>
     </Compile>
@@ -869,6 +873,10 @@
     <Compile Include="Services\TreasuryService.vb" />
     <Compile Include="Services\SupplierAccountingService.vb" />
     <Compile Include="Services\PurchaseDocumentHelper.vb" />
+    <Compile Include="Services\NotificationManager.vb" />
+    <Compile Include="Controls\NotificationPanel.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="forms\FrmPurchaseDocument.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -898,6 +906,7 @@
     <Compile Include="LayoutHelper.vb" />
     <Compile Include="Logger.vb" />
     <Compile Include="Notify.vb" />
+    <Compile Include="PasswordHasher.vb" />
     <Compile Include="FirstRunSetup.Designer.vb">
       <DependentUpon>FirstRunSetup.vb</DependentUpon>
     </Compile>
@@ -1023,6 +1032,12 @@
       <DependentUpon>UCNotificationsSettings.vb</DependentUpon>
     </Compile>
     <Compile Include="UC_Settings\UCNotificationsSettings.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UC_Settings\UCNotificationsSettingsAdvanced.Designer.vb">
+      <DependentUpon>UCNotificationsSettingsAdvanced.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Settings\UCNotificationsSettingsAdvanced.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UC_Settings\UCWhatsAppSettings.Designer.vb">
@@ -1480,7 +1495,6 @@
     </None>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="WindowsApp1_TemporaryKey.pfx" />
     <None Include="tools\Sestamk.VB.Updater.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

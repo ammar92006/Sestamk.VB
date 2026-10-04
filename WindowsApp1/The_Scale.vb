@@ -187,10 +187,10 @@ Public Class The_Scale
                 End Using
             End Using
 
-            MessageBox.Show("✔ تم استيراد البيانات بنجاح")
+            SmartMessageBox.Show("✔ تم استيراد البيانات بنجاح")
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الاستيراد: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء الاستيراد: " & ex.Message)
         End Try
 
     End Sub
@@ -224,7 +224,7 @@ Public Class The_Scale
             row.Selected = True
 
         Catch ex As Exception
-            MessageBox.Show("❌ خطأ أثناء تحميل بيانات الصف: " & ex.Message)
+            SmartMessageBox.Show("❌ خطأ أثناء تحميل بيانات الصف: " & ex.Message)
         End Try
     End Sub
 
@@ -258,17 +258,17 @@ Public Class The_Scale
                 Dim excelPath As String = ofd.FileName
                 ImportExcelToTheScale(excelPath)
             Else
-                MessageBox.Show("⚠ لم يتم اختيار ملف.")
+                SmartMessageBox.Show("⚠ لم يتم اختيار ملف.")
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ: " & ex.Message)
+            SmartMessageBox.Show("خطأ: " & ex.Message)
         End Try
     End Sub
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         If Code.Text = "" Or txt_Name.Text = "" Then
-            MessageBox.Show("⚠ الرجاء إدخال الكود والاسم")
+            SmartMessageBox.Show("⚠ الرجاء إدخال الكود والاسم")
             Return
         End If
 
@@ -283,17 +283,17 @@ Public Class The_Scale
                     cmd.ExecuteNonQuery()
                 End Using
             End Using
-            MessageBox.Show("✔ تم إضافة المنتج بنجاح")
+            SmartMessageBox.Show("✔ تم إضافة المنتج بنجاح")
             cleantxts()
             LoadTheScale() ' دالة لتحديث DataGridView
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
         End Try
     End Sub
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgv_TheScale.SelectedRows.Count = 0 Then
-            MessageBox.Show("⚠ الرجاء تحديد صف للتعديل")
+            SmartMessageBox.Show("⚠ الرجاء تحديد صف للتعديل")
             Return
         End If
 
@@ -312,24 +312,24 @@ Public Class The_Scale
                     cmd.ExecuteNonQuery()
                 End Using
             End Using
-            MessageBox.Show("✔ تم تعديل المنتج بنجاح")
+            SmartMessageBox.Show("✔ تم تعديل المنتج بنجاح")
             cleantxts()
             LoadTheScale()
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء التعديل: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message)
         End Try
     End Sub
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgv_TheScale.SelectedRows.Count = 0 Then
-            MessageBox.Show("⚠ الرجاء تحديد صف للحذف")
+            SmartMessageBox.Show("⚠ الرجاء تحديد صف للحذف")
             Return
         End If
 
         Dim selectedRow As DataGridViewRow = dgv_TheScale.SelectedRows(0)
         Dim id As Integer = Convert.ToInt32(selectedRow.Cells("ID").Value)
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا المنتج؟", "تأكيد الحذف", MessageBoxButtons.YesNo) = DialogResult.No Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا المنتج؟", "تأكيد الحذف", MessageBoxButtons.YesNo) = DialogResult.No Then
             Return
         End If
 
@@ -341,11 +341,11 @@ Public Class The_Scale
                     cmd.ExecuteNonQuery()
                 End Using
             End Using
-            MessageBox.Show("✔ تم حذف المنتج بنجاح")
+            SmartMessageBox.Show("✔ تم حذف المنتج بنجاح")
             cleantxts()
             LoadTheScale()
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الحذف: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub
 

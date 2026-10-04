@@ -45,7 +45,7 @@ Public Class frmBranches
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل بيانات الفروع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل بيانات الفروع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -55,7 +55,7 @@ Public Class frmBranches
             txtBranchCode.Text = GetNextCode("Branches", "BranchCode").ToString()
         End If
         If String.IsNullOrWhiteSpace(txtBranchName.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم الفرع أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم الفرع أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtBranchName.Focus()
             Return False
         End If
@@ -138,13 +138,13 @@ Public Class frmBranches
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ بيانات الفرع بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ بيانات الفرع بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                     _cachedBranches = Nothing
                     LoadBranchesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -175,13 +175,13 @@ Public Class frmBranches
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل بيانات الفرع بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل بيانات الفرع بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                     _cachedBranches = Nothing
                     LoadBranchesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -191,7 +191,7 @@ Public Class frmBranches
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvBranches.SelectedRows.Count = 0 Then Exit Sub
 
-        Dim result As DialogResult = MessageBox.Show("هل أنت متأكد من رغبتك في حذف هذا الفرع؟", "تأكيد الحذف",
+        Dim result As DialogResult = SmartMessageBox.Show("هل أنت متأكد من رغبتك في حذف هذا الفرع؟", "تأكيد الحذف",
                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Question)
 
         If result = DialogResult.Yes Then
@@ -204,13 +204,13 @@ Public Class frmBranches
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الفرع بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الفرع بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         _cachedBranches = Nothing
                         LoadBranchesGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

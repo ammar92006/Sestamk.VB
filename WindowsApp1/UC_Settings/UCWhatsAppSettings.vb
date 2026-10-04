@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Drawing
 Imports System.IO
 Imports System.Threading.Tasks
@@ -67,7 +67,7 @@ Namespace UC_Settings
                 txtInvoiceTemplate.Text = If(String.IsNullOrWhiteSpace(invTpl), "مرحباً {CustomerName}، شكراً لتعاملكم مع {ShopName}. فاتورتكم رقم {InvoiceNo} بإجمالي {Total} ج.م. نتمنى لكم يوماً سعيداً!", invTpl)
 
             Catch ex As Exception
-                MessageBox.Show("خطأ في قراءة إعدادات الواتساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في قراءة إعدادات الواتساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -139,6 +139,7 @@ Namespace UC_Settings
                     picQRCode.Image = New Bitmap(img)
                 End Using
             Catch ex As Exception
+                Logger.LogError("UCWhatsAppSettings.vb:141", ex)
             End Try
         End Function
 
@@ -153,7 +154,7 @@ Namespace UC_Settings
         End Sub
 
         Private Async Sub btnResetSession_Click(sender As Object, e As EventArgs) Handles btnResetSession.Click
-            If MessageBox.Show("هل أنت متأكد من فك ارتباط الحساب وإعادة تهيئة الجلسة؟ سيتطلب ذلك مسح رمز QR مجدداً.", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من فك ارتباط الحساب وإعادة تهيئة الجلسة؟ سيتطلب ذلك مسح رمز QR مجدداً.", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 btnResetSession.Enabled = False
                 Try
                     Dim ok = Await WhatsAppService.ResetSessionAsync()
@@ -161,11 +162,11 @@ Namespace UC_Settings
                         Try
                             Notify.Toast("تمت إعادة ضبط جلسة الواتساب بنجاح 🔓", Notify.ToastType.Info)
                         Catch
-                            MessageBox.Show("تمت إعادة ضبط الجلسة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            SmartMessageBox.Show("تمت إعادة ضبط الجلسة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         End Try
                         Await RefreshStatusAsync()
                     Else
-                        MessageBox.Show("تعذّر إعادة ضبط الجلسة، تأكد من أن السيرفر يعمل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        SmartMessageBox.Show("تعذّر إعادة ضبط الجلسة، تأكد من أن السيرفر يعمل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     End If
                 Finally
                     btnResetSession.Enabled = True
@@ -188,7 +189,7 @@ Namespace UC_Settings
         Private Async Sub btnSendTest_Click(sender As Object, e As EventArgs) Handles btnSendTest.Click
             Dim phone = txtTestPhone.Text.Trim().Replace("+", "").Replace(" ", "")
             If String.IsNullOrEmpty(phone) Then
-                MessageBox.Show("يرجى إدخال رقم هاتف المستلم (مع كود الدولة مثل 201012345678).", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى إدخال رقم هاتف المستلم (مع كود الدولة مثل 201012345678).", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 txtTestPhone.Focus()
                 Return
             End If
@@ -206,10 +207,10 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم إرسال الرسالة التجريبية بنجاح 🚀", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("✅ تم إرسال الرسالة التجريبية بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("✅ تم إرسال الرسالة التجريبية بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 Else
-                    MessageBox.Show("❌ فشل إرسال الرسالة:" & vbCrLf & res.error, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("❌ فشل إرسال الرسالة:" & vbCrLf & res.error, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
             Finally
                 btnSendTest.Enabled = True
@@ -237,18 +238,18 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات الواتساب بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات الواتساب بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات الواتساب بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
 
                 Await RefreshStatusAsync()
 
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات الواتساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات الواتساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الواتساب؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الواتساب؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 rdoModeCloud.Checked = True
                 rdoModeLocal.Checked = False
                 txtServerUrl.Text = "http://127.0.0.1:3000"

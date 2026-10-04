@@ -29,7 +29,8 @@ Module ServerManager
                 NodeProcess.WaitForExit(2000)
                 NodeProcess = Nothing
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ServerManager.vb:32", __logEx)
         End Try
 
     End Sub

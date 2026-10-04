@@ -123,6 +123,7 @@ Partial Class frmPOS
         Me.colTotalPrice = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colNotes = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colTaxPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
@@ -585,7 +586,7 @@ Partial Class frmPOS
         Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvInvoice.ColumnHeadersHeight = 38
         Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID})
+        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID, Me.colTaxPercent})
         DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle11.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 9.5!)
@@ -1282,6 +1283,13 @@ Partial Class frmPOS
         Me.colProductID.ReadOnly = True
         Me.colProductID.Visible = False
         '
+        'colTaxPercent
+        '
+        Me.colTaxPercent.HeaderText = "TaxPercent"
+        Me.colTaxPercent.Name = "colTaxPercent"
+        Me.colTaxPercent.ReadOnly = True
+        Me.colTaxPercent.Visible = False
+        '
         'frmPOS
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -1413,4 +1421,5 @@ Partial Class frmPOS
     Friend WithEvents colTotalPrice As DataGridViewTextBoxColumn
     Friend WithEvents colNotes As DataGridViewTextBoxColumn
     Friend WithEvents colProductID As DataGridViewTextBoxColumn
+    Friend WithEvents colTaxPercent As DataGridViewTextBoxColumn
 End Class

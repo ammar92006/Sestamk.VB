@@ -34,7 +34,7 @@ Public Class frmEmployees
             Dim drag As New FormDragHelper(Me, panelHeader)
             Dim drag2 As New FormDragHelper(Me, Guna2HtmlLabel1)
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء تحميل شاشة الموظفين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تحميل شاشة الموظفين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -196,7 +196,7 @@ Public Class frmEmployees
 
         Catch ex As Exception
             _isLoadingData = False
-            MessageBox.Show("خطأ في تحميل بيانات الموظفين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل بيانات الموظفين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -389,7 +389,7 @@ Public Class frmEmployees
 
         ' 2. Validate Arabic Name (Required NOT NULL in DB)
         If String.IsNullOrWhiteSpace(txtArabicName.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم الموظف باللغة العربية!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم الموظف باللغة العربية!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Guna2TabControl1.SelectedTab = tabPageBasic
             txtArabicName.Focus()
             Return False
@@ -397,7 +397,7 @@ Public Class frmEmployees
 
         ' 2.1 Validate Phone (Required)
         If String.IsNullOrWhiteSpace(txtPhone.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال رقم الهاتف للموظف!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال رقم الهاتف للموظف!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Guna2TabControl1.SelectedTab = tabPageBasic
             txtPhone.Focus()
             Return False
@@ -405,7 +405,7 @@ Public Class frmEmployees
 
         ' 3. Validate National ID format if entered
         If Not String.IsNullOrWhiteSpace(txtNationalID.Text) AndAlso Not IsNumeric(txtNationalID.Text.Trim()) Then
-            MessageBox.Show("عذراً، الرقم القومي يجب أن يتكون من أرقام فقط!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، الرقم القومي يجب أن يتكون من أرقام فقط!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Guna2TabControl1.SelectedTab = tabPageBasic
             txtNationalID.Focus()
             Return False
@@ -415,7 +415,7 @@ Public Class frmEmployees
         If Not String.IsNullOrWhiteSpace(txtEmail.Text) Then
             Dim emailStr As String = txtEmail.Text.Trim()
             If Not (emailStr.Contains("@") AndAlso emailStr.Contains(".")) Then
-                MessageBox.Show("عذراً، صيغة البريد الإلكتروني غير صحيحة!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("عذراً، صيغة البريد الإلكتروني غير صحيحة!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Guna2TabControl1.SelectedTab = tabPageBasic
                 txtEmail.Focus()
                 Return False
@@ -424,7 +424,7 @@ Public Class frmEmployees
 
         ' 5. Validate Department Selection
         If cmbDepartment.SelectedValue Is Nothing OrElse IsDBNull(cmbDepartment.SelectedValue) OrElse Not IsNumeric(cmbDepartment.SelectedValue) Then
-            MessageBox.Show("عذراً، يجب اختيار القسم التابع له الموظف!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب اختيار القسم التابع له الموظف!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Guna2TabControl1.SelectedTab = tabPageJob
             cmbDepartment.Focus()
             Return False
@@ -443,7 +443,7 @@ Public Class frmEmployees
 
         For Each item In numFields
             If Not String.IsNullOrWhiteSpace(item.Item1.Text) AndAlso Not IsNumeric(item.Item1.Text.Trim()) Then
-                MessageBox.Show($"عذراً، قيمة [{item.Item2}] يجب أن تكون رقماً صحياً أو عشرياً!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show($"عذراً، قيمة [{item.Item2}] يجب أن تكون رقماً صحياً أو عشرياً!", "تنبيه الإدخال", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Guna2TabControl1.SelectedTab = tabPageSalary
                 item.Item1.Focus()
                 Return False
@@ -559,9 +559,9 @@ Public Class frmEmployees
                     LoadEmployeesGrid()
                     ClearFields()
 
-                    MessageBox.Show("تمت إضافة الموظف بنجاح 🟢", "نجاح الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت إضافة الموظف بنجاح 🟢", "نجاح الحفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("حدث خطأ أثناء إضافة الموظف: " & ex.Message, "خطأ SQL", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء إضافة الموظف: " & ex.Message, "خطأ SQL", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -570,7 +570,7 @@ Public Class frmEmployees
     ' --- EDIT / UPDATE ---
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
         If dgvEmployees.SelectedRows.Count = 0 Then
-            MessageBox.Show("الرجاء اختيار الموظف المراد تعديل بياناته من القائمة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("الرجاء اختيار الموظف المراد تعديل بياناته من القائمة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -605,9 +605,9 @@ Public Class frmEmployees
                     LoadEmployeesGrid()
                     ClearFields()
 
-                    MessageBox.Show("تم تحديث بيانات الموظف بنجاح 🟢", "نجاح التعديل", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تحديث بيانات الموظف بنجاح 🟢", "نجاح التعديل", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Catch ex As Exception
-                    MessageBox.Show("حدث خطأ أثناء تعديل بيانات الموظف: " & ex.Message, "خطأ SQL", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء تعديل بيانات الموظف: " & ex.Message, "خطأ SQL", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -616,12 +616,12 @@ Public Class frmEmployees
     ' --- SOFT DELETE ---
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvEmployees.SelectedRows.Count = 0 Then
-            MessageBox.Show("الرجاء اختيار الموظف المراد حذفه من القائمة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("الرجاء اختيار الموظف المراد حذفه من القائمة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim empName As String = GetCellString(dgvEmployees.SelectedRows(0), "ArabicName")
-        If MessageBox.Show($"هل أنت متأكد من حذف الموظف [{empName}]؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show($"هل أنت متأكد من حذف الموظف [{empName}]؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim empID As Integer = Convert.ToInt32(dgvEmployees.SelectedRows(0).Cells("EmployeeID").Value)
             Dim query As String = "UPDATE Employees SET IsDeleted = 1 WHERE EmployeeID = @EmployeeID"
 
@@ -637,9 +637,9 @@ Public Class frmEmployees
                         LoadEmployeesGrid()
                         ClearFields()
 
-                        MessageBox.Show("تم حذف الموظف بنجاح 🗑️", "حذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الموظف بنجاح 🗑️", "حذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Catch ex As Exception
-                        MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -791,7 +791,7 @@ Public Class frmEmployees
                         pic.Image = New Bitmap(tempImg)
                     End Using
                 Catch ex As Exception
-                    MessageBox.Show("خطأ في تحميل الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ في تحميل الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End If
         End Using

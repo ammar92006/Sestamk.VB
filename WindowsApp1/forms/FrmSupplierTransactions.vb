@@ -70,7 +70,7 @@ Public Class FrmSupplierTransactions
 
         Catch ex As Exception
             _isLoading = False
-            MessageBox.Show("خطأ أثناء تحميل شاشة كشف حساب المورد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل شاشة كشف حساب المورد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -89,7 +89,7 @@ Public Class FrmSupplierTransactions
                 supplierBox.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في جلب بيانات الموردين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في جلب بيانات الموردين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -116,7 +116,7 @@ Public Class FrmSupplierTransactions
                 treasuryBox.SelectedIndex = 0
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء جلب الخزائن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء جلب الخزائن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 
@@ -264,7 +264,7 @@ Public Class FrmSupplierTransactions
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء استخراج كشف الحساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء استخراج كشف الحساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -295,18 +295,18 @@ Public Class FrmSupplierTransactions
     ''' </summary>
     Private Async Sub btnAddPayment_Click(sender As Object, e As EventArgs) Handles btnAddPayment.Click
         If supplierBox.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار المورد أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If amountBox.Value <= 0 Then
-            MessageBox.Show("يرجى إدخال مبلغ سداد صحيح أكبر من الصفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال مبلغ سداد صحيح أكبر من الصفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             amountBox.Focus()
             Exit Sub
         End If
 
         If treasuryBox.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الخزينة التي سيتم الصرف منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخزينة التي سيتم الصرف منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             treasuryBox.Focus()
             Exit Sub
         End If
@@ -320,7 +320,7 @@ Public Class FrmSupplierTransactions
         Dim paymentRef As String = "PAY-" & DateTime.Now.ToString("yyyyMMddHHmmss")
         Dim currentUserId As Integer = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1)
 
-        If MessageBox.Show($"هل أنت متأكد من تسجيل سداد مبلغ ({amount:N2} ج) للمورد ({supName}) وصرفه من خزينة ({treasuryBox.Text})؟", "تأكيد السداد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+        If SmartMessageBox.Show($"هل أنت متأكد من تسجيل سداد مبلغ ({amount:N2} ج) للمورد ({supName}) وصرفه من خزينة ({treasuryBox.Text})؟", "تأكيد السداد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
             Exit Sub
         End If
 
@@ -378,7 +378,7 @@ Public Class FrmSupplierTransactions
 
                 trans.Commit()
 
-                MessageBox.Show("تم تسجيل عملية السداد بنجاح وخصم المبلغ من الخزينة وتحديث رصيد المورد!", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم تسجيل عملية السداد بنجاح وخصم المبلغ من الخزينة وتحديث رصيد المورد!", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                 amountBox.Value = 0
                 notesBox.Clear()
@@ -386,7 +386,7 @@ Public Class FrmSupplierTransactions
 
             Catch ex As Exception
                 trans.Rollback()
-                MessageBox.Show("حدث خطأ أثناء حفظ حركة السداد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ أثناء حفظ حركة السداد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Using
     End Sub
@@ -396,7 +396,7 @@ Public Class FrmSupplierTransactions
     ''' </summary>
     Private Sub btnExportStatement_Click(sender As Object, e As EventArgs) Handles btnExportStatement.Click
         If grid.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد بيانات لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد بيانات لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -448,11 +448,11 @@ Public Class FrmSupplierTransactions
                     ws.Columns().AdjustToContents()
                     wb.SaveAs(sfd.FileName)
 
-                    MessageBox.Show("تم تصدير كشف الحساب إلى Excel بنجاح!", "نجاح التصدير", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تصدير كشف الحساب إلى Excel بنجاح!", "نجاح التصدير", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Using
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تصدير ملف Excel: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تصدير ملف Excel: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -461,7 +461,7 @@ Public Class FrmSupplierTransactions
     ''' </summary>
     Private Sub btnPrintStatement_Click(sender As Object, e As EventArgs) Handles btnPrintStatement.Click
         If grid.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد بيانات للطباعة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد بيانات للطباعة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -473,7 +473,7 @@ Public Class FrmSupplierTransactions
             preview.WindowState = FormWindowState.Maximized
             preview.ShowDialog()
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تهيئة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تهيئة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

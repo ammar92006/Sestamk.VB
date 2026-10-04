@@ -40,7 +40,7 @@ Public Class Customer_Balance_Download
             LoadCustomers()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح شاشة سداد الأرصدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء فتح شاشة سداد الأرصدة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -71,7 +71,7 @@ Public Class Customer_Balance_Download
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تحميل بيانات الخزينة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل بيانات الخزينة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 
@@ -104,7 +104,7 @@ Public Class Customer_Balance_Download
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تحميل العملاء: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل العملاء: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -279,19 +279,19 @@ Public Class Customer_Balance_Download
     ' تنفيذ عملية السداد وفتح فورم التأكيد
     Private Sub btnDoPayment_Click(sender As Object, e As EventArgs) Handles btnDoPayment.Click
         If _selectedCustomerID <= 0 Then
-            MessageBox.Show("يرجى اختيار العميل من القائمة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار العميل من القائمة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim payAmount As Decimal = 0
         If Not Decimal.TryParse(txtAmountPaid.Text.Trim(), payAmount) OrElse payAmount <= 0 Then
-            MessageBox.Show("يرجى إدخال مبلغ سداد صحيح أكبر من الصفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال مبلغ سداد صحيح أكبر من الصفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtAmountPaid.Focus()
             Exit Sub
         End If
 
         If cmbTreasury.SelectedValue Is Nothing Then
-            MessageBox.Show("يرجى اختيار الخزينة التي سيتم إيداع المبلغ فيها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخزينة التي سيتم إيداع المبلغ فيها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbTreasury.Focus()
             Exit Sub
         End If
@@ -324,7 +324,7 @@ Public Class Customer_Balance_Download
     ' فتح كشف حساب العميل مباشرة
     Private Sub btnOpenStatement_Click(sender As Object, e As EventArgs) Handles btnOpenStatement.Click
         If _selectedCustomerID <= 0 Then
-            MessageBox.Show("يرجى اختيار العميل أولاً لعرض كشف حسابه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار العميل أولاً لعرض كشف حسابه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -336,14 +336,14 @@ Public Class Customer_Balance_Download
                 frmStatement.btnSearch.PerformClick()
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح كشف الحساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء فتح كشف الحساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     ' تصدير إلى ملف إكسيل
     Private Sub btnExportExcel_Click(sender As Object, e As EventArgs) Handles btnExportExcel.Click
         If dgvCustomers.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد بيانات عملاء لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد بيانات عملاء لتصديرها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -391,12 +391,12 @@ Public Class Customer_Balance_Download
                     wb.SaveAs(sfd.FileName)
                 End Using
 
-                MessageBox.Show("✅ تم تصدير بيانات وأرصدة العملاء إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تصدير بيانات وأرصدة العملاء إلى Excel بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Process.Start("explorer.exe", Path.GetDirectoryName(sfd.FileName))
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تصدير ملف الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تصدير ملف الإكسيل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

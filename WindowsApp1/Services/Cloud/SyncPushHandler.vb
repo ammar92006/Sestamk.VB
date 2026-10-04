@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -77,7 +77,8 @@ Namespace Services.Cloud
                                     For Each prop In parsed.Properties()
                                         rowValues(prop.Name) = prop.Value?.ToObject(Of Object)()
                                     Next
-                                Catch
+                                Catch __logEx As Exception
+                                    Logger.LogError("SyncPushHandler.vb:80", __logEx)
                                 End Try
                             End If
 
@@ -96,7 +97,8 @@ Namespace Services.Cloud
                                             End If
                                         End Using
                                     End Using
-                                Catch
+                                Catch __logEx As Exception
+                                    Logger.LogError("SyncPushHandler.vb:100", __logEx)
                                 End Try
                             End If
 

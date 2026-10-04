@@ -1,4 +1,4 @@
-'Imports System.Data.SqlClient
+﻿'Imports System.Data.SqlClient
 
 'Public Class frmRecipes
 '    Private _selectedRecipeID As Integer? = Nothing
@@ -32,7 +32,7 @@
 '                cmbMaterial.SelectedIndex = -1
 '            End If
 '        Catch ex As Exception
-'            MessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+'            SmartMessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 '        End Try
 '    End Sub
 
@@ -100,7 +100,7 @@
 '            If dgvRecipes.Columns.Contains("UnitName") Then dgvRecipes.Columns("UnitName").HeaderText = "الوحدة"
 '            If dgvRecipes.Columns.Contains("Notes") Then dgvRecipes.Columns("Notes").HeaderText = "ملاحظات"
 '        Catch ex As Exception
-'            MessageBox.Show("خطأ في تحميل قائمة الريسيبي: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+'            SmartMessageBox.Show("خطأ في تحميل قائمة الريسيبي: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 '        End Try
 '    End Sub
 
@@ -140,18 +140,18 @@
 
 '    Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
 '        If cmbProduct.SelectedIndex = -1 Then
-'            MessageBox.Show("يرجى اختيار الصنف الأساسي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+'            SmartMessageBox.Show("يرجى اختيار الصنف الأساسي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 '            Exit Sub
 '        End If
 
 '        If cmbMaterial.SelectedIndex = -1 Then
-'            MessageBox.Show("يرجى اختيار الخامة المستهلكة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+'            SmartMessageBox.Show("يرجى اختيار الخامة المستهلكة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 '            Exit Sub
 '        End If
 
 '        Dim qty As Decimal = 0
 '        If Not Decimal.TryParse(txtQuantity.Text, qty) OrElse qty <= 0 Then
-'            MessageBox.Show("يرجى إدخال كمية استهلاك صحيحة أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+'            SmartMessageBox.Show("يرجى إدخال كمية استهلاك صحيحة أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 '            txtQuantity.Focus()
 '            Exit Sub
 '        End If
@@ -171,7 +171,7 @@
 '                conn.Open()
 '                Dim exists As Integer = Convert.ToInt32(cmdCheck.ExecuteScalar())
 '                If exists > 0 Then
-'                    MessageBox.Show("هذه الخامة مسجلة مسبقاً لهذه التركيبة! يمكنك تعديل كميتها بدلاً من إضافتها مجدداً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+'                    SmartMessageBox.Show("هذه الخامة مسجلة مسبقاً لهذه التركيبة! يمكنك تعديل كميتها بدلاً من إضافتها مجدداً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 '                    Exit Sub
 '                End If
 '            End Using
@@ -189,7 +189,7 @@
 '            End Using
 '        End Using
 
-'        MessageBox.Show("تم حفظ المكون بالريسيبي بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+'        SmartMessageBox.Show("تم حفظ المكون بالريسيبي بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 '        Dim currentProd As Integer? = If(cmbProduct.SelectedValue IsNot Nothing, Convert.ToInt32(cmbProduct.SelectedValue), CType(Nothing, Integer?))
 '        LoadRecipesGrid(currentProd)
 '        ClearFields(keepProduct:=True)
@@ -197,13 +197,13 @@
 
 '    Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
 '        If Not _selectedRecipeID.HasValue Then
-'            MessageBox.Show("يرجى تحديد مكون من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+'            SmartMessageBox.Show("يرجى تحديد مكون من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 '            Exit Sub
 '        End If
 
 '        Dim qty As Decimal = 0
 '        If Not Decimal.TryParse(txtQuantity.Text, qty) OrElse qty <= 0 Then
-'            MessageBox.Show("يرجى إدخال كمية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+'            SmartMessageBox.Show("يرجى إدخال كمية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
 '            Exit Sub
 '        End If
 
@@ -223,12 +223,12 @@
 '                Try
 '                    conn.Open()
 '                    cmd.ExecuteNonQuery()
-'                    MessageBox.Show("تم تعديل المكون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+'                    SmartMessageBox.Show("تم تعديل المكون بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 '                    Dim currentProd As Integer? = If(cmbProduct.SelectedValue IsNot Nothing, Convert.ToInt32(cmbProduct.SelectedValue), CType(Nothing, Integer?))
 '                    LoadRecipesGrid(currentProd)
 '                    ClearFields(keepProduct:=True)
 '                Catch ex As Exception
-'                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+'                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 '                End Try
 '            End Using
 '        End Using
@@ -237,14 +237,14 @@
 '    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
 '        If Not _selectedRecipeID.HasValue Then Exit Sub
 
-'        If MessageBox.Show("هل أنت متأكد من حذف هذه الخامة من الريسيبي؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+'        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الخامة من الريسيبي؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
 '            Dim query As String = "DELETE FROM Recipes WHERE RecipeID = @ID"
 '            Using conn As New SqlConnection(DBModule.ConnectionString)
 '                Using cmd As New SqlCommand(query, conn)
 '                    cmd.Parameters.AddWithValue("@ID", _selectedRecipeID.Value)
 '                    conn.Open()
 '                    cmd.ExecuteNonQuery()
-'                    MessageBox.Show("تم الحذف بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+'                    SmartMessageBox.Show("تم الحذف بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 '                    Dim currentProd As Integer? = If(cmbProduct.SelectedValue IsNot Nothing, Convert.ToInt32(cmbProduct.SelectedValue), CType(Nothing, Integer?))
 '                    LoadRecipesGrid(currentProd)
 '                    ClearFields(keepProduct:=True)
@@ -312,7 +312,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "حدث خطأ أثناء تحميل شاشة الريسيبي:" &
                 Environment.NewLine &
                 ex.Message,
@@ -442,7 +442,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ في تحميل القوائم:" &
                 Environment.NewLine &
                 ex.Message,
@@ -645,7 +645,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ في تحميل أحجام الصنف:" &
                 Environment.NewLine &
                 ex.Message,
@@ -799,7 +799,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ في تحميل وحدات الخامة:" &
                 Environment.NewLine &
                 ex.Message,
@@ -935,7 +935,8 @@ Public Class frmRecipes
 
             End Using
 
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("frmRecipes.vb:938", __logEx)
         End Try
 
         Return "-"
@@ -1134,7 +1135,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ في تحميل قائمة الريسيبي:" &
                 Environment.NewLine &
                 ex.Message,
@@ -1292,12 +1293,12 @@ Public Class frmRecipes
     Private Sub ApplyRecipeCostToProduct(sender As Object, e As EventArgs)
         Dim prodId As Integer = 0
         If Not TryGetComboIntegerValue(cmbProduct, prodId) OrElse prodId <= 0 Then
-            MessageBox.Show("يرجى اختيار صنف أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار صنف أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         If _currentRecipeTotalCost <= 0 Then
-            MessageBox.Show("لا توجد تكلفة خامات محسوبة للوصفة لتحديثها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد تكلفة خامات محسوبة للوصفة لتحديثها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -1306,9 +1307,9 @@ Public Class frmRecipes
 
         Dim repo As New POSRepository(DBModule.ConnectionString)
         If repo.UpdateProductSizeCostPrice(prodId, If(hasSize, CType(sizeId, Integer?), Nothing), _currentRecipeTotalCost) Then
-            MessageBox.Show($"تم تحديث تكلفة الصنف بنجاح بقيمة: {_currentRecipeTotalCost:N2} ج", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show($"تم تحديث تكلفة الصنف بنجاح بقيمة: {_currentRecipeTotalCost:N2} ج", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Else
-            MessageBox.Show("حدث خطأ أثناء تحديث تكلفة الصنف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تحديث تكلفة الصنف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 
@@ -1450,7 +1451,7 @@ Public Class frmRecipes
 
             _suppressEvents = False
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء تحميل بيانات السطر:" &
                 Environment.NewLine &
                 ex.Message,
@@ -1504,7 +1505,7 @@ Public Class frmRecipes
 
         If Not TryGetComboIntegerValue(cmbMaterial, materialID) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى اختيار الخامة أولاً.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1522,7 +1523,7 @@ Public Class frmRecipes
             inputQuantity
         ) OrElse inputQuantity <= 0D Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى إدخال كمية صحيحة أكبر من صفر.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1539,7 +1540,7 @@ Public Class frmRecipes
 
         If Not TryGetSelectedConversionFactor(conversionFactor) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى اختيار وحدة الاستخدام.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1561,7 +1562,7 @@ Public Class frmRecipes
         ' ==========================================
         If RecipeMaterialExists(materialID, Nothing) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "هذه الخامة مضافة بالفعل إلى هذه الوصفة." &
                 Environment.NewLine &
                 "يمكنك تحديدها من الجدول ثم تعديل كميتها.",
@@ -1617,7 +1618,7 @@ Public Class frmRecipes
 
             End Using
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "تمت إضافة الخامة إلى الوصفة بنجاح.",
                 "نجاح",
                 MessageBoxButtons.OK,
@@ -1630,7 +1631,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء إضافة الخامة:" &
                 Environment.NewLine &
                 ex.Message,
@@ -1653,7 +1654,7 @@ Public Class frmRecipes
 
         If Not _selectedRecipeID.HasValue Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى تحديد خامة من الجدول أولاً.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1670,7 +1671,7 @@ Public Class frmRecipes
 
         If Not TryGetComboIntegerValue(cmbMaterial, materialID) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى اختيار الخامة.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1688,7 +1689,7 @@ Public Class frmRecipes
             inputQuantity
         ) OrElse inputQuantity <= 0D Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى إدخال كمية صحيحة أكبر من صفر.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1703,7 +1704,7 @@ Public Class frmRecipes
 
         If Not TryGetSelectedConversionFactor(conversionFactor) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى اختيار وحدة الاستخدام.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1725,7 +1726,7 @@ Public Class frmRecipes
             _selectedRecipeID.Value
         ) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "هذه الخامة موجودة بالفعل في نفس الوصفة.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -1786,7 +1787,7 @@ Public Class frmRecipes
 
             End Using
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "تم تعديل الخامة بنجاح.",
                 "نجاح",
                 MessageBoxButtons.OK,
@@ -1799,7 +1800,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء التعديل:" &
                 Environment.NewLine &
                 ex.Message,
@@ -1822,7 +1823,7 @@ Public Class frmRecipes
 
         If Not _selectedRecipeID.HasValue Then Exit Sub
 
-        If MessageBox.Show(
+        If SmartMessageBox.Show(
             "هل أنت متأكد من حذف هذه الخامة من الوصفة؟",
             "تأكيد الحذف",
             MessageBoxButtons.YesNo,
@@ -1857,7 +1858,7 @@ Public Class frmRecipes
 
             End Using
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "تم حذف الخامة من الوصفة.",
                 "نجاح",
                 MessageBoxButtons.OK,
@@ -1870,7 +1871,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء الحذف:" &
                 Environment.NewLine &
                 ex.Message,
@@ -1951,7 +1952,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء فحص تكرار الخامة:" &
                 Environment.NewLine &
                 ex.Message,
@@ -2135,7 +2136,7 @@ Public Class frmRecipes
             productID
         ) Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى اختيار الصنف أولاً.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -2148,7 +2149,7 @@ Public Class frmRecipes
 
         If cmbRecipeType.SelectedIndex = -1 Then
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى اختيار نوع الوصفة.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -2168,7 +2169,7 @@ Public Class frmRecipes
                 sizeID
             ) Then
 
-                MessageBox.Show(
+                SmartMessageBox.Show(
                     "يرجى اختيار الحجم.",
                     "تنبيه",
                     MessageBoxButtons.OK,
@@ -2190,7 +2191,7 @@ Public Class frmRecipes
                 addonID
             ) Then
 
-                MessageBox.Show(
+                SmartMessageBox.Show(
                     "يرجى اختيار الإضافة.",
                     "تنبيه",
                     MessageBoxButtons.OK,
@@ -2387,7 +2388,7 @@ Public Class frmRecipes
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء تحديث البيانات:" &
                 Environment.NewLine &
                 ex.Message,

@@ -19,7 +19,7 @@ Public Class frmPrinters
                 cmbWindowsPrinters.SelectedIndex = -1 ' بدون تحديد افتراضي
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء قراءة طابعات الجهاز: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("خطأ أثناء قراءة طابعات الجهاز: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
 
@@ -83,7 +83,7 @@ Public Class frmPrinters
     ' زر إضافة طابعة جديدة
     Private Sub btnAddPrinter_Click(sender As Object, e As EventArgs) Handles btnAddPrinter.Click
         If String.IsNullOrWhiteSpace(txtPrinterName.Text) OrElse cmbWindowsPrinters.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى كتابة اسم المنفذ واختيار الطابعة الحقيقية!")
+            SmartMessageBox.Show("يرجى كتابة اسم المنفذ واختيار الطابعة الحقيقية!")
             Exit Sub
         End If
 
@@ -99,9 +99,9 @@ Public Class frmPrinters
                     conn.Open()
                     cmd.ExecuteNonQuery()
                     LoadPrintersGrid()
-                    MessageBox.Show("تم الحفظ بنجاح")
+                    SmartMessageBox.Show("تم الحفظ بنجاح")
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message)
+                    SmartMessageBox.Show(ex.Message)
                 End Try
             End Using
         End Using
@@ -111,7 +111,7 @@ Public Class frmPrinters
     Private Sub btnEditPrinter_Click(sender As Object, e As EventArgs) Handles btnEditPrinter.Click
         If dgvPrinters.SelectedRows.Count = 0 Then Exit Sub
         If String.IsNullOrWhiteSpace(txtPrinterName.Text) OrElse cmbWindowsPrinters.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى كتابة اسم المنفذ واختيار الطابعة الحقيقية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى كتابة اسم المنفذ واختيار الطابعة الحقيقية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
         Dim currentID As Integer = Convert.ToInt32(dgvPrinters.SelectedRows(0).Cells("PrinterID").Value)
@@ -129,9 +129,9 @@ Public Class frmPrinters
                     conn.Open()
                     cmd.ExecuteNonQuery()
                     LoadPrintersGrid()
-                    MessageBox.Show("تم التعديل بنجاح")
+                    SmartMessageBox.Show("تم التعديل بنجاح")
                 Catch ex As Exception
-                    MessageBox.Show(ex.Message)
+                    SmartMessageBox.Show(ex.Message)
                 End Try
             End Using
         End Using
@@ -141,7 +141,7 @@ Public Class frmPrinters
     Private Sub btnDeletePrinter_Click(sender As Object, e As EventArgs) Handles btnDeletePrinter.Click
         ' (نفس كود الحذف السابق دون تغيير يعتمد على الـ ID)
         If dgvPrinters.SelectedRows.Count = 0 Then Exit Sub
-        Dim result As DialogResult = MessageBox.Show("هل أنت متأكد من رغبتك في حذف هذه الطابعة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        Dim result As DialogResult = SmartMessageBox.Show("هل أنت متأكد من رغبتك في حذف هذه الطابعة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If result = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvPrinters.SelectedRows(0).Cells("PrinterID").Value)
             Dim query As String = "UPDATE Printers SET IsDeleted = 1 WHERE PrinterID = @PrinterID"
@@ -152,10 +152,10 @@ Public Class frmPrinters
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف الطابعة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الطابعة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         LoadPrintersGrid()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -204,7 +204,7 @@ Public Class frmPrinters
         End If
 
         If String.IsNullOrWhiteSpace(targetPrinter) Then
-            MessageBox.Show("يرجى اختيار طابعة لتجربتها أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار طابعة لتجربتها أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 

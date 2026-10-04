@@ -94,19 +94,19 @@ Public Class FrmDriverReport
         Dim driverID As Integer = If(cmbDrivers.SelectedValue IsNot Nothing, Convert.ToInt32(cmbDrivers.SelectedValue), 0)
 
         If driverID = 0 Then
-            MessageBox.Show("برجاء اختيار طيار محدد من القائمة لإجراء التصفية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء اختيار طيار محدد من القائمة لإجراء التصفية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         Dim driverName As String = cmbDrivers.Text
-        Dim confirm = MessageBox.Show($"هل أنت متأكد من تسوية وتصفية جميع الأوردرات المعلقة للطيار: {driverName}؟", "تأكيد التصفية", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        Dim confirm = SmartMessageBox.Show($"هل أنت متأكد من تسوية وتصفية جميع الأوردرات المعلقة للطيار: {driverName}؟", "تأكيد التصفية", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
 
         If confirm = DialogResult.Yes Then
             If _repo.SettleDriverOrders(driverID) Then
-                MessageBox.Show("تمت تصفية وتوريد حسابات الطيار بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تمت تصفية وتوريد حسابات الطيار بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 FilterData()
             Else
-                MessageBox.Show("لا توجد أوردرات معلقة لتصفيتها لهذا الطيار.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("لا توجد أوردرات معلقة لتصفيتها لهذا الطيار.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         End If
     End Sub

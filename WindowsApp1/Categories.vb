@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports DevExpress.Office.Utils
 Imports DevExpress.PivotGrid.Design
@@ -137,7 +137,7 @@ Public Class Categories
                     End If
 
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء تحميل بيانات الفئات: " & ex.Message, "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء تحميل بيانات الفئات: " & ex.Message, "خطأ في البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using ' يتم قفل وتدمير الاتصال المحلي هنا تلقائياً وبأمان دون التأثير على البرنامج
@@ -200,7 +200,7 @@ Public Class Categories
             End If
         Catch ex As Exception
             ' معالجة أي خطأ غير متوقع دون توقف التطبيق
-            MessageBox.Show("حدث خطأ أثناء عرض بيانات الصف: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("حدث خطأ أثناء عرض بيانات الصف: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
     Private Function GetProductsCount(categoryId As Integer) As Integer
@@ -217,7 +217,7 @@ Public Class Categories
 
         End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ: " & ex.Message)
+            SmartMessageBox.Show("خطأ: " & ex.Message)
         End Try
 
         Return count
@@ -313,14 +313,14 @@ Public Class Categories
             If Not IsValidData() Then Exit Sub
 
             If InsertCategory() Then
-                MessageBox.Show("تمت إضافة الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تمت إضافة الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 ' هنا تستدعي دالة تحديث الداتا جريد فيو لتظهر البيانات الجديدة
                 ClearFields()
                 LoadCategories()
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
         End Try
 
     End Sub
@@ -463,7 +463,7 @@ Public Class Categories
                 cmbColor.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل ألوان الفئات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل ألوان الفئات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -483,7 +483,7 @@ Public Class Categories
                 cmbPrinter.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الطابعات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل الطابعات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -526,7 +526,7 @@ Public Class Categories
                 cmbType.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل أنواع الفئات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل أنواع الفئات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -560,7 +560,7 @@ Public Class Categories
                     Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
                     Return rowsAffected > 0
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء إضافة الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء إضافة الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return False
                 End Try
             End Using
@@ -571,20 +571,21 @@ Public Class Categories
         Try
             If Not IsValidData() Then Exit Sub
             If UpdateCategory() Then
-                MessageBox.Show("تم تعديل بيانات الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم تعديل بيانات الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 ' هنا تستدعي دالة تحديث الداتا جريد فيو لتظهر التعديلات
                 ClearFields()
                 LoadCategories()
             End If
         Catch ex As Exception
 
+            Logger.LogError("Categories.vb:579", ex)
         End Try
     End Sub
 
     Private Function UpdateCategory() As Boolean
         ' التحقق من تحديد صف من الجدول أولاً
         If dvg_Categories.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار الفئة المراد تعديلها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الفئة المراد تعديلها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
@@ -618,7 +619,7 @@ Public Class Categories
                     Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
                     Return rowsAffected > 0
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء تعديل الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء تعديل الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return False
                 End Try
             End Using
@@ -627,18 +628,18 @@ Public Class Categories
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dvg_Categories.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار الفئة المراد حذفها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الفئة المراد حذفها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         ' رسالة تأكيد لحماية البيانات من الضغط غير المقصود
-        Dim result As DialogResult = MessageBox.Show("هل أنت متأكد من رغبتك في حذف هذه الفئة نهائياً؟", "تأكيد الحذف",
+        Dim result As DialogResult = SmartMessageBox.Show("هل أنت متأكد من رغبتك في حذف هذه الفئة نهائياً؟", "تأكيد الحذف",
                                                  MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
 
         If result = DialogResult.Yes Then
             ' تنفيذ دالة الحذف الآمنة
             If DeleteCategory() Then
-                MessageBox.Show("تم حذف الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم حذف الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                 ' تفريغ الحقول ومسح البيانات من أدوات الإدخال
                 ClearFields()
@@ -651,7 +652,7 @@ Public Class Categories
     Private Function DeleteCategory() As Boolean
         ' 1. التأكد أولاً من تحديد صف من الجدول لحذفه
         If dvg_Categories.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار الفئة المراد حذفها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الفئة المراد حذفها من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
@@ -672,7 +673,7 @@ Public Class Categories
                     Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
                     Return rowsAffected > 0
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء حذف الفئة: " & ex.Message, "خطأ في السيرفر", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء حذف الفئة: " & ex.Message, "خطأ في السيرفر", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return False
                 End Try
             End Using
@@ -700,21 +701,21 @@ Public Class Categories
     Private Function IsValidData() As Boolean
         ' 1. التحقق من كود الفئة
         If String.IsNullOrWhiteSpace(txtCategoryCode.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال كود الفئة أولاً!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال كود الفئة أولاً!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCategoryCode.Focus()
             Return False
         End If
 
         ' 2. التحقق من اسم الفئة باللغة العربية
         If String.IsNullOrWhiteSpace(txtCategoryNameAr.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم الفئة باللغة العربية!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم الفئة باللغة العربية!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCategoryNameAr.Focus()
             Return False
         End If
 
         ' 3. التحقق من اختيار نوع الفئة من الكومبو بوكس
         If cmbType.SelectedValue Is Nothing OrElse cmbType.SelectedIndex = -1 Then
-            MessageBox.Show("عذراً، يجب اختيار نوع الفئة!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب اختيار نوع الفئة!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbType.Focus()
             Return False
         End If

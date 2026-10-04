@@ -15,7 +15,8 @@ Public NotInheritable Class ColorHelper
             If Not hex.StartsWith("#") Then hex = "#" & hex
             Try
                 Return ColorTranslator.FromHtml(hex)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ColorHelper.vb:18", __logEx)
             End Try
         End If
 
@@ -29,7 +30,8 @@ Public NotInheritable Class ColorHelper
                     Dim b As Integer = Integer.Parse(parts(2).Trim())
                     Return Color.FromArgb(r, g, b)
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ColorHelper.vb:33", __logEx)
             End Try
         End If
 

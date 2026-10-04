@@ -422,15 +422,17 @@ Namespace Services
                     report.Log($"تنبيه أثناء تهيئة الأدوار: {ex.Message}")
                 End Try
 
-                ' 2. زرع المستخدم الافتراضي في Users_TBL إن كان فارغاً
+                ' 2. زرع المستخدم الافتراضي في Users_TBL إن كان فارغاً (كلمة المرور تُخزن كتجزئة PBKDF2 وليس نصاً صريحاً)
                 Try
                     Dim seedUserTblSql As String = "
                     IF OBJECT_ID('Users_TBL', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Users_TBL)
                     BEGIN
                         INSERT INTO Users_TBL (User_Code, User_Name, User_username, User_password, RoleID, IsActive, IsDeleted)
-                        VALUES ('1', N'المدير العام', 'admin', '123', 1, 1, 0);
+                        VALUES ('1', N'المدير العام', 'admin', @SeedPasswordHash, 1, 1, 0);
                     END"
                     Using cmd As New SqlCommand(seedUserTblSql, conn)
+                        ' كلمة المرور الافتراضية "123" — تُخزن مجزأة PBKDF2
+                        cmd.Parameters.AddWithValue("@SeedPasswordHash", PasswordHasher.Hash("123"))
                         Await cmd.ExecuteNonQueryAsync().ConfigureAwait(False)
                     End Using
                 Catch ex As Exception

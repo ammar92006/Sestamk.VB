@@ -1,4 +1,4 @@
-Imports System.Drawing.Printing
+﻿Imports System.Drawing.Printing
 Imports System.Windows.Forms
 
 Namespace UC_Settings
@@ -42,7 +42,7 @@ Namespace UC_Settings
             Try
                 Notify.Toast("تم تحديث قائمة الطابعات بنجاح ✅", Notify.ToastType.Success)
             Catch
-                MessageBox.Show("✅ تم تحديث قائمة الطابعات بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تحديث قائمة الطابعات بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Try
         End Sub
 
@@ -59,7 +59,8 @@ Namespace UC_Settings
                     Try
                         Dim ps As New PrinterSettings()
                         savedThermal = ps.PrinterName
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCPrinterSettings.vb:62", __logEx)
                     End Try
                 End If
 
@@ -94,7 +95,7 @@ Namespace UC_Settings
                 tglOpenDrawer.Checked = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterOpenCashDrawer, SettingsKeys.OpenDrawerOnPayment, True)
                 txtCopies.Text = SettingsManager.GetIntSetting(SettingsKeys.PrinterCopiesCount, 1).ToString()
             Catch ex As Exception
-                MessageBox.Show("خطأ في قراءة إعدادات الطابعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في قراءة إعدادات الطابعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -148,16 +149,16 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات الطابعة والطباعة بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات الطابعة والطباعة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات الطابعة والطباعة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات الطابعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات الطابعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
         Private Sub btnTestThermal_Click(sender As Object, e As EventArgs) Handles btnTestThermal.Click
             If String.IsNullOrWhiteSpace(cmbThermalPrinter.Text) Then
-                MessageBox.Show("يرجى اختيار الطابعة الحرارية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار الطابعة الحرارية أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -175,7 +176,7 @@ Namespace UC_Settings
         Private Sub btnTestKitchen_Click(sender As Object, e As EventArgs) Handles btnTestKitchen.Click
             Dim kitchenPrn As String = cmbKitchenPrinter.Text.Trim()
             If String.IsNullOrWhiteSpace(kitchenPrn) AndAlso Not chkPrintPreview.Checked Then
-                MessageBox.Show("يرجى اختيار طابعة المطبخ أولاً أو تفعيل المعاينة قبل الطباعة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار طابعة المطبخ أولاً أو تفعيل المعاينة قبل الطباعة.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -204,20 +205,21 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم إرسال بون الاختبار لطابعة المطبخ بنجاح 🍳", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("✅ تم إرسال بون الاختبار لطابعة المطبخ بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("✅ تم إرسال بون الاختبار لطابعة المطبخ بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                 End If
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء طباعة تجربة المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء طباعة تجربة المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الطابعة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الطابعة؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 Try
                     Dim ps As New PrinterSettings()
                     SelectComboValue(cmbThermalPrinter, ps.PrinterName)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCPrinterSettings.vb:221", __logEx)
                 End Try
                 cmbKitchenPrinter.SelectedIndex = -1
                 cmbKitchenPrinter.Text = ""

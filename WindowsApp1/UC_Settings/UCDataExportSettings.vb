@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Data
 Imports System.Diagnostics
 Imports System.Drawing
@@ -160,14 +160,15 @@ Namespace UC_Settings
             Try
                 If Session.CurrentRoleID > 1 Then
                     If Not Session.HasPermission("Settings", "CanEdit") AndAlso Not Session.HasPermission("Settings", "CanView") Then
-                        MessageBox.Show($"عذراً، لا تمتلك الصلاحيات الكافية لتنفيذ عملية ({operationName})." & vbCrLf &
+                        SmartMessageBox.Show($"عذراً، لا تمتلك الصلاحيات الكافية لتنفيذ عملية ({operationName})." & vbCrLf &
                                         "هذه العملية مخصصة لمدير النظام أو للمستخدمين المصرح لهم.",
                                         "صلاحية غير كافية", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                         Return False
                     End If
                 End If
-            Catch
+            Catch __logEx As Exception
                 ' في حال حدوث استثناء بالجلسة نسمح بالعمليات لعدم تعطيل النظام في وضع التطوير
+                Logger.LogError("UCDataExportSettings.vb:169", __logEx)
             End Try
             Return True
         End Function
@@ -245,7 +246,7 @@ Namespace UC_Settings
                             Dim msg = $"✅ تم تصدير كافة بيانات النظام في ملف إكسيل كامل بنجاح!" & vbCrLf & vbCrLf &
                                       $"المسار: {targetPath}" & vbCrLf & vbCrLf &
                                       "هل ترغب في فتح المجلد المحتوي على الملف الآن؟"
-                            If MessageBox.Show(msg, "نجاح التصدير الشامل", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                            If SmartMessageBox.Show(msg, "نجاح التصدير الشامل", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
                                 Dim folder = Path.GetDirectoryName(targetPath)
                                 If Directory.Exists(folder) Then
                                     Process.Start("explorer.exe", $"/select,""{targetPath}""")
@@ -255,7 +256,7 @@ Namespace UC_Settings
                     Catch ex As OperationCanceledException
                         lblProgressStatus.Text = "تم إلغاء عملية التصدير الشامل."
                     Catch ex As Exception
-                        MessageBox.Show("حدث خطأ أثناء التصدير الشامل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("حدث خطأ أثناء التصدير الشامل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         lblProgressStatus.Text = "فشلت عملية التصدير الشامل."
                     Finally
                         SetOperationRunning(False)
@@ -270,7 +271,7 @@ Namespace UC_Settings
         Private Async Sub btnExportSingleExcel_Click(sender As Object, e As EventArgs) Handles btnExportSingleExcel.Click
             Dim entity = TryCast(cmbExportEntity.SelectedItem, EntityExportInfo)
             If entity Is Nothing Then
-                MessageBox.Show("يرجى اختيار القسم المراد تصديره أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار القسم المراد تصديره أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -300,7 +301,7 @@ Namespace UC_Settings
                         If success Then
                             Dim msg = $"✅ تم تصدير بيانات [{entity.DisplayNameAr}] إلى Excel بنجاح!" & vbCrLf & vbCrLf &
                                       "هل ترغب في فتح الملف الآن؟"
-                            Dim choice = MessageBox.Show(msg, "نجاح التصدير", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+                            Dim choice = SmartMessageBox.Show(msg, "نجاح التصدير", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                             If choice = DialogResult.Yes Then
                                 Process.Start(New ProcessStartInfo(targetPath) With {.UseShellExecute = True})
                             End If
@@ -308,7 +309,7 @@ Namespace UC_Settings
                     Catch ex As OperationCanceledException
                         lblProgressStatus.Text = "تم إلغاء عملية التصدير."
                     Catch ex As Exception
-                        MessageBox.Show("حدث خطأ أثناء تصدير Excel: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("حدث خطأ أثناء تصدير Excel: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         lblProgressStatus.Text = "فشلت عملية التصدير."
                     Finally
                         SetOperationRunning(False)
@@ -323,7 +324,7 @@ Namespace UC_Settings
         Private Async Sub btnExportSinglePdf_Click(sender As Object, e As EventArgs) Handles btnExportSinglePdf.Click
             Dim entity = TryCast(cmbExportEntity.SelectedItem, EntityExportInfo)
             If entity Is Nothing Then
-                MessageBox.Show("يرجى اختيار القسم المراد تصديره أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار القسم المراد تصديره أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -353,7 +354,7 @@ Namespace UC_Settings
                         If success Then
                             Dim msg = $"✅ تم تصدير تقرير [{entity.DisplayNameAr}] إلى PDF بنجاح وبأعلى جودة!" & vbCrLf & vbCrLf &
                                       "هل ترغب في فتح ملف الـ PDF الآن؟"
-                            Dim choice = MessageBox.Show(msg, "نجاح التصدير", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+                            Dim choice = SmartMessageBox.Show(msg, "نجاح التصدير", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                             If choice = DialogResult.Yes Then
                                 Process.Start(New ProcessStartInfo(targetPath) With {.UseShellExecute = True})
                             End If
@@ -361,7 +362,7 @@ Namespace UC_Settings
                     Catch ex As OperationCanceledException
                         lblProgressStatus.Text = "تم إلغاء عملية تصدير PDF."
                     Catch ex As Exception
-                        MessageBox.Show("حدث خطأ أثناء تصدير PDF: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("حدث خطأ أثناء تصدير PDF: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         lblProgressStatus.Text = "فشلت عملية التصدير إلى PDF."
                     Finally
                         SetOperationRunning(False)
@@ -398,7 +399,7 @@ Namespace UC_Settings
                             Dim msg = $"✅ تم تصدير جهات اتصال العملاء لحملات الواتساب بنجاح!" & vbCrLf & vbCrLf &
                                       $"الملف جاهز ويحتوي على الأرقام بالصيغة الدولية وروابط الدردشة الفورية." & vbCrLf & vbCrLf &
                                       "هل ترغب في فتح الملف الآن؟"
-                            Dim choice = MessageBox.Show(msg, "نجاح تصدير الواتساب", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
+                            Dim choice = SmartMessageBox.Show(msg, "نجاح تصدير الواتساب", MessageBoxButtons.YesNo, MessageBoxIcon.Information)
                             If choice = DialogResult.Yes Then
                                 Process.Start(New ProcessStartInfo(targetPath) With {.UseShellExecute = True})
                             End If
@@ -406,7 +407,7 @@ Namespace UC_Settings
                     Catch ex As OperationCanceledException
                         lblProgressStatus.Text = "تم إلغاء عملية تصدير الواتساب."
                     Catch ex As Exception
-                        MessageBox.Show("حدث خطأ أثناء تصدير عملاء الواتساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("حدث خطأ أثناء تصدير عملاء الواتساب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         lblProgressStatus.Text = "فشلت عملية تصدير الواتساب."
                     Finally
                         SetOperationRunning(False)
@@ -421,7 +422,7 @@ Namespace UC_Settings
         Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
             Dim entity = TryCast(cmbImportEntity.SelectedItem, EntityExportInfo)
             If entity Is Nothing Then
-                MessageBox.Show("يرجى اختيار نوع البيانات المراد تحميل نموذج لها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار نوع البيانات المراد تحميل نموذج لها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -436,11 +437,11 @@ Namespace UC_Settings
                         Dim msg = $"✅ تم حفظ النموذج الاسترشادي بنجاح!" & vbCrLf & vbCrLf &
                                   "يمكنك ملء البيانات في هذا الملف ثم استيراده مباشرة إلى النظام." & vbCrLf & vbCrLf &
                                   "هل ترغب في فتح الملف الآن لتعبئته؟"
-                        If MessageBox.Show(msg, "تم تجهيز النموذج", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                        If SmartMessageBox.Show(msg, "تم تجهيز النموذج", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
                             Process.Start(New ProcessStartInfo(sfd.FileName) With {.UseShellExecute = True})
                         End If
                     Catch ex As Exception
-                        MessageBox.Show("حدث خطأ أثناء إنشاء النموذج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("حدث خطأ أثناء إنشاء النموذج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End If
             End Using
@@ -463,7 +464,7 @@ Namespace UC_Settings
                         lblPreviewTitle.Text = $"معاينة أولية لبيانات الملف المختار ({previewDt.Rows.Count} صف معروض):"
                         lblProgressStatus.Text = $"تم تحميل معاينة الملف بنجاح ({previewDt.Rows.Count} صف)."
                     Catch ex As Exception
-                        MessageBox.Show("تعذر قراءة ملف الإكسيل المحدد: " & ex.Message, "خطأ في قراءة الملف", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("تعذر قراءة ملف الإكسيل المحدد: " & ex.Message, "خطأ في قراءة الملف", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         lblProgressStatus.Text = "فشلت قراءة ملف الإكسيل."
                     End Try
                 End If
@@ -476,7 +477,7 @@ Namespace UC_Settings
         Private Async Sub btnStartImport_Click(sender As Object, e As EventArgs) Handles btnStartImport.Click
             Dim entity = TryCast(cmbImportEntity.SelectedItem, EntityExportInfo)
             If entity Is Nothing Then
-                MessageBox.Show("يرجى اختيار نوع البيانات المراد استيرادها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار نوع البيانات المراد استيرادها.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -484,7 +485,7 @@ Namespace UC_Settings
 
             Dim filePath = txtImportFilePath.Text.Trim()
             If String.IsNullOrEmpty(filePath) OrElse Not File.Exists(filePath) Then
-                MessageBox.Show("يرجى اختيار ملف Excel صالح للاستيراد أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار ملف Excel صالح للاستيراد أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 btnSelectImportFile.Focus()
                 Return
             End If
@@ -492,7 +493,7 @@ Namespace UC_Settings
             Dim confirmMsg = $"هل أنت متأكد من بدء استيراد البيانات إلى قسم [{entity.DisplayNameAr}]؟" & vbCrLf & vbCrLf &
                              $"الملف: {Path.GetFileName(filePath)}" & vbCrLf &
                              $"تحديث المكرر: {(If(chkUpdateExisting.Checked, "مفعل (تحديث السجلات)", "غير مفعل (تخطي المكرر)"))}"
-            If MessageBox.Show(confirmMsg, "تأكيد بدء الاستيراد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+            If SmartMessageBox.Show(confirmMsg, "تأكيد بدء الاستيراد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
                 Return
             End If
 
@@ -528,7 +529,7 @@ Namespace UC_Settings
                     End If
                 End If
 
-                MessageBox.Show(sb.ToString(), "نتيجة الاستيراد", MessageBoxButtons.OK,
+                SmartMessageBox.Show(sb.ToString(), "نتيجة الاستيراد", MessageBoxButtons.OK,
                                 If(result.ErrorCount > 0, MessageBoxIcon.Warning, MessageBoxIcon.Information))
 
                 ' إذا وُجد ملف للأخطاء والصفوف المرفوضة، نقوم بسؤال المستخدم إن كان يريد فتحه لفحصه وتصحيحه
@@ -536,7 +537,7 @@ Namespace UC_Settings
                     Dim errPrompt = $"⚠️ تنبيه: تم حفظ الصفوف المرفوضة وأسباب عدم قبولها في ملف إكسيل مستقل:" & vbCrLf & vbCrLf &
                                     $"{result.ErrorFilePath}" & vbCrLf & vbCrLf &
                                     "هل ترغب في فتح ملف الأخطاء الآن لمراجعتها وتصحيحها؟"
-                    If MessageBox.Show(errPrompt, "ملف الصفوف المرفوضة", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
+                    If SmartMessageBox.Show(errPrompt, "ملف الصفوف المرفوضة", MessageBoxButtons.YesNo, MessageBoxIcon.Information) = DialogResult.Yes Then
                         Process.Start(New ProcessStartInfo(result.ErrorFilePath) With {.UseShellExecute = True})
                     End If
                 End If
@@ -546,7 +547,7 @@ Namespace UC_Settings
             Catch ex As OperationCanceledException
                 lblProgressStatus.Text = "تم إلغاء عملية الاستيراد."
             Catch ex As Exception
-                MessageBox.Show("حدث خطأ غير متوقع أثناء عملية الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ غير متوقع أثناء عملية الاستيراد: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 lblProgressStatus.Text = "فشلت عملية الاستيراد."
             Finally
                 SetOperationRunning(False)
@@ -557,7 +558,7 @@ Namespace UC_Settings
         ' 8. النقر على بطاقة الميزة القادمة (التصدير المجدول)
         ' ─────────────────────────────────────────────────────────────
         Private Sub badgeComingSoon_Click(sender As Object, e As EventArgs) Handles badgeComingSoon.Click
-            MessageBox.Show("ميزة (النسخ والتصدير التلقائي المجدول) قيد التطوير والتجهيز." & vbCrLf & vbCrLf &
+            SmartMessageBox.Show("ميزة (النسخ والتصدير التلقائي المجدول) قيد التطوير والتجهيز." & vbCrLf & vbCrLf &
                             "ستتوفر قريباً بإذن الله في التحديث القادم، وستدعم الجدولة اليومية/الأسبوعية التلقائية وحفظ النسخ على وسائط التخزين السحابية ومحركات الأقراص المحددة.",
                             "🚀 ميزة ستتوفر قريباً", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Sub

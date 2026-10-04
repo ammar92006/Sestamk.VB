@@ -188,7 +188,7 @@ Public Class FrmSelectTable
 
         ' التأكد من حالة الطاولة عند الاختيار
         If tbl.TableStatus = 2 Then
-            Dim res As DialogResult = MessageBox.Show(
+            Dim res As DialogResult = SmartMessageBox.Show(
                 $"الطاولة ({displayName}) مشغولة حالياً وبها طلب مفتوح!" & vbCrLf &
                 "هل تريد فتح الطلب الحالي لإضافة أصناف أخرى أو إتمام الحساب؟",
                 "طاولة مشغولة", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
@@ -207,7 +207,7 @@ Public Class FrmSelectTable
                           $"💰 العربون المدفوع: {depStr}" & vbCrLf & vbCrLf &
                           "هل تريد تسكين العميل الآن وبدء طلبه (مع خصم العربون تلقائياً من الفاتورة)؟"
 
-                Dim dlgRes = MessageBox.Show(msg, "تسكين حجز الطاولة", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                Dim dlgRes = SmartMessageBox.Show(msg, "تسكين حجز الطاولة", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                 If dlgRes = DialogResult.No Then Return
 
                 ' تحديث حالة الحجز إلى Seated وحالة الطاولة إلى مشغولة
@@ -232,4 +232,4 @@ Public Class FrmSelectTable
         Me.Close()
     End Sub
 
-End Class
+End Class

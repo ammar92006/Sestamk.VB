@@ -107,13 +107,13 @@ Namespace Global.WindowsApp1
 
         Private Sub OnAddItemClick(sender As Object, e As EventArgs)
             If cmbMaterials.SelectedValue Is Nothing Then
-                MessageBox.Show("يرجى اختيار خامة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار خامة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             Dim qty As Decimal = 0
             If Not Decimal.TryParse(txtQuantity.Text, qty) OrElse qty <= 0 Then
-                MessageBox.Show("يرجى إدخال كمية تالفة صحيحة أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى إدخال كمية تالفة صحيحة أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 txtQuantity.Focus()
                 Return
             End If
@@ -157,14 +157,14 @@ Namespace Global.WindowsApp1
 
         Private Async Function SaveWasteTicketAsync() As Task
             If _currentItems.Count = 0 Then
-                MessageBox.Show("لا توجد أصناف في إذن الهالك لحفظها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("لا توجد أصناف في إذن الهالك لحفظها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             Dim storeId As Integer = If(cmbStores.SelectedValue IsNot Nothing, Convert.ToInt32(cmbStores.SelectedValue), 1)
             Dim totalLoss As Decimal = _currentItems.Sum(Function(x) x.TotalCost)
 
-            Dim confirm = MessageBox.Show($"هل أنت متأكد من حفظ إذن الهالك بقيمة إجمالية {totalLoss:N2} ج وتأكيد خصم الخامات من المخزن؟", "تأكيد إذن الهالك", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            Dim confirm = SmartMessageBox.Show($"هل أنت متأكد من حفظ إذن الهالك بقيمة إجمالية {totalLoss:N2} ج وتأكيد خصم الخامات من المخزن؟", "تأكيد إذن الهالك", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
             If confirm <> DialogResult.Yes Then Return
 
             Dim wasteTypeVal As KitchenWasteType = CType(cmbWasteType.SelectedIndex + 1, KitchenWasteType)
@@ -189,17 +189,22 @@ Namespace Global.WindowsApp1
             Try
                 Dim success = Await _repo.SaveKitchenWasteAsync(wasteModel)
                 If success Then
-                    MessageBox.Show($"تم حفظ وترحيل إذن الهالك برقم: {wasteModel.WasteNumber} بنجاح، وتم تحديث أرصدة الخامات بالمخزن!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Try
+                        NotificationManager.Instance.NotifyKitchenWaste(wasteModel.WasteNumber)
+                    Catch exNotif As Exception
+                        Logger.LogError("FrmKitchenWaste.SaveWasteTicketAsync - Notification", exNotif)
+                    End Try
+                    SmartMessageBox.Show($"تم حفظ وترحيل إذن الهالك برقم: {wasteModel.WasteNumber} بنجاح، وتم تحديث أرصدة الخامات بالمخزن!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _currentItems.Clear()
                     RefreshCurrentGrid()
                     LoadMaterialsList()
                     LoadWasteHistory()
                 Else
-                    MessageBox.Show("حدث خطأ أثناء حفظ إذن الهالك!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء حفظ إذن الهالك!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
             Catch ex As Exception
                 Logger.LogError("SaveWasteTicketAsync", ex)
-                MessageBox.Show("خطأ غير متوقع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ غير متوقع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 btnSaveWasteTicket.Enabled = True
             End Try

@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Public Class FrmTreasuryTransactionsReport
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
@@ -49,7 +49,7 @@ Public Class FrmTreasuryTransactionsReport
             cmbTypeFilter.SelectedIndex = 0
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show(ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 
@@ -92,6 +92,7 @@ Public Class FrmTreasuryTransactionsReport
 
         Catch ex As Exception
 
+            Logger.LogError("FrmTreasuryTransactionsReport.vb:93", ex)
         End Try
 
     End Function
@@ -138,7 +139,7 @@ Public Class FrmTreasuryTransactionsReport
             lblTotalWithdrawals.Text = totalWithdrawals.ToString("N2")
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء جلب الحركات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء جلب الحركات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 

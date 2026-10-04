@@ -122,7 +122,7 @@ Public Class frmKitchenComments
 
             dgvComments.ClearSelection()
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل قائمة تعليقات المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل قائمة تعليقات المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -131,7 +131,7 @@ Public Class frmKitchenComments
             txtCommentCode.Text = GetNextCommentCode()
         End If
         If String.IsNullOrWhiteSpace(txtCommentText.Text) Then
-            MessageBox.Show("عذراً، يجب كتابة نص التعليق أو الملاحظة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب كتابة نص التعليق أو الملاحظة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCommentText.Focus()
             Return False
         End If
@@ -185,7 +185,7 @@ Public Class frmKitchenComments
                     LoadCommentsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -193,7 +193,7 @@ Public Class frmKitchenComments
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvComments.SelectedRows.Count = 0 OrElse Not IsValidData() Then
-            MessageBox.Show("يرجى تحديد تعليق من الجدول لتعديله!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد تعليق من الجدول لتعديله!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -215,7 +215,7 @@ Public Class frmKitchenComments
                     LoadCommentsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -223,12 +223,12 @@ Public Class frmKitchenComments
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvComments.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد تعليق من الجدول لحذفه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد تعليق من الجدول لحذفه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim commentText = dgvComments.SelectedRows(0).Cells("CommentText").Value?.ToString()
-        If MessageBox.Show($"هل أنت متأكد من حذف تعليق المطبخ [{commentText}]؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show($"هل أنت متأكد من حذف تعليق المطبخ [{commentText}]؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvComments.SelectedRows(0).Cells("CommentID").Value)
             Dim query As String = "UPDATE KitchenComments SET IsDeleted = 1 WHERE CommentID = @ID"
 
@@ -243,7 +243,7 @@ Public Class frmKitchenComments
                         LoadCommentsGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

@@ -115,7 +115,9 @@ WHERE TreasuryID=@TreasuryID
             ' معالجة النصوص الفارغة لتخزينها كـ NULL في القاعدة إن كانت فارغة
             cmd.Parameters.Add("@ReferenceNo", SqlDbType.NVarChar, 50).Value = If(String.IsNullOrEmpty(referenceNo), DBNull.Value, referenceNo)
 
-            cmd.Parameters.Add("@Amount", SqlDbType.Decimal).Value = amount
+            ' SqlClient يقصّ القيمة (لا يقرّبها) عند تحديد Scale=2 — لذلك نقرّب هنا أولاً
+            ' حتى لا يفقد المبلغ كسوراً مثل 250.555 وتصبح 250.55 بدل 250.56
+            cmd.Parameters.Add("@Amount", SqlDbType.Decimal).Value = Math.Round(amount, 2)
             cmd.Parameters("@Amount").Precision = 18
             cmd.Parameters("@Amount").Scale = 2
 

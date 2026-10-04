@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 ' ---------------------------------------------------------
 ' الكلاس المساعد 1: ProductUnitInfo
@@ -81,8 +81,9 @@ Public Class StockManager
             ' 1) لو Base64
             Try
                 Return Convert.FromBase64String(s)
-            Catch
+            Catch __logEx As Exception
                 ' مش Base64
+                Logger.LogError("StockManager.vb:84", __logEx)
             End Try
 
             ' 2) لو مسار صورة
@@ -262,7 +263,7 @@ ORDER BY
             End Using
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
         End Try
 
         Return list
@@ -282,7 +283,7 @@ ORDER BY
             End Using
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
             Return False
         End Try
     End Function
@@ -309,7 +310,7 @@ ORDER BY
             End Using
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
             Return False
         End Try
     End Function
@@ -633,7 +634,7 @@ LEFT JOIN
     '        End Using
 
     '    Catch ex As Exception
-    '        MessageBox.Show(ex.Message)
+    '        SmartMessageBox.Show(ex.Message)
     '    Finally
     '        Disconnect()
     '    End Try
@@ -724,7 +725,7 @@ LEFT JOIN
             End Using
 
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
         End Try
 
         Return stockList

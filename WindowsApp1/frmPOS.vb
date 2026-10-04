@@ -1,4 +1,4 @@
-Public Class frmPOS
+﻿Public Class frmPOS
     Private _repo As New POSRepository(DBModule.ConnectionString)
 
     Public Enum OrderType
@@ -372,7 +372,7 @@ Public Class frmPOS
         End If
 
         ' ج) لو مفيش وردية مفتوحة نطلع الـ MessageBox
-        Dim msgResult As DialogResult = MessageBox.Show(
+        Dim msgResult As DialogResult = SmartMessageBox.Show(
         "لا توجد وردية مفتوحة حالياً!" & vbCrLf & "هل تريد فتح وردية جديدة الآن للتمكن من البيع؟",
         "تنبيه الوردية الحالية",
         MessageBoxButtons.YesNo,
@@ -392,10 +392,10 @@ Public Class frmPOS
             InitializeShiftSession()
 
             If ShiftSession.HasActiveShift Then
-                MessageBox.Show("تم التعرف على الوردية الجديدة بنجاح! يمكنك البدء بالبيع الآن.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم التعرف على الوردية الجديدة بنجاح! يمكنك البدء بالبيع الآن.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Return True
             Else
-                MessageBox.Show("لم يتم فتح وردية نشطة، سيتم إغلاق شاشة البيع.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                SmartMessageBox.Show("لم يتم فتح وردية نشطة، سيتم إغلاق شاشة البيع.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 Return False
             End If
 
@@ -566,6 +566,7 @@ Public Class frmPOS
             flpCategories.ResumeLayout(True)
         Catch ex As Exception
             ' تجنب أي خطأ أثناء التهيئة الأولية
+            Logger.LogError("frmPOS.vb:567", ex)
         End Try
     End Sub
 
@@ -693,7 +694,7 @@ Public Class frmPOS
             End Try
         Catch ex As Exception
             Logger.LogError("LoadCategories", ex)
-            MessageBox.Show("حدث خطأ أثناء تحميل الأقسام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تحميل الأقسام: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -810,7 +811,7 @@ Public Class frmPOS
             End Try
         Catch ex As Exception
             Logger.LogError("LoadProducts", ex)
-            MessageBox.Show("حدث خطأ أثناء تحميل الأصناف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تحميل الأصناف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -845,6 +846,7 @@ Public Class frmPOS
             Next
             flpProducts.ResumeLayout(True)
         Catch ex As Exception
+            Logger.LogError("frmPOS.vb:848", ex)
         End Try
     End Sub
 
@@ -951,7 +953,8 @@ Public Class frmPOS
                 Dim orderItem As New OrderItemModel With {
                     .Product_ID = product.Product_ID,
                     .ProductName = product.ProductNameAr,
-                    .Quantity = 1
+                    .Quantity = 1,
+                    .TaxPercent = Convert.ToDecimal(If(product.TaxPercent.HasValue, product.TaxPercent.Value, 0))
                 }
 
                 If sizes IsNot Nothing AndAlso sizes.Count > 0 Then
@@ -979,7 +982,7 @@ Public Class frmPOS
             End If
         Catch ex As Exception
             Logger.LogError("ProductButton_Click", ex)
-            MessageBox.Show("حدث خطأ أثناء إضافة الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء إضافة الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1063,6 +1066,24 @@ Public Class frmPOS
             End If
         Next
 
+        ' 1.ب الضريبة: تُحسب لكل سطر من نسبة صنفه عند تفعيل إعداد EnableTax
+        ' (كانت ثابتة على صفر — حقل الضريبة ظهر دائماً 0.00 رغم تخزين TaxPercent للأصناف)
+        TaxAmount = 0
+        If SettingsManager.GetBoolSetting(SettingsKeys.EnableTax, True) Then
+            For Each row As DataGridViewRow In dgvInvoice.Rows
+                If row.IsNewRow OrElse row.Cells("colTotalPrice").Value Is Nothing Then Continue For
+                Dim rowTotal As Decimal = 0
+                Decimal.TryParse(row.Cells("colTotalPrice").Value.ToString(), rowTotal)
+                Dim rowTaxPercent As Decimal = 0
+                If row.Cells("colTaxPercent").Value IsNot Nothing AndAlso Not IsDBNull(row.Cells("colTaxPercent").Value) Then
+                    Decimal.TryParse(row.Cells("colTaxPercent").Value.ToString(), rowTaxPercent)
+                End If
+                If rowTotal > 0 AndAlso rowTaxPercent > 0 Then
+                    TaxAmount += Math.Round(rowTotal * rowTaxPercent / 100D, 2)
+                End If
+            Next
+        End If
+
         ' 2. عرض الصافي الأولي
         lblSubTotal.Text = itemsTotal.ToString("N2")
         Dim feeStr As String = SettingsManager.GetSettingOrDefault("DineInServiceFee", "0")
@@ -1129,7 +1150,8 @@ Public Class frmPOS
             item.Quantity,
             item.TotalPrice,
             item.Notes,
-            item.Product_ID
+            item.Product_ID,
+            item.TaxPercent
         )
 
         ' تحديث الحسابات الشاملة فور إضافة صنف
@@ -1141,26 +1163,26 @@ Public Class frmPOS
     ' =========================================================
     Private Sub btnHoldInvoice_Click(sender As Object, e As EventArgs) Handles btnHoldInvoice.Click
         If dgvInvoice.Rows.Count = 0 Then
-            MessageBox.Show("لا يمكن تعليق أو إرسال فاتورة فارغة للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن تعليق أو إرسال فاتورة فارغة للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         ' للطلبات الدليفري يجب تحديد العميل والطيار
         If CurrentOrderType = OrderType.Delivery Then
             If CurrentCustomer Is Nothing AndAlso String.IsNullOrWhiteSpace(txtCustomer.Text) Then
-                MessageBox.Show("برجاء تحديد العميل أولاً لطلبات الدليفري قبل تعليق الفاتورة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("برجاء تحديد العميل أولاً لطلبات الدليفري قبل تعليق الفاتورة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 btnSelectCustomer.Focus()
                 Return
             End If
             If Not SelectedDriverID.HasValue Then
-                MessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
         End If
 
         ' لطلبات الصالة يجب تحديد الطاولة
         If CurrentOrderType = OrderType.DineIn AndAlso Not SelectedTableID.HasValue Then
-            MessageBox.Show("برجاء اختيار الطاولة أولاً لطلب الصالة قبل إرساله للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء اختيار الطاولة أولاً لطلب الصالة قبل إرساله للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             btnDineIn.PerformClick()
             Return
         End If
@@ -1177,7 +1199,8 @@ Public Class frmPOS
                     .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                     .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                     .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
-                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), ""),
+                    .TaxPercent = Convert.ToDecimal(If(row.Cells("colTaxPercent").Value IsNot Nothing AndAlso Not IsDBNull(row.Cells("colTaxPercent").Value), row.Cells("colTaxPercent").Value, 0))
                 })
             End If
         Next
@@ -1326,12 +1349,29 @@ Public Class frmPOS
             End If
 
             If CurrentOrderType = OrderType.DineIn Then
-                MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وتسكينه على ({SelectedTableName}) بنجاح!" & vbCrLf & "سيظل الحساب معلقاً حتى انتهاء العميل من تناول وجبته وسداد الفاتورة.", "إرسال للمطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وتسكينه على ({SelectedTableName}) بنجاح!" & vbCrLf & "سيظل الحساب معلقاً حتى انتهاء العميل من تناول وجبته وسداد الفاتورة.", "إرسال للمطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
             ElseIf CurrentOrderType = OrderType.Delivery Then
-                MessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وإسناده للطيار ({SelectedDriverName}) بنجاح!" & vbCrLf & "يمكنك استرجاع الفاتورة وسدادها من المعلقة [F7] عند عودة الطيار بالتحصيل.", "إرسال دليفري", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"تم إرسال الطلب للمطبخ (KOT & KDS) وإسناده للطيار ({SelectedDriverName}) بنجاح!" & vbCrLf & "يمكنك استرجاع الفاتورة وسدادها من المعلقة [F7] عند عودة الطيار بالتحصيل.", "إرسال دليفري", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
-                MessageBox.Show("تم إرسال الطلب للمطبخ (KOT & KDS) بنجاح!" & vbCrLf & "يمكنك استرجاع الفاتورة وسدادها من المعلقة [F7] فور استلام العميل للطلب.", "إرسال تيك أوي", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم إرسال الطلب للمطبخ (KOT & KDS) بنجاح!" & vbCrLf & "يمكنك استرجاع الفاتورة وسدادها من المعلقة [F7] فور استلام العميل للطلب.", "إرسال تيك أوي", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
+
+            Try
+                Dim holdDesc As String = If(CurrentOrderType = OrderType.DineIn, $"طاولة: {SelectedTableName}", If(CurrentOrderType = OrderType.Delivery, $"دليفري: {SelectedDriverName}", "تيك أوي"))
+                NotificationManager.Instance.CreateNotification(
+                    NotificationManager.NotificationType.Order,
+                    "طلب معلق / تجهيز ⏳",
+                    $"تم تعليق طلب #{pendingInv.PendingID} ({holdDesc}) بقيمة {pendingInv.TotalAmount:N2} ج.م",
+                    NotificationManager.NotificationPriority.Normal,
+                    Nothing,
+                    "cart",
+                    True,
+                    "OpenOrder",
+                    pendingInv.PendingID.ToString()
+                )
+            Catch exHoldNotif As Exception
+                Logger.LogError("btnHoldInvoice_Click - Notification", exHoldNotif)
+            End Try
 
             ResetPOSForm()
             UpdateNextInvoiceNumber() ' تغيير وتحديث رقم الفاتورة القادمة
@@ -1427,13 +1467,14 @@ Public Class frmPOS
                                             itm.Quantity,
                                             itm.TotalPrice,
                                             itm.Notes,
-                                            itm.ProductID
+                                            itm.ProductID,
+                                            itm.TaxPercent
                                         )
                                     Next
                                 End If
                             Catch ex As Exception
                                 Logger.LogError("btnPendingInvoices_Click - Deserializing InvoiceJSON", ex)
-                                MessageBox.Show("حدث خطأ أثناء قراءة أصناف الفاتورة المعلقة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                SmartMessageBox.Show("حدث خطأ أثناء قراءة أصناف الفاتورة المعلقة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                             End Try
                         Else
                             ' توافقية مع الفواتير المعلقة القديمة بنظام الـ Delimiter
@@ -1450,7 +1491,8 @@ Public Class frmPOS
                                         Convert.ToInt32(parts(5)),
                                         Convert.ToDecimal(parts(6)),
                                         parts(7),
-                                        Convert.ToInt32(parts(0))
+                                        Convert.ToInt32(parts(0)),
+                                        0D
                                     )
                                 End If
                             Next
@@ -1523,26 +1565,26 @@ Public Class frmPOS
     Private Async Sub btnPay_Click(sender As Object, e As EventArgs) Handles btnPay.Click
 
         If dgvInvoice.Rows.Count = 0 Then
-            MessageBox.Show("لا يمكن إتمام عملية الدفع بفاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن إتمام عملية الدفع بفاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         ' التحقق من طلبات الصالة
         If CurrentOrderType = OrderType.DineIn AndAlso Not SelectedTableID.HasValue Then
-            MessageBox.Show("برجاء تحديد رقم الطاولة أولاً لطلبات الصالة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء تحديد رقم الطاولة أولاً لطلبات الصالة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         ' التحقق من طلبات الدليفري
         If CurrentOrderType = OrderType.Delivery Then
             If CurrentCustomer Is Nothing Then
-                MessageBox.Show("برجاء تحديد بيانات العميل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("برجاء تحديد بيانات العميل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 btnSelectCustomer.Focus()
                 Return
             End If
 
             If Not SelectedDriverID.HasValue Then
-                MessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("برجاء تحديد طيار التوصيل أولاً لطلبات الدليفري!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
         End If
@@ -1647,6 +1689,13 @@ Public Class frmPOS
                     invoice.InvoiceNumber = savedInvNum
                     Dim custNameStr As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, If(Not String.IsNullOrWhiteSpace(txtCustomer.Text) AndAlso txtCustomer.Text.Trim() <> "عميل نقدي", txtCustomer.Text.Trim(), "عميل نقدي"))
 
+                    ' إرسال إشعار طلب جديد للنظام
+                    Try
+                        NotificationManager.Instance.NotifyNewOrder(savedInvNum, invoice.NetTotal)
+                    Catch exNotif As Exception
+                        Logger.LogError("btnPay_Click - NotificationManager.NotifyNewOrder", exNotif)
+                    End Try
+
                     ' 1. الطباعة التلقائية لإيصال العميل (إذا كانت مفعلة في الإعدادات)
                     Dim autoPrintReceipt As Boolean = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, True)
                     If autoPrintReceipt Then
@@ -1654,6 +1703,7 @@ Public Class frmPOS
                             RestaurantPrintManager.PrintCustomerReceipt(invoice, custNameStr, SelectedTableName, SelectedDriverName)
                         Catch printEx As Exception
                             Logger.LogError("btnPay_Click - PrintCustomerReceipt", printEx)
+                            NotificationManager.Instance.NotifyPrintFailure("طابعة الإيصالات", printEx.Message)
                         End Try
                     End If
 
@@ -1732,6 +1782,7 @@ Public Class frmPOS
                                 )
                             Catch exKot As Exception
                                 Logger.LogError("btnPay_Click - PrintKitchenTicket", exKot)
+                                NotificationManager.Instance.NotifyPrintFailure("طابعة المطبخ", exKot.Message)
                             End Try
                         End If
 
@@ -1768,14 +1819,14 @@ Public Class frmPOS
                     _lastSavedTableName = SelectedTableName
                     _lastSavedDriverName = SelectedDriverName
 
-                    MessageBox.Show("تم حفظ وطباعة الفاتورة بنجاح برقم: " & savedInvNum, "حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ وطباعة الفاتورة بنجاح برقم: " & savedInvNum, "حفظ الفاتورة", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                     ResetPOSForm()
                     UpdateNextInvoiceNumber() ' تحديث رقم الفاتورة القادمة تلقائياً
 
                 Catch ex As Exception
                     Logger.LogError("btnPay_Click - SaveInvoiceAsync", ex)
-                    MessageBox.Show("حدث خطأ أثناء حفظ الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء حفظ الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Finally
                     btnPay.Enabled = True
                 End Try
@@ -1927,7 +1978,7 @@ Public Class frmPOS
 
             CalculatePOSGrandTotal()
         Else
-            MessageBox.Show("برجاء اختيار الصنف المراد حذفه من جدول الفاتورة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء اختيار الصنف المراد حذفه من جدول الفاتورة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End If
     End Sub
 
@@ -2100,7 +2151,7 @@ Public Class frmPOS
                     CurrentReservationID = frmTables.ActiveReservation.ReservationID
                     txtCustomer.Text = frmTables.ActiveReservation.CustomerName
                     lblOrderTypeStatus.Text = $"نوع الطلب: صالة | {SelectedTableName} (حجز: {frmTables.ActiveReservation.CustomerName} - عربون: {CurrentReservationDeposit:N2} {CurrencySymbol})"
-                    MessageBox.Show($"تم تسكين العميل ({frmTables.ActiveReservation.CustomerName}) بنجاح!" & vbCrLf &
+                    SmartMessageBox.Show($"تم تسكين العميل ({frmTables.ActiveReservation.CustomerName}) بنجاح!" & vbCrLf &
                                     $"سيتم خصم مبلغ العربون ({CurrentReservationDeposit:N2} {CurrencySymbol}) تلقائياً من إجمالي الفاتورة.",
                                     "تسكين حجز الطاولة", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
@@ -2151,7 +2202,8 @@ Public Class frmPOS
                                     itm.Quantity,
                                     itm.TotalPrice,
                                     itm.Notes,
-                                    itm.ProductID
+                                    itm.ProductID,
+                                    itm.TaxPercent
                                 )
                             Next
                         End If
@@ -2167,7 +2219,8 @@ Public Class frmPOS
                                     Convert.ToInt32(parts(5)),
                                     Convert.ToDecimal(parts(6)),
                                     parts(7),
-                                    Convert.ToInt32(parts(0))
+                                    Convert.ToInt32(parts(0)),
+                                    0D
                                 )
                             End If
                         Next
@@ -2176,11 +2229,11 @@ Public Class frmPOS
 
                 CalculatePOSGrandTotal()
                 SnapshotRecalledItems()
-                MessageBox.Show($"تم استرجاع طلب الطاولة [{SelectedTableName}] بنجاح، يمكنك تعديل الأصناف أو إتمام المحاسبة.", "طلب طاولة مفتوح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"تم استرجاع طلب الطاولة [{SelectedTableName}] بنجاح، يمكنك تعديل الأصناف أو إتمام المحاسبة.", "طلب طاولة مفتوح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
             Logger.LogError("LoadPendingInvoiceForTable", ex)
-            MessageBox.Show("حدث خطأ أثناء استرجاع طلب الطاولة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء استرجاع طلب الطاولة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -2189,7 +2242,7 @@ Public Class frmPOS
     ' =========================================================
     Public Sub TransferCurrentTable()
         If Not SelectedTableID.HasValue Then
-            MessageBox.Show("برجاء تحديد طاولة صالة أولاً لنقلها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء تحديد طاولة صالة أولاً لنقلها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -2203,7 +2256,7 @@ Public Class frmPOS
             frmTarget.Text = "اختر الطاولة الفارغة المراد نقل الطلب إليها"
             If frmTarget.ShowDialog() = DialogResult.OK Then
                 If frmTarget.IsOccupiedSelected Then
-                    MessageBox.Show("لا يمكن النقل إلى طاولة مشغولة بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("لا يمكن النقل إلى طاولة مشغولة بالفعل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return
                 End If
 
@@ -2215,9 +2268,9 @@ Public Class frmPOS
                     SelectedTableID = targetTableID
                     SelectedTableName = targetTableName
                     lblOrderTypeStatus.Text = "نوع الطلب: صالة | الطاولة: " & SelectedTableName
-                    MessageBox.Show($"تم نقل الطلب بنجاح من [{oldName}] إلى [{targetTableName}]", "نجاح النقل", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show($"تم نقل الطلب بنجاح من [{oldName}] إلى [{targetTableName}]", "نجاح النقل", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
-                    MessageBox.Show("حدث خطأ أثناء تحديث بيانات الطاولة في قاعدة البيانات.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء تحديث بيانات الطاولة في قاعدة البيانات.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
             End If
         End Using
@@ -2228,7 +2281,7 @@ Public Class frmPOS
     ' =========================================================
     Public Sub PrintCurrentKOT()
         If dgvInvoice.Rows.Count = 0 Then
-            MessageBox.Show("لا توجد أصناف في الفاتورة لإرسالها للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا توجد أصناف في الفاتورة لإرسالها للمطبخ!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -2243,7 +2296,8 @@ Public Class frmPOS
                     .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                     .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                     .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
-                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), ""),
+                    .TaxPercent = Convert.ToDecimal(If(row.Cells("colTaxPercent").Value IsNot Nothing AndAlso Not IsDBNull(row.Cells("colTaxPercent").Value), row.Cells("colTaxPercent").Value, 0))
                 })
             End If
         Next
@@ -2263,10 +2317,10 @@ Public Class frmPOS
             End If
 
             RestaurantPrintManager.PrintKitchenTicket("طلب يدوي", kotTypeDesc, SelectedTableName, staffName, itemsList, ticketTitle:=title)
-            MessageBox.Show("تمت طباعة بون المطبخ (KOT) بنجاح!", "طباعة المطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تمت طباعة بون المطبخ (KOT) بنجاح!", "طباعة المطبخ", MessageBoxButtons.OK, MessageBoxIcon.Information)
         Catch ex As Exception
             Logger.LogError("PrintCurrentKOT", ex)
-            MessageBox.Show("حدث خطأ أثناء طباعة بون المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء طباعة بون المطبخ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -2277,9 +2331,9 @@ Public Class frmPOS
         If _lastSavedInvoice IsNot Nothing Then
             Try
                 RestaurantPrintManager.PrintCustomerReceipt(_lastSavedInvoice, _lastSavedCustomerName, _lastSavedTableName, _lastSavedDriverName)
-                MessageBox.Show("تمت إعادة طباعة الفاتورة بنجاح.", "إعادة الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تمت إعادة طباعة الفاتورة بنجاح.", "إعادة الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Catch ex As Exception
-                MessageBox.Show("حدث خطأ أثناء إعادة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ أثناء إعادة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         Else
             Dim lastInvNum As String = _repo.GetLastSavedInvoiceNumber()
@@ -2287,11 +2341,11 @@ Public Class frmPOS
                 Dim inv = _repo.GetInvoiceByNumber(lastInvNum)
                 If inv IsNot Nothing Then
                     RestaurantPrintManager.PrintCustomerReceipt(inv, "عميل نقدي", "", "")
-                    MessageBox.Show("تمت إعادة طباعة الفاتورة رقم " & lastInvNum & " بنجاح.", "إعادة الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت إعادة طباعة الفاتورة رقم " & lastInvNum & " بنجاح.", "إعادة الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Return
                 End If
             End If
-            MessageBox.Show("لا توجد فواتير مسجلة في الجلسة لإعادة طباعتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("لا توجد فواتير مسجلة في الجلسة لإعادة طباعتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End If
     End Sub
 
@@ -2336,7 +2390,7 @@ Public Class frmPOS
 
     Public Async Sub OpenSplitBill()
         If dgvInvoice.Rows.Count = 0 Then
-            MessageBox.Show("لا يمكن تقسيم فاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن تقسيم فاتورة فارغة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -2445,11 +2499,11 @@ Public Class frmPOS
                     _lastSavedTableName = SelectedTableName
                     _lastSavedDriverName = SelectedDriverName
 
-                    MessageBox.Show($"تم سداد الفاتورة المقسمة بنجاح وحفظها برقم: {savedInvNum}", "نجاح السداد", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show($"تم سداد الفاتورة المقسمة بنجاح وحفظها برقم: {savedInvNum}", "نجاح السداد", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     ResetPOSForm()
                 Catch ex As Exception
                     Logger.LogError("OpenSplitBill - SaveInvoiceAsync", ex)
-                    MessageBox.Show("حدث خطأ أثناء حفظ الفاتورة المقسمة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء حفظ الفاتورة المقسمة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Finally
                     btnPay.Enabled = True
                 End Try

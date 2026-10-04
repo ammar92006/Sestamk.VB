@@ -65,7 +65,7 @@ Public Class FrmCustomers
             cmbAreas.ValueMember = "AreaID"
             cmbAreas.SelectedIndex = -1
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تحميل المناطق: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل المناطق: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -87,21 +87,21 @@ Public Class FrmCustomers
 
         ' أ) اسم العميل
         If String.IsNullOrWhiteSpace(txtCustomerName.Text) Then
-            MessageBox.Show("برجاء إدخال اسم العميل!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء إدخال اسم العميل!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCustomerName.Focus()
             Return False
         End If
 
         ' ب) رقم الموبايل
         If String.IsNullOrWhiteSpace(txtPhone1.Text) Then
-            MessageBox.Show("برجاء إدخال رقم الهاتف الرئيسي!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء إدخال رقم الهاتف الرئيسي!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtPhone1.Focus()
             Return False
         End If
 
         ' ج) التحقق من تكرار رقم الموبايل
         If _repo.IsPhoneExists(txtPhone1.Text, _selectedCustomerID) Then
-            MessageBox.Show("رقم الهاتف هذا مسجل لعميل آخر بالفعل!", "تنبيه تكرار", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("رقم الهاتف هذا مسجل لعميل آخر بالفعل!", "تنبيه تكرار", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtPhone1.Focus()
             Return False
         End If
@@ -109,7 +109,7 @@ Public Class FrmCustomers
         ' د) نسبة الخصم
         Dim discount As Double
         If Not String.IsNullOrWhiteSpace(txtDiscountPercent.Text) AndAlso Not Double.TryParse(txtDiscountPercent.Text, discount) Then
-            MessageBox.Show("برجاء إدخال نسبة خصم صحيحة!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء إدخال نسبة خصم صحيحة!", "تنبيه validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtDiscountPercent.Focus()
             Return False
         End If
@@ -138,11 +138,11 @@ Public Class FrmCustomers
         }
 
         If _repo.AddCustomer(cust) Then
-            MessageBox.Show("تمت إضافة العميل بنجاح!", "حفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تمت إضافة العميل بنجاح!", "حفظ", MessageBoxButtons.OK, MessageBoxIcon.Information)
             RefreshData()
             ClearFields()
         Else
-            MessageBox.Show("حدث خطأ أثناء حفظ العميل!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء حفظ العميل!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 
@@ -151,7 +151,7 @@ Public Class FrmCustomers
     ' =========================================================
     Private Sub btnUpdate_Click(sender As Object, e As EventArgs) Handles btnUpdate.Click
         If _selectedCustomerID = 0 Then
-            MessageBox.Show("برجاء تحديد عميل من الجدول أولاً للتعديل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء تحديد عميل من الجدول أولاً للتعديل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -173,11 +173,11 @@ Public Class FrmCustomers
         }
 
         If _repo.UpdateCustomer(cust) Then
-            MessageBox.Show("تم تعديل بيانات العميل بنجاح!", "تحديث", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم تعديل بيانات العميل بنجاح!", "تحديث", MessageBoxButtons.OK, MessageBoxIcon.Information)
             RefreshData()
             ClearFields()
         Else
-            MessageBox.Show("حدث خطأ أثناء تعديل بيانات العميل!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء تعديل بيانات العميل!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 
@@ -186,18 +186,18 @@ Public Class FrmCustomers
     ' =========================================================
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If _selectedCustomerID = 0 Then
-            MessageBox.Show("برجاء تحديد العميل المراد حذفه من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء تحديد العميل المراد حذفه من الجدول أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
-        Dim confirm = MessageBox.Show("هل أنت تأكد من نقل هذا العميل لسلة المحذوفات؟", "تأكيد الحذف الناعم", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        Dim confirm = SmartMessageBox.Show("هل أنت تأكد من نقل هذا العميل لسلة المحذوفات؟", "تأكيد الحذف الناعم", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If confirm = DialogResult.Yes Then
             If _repo.SoftDeleteCustomer(_selectedCustomerID) Then
-                MessageBox.Show("تم حذف العميل بنجاح!", "تم الحذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم حذف العميل بنجاح!", "تم الحذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 RefreshData()
                 ClearFields()
             Else
-                MessageBox.Show("حدث خطأ أثناء تنفيذ عملية الحذف!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ أثناء تنفيذ عملية الحذف!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
         End If
     End Sub

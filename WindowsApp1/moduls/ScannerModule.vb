@@ -91,7 +91,8 @@ Module ScannerModule
             End If
 
             buffer = ""
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("ScannerModule.vb:94", __logEx)
         End Try
     End Sub
 

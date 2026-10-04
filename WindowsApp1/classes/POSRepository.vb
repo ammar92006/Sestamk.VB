@@ -753,15 +753,12 @@ ORDER BY ShiftID DESC;"
                     End Using
 
                     ' خصم المخزون حسب الريسيبي إن كان هناك مخزن محدد وميزة خصم الخامات مفعلة
+                    ' أمان محاسبي: فشل الخصم يلغي الفاتورة بالكامل (Rollback) — لا يُسمح ببيع بدون خصم مخزون صامت
                     If inv.StoreID.HasValue AndAlso inv.StoreID.Value > 0 Then
-                        Try
-                            Dim shouldDeduct As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True)
-                            If shouldDeduct Then
-                                InventoryDeductionManager.DeductItemRecipe(con, trans, inv.StoreID.Value, dt.ProductID, Nothing, Nothing, dt.Quantity, generatedNumber)
-                            End If
-                        Catch exStock As Exception
-                            Debug.WriteLine("Inventory deduction error: " & exStock.Message)
-                        End Try
+                        Dim shouldDeduct As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True)
+                        If shouldDeduct Then
+                            InventoryDeductionManager.DeductItemRecipe(con, trans, inv.StoreID.Value, dt.ProductID, Nothing, Nothing, dt.Quantity, generatedNumber)
+                        End If
                     End If
                 Next
 

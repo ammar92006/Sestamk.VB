@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Windows.Forms
@@ -63,11 +63,12 @@ Public Class RestaurantPrintManager
                     Try
                         Dim ps As New PrinterSettings()
                         prn = ps.PrinterName
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("RestaurantPrintManager.vb:66", __logEx)
                     End Try
                 End If
                 If String.IsNullOrWhiteSpace(prn) Then
-                    MessageBox.Show("لم يتم تحديد طابعة فواتير في الإعدادات!", "تنبيه الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("لم يتم تحديد طابعة فواتير في الإعدادات!", "تنبيه الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     Return
                 End If
             End If
@@ -115,16 +116,17 @@ Public Class RestaurantPrintManager
             If copiesVal < 1 Then copiesVal = 1
             Try
                 pd.PrinterSettings.Copies = CShort(copiesVal)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("RestaurantPrintManager.vb:119", __logEx)
             End Try
 
             AddHandler pd.PrintPage, Sub(sender As Object, e As PrintPageEventArgs)
                                          Dim g As Graphics = e.Graphics
                                          Dim pageWidth As Integer = e.PageBounds.Width
                                          If is58mm Then
-                                             If pageWidth > 205 Then pageWidth = 195
+                                             If pageWidth > 220 Then pageWidth = 200
                                          Else
-                                             If pageWidth > 300 Then pageWidth = 285
+                                             If pageWidth > 310 Then pageWidth = 298
                                          End If
 
                                          If receiptStyle.Equals("Grid", StringComparison.OrdinalIgnoreCase) Then
@@ -156,7 +158,7 @@ Public Class RestaurantPrintManager
             End If
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء طباعة فاتورة العميل: " & ex.Message, "خطأ طباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء طباعة فاتورة العميل: " & ex.Message, "خطأ طباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -203,24 +205,25 @@ Public Class RestaurantPrintManager
                     g.DrawImage(logoImg, New Rectangle(logoX, yPos, logoW, logoH))
                     yPos += logoH + 6
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("RestaurantPrintManager.vb:208", __logEx)
             End Try
         End If
 
         Using fontTitle As New Font("Segoe UI", If(isSmallPaper, 11.5!, 13.0!), FontStyle.Bold),
-              fontSub As New Font("Segoe UI", If(isSmallPaper, 7.5!, 8.0!), FontStyle.Regular),
-              fontBold As New Font("Segoe UI", baseFontSize + 0.5!, FontStyle.Bold),
-              fontRegular As New Font("Segoe UI", baseFontSize, FontStyle.Regular),
-              fontHeader As New Font("Segoe UI", If(isSmallPaper, 8.0!, 9.0!), FontStyle.Bold),
-              fontRow As New Font("Segoe UI", baseFontSize, FontStyle.Regular),
-              fontRowBold As New Font("Segoe UI", baseFontSize, FontStyle.Bold),
+              fontSub As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Regular),
+              fontBold As New Font("Segoe UI", baseFontSize + 1.0!, FontStyle.Bold),
+              fontRegular As New Font("Segoe UI", baseFontSize + 0.5!, FontStyle.Regular),
+              fontHeader As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.5!), FontStyle.Bold),
+              fontRow As New Font("Segoe UI", baseFontSize + 0.5!, FontStyle.Regular),
+              fontRowBold As New Font("Segoe UI", baseFontSize + 0.5!, FontStyle.Bold),
               fontGrand As New Font("Segoe UI", If(isSmallPaper, 10.5!, 11.5!), FontStyle.Bold),
-              fontAddon As New Font("Segoe UI", 7.5!, FontStyle.Regular),
-              fontNote As New Font("Segoe UI", 7.5!, FontStyle.Bold),
+              fontAddon As New Font("Segoe UI", If(isSmallPaper, 7.5!, 8.0!), FontStyle.Regular),
+              fontNote As New Font("Segoe UI", If(isSmallPaper, 7.5!, 8.5!), FontStyle.Bold),
               sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.NoWrap},
-              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
               sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center},
-              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
               borderPen As New Pen(Color.Black, 2.0!),
               gridPen As New Pen(Color.Black, 1.8!),
               boldPen As New Pen(Color.Black, 2.2!),
@@ -261,17 +264,17 @@ Public Class RestaurantPrintManager
             ' 3. صندوق بيانات الفاتورة الشبكي (Meta Box)
             Dim metaX As Integer = 4
             Dim metaW As Integer = pageWidth - 8
-            Dim colW1 As Integer = CInt(metaW * 0.58) ' عمود نوع الطلب / رقم الفاتورة (58% لمنع قص النصوص)
-            Dim colW2 As Integer = metaW - colW1     ' عمود التاريخ / العميل (42%)
-            Dim metaRowH As Integer = 22
+            Dim colW1 As Integer = CInt(metaW * 0.53) ' عمود نوع الطلب / رقم الفاتورة
+            Dim colW2 As Integer = metaW - colW1     ' عمود التاريخ / العميل (130px كافية لاسم العميل والتاريخ)
+            Dim metaRowH As Integer = 26
 
             ' الصف الأول: رقم الفاتورة + التاريخ
             Dim metaY1 As Integer = yPos
             g.FillRectangle(metaBgBrush, metaX, metaY1, metaW, metaRowH)
             g.DrawRectangle(gridPen, metaX, metaY1, metaW, metaRowH)
             g.DrawLine(gridPen, metaX + colW2, metaY1, metaX + colW2, metaY1 + metaRowH)
-            g.DrawString("رقم الفاتورة: " & inv.InvoiceNumber, fontBold, Brushes.Black, New RectangleF(metaX + colW2 + 4, metaY1, colW1 - 8, metaRowH), sfRight)
-            g.DrawString(inv.InvoiceDate.ToString("yyyy/MM/dd hh:mm tt"), fontSub, Brushes.Black, New RectangleF(metaX + 2, metaY1, colW2 - 4, metaRowH), sfCenter)
+            g.DrawString("فاتورة: #" & inv.InvoiceNumber, fontBold, Brushes.Black, New RectangleF(metaX + colW2 + 4, metaY1, colW1 - 8, metaRowH), sfRight)
+            g.DrawString(inv.InvoiceDate.ToString("yyyy/MM/dd HH:mm"), fontSub, Brushes.Black, New RectangleF(metaX + 2, metaY1, colW2 - 4, metaRowH), sfCenter)
             yPos += metaRowH
 
             ' بيان نوع الطلب بدون عبارات زائدة تسبب القص
@@ -298,7 +301,10 @@ Public Class RestaurantPrintManager
             Else
                 clientOrUser = "عميل نقدي"
             End If
-            g.DrawString(clientOrUser, fontRegular, Brushes.Black, New RectangleF(metaX + 2, metaY2, colW2 - 4, metaRowH), sfRight)
+                        Using fontClient As New Font("Segoe UI", If(g.MeasureString(clientOrUser, fontSub).Width > (colW2 - 8), 7.5!, 8.5!), FontStyle.Regular),
+                  sfClient As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft Or StringFormatFlags.NoWrap, .Trimming = StringTrimming.EllipsisCharacter}
+                g.DrawString(clientOrUser, fontClient, Brushes.Black, New RectangleF(metaX + 2, metaY2, colW2 - 4, metaRowH), sfClient)
+            End Using
             yPos += metaRowH + 6
 
             ' 4. جدول المنتجات الشبكي (Excel Grid Table)
@@ -340,12 +346,25 @@ Public Class RestaurantPrintManager
                 Dim hasAddons As Boolean = Not String.IsNullOrWhiteSpace(det.AddonsText) AndAlso det.AddonsText <> "-"
                 Dim hasNotes As Boolean = Not String.IsNullOrWhiteSpace(det.Notes)
 
-                ' قياس ارتفاع النص المطلوب لاسم الصنف
-                Dim measuredSize = g.MeasureString(itemName, fontRowBold, colNameW - 8)
-                Dim baseTextH As Integer = Math.Max(20, CInt(measuredSize.Height) + 2)
+                ' قياس ارتفاع النص المطلوب لاسم الصنف والإضافات والملاحظات ديناميكياً
+                Dim measuredSize = g.MeasureString(itemName, fontRowBold, colNameW - 8, sfItemWrap)
+                Dim baseTextH As Integer = Math.Max(20, CInt(Math.Ceiling(measuredSize.Height)) + 2)
                 Dim rowH As Integer = baseTextH
-                If hasAddons Then rowH += 15
-                If hasNotes Then rowH += 15
+
+                Dim addonH As Integer = 0
+                If hasAddons Then
+                    Dim addonSize = g.MeasureString("+" & det.AddonsText, fontAddon, colNameW - 8, sfItemWrap)
+                    addonH = Math.Max(16, CInt(Math.Ceiling(addonSize.Height)) + 2)
+                    rowH += addonH
+                End If
+
+                Dim noteH As Integer = 0
+                If hasNotes Then
+                    Dim noteSize = g.MeasureString("*" & det.Notes, fontNote, colNameW - 8, sfItemWrap)
+                    noteH = Math.Max(16, CInt(Math.Ceiling(noteSize.Height)) + 2)
+                    rowH += noteH
+                End If
+
                 rowH += 4 ' هوامش علوية وسفلية مريحة
 
                 ' رسم تفاصيل الصنف
@@ -354,13 +373,13 @@ Public Class RestaurantPrintManager
                 textY += baseTextH
 
                 If hasAddons Then
-                    g.DrawString("+" & det.AddonsText, fontAddon, Brushes.DarkSlateGray, New RectangleF(xName + 2, textY, colNameW - 6, 14), sfItemWrap)
-                    textY += 14
+                    g.DrawString("+" & det.AddonsText, fontAddon, Brushes.DarkSlateGray, New RectangleF(xName + 2, textY, colNameW - 6, addonH), sfItemWrap)
+                    textY += addonH
                 End If
 
                 If hasNotes Then
-                    g.DrawString("*" & det.Notes, fontNote, Brushes.DarkRed, New RectangleF(xName + 2, textY, colNameW - 6, 14), sfItemWrap)
-                    textY += 14
+                    g.DrawString("*" & det.Notes, fontNote, Brushes.DarkRed, New RectangleF(xName + 2, textY, colNameW - 6, noteH), sfItemWrap)
+                    textY += noteH
                 End If
 
                 ' رسم الكمية والسعر والإجمالي
@@ -382,9 +401,9 @@ Public Class RestaurantPrintManager
 
             yPos += 6
 
-            ' 5. جدول ملخص الإجماليات الشبكي (Excel Totals Box)
-            Dim totalRowH As Integer = 22
-            Dim totalValW As Integer = If(isSmallPaper, 68, 88)
+            ' 5. جدول ملخص الإجماليات الشبكي (Excel Totals Box) - [FIX] توزيع نسبي
+            Dim totalRowH As Integer = 24
+            Dim totalValW As Integer = CInt(tableW * If(isSmallPaper, 0.30, 0.32))
             Dim totalLabelW As Integer = tableW - totalValW
 
             Dim drawGridSummaryRow = Sub(label As String, val As String, isHighlight As Boolean)
@@ -510,17 +529,18 @@ Public Class RestaurantPrintManager
                     g.DrawImage(logoImg, New Rectangle(logoX, yPos, logoW, logoH))
                     yPos += logoH + 6
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("RestaurantPrintManager.vb:532", __logEx)
             End Try
         End If
 
         Using fontTitle As New Font("Segoe UI", 13.0!, FontStyle.Bold),
-              fontSub As New Font("Segoe UI", 8.5!, FontStyle.Regular),
-              fontBold As New Font("Segoe UI", baseFontSize + 0.5!, FontStyle.Bold),
-              fontRegular As New Font("Segoe UI", baseFontSize, FontStyle.Regular),
-              sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center},
-              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
-              sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near}
+              fontSub As New Font("Segoe UI", 9.5!, FontStyle.Regular),
+              fontBold As New Font("Segoe UI", baseFontSize + 1.0!, FontStyle.Bold),
+              fontRegular As New Font("Segoe UI", baseFontSize + 0.5!, FontStyle.Regular),
+              sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center}
 
             ' اسم المحل
             g.DrawString(shopName, fontTitle, Brushes.Black, New RectangleF(0, yPos, pageWidth, 26), sfCenter)
@@ -581,11 +601,17 @@ Public Class RestaurantPrintManager
             DrawDashedLine(g, yPos, pageWidth)
             yPos += 6
 
-            ' 3. جدول الأصناف (هيدر)
-            g.DrawString("الصنف", fontBold, Brushes.Black, New RectangleF(130, yPos, pageWidth - 130, 18), sfRight)
-            g.DrawString("الكمية", fontBold, Brushes.Black, New RectangleF(75, yPos, 50, 18), sfCenter)
-            g.DrawString("الإجمالي", fontBold, Brushes.Black, New RectangleF(0, yPos, 70, 18), sfLeft)
-            yPos += 20
+            ' 3. جدول الأصناف (هيدر) - [FIX] توزيع نسبي للأعمدة بدلاً من قيم مطلقة
+            Dim colTotalW_c As Integer = CInt(pageWidth * 0.24)
+            Dim colQtyW_c As Integer = CInt(pageWidth * 0.18)
+            Dim colNameW_c As Integer = pageWidth - colTotalW_c - colQtyW_c
+            Dim colQtyX_c As Integer = colTotalW_c
+            Dim colNameX_c As Integer = colTotalW_c + colQtyW_c
+
+            g.DrawString("الصنف", fontBold, Brushes.Black, New RectangleF(colNameX_c, yPos, colNameW_c, 20), sfRight)
+            g.DrawString("الكمية", fontBold, Brushes.Black, New RectangleF(colQtyX_c, yPos, colQtyW_c, 20), sfCenter)
+            g.DrawString("الإجمالي", fontBold, Brushes.Black, New RectangleF(0, yPos, colTotalW_c, 20), sfLeft)
+            yPos += 22
             DrawSolidLine(g, yPos, pageWidth)
             yPos += 5
 
@@ -596,21 +622,31 @@ Public Class RestaurantPrintManager
                     itemDisplay &= " (" & det.SizeName & ")"
                 End If
 
-                g.DrawString(itemDisplay, fontBold, Brushes.Black, New RectangleF(125, yPos, pageWidth - 125, 18), sfRight)
-                g.DrawString(det.Quantity.ToString(), fontBold, Brushes.Black, New RectangleF(75, yPos, 50, 18), sfCenter)
-                g.DrawString(det.TotalPrice.ToString("N2"), fontBold, Brushes.Black, New RectangleF(0, yPos, 70, 18), sfLeft)
-                yPos += 18
+                ' [FIX] قياس ارتفاع النص لمنع القص
+                Dim measuredH = g.MeasureString(itemDisplay, fontBold, colNameW_c - 4)
+                Dim itemRowH As Integer = Math.Max(20, CInt(measuredH.Height) + 4)
 
-                ' سطر الإضافات إن وجدت
+                g.DrawString(itemDisplay, fontBold, Brushes.Black, New RectangleF(colNameX_c, yPos, colNameW_c - 4, itemRowH), sfRight)
+                g.DrawString(det.Quantity.ToString(), fontBold, Brushes.Black, New RectangleF(colQtyX_c, yPos, colQtyW_c, itemRowH), sfCenter)
+                g.DrawString(det.TotalPrice.ToString("N2"), fontBold, Brushes.Black, New RectangleF(0, yPos, colTotalW_c, itemRowH), sfLeft)
+                yPos += itemRowH
+
+                ' سطر الإضافات إن وجدت بديناميكية لمنع القص
                 If Not String.IsNullOrWhiteSpace(det.AddonsText) AndAlso det.AddonsText <> "-" Then
-                    g.DrawString(" + " & det.AddonsText, fontSub, Brushes.DimGray, New RectangleF(80, yPos, pageWidth - 80, 16), sfRight)
-                    yPos += 16
+                    Dim addonStr = " + " & det.AddonsText
+                    Dim aSize = g.MeasureString(addonStr, fontSub, colNameW_c + colQtyW_c - 4, sfRight)
+                    Dim aH As Integer = Math.Max(18, CInt(Math.Ceiling(aSize.Height)) + 2)
+                    g.DrawString(addonStr, fontSub, Brushes.DimGray, New RectangleF(colQtyX_c, yPos, colNameW_c + colQtyW_c - 4, aH), sfRight)
+                    yPos += aH
                 End If
 
-                ' الملاحظات إن وجدت
+                ' الملاحظات إن وجدت بديناميكية لمنع القص
                 If Not String.IsNullOrWhiteSpace(det.Notes) Then
-                    g.DrawString(" * " & det.Notes, fontSub, Brushes.DarkRed, New RectangleF(80, yPos, pageWidth - 80, 16), sfRight)
-                    yPos += 16
+                    Dim noteStr = " * " & det.Notes
+                    Dim nSize = g.MeasureString(noteStr, fontSub, colNameW_c + colQtyW_c - 4, sfRight)
+                    Dim nH As Integer = Math.Max(18, CInt(Math.Ceiling(nSize.Height)) + 2)
+                    g.DrawString(noteStr, fontSub, Brushes.DarkRed, New RectangleF(colQtyX_c, yPos, colNameW_c + colQtyW_c - 4, nH), sfRight)
+                    yPos += nH
                 End If
 
                 yPos += 2
@@ -638,9 +674,12 @@ Public Class RestaurantPrintManager
 
             ' الإجمالي الصافي بخط عريض
             Using fontGrand As New Font("Segoe UI", 12.0!, FontStyle.Bold)
-                g.DrawString("الصافي المطلوب:", fontGrand, Brushes.Black, New RectangleF(100, yPos, pageWidth - 100, 24), sfRight)
-                g.DrawString(inv.NetTotal.ToString("N2") & " ج", fontGrand, Brushes.Black, New RectangleF(0, yPos, 100, 24), sfLeft)
-                yPos += 26
+                ' [FIX] توزيع نسبي بدلاً من قيمة ثابتة 100px
+                Dim netValW As Integer = CInt(pageWidth * 0.38)
+                Dim netLblW As Integer = pageWidth - netValW
+                g.DrawString("الصافي المطلوب:", fontGrand, Brushes.Black, New RectangleF(netValW, yPos, netLblW, 26), sfRight)
+                g.DrawString(inv.NetTotal.ToString("N2") & " ج", fontGrand, Brushes.Black, New RectangleF(0, yPos, netValW, 26), sfLeft)
+                yPos += 28
             End Using
 
             DrawSolidLine(g, yPos, pageWidth)
@@ -714,7 +753,8 @@ Public Class RestaurantPrintManager
                     Try
                         Dim ps As New PrinterSettings()
                         prn = ps.PrinterName
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("RestaurantPrintManager.vb:756", __logEx)
                     End Try
                 End If
                 If String.IsNullOrWhiteSpace(prn) Then Return
@@ -722,7 +762,7 @@ Public Class RestaurantPrintManager
 
             Dim pd As New PrintDocument()
             pd.PrinterSettings.PrinterName = prn
-            pd.DefaultPageSettings.Margins = New Margins(4, 4, 4, 4)
+            pd.DefaultPageSettings.Margins = New Margins(2, 2, 2, 2)
 
             AddHandler pd.PrintPage, Sub(sender As Object, e As PrintPageEventArgs)
                                          Dim g As Graphics = e.Graphics
@@ -733,7 +773,7 @@ Public Class RestaurantPrintManager
                                          Dim isSmallPaper As Boolean = (paperSizeVal = "58mm" OrElse e.PageBounds.Width < 240)
 
                                          Dim pageWidth As Integer = e.PageBounds.Width
-                                         If pageWidth > 300 Then pageWidth = 285
+                                         If pageWidth > 310 Then pageWidth = 298
                                          If isSmallPaper Then pageWidth = Math.Min(pageWidth, 205)
 
                                          Dim kitchenDesign = SettingsManager.GetSettingOrDefault(SettingsKeys.KitchenTicketDesign, "1")
@@ -794,8 +834,8 @@ Public Class RestaurantPrintManager
               fontNotes As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.5!), FontStyle.Bold),
               fontFooter As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Regular),
               sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center},
-              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
-              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
               sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center},
               headerBrush As New SolidBrush(Color.FromArgb(240, 240, 240)),
               noteBrush As New SolidBrush(Color.FromArgb(254, 242, 242)),
@@ -937,8 +977,8 @@ Public Class RestaurantPrintManager
               fontNotes As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Bold),
               fontFooter As New Font("Segoe UI", If(isSmallPaper, 8.5!, 9.0!), FontStyle.Bold),
               sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center, .LineAlignment = StringAlignment.Center},
-              sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
-              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Far, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+              sfItemWrap As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Near, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
               sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center},
               headerBgBrush As New SolidBrush(Color.FromArgb(235, 238, 242)),
               badgeBgBrush As New SolidBrush(Color.FromArgb(220, 226, 236)),
@@ -1121,21 +1161,21 @@ Public Class RestaurantPrintManager
 
             Dim pd As New PrintDocument()
             pd.PrinterSettings.PrinterName = prn
-            pd.DefaultPageSettings.Margins = New Margins(4, 4, 4, 4)
+            pd.DefaultPageSettings.Margins = New Margins(2, 2, 2, 2)
 
             AddHandler pd.PrintPage, Sub(sender As Object, e As PrintPageEventArgs)
                                          Dim g As Graphics = e.Graphics
                                          Dim pageWidth As Integer = e.PageBounds.Width
-                                         If pageWidth > 300 Then pageWidth = 290
+                                         If pageWidth > 310 Then pageWidth = 298
 
                                          Dim yPos As Integer = 10
 
-                                         Using fontTitle As New Font("Segoe UI", 12.5!, FontStyle.Bold),
-                                               fontHeader As New Font("Segoe UI", 10.0!, FontStyle.Bold),
-                                               fontBold As New Font("Segoe UI", 9.0!, FontStyle.Bold),
-                                               fontRegular As New Font("Segoe UI", 8.5!, FontStyle.Regular),
+                                         Using fontTitle As New Font("Segoe UI", 13.0!, FontStyle.Bold),
+                                               fontHeader As New Font("Segoe UI", 10.5!, FontStyle.Bold),
+                                               fontBold As New Font("Segoe UI", 9.5!, FontStyle.Bold),
+                                               fontRegular As New Font("Segoe UI", 9.0!, FontStyle.Regular),
                                                sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center},
-                                               sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+                                               sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
                                                sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near}
 
                                              ' عنوان التقرير
@@ -1232,8 +1272,8 @@ Public Class RestaurantPrintManager
                                              yPos += 15
 
                                              ' توقيعات
-                                             g.DrawString("توقيع الكاشير: ____________", fontRegular, Brushes.Black, New RectangleF(130, yPos, pageWidth - 130, 20), sfRight)
-                                             g.DrawString("توقيع المدير: ____________", fontRegular, Brushes.Black, New RectangleF(0, yPos, 120, 20), sfLeft)
+                                             g.DrawString("توقيع الكاشير: ____________", fontRegular, Brushes.Black, New RectangleF(pageWidth \ 2, yPos, pageWidth \ 2, 20), sfRight)
+                                             g.DrawString("توقيع المدير: ____________", fontRegular, Brushes.Black, New RectangleF(0, yPos, pageWidth \ 2, 20), sfLeft)
                                              yPos += 35
                                          End Using
 
@@ -1243,7 +1283,7 @@ Public Class RestaurantPrintManager
             pd.Print()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء طباعة تقرير الوردية Z-Report: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء طباعة تقرير الوردية Z-Report: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1251,8 +1291,12 @@ Public Class RestaurantPrintManager
     ' دوال مساعدة في الرسم والتنسيق
     ' ═════════════════════════════════════════════════════════════════
     Private Shared Sub DrawAmountRow(g As Graphics, label As String, val As String, fnt As Font, sfRight As StringFormat, sfLeft As StringFormat, y As Integer, w As Integer)
-        g.DrawString(label, fnt, Brushes.Black, New RectangleF(90, y, w - 90, 18), sfRight)
-        g.DrawString(val, fnt, Brushes.Black, New RectangleF(0, y, 90, 18), sfLeft)
+        ' [FIX] توزيع نسبي للأعمدة بدلاً من قيم ثابتة - لضمان محاذاة صحيحة على كل مقاسات الورق
+        Dim valColW As Integer = CInt(w * 0.35)
+        Dim lblColW As Integer = w - valColW
+        Dim rowH As Integer = Math.Max(18, CInt(fnt.GetHeight(g)) + 4)
+        g.DrawString(label, fnt, Brushes.Black, New RectangleF(valColW, y, lblColW, rowH), sfRight)
+        g.DrawString(val, fnt, Brushes.Black, New RectangleF(0, y, valColW, rowH), sfLeft)
     End Sub
 
     Private Shared Sub DrawDashedLine(g As Graphics, y As Integer, w As Integer)
@@ -1283,7 +1327,7 @@ Public Class RestaurantPrintManager
         Try
             Dim prn = If(String.IsNullOrWhiteSpace(customPrinterName), GetDefaultThermalPrinter(), customPrinterName)
             If String.IsNullOrWhiteSpace(prn) Then
-                MessageBox.Show("لم يتم تحديد طابعة فواتير في الإعدادات!", "تنبيه الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("لم يتم تحديد طابعة فواتير في الإعدادات!", "تنبيه الطباعة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -1293,21 +1337,21 @@ Public Class RestaurantPrintManager
 
             Dim pd As New PrintDocument()
             pd.PrinterSettings.PrinterName = prn
-            pd.DefaultPageSettings.Margins = New Margins(4, 4, 4, 4)
+            pd.DefaultPageSettings.Margins = New Margins(2, 2, 2, 2)
 
             AddHandler pd.PrintPage, Sub(sender As Object, e As PrintPageEventArgs)
                                          Dim g As Graphics = e.Graphics
                                          Dim pageWidth As Integer = e.PageBounds.Width
-                                         If pageWidth > 300 Then pageWidth = 290
+                                         If pageWidth > 310 Then pageWidth = 298
 
                                          Dim yPos As Integer = 10
 
                                          Using fontTitle As New Font("Segoe UI", 12.0!, FontStyle.Bold),
                                                fontSub As New Font("Segoe UI", 8.5!, FontStyle.Regular),
                                                fontBold As New Font("Segoe UI", 9.5!, FontStyle.Bold),
-                                               fontRegular As New Font("Segoe UI", 8.5!, FontStyle.Regular),
+                                               fontRegular As New Font("Segoe UI", 9.0!, FontStyle.Regular),
                                                sfCenter As New StringFormat() With {.Alignment = StringAlignment.Center},
-                                               sfRight As New StringFormat() With {.Alignment = StringAlignment.Far, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
+                                               sfRight As New StringFormat() With {.Alignment = StringAlignment.Near, .LineAlignment = StringAlignment.Center, .FormatFlags = StringFormatFlags.DirectionRightToLeft},
                                                sfLeft As New StringFormat() With {.Alignment = StringAlignment.Near}
 
                                              ' هيدر المحل
@@ -1387,7 +1431,7 @@ Public Class RestaurantPrintManager
                 OpenCashDrawer(prn)
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء طباعة إيصال الحصة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء طباعة إيصال الحصة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

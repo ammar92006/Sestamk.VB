@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.IO.Ports
 Imports System.Management
@@ -40,6 +40,7 @@ Public Module SettingsManager
                 _cacheLoaded = True
             End SyncLock
         Catch ex As Exception
+            Logger.LogError("AppSettings.vb:42", ex)
         End Try
     End Sub
 
@@ -56,6 +57,7 @@ Public Module SettingsManager
                 cmd.ExecuteNonQuery()
             End Using
         Catch ex As Exception
+            Logger.LogError("AppSettings.vb:59", ex)
         End Try
     End Sub
 
@@ -100,6 +102,10 @@ Public Module SettingsManager
     Public Function GetSettingOrDefault(key As String, defaultValue As String) As String
         Dim v = GetSetting(key)
         Return If(String.IsNullOrEmpty(v), defaultValue, v)
+    End Function
+
+    Public Function GetStringSetting(key As String, Optional defaultValue As String = "") As String
+        Return GetSettingOrDefault(key, defaultValue)
     End Function
 
     ' 🟢 قراءة إعداد بمفتاحين بديلين (Key1 ثم Key2)
@@ -162,6 +168,7 @@ Public Module SettingsManager
                              End Using
                          End Using
                      Catch ex As Exception
+                         Logger.LogError("AppSettings.vb:170", ex)
                      End Try
                  End Sub)
     End Sub
@@ -183,6 +190,7 @@ Public Module SettingsManager
             End If
         Catch ex As Exception
             'Debug.WriteLine("CloseBarcodePort: " & ex.Message)
+            Logger.LogError("AppSettings.vb:191", ex)
         End Try
     End Sub
 
@@ -224,12 +232,12 @@ Public Module SettingsManager
                         port.Close()
                     End If
                 End Using
-                MessageBox.Show($"تم غلق البورت {portName} بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"تم غلق البورت {portName} بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
-                MessageBox.Show($"البورت {portName} غير مستخدم حالياً.", "معلومة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"البورت {portName} غير مستخدم حالياً.", "معلومة", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء غلق البورت: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء غلق البورت: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

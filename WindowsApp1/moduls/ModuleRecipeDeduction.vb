@@ -70,13 +70,13 @@ Public Module ModuleRecipeDeduction
 
                 Catch ex As Exception
                     transaction.Rollback()
-                    MessageBox.Show("خطأ أثناء خصم خامات الريسيبي: " & ex.Message, "خطأ مخزني", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء خصم خامات الريسيبي: " & ex.Message, "خطأ مخزني", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return False
                 End Try
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في قراءة الريسيبي: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في قراءة الريسيبي: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
         End Try
     End Function

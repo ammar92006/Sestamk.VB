@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class add_new_Categorie
 
@@ -24,26 +24,26 @@ Public Class add_new_Categorie
             If Not IsValidData() Then Exit Sub
 
             If InsertCategory() Then
-                MessageBox.Show("تمت إضافة الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تمت إضافة الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 ' هنا تستدعي دالة تحديث الداتا جريد فيو لتظهر البيانات الجديدة
                 ClearFields()
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء الإضافة: " & ex.Message)
         End Try
     End Sub
     Private Function IsValidData() As Boolean
         ' 1. التحقق من كود الفئة
         If String.IsNullOrWhiteSpace(txtCategoryCode.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال كود الفئة أولاً!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال كود الفئة أولاً!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCategoryCode.Focus()
             Return False
         End If
 
         ' 2. التحقق من اسم الفئة باللغة العربية
         If String.IsNullOrWhiteSpace(txtCategoryName.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم الفئة باللغة العربية!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم الفئة باللغة العربية!", "تنبيهvalidation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCategoryName.Focus()
             Return False
         End If
@@ -79,7 +79,7 @@ Public Class add_new_Categorie
                     Dim rowsAffected As Integer = cmd.ExecuteNonQuery()
                     Return rowsAffected > 0
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء إضافة الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء إضافة الفئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return False
                 End Try
             End Using

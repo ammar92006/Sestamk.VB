@@ -39,7 +39,7 @@ Public Class FrmCustomerStatement
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
         If cmbCustomers.SelectedValue Is Nothing Then
-            MessageBox.Show("برجاء اختيار العميل أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("برجاء اختيار العميل أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 

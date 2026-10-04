@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Security.Cryptography
 Imports System.Text
 Imports Newtonsoft.Json
@@ -115,6 +115,7 @@ Namespace Services.Cloud
                     File.Delete(filePath)
                 Catch ex As Exception
                     ' تجاهل الأخطاء البسيطة (Ignore minor errors)
+                    Logger.LogError("CloudSyncConfig.vb:116", ex)
                 End Try
             End If
         End Sub

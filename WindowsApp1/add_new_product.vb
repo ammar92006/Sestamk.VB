@@ -15,10 +15,10 @@ Public Class add_new_product
             Me.Invoke(Sub()
                           txtUnitBarcode.Focus()
                           txtUnitBarcode.Text = code
-                          MessageBox.Show("تم قراءة الباركود: " & code, "تم بنجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                          SmartMessageBox.Show("تم قراءة الباركود: " & code, "تم بنجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                       End Sub)
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء استقبال البيانات من السكانر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء استقبال البيانات من السكانر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
     Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove
@@ -68,7 +68,7 @@ Public Class add_new_product
             txtProductCode.Text = (maxCode + 1).ToString()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء جلب كود المنتج: " & ex.Message,
+            SmartMessageBox.Show("حدث خطأ أثناء جلب كود المنتج: " & ex.Message,
                         "خطأ",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error)
@@ -98,7 +98,7 @@ Public Class add_new_product
             cmbCategory.SelectedIndex = -1
         End Using
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
         End Try
     End Sub
 
@@ -155,28 +155,28 @@ Public Class add_new_product
                     Pic_Product.Image = New Bitmap(img)  ' ← نسخ الصورة (Clone)
                 End Using
 
-                MessageBox.Show("✅ تم تحديد الصورة بنجاح:" & vbCrLf, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✅ تم تحديد الصورة بنجاح:" & vbCrLf, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء حفظ الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء حفظ الصورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub btn_AddUnit_Click(sender As Object, e As EventArgs) Handles btn_AddUnit.Click
         If txtUnitName.Text.Trim = "" Then
-            MessageBox.Show("أدخل اسم الوحدة", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("أدخل اسم الوحدة", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         If txtUnitQuantity.Text.Trim = "" Then
-            MessageBox.Show("أدخل عدد الوحدات التي داخلها", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("أدخل عدد الوحدات التي داخلها", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         If txtPurchasePrice.Text.Trim = "" Then
-            MessageBox.Show("أدخل سعر الشراء", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("أدخل سعر الشراء", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
         If txtSalePrice.Text.Trim = "" Then
-            MessageBox.Show("أدخل سعر البيع", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("أدخل سعر البيع", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
@@ -184,13 +184,13 @@ Public Class add_new_product
 
         '' 1 — فحص داخل GRID
         'If BarcodeExistsInGrid(bar) Then
-        '    MessageBox.Show("⚠ هذا الباركود مضاف بالفعل داخل الوحدات.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '    SmartMessageBox.Show("⚠ هذا الباركود مضاف بالفعل داخل الوحدات.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         '    Return
         'End If
 
         '' 2 — فحص داخل قاعدة البيانات
         'If BarcodeExistsInDatabase(bar) Then
-        '    MessageBox.Show("❌ هذا الباركود موجود بالفعل في قاعدة البيانات ولا يمكن تكراره.", "مكرر", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    SmartMessageBox.Show("❌ هذا الباركود موجود بالفعل في قاعدة البيانات ولا يمكن تكراره.", "مكرر", MessageBoxButtons.OK, MessageBoxIcon.Error)
         '    Return
         'End If
 
@@ -223,7 +223,7 @@ Public Class add_new_product
         End If
     End Sub
     Private Sub ShowWarning(msg As String, ctrl As Control)
-        MessageBox.Show("❌ " & msg, "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        SmartMessageBox.Show("❌ " & msg, "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         ctrl.Focus()
     End Sub
 
@@ -277,7 +277,7 @@ Public Class add_new_product
                 Dim NewProductID As Integer = Convert.ToInt32(cmdProd.ExecuteScalar())
 
                 'اختياري: عرض ID المنتج
-                'MessageBox.Show("كود المنتج الجديد: " & NewProductID)
+                'SmartMessageBox.Show("كود المنتج الجديد: " & NewProductID)
                 '===========================================================
                 ' 3 — إضافة وحدات المنتج من الـ DataGridView
                 '===========================================================
@@ -303,7 +303,7 @@ Public Class add_new_product
                     End Using
                 Next
 
-                MessageBox.Show("✔ تم إضافة المنتج ووحداته بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("✔ تم إضافة المنتج ووحداته بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
 
             ClearAll()
@@ -311,7 +311,7 @@ Public Class add_new_product
 
         End Using
         Catch ex As Exception
-            MessageBox.Show("❌ حدث خطأ أثناء حفظ المنتج:" & vbCrLf & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("❌ حدث خطأ أثناء حفظ المنتج:" & vbCrLf & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
     End Sub
@@ -327,7 +327,7 @@ Public Class add_new_product
 
         End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فحص الباركود: " & ex.Message)
+            SmartMessageBox.Show("خطأ أثناء فحص الباركود: " & ex.Message)
             Return True
         End Try
     End Function
@@ -393,14 +393,14 @@ Public Class add_new_product
             Dim UnitNameToDelete As String = dgvUnits.Rows(e.RowIndex).Cells("ColUnitName").Value.ToString()
 
             ' رسالة تأكيد الحذف
-            If MessageBox.Show($"هل أنت متأكد من حذف الوحدة ({UnitNameToDelete}) من وحدات هذا المنتج؟",
+            If SmartMessageBox.Show($"هل أنت متأكد من حذف الوحدة ({UnitNameToDelete}) من وحدات هذا المنتج؟",
                                "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
 
                 ' حذف الصف من الـ DataGridView
                 dgvUnits.Rows.RemoveAt(e.RowIndex)
 
                 ' رسالة نجاح الحذف
-                MessageBox.Show("تم حذف الوحدة.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم حذف الوحدة.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End If
 
         End If
@@ -448,7 +448,7 @@ Public Class add_new_product
 
         'Select Case e.KeyCode
         '    Case Keys.F1
-        '        MessageBox.Show("الاختصارات المتاحة:" & vbCrLf &
+        '        SmartMessageBox.Show("الاختصارات المتاحة:" & vbCrLf &
         '            "F2 / Ctrl+N : إضافة جديد" & vbCrLf &
         '            "F3 : تعديل" & vbCrLf &
         '            "F4 : حذف" & vbCrLf &
@@ -502,7 +502,7 @@ Public Class add_new_product
             cmbVendor.SelectedIndex = -1
         End Using
         Catch ex As Exception
-            MessageBox.Show(ex.Message)
+            SmartMessageBox.Show(ex.Message)
         End Try
     End Sub
 

@@ -1,4 +1,4 @@
-Imports System.Collections.Concurrent
+﻿Imports System.Collections.Concurrent
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Net.Http
@@ -29,6 +29,7 @@ Namespace Services.Sync
         Private Shared _isSyncing As Integer = 0
         Private Shared _cachedAdminToken As String = ""
         Private Shared _tokenExpiresAt As DateTime = DateTime.MinValue
+        Private Shared _lastAdminConfigWarnAt As DateTime = DateTime.MinValue
 
         ' ذاكرة لتتبع آخر حالة متزامنة لمنع تكرار الكتابة واكتشاف جهة التعديل
         Private Shared ReadOnly _lastSyncedStates As New ConcurrentDictionary(Of String, SyncedUserState)(StringComparer.OrdinalIgnoreCase)
@@ -130,7 +131,8 @@ Namespace Services.Sync
                     _backgroundTimer = Nothing
                     Logger.Info("UserSyncService: Background sync timer stopped.")
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UserSyncService.vb:133", __logEx)
             End Try
         End Sub
 
@@ -442,6 +444,28 @@ Namespace Services.Sync
                     u.Password = Convert.ToString(row("User_password")).Trim()
                 End If
 
+                ' أمان: لا تُغادر أي كلمة مرور نصاً صريحاً هذا الجهاز أبداً.
+                ' الترحيل هنا لمرة واحدة لكل مستخدم: تُجزَّأ (PBKDF2) وتُكتب محلياً،
+                ' فترسل للسحابة تجزئة والأجهزة الأخرى تتحقق بها دون معرفة النص الأصلي.
+                If Not String.IsNullOrWhiteSpace(u.Password) AndAlso Not PasswordHasher.IsHashed(u.Password) Then
+                    Try
+                        Dim migratedHash = PasswordHasher.Hash(u.Password)
+                        Using cnMig = DBModule.NewConn()
+                            Using cmdMig As New SqlCommand("UPDATE Users_TBL SET User_password = @h WHERE User_ID = @id", cnMig)
+                                cmdMig.Parameters.AddWithValue("@h", migratedHash)
+                                cmdMig.Parameters.AddWithValue("@id", u.UserId)
+                                cnMig.Open()
+                                cmdMig.ExecuteNonQuery()
+                            End Using
+                        End Using
+                        u.Password = migratedHash
+                        Logger.LogInfo($"UserSyncService: تمت ترقية كلمة مرور المستخدم [{u.Username}] إلى تجزئة PBKDF2 أثناء المزامنة")
+                    Catch exMig As Exception
+                        Logger.LogError("UserSyncService.MigratePlaintextPassword", exMig)
+                        u.Password = String.Empty ' فشل الترحيل: لا يُرسل النص الصريح مهما كان
+                    End Try
+                End If
+
                 Dim rawRole = ""
                 If row.Table.Columns.Contains("RoleName") AndAlso Not Convert.IsDBNull(row("RoleName")) Then
                     rawRole = Convert.ToString(row("RoleName"))
@@ -511,7 +535,8 @@ Namespace Services.Sync
                               "User_Role = @roleName, " &
                               "IsActive = @isActive, " &
                               "IsDeleted = 0 "
-                    If Not String.IsNullOrWhiteSpace(newPass) Then
+                    Dim pwdToStore = SanitizeIncomingPassword(newPass)
+                    If Not String.IsNullOrWhiteSpace(pwdToStore) Then
                         sql &= ", User_password = @pwd "
                     End If
                     If roleId > 0 Then
@@ -527,8 +552,8 @@ Namespace Services.Sync
                         cmd.Parameters.AddWithValue("@roleName", roleName)
                         cmd.Parameters.AddWithValue("@isActive", isActive)
                         cmd.Parameters.AddWithValue("@user", username)
-                        If Not String.IsNullOrWhiteSpace(newPass) Then
-                            cmd.Parameters.AddWithValue("@pwd", newPass)
+                        If Not String.IsNullOrWhiteSpace(pwdToStore) Then
+                            cmd.Parameters.AddWithValue("@pwd", pwdToStore)
                         End If
                         If roleId > 0 Then
                             cmd.Parameters.AddWithValue("@roleId", roleId)
@@ -563,7 +588,8 @@ Namespace Services.Sync
                                     empCmd.ExecuteNonQuery()
                                 End Using
                             End If
-                        Catch
+                        Catch __logEx As Exception
+                            Logger.LogError("UserSyncService.vb:567", __logEx)
                         End Try
                     End If
                 End Using
@@ -572,6 +598,17 @@ Namespace Services.Sync
                 Logger.LogError($"UserSyncService.UpdateLocalUser({username})", ex)
             End Try
         End Sub
+
+        ''' <summary>
+        ''' أمان كلمات المرور: لا يجوز أن تُخزَّن أي قيمة غير مجزأة (نص صريح) في قاعدة المستخدمين المحلية.
+        ''' أي قيمة قادمة من السحابة ليست بصيغة PBKDF2$ تُجزَّأ قبل الكتابة، فتبقى قابلة للتحقق
+        ''' عبر PasswordHasher.Verify عند الدخول دون معرفة النص الأصلي.
+        ''' </summary>
+        Private Shared Function SanitizeIncomingPassword(value As String) As String
+            If String.IsNullOrWhiteSpace(value) Then Return String.Empty
+            If PasswordHasher.IsHashed(value) Then Return value
+            Return PasswordHasher.Hash(value)
+        End Function
 
         ''' <summary>
         ''' إضافة مستخدم جديد محلياً ورد من Supabase
@@ -590,7 +627,7 @@ Namespace Services.Sync
                         cmd.Parameters.AddWithValue("@code", nextCode)
                         cmd.Parameters.AddWithValue("@name", If(String.IsNullOrWhiteSpace(fullName), username, fullName))
                         cmd.Parameters.AddWithValue("@uname", username)
-                        cmd.Parameters.AddWithValue("@pwd", If(String.IsNullOrWhiteSpace(password), "123456", password))
+                        cmd.Parameters.AddWithValue("@pwd", SanitizeIncomingPassword(If(String.IsNullOrWhiteSpace(password), "123456", password)))
                         cmd.Parameters.AddWithValue("@roleName", roleName)
                         If roleId > 0 Then
                             cmd.Parameters.AddWithValue("@roleId", roleId)
@@ -617,7 +654,8 @@ Namespace Services.Sync
                         Return result.ToString()
                     End If
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UserSyncService.vb:622", __logEx)
             End Try
             Return "1"
         End Function
@@ -633,7 +671,8 @@ Namespace Services.Sync
                         Return Convert.ToInt32(res)
                     End If
                 End Using
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UserSyncService.vb:639", __logEx)
             End Try
             Return 1
         End Function
@@ -674,13 +713,15 @@ Namespace Services.Sync
                             Dim lf = DirectCast(f, Global.WindowsApp1.Login)
                             Try
                                 lf.BeginInvoke(Sub() lf.FillUsersComboBox(showPromptOnError:=False))
-                            Catch
+                            Catch __logEx As Exception
+                                Logger.LogError("UserSyncService.vb:681", __logEx)
                             End Try
                         ElseIf TypeOf f Is Global.WindowsApp1.frmUsers Then
                             Dim uf = DirectCast(f, Global.WindowsApp1.frmUsers)
                             Try
                                 uf.BeginInvoke(Sub() uf.LoadUsersGrid())
-                            Catch
+                            Catch __logEx As Exception
+                                Logger.LogError("UserSyncService.vb:688", __logEx)
                             End Try
                         End If
                     Next
@@ -721,15 +762,28 @@ Namespace Services.Sync
         End Function
 
         ''' <summary>
-        ''' الحصول على توكن الإدارة مع التخزين المؤقت لتجنب تكرار الاتصال غير الضروري
+        ''' الحصول على توكن الإدارة مع التخزين المؤقت لتجنب تكرار الاتصال غير الضروري.
+        ''' أمان: بيانات الإدارة تُقرأ من App.config (مفاتيح Sync:AdminUsername / Sync:AdminPassword)
+        ''' ولا تُكتب في الكود المصدري إطلاقاً. إن لم توجد، تتخطى المزامنة الإدارية وتسجل خطأ.
         ''' </summary>
         Private Shared Async Function GetAdminTokenAsync(client As HttpClient) As Task(Of String)
             If Not String.IsNullOrWhiteSpace(_cachedAdminToken) AndAlso DateTime.UtcNow < _tokenExpiresAt Then
                 Return _cachedAdminToken
             End If
 
+            Dim adminUser = System.Configuration.ConfigurationManager.AppSettings("Sync:AdminUsername")
+            Dim adminPass = System.Configuration.ConfigurationManager.AppSettings("Sync:AdminPassword")
+            If String.IsNullOrWhiteSpace(adminUser) OrElse String.IsNullOrWhiteSpace(adminPass) Then
+                ' التحذير يُسجل مرة واحدة يومياً فقط — التكرار كل 25 ثانية كان يضخم ملف اللوج
+                If (DateTime.UtcNow - _lastAdminConfigWarnAt) >= TimeSpan.FromHours(24) Then
+                    _lastAdminConfigWarnAt = DateTime.UtcNow
+                    Logger.LogWarning("UserSyncService.GetAdminToken", "إعدادات المزامنة الإدارية غير مكتملة (Sync:AdminUsername / Sync:AdminPassword في App.config) — تم تخطي المزامنة الإدارية.")
+                End If
+                Return Nothing
+            End If
+
             Try
-                Dim loginPayload = JsonConvert.SerializeObject(New With {.username = "admin", .password = "Sestamk@2026"})
+                Dim loginPayload = JsonConvert.SerializeObject(New With {.username = adminUser, .password = adminPass})
                 Dim loginContent As New StringContent(loginPayload, Encoding.UTF8, "application/json")
                 Dim loginResp = Await client.PostAsync(AdminLoginUrl, loginContent).ConfigureAwait(False)
                 If loginResp.IsSuccessStatusCode Then
@@ -785,7 +839,8 @@ Namespace Services.Sync
                             Dim updateJson = JsonConvert.SerializeObject(updateData)
                             Dim updateContent As New StringContent(updateJson, Encoding.UTF8, "application/json")
                             Await client.PostAsync(AdminDbUrl, updateContent).ConfigureAwait(False)
-                        Catch
+                        Catch __logEx As Exception
+                            Logger.LogError("UserSyncService.vb:803", __logEx)
                         End Try
                     Next
                 End Using
@@ -830,7 +885,8 @@ Namespace Services.Sync
                         Try
                             Using cn = DBModule.NewConn()
                                 Using cmd As New SqlCommand("UPDATE Users_TBL SET User_password = @pwd WHERE User_username = @user", cn)
-                                    cmd.Parameters.AddWithValue("@pwd", r.pending_password_hash)
+                                    ' أمان: قناة إعادة تعيين كلمة المرور تخزن تجزئة فقط
+                                    cmd.Parameters.AddWithValue("@pwd", SanitizeIncomingPassword(r.pending_password_hash))
                                     cmd.Parameters.AddWithValue("@user", r.username)
                                     cmd.ExecuteNonQuery()
                                 End Using

@@ -1,4 +1,4 @@
-Imports System.Windows.Forms
+﻿Imports System.Windows.Forms
 Imports System.Drawing
 
 Namespace UC_Main
@@ -40,7 +40,7 @@ Namespace UC_Main
         Private Sub OpenTreasuryWithOperation(op As FrmTreasuryTransaction.TreasuryOperation, btn As Control)
             If Not Session.HasPermission("FrmTreasuryTransaction", "CanOpen") Then
                 Dim dispName As String = Session.GetScreenDisplayName("FrmTreasuryTransaction")
-                MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 
@@ -128,7 +128,8 @@ Namespace UC_Main
                         btn.HoverState.ForeColor = pal.TextOnPrimary
                     End If
                 Next
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCTreasuryHub.vb:131", __logEx)
             End Try
         End Sub
 

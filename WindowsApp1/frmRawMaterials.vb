@@ -72,7 +72,7 @@ Public Class frmRawMaterials
             If dgvMaterials.Columns.Contains("IsActive") Then dgvMaterials.Columns("IsActive").HeaderText = "نشط"
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الخامات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل الخامات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -88,18 +88,18 @@ Public Class frmRawMaterials
 
     Private Function IsValidData() As Boolean
         If String.IsNullOrWhiteSpace(txtMaterialName.Text) Then
-            MessageBox.Show("يرجى إدخال اسم الخامة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال اسم الخامة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtMaterialName.Focus()
             Return False
         End If
         If cmbUnit.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الوحدة الأساسية أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الوحدة الأساسية أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbUnit.Focus()
             Return False
         End If
         Dim cost As Decimal = 0
         If Not Decimal.TryParse(txtCostPrice.Text, cost) OrElse cost < 0 Then
-            MessageBox.Show("يرجى إدخال تكلفة وحدة أساسية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال تكلفة وحدة أساسية صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtCostPrice.Focus()
             Return False
         End If
@@ -159,12 +159,12 @@ Public Class frmRawMaterials
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ الخامة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الخامة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedMaterials = Nothing
                     LoadMaterialsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -195,12 +195,12 @@ Public Class frmRawMaterials
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل الخامة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل الخامة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     _cachedMaterials = Nothing
                     LoadMaterialsGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -222,7 +222,7 @@ Public Class frmRawMaterials
 
     Private Sub btnOpenUnitsConversion_Click(sender As Object, e As EventArgs) Handles btnOpenUnitsConversion.Click
         If dgvMaterials.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد خامة من الجدول أولاً لضبط وحدات التحويل الخاصة بها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد خامة من الجدول أولاً لضبط وحدات التحويل الخاصة بها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -255,7 +255,7 @@ Public Class frmRawMaterials
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
 
         If dgvMaterials.SelectedRows.Count = 0 Then
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "يرجى تحديد خامة من الجدول أولاً.",
                 "تنبيه",
                 MessageBoxButtons.OK,
@@ -269,7 +269,7 @@ Public Class frmRawMaterials
         Dim materialName As String = row.Cells("MaterialName").Value.ToString()
 
         ' تأكيد الحذف
-        Dim confirm As DialogResult = MessageBox.Show(
+        Dim confirm As DialogResult = SmartMessageBox.Show(
             $"هل أنت متأكد من حذف الخامة ""{materialName}""؟" & Environment.NewLine &
             "سيتم إخفاؤها ولن تظهر في القوائم أو الوصفات.",
             "تأكيد الحذف",
@@ -294,7 +294,7 @@ Public Class frmRawMaterials
 
             End Using
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 $"تم حذف الخامة ""{materialName}"" بنجاح.",
                 "تم الحذف",
                 MessageBoxButtons.OK,
@@ -307,7 +307,7 @@ Public Class frmRawMaterials
 
         Catch ex As Exception
 
-            MessageBox.Show(
+            SmartMessageBox.Show(
                 "خطأ أثناء الحذف:" & Environment.NewLine & ex.Message,
                 "خطأ",
                 MessageBoxButtons.OK,
@@ -330,7 +330,7 @@ Public Class frmRawMaterials
         End If
 
         If _selectedMaterialID <= 0 Then
-            MessageBox.Show("يرجى حفظ أو اختيار الخامة أولاً لتتمكن من احتساب التكلفة من وحداتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى حفظ أو اختيار الخامة أولاً لتتمكن من احتساب التكلفة من وحداتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -354,7 +354,7 @@ Public Class frmRawMaterials
 
             ' 3. في حالة عدم وجود وحدات أكبر بأسعار مسجلة
             If dtUnits.Rows.Count = 0 Then
-                MessageBox.Show("لم يتم العثور على وحدات كبرى مسجلة بأسعار شراء لهذه الخامة!" & vbCrLf &
+                SmartMessageBox.Show("لم يتم العثور على وحدات كبرى مسجلة بأسعار شراء لهذه الخامة!" & vbCrLf &
                             "يرجى فتح شاشة وحدات التحويل وتسجيل وحدة (مثل: شكارة أو كرتونة) وتحديد سعر شرائها أولاً.",
                             "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Exit Sub
@@ -371,7 +371,7 @@ Public Class frmRawMaterials
                 ' وضع القيمة المحسوبة في التيكست بوكس
                 txtCostPrice.Text = baseCost.ToString("N4")
 
-                MessageBox.Show($"تم احتساب تكلفة الوحدة الأساسية بنجاح بناءً على:" & vbCrLf &
+                SmartMessageBox.Show($"تم احتساب تكلفة الوحدة الأساسية بنجاح بناءً على:" & vbCrLf &
                             $"- الوحدة: {unitName}" & vbCrLf &
                             $"- سعر الشراء: {price:N2} ج" & vbCrLf &
                             $"- معامل التحويل: {factor:N2}" & vbCrLf &
@@ -396,7 +396,7 @@ Public Class frmRawMaterials
                     ' عند الضغط على وحدة معينة من القائمة
                     AddHandler menuItem.Click, Sub(s, args)
                                                    txtCostPrice.Text = baseCost.ToString("N4")
-                                                   MessageBox.Show($"تم نقل التكلفة ({baseCost:N4} ج) إلى خانة التكلفة بنجاح بناءً على ({unitName})." & vbCrLf &
+                                                   SmartMessageBox.Show($"تم نقل التكلفة ({baseCost:N4} ج) إلى خانة التكلفة بنجاح بناءً على ({unitName})." & vbCrLf &
                                                               "اضغط على زر (حفظ) لاعتماد التعديل.", "تم التحديد", MessageBoxButtons.OK, MessageBoxIcon.Information)
                                                End Sub
 
@@ -408,7 +408,7 @@ Public Class frmRawMaterials
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء جلب وحدات التحويل واحتساب التكلفة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء جلب وحدات التحويل واحتساب التكلفة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 End Class

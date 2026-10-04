@@ -53,7 +53,7 @@ Public Class ProductUnits
         '    lstSuggestions.Visible = False
 
         'Catch ex As Exception
-        '    MessageBox.Show("❌ خطأ أثناء تحميل بيانات الصف: " & ex.Message)
+        '    SmartMessageBox.Show("❌ خطأ أثناء تحميل بيانات الصف: " & ex.Message)
         'End Try
         Try
             If e.RowIndex < 0 Then Exit Sub
@@ -80,7 +80,7 @@ Public Class ProductUnits
             lstSuggestions.Visible = False
 
         Catch ex As Exception
-            MessageBox.Show("❌ خطأ أثناء تحميل بيانات الصف: " & ex.Message)
+            SmartMessageBox.Show("❌ خطأ أثناء تحميل بيانات الصف: " & ex.Message)
         End Try
 
     End Sub
@@ -123,12 +123,12 @@ Public Class ProductUnits
             cmd.Parameters.AddWithValue("@Sale_Price", Sale_Price.Text)
             cmd.Parameters.AddWithValue("@Notes", Notes.Text)
             cmd.ExecuteNonQuery()
-            MessageBox.Show("✅ تم إضافة الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("✅ تم إضافة الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             End Using
             btn_clear.PerformClick()
             LoadProductUnits() ' لإعادة تحميل البيانات
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء الإضافة: " & ex.Message)
         End Try
     End Sub
     Private Sub datagridviewsetup()
@@ -326,7 +326,7 @@ Public Class ProductUnits
     Private Sub PrintSelectedRowValues(dgv As DataGridView)
 
         If dgv.CurrentRow Is Nothing Then
-            MessageBox.Show("❌ من فضلك اختر صف أولاً.")
+            SmartMessageBox.Show("❌ من فضلك اختر صف أولاً.")
             Exit Sub
         End If
 
@@ -345,7 +345,7 @@ Public Class ProductUnits
             msg.AppendLine(colName & ": " & colValue)
         Next
 
-        MessageBox.Show(msg.ToString(), "بيانات الصف", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        SmartMessageBox.Show(msg.ToString(), "بيانات الصف", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
     End Sub
     Private Sub btn_edit_Click(sender As Object, e As EventArgs) Handles btn_edit.Click
@@ -353,7 +353,7 @@ Public Class ProductUnits
         '    ' استدعاء دالة التحقق
         '    Dim result = ValidateAndConvertInputs()
         '    If Not result.IsValid Then
-        '        MessageBox.Show(result.Message, "تحقق من البيانات", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '        SmartMessageBox.Show(result.Message, "تحقق من البيانات", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         '        Return
         '    End If
 
@@ -382,24 +382,24 @@ Public Class ProductUnits
         '        cmd.ExecuteNonQuery()
         '    End Using
 
-        '    MessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    SmartMessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '    Disconnect()
         '    btn_clear.PerformClick()
         '    LoadProductUnits()
 
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
         'End Try
         Try
             ' ✅ التحقق من وجود وحدة محددة
             If _currentUnitID = 0 Then
-                MessageBox.Show("من فضلك اختر وحدة من الجدول أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("من فضلك اختر وحدة من الجدول أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             Dim result = ValidateAndConvertInputs()
             If Not result.IsValid Then
-                MessageBox.Show(result.Message, "تحقق من البيانات", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show(result.Message, "تحقق من البيانات", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -431,9 +431,9 @@ Public Class ProductUnits
 
                 ' ✅ التحقق الفعلي من أن التعديل تم
                 If rowsAffected > 0 Then
-                    MessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✏️ تم تعديل البيانات بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
-                    MessageBox.Show("⚠️ لم يتم العثور على الوحدة في قاعدة البيانات", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("⚠️ لم يتم العثور على الوحدة في قاعدة البيانات", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End If
             End Using
 
@@ -443,38 +443,38 @@ Public Class ProductUnits
             LoadProductUnits()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
         End Try
     End Sub
 
     Private Sub btn_delete_Click(sender As Object, e As EventArgs) Handles btn_delete.Click
         'Try
         '    If ProductUnit_ID.Text = "" Then
-        '        MessageBox.Show("من فضلك اختر وحدة لحذفها أولاً")
+        '        SmartMessageBox.Show("من فضلك اختر وحدة لحذفها أولاً")
         '        Return
         '    End If
 
-        '    If MessageBox.Show("هل أنت متأكد من حذف هذه الوحدة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        '    If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الوحدة؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
         '        Connect()
         '        Dim query As String = "DELETE FROM ProductUnits WHERE ProductUnit_ID=@ProductUnit_ID"
         '        Dim cmd As New SqlCommand(query, Conn)
         '        cmd.Parameters.AddWithValue("@ProductUnit_ID", Convert.ToInt32(ProductUnit_ID.Text.Trim))
         '        cmd.ExecuteNonQuery()
         '        Disconnect()
-        '        MessageBox.Show("🗑️ تم حذف الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '        SmartMessageBox.Show("🗑️ تم حذف الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
         '        btn_clear.PerformClick()
         '        LoadProductUnits()
         '    End If
         'Catch ex As Exception
-        '    MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
+        '    SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         'End Try
         Try
             If _currentUnitID = 0 Then
-                MessageBox.Show("من فضلك اختر وحدة لحذفها أولاً")
+                SmartMessageBox.Show("من فضلك اختر وحدة لحذفها أولاً")
                 Return
             End If
 
-            If MessageBox.Show("هل أنت متأكد من حذف هذه الوحدة؟", "تأكيد الحذف",
+            If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الوحدة؟", "تأكيد الحذف",
                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 Using cn As SqlConnection = DBModule.NewConn()
                 Dim query As String = "DELETE FROM ProductUnits WHERE ProductUnit_ID = @ProductUnit_ID"
@@ -482,13 +482,13 @@ Public Class ProductUnits
                 cmd.Parameters.AddWithValue("@ProductUnit_ID", _currentUnitID)
                 cmd.ExecuteNonQuery()
                 End Using
-                MessageBox.Show("🗑️ تم حذف الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("🗑️ تم حذف الوحدة بنجاح", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 _currentUnitID = 0
                 btn_clear.PerformClick()
                 LoadProductUnits()
             End If
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
+            SmartMessageBox.Show("حدث خطأ أثناء الحذف: " & ex.Message)
         End Try
     End Sub
 
@@ -815,7 +815,7 @@ End Sub
     Private Sub btnSearchByID_Click(sender As Object, e As EventArgs) Handles btnSearchByID.Click
         ' تأكد إن المستخدم كتب رقم ID
         If String.IsNullOrWhiteSpace(ProductUnit_ID.Text) Then
-            MessageBox.Show("من فضلك أدخل كود المنتج أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("من فضلك أدخل كود المنتج أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -831,7 +831,7 @@ End Sub
             If reader.Read() Then
                 txt_Product_Name.Text = reader("Product_Name").ToString()
             Else
-                MessageBox.Show("لم يتم العثور على المنتج بهذا الكود", "نتيجة البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("لم يتم العثور على المنتج بهذا الكود", "نتيجة البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 txt_Product_Name.Clear()
             End If
 
@@ -839,14 +839,14 @@ End Sub
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub btnSearchByName_Click(sender As Object, e As EventArgs) Handles btnSearchByName.Click
         ' تأكد إن المستخدم كتب اسم المنتج
         If String.IsNullOrWhiteSpace(txt_Product_Name.Text) Then
-            MessageBox.Show("من فضلك أدخل اسم المنتج أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("من فضلك أدخل اسم المنتج أولاً", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -862,7 +862,7 @@ End Sub
             If reader.Read() Then
                 ProductUnit_ID.Text = reader("Product_ID").ToString()
             Else
-                MessageBox.Show("لم يتم العثور على المنتج بهذا الاسم", "نتيجة البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("لم يتم العثور على المنتج بهذا الاسم", "نتيجة البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 ProductUnit_ID.Clear()
             End If
 
@@ -870,7 +870,7 @@ End Sub
             End Using
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -901,7 +901,7 @@ End Sub
             lstSuggestions.BringToFront()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تحميل الاقتراحات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل الاقتراحات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -928,7 +928,7 @@ End Sub
 
         End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء جلب كود المنتج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء جلب كود المنتج: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -936,7 +936,7 @@ End Sub
         Try
             ' ✅ تحقق من أن المستخدم اختار عمود وأدخل قيمة
             If cmbSearchField.SelectedValue Is Nothing OrElse String.IsNullOrWhiteSpace(txtSearch.Text) Then
-                MessageBox.Show("من فضلك اختر عمود واكتب قيمة للبحث", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("من فضلك اختر عمود واكتب قيمة للبحث", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Exit Sub
             End If
 
@@ -978,16 +978,16 @@ End Sub
                     dgv_ProductUnits.DataSource = dt
                 Else
                     dgv_ProductUnits.DataSource = Nothing
-                    MessageBox.Show("لا توجد نتائج مطابقة للبحث.", "نتيجة البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("لا توجد نتائج مطابقة للبحث.", "نتيجة البحث", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End If
             End Using
 
         End Using
         Catch ex As SqlException
-            MessageBox.Show("خطأ في الاتصال أو الاستعلام بقاعدة البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في الاتصال أو الاستعلام بقاعدة البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ غير متوقع أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ غير متوقع أثناء البحث: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
 
         End Try
 
@@ -1081,10 +1081,10 @@ End Sub
             '    barcodePort.Open()
             'End If
 
-            MessageBox.Show("في انتظار قراءة الباركود من جهاز السكانر المتصل", "انتظار", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("في انتظار قراءة الباركود من جهاز السكانر المتصل", "انتظار", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء محاولة فتح المنفذ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء محاولة فتح المنفذ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1098,14 +1098,14 @@ End Sub
         Try
             ' التحقق من وجود رقم المنتج أولاً
             If String.IsNullOrWhiteSpace(ProductUnit_ID.Text) Then
-                MessageBox.Show("من فضلك اختر المنتج أولاً قبل مسح الباركود.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("من فضلك اختر المنتج أولاً قبل مسح الباركود.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 ProductUnit_ID.Focus()
                 Return Nothing
             End If
 
             ' التحقق من أن الباركود فعلاً مقروء
             If String.IsNullOrWhiteSpace(scannedText) Then
-                MessageBox.Show("لم يتم قراءة أي باركود. حاول المسح مرة أخرى.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("لم يتم قراءة أي باركود. حاول المسح مرة أخرى.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return Nothing
             End If
 
@@ -1116,7 +1116,7 @@ End Sub
             Return scannedText
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء قراءة الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء قراءة الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return Nothing
         End Try
     End Function
@@ -1125,7 +1125,7 @@ End Sub
         Try
             ' التحقق من وجود رقم الوحدة
             If String.IsNullOrWhiteSpace(ProductUnit_ID.Text) Then
-                MessageBox.Show("من فضلك أدخل رقم الوحدة أولاً قبل توليد الباركود.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("من فضلك أدخل رقم الوحدة أولاً قبل توليد الباركود.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 ProductUnit_ID.Focus()
                 Exit Sub
             End If
@@ -1135,7 +1135,7 @@ End Sub
 
             ' التحقق أن رقم الوحدة رقم فعلاً
             If Not IsNumeric(unitId) Then
-                MessageBox.Show("رقم الوحدة يجب أن يكون رقمياً فقط.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("رقم الوحدة يجب أن يكون رقمياً فقط.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit Sub
             End If
 
@@ -1147,10 +1147,10 @@ End Sub
             txt_Barcode.Text = generatedBarcode
 
             ' رسالة نجاح
-            MessageBox.Show("تم توليد رقم الباركود بنجاح: " & generatedBarcode, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم توليد رقم الباركود بنجاح: " & generatedBarcode, "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء توليد الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء توليد الباركود: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -1166,10 +1166,10 @@ End Sub
             Me.Invoke(Sub()
                           txt_Barcode.Focus()
                           txt_Barcode.Text = code
-                          MessageBox.Show("تم قراءة الباركود: " & code, "تم بنجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                          SmartMessageBox.Show("تم قراءة الباركود: " & code, "تم بنجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                       End Sub)
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء استقبال البيانات من السكانر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء استقبال البيانات من السكانر: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

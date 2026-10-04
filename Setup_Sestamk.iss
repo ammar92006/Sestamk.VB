@@ -1,12 +1,13 @@
 ; ==============================================================================
 ; سكريبت إعداد برنامج التثبيت الاحترافي لتطبيق سستمك (Sestamk POS Setup Script)
 ; يدعم التثبيت الصامت التلقائي لمحرك Microsoft SQL Server LocalDB و .NET Framework 4.8
-; مع ضبط صلاحيات NTFS (users-modify) لمنع مشاكل UAC وحفظ الإعدادات في Program Files
+; الأمان: لا تُمنح صلاحيات التعديل على ملفات البرنامج التنفيذية ({app} و tools) لمنع تصعيد الصلاحيات،
+; وتُمنح فقط على مجلدات البيانات (logs / Backups / db / photos / Barcodes) لتخزين ملفات التشغيل.
 ; متوافق مع Inno Setup 6+
 ; ==============================================================================
 
 #define MyAppName "Sestamk POS"
-#define MyAppVersion "1.2.6"
+#define MyAppVersion "1.2.7"
 #define MyAppPublisher "Sestamk Solutions"
 #define MyAppURL "https://sestamk.com"
 #define MyAppExeName "Sestamk.exe"
@@ -27,7 +28,7 @@ DefaultDirName={autopf}\Sestamk
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=OutputSetup
-OutputBaseFilename=Sestamk_Setup_v2026
+OutputBaseFilename=Sestamk_Setup_v{#MyAppVersion}
 SetupIconFile=WindowsApp1\loge.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2/max
@@ -46,39 +47,39 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Dirs]
-; منح صلاحيات التعديل الكاملة للمستخدمين العاديين لمنع أخطاء Access Denied عند حفظ الإعدادات وقواعد البيانات المحلية
-Name: "{app}"; Permissions: users-modify
+; صلاحيات التعديل لمجلدات البيانات فقط — مجلد البرنامج الجذري ومجلد tools يبقيان محميين (يحتويان ملفات تنفيذية)
+Name: "{app}"
 Name: "{app}\logs"; Permissions: users-modify
 Name: "{app}\Backups"; Permissions: users-modify
 Name: "{app}\db"; Permissions: users-modify
-Name: "{app}\redist"; Permissions: users-modify
+Name: "{app}\redist"
 Name: "{app}\photos_user"; Permissions: users-modify
 Name: "{app}\photos_purchases"; Permissions: users-modify
 Name: "{app}\Barcodes"; Permissions: users-modify
-Name: "{app}\tools"; Permissions: users-modify
+Name: "{app}\tools"
 Name: "{commonappdata}\Sestamk"; Permissions: users-modify
 Name: "{commonappdata}\Sestamk\logs"; Permissions: users-modify
 Name: "{commonappdata}\Sestamk\Backups"; Permissions: users-modify
 
 [Files]
-; 1. الملفات الأساسية للبرنامج (exe + جميع المكتبات المشغلة) مع منح صلاحية التعديل
-Source: "{#SourceBin}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Permissions: users-modify; Excludes: "*.pdb,*.xml,*.vshost.*,*.manifest,*.application,Backups\*,logs\*,app.publish\*"
+; 1. الملفات الأساسية للبرنامج (exe + جميع المكتبات المشغلة) — بدون صلاحيات تعديل (أمان: منع استبدال الملفات التنفيذية)
+Source: "{#SourceBin}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pdb,*.xml,*.vshost.*,*.manifest,*.application,Backups\*,logs\*,app.publish\*"
 
 ; 1.1 أداة التحديث المباشر التلقائي (update.exe و Sestamk.VB.Updater.exe) في مجلد البرنامج الرئيسي ومجلد tools
-Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "update.exe"; Flags: ignoreversion; Permissions: users-modify
-Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion; Permissions: users-modify
-Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "update.exe"; Flags: ignoreversion; Permissions: users-modify
-Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion; Permissions: users-modify
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "update.exe"; Flags: ignoreversion
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "update.exe"; Flags: ignoreversion
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion
 
 ; 2. حزمة محرك LocalDB للتثبيت المؤقت
 Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall skipifsourcedoesntexist
 
 ; 3. حزمة محرك LocalDB داخل مجلد البرنامج كاحتياط دائم للنظام
-Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{app}\redist"; Flags: ignoreversion skipifsourcedoesntexist; Permissions: users-modify
+Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{app}\redist"; Flags: ignoreversion skipifsourcedoesntexist
 
 ; 4. سكريبتات هيكل وقاعدة البيانات الأولية
-Source: "WindowsApp1\Resources\DatabaseSchema.sql"; DestDir: "{app}\db"; Flags: ignoreversion; Permissions: users-modify
-Source: "SestamkDB_SQL2014_Full.sql"; DestDir: "{app}\db"; Flags: ignoreversion skipifsourcedoesntexist; Permissions: users-modify
+Source: "WindowsApp1\Resources\DatabaseSchema.sql"; DestDir: "{app}\db"; Flags: ignoreversion
+Source: "SestamkDB_SQL2014_Full.sql"; DestDir: "{app}\db"; Flags: ignoreversion skipifsourcedoesntexist
 
 ; 5. حزمة .NET Framework 4.8 إن توفرت في مجلد redist
 Source: "Installer\redist\ndp48-x86-x64-allos-enu.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall skipifsourcedoesntexist

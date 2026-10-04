@@ -9,6 +9,9 @@ Public Module SettingsKeys
 
     ' ── حساب المدير (قابل للتهيئة لكل نشاط) ──
     Public Const AdminUsername As String = "AdminUsername"
+    ''' <summary>تجزئة PBKDF2 لكلمة مرور المدير — لا يخزن النص الصريح أبداً</summary>
+    Public Const AdminPasswordHash As String = "AdminPasswordHash"
+    ''' <summary>مهمل — كان يخزن النص الصريح؛ يُمسح تلقائياً عند الترقية</summary>
     Public Const AdminPassword As String = "AdminPassword"
 
     ' ── بيانات النشاط / المحل ──
@@ -127,6 +130,16 @@ Public Module SettingsKeys
     Public Const NotificationErrorSound As String = "Notification_ErrorSound"
     Public Const NotificationLowStockAlert As String = "Notification_LowStockAlert"
     Public Const NotificationPrintFailAlert As String = "Notification_PrintFailAlert"
+
+    ' ── إعدادات Toast المتطورة (Advanced Toast Settings) ──
+    Public Const NotificationSoundEnabled As String = "Notification_SoundEnabled"
+    Public Const NotificationPosition As String = "Notification_Position"          ' ToastPosition enum (0-6)
+    Public Const NotificationAnimation As String = "Notification_Animation"        ' ToastAnimation enum (0-4)
+    Public Const NotificationDuration As String = "Notification_Duration"          ' milliseconds (default 3800)
+    Public Const NotificationMaxVisible As String = "Notification_MaxVisible"      ' max toasts on screen (default 5)
+    Public Const NotificationShowProgressBar As String = "Notification_ShowProgressBar"
+    Public Const NotificationCustomSoundPath As String = "Notification_CustomSoundPath"
+    Public Const NotificationStackSimilar As String = "Notification_StackSimilar"  ' تجميع الإشعارات المتشابهة
 
     ' ── إعدادات خدمة الواتساب (WhatsApp Settings) ──
     Public Const WhatsAppEnabled As String = "WhatsApp_Enabled"

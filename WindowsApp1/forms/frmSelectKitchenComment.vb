@@ -241,7 +241,7 @@ Public Class frmSelectKitchenComment
     Private Sub btnQuickAdd_Click(sender As Object, e As EventArgs) Handles btnQuickAdd.Click
         Dim newComment = txtNewComment.Text.Trim()
         If String.IsNullOrWhiteSpace(newComment) Then
-            MessageBox.Show("يرجى كتابة نص التعليق أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى كتابة نص التعليق أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtNewComment.Focus()
             Return
         End If

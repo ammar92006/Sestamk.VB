@@ -24,7 +24,7 @@ Namespace UC_Settings
                 tglLowStock.Checked = SettingsManager.GetBoolSetting(SettingsKeys.NotificationLowStockAlert, True)
                 tglPrintFailure.Checked = SettingsManager.GetBoolSetting(SettingsKeys.NotificationPrintFailAlert, True)
             Catch ex As Exception
-                MessageBox.Show("خطأ في قراءة إعدادات الإشعارات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في قراءة إعدادات الإشعارات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -38,15 +38,15 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات الإشعارات بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات الإشعارات بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات الإشعارات بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات الإشعارات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات الإشعارات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الإشعارات؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات الإشعارات؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 tglOrderSound.Checked = True
                 tglErrorSound.Checked = True
                 tglLowStock.Checked = True

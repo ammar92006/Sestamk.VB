@@ -1,4 +1,4 @@
-Imports System.Diagnostics
+﻿Imports System.Diagnostics
 Imports System.Drawing
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
@@ -49,7 +49,7 @@ Public Class FormActivation
             StartBackgroundHwidPolling()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ في تحميل بيانات بصمة الجهاز: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ في تحميل بيانات بصمة الجهاز: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -82,7 +82,8 @@ Public Class FormActivation
 
                 Try
                     Notify.Toast(result.Message, Notify.ToastType.Success)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("FormActivation.vb:85", __logEx)
                 End Try
 
                 Await Task.Delay(800)
@@ -92,12 +93,12 @@ Public Class FormActivation
                 Dim msg = If(String.IsNullOrWhiteSpace(result.Message), "مفتاح التفعيل غير صالح.", result.Message)
                 lblStatusMessage.Text = "❌ " & msg
                 lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
-                MessageBox.Show(msg, "فشل التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show(msg, "فشل التفعيل", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
         Catch ex As Exception
             lblStatusMessage.Text = "❌ خطأ في الاتصال: " & ex.Message
             lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
-            MessageBox.Show("تعذر إتمام عملية التفعيل: " & ex.Message, "خطأ تفعيل", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("تعذر إتمام عملية التفعيل: " & ex.Message, "خطأ تفعيل", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             btn_Staff.Enabled = True
             btnCheckOnline.Enabled = True
@@ -131,7 +132,8 @@ Public Class FormActivation
 
                 Try
                     Notify.Toast("تم تفعيل الجهاز أونلاين بنجاح ✅", Notify.ToastType.Success)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("FormActivation.vb:135", __logEx)
                 End Try
 
                 Await Task.Delay(800)
@@ -157,7 +159,8 @@ Public Class FormActivation
 
                     Try
                         Notify.Toast("تم التحقق من الترخيص وتفعيله بنجاح ✅", Notify.ToastType.Success)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("FormActivation.vb:162", __logEx)
                     End Try
 
                     Await Task.Delay(800)
@@ -170,7 +173,7 @@ Public Class FormActivation
             ' 3. في حال عدم وجود ترخيص نشط
             lblStatusMessage.Text = "⚠️ لم يتم العثور على ترخيص نشط مسجل لهذا الجهاز على السيرفر."
             lblStatusMessage.ForeColor = Color.FromArgb(251, 191, 36)
-            MessageBox.Show("لا يوجد ترخيص نشط مسجل لهذا الجهاز على السيرفر حتى الآن." & vbCrLf & vbCrLf &
+            SmartMessageBox.Show("لا يوجد ترخيص نشط مسجل لهذا الجهاز على السيرفر حتى الآن." & vbCrLf & vbCrLf &
                             "إذا قمت بإرسال معرف الجهاز للإدارة، يرجى الانتظار لحين التفعيل ثم الضغط على هذا الزر مرة أخرى.",
                             "فحص السيرفر الأونلاين", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
@@ -209,17 +212,20 @@ Public Class FormActivation
                                                     lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
                                                     Try
                                                         Notify.Toast("تم تفعيل الجهاز أونلاين بنجاح ✅", Notify.ToastType.Success)
-                                                    Catch
+                                                    Catch __logEx As Exception
+                                                        Logger.LogError("FormActivation.vb:215", __logEx)
                                                     End Try
                                                     Await Task.Delay(800)
                                                     DialogResult = DialogResult.OK
                                                     Close()
                                                 End If
-                                            Catch
+                                            Catch __logEx As Exception
+                                                Logger.LogError("FormActivation.vb:222", __logEx)
                                             End Try
                                         End Sub
             _pollTimer.Start()
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("FormActivation.vb:227", __logEx)
         End Try
     End Sub
 
@@ -230,7 +236,8 @@ Public Class FormActivation
                 _pollTimer.Dispose()
                 _pollTimer = Nothing
             End If
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("FormActivation.vb:239", __logEx)
         End Try
     End Sub
 
@@ -267,7 +274,8 @@ Public Class FormActivation
 
                 Try
                     Notify.Toast("تم نسخ معرف الجهاز للحافظة بنجاح ✅", Notify.ToastType.Success)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("FormActivation.vb:277", __logEx)
                 End Try
 
                 Await Task.Delay(2000)
@@ -275,7 +283,7 @@ Public Class FormActivation
                 btnCopyHwid.FillColor = Color.FromArgb(51, 65, 85)
             End If
         Catch ex As Exception
-            MessageBox.Show("تعذر نسخ المعرف: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("تعذر نسخ المعرف: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
 
@@ -296,7 +304,7 @@ Public Class FormActivation
                 lblStatusMessage.ForeColor = Color.FromArgb(251, 191, 36)
             End If
         Catch ex As Exception
-            MessageBox.Show("تعذر اللصق: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("تعذر اللصق: " & ex.Message, "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
         End Try
     End Sub
 
@@ -311,7 +319,7 @@ Public Class FormActivation
             Dim url = "https://wa.me/201281637066?text=" & Uri.EscapeDataString(message)
             Process.Start(New ProcessStartInfo(url) With {.UseShellExecute = True})
         Catch ex As Exception
-            MessageBox.Show("تعذر فتح رابط الدعم الفني: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("تعذر فتح رابط الدعم الفني: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

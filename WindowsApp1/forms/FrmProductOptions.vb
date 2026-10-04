@@ -465,7 +465,8 @@ Public Class FrmProductOptions
             .SelectedSize = _selectedSize,
             .SelectedAddons = New List(Of ProductAddonModel)(_selectedAddons),
             .Quantity = _quantity,
-            .Notes = ""
+            .Notes = "",
+            .TaxPercent = Convert.ToDecimal(If(_product.TaxPercent.HasValue, _product.TaxPercent.Value, 0))
         }
 
         ResultOrderItems.Add(item)

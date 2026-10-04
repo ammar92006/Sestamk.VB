@@ -163,7 +163,7 @@ Namespace UC_Settings
                 chkPaymentMaster.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PaymentMaster, True)
                 chkPaymentMada.Checked = SettingsManager.GetBoolSetting(SettingsKeys.PaymentMada, True)
             Catch ex As Exception
-                MessageBox.Show("خطأ في قراءة إعدادات البيع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في قراءة إعدادات البيع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -220,15 +220,15 @@ Namespace UC_Settings
                 Try
                     Notify.Toast("تم حفظ إعدادات البيع بنجاح ✅", Notify.ToastType.Success)
                 Catch
-                    MessageBox.Show("✅ تم حفظ إعدادات البيع بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("✅ تم حفظ إعدادات البيع بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 End Try
             Catch ex As Exception
-                MessageBox.Show("خطأ في حفظ إعدادات البيع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في حفظ إعدادات البيع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
         Private Sub btnReset_Click(sender As Object, e As EventArgs) Handles btnReset.Click
-            If MessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات البيع؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل أنت متأكد من استعادة القيم الافتراضية لإعدادات البيع؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 tglDineIn.Checked = True
                 tglTakeaway.Checked = True
                 tglDelivery.Checked = True

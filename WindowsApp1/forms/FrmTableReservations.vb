@@ -98,18 +98,18 @@ Namespace Global.WindowsApp1
 
         Private Async Function SaveReservationAsync() As Task
             If cmbTables.SelectedValue Is Nothing Then
-                MessageBox.Show("يرجى اختيار طاولة للحجز!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى اختيار طاولة للحجز!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtCustomerName.Text) Then
-                MessageBox.Show("يرجى إدخال اسم العميل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى إدخال اسم العميل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 txtCustomerName.Focus()
                 Return
             End If
 
             If String.IsNullOrWhiteSpace(txtCustomerPhone.Text) Then
-                MessageBox.Show("يرجى إدخال رقم هاتف العميل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى إدخال رقم هاتف العميل!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 txtCustomerPhone.Focus()
                 Return
             End If
@@ -141,11 +141,11 @@ Namespace Global.WindowsApp1
             Try
                 Dim success = Await _repo.SaveTableReservationAsync(resModel)
                 If success Then
-                    MessageBox.Show($"تم تأكيد الحجز بنجاح برقم: {resModel.ReservationNumber}، وتم تغيير حالة الطاولة إلى محجوزة وإيداع العربون في الخزينة!", "نجاح الحجز", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show($"تم تأكيد الحجز بنجاح برقم: {resModel.ReservationNumber}، وتم تغيير حالة الطاولة إلى محجوزة وإيداع العربون في الخزينة!", "نجاح الحجز", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     ClearInputs()
                     LoadReservationsList()
                 Else
-                    MessageBox.Show("حدث خطأ أثناء حفظ الحجز!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء حفظ الحجز!", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
             Catch ex As Exception
                 Logger.LogError("SaveReservationAsync", ex)
@@ -156,7 +156,7 @@ Namespace Global.WindowsApp1
 
         Private Sub CheckInSelectedReservation(sender As Object, e As EventArgs)
             If dgvReservations.SelectedRows.Count = 0 Then
-                MessageBox.Show("يرجى تحديد حجز من القائمة لتسكينه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى تحديد حجز من القائمة لتسكينه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -165,9 +165,9 @@ Namespace Global.WindowsApp1
             Dim tblId = Convert.ToInt32(row.Cells("colTableID").Value)
             Dim custName = row.Cells("colCustomer").Value.ToString()
 
-            If MessageBox.Show($"هل ترغب في تسكين العميل: {custName} الآن على الطاولة وتحويلها إلى مشغولة؟", "تأكيد التسكين", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show($"هل ترغب في تسكين العميل: {custName} الآن على الطاولة وتحويلها إلى مشغولة؟", "تأكيد التسكين", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 If _repo.CheckInReservation(resId, tblId) Then
-                    MessageBox.Show("تم تسكين العميل بنجاح وأصبحت الطاولة مشغولة!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تسكين العميل بنجاح وأصبحت الطاولة مشغولة!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadReservationsList()
                 End If
             End If
@@ -175,7 +175,7 @@ Namespace Global.WindowsApp1
 
         Private Sub CancelSelectedReservation(sender As Object, e As EventArgs)
             If dgvReservations.SelectedRows.Count = 0 Then
-                MessageBox.Show("يرجى تحديد حجز من القائمة لإلغائه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("يرجى تحديد حجز من القائمة لإلغائه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 
@@ -184,9 +184,9 @@ Namespace Global.WindowsApp1
             Dim tblId = Convert.ToInt32(row.Cells("colTableID").Value)
             Dim custName = row.Cells("colCustomer").Value.ToString()
 
-            If MessageBox.Show($"هل أنت متأكد من إلغاء حجز العميل: {custName} وإتاحة الطاولة مجدداً؟", "تأكيد الإلغاء", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show($"هل أنت متأكد من إلغاء حجز العميل: {custName} وإتاحة الطاولة مجدداً؟", "تأكيد الإلغاء", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 If _repo.CancelReservation(resId, tblId) Then
-                    MessageBox.Show("تم إلغاء الحجز بنجاح وأصبحت الطاولة متاحة!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم إلغاء الحجز بنجاح وأصبحت الطاولة متاحة!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadReservationsList()
                 End If
             End If

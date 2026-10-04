@@ -63,7 +63,7 @@ Public Class frmRolesAndPermissions
                 End If
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الأدوار: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل الأدوار: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -105,14 +105,14 @@ Public Class frmRolesAndPermissions
 
             UpdateSelectAllState()
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل الصلاحيات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل الصلاحيات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     ' 5. حفظ الصلاحيات المعدلة للدور المختار مع تحديث اسم ووصف الدور
     Private Sub btnSavePermissions_Click(sender As Object, e As EventArgs) Handles btnSavePermissions.Click
         If Not _selectedRoleID.HasValue Then
-            MessageBox.Show("يرجى اختيار دور وظيفي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار دور وظيفي أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -163,13 +163,13 @@ Public Class frmRolesAndPermissions
                         Session.LoadPermissions(Session.CurrentRoleID)
                     End If
 
-                    MessageBox.Show("تم حفظ الدور والصلاحيات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ الدور والصلاحيات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                     Dim currentID As Integer = _selectedRoleID.Value
                     LoadRolesList(currentID)
                 Catch ex As Exception
                     trans.Rollback()
-                    MessageBox.Show("حدث خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -179,7 +179,7 @@ Public Class frmRolesAndPermissions
     Private Sub btnAddRole_Click(sender As Object, e As EventArgs) Handles btnAddRole.Click
         Dim roleName As String = txtRoleName.Text.Trim()
         If String.IsNullOrWhiteSpace(roleName) Then
-            MessageBox.Show("يرجى كتابة اسم الدور الجديد أولاً في خانة (اسم الدور)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى كتابة اسم الدور الجديد أولاً في خانة (اسم الدور)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtRoleName.Focus()
             Exit Sub
         End If
@@ -191,7 +191,7 @@ Public Class frmRolesAndPermissions
             Using cmdCheck As New SqlCommand(checkSql, conn)
                 cmdCheck.Parameters.AddWithValue("@Name", roleName)
                 If Convert.ToInt32(cmdCheck.ExecuteScalar()) > 0 Then
-                    MessageBox.Show("اسم الدور موجود بالفعل! يرجى اختيار اسم آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("اسم الدور موجود بالفعل! يرجى اختيار اسم آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtRoleName.Focus()
                     Exit Sub
                 End If
@@ -204,10 +204,10 @@ Public Class frmRolesAndPermissions
 
                 Try
                     Dim newID As Integer = Convert.ToInt32(cmd.ExecuteScalar())
-                    MessageBox.Show("تمت إضافة الدور بنجاح! يمكنك الآن تحديد صلاحياته ثم الضغط على (حفظ الصلاحيات).", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت إضافة الدور بنجاح! يمكنك الآن تحديد صلاحياته ثم الضغط على (حفظ الصلاحيات).", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadRolesList(newID)
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء إضافة الدور: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء إضافة الدور: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -216,12 +216,12 @@ Public Class frmRolesAndPermissions
     ' 7. حذف دور وظيفي
     Private Sub btnDeleteRole_Click(sender As Object, e As EventArgs) Handles btnDeleteRole.Click
         If Not _selectedRoleID.HasValue Then
-            MessageBox.Show("يرجى اختيار دور لحذفه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار دور لحذفه!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If _selectedRoleID.Value = 1 Then
-            MessageBox.Show("لا يمكن حذف دور (مدير النظام) الأساسي لحماية البرنامج!", "محظور", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن حذف دور (مدير النظام) الأساسي لحماية البرنامج!", "محظور", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -229,11 +229,11 @@ Public Class frmRolesAndPermissions
         Dim userCountObj As Object = DBModule.ExecuteScalar($"SELECT COUNT(1) FROM Users_TBL WHERE RoleID = {_selectedRoleID.Value} AND (IsDeleted = 0 OR IsDeleted IS NULL)")
         Dim countUsers As Integer = If(userCountObj IsNot Nothing AndAlso Not IsDBNull(userCountObj), Convert.ToInt32(userCountObj), 0)
         If countUsers > 0 Then
-            MessageBox.Show($"لا يمكن حذف هذا الدور لوجود ({countUsers}) مستخدمين مرتبطين به حالياً! يرجى تغيير دور هؤلاء المستخدمين أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show($"لا يمكن حذف هذا الدور لوجود ({countUsers}) مستخدمين مرتبطين به حالياً! يرجى تغيير دور هؤلاء المستخدمين أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذا الدور وكافة صلاحياته؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذا الدور وكافة صلاحياته؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Using conn As New SqlConnection(DBModule.ConnectionString)
                 conn.Open()
                 Using trans As SqlTransaction = conn.BeginTransaction()
@@ -251,14 +251,14 @@ Public Class frmRolesAndPermissions
                         End Using
 
                         trans.Commit()
-                        MessageBox.Show("تم حذف الدور وصلاحياته بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف الدور وصلاحياته بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         _selectedRoleID = Nothing
                         txtRoleName.Clear()
                         txtRoleDescription.Clear()
                         LoadRolesList()
                     Catch ex As Exception
                         trans.Rollback()
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

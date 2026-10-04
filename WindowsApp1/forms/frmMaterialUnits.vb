@@ -47,7 +47,7 @@ Public Class frmMaterialUnits
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ في جلب الوحدات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في جلب الوحدات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -78,19 +78,19 @@ Public Class frmMaterialUnits
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ في جلب وحدات التحويل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في جلب وحدات التحويل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Private Sub btnAddUnit_Click(sender As Object, e As EventArgs) Handles btnAddUnit.Click
         If cmbUnit.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الوحدة المراد إضافتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الوحدة المراد إضافتها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         Dim factor As Decimal = 0
         If Not Decimal.TryParse(txtConversionFactor.Text.Trim(), factor) OrElse factor <= 0 Then
-            MessageBox.Show("يرجى إدخال معامل تحويل صحيح أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال معامل تحويل صحيح أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtConversionFactor.Focus()
             Exit Sub
         End If
@@ -117,7 +117,7 @@ Public Class frmMaterialUnits
                     LoadUnitsGrid()
                     ClearInputs()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -127,7 +127,7 @@ Public Class frmMaterialUnits
         If dgvMaterialUnits.SelectedRows.Count = 0 Then Exit Sub
         Dim unitID As Integer = Convert.ToInt32(dgvMaterialUnits.SelectedRows(0).Cells("MaterialUnitID").Value)
 
-        If MessageBox.Show("هل أنت متأكد من حذف هذه الوحدة للتحويل؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من حذف هذه الوحدة للتحويل؟", "تأكيد", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Using conn As New SqlConnection(DBModule.ConnectionString)
                 Using cmd As New SqlCommand("DELETE FROM MaterialUnits WHERE MaterialUnitID = @ID", conn)
                     cmd.Parameters.AddWithValue("@ID", unitID)

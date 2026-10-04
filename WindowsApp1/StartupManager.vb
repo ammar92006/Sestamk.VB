@@ -1,4 +1,4 @@
-Imports System.IO
+﻿Imports System.IO
 Imports System.Windows.Forms
 Imports Microsoft.Win32
 
@@ -101,7 +101,8 @@ Public Module StartupManager
                     If File.Exists(lnkPath) Then
                         File.Delete(lnkPath)
                     End If
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("StartupManager.vb:104", __logEx)
                 End Try
             End If
 
@@ -160,7 +161,8 @@ Public Module StartupManager
             If IsBusinessAlreadyConfigured() Then
                 Try
                     SettingsManager.SaveSetting(SettingsKeys.SetupCompleted, "true")
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("StartupManager.vb:164", __logEx)
                 End Try
                 Exit Sub
             End If
@@ -188,7 +190,8 @@ Public Module StartupManager
                     If Convert.ToInt32(cmd.ExecuteScalar()) > 0 Then Return True
                 End Using
             End Using
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("StartupManager.vb:193", __logEx)
         End Try
         Return False
     End Function

@@ -66,9 +66,9 @@ Namespace Global.WindowsApp1
             dgvSplits.AlternatingRowsDefaultCellStyle.SelectionForeColor = pal.GridSelectionForeground
 
             AddHandler btnCloseForm.Click, Sub()
-                                              Me.DialogResult = DialogResult.Cancel
-                                              Me.Close()
-                                          End Sub
+                                               Me.DialogResult = DialogResult.Cancel
+                                               Me.Close()
+                                           End Sub
             AddHandler btnApplySplit.Click, Sub() ApplySplitCalculation()
             AddHandler rbEqualSplit.CheckedChanged, Sub()
                                                         numGuests.Enabled = rbEqualSplit.Checked
@@ -89,9 +89,9 @@ Namespace Global.WindowsApp1
             AddHandler btnPrintAllReceipts.Click, Sub() PrintAllSplitReceipts()
             AddHandler btnConfirmSettlement.Click, Sub() ConfirmSettlement()
             AddHandler btnCancelForm.Click, Sub()
-                                               Me.DialogResult = DialogResult.Cancel
-                                               Me.Close()
-                                           End Sub
+                                                Me.DialogResult = DialogResult.Cancel
+                                                Me.Close()
+                                            End Sub
             AddHandler dgvSplits.CellContentClick, AddressOf DgvSplits_CellContentClick
             AddHandler dgvSplits.CellValueChanged, AddressOf DgvSplits_CellValueChanged
 
@@ -178,7 +178,7 @@ Namespace Global.WindowsApp1
 
                 If paidVal >= shareVal Then
                     ' إذا كانت مسددة بالفعل، يتم إلغاء السداد للتعديل
-                    Dim res = MessageBox.Show($"الحصة مسددة بالفعل! هل ترغب في إلغاء سداد حصة ({row.Cells("colGuestName").Value})؟", "إلغاء السداد", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    Dim res = SmartMessageBox.Show($"الحصة مسددة بالفعل! هل ترغب في إلغاء سداد حصة ({row.Cells("colGuestName").Value})؟", "إلغاء السداد", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     If res = DialogResult.Yes Then
                         row.Cells("colPaid").Value = 0.00D
                         row.Cells("colRemaining").Value = shareVal
@@ -194,7 +194,7 @@ Namespace Global.WindowsApp1
                 End If
                 RecalculateTotals()
 
-            ' زر طباعة إيصال فردي
+                ' زر طباعة إيصال فردي
             ElseIf colName = "colBtnPrint" Then
                 PrintSingleGuestReceipt(e.RowIndex)
             End If
@@ -234,7 +234,7 @@ Namespace Global.WindowsApp1
                 row.Cells("colStatus").Style.ForeColor = Color.FromArgb(16, 185, 129)
             Next
             RecalculateTotals()
-            MessageBox.Show("تم سداد جميع الحصص نقداً بنجاح! يمكنك الآن اعتماد الفاتورة.", "سداد كامل", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم سداد جميع الحصص نقداً بنجاح! يمكنك الآن اعتماد الفاتورة.", "سداد كامل", MessageBoxButtons.OK, MessageBoxIcon.Information)
         End Sub
 
         Private Sub PrintSingleGuestReceipt(rowIndex As Integer)
@@ -247,7 +247,7 @@ Namespace Global.WindowsApp1
                 Dim methodStr As String = If(row.Cells("colMethod").Value IsNot Nothing, row.Cells("colMethod").Value.ToString(), "نقدي")
 
                 If paidVal <= 0 Then
-                    Dim ans = MessageBox.Show($"حصة ({gName}) لم يتم سدادها بعد! هل تريد طباعة إيصال مطالبة غير مسدد؟", "تنبيه", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                    Dim ans = SmartMessageBox.Show($"حصة ({gName}) لم يتم سدادها بعد! هل تريد طباعة إيصال مطالبة غير مسدد؟", "تنبيه", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                     If ans = DialogResult.No Then Return
                 End If
 
@@ -278,7 +278,7 @@ Namespace Global.WindowsApp1
             Decimal.TryParse(lblKpiRemaining.Text.Replace("ج", "").Trim(), totalRem)
 
             If totalRem > 0.05D Then
-                MessageBox.Show($"لا يمكن اعتماد إنهاء الفاتورة لوجود متبقي غير مسدد بقيمة: {totalRem:N2} ج.م!", "تنبيه السداد", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show($"لا يمكن اعتماد إنهاء الفاتورة لوجود متبقي غير مسدد بقيمة: {totalRem:N2} ج.م!", "تنبيه السداد", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 Return
             End If
 

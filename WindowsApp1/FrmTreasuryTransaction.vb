@@ -91,7 +91,7 @@ Public Class FrmTreasuryTransaction
                 End Using
             End Using
 
-            MessageBox.Show("تم حفظ الحركة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show("تم حفظ الحركة بنجاح.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Me.DialogResult = DialogResult.OK
             Me.Close()
             ClearControls()
@@ -201,10 +201,10 @@ ORDER BY IsDefault DESC, TreasuryNameAr
     End Function
 
     Private Sub ShowWarning(msg As String)
-        MessageBox.Show(msg, "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        SmartMessageBox.Show(msg, "تحذير", MessageBoxButtons.OK, MessageBoxIcon.Warning)
     End Sub
     Private Sub ShowError(msg As String)
-        MessageBox.Show(msg, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        SmartMessageBox.Show(msg, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Sub
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click

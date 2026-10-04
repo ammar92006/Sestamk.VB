@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Drawing.Imaging
 
@@ -84,13 +84,13 @@ Public Class frmUsers
                 cmbEmployee.SelectedIndex = -1
             End If
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
     Public Sub LoadUsersGrid(Optional filterText As String = "")
         Try
-            Dim query As String = "SELECT U.User_ID, U.User_Code, U.User_Name, U.User_username, U.User_password, " &
+            Dim query As String = "SELECT U.User_ID, U.User_Code, U.User_Name, U.User_username, " &
                                   "U.RoleID, R.RoleName, U.EmployeeID, E.ArabicName AS EmployeeName, " &
                                   "U.UserBarcode, U.UserPhotobase64, U.IsActive, U.User_Note " &
                                   "FROM Users_TBL U " &
@@ -98,17 +98,20 @@ Public Class frmUsers
                                   "LEFT JOIN Employees E ON U.EmployeeID = E.EmployeeID " &
                                   "WHERE (U.IsDeleted = 0 OR U.IsDeleted IS NULL) "
 
+            ' باراميترز بدل الدمج النصي (منع SQL Injection) — ولا تُجلب كلمات المرور إلى الواجهة
+            Dim params As New Dictionary(Of String, Object)
             If Not String.IsNullOrWhiteSpace(filterText) Then
-                query &= $"AND (U.User_Name LIKE '%{filterText.Replace("'", "''")}%' OR U.User_username LIKE '%{filterText.Replace("'", "''")}%' OR U.User_Code LIKE '%{filterText.Replace("'", "''")}%') "
+                query &= "AND (U.User_Name LIKE @Filter OR U.User_username LIKE @Filter OR U.User_Code LIKE @Filter) "
+                params("@Filter") = "%" & filterText & "%"
             End If
 
             query &= "ORDER BY U.User_ID DESC"
 
-            _cachedUsers = DBModule.ExecuteQuery(query)
+            _cachedUsers = DBModule.ExecuteQuery(query, params)
             dgvUsers.DataSource = _cachedUsers
 
             ' إخفاء الحقول غير الأساسية في العرض
-            Dim hiddenCols As String() = {"User_ID", "User_password", "RoleID", "EmployeeID", "UserPhotobase64", "User_Note"}
+            Dim hiddenCols As String() = {"User_ID", "RoleID", "EmployeeID", "UserPhotobase64", "User_Note"}
             For Each c In hiddenCols
                 If dgvUsers.Columns.Contains(c) Then dgvUsers.Columns(c).Visible = False
             Next
@@ -122,7 +125,7 @@ Public Class frmUsers
             If dgvUsers.Columns.Contains("IsActive") Then dgvUsers.Columns("IsActive").HeaderText = "نشط"
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل المستخدمين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل المستخدمين: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -222,7 +225,7 @@ Public Class frmUsers
             Using cmdCheck As New SqlCommand(checkSql, conn)
                 cmdCheck.Parameters.AddWithValue("@Username", txtUsername.Text.Trim())
                 If Convert.ToInt32(cmdCheck.ExecuteScalar()) > 0 Then
-                    MessageBox.Show("اسم الدخول مستخدم بالفعل! اختر اسماً آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("اسم الدخول مستخدم بالفعل! اختر اسماً آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtUsername.Focus()
                     Exit Sub
                 End If
@@ -249,14 +252,15 @@ Public Class frmUsers
                     Task.Run(Async Function()
                                  Try
                                      Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
-                                 Catch
+                                 Catch __logEx As Exception
+                                     Logger.LogError("frmUsers.vb:255", __logEx)
                                  End Try
                              End Function)
-                    MessageBox.Show("تمت إضافة المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تمت إضافة المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadUsersGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء إضافة المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -279,7 +283,7 @@ Public Class frmUsers
                 cmdCheck.Parameters.AddWithValue("@Username", txtUsername.Text.Trim())
                 cmdCheck.Parameters.AddWithValue("@ID", currentUserID)
                 If Convert.ToInt32(cmdCheck.ExecuteScalar()) > 0 Then
-                    MessageBox.Show("اسم الدخول مستخدم بالفعل لمستخدم آخر! اختر اسماً آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("اسم الدخول مستخدم بالفعل لمستخدم آخر! اختر اسماً آخر.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                     txtUsername.Focus()
                     Exit Sub
                 End If
@@ -307,14 +311,15 @@ Public Class frmUsers
                     Task.Run(Async Function()
                                  Try
                                      Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
-                                 Catch
+                                 Catch __logEx As Exception
+                                     Logger.LogError("frmUsers.vb:314", __logEx)
                                  End Try
                              End Function)
-                    MessageBox.Show("تم تعديل بيانات المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل بيانات المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadUsersGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء تعديل المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء تعديل المستخدم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -323,7 +328,7 @@ Public Class frmUsers
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         If dgvUsers.SelectedRows.Count = 0 Then Exit Sub
 
-        If MessageBox.Show("هل أنت متأكد من تعطيل/حذف هذا المستخدم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+        If SmartMessageBox.Show("هل أنت متأكد من تعطيل/حذف هذا المستخدم؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
             Dim currentUserID As Object = dgvUsers.SelectedRows(0).Cells("User_ID").Value
             Dim query As String = "UPDATE Users_TBL SET IsDeleted = 1, IsActive = 0 WHERE User_ID = @ID"
 
@@ -336,14 +341,15 @@ Public Class frmUsers
                         Task.Run(Async Function()
                                      Try
                                          Await WindowsApp1.Services.Sync.UserSyncService.SyncAsync()
-                                     Catch
+                                     Catch __logEx As Exception
+                                         Logger.LogError("frmUsers.vb:344", __logEx)
                                      End Try
                                  End Function)
-                        MessageBox.Show("تم حذف المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف المستخدم بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         LoadUsersGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using
@@ -440,12 +446,12 @@ Public Class frmUsers
         End If
 
         If String.IsNullOrWhiteSpace(txtFullName.Text) OrElse String.IsNullOrWhiteSpace(txtUsername.Text) OrElse String.IsNullOrWhiteSpace(txtPassword.Text) Then
-            MessageBox.Show("يرجى ملء الحقول الإلزامية: (الاسم، اسم الدخول، كلمة المرور)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى ملء الحقول الإلزامية: (الاسم، اسم الدخول، كلمة المرور)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return False
         End If
 
         If cmbRole.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى تحديد دور المستخدم / الصلاحية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد دور المستخدم / الصلاحية!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbRole.Focus()
             Return False
         End If

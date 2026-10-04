@@ -82,7 +82,7 @@ Public Class ExpensesReportForm
                 CalculateSummary(dt)
 
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء جلب التقارير: " & ex.Message, "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء جلب التقارير: " & ex.Message, "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Using
     End Function
@@ -153,13 +153,13 @@ Public Class ExpensesReportForm
     Private Async Sub btn_delete_Click(sender As Object, e As EventArgs) Handles btn_delete.Click
         ' 1. التأكد من أن المستخدم اختار صفاً من الجدول
         If dgvReport.SelectedRows.Count = 0 Then
-            MessageBox.Show("من فضلك اختر المصروف الذي تريد حذفه من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("من فضلك اختر المصروف الذي تريد حذفه من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Return
         End If
 
         ' 2. إظهار رسالة تأكيد للحذف
-        ' ملحوظة: استخدمت MessageBox.Show هنا لأنها الطريقة القياسية في تطبيقات Desktop VB.NET
-        Dim confirmResult = MessageBox.Show("هل أنت متأكد من رغبتك في حذف هذا المصروف نهائياً؟",
+        ' ملحوظة: استخدمت SmartMessageBox.Show هنا لأنها الطريقة القياسية في تطبيقات Desktop VB.NET
+        Dim confirmResult = SmartMessageBox.Show("هل أنت متأكد من رغبتك في حذف هذا المصروف نهائياً؟",
                                             "تأكيد الحذف",
                                             MessageBoxButtons.YesNo,
                                             MessageBoxIcon.Question,
@@ -173,7 +173,7 @@ Public Class ExpensesReportForm
         Try
             selectedExpenseId = Convert.ToInt32(dgvReport.SelectedRows(0).Cells("كود").Value)
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ أثناء محاولة تحديد كود المصروف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("حدث خطأ أثناء محاولة تحديد كود المصروف.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         End Try
 
@@ -192,18 +192,18 @@ Public Class ExpensesReportForm
                     Dim rowsAffected As Integer = Await cmd.ExecuteNonQueryAsync()
 
                     If rowsAffected > 0 Then
-                        MessageBox.Show("تم حذف البيانات بنجاح.", "تم الحذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف البيانات بنجاح.", "تم الحذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
                         ' 5. تحديث الجدول لإظهار البيانات الجديدة بعد الحذف
                         Await FilterDataAsync()
                     Else
-                        MessageBox.Show("لم يتم العثور على السجل في قاعدة البيانات، ربما تم حذفه مسبقاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        SmartMessageBox.Show("لم يتم العثور على السجل في قاعدة البيانات، ربما تم حذفه مسبقاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     End If
 
                 Catch ex As SqlException
-                    MessageBox.Show("خطأ في قاعدة البيانات أثناء الحذف: " & ex.Message, "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ في قاعدة البيانات أثناء الحذف: " & ex.Message, "خطأ فني", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Catch ex As Exception
-                    MessageBox.Show("حدث خطأ غير متوقع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("حدث خطأ غير متوقع: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using

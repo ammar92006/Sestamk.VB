@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Drawing
@@ -48,7 +48,7 @@ Public Class Sales_Returns
             ClearForm()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء فتح شاشة المرتجعات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء فتح شاشة المرتجعات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -77,7 +77,7 @@ Public Class Sales_Returns
             End If
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء تحميل بيانات الخزائن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء تحميل بيانات الخزائن: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Function
 
@@ -124,7 +124,7 @@ Public Class Sales_Returns
     Private Sub SearchInvoice()
         Dim invNum As String = txtInvoiceSearch.Text.Trim()
         If String.IsNullOrWhiteSpace(invNum) Then
-            MessageBox.Show("يرجى إدخال أو مسح رقم الفاتورة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى إدخال أو مسح رقم الفاتورة أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtInvoiceSearch.Focus()
             Exit Sub
         End If
@@ -132,7 +132,7 @@ Public Class Sales_Returns
         Try
             Dim inv As InvoiceModel = _repo.GetInvoiceByNumber(invNum)
             If inv Is Nothing Then
-                MessageBox.Show($"لم يتم العثور على أي فاتورة مبيعات بالرقم: {invNum}", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"لم يتم العثور على أي فاتورة مبيعات بالرقم: {invNum}", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 txtInvoiceSearch.SelectAll()
                 txtInvoiceSearch.Focus()
                 Exit Sub
@@ -141,7 +141,7 @@ Public Class Sales_Returns
             LoadInvoiceIntoReturn(inv)
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء جلب الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء جلب الفاتورة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -290,13 +290,13 @@ Public Class Sales_Returns
                             txtItemSearch.Clear()
                             RecalculateTotals()
                         Else
-                            MessageBox.Show($"لم يتم العثور على أي صنف مطابق لـ: {queryText}", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                            SmartMessageBox.Show($"لم يتم العثور على أي صنف مطابق لـ: {queryText}", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         End If
                     End Using
                 End Using
             End Using
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء البحث عن الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء البحث عن الصنف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
@@ -336,7 +336,7 @@ Public Class Sales_Returns
             End If
 
             If retQty > origQty AndAlso origQty < 999 Then
-                MessageBox.Show($"الكمية المرتجعة لا يمكن أن تزيد عن الكمية المباعة في الفاتورة ({origQty})!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show($"الكمية المرتجعة لا يمكن أن تزيد عن الكمية المباعة في الفاتورة ({origQty})!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 retQty = origQty
                 row.Cells("colReturnQty").Value = retQty
             End If
@@ -400,7 +400,7 @@ Public Class Sales_Returns
         Next
 
         If selectedRows.Count = 0 Then
-            MessageBox.Show("يرجى تحديد صنف واحد على الأقل بكمية مرتجعة صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد صنف واحد على الأقل بكمية مرتجعة صحيحة!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -417,13 +417,13 @@ Public Class Sales_Returns
         If String.IsNullOrEmpty(refundMethod) Then refundMethod = "نقدي من الدرج / الخزينة"
 
         If refundMethod = "إضافة إلى حساب العميل" AndAlso (Not _currentCustomerID.HasValue OrElse _currentCustomerID.Value <= 0) Then
-            MessageBox.Show("لا يمكن إضافة المرتجع لحساب العميل لأن الفاتورة مسجلة لعميل نقدي عام. يرجى اختيار الصرف النقدي أو ربط الفاتورة بعميل محدد.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لا يمكن إضافة المرتجع لحساب العميل لأن الفاتورة مسجلة لعميل نقدي عام. يرجى اختيار الصرف النقدي أو ربط الفاتورة بعميل محدد.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbRefundMethod.Focus()
             Exit Sub
         End If
 
         If cmbTreasury.SelectedValue Is Nothing AndAlso refundMethod = "نقدي من الدرج / الخزينة" Then
-            MessageBox.Show("يرجى اختيار الخزينة التي سيتم صرف المرتجع منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الخزينة التي سيتم صرف المرتجع منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbTreasury.Focus()
             Exit Sub
         End If
@@ -434,7 +434,7 @@ Public Class Sales_Returns
 
         ' تأكيد العملية من المستخدم
         Dim confirmMsg As String = $"هل أنت متأكد من حفظ مرتجع المبيعات بقيمة إجمالية {netRefund:N2} ج.م بطريقة: [{refundMethod}]؟"
-        If MessageBox.Show(confirmMsg, "تأكيد المرتجع", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
+        If SmartMessageBox.Show(confirmMsg, "تأكيد المرتجع", MessageBoxButtons.YesNo, MessageBoxIcon.Question) <> DialogResult.Yes Then
             Exit Sub
         End If
 
@@ -444,17 +444,17 @@ Public Class Sales_Returns
             Dim newReturnNum As String = Await SaveReturnTransactionAsync(selectedRows, totalBeforeDisc, discountVal, netRefund, refundMethod, selectedTreasuryID, returnReason, returnNotes)
             _lastSavedReturnNumber = newReturnNum
 
-            MessageBox.Show($"✅ تم حفظ فاتورة المرتجع رقم [{newReturnNum}] بنجاح، وتحديث المخزون والخزينة وحساب الوردية والعميل.", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            SmartMessageBox.Show($"✅ تم حفظ فاتورة المرتجع رقم [{newReturnNum}] بنجاح، وتحديث المخزون والخزينة وحساب الوردية والعميل.", "نجاح العملية", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             ' اقتراح طباعة الإيصال
-            If MessageBox.Show("هل ترغب في طباعة إيصال المرتجع الآن؟", "طباعة الإيصال", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            If SmartMessageBox.Show("هل ترغب في طباعة إيصال المرتجع الآن؟", "طباعة الإيصال", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 PrintReturnReceipt(newReturnNum, selectedRows, netRefund, refundMethod)
             End If
 
             ClearForm()
 
         Catch ex As Exception
-            MessageBox.Show("فشلت عملية حفظ المرتجع: " & ex.Message, "خطأ في قاعدة البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("فشلت عملية حفظ المرتجع: " & ex.Message, "خطأ في قاعدة البيانات", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             btnSaveReturn.Enabled = True
         End Try
@@ -618,7 +618,8 @@ Public Class Sales_Returns
                 Catch ex As Exception
                     Try
                         trans.Rollback()
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("Sales_Returns.vb:621", __logEx)
                     End Try
                     Throw
                 End Try
@@ -633,7 +634,7 @@ Public Class Sales_Returns
     ' =========================================================
     Private Sub btnPrintReceipt_Click(sender As Object, e As EventArgs) Handles btnPrintReceipt.Click
         If String.IsNullOrEmpty(_lastSavedReturnNumber) Then
-            MessageBox.Show("لم يتم حفظ أي مرتجع بعد لطباعة إيصاله!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("لم يتم حفظ أي مرتجع بعد لطباعة إيصاله!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -719,7 +720,7 @@ Public Class Sales_Returns
             prev.ShowDialog()
 
         Catch ex As Exception
-            MessageBox.Show("خطأ أثناء معاينة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ أثناء معاينة الطباعة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 

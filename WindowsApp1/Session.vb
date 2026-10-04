@@ -1,4 +1,4 @@
-Imports System.Data
+﻿Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Windows.Forms
 
@@ -6,8 +6,12 @@ Public Module Session
     Public CurrentUserID As Integer = 0
     Public CurrentUserfullName As String = String.Empty
     Public CurrentUserName As String = String.Empty
-    Public CurrentUserPassword As String = String.Empty
+    ''' <summary>تجزئة PBKDF2 لكلمة مرور المستخدم الحالي (لا تخزن كلمة المرور نفسها أبداً)</summary>
+    Public CurrentUserPasswordHash As String = String.Empty
     Public CurrentRoleID As Integer = 0
+    Public CurrentRoleName As String = String.Empty
+    Public CurrentUserPhotoBase64 As String = String.Empty
+    Public CurrentUserImage As System.Drawing.Image = Nothing
     Public Permissions As DataTable = Nothing
     Public GuardedScreens As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
@@ -20,7 +24,8 @@ Public Module Session
             ' Dispose للـ DataTable القديم لمنع تراكم الذاكرة
             Try
                 Permissions?.Dispose()
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("Session.vb:27", __logEx)
             End Try
             Permissions = Nothing
 
@@ -59,9 +64,70 @@ Public Module Session
         Catch ex As Exception
             Logger.LogError("Session.LoadPermissions", ex)
             If roleId <> 1 Then
-                MessageBox.Show("خطأ في تحميل الصلاحيات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في تحميل الصلاحيات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
             Permissions = New DataTable()
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' تحميل تفاصيل المستخدم وصورته واسم دوره من قاعدة البيانات
+    ''' </summary>
+    Public Sub LoadUserProfile(userId As Integer, roleId As Integer, Optional username As String = "")
+        Try
+            If userId <= 0 AndAlso String.IsNullOrEmpty(username) Then
+                If roleId = 1 Then
+                    If String.IsNullOrEmpty(CurrentRoleName) Then CurrentRoleName = "مدير النظام"
+                    If String.IsNullOrEmpty(CurrentUserfullName) Then CurrentUserfullName = "المدير العام"
+                End If
+                Return
+            End If
+
+            Using cn As New SqlConnection(DBModule.ConnectionString)
+                cn.Open()
+                Dim sql As String = "SELECT TOP 1 U.User_ID, U.User_Name, U.User_username, U.RoleID, U.UserPhotobase64, R.RoleName " &
+                                    "FROM Users_TBL U " &
+                                    "LEFT JOIN Roles R ON U.RoleID = R.RoleID " &
+                                    "WHERE U.User_ID = @UID OR (U.User_username = @UName AND @UName <> '')"
+                Using cmd As New SqlCommand(sql, cn)
+                    cmd.Parameters.AddWithValue("@UID", userId)
+                    cmd.Parameters.AddWithValue("@UName", If(username, ""))
+                    Using reader As SqlDataReader = cmd.ExecuteReader()
+                        If reader.Read() Then
+                            If Not IsDBNull(reader("User_Name")) AndAlso Not String.IsNullOrWhiteSpace(reader("User_Name").ToString()) Then
+                                CurrentUserfullName = reader("User_Name").ToString().Trim()
+                            End If
+                            If Not IsDBNull(reader("RoleName")) AndAlso Not String.IsNullOrWhiteSpace(reader("RoleName").ToString()) Then
+                                CurrentRoleName = reader("RoleName").ToString().Trim()
+                            End If
+                            If Not IsDBNull(reader("UserPhotobase64")) AndAlso Not String.IsNullOrWhiteSpace(reader("UserPhotobase64").ToString()) Then
+                                Dim photoStr As String = reader("UserPhotobase64").ToString().Trim()
+                                If Not String.IsNullOrEmpty(photoStr) Then
+                                    CurrentUserPhotoBase64 = photoStr
+                                    Try
+                                        CurrentUserImage?.Dispose()
+                                    Catch __logEx As Exception
+                                        Logger.LogError("Session.vb:109", __logEx)
+                                    End Try
+                                    CurrentUserImage = Base64ToImage(photoStr)
+                                End If
+                            End If
+                        End If
+                    End Using
+                End Using
+            End Using
+
+            If String.IsNullOrEmpty(CurrentRoleName) Then
+                CurrentRoleName = If(roleId = 1, "مدير النظام", "مستخدم نظام")
+            End If
+            If String.IsNullOrEmpty(CurrentUserfullName) Then
+                CurrentUserfullName = If(Not String.IsNullOrEmpty(CurrentUserName), CurrentUserName, "المدير العام")
+            End If
+        Catch ex As Exception
+            Logger.LogError("Session.LoadUserProfile", ex)
+            If String.IsNullOrEmpty(CurrentRoleName) Then
+                CurrentRoleName = If(roleId = 1, "مدير النظام", "مستخدم نظام")
+            End If
         End Try
     End Sub
 
@@ -71,15 +137,24 @@ Public Module Session
     Public Sub Clear()
         Try
             Permissions?.Dispose()
-        Catch
+        Catch __logEx As Exception
+            Logger.LogError("Session.vb:140", __logEx)
         End Try
         Permissions = Nothing
         GuardedScreens.Clear()
         CurrentUserID = 0
         CurrentUserfullName = String.Empty
         CurrentUserName = String.Empty
-        CurrentUserPassword = String.Empty
+        CurrentUserPasswordHash = String.Empty
         CurrentRoleID = 0
+        CurrentRoleName = String.Empty
+        CurrentUserPhotoBase64 = String.Empty
+        Try
+            CurrentUserImage?.Dispose()
+        Catch __logEx As Exception
+            Logger.LogError("Session.vb:154", __logEx)
+        End Try
+        CurrentUserImage = Nothing
     End Sub
 
     ''' <summary>
@@ -175,7 +250,7 @@ Public Module Session
 
         If Not HasPermission(resolved, "CanOpen") Then
             Dim dispName As String = GetScreenDisplayName(resolved)
-            MessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عفواً، ليس لديك صلاحية لفتح شاشة (" & dispName & ")!", "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             frm.BeginInvoke(New MethodInvoker(AddressOf frm.Close))
             Return False
         End If
@@ -332,7 +407,7 @@ Public Module Session
         If c IsNot Nothing AndAlso c.Tag IsNot Nothing AndAlso c.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
             Dim parts = c.Tag.ToString().Split("|"c)
             If parts.Length > 1 Then
-                MessageBox.Show(parts(1), "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show(parts(1), "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
         End If
     End Sub
@@ -405,7 +480,7 @@ Public Module Session
         If itm IsNot Nothing AndAlso itm.Tag IsNot Nothing AndAlso itm.Tag.ToString().StartsWith("LOCKED_BY_PERMISSION_") Then
             Dim parts = itm.Tag.ToString().Split("|"c)
             If parts.Length > 1 Then
-                MessageBox.Show(parts(1), "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show(parts(1), "صلاحيات الوصول", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
         End If
     End Sub

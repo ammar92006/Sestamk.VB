@@ -1,4 +1,4 @@
-Imports Microsoft.VisualBasic.ApplicationServices
+﻿Imports Microsoft.VisualBasic.ApplicationServices
 
 Namespace My
     ' The following events are available for MyApplication:
@@ -17,16 +17,18 @@ Namespace My
         Private Sub MyApplication_UnhandledException(sender As Object, e As Microsoft.VisualBasic.ApplicationServices.UnhandledExceptionEventArgs) Handles Me.UnhandledException
             Try
                 Logger.LogError("UnhandledException", e.Exception)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ApplicationEvents.vb:20", __logEx)
             End Try
             Try
                 Dim errorDetails As String = If(e.Exception IsNot Nothing, vbCrLf & "التفاصيل: " & e.Exception.Message, "")
-                MessageBox.Show(
+                SmartMessageBox.Show(
                     "حدث خطأ غير متوقّع، وتم تسجيله تلقائياً." & vbCrLf &
                     "يمكنك متابعة العمل، وإن تكرّر الخطأ أعد تشغيل البرنامج." & errorDetails,
                     "تنبيه",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ApplicationEvents.vb:30", __logEx)
             End Try
 
             ' منع إغلاق البرنامج فقط إذا كانت هناك نوافذ مفتوحة فعلاً
@@ -55,7 +57,8 @@ Namespace My
                     targetForm.Activate()
                     targetForm.BringToFront()
                 End If
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("ApplicationEvents.vb:60", __logEx)
             End Try
         End Sub
 
@@ -69,7 +72,8 @@ Namespace My
             Catch ex As Exception
                 Try
                     Logger.LogError("MyApplication_Startup", ex)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("ApplicationEvents.vb:75", __logEx)
                 End Try
             End Try
         End Sub

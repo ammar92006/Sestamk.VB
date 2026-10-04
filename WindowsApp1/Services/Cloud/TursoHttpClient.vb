@@ -1,4 +1,4 @@
-Imports System
+﻿Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Net
@@ -367,7 +367,8 @@ Namespace Services.Cloud
                                 If errObj("message") IsNot Nothing Then
                                     tursoMsg = errObj("message").ToString()
                                 End If
-                            Catch
+                            Catch __logEx As Exception
+                                Logger.LogError("TursoHttpClient.vb:370", __logEx)
                             End Try
 
                             Throw New TursoException($"Turso API Request failed with status {statusCode}: {tursoMsg}", statusCode, tursoMsg)

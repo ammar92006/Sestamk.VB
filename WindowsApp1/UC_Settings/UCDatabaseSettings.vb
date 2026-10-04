@@ -1,4 +1,4 @@
-Imports System.Collections.Generic
+﻿Imports System.Collections.Generic
 Imports System.Drawing
 Imports System.IO
 Imports System.Threading.Tasks
@@ -193,7 +193,7 @@ Namespace UC_Settings
                 UpdateEngineModeVisuals(_selectedEngineMode)
                 UpdateAuthFields()
             Catch ex As Exception
-                MessageBox.Show("خطأ في تحميل إعدادات قاعدة البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ في تحميل إعدادات قاعدة البيانات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -232,7 +232,8 @@ Namespace UC_Settings
                                                                                        txtDbServer.Items.Add(s)
                                                                                    End If
                                                                                Next
-                                                                           Catch
+                                                                           Catch __logEx As Exception
+                                                                               Logger.LogError("UCDatabaseSettings.vb:235", __logEx)
                                                                            End Try
                                                                        End Sub)
                                                     End Sub)
@@ -348,10 +349,11 @@ Namespace UC_Settings
             If started Then
                 Try
                     Notify.Toast("تم تشغيل محرك LocalDB بنجاح ▶️", Notify.ToastType.Success)
-                Catch
+                Catch __logEx As Exception
+                    Logger.LogError("UCDatabaseSettings.vb:352", __logEx)
                 End Try
             Else
-                MessageBox.Show("تعذر تشغيل محرك LocalDB تلقائياً. تحقق من تثبيت SQL LocalDB.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                SmartMessageBox.Show("تعذر تشغيل محرك LocalDB تلقائياً. تحقق من تثبيت SQL LocalDB.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
         End Sub
 
@@ -361,7 +363,8 @@ Namespace UC_Settings
             Await RefreshLocalDbStatusAsync()
             Try
                 Notify.Toast("تم إيقاف محرك LocalDB ⏹️", Notify.ToastType.Info)
-            Catch
+            Catch __logEx As Exception
+                Logger.LogError("UCDatabaseSettings.vb:366", __logEx)
             End Try
         End Sub
 
@@ -373,7 +376,7 @@ Namespace UC_Settings
             Dim msi = LocalDbManager.FindLocalDbMsiInstaller()
 
             If String.IsNullOrEmpty(msi) Then
-                Dim askDownload = MessageBox.Show(
+                Dim askDownload = SmartMessageBox.Show(
                     "لم يتم العثور على ملف SqlLocalDB.msi تلقائياً على هذا الجهاز." & vbCrLf & vbCrLf &
                     "هل ترغب في تنزيل الحزمة الرسمية من موقع Microsoft وتثبيتها تلقائياً الآن؟" & vbCrLf &
                     "(اضغط 'لا' لتحديد مكان الملف يدوياً من جهازك)",
@@ -393,7 +396,7 @@ Namespace UC_Settings
                     If downloaded Then
                         msi = downloadTarget
                     Else
-                        MessageBox.Show("تعذر تنزيل حزمة SqlLocalDB.msi تلقائياً. تأكد من اتصال الإنترنت أو انسخ الملف يدوياً.", "فشل التنزيل", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("تعذر تنزيل حزمة SqlLocalDB.msi تلقائياً. تأكد من اتصال الإنترنت أو انسخ الملف يدوياً.", "فشل التنزيل", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         btnInstallLocalDb.Enabled = True
                         Return
                     End If
@@ -413,7 +416,7 @@ Namespace UC_Settings
                 End If
             End If
 
-            Dim ask = MessageBox.Show("هل تريد بدء التثبيت الصامت لمحرك Microsoft SQL Server Express LocalDB الآن؟",
+            Dim ask = SmartMessageBox.Show("هل تريد بدء التثبيت الصامت لمحرك Microsoft SQL Server Express LocalDB الآن؟",
                                       "تثبيت LocalDB", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
             If ask <> DialogResult.Yes Then Return
 
@@ -425,10 +428,10 @@ Namespace UC_Settings
             btnInstallLocalDb.Enabled = True
 
             If installed Then
-                MessageBox.Show("تم تثبيت محرك SQL Server LocalDB بنجاح!", "نجاح التثبيت", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show("تم تثبيت محرك SQL Server LocalDB بنجاح!", "نجاح التثبيت", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Await RefreshLocalDbStatusAsync()
             Else
-                MessageBox.Show("فشل التثبيت أو تم إلغاؤه من قبل المستخدم. يرجى تشغيل ملف SqlLocalDB.msi يدوياً بصلاحيات مدير النظام.", "فشل التثبيت", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("فشل التثبيت أو تم إلغاؤه من قبل المستخدم. يرجى تشغيل ملف SqlLocalDB.msi يدوياً بصلاحيات مدير النظام.", "فشل التثبيت", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
         End Sub
 
@@ -444,7 +447,7 @@ Namespace UC_Settings
                 If Not LocalDbManager.IsLocalDbInstalled() Then
                     Dim msi = LocalDbManager.FindLocalDbMsiInstaller()
                     If Not String.IsNullOrEmpty(msi) Then
-                        Dim ask = MessageBox.Show("محرك SQL Server LocalDB غير مثبت على هذا الجهاز." & vbCrLf &
+                        Dim ask = SmartMessageBox.Show("محرك SQL Server LocalDB غير مثبت على هذا الجهاز." & vbCrLf &
                                                   "هل تريد تثبيته صامتاً الآن من الحزمة المرفقة؟",
                                                   "تثبيت LocalDB", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
                         If ask = DialogResult.Yes Then
@@ -452,7 +455,7 @@ Namespace UC_Settings
                             lblLocalDbStatusText.ForeColor = Color.Yellow
                             Dim installed = Await LocalDbManager.InstallLocalDbSilentlyAsync(msi)
                             If Not installed Then
-                                MessageBox.Show("تعذر إكمال تثبيت LocalDB تلقائياً. يرجى تشغيل حزمة SqlLocalDB.msi كمسؤول.",
+                                SmartMessageBox.Show("تعذر إكمال تثبيت LocalDB تلقائياً. يرجى تشغيل حزمة SqlLocalDB.msi كمسؤول.",
                                                 "فشل التثبيت", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                                 Return
                             End If
@@ -460,7 +463,7 @@ Namespace UC_Settings
                             Return
                         End If
                     Else
-                        MessageBox.Show("محرك Microsoft SQL Server LocalDB غير مثبت على هذا الجهاز،" & vbCrLf &
+                        SmartMessageBox.Show("محرك Microsoft SQL Server LocalDB غير مثبت على هذا الجهاز،" & vbCrLf &
                                         "ولم يتم العثور على ملف SqlLocalDB.msi في مجلد البرنامج." & vbCrLf &
                                         "يرجى تثبيت SQL LocalDB ليعمل هذا النمط.",
                                         "المحرك غير متوفر", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -473,7 +476,7 @@ Namespace UC_Settings
                 lblLocalDbStatusText.ForeColor = Color.Yellow
                 Dim started = Await LocalDbManager.EnsureInstanceRunningAsync("MSSQLLocalDB")
                 If Not started Then
-                    MessageBox.Show("تعذر تشغيل نسخة LocalDB (MSSQLLocalDB). يرجى التأكد من صلاحيات النظام.",
+                    SmartMessageBox.Show("تعذر تشغيل نسخة LocalDB (MSSQLLocalDB). يرجى التأكد من صلاحيات النظام.",
                                     "خطأ في تشغيل المحرك", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     Return
                 End If
@@ -531,21 +534,22 @@ Namespace UC_Settings
                                         $"• زمن التنفيذ: {report.ExecutionTime.TotalSeconds:F2} ثانية" & vbCrLf & vbCrLf &
                                         "تم حفظ الإعدادات تلقائياً، والتطبيق جاهز للعمل بالكامل دون أي ملفات خارجية."
 
-                    MessageBox.Show(msg, "نجاح تهيئة وتثبيت قاعدة البيانات", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show(msg, "نجاح تهيئة وتثبيت قاعدة البيانات", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     Try
                         Notify.Toast("تم تثبيت وتهيئة قاعدة البيانات بنجاح 🚀", Notify.ToastType.Success)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCDatabaseSettings.vb:540", __logEx)
                     End Try
                 Else
                     Dim errMsg = String.Join(vbCrLf, report.Errors)
-                    MessageBox.Show("حدث خطأ أثناء فحص وتهيئة قاعدة البيانات:" & vbCrLf & errMsg,
+                    SmartMessageBox.Show("حدث خطأ أثناء فحص وتهيئة قاعدة البيانات:" & vbCrLf & errMsg,
                                     "خطأ في التهيئة", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     lblLocalDbStatusText.Text = "❌ فشلت تهيئة قاعدة البيانات"
                     lblLocalDbStatusText.ForeColor = Color.OrangeRed
                 End If
 
             Catch ex As Exception
-                MessageBox.Show("خطأ غير متوقع أثناء تهيئة LocalDB: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ غير متوقع أثناء تهيئة LocalDB: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 btnInitLocalDatabase.Enabled = True
                 btnInitLocalDatabase.Text = "⚡ تثبيت وتهيئة قاعدة بيانات LocalDB"
@@ -683,13 +687,13 @@ Namespace UC_Settings
                     Try
                         Notify.Toast("تم حفظ إعدادات قاعدة البيانات وتم التحقق من الاتصال بنجاح ✅", Notify.ToastType.Success)
                     Catch
-                        MessageBox.Show("✅ تم حفظ إعدادات قاعدة البيانات بنجاح والاتصال يعمل تماماً.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("✅ تم حفظ إعدادات قاعدة البيانات بنجاح والاتصال يعمل تماماً.", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     End Try
                     lblDbStatus.Text = "✅ تم الحفظ بنجاح والاتصال نشط"
                     lblDbStatus.ForeColor = Color.LightGreen
                     Dim loadTask = SafeLoadTableStatisticsAsync()
                 Else
-                    Dim result = MessageBox.Show("⚠️ تم الحفظ لكن تعذّر الاتصال بقاعدة البيانات بالإعدادات الجديدة." & vbCrLf &
+                    Dim result = SmartMessageBox.Show("⚠️ تم الحفظ لكن تعذّر الاتصال بقاعدة البيانات بالإعدادات الجديدة." & vbCrLf &
                                                  "هل تريد الإبقاء على الإعدادات؟",
                                                  "تحذير", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
                     If result = DialogResult.No Then
@@ -698,7 +702,7 @@ Namespace UC_Settings
                     End If
                 End If
             Catch ex As Exception
-                MessageBox.Show("❌ خطأ في الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("❌ خطأ في الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Sub
 
@@ -757,13 +761,14 @@ Namespace UC_Settings
 
                     Try
                         Notify.Toast("تم فحص وصيانة هيكل قاعدة البيانات بنجاح ✅", Notify.ToastType.Success)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCDatabaseSettings.vb:764", __logEx)
                     End Try
 
-                    MessageBox.Show(summaryMsg, "تقرير الصيانة الذاتية", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show(summaryMsg, "تقرير الصيانة الذاتية", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
                     lblMaintenanceProgress.Text = "❌ حدثت أخطاء أثناء الصيانة."
-                    MessageBox.Show("حدثت بعض الأخطاء أثناء فحص أو ترقيع قاعدة البيانات، يرجى مراجعة سجل العمليات أدناه.",
+                    SmartMessageBox.Show("حدثت بعض الأخطاء أثناء فحص أو ترقيع قاعدة البيانات، يرجى مراجعة سجل العمليات أدناه.",
                                     "تنبيه الصيانة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End If
 
@@ -771,7 +776,7 @@ Namespace UC_Settings
 
             Catch ex As Exception
                 txtMaintenanceLog.AppendText($"❌ خطأ غير متوقع: {ex.Message}" & vbCrLf)
-                MessageBox.Show("خطأ أثناء الفحص: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء الفحص: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 _isBusy = False
                 SetBusyState(False)
@@ -846,7 +851,7 @@ Namespace UC_Settings
         Private Async Sub btnResetTransactional_Click(sender As Object, e As EventArgs) Handles btnResetTransactional.Click
             If _isBusy Then Return
 
-            Dim confirm = MessageBox.Show("⚠️ تحذير شديد الأهمية:" & vbCrLf & vbCrLf &
+            Dim confirm = SmartMessageBox.Show("⚠️ تحذير شديد الأهمية:" & vbCrLf & vbCrLf &
                                           "سيتم تفريغ كافة حركات فواتير المبيعات، المشتريات، المصروفات، الورديات، وسجلات الخزينة بالكامل، وتصفير عدادات الترقيم التلقائي إلى 0." & vbCrLf & vbCrLf &
                                           "ملاحظة: البيانات الأساسية (الأصناف، العملاء، الموردين، المستخدمين، الإعدادات) لن تتأثر أبداً." & vbCrLf & vbCrLf &
                                           "هل أنت متأكد تماماً من رغبتك في المتابعة؟",
@@ -882,17 +887,18 @@ Namespace UC_Settings
                     lblMaintenanceProgress.Text = "✅ تم تصفير كافة حركات المعاملات بنجاح!"
                     Try
                         Notify.Toast("تم تصفير حركات المبيعات والمشتريات وتصفير العدادات بنجاح 🧹", Notify.ToastType.Success)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCDatabaseSettings.vb:890", __logEx)
                     End Try
-                    MessageBox.Show("تم تفريغ جداول المعاملات وتصفير عدادات الهوية بنجاح.", "تمت التهيئة", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تفريغ جداول المعاملات وتصفير عدادات الهوية بنجاح.", "تمت التهيئة", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
-                    MessageBox.Show("حدثت بعض الأخطاء أثناء تفريغ الجداول، راجع سجل العمليات للتفاصيل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    SmartMessageBox.Show("حدثت بعض الأخطاء أثناء تفريغ الجداول، راجع سجل العمليات للتفاصيل.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
                 End If
 
                 Await SafeLoadTableStatisticsAsync()
 
             Catch ex As Exception
-                MessageBox.Show("خطأ أثناء التهيئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("خطأ أثناء التهيئة: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 _isBusy = False
                 SetBusyState(False)
@@ -911,7 +917,7 @@ Namespace UC_Settings
             Dim prompt = $"هل أنت متأكد تماماً من رغبتك في تفريغ جدول [{displayName} ({tableName})] وحذف كافة سجلاته وتصفير العداد التلقائي (Identity Reseed)؟" & vbCrLf & vbCrLf &
                          "⚠️ لا يمكن التراجع عن هذه العملية بعد تنفيذها!"
 
-            Dim confirm = MessageBox.Show(prompt, $"تأكيد تهيئة جدول {displayName}", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
+            Dim confirm = SmartMessageBox.Show(prompt, $"تأكيد تهيئة جدول {displayName}", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2)
             If confirm <> DialogResult.Yes Then Return
 
             _isBusy = True
@@ -930,7 +936,8 @@ Namespace UC_Settings
 
                     Try
                         Notify.Toast($"تم تفريغ جدول {displayName} بنجاح ✅", Notify.ToastType.Success)
-                    Catch
+                    Catch __logEx As Exception
+                        Logger.LogError("UCDatabaseSettings.vb:939", __logEx)
                     End Try
 
                     dgvTables.Rows(e.RowIndex).Cells("colRecordCount").Value = "0"
@@ -938,7 +945,7 @@ Namespace UC_Settings
                 End If
             Catch ex As Exception
                 txtMaintenanceLog.AppendText($"[{DateTime.Now:HH:mm:ss}] ❌ فشل تفريغ جدول [{tableName}]: {ex.Message}" & vbCrLf)
-                MessageBox.Show($"تعذر تفريغ جدول {displayName}: {ex.Message}", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show($"تعذر تفريغ جدول {displayName}: {ex.Message}", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Finally
                 _isBusy = False
                 SetBusyState(False)

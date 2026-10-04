@@ -38,7 +38,7 @@ Public Class frmCategoryTypes
         End If
         ' التحقق من أن اسم النوع ليس فارغاً (لأنه حقل لا يقبل NULL في قاعدة البيانات)
         If String.IsNullOrWhiteSpace(txtTypeName.Text) Then
-            MessageBox.Show("عذراً، يجب إدخال اسم نوع الفئة أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("عذراً، يجب إدخال اسم نوع الفئة أولاً!", "تنبيه الـ Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             txtTypeName.Focus()
             Return False
         End If
@@ -88,11 +88,11 @@ Public Class frmCategoryTypes
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم حفظ نوع الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم حفظ نوع الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadTypesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء الحفظ: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -101,7 +101,7 @@ Public Class frmCategoryTypes
     ' 6. زر تعديل بيانات نوع الفئة الحالي
     Private Sub btnEditType_Click(sender As Object, e As EventArgs) Handles btnEditType.Click
         If dgvCategoryTypes.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار النوع المراد تعديله من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار النوع المراد تعديله من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -121,11 +121,11 @@ Public Class frmCategoryTypes
                 Try
                     conn.Open()
                     cmd.ExecuteNonQuery()
-                    MessageBox.Show("تم تعديل البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    SmartMessageBox.Show("تم تعديل البيانات بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadTypesGrid()
                     ClearFields()
                 Catch ex As Exception
-                    MessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    SmartMessageBox.Show("خطأ أثناء التعديل: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End Try
             End Using
         End Using
@@ -134,11 +134,11 @@ Public Class frmCategoryTypes
     ' 7. زر الحذف المنطقي لنوع الفئة (Soft Delete)
     Private Sub btnDeleteType_Click(sender As Object, e As EventArgs) Handles btnDeleteType.Click
         If dgvCategoryTypes.SelectedRows.Count = 0 Then
-            MessageBox.Show("يرجى اختيار النوع المراد حذفه من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار النوع المراد حذفه من الجدول أولاً.", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
-        Dim result As DialogResult = MessageBox.Show("هل أنت متأكد من رغبتك في حذف نوع الفئة هذا؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        Dim result As DialogResult = SmartMessageBox.Show("هل أنت متأكد من رغبتك في حذف نوع الفئة هذا؟", "تأكيد الحذف", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If result = DialogResult.Yes Then
             Dim currentID As Integer = Convert.ToInt32(dgvCategoryTypes.SelectedRows(0).Cells("CategoryTypeID").Value)
             Dim query As String = "UPDATE CategoryTypes SET IsDeleted = 1 WHERE CategoryTypeID = @CategoryTypeID"
@@ -149,11 +149,11 @@ Public Class frmCategoryTypes
                     Try
                         conn.Open()
                         cmd.ExecuteNonQuery()
-                        MessageBox.Show("تم حذف نوع الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        SmartMessageBox.Show("تم حذف نوع الفئة بنجاح!", "نجاح", MessageBoxButtons.OK, MessageBoxIcon.Information)
                         LoadTypesGrid()
                         ClearFields()
                     Catch ex As Exception
-                        MessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        SmartMessageBox.Show("خطأ أثناء الحذف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
                     End Try
                 End Using
             End Using

@@ -44,7 +44,7 @@ Public Class frmSalaryPayment
             nudYear.Value = DateTime.Now.Year
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل القوائم: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
     Private Sub LoadMonths()
@@ -124,12 +124,12 @@ Public Class frmSalaryPayment
     ' زر حفظ وصرف الراتب وتحديث الخزينة والوردية
     Private Async Sub btnSaveAndPay_Click(sender As Object, e As EventArgs) Handles btnSaveAndPay.Click
         If cmbEmployee.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى اختيار الموظف أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى اختيار الموظف أولاً!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         If cmbTreasury.SelectedIndex = -1 Then
-            MessageBox.Show("يرجى تحديد الخزينة التي سيتم صرف المرتب منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("يرجى تحديد الخزينة التي سيتم صرف المرتب منها!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             cmbTreasury.Focus()
             Exit Sub
         End If
@@ -137,13 +137,13 @@ Public Class frmSalaryPayment
         Dim netSalary As Decimal = 0
         Decimal.TryParse(lblNetSalary.Text, netSalary)
         If netSalary <= 0 Then
-            MessageBox.Show("صافي الراتب المستحق يجب أن يكون أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            SmartMessageBox.Show("صافي الراتب المستحق يجب أن يكون أكبر من صفر!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
         'CheckActiveShift()
         If Not _activeShiftID.HasValue Then
-            If MessageBox.Show("تنبيه: لا توجد وردية مفتوحة حالياً بالدرج، هل تريد الصرف مباشرة من الخزينة المحددة فقط؟", "تأكيد الصرف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            If SmartMessageBox.Show("تنبيه: لا توجد وردية مفتوحة حالياً بالدرج، هل تريد الصرف مباشرة من الخزينة المحددة فقط؟", "تأكيد الصرف", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                 Exit Sub
             End If
         End If
@@ -216,13 +216,13 @@ Public Class frmSalaryPayment
                 End If
 
                 trans.Commit()
-                MessageBox.Show($"تم صرف راتب الموظف ({cmbEmployee.Text}) بنجاح بمبلغ {netSalary:N2} ج.م وتم خصمه من الخزينة!", "نجاح الصرف", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                SmartMessageBox.Show($"تم صرف راتب الموظف ({cmbEmployee.Text}) بنجاح بمبلغ {netSalary:N2} ج.م وتم خصمه من الخزينة!", "نجاح الصرف", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 ClearInputs()
                 LoadSalaryHistory()
 
             Catch ex As Exception
                 trans.Rollback()
-                MessageBox.Show("حدث خطأ أثناء تسجيل وصرف الراتب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                SmartMessageBox.Show("حدث خطأ أثناء تسجيل وصرف الراتب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End Try
         End Using
     End Sub
@@ -250,7 +250,7 @@ Public Class frmSalaryPayment
             If dgvSalaries.Columns.Contains("Notes") Then dgvSalaries.Columns("Notes").HeaderText = "ملاحظات"
 
         Catch ex As Exception
-            MessageBox.Show("خطأ في تحميل سجل الرواتب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            SmartMessageBox.Show("خطأ في تحميل سجل الرواتب: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
