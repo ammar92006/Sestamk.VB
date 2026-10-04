@@ -106,11 +106,51 @@ Namespace Services
     End Class
 
     ''' <summary>
+    ''' تعريف عرض توافقي (View) في قاعدة البيانات — يُنشأ أو يُحدَّث تلقائياً عند بدء التشغيل
+    ''' </summary>
+    Public Class ViewDefinition
+        Public Property ViewName As String
+        Public Property DisplayNameAr As String
+        Public Property DisplayNameEn As String
+        ''' <summary>جسم العرض فقط (SELECT ...) بدون كلمتي CREATE VIEW ... AS</summary>
+        Public Property BodySql As String
+
+        Public Sub New()
+        End Sub
+
+        Public Sub New(viewName As String, displayNameAr As String, bodySql As String)
+            Me.ViewName = viewName
+            Me.DisplayNameAr = displayNameAr
+            Me.BodySql = bodySql
+        End Sub
+
+        ''' <summary>
+        ''' توليد أمر إنشاء/تحديث العرض بصيغة آمنة ومتوافقة مع SQL Server 2014.
+        ''' (CREATE OR ALTER VIEW غير مدعوم قبل 2016 SP1، لذلك نستخدم EXEC ديناميكي
+        '''  داخل IF/ELSE حتى لا يكون CREATE VIEW أول أمر في الدفعة.)
+        ''' </summary>
+        Public Function ToCreateOrAlterSql() As String
+            ' علامات التنصيص المفردة داخل النص الديناميكي يجب مضاعفتها
+            Dim escapedBody As String = If(BodySql, "").Replace("'", "''")
+
+            Return $"IF OBJECT_ID(N'[dbo].[{ViewName}]', N'V') IS NULL" & vbCrLf &
+                   "BEGIN" & vbCrLf &
+                   $"    EXEC(N'CREATE VIEW [dbo].[{ViewName}] AS {escapedBody}');" & vbCrLf &
+                   "END" & vbCrLf &
+                   "ELSE" & vbCrLf &
+                   "BEGIN" & vbCrLf &
+                   $"    EXEC(N'ALTER VIEW [dbo].[{ViewName}] AS {escapedBody}');" & vbCrLf &
+                   "END"
+        End Function
+    End Class
+
+    ''' <summary>
     ''' مستودع التعريفات الهيكلية الشامل لكافة جداول وأعمدة النظام الـ 74
     ''' المتطابقة 100% مع قاعدة البيانات الفعلية SestamkDB ومحرك LocalDB
     ''' </summary>
     Public Module DatabaseSchemaDefinitions
         Private _schemaTables As List(Of TableDefinition) = Nothing
+        Private _schemaViews As List(Of ViewDefinition) = Nothing
         Private ReadOnly _lockObj As New Object()
 
         Public Function GetExpectedSchema() As List(Of TableDefinition)
@@ -1332,10 +1372,147 @@ Namespace Services
             End SyncLock
         End Function
 
+        ''' <summary>
+        ''' العروض التوافقية (Views) التي تُظهر فواتير المبيعات القديمة (SalesHeader/SalesDetails)
+        ''' والحديثة (SalesInvoices/SalesInvoiceDetails) بنفس أسماء الأعمدة القديمة.
+        ''' </summary>
+        Public Function GetExpectedViews() As List(Of ViewDefinition)
+            If _schemaViews IsNot Nothing Then Return _schemaViews
+
+            SyncLock _lockObj
+                If _schemaViews IsNot Nothing Then Return _schemaViews
+
+                Dim list As New List(Of ViewDefinition)()
+
+                ' ─────────────────────────────────────────────────────────────
+                ' عرض رؤوس فواتير المبيعات (قديم + حديث)
+                ' سبب الوجود: كل التقارير في ReportsModule.vb تقرأ الجدول القديم SalesHeader
+                '   الذي لم يعد أي كود يكتب فيه، فكانت تعرض التاريخ القديم فقط ولا ترى المبيعات الجديدة.
+                ' الإزاحة: الصفوف الحديثة تأخذ Invoice_ID = 100000000 + SalesInvoices.InvoiceID
+                '   لأن معرّفات الإنتاج القديمة كلها أقل من 7000، فالإزاحة تفصل المجالين وتمنع
+                '   تصادم رأس قديم مع رأس حديث بنفس الرقم. ونفس الإزاحة مطبقة في عرض التفاصيل
+                '   حتى يبقى ربط الرأس بالتفاصيل متسقاً (رأس مُزاح يقابله تفاصيل مُزاحة).
+                ' الكتابة: لا يُكتب أي شيء عبر هذا العرض (قراءة فقط)؛ مسار الحذف في Reports.vb
+                '   يفكّ الإزاحة ويحذف من الجداول الحقيقية.
+                ' ─────────────────────────────────────────────────────────────
+                Dim headerBody As String = String.Join(vbCrLf, New String() {
+                    "SELECT",
+                    "    SH.[Invoice_ID],",
+                    "    SH.[Invoice_Date],",
+                    "    SH.[Customer_ID],",
+                    "    SH.[User_ID],",
+                    "    SH.[User_Name],",
+                    "    SH.[Net_Amount],",
+                    "    SH.[Discount_Value],",
+                    "    SH.[Total_Amount],",
+                    "    SH.[Payment_Method],",
+                    "    SH.[Amount_Paid],",
+                    "    SH.[Remaining],",
+                    "    SH.[Total_Profit],",
+                    "    SH.[Notes],",
+                    "    SH.[Invoice_type],",
+                    "    -- Invoice_Code نصّي في العرض: القديم INT والحديث نصّي (مثال INV-2026-001)",
+                    "    CAST(SH.[Invoice_Code] AS NVARCHAR(50)) AS [Invoice_Code],",
+                    "    SH.[TreasuryID],",
+                    "    SH.[PreviousBalance]",
+                    "FROM [dbo].[SalesHeader] SH",
+                    "UNION ALL",
+                    "SELECT",
+                    "    -- الإزاحة: 100000000 + معرّف الفاتورة الحديثة",
+                    "    CAST(100000000 + SI.[InvoiceID] AS INT) AS [Invoice_ID],",
+                    "    SI.[InvoiceDate] AS [Invoice_Date],",
+                    "    SI.[CustomerID] AS [Customer_ID],",
+                    "    SI.[UserID] AS [User_ID],",
+                    "    ISNULL((SELECT TOP 1 U.[User_Name] FROM [dbo].[Users_TBL] U WHERE U.[User_ID] = SI.[UserID]), N'المستخدم') AS [User_Name],",
+                    "    SI.[NetTotal] AS [Net_Amount],",
+                    "    SI.[DiscountAmount] AS [Discount_Value],",
+                    "    SI.[TotalBeforeDiscount] AS [Total_Amount],",
+                    "    SI.[PaymentType] AS [Payment_Method],",
+                    "    SI.[PaidAmount] AS [Amount_Paid],",
+                    "    SI.[RemainingAmount] AS [Remaining],",
+                    "    -- ربح الفاتورة = مجموع (إجمالي السطر - خصمه - تكلفة الكمية) بنفس دلالة SalesDetails.Profit",
+                    "    CAST(ISNULL((SELECT SUM(D.[TotalPrice] - ISNULL(D.[Discount], 0) - (D.[CostPrice] * D.[Quantity])) FROM [dbo].[SalesInvoiceDetails] D WHERE D.[InvoiceID] = SI.[InvoiceID]), 0) AS DECIMAL(18, 2)) AS [Total_Profit],",
+                    "    SI.[Notes],",
+                    "    CASE WHEN SI.[OriginalInvoiceID] IS NOT NULL THEN N'مرتجع مبيعات' ELSE N'فاتورة مبيعات' END AS [Invoice_type],",
+                    "    ISNULL(CAST(SI.[InvoiceNumber] AS NVARCHAR(50)), N'') AS [Invoice_Code],",
+                    "    SI.[TreasuryID],",
+                    "    -- الرصيد السابق لم يكن يُحفظ في الجداول الحديثة (عمود قديم فقط) فنُخرجه صفراً بدل NULL",
+                    "    CAST(0 AS DECIMAL(18, 2)) AS [PreviousBalance]",
+                    "FROM [dbo].[SalesInvoices] SI",
+                    "WHERE ISNULL(SI.[IsDeleted], 0) = 0"})
+                list.Add(New ViewDefinition("vw_SalesHeaderAll", "رؤوس فواتير المبيعات (توافقي)", headerBody))
+
+                ' ─────────────────────────────────────────────────────────────
+                ' عرض تفاصيل فواتير المبيعات (قديم + حديث)
+                ' سبب الوجود: ReportsModule.vb يقرأ SalesDetails القديم للتجميعات (الأكثر مبيعاً،
+                '   حركة المخزون، تفاصيل الفاتورة) فكان يتجاهل كل الأصناف الحديثة.
+                ' الإزاحة: Invoice_ID = 100000000 + SalesInvoiceDetails.InvoiceID بنفس إزاحة الرؤوس.
+                ' الكتابة: قراءة فقط، ومسار الحذف في Reports.vb يفكّ الإزاحة ويحذف من الجداول الحقيقية.
+                ' ─────────────────────────────────────────────────────────────
+                Dim detailsBody As String = String.Join(vbCrLf, New String() {
+                    "SELECT",
+                    "    SD.[Detail_ID],",
+                    "    SD.[Invoice_ID],",
+                    "    SD.[Product_ID],",
+                    "    SD.[Product_Name],",
+                    "    SD.[ProductUnit_ID],",
+                    "    SD.[ProductUnit_Name],",
+                    "    SD.[Quantity_Sold],",
+                    "    SD.[Sale_Price_Per_Unit],",
+                    "    SD.[Total_Line_Amount],",
+                    "    SD.[Profit],",
+                    "    SD.[Purchase_Price_At_Sale],",
+                    "    SD.[DetailID],",
+                    "    SD.[SaleID],",
+                    "    SD.[ProductID],",
+                    "    SD.[Quantity],",
+                    "    SD.[UnitPrice],",
+                    "    SD.[CostPrice],",
+                    "    SD.[Discount],",
+                    "    SD.[Total]",
+                    "FROM [dbo].[SalesDetails] SD",
+                    "UNION ALL",
+                    "SELECT",
+                    "    D.[DetailID] AS [Detail_ID],",
+                    "    -- نفس إزاحة الرؤوس ليبقى الربط بين الرأس والتفاصيل صحيحاً",
+                    "    CAST(100000000 + D.[InvoiceID] AS INT) AS [Invoice_ID],",
+                    "    D.[ProductID] AS [Product_ID],",
+                    "    D.[ProductName] AS [Product_Name],",
+                    "    -- لا يوجد مقابل لعمود الوحدة القديم في الجداول الحديثة (SizeID مفهوم مختلف)",
+                    "    CAST(NULL AS INT) AS [ProductUnit_ID],",
+                    "    ISNULL(P.[Unit], N'') AS [ProductUnit_Name],",
+                    "    -- Quantity_Sold بالشكل القديم DECIMAL(18,2) حفاظاً على عرض الفواتير القديمة كما هو",
+                    "    CAST(D.[Quantity] AS DECIMAL(18, 2)) AS [Quantity_Sold],",
+                    "    D.[UnitPrice] AS [Sale_Price_Per_Unit],",
+                    "    D.[TotalPrice] AS [Total_Line_Amount],",
+                    "    CAST(D.[TotalPrice] - ISNULL(D.[Discount], 0) - (D.[CostPrice] * D.[Quantity]) AS DECIMAL(18, 2)) AS [Profit],",
+                    "    D.[CostPrice] AS [Purchase_Price_At_Sale],",
+                    "    D.[DetailID],",
+                    "    CAST(100000000 + D.[InvoiceID] AS INT) AS [SaleID],",
+                    "    D.[ProductID],",
+                    "    -- Quantity هنا DECIMAL(18,3) وليس INT كما في ملف الهيكل: قاعدة البيانات الحيّة تحمل",
+                    "    -- DECIMAL(18,3) والتحويل إلى INT كان سيقتطع الكسور (أوزان/أنصاف الكميات)",
+                    "    CAST(D.[Quantity] AS DECIMAL(18, 3)) AS [Quantity],",
+                    "    D.[UnitPrice],",
+                    "    D.[CostPrice],",
+                    "    ISNULL(D.[Discount], 0) AS [Discount],",
+                    "    D.[TotalPrice] AS [Total]",
+                    "FROM [dbo].[SalesInvoiceDetails] D",
+                    "LEFT JOIN [dbo].[SalesInvoices] SIH ON SIH.[InvoiceID] = D.[InvoiceID]",
+                    "LEFT JOIN [dbo].[Products] P ON P.[Product_ID] = D.[ProductID]",
+                    "WHERE ISNULL(SIH.[IsDeleted], 0) = 0"})
+                list.Add(New ViewDefinition("vw_SalesDetailsAll", "تفاصيل فواتير المبيعات (توافقي)", detailsBody))
+
+                _schemaViews = list
+                Return _schemaViews
+            End SyncLock
+        End Function
+
         ''' <summary>إعادة ضبط الكاش الهيكلي</summary>
         Public Sub InvalidateCache()
             SyncLock _lockObj
                 _schemaTables = Nothing
+                _schemaViews = Nothing
             End SyncLock
         End Sub
     End Module

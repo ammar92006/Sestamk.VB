@@ -78,6 +78,10 @@ jobs:
         shell: pwsh
         run: pwsh -NoProfile -File tests\SupplierAccounting.Integration.ps1 -AppPath "WindowsApp1\bin\Release\Sestamk.exe"
 
+      - name: Run schema & query verification tests
+        shell: pwsh
+        run: pwsh -NoProfile -File tests\SchemaAndQueryVerification.ps1
+
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4

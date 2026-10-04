@@ -1712,6 +1712,127 @@ END
 GO
 
 -- -------------------------------------------------------------
+-- Views (عروض توافقية) — قراءة فقط، تجمع المبيعات القديمة والحديثة
+-- -------------------------------------------------------------
+
+-- سبب الوجود: كل تقارير ReportsModule.vb تقرأ الجدول القديم SalesHeader الذي لم يعد أي كود
+-- يكتب فيه، فكانت تعرض التاريخ القديم فقط ولا ترى المبيعات الجديدة المكتوبة في SalesInvoices.
+-- هذا العرض يضم الفواتير القديمة كما هي + الفواتير الحديثة بنفس أسماء الأعمدة القديمة.
+-- الإزاحة: الصفوف الحديثة تأخذ Invoice_ID = 100000000 + SalesInvoices.InvoiceID لأن معرّفات
+-- الإنتاج القديمة كلها أقل من 7000، فالإزاحة تفصل المجالين وتمنع تصادم رأس قديم مع رأس حديث
+-- بنفس الرقم. ونفس الإزاحة مطبقة في عرض التفاصيل ليبقى ربط الرأس بالتفاصيل متسقاً.
+-- الكتابة: لا يُكتب أي شيء عبر هذه العروض (قراءة فقط)؛ مسار حذف الفاتورة في Reports.vb يفكّ
+-- الإزاحة ويحذف من الجداول الحقيقية.
+IF OBJECT_ID('[dbo].[vw_SalesHeaderAll]', 'V') IS NOT NULL
+    DROP VIEW [dbo].[vw_SalesHeaderAll];
+GO
+CREATE VIEW [dbo].[vw_SalesHeaderAll]
+AS
+SELECT
+    SH.[Invoice_ID],
+    SH.[Invoice_Date],
+    SH.[Customer_ID],
+    SH.[User_ID],
+    SH.[User_Name],
+    SH.[Net_Amount],
+    SH.[Discount_Value],
+    SH.[Total_Amount],
+    SH.[Payment_Method],
+    SH.[Amount_Paid],
+    SH.[Remaining],
+    SH.[Total_Profit],
+    SH.[Notes],
+    SH.[Invoice_type],
+    -- Invoice_Code نصّي في العرض: القديم INT والحديث نصّي (مثال INV-2026-001)
+    CAST(SH.[Invoice_Code] AS NVARCHAR(50)) AS [Invoice_Code],
+    SH.[TreasuryID],
+    SH.[PreviousBalance]
+FROM [dbo].[SalesHeader] SH
+UNION ALL
+SELECT
+    -- الإزاحة: 100000000 + معرّف الفاتورة الحديثة
+    CAST(100000000 + SI.[InvoiceID] AS INT) AS [Invoice_ID],
+    SI.[InvoiceDate] AS [Invoice_Date],
+    SI.[CustomerID] AS [Customer_ID],
+    SI.[UserID] AS [User_ID],
+    ISNULL((SELECT TOP 1 U.[User_Name] FROM [dbo].[Users_TBL] U WHERE U.[User_ID] = SI.[UserID]), N'المستخدم') AS [User_Name],
+    SI.[NetTotal] AS [Net_Amount],
+    SI.[DiscountAmount] AS [Discount_Value],
+    SI.[TotalBeforeDiscount] AS [Total_Amount],
+    SI.[PaymentType] AS [Payment_Method],
+    SI.[PaidAmount] AS [Amount_Paid],
+    SI.[RemainingAmount] AS [Remaining],
+    -- ربح الفاتورة = مجموع (إجمالي السطر - خصمه - تكلفة الكمية) بنفس دلالة SalesDetails.Profit
+    CAST(ISNULL((SELECT SUM(D.[TotalPrice] - ISNULL(D.[Discount], 0) - (D.[CostPrice] * D.[Quantity])) FROM [dbo].[SalesInvoiceDetails] D WHERE D.[InvoiceID] = SI.[InvoiceID]), 0) AS DECIMAL(18, 2)) AS [Total_Profit],
+    SI.[Notes],
+    CASE WHEN SI.[OriginalInvoiceID] IS NOT NULL THEN N'مرتجع مبيعات' ELSE N'فاتورة مبيعات' END AS [Invoice_type],
+    ISNULL(CAST(SI.[InvoiceNumber] AS NVARCHAR(50)), N'') AS [Invoice_Code],
+    SI.[TreasuryID],
+    -- الرصيد السابق لم يكن يُحفظ في الجداول الحديثة (عمود قديم فقط) فنُخرجه صفراً بدل NULL
+    CAST(0 AS DECIMAL(18, 2)) AS [PreviousBalance]
+FROM [dbo].[SalesInvoices] SI
+WHERE ISNULL(SI.[IsDeleted], 0) = 0
+GO
+
+IF OBJECT_ID('[dbo].[vw_SalesDetailsAll]', 'V') IS NOT NULL
+    DROP VIEW [dbo].[vw_SalesDetailsAll];
+GO
+CREATE VIEW [dbo].[vw_SalesDetailsAll]
+AS
+SELECT
+    SD.[Detail_ID],
+    SD.[Invoice_ID],
+    SD.[Product_ID],
+    SD.[Product_Name],
+    SD.[ProductUnit_ID],
+    SD.[ProductUnit_Name],
+    SD.[Quantity_Sold],
+    SD.[Sale_Price_Per_Unit],
+    SD.[Total_Line_Amount],
+    SD.[Profit],
+    SD.[Purchase_Price_At_Sale],
+    SD.[DetailID],
+    SD.[SaleID],
+    SD.[ProductID],
+    SD.[Quantity],
+    SD.[UnitPrice],
+    SD.[CostPrice],
+    SD.[Discount],
+    SD.[Total]
+FROM [dbo].[SalesDetails] SD
+UNION ALL
+SELECT
+    D.[DetailID] AS [Detail_ID],
+    -- نفس إزاحة الرؤوس ليبقى الربط بين الرأس والتفاصيل صحيحاً
+    CAST(100000000 + D.[InvoiceID] AS INT) AS [Invoice_ID],
+    D.[ProductID] AS [Product_ID],
+    D.[ProductName] AS [Product_Name],
+    -- لا يوجد مقابل لعمود الوحدة القديم في الجداول الحديثة (SizeID مفهوم مختلف)
+    CAST(NULL AS INT) AS [ProductUnit_ID],
+    ISNULL(P.[Unit], N'') AS [ProductUnit_Name],
+    -- Quantity_Sold بالشكل القديم DECIMAL(18,2) حفاظاً على عرض الفواتير القديمة كما هو
+    CAST(D.[Quantity] AS DECIMAL(18, 2)) AS [Quantity_Sold],
+    D.[UnitPrice] AS [Sale_Price_Per_Unit],
+    D.[TotalPrice] AS [Total_Line_Amount],
+    CAST(D.[TotalPrice] - ISNULL(D.[Discount], 0) - (D.[CostPrice] * D.[Quantity]) AS DECIMAL(18, 2)) AS [Profit],
+    D.[CostPrice] AS [Purchase_Price_At_Sale],
+    D.[DetailID],
+    CAST(100000000 + D.[InvoiceID] AS INT) AS [SaleID],
+    D.[ProductID],
+    -- Quantity هنا DECIMAL(18,3) وليس INT كما في ملف الهيكل: قاعدة البيانات الحيّة تحمل
+    -- DECIMAL(18,3) والتحويل إلى INT كان سيقتطع الكسور (أوزان/أنصاف الكميات)
+    CAST(D.[Quantity] AS DECIMAL(18, 3)) AS [Quantity],
+    D.[UnitPrice],
+    D.[CostPrice],
+    ISNULL(D.[Discount], 0) AS [Discount],
+    D.[TotalPrice] AS [Total]
+FROM [dbo].[SalesInvoiceDetails] D
+LEFT JOIN [dbo].[SalesInvoices] SIH ON SIH.[InvoiceID] = D.[InvoiceID]
+LEFT JOIN [dbo].[Products] P ON P.[Product_ID] = D.[ProductID]
+WHERE ISNULL(SIH.[IsDeleted], 0) = 0
+GO
+
+-- -------------------------------------------------------------
 -- 74. Table: [dbo].[WorkShifts]
 -- -------------------------------------------------------------
 IF OBJECT_ID('[dbo].[WorkShifts]', 'U') IS NULL
@@ -1841,28 +1962,32 @@ END
 GO
 
 -- 5. Default Category Types
+-- إصلاح: كان البذر يُدرج عمود DisplayOrder غير الموجود في الجدول (ولا في تعريفات
+-- الترحيل الذاتي)، فكانت الدفعة كلها تفشل ويبقى جدول أنواع الأقسام فارغاً بعد كل تثبيت جديد.
 IF OBJECT_ID('[dbo].[CategoryTypes]', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[CategoryTypes])
 BEGIN
     SET IDENTITY_INSERT [dbo].[CategoryTypes] ON;
-    INSERT INTO [dbo].[CategoryTypes] (CategoryTypeID, TypeName, DisplayOrder, IsActive, TypeCode, IsDeleted)
-    VALUES (1, N'مأكولات ومشروبات', 1, 1, N'FB', 0),
-           (2, N'خدمات', 2, 1, N'SRV', 0),
-           (3, N'بضائع عامة', 3, 1, N'GEN', 0),
-           (4, N'مطبخ وتجهيز', 4, 1, N'KIT', 0);
+    INSERT INTO [dbo].[CategoryTypes] (CategoryTypeID, TypeName, IsActive, TypeCode, IsDeleted)
+    VALUES (1, N'مأكولات ومشروبات', 1, N'FB', 0),
+           (2, N'خدمات', 1, N'SRV', 0),
+           (3, N'بضائع عامة', 1, N'GEN', 0),
+           (4, N'مطبخ وتجهيز', 1, N'KIT', 0);
     SET IDENTITY_INSERT [dbo].[CategoryTypes] OFF;
 END
 GO
 
 -- 6. Default Colors
+-- إصلاح: كان البذر يُدرج عمود ColorHex غير الموجود؛ العمود الصحيح هو HexCode وكان
+-- يستقبل نفس القيمة أصلاً — فحُذف المكرر وأصبح البذر ناجحاً.
 IF OBJECT_ID('[dbo].[Colors]', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Colors])
 BEGIN
     SET IDENTITY_INSERT [dbo].[Colors] ON;
-    INSERT INTO [dbo].[Colors] (ColorID, ColorName, ColorHex, IsActive, HexCode, IsDeleted)
-    VALUES (1, N'أزرق رئيسي', N'#3B82F6', 1, N'#3B82F6', 0),
-           (2, N'أخضر زمردي', N'#10B981', 1, N'#10B981', 0),
-           (3, N'برتقالي كهرماني', N'#F59E0B', 1, N'#F59E0B', 0),
-           (4, N'أحمر مرجاني', N'#EF4444', 1, N'#EF4444', 0),
-           (5, N'بنفسجي هادئ', N'#8B5CF6', 1, N'#8B5CF6', 0);
+    INSERT INTO [dbo].[Colors] (ColorID, ColorName, IsActive, HexCode, IsDeleted)
+    VALUES (1, N'أزرق رئيسي', 1, N'#3B82F6', 0),
+           (2, N'أخضر زمردي', 1, N'#10B981', 0),
+           (3, N'برتقالي كهرماني', 1, N'#F59E0B', 0),
+           (4, N'أحمر مرجاني', 1, N'#EF4444', 0),
+           (5, N'بنفسجي هادئ', 1, N'#8B5CF6', 0);
     SET IDENTITY_INSERT [dbo].[Colors] OFF;
 END
 GO
@@ -1878,21 +2003,24 @@ END
 GO
 
 -- 8. Default Main Cash (Legacy)
+-- إصلاح: كان البذر يستخدم SET IDENTITY_INSERT على جدول بلا عمود IDENTITY،
+-- ويُمرّر نصوصاً N'CSH-01' و N'Active' لأعمدة رقمية (Cash_Code=numeric, Cash_Stats=int)
+-- فتفشل الدفعة ويبقى الجدول فارغاً.
 IF OBJECT_ID('[dbo].[Main_Cash_TBL]', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Main_Cash_TBL])
 BEGIN
-    SET IDENTITY_INSERT [dbo].[Main_Cash_TBL] ON;
     INSERT INTO [dbo].[Main_Cash_TBL] (Cash_ID, Cash_Code, Cash_S_Date, Cash_S_Balance, Cash_Z_Balance, Cash_Balance, Cash_Stats)
-    VALUES (1, N'CSH-01', GETDATE(), 0, 0, 0, N'Active');
-    SET IDENTITY_INSERT [dbo].[Main_Cash_TBL] OFF;
+    VALUES (1, 1, GETDATE(), 0, 0, 0, 1);
 END
 GO
 
 -- 9. Default Store / Warehouse
+-- إصلاح: كان البذر يُدرج عمود Location غير الموجود في جدول Stores
+-- (ولا في تعريفات الترحيل الذاتي)، فتفشل الدفعة ولا يوجد مخزن افتراضي بعد التثبيت.
 IF OBJECT_ID('[dbo].[Stores]', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Stores])
 BEGIN
     SET IDENTITY_INSERT [dbo].[Stores] ON;
-    INSERT INTO [dbo].[Stores] (StoreID, StoreName, Location, IsActive, IsDefault)
-    VALUES (1, N'المخزن الرئيسي', N'المقر الرئيسي', 1, 1);
+    INSERT INTO [dbo].[Stores] (StoreID, StoreName, IsActive, IsDefault)
+    VALUES (1, N'المخزن الرئيسي', 1, 1);
     SET IDENTITY_INSERT [dbo].[Stores] OFF;
 END
 GO

@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Drawing.Printing
 Imports System.Text
@@ -81,7 +81,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetAllInvoicesPurchase", ex)
+            Throw
         End Try
 
         Return dt
@@ -109,7 +111,7 @@ Module ReportsModule
                 SH.User_ID,
                 SH.User_Name,
                 SH.Total_Profit
-            FROM SalesHeader SH
+            FROM vw_SalesHeaderAll SH
             LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID
             ORDER BY SH.Invoice_ID DESC
 "
@@ -124,7 +126,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetAllInvoices", ex)
+            Throw
         End Try
 
         Return dt
@@ -143,7 +147,7 @@ Module ReportsModule
                     Sale_Price_Per_Unit AS Sale_Price_Per_Unit,
                     SUM(Total_Line_Amount)   AS Total_Line_Amount,
                     SUM(Quantity_Sold)       AS TotalQuantitySold
-                FROM SalesDetails
+                FROM vw_SalesDetailsAll
                 WHERE 
                     ProductUnit_Name NOT LIKE N'%جرام%'
                     AND ProductUnit_Name NOT LIKE N'%جم%'
@@ -165,7 +169,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetAll_most_sale", ex)
+            Throw
         End Try
 
         Return dt
@@ -201,7 +207,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetAllBalancedownload", ex)
+            Throw
         End Try
 
         Return dt
@@ -247,7 +255,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetInvoiceHeaderpurchases", ex)
+            Throw
         End Try
 
         Return dt
@@ -275,7 +285,7 @@ Module ReportsModule
                                     SH.Payment_Method,
                                     SH.User_Name,
                                     SH.Total_Profit
-                                FROM SalesHeader SH
+                                FROM vw_SalesHeaderAll SH
                                 LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID
                                 WHERE SH.Invoice_ID = @ID"
 
@@ -289,7 +299,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetInvoiceHeader", ex)
+            Throw
         End Try
 
         Return dt
@@ -324,7 +336,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetInvoiceDetailsPurchase", ex)
+            Throw
         End Try
 
         Return dt
@@ -345,7 +359,7 @@ Module ReportsModule
                                     SD.Sale_Price_Per_Unit, 
                                     SD.Total_Line_Amount,
                                     SD.Profit
-                                FROM SalesDetails SD
+                                FROM vw_SalesDetailsAll SD
                                 WHERE SD.Invoice_ID = @ID"
 
             Using cmd As New SqlCommand(q, cn)
@@ -358,7 +372,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetInvoiceDetails", ex)
+            Throw
         End Try
 
         Return dt
@@ -386,15 +402,15 @@ Module ReportsModule
                 sql.AppendLine("SH.Amount_Paid, SH.Remaining, SH.Payment_Method, SH.User_Name,")
                 sql.AppendLine("SD.Product_ID, P.Product_Name, SD.Quantity_Sold,")
                 sql.AppendLine("SD.Sale_Price_Per_Unit, SD.Total_Line_Amount")
-                sql.AppendLine("FROM SalesHeader SH")
+                sql.AppendLine("FROM vw_SalesHeaderAll SH")
                 sql.AppendLine("LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID")
-                sql.AppendLine("LEFT JOIN SalesDetails SD ON SH.Invoice_ID = SD.Invoice_ID")
+                sql.AppendLine("LEFT JOIN vw_SalesDetailsAll SD ON SH.Invoice_ID = SD.Invoice_ID")
                 sql.AppendLine("LEFT JOIN Products P ON SD.Product_ID = P.Product_ID")
             Else
                 sql.AppendLine("SELECT SH.Invoice_ID, SH.Invoice_Date, C.CustomerName,")
                 sql.AppendLine("SH.Total_Amount, SH.Discount_Value, SH.Net_Amount,SH.Total_Profit,")
                 sql.AppendLine("SH.Amount_Paid, SH.Remaining, SH.Payment_Method, SH.User_Name")
-                sql.AppendLine("FROM SalesHeader SH")
+                sql.AppendLine("FROM vw_SalesHeaderAll SH")
                 sql.AppendLine("LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID")
             End If
 
@@ -422,7 +438,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetSalesReport", ex)
+            Throw
         End Try
 
         Return dt
@@ -450,7 +468,7 @@ Module ReportsModule
                 'sql.AppendLine("SD.Sale_Price_Per_Unit, SD.Total_Line_Amount")
                 'sql.AppendLine("FROM Purchase_Header PH")
                 'sql.AppendLine("LEFT JOIN Customers C ON SH.Customer_ID = C.CustomerID")
-                'sql.AppendLine("LEFT JOIN SalesDetails SD ON SH.Invoice_ID = SD.Invoice_ID")
+                'sql.AppendLine("LEFT JOIN vw_SalesDetailsAll SD ON SH.Invoice_ID = SD.Invoice_ID")
                 'sql.AppendLine("LEFT JOIN Products P ON SD.Product_ID = P.Product_ID")
                 sql.AppendLine("SELECT PH.PurchaseID AS Purchase_Id, PH.PaymentType AS Purchase_type, PH.PurchaseDate AS Purchase_Date, S.SupplierID AS SuppliersID, S.SupplierName AS SuppliersName, PH.TotalAmount AS Net_Amount, PH.Discount AS Discount_Value, PH.NetTotal AS Total_Amount, PH.PaidAmount AS Amount_Paid, PH.RemainingAmount AS Remaining, PH.Notes, CAST(NULL AS VARBINARY(MAX)) AS purchases_Image, PH.UserID AS User_ID, ISNULL(U.FullName, ISNULL(U.Username, N'المستخدم')) AS User_Name, PH.PaymentType AS Payment_Method,")
                 sql.AppendLine("PD.PurchaseID AS Detail_Purchase_Id, ISNULL(RM.MaterialName, N'صنف مشتريات') AS Product_Name, PD.Quantity AS Quantity_Sold, ISNULL(UN.UnitName, N'وحدة') AS ProductUnit_Name, PD.UnitPrice AS Purchase_Price_Per_Unit, (PD.Quantity * PD.UnitPrice) AS Total_Line_Amount")
@@ -493,8 +511,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            MsgBox(ex.Message)
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetPurchaseReport2", ex)
+            Throw
         End Try
 
         Return dt
@@ -555,7 +574,9 @@ Module ReportsModule
 
         End Using
         Catch ex As Exception
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetPurchaseReport", ex)
+            Throw
         End Try
 
         Return dt
@@ -572,7 +593,7 @@ Module ReportsModule
             Using cn As SqlConnection = DBModule.NewConn()
             Dim q As String = "
 SELECT SD.Invoice_ID, P.Product_Name, SD.Quantity_Sold, SD.Sale_Price_Per_Unit, SD.Total_Line_Amount
-FROM SalesDetails SD
+FROM vw_SalesDetailsAll SD
 LEFT JOIN Products P ON SD.Product_ID = P.Product_ID
 WHERE SD.Invoice_ID = @ID"
             Using cmd As New SqlCommand(q, cn)
@@ -584,8 +605,9 @@ WHERE SD.Invoice_ID = @ID"
 
         End Using
         Catch ex As Exception
-            ' LogError(ex)
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetSalesDetails", ex)
+            Throw
         End Try
 
         Return dt
@@ -614,8 +636,9 @@ WHERE PD.PurchaseID = @ID"
 
         End Using
         Catch ex As Exception
-            ' LogError(ex)
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetPurchaseDetails", ex)
+            Throw
         End Try
 
         Return dt
@@ -635,7 +658,7 @@ WHERE PD.PurchaseID = @ID"
 SELECT 
     P.Product_ID,
     P.ProductName,
-    ISNULL((SELECT SUM(Quantity_Sold) FROM SalesDetails SD JOIN SalesHeader SH on SD.Invoice_ID=SH.Invoice_ID WHERE SD.Product_ID = P.Product_ID AND SH.Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSold,
+    ISNULL((SELECT SUM(Quantity_Sold) FROM vw_SalesDetailsAll SD JOIN vw_SalesHeaderAll SH on SD.Invoice_ID=SH.Invoice_ID WHERE SD.Product_ID = P.Product_ID AND SH.Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSold,
     ISNULL((SELECT SUM(Quantity) FROM PurchaseDetails PD JOIN PurchaseHeaders PH on PD.PurchaseID=PH.PurchaseID WHERE PD.MaterialID = P.Product_ID AND PH.PurchaseDate BETWEEN @D1 AND @D2 AND ISNULL(PH.IsDeleted, 0) = 0),0) AS TotalPurchased,
     ISNULL(S.Quantity_OnHand,0) AS Quantity_OnHand
 FROM Products P
@@ -652,8 +675,9 @@ ORDER BY P.ProductName
 
         End Using
         Catch ex As Exception
-            ' LogError(ex)
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetStockMovement", ex)
+            Throw
         End Try
 
         Return dt
@@ -671,7 +695,7 @@ ORDER BY P.ProductName
             Using cn As SqlConnection = DBModule.NewConn()
             Dim q As String = "
 SELECT 
-    ISNULL((SELECT SUM(Net_Amount) FROM SalesHeader WHERE Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSales,
+    ISNULL((SELECT SUM(Net_Amount) FROM vw_SalesHeaderAll WHERE Invoice_Date BETWEEN @D1 AND @D2),0) AS TotalSales,
     ISNULL((SELECT SUM(NetTotal) FROM PurchaseHeaders WHERE PurchaseDate BETWEEN @D1 AND @D2 AND ISNULL(IsDeleted, 0) = 0),0) AS TotalPurchases
 "
             Using cmd As New SqlCommand(q, cn)
@@ -695,8 +719,9 @@ SELECT
 
         End Using
         Catch ex As Exception
-            ' LogError(ex)
-            Return New DataTable()
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetProfit", ex)
+            Throw
         End Try
 
         Return dt
@@ -714,8 +739,10 @@ SELECT
                 dt.Load(cmd.ExecuteReader())
             End Using
         End Using
-        Catch
-            Return New DataTable()
+        Catch ex As Exception
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetCustomersList", ex)
+            Throw
         End Try
         Return dt
     End Function
@@ -729,8 +756,10 @@ SELECT
                 dt.Load(cmd.ExecuteReader())
             End Using
         End Using
-        Catch
-            Return New DataTable()
+        Catch ex As Exception
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetSuppliersList", ex)
+            Throw
         End Try
         Return dt
     End Function
@@ -743,8 +772,10 @@ SELECT
                 dt.Load(cmd.ExecuteReader())
             End Using
         End Using
-        Catch
-            Return New DataTable()
+        Catch ex As Exception
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetUsersList", ex)
+            Throw
         End Try
         Return dt
     End Function
@@ -753,12 +784,14 @@ SELECT
         Dim dt As New DataTable()
         Try
             Using cn As SqlConnection = DBModule.NewConn()
-            Using cmd As New SqlCommand("SELECT DISTINCT Payment_Method FROM (SELECT Payment_Method FROM SalesHeader UNION ALL SELECT PaymentType AS Payment_Method FROM PurchaseHeaders) t WHERE Payment_Method IS NOT NULL", cn)
+            Using cmd As New SqlCommand("SELECT DISTINCT Payment_Method FROM (SELECT Payment_Method FROM vw_SalesHeaderAll UNION ALL SELECT PaymentType AS Payment_Method FROM PurchaseHeaders) t WHERE Payment_Method IS NOT NULL", cn)
                 dt.Load(cmd.ExecuteReader())
             End Using
         End Using
-        Catch
-            Return New DataTable()
+        Catch ex As Exception
+            ' لا نُعيد جدولاً فارغاً: فشل الاستعلام يجب ألا يبدو كأنه تقرير بلا بيانات
+            Logger.LogError("ReportsModule.GetPaymentMethodsList", ex)
+            Throw
         End Try
         Return dt
     End Function
@@ -778,17 +811,18 @@ SELECT
         H.Net_Amount,
         H.Amount_Paid,
         H.Remaining,
+        H.[Invoice_Code],
         H.PreviousBalance,
         H.Payment_Method,
         C.CurrentBalance
-    FROM SalesHeader H
+    FROM vw_SalesHeaderAll H
     INNER JOIN Customers C ON H.Customer_ID = C.CustomerID
     WHERE H.Invoice_ID = @id"
         ' كود قديم (بدون CurrentBalance):
         '    SELECT H.Invoice_ID, H.Invoice_Date, C.CustomerCode, C.CustomerName,
         '           H.User_Name, H.Total_Amount, H.Discount_Value, H.Net_Amount,
         '           H.Amount_Paid, H.Remaining, H.Payment_Method
-        '    FROM SalesHeader H INNER JOIN Customers C ON H.Customer_ID = C.CustomerID
+        '    FROM vw_SalesHeaderAll H INNER JOIN Customers C ON H.Customer_ID = C.CustomerID
         '    WHERE H.Invoice_ID = @id
         Using cn As SqlConnection = DBModule.NewConn()
             Using cmd As New SqlCommand(q, cn)
@@ -797,8 +831,10 @@ SELECT
                     If rd.Read() Then
                         Dim currentBalance As Decimal = If(IsDBNull(rd("CurrentBalance")), 0D, CDec(rd("CurrentBalance")))
                         Dim remaining As Decimal = CDec(rd("Remaining"))
+                        ' الرقم الظاهر للمستخدم من العرض التوافقي (قديم: Invoice_Code / حديث: رقم الفاتورة النصي)
                         inv = New InvoiceHeader With {
                             .InvoiceID = rd("Invoice_ID"),
+                            .InvoiceCode = If(IsDBNull(rd("Invoice_Code")), String.Empty, rd("Invoice_Code").ToString()),
                             .InvoiceDate = rd("Invoice_Date"),
                             .CustomerCode = rd("CustomerCode").ToString(),
                             .CustomerName = rd("CustomerName").ToString(),
@@ -881,7 +917,7 @@ SELECT
                 Quantity_Sold,
                 Sale_Price_Per_Unit,
                 Total_Line_Amount
-            FROM SalesDetails
+            FROM vw_SalesDetailsAll
             WHERE Invoice_ID = @id"
         Using cn As SqlConnection = DBModule.NewConn()
             Using cmd As New SqlCommand(q, cn)
@@ -979,7 +1015,7 @@ SELECT
     '    Center("فاتورة مبيعات", fBold)
     '    Center(New String("═"c, 32), f11)
 
-    '    RightAligned("رقم الفاتورة : " & header.InvoiceID, f11)
+    '    RightAligned("رقم الفاتورة : " & header.DisplayInvoiceNumber, f11)
     '    RightAligned("التاريخ : " & header.InvoiceDate, f11)
     '    RightAligned("الكاشير : " & header.UserName, f11)
     '    RightAligned("كود العميل : " & header.CustomerCode, f11)
@@ -1086,7 +1122,7 @@ SELECT
     '    Center("فاتورة مبيعات", fBold)
     '    Center(New String("═"c, 32), f11)
 
-    '    RightAligned("رقم الفاتورة : " & header.InvoiceID, f11)
+    '    RightAligned("رقم الفاتورة : " & header.DisplayInvoiceNumber, f11)
     '    RightAligned("التاريخ : " & header.InvoiceDate.ToString("yyyy/MM/dd hh:mm tt"), f11)
     '    RightAligned("الكاشير : " & header.UserName, f11)
     '    RightAligned("كود العميل : " & header.CustomerCode, f11)
@@ -1320,7 +1356,7 @@ Sub(sender, e)
     ' كود قديم: DrawSeparator(1)
     DrawSeparator(2)
     RightAligned("نوع الفاتورة : فاتورة مبيعات", f11)
-    RightAligned("رقم الفاتورة : " & header.InvoiceID, f11)
+    RightAligned("رقم الفاتورة : " & header.DisplayInvoiceNumber, f11)
     RightAligned("التاريخ : " & header.InvoiceDate.ToString("yyyy/MM/dd  hh:mm:ss tt"), f11)
     RightAligned("الكاشير : " & header.UserName, f11)
     RightAligned("كود العميل : " & header.CustomerCode, f11)
@@ -1427,12 +1463,12 @@ Sub(sender, e)
 
     ' باركود (مشروط بالإعداد - يأتي كـ parameter من المُستدعي)
     If printBarcode Then
-        Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
+        Dim qr As Bitmap = GenerateQRCode(header.DisplayInvoiceNumber)
         g.DrawImage(qr, leftX + (pageW - qr.Width) \ 2, Y)
         Y += qr.Height + 5
     End If
     ' كود قديم (الباركود يطبع دائماً):
-    ' Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
+    ' Dim qr As Bitmap = GenerateQRCode(header.DisplayInvoiceNumber)
     ' g.DrawImage(qr, leftX + (pageW - qr.Width) \ 2, Y)
     ' Y += qr.Height + 5
 
@@ -1664,7 +1700,7 @@ End Sub
     '                                 End Sub
 
     '            drawRightField("اسم العميل", header.CustomerName)
-    '            drawRightField("فاتورة رقم", header.InvoiceID.ToString())
+    '            drawRightField("فاتورة رقم", header.DisplayInvoiceNumber)
     '            ' تاريخ مختصر مع نظام 12 ساعة
     '            drawRightField("التاريخ", header.InvoiceDate.ToString("yyyy/MM/dd hh:mm tt"))
     '            drawRightField("المستخدم", header.UserName)
@@ -1758,7 +1794,7 @@ End Sub
     '            separator()
     '            If printBarcode Then
     '                Try
-    '                    Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
+    '                    Dim qr As Bitmap = GenerateQRCode(header.DisplayInvoiceNumber)
     '                    g.DrawImage(qr, leftX + (usableW - qr.Width) \ 2, Y)
     '                    Y += qr.Height + 5
     '                Catch
@@ -1971,7 +2007,7 @@ End Sub
                                      End Sub
 
                 drawRightField("اسم العميل", header.CustomerName)
-                drawRightField("فاتورة رقم", header.InvoiceID.ToString())
+                drawRightField("فاتورة رقم", header.DisplayInvoiceNumber)
                 ' تاريخ مختصر مع نظام 12 ساعة
                 drawRightField("التاريخ", header.InvoiceDate.ToString("yyyy/MM/dd hh:mm tt"))
                 drawRightField("المستخدم", header.UserName)
@@ -1995,7 +2031,7 @@ End Sub
                 separator()
             Else
                 ' [جديد] صفحة تكملة أصناف: هيدر مختصر بدل اللوجو والبيانات الكاملة
-                centerLine("تابع فاتورة رقم " & header.InvoiceID.ToString(), fBold)
+                centerLine("تابع فاتورة رقم " & header.DisplayInvoiceNumber, fBold)
                 centerLine("(الأصناف من " & (startIdx + 1) & " إلى " & (startIdx + pageItems.Count) & " من " & items.Count & ")", f9)
                 separator()
             End If
@@ -2078,7 +2114,7 @@ End Sub
                 separator()
                 If printBarcode Then
                     Try
-                        Dim qr As Bitmap = GenerateQRCode(header.InvoiceID.ToString())
+                        Dim qr As Bitmap = GenerateQRCode(header.DisplayInvoiceNumber)
                         g.DrawImage(qr, leftX + (usableW - qr.Width) \ 2, Y)
                         Y += qr.Height + 5
                     Catch __logEx As Exception
@@ -2190,7 +2226,7 @@ End Sub
         If Not String.IsNullOrEmpty(Phone1) Then sb.AppendLine("*هاتف : " + Phone1 + "*")
         If Not String.IsNullOrEmpty(Phone2) Then sb.AppendLine("*هاتف : " + Phone2 + "*")
         sb.AppendLine("🧾 *فاتورة مبيعات*")
-        sb.AppendLine("رقم الفاتورة: " & header.InvoiceID)
+        sb.AppendLine("رقم الفاتورة: " & header.DisplayInvoiceNumber)
         sb.AppendLine("التاريخ: " & header.InvoiceDate.ToString("yyyy/MM/dd HH:mm"))
         sb.AppendLine("الكاشير: " & header.UserName)
         sb.AppendLine("العميل: " & header.CustomerName & " (كود: " & header.CustomerCode & ")")
@@ -2229,6 +2265,22 @@ End Sub
 End Module
 Public Class InvoiceHeader
     Public Property InvoiceID As Integer
+    ''' <summary>رقم الفاتورة الظاهر للمستخدم من العرض التوافقي (Invoice_Code)</summary>
+    Public Property InvoiceCode As String
+
+    ''' <summary>
+    ''' الرقم المعروض/المطبوع على الفاتورة: لا نُظهر معرّف العرض المُزاح (100000000 + معرّف
+    ''' الفاتورة الحديثة) للمستخدم أبداً؛ نُظهر رقم الفاتورة الظاهر وإن غاب نرجع للمعرّف الحقيقي.
+    ''' </summary>
+    Public ReadOnly Property DisplayInvoiceNumber As String
+        Get
+            If Not String.IsNullOrWhiteSpace(InvoiceCode) Then Return InvoiceCode
+            ' إزاحة العرض التوافقي (vw_SalesHeaderAll) للمبيعات الحديثة
+            If InvoiceID >= 100000000 Then Return (InvoiceID - 100000000).ToString()
+            Return InvoiceID.ToString()
+        End Get
+    End Property
+
     Public Property InvoiceDate As DateTime
     Public Property CustomerCode As String
     Public Property CustomerName As String

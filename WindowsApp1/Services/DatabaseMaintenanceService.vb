@@ -283,6 +283,11 @@ Namespace Services
                 progress?.Report(New MaintenanceProgress(65, "فحص الأعمدة", "فحص أعمدة الجداول وتوليد ترقيعات ALTER TABLE..."))
                 Await CheckAndRepairColumnsAsync(report, progress).ConfigureAwait(False)
 
+                ' الخطوة 3.5: إنشاء/تحديث العروض التوافقية للمبيعات (قديم + حديث)
+                ' مهم: تُنفَّذ بعد ترقيع الأعمدة لأن تعريف العرض يعتمد على أعمدة أضيفت في إصدارات لاحقة
+                progress?.Report(New MaintenanceProgress(75, "فحص العروض التوافقية", "جارٍ إنشاء عروض المبيعات التوافقية (قديم + حديث)..."))
+                Await CheckAndRepairViewsAsync(report).ConfigureAwait(False)
+
                 ' الخطوة 4: مزامنة البيانات المشتركة وزرع الحساب الافتراضي وتأكيد الجاهزية
                 progress?.Report(New MaintenanceProgress(85, "مزامنة البيانات الأساسية", "مزامنة الحقول التوافقية وزرع الحساب الافتراضي..."))
                 Await SyncAndSeedEssentialDataAsync(report, progress).ConfigureAwait(False)
@@ -408,6 +413,31 @@ Namespace Services
                     Next
                 Next
             End Using
+        End Function
+
+        ''' <summary>
+        ''' إنشاء/تحديث العروض التوافقية (Views) التي تجمع فواتير المبيعات القديمة والحديثة.
+        ''' تُنفَّذ عند كل تشغيل حتى تصل العروض لقواعد البيانات القائمة التي أُنشئت قبل إضافتها
+        ''' (سكريبت DatabaseSchema.sql لا يُنفَّذ إلا عند إنشاء قاعدة بيانات جديدة).
+        ''' </summary>
+        Private Async Function CheckAndRepairViewsAsync(report As MaintenanceReport) As Task
+            Try
+                Dim expectedViews = DatabaseSchemaDefinitions.GetExpectedViews()
+
+                Using conn As New SqlConnection(_connectionString)
+                    Await conn.OpenAsync().ConfigureAwait(False)
+
+                    For Each viewDef In expectedViews
+                        Using cmd As New SqlCommand(viewDef.ToCreateOrAlterSql(), conn)
+                            cmd.CommandTimeout = 120
+                            Await cmd.ExecuteNonQueryAsync().ConfigureAwait(False)
+                        End Using
+                        report.Log($"✅ تم تحديث العرض التوافقي [{viewDef.ViewName}] ({viewDef.DisplayNameAr}).")
+                    Next
+                End Using
+            Catch ex As Exception
+                report.LogError($"فشل إنشاء/تحديث العروض التوافقية للمبيعات: {ex.Message}", ex)
+            End Try
         End Function
 
         ''' <summary>

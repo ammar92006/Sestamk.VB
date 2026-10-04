@@ -1,4 +1,4 @@
-﻿
+
 
 Imports System.Data
 Imports System.Data.SqlClient
@@ -848,19 +848,42 @@ Public Class Reports
                 Return
             End If
 
+            ' العروض التوافقية (vw_SalesHeaderAll / vw_SalesDetailsAll) مبنية على UNION ولا تقبل الحذف
+            ' المباشر، لذلك نحذف من الجداول الحقيقية. صفوف المبيعات الحديثة تظهر في العرض بمعرّف مُزاح
+            ' (100000000 + InvoiceID) لفصل مجال المعرّفات عن القديمة، فنتعرف على الجدول الصحيح بفكّ الإزاحة.
+            Const ModernIdOffset As Integer = 100000000
+
             Using cn As SqlConnection = DBModule.NewConn()
 
-            Dim queryDetails As String = "DELETE FROM SalesDetails WHERE Invoice_ID = @Invoice_ID"
-            Using cmdDetails As New SqlCommand(queryDetails, cn)
-                cmdDetails.Parameters.AddWithValue("@Invoice_ID", inv_id)
-                cmdDetails.ExecuteNonQuery()
-            End Using
+                If inv_id >= ModernIdOffset Then
+                    ' فاتورة حديثة: نفكّ الإزاحة ثم نحذف التفاصيل فالنرأس
+                    Dim realInvoiceID As Integer = inv_id - ModernIdOffset
 
-            Dim queryHeader As String = "DELETE FROM SalesHeader WHERE Invoice_ID = @Invoice_ID"
-            Using cmdHeader As New SqlCommand(queryHeader, cn)
-                cmdHeader.Parameters.AddWithValue("@Invoice_ID", inv_id)
-                cmdHeader.ExecuteNonQuery()
-            End Using
+                    Dim queryModernDetails As String = "DELETE FROM SalesInvoiceDetails WHERE InvoiceID = @Invoice_ID"
+                    Using cmdModernDetails As New SqlCommand(queryModernDetails, cn)
+                        cmdModernDetails.Parameters.AddWithValue("@Invoice_ID", realInvoiceID)
+                        cmdModernDetails.ExecuteNonQuery()
+                    End Using
+
+                    Dim queryModernHeader As String = "DELETE FROM SalesInvoices WHERE InvoiceID = @Invoice_ID"
+                    Using cmdModernHeader As New SqlCommand(queryModernHeader, cn)
+                        cmdModernHeader.Parameters.AddWithValue("@Invoice_ID", realInvoiceID)
+                        cmdModernHeader.ExecuteNonQuery()
+                    End Using
+                Else
+                    ' فاتورة قديمة: معرّفها كما هو في الجداول القديمة
+                    Dim queryDetails As String = "DELETE FROM SalesDetails WHERE Invoice_ID = @Invoice_ID"
+                    Using cmdDetails As New SqlCommand(queryDetails, cn)
+                        cmdDetails.Parameters.AddWithValue("@Invoice_ID", inv_id)
+                        cmdDetails.ExecuteNonQuery()
+                    End Using
+
+                    Dim queryHeader As String = "DELETE FROM SalesHeader WHERE Invoice_ID = @Invoice_ID"
+                    Using cmdHeader As New SqlCommand(queryHeader, cn)
+                        cmdHeader.Parameters.AddWithValue("@Invoice_ID", inv_id)
+                        cmdHeader.ExecuteNonQuery()
+                    End Using
+                End If
 
             End Using
 

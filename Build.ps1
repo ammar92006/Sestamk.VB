@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     بناء موحّد لمشروع سستمك (Sestamk) — الحل كاملاً + الاختبارات + المثبّت اختيارياً.
 
@@ -109,7 +109,8 @@ if (-not $SkipTests) {
 
     $tests = @(
         "TreasuryAndCrypto.Headless.ps1",
-        "SupplierAccounting.Integration.ps1"
+        "SupplierAccounting.Integration.ps1",
+        "SchemaAndQueryVerification.ps1"
     )
     $failures = @()
     foreach ($t in $tests) {

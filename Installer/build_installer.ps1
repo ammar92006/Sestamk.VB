@@ -1,4 +1,4 @@
-# Builds the whole solution (Release) and packages the installer with Inno Setup.
+﻿# Builds the whole solution (Release) and packages the installer with Inno Setup.
 # Usage: .\build_installer.ps1 [-Configuration Release] [-SkipTests]
 #
 # ملاحظة: هذا السكربت صار واجهة رقيقة حول Build.ps1 في جذر المستودع لتفادي ازدواج
