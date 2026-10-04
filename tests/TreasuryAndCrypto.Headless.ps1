@@ -158,6 +158,11 @@ AddTx ([decimal]'250.555') $true 1
 AssertEqual (GetBalance) 1250.56 'sub-cent amount rounds to nearest cent (1250.56)'
 
 $cn.Dispose()
-$cmd = $master.CreateCommand(); $cmd.CommandText = "DROP DATABASE [$testDb];"; [void]$cmd.ExecuteNonQuery()
+# تنظيف قاعدة الاختبار: يجب طرد أي اتصال قائم أولاً (SINGLE_USER + ROLLBACK IMMEDIATE)،
+# وإلا فشل DROP DATABASE برسالة "currently in use" وأفشل الاختبار رغم نجاح كل التأكيدات.
+$cmd = $master.CreateCommand()
+$cmd.CommandText = "IF DB_ID('$testDb') IS NOT NULL BEGIN ALTER DATABASE [$testDb] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [$testDb]; END;"
+$cmd.CommandTimeout = 60
+[void]$cmd.ExecuteNonQuery()
 $master.Dispose()
 Write-Output 'ALL SERVICE TESTS PASSED'

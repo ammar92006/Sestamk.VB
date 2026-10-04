@@ -7,7 +7,7 @@
 ; ==============================================================================
 
 #define MyAppName "Sestamk POS"
-#define MyAppVersion "1.3.0"
+#define MyAppVersion "1.4.0"
 #define MyAppPublisher "Sestamk Solutions"
 #define MyAppURL "https://sestamk.com"
 #define MyAppExeName "Sestamk.exe"
@@ -28,7 +28,9 @@ DefaultDirName={autopf}\Sestamk
 DefaultGroupName={#MyAppName}
 AllowNoIcons=yes
 OutputDir=OutputSetup
-OutputBaseFilename=Sestamk_Setup_v{#MyAppVersion}
+; اسم ثابت بلا رقم إصدار — لأن manifest.json وصف التحديث على السيرفر يشيران إلى هذا
+; الاسم تحديداً (Sestamk_Setup_v2026.exe). تغييره هنا يكسر تنزيل التحديث للعملاء.
+OutputBaseFilename=Sestamk_Setup_v2026
 SetupIconFile=WindowsApp1\loge.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 Compression=lzma2/max

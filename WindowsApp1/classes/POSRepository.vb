@@ -1238,6 +1238,20 @@ ORDER BY ShiftID DESC;"
     End Function
 
     ' 2. تصفية حساب الطيار (تسوية الأوردرات وتوريد المبالغ للدرج)
+    ''' <summary>
+    ''' تصفية حركات الطيار (تسجيل أنها حُصّلت).
+    '''
+    ''' ⚠️ فجوة محاسبية معروفة تحتاج قراراً من صاحب العمل (لم تُعدّل عن قصد):
+    ''' عند التصفية فعلياً يقتطع الطيار عمولته ويسلّم الكاشير الصافي، بينما هذه الدالة
+    ''' تكتفي بوسم الحركات كمُصفّاة دون أي قيد خزينة أو تحديث لإجماليات الوردية — فيظهر
+    ''' عجز في الدرج بمقدار العمولة. الإصلاح الصحيح يحتاج تحديد قاعدتين لا يمكن تخمينهما:
+    '''   1) هل العمولة = رسوم التوصيل (DeliveryFee) أم نسبة/مبلغ من جدول DeliveryDrivers
+    '''      (IsPercentage + DeliveryFeeValue)؟
+    '''   2) هل الفاتورة الأصلية حُصّلت على الكاونتر (PaidAmount > 0 و IsCredit = 0)
+    '''      أم حصّلها الطيار؟ في الحالة الأولى تكون الحركة مزدوجة إن أُضيف تحصيل جديد.
+    ''' بعد تحديدهما: تُنفَّذ التصفية داخل معاملة واحدة تقيد صرف العمولة على الخزينة
+    ''' (TreasuryTransactionTypes.Expense) وتضيف الصافي إلى إجماليات الوردية.
+    ''' </summary>
     Public Function SettleDriverOrders(driverID As Integer) As Boolean
         Dim sql As String = "
         UPDATE DriverTransactions 
@@ -2231,6 +2245,18 @@ ORDER BY ShiftID DESC;"
                         cn:=con,
                         trans:=trans
                     )
+
+                    ' تسجيل العربون في إجماليات الوردية النشطة داخل نفس المعاملة.
+                    ' بدون ذلك يدخل العربون الخزينة ودرج النقدية فعلاً ولا يظهر في إيرادات
+                    ' الوردية، فيظهر عجز وهمي بمقدار العربون عند تقفيل الوردية.
+                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
+                        Dim sqlShiftDeposit As String = "UPDATE Shifts SET TotalIncomes = ISNULL(TotalIncomes, 0) + @Dep WHERE ShiftID = @ShiftID;"
+                        Using cmdShiftDep As New SqlCommand(sqlShiftDeposit, con, trans)
+                            cmdShiftDep.Parameters.AddWithValue("@Dep", res.DepositAmount)
+                            cmdShiftDep.Parameters.AddWithValue("@ShiftID", ShiftSession.CurrentShift.ShiftID)
+                            Await cmdShiftDep.ExecuteNonQueryAsync()
+                        End Using
+                    End If
                 End If
 
                 trans.Commit()

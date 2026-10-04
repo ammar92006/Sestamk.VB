@@ -1,0 +1,29 @@
+# إعداد gitleaks لمنع تسرّب أسرار جديدة مع الإقرار الصريح بالتسرّبات المعروفة.
+#
+# ⚠️ حالة أمنية معلّقة (راجع SECURITY.md):
+#   - مفتاح Supabase بدور service_role كُتب قديماً في WindowsApp1\CheckActivation.vb
+#     وما زال موجوداً في تاريخ Git (المستودع عام). يجب تدويره من لوحة Supabase.
+#   - سر واتساب ثابت كان مضمّناً في UCWhatsAppSettings.vb (أُزيل من الكود الحالي).
+#   - كلمة مرور إدارية قديمة مذكورة في تعليق App.config (أُزيلت من الكود الحالي).
+#
+# هذه الإدخالات تُستثني حتى لا يفشل الفحص على تاريخ لا يمكن تغييره إلا بإعادة كتابته.
+# الاستثناء بالمطابقة الدقيقة للقيم المعروفة فقط — أي سر جديد أو مختلف سيُكتشف.
+
+title = "Sestamk gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "أسرار تاريخية معروفة ومُقرّ بها — يجب تدويرها، والاستثناء يُرفع بعد تنظيف التاريخ"
+regexTarget = "match"
+regexes = [
+  # مفتاح Supabase service_role القديم (JWT) — يجب تدويره فوراً
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_\-]+\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4Y2J5b2VwamJwaHlsdnlod2d3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSI[A-Za-z0-9_\-]*''',
+  # سر واتساب الثابت القديم
+  '''40ddff3e42dce8ecae15405ba523f572e526c673e0b40051a8d67aee1bdab190''',
+]
+paths = [
+  # Placeholder واجهة إدخال التوكن — ليس سراً
+  '''UCCloudSyncSettings\.Designer\.vb$''',
+]

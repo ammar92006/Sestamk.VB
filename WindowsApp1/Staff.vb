@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports DevExpress.XtraLayout.Customization
 
 Public Class Staff
@@ -528,46 +528,62 @@ Public Class Staff
 
             Dim roleId As Integer = Convert.ToInt32(txtUser_Code.Text)
             Using cn As SqlConnection = DBModule.NewConn()
+                ' أمان: العمليات الثلاث (تحديث الدور، حذف الصلاحيات، إعادة إدخالها) في معاملة واحدة.
+                ' بدونها كان أي فشل في منتصف إعادة الإدخال يترك الدور بلا أي صلاحيات نهائياً،
+                ' فيفقد كل مستخدمي هذا الدور الوصول لشاشاتهم.
+                Using trans As SqlTransaction = cn.BeginTransaction()
+                    Try
+                        ' تحديث بيانات الدور
+                        Dim updateRoleQuery As String = "
+                        UPDATE Roles SET RoleName = @RoleName, Description = @Description WHERE RoleID = @RoleID"
+                        Using cmdRole As New SqlCommand(updateRoleQuery, cn, trans)
+                            cmdRole.Parameters.AddWithValue("@RoleName", txtUser_Name.Text)
+                            cmdRole.Parameters.AddWithValue("@Description", txtUser_Note.Text)
+                            cmdRole.Parameters.AddWithValue("@RoleID", roleId)
+                            cmdRole.ExecuteNonQuery()
+                        End Using
 
-            ' تحديث بيانات الدور
-            Dim updateRoleQuery As String = "
-            UPDATE Roles SET RoleName = @RoleName, Description = @Description WHERE RoleID = @RoleID"
-            Dim cmdRole As New SqlCommand(updateRoleQuery, cn)
-            cmdRole.Parameters.AddWithValue("@RoleName", txtUser_Name.Text)
-            cmdRole.Parameters.AddWithValue("@Description", txtUser_Note.Text)
-            cmdRole.Parameters.AddWithValue("@RoleID", roleId)
-            cmdRole.ExecuteNonQuery()
+                        ' حذف الصلاحيات القديمة
+                        Using cmdDel As New SqlCommand("DELETE FROM Permissions WHERE RoleID = @RoleID", cn, trans)
+                            cmdDel.Parameters.AddWithValue("@RoleID", roleId)
+                            cmdDel.ExecuteNonQuery()
+                        End Using
 
-            ' حذف الصلاحيات القديمة
-            Dim deleteQuery As String = "DELETE FROM Permissions WHERE RoleID = @RoleID"
-            Dim cmdDel As New SqlCommand(deleteQuery, cn)
-            cmdDel.Parameters.AddWithValue("@RoleID", roleId)
-            cmdDel.ExecuteNonQuery()
+                        ' إعادة إدخال الصلاحيات
+                        Dim insertPermissionQuery As String = "
+                        INSERT INTO Permissions (RoleID, FormName, CanOpen, CanAdd, CanEdit, CanDelete)
+                        VALUES (@RoleID, @FormName, @CanOpen, @CanAdd, @CanEdit, @CanDelete)"
 
-            ' إعادة إدخال الصلاحيات
-            Dim insertPermissionQuery As String = "
-            INSERT INTO Permissions (RoleID, FormName, CanOpen, CanAdd, CanEdit, CanDelete)
-            VALUES (@RoleID, @FormName, @CanOpen, @CanAdd, @CanEdit, @CanDelete)"
+                        Using cmdPermission As New SqlCommand(insertPermissionQuery, cn, trans)
+                            cmdPermission.Parameters.Add("@RoleID", SqlDbType.Int).Value = roleId
+                            cmdPermission.Parameters.Add("@FormName", SqlDbType.NVarChar, 200)
+                            cmdPermission.Parameters.Add("@CanOpen", SqlDbType.Bit)
+                            cmdPermission.Parameters.Add("@CanAdd", SqlDbType.Bit)
+                            cmdPermission.Parameters.Add("@CanEdit", SqlDbType.Bit)
+                            cmdPermission.Parameters.Add("@CanDelete", SqlDbType.Bit)
 
-            Dim cmdPermission As New SqlCommand(insertPermissionQuery, cn)
-            cmdPermission.Parameters.Add("@RoleID", SqlDbType.Int).Value = roleId
-            cmdPermission.Parameters.Add("@FormName", SqlDbType.NVarChar)
-            cmdPermission.Parameters.Add("@CanOpen", SqlDbType.Bit)
-            cmdPermission.Parameters.Add("@CanAdd", SqlDbType.Bit)
-            cmdPermission.Parameters.Add("@CanEdit", SqlDbType.Bit)
-            cmdPermission.Parameters.Add("@CanDelete", SqlDbType.Bit)
+                            For Each formPermission In GetAllFormPermissions()
+                                cmdPermission.Parameters("@FormName").Value = formPermission.FormName
+                                cmdPermission.Parameters("@CanOpen").Value = formPermission.CanOpen
+                                cmdPermission.Parameters("@CanAdd").Value = formPermission.CanAdd
+                                cmdPermission.Parameters("@CanEdit").Value = formPermission.CanEdit
+                                cmdPermission.Parameters("@CanDelete").Value = formPermission.CanDelete
+                                cmdPermission.ExecuteNonQuery()
+                            Next
+                        End Using
 
-            For Each formPermission In GetAllFormPermissions()
-                cmdPermission.Parameters("@FormName").Value = formPermission.FormName
-                cmdPermission.Parameters("@CanOpen").Value = formPermission.CanOpen
-                cmdPermission.Parameters("@CanAdd").Value = formPermission.CanAdd
-                cmdPermission.Parameters("@CanEdit").Value = formPermission.CanEdit
-                cmdPermission.Parameters("@CanDelete").Value = formPermission.CanDelete
-                cmdPermission.ExecuteNonQuery()
-            Next
+                        trans.Commit()
+                    Catch
+                        Try
+                            trans.Rollback()
+                        Catch
+                        End Try
+                        Throw
+                    End Try
+                End Using
 
-            SmartMessageBox.Show("✅ تم تحديث الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End Using
+                SmartMessageBox.Show("✅ تم تحديث الدور والصلاحيات بنجاح.", "تم", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            End Using
         Catch ex As Exception
             SmartMessageBox.Show("حدث خطأ أثناء التعديل: " & ex.Message)
         End Try

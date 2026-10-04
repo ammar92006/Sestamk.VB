@@ -1,16 +1,37 @@
-name: Build Sestamk POS
+name: Build & Test Sestamk POS
 
 on:
   push:
     branches: [ main, master ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main, master ]
   workflow_dispatch:
 
-jobs:
-  build:
-    runs-on: windows-latest
+env:
+  # يجب إعداد هذا السر في إعدادات المستودع (Settings → Secrets → Actions):
+  # مفتاح feed حزم DevExpress المرخّص، مثال: https://nuget.devexpress.com/<KEY>/api
+  DEVEXPRESS_FEED: ${{ secrets.DEVEXPRESS_NUGET_FEED }}
 
+jobs:
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # مهم: gitleaks يفحص التاريخ كاملاً، لا آخر كوميت فقط
+
+      - name: Scan for committed secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-test:
+    name: Build & test
+    runs-on: windows-latest
+    needs: secret-scan
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,19 +39,107 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
-      - name: Restore NuGet packages (packages.config)
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Configure DevExpress package source (licensed feed)
+        if: ${{ env.DEVEXPRESS_FEED != '' }}
+        shell: pwsh
+        run: |
+          nuget sources Add -Name DevExpress -Source "$env:DEVEXPRESS_FEED" -ConfigFile NuGet.config
+
+      - name: Restore NuGet packages
         run: nuget restore Sestamk.sln -NonInteractive
 
       - name: Build solution (Release)
-        run: msbuild Sestamk.sln /p:Configuration=Release /p:RestorePackagesConfig=true /m /nologo /v:m /p:GenerateManifests=false /p:SignManifests=false
+        run: msbuild Sestamk.sln /p:Configuration=Release /p:RestorePackagesConfig=true /m /nologo /v:m
+
+      - name: Prepare updater tool
+        shell: pwsh
+        run: |
+          $updater = "Sestamk.VB.Updater\bin\Release\Sestamk.VB.Updater.exe"
+          if (Test-Path $updater) {
+            New-Item -ItemType Directory -Force -Path "WindowsApp1\tools" | Out-Null
+            Copy-Item $updater "WindowsApp1\tools\Sestamk.VB.Updater.exe" -Force
+            Copy-Item $updater "WindowsApp1\tools\update.exe" -Force
+          }
+
+      - name: Start SQL Server LocalDB
+        shell: pwsh
+        run: |
+          sqllocaldb start MSSQLLocalDB
+          sqllocaldb info MSSQLLocalDB
+
+      - name: Run headless tests (treasury + crypto)
+        shell: pwsh
+        run: pwsh -NoProfile -File tests\TreasuryAndCrypto.Headless.ps1 -AppPath "WindowsApp1\bin\Release\Sestamk.exe"
+
+      - name: Run integration tests (supplier accounting)
+        shell: pwsh
+        run: pwsh -NoProfile -File tests\SupplierAccounting.Integration.ps1 -AppPath "WindowsApp1\bin\Release\Sestamk.exe"
 
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: Sestamk-Release
+          # ملاحظة: نرفع مجلد الإخراج كاملاً (التطبيق يحتاج ~128 ملف تابع،
+          # ورفع Sestamk.exe وحده ينتج حزمة غير قابلة للتشغيل).
           path: |
-            WindowsApp1/bin/Release/Sestamk.exe
+            WindowsApp1/bin/Release/**
             Sestamk.VB.Updater/bin/Release/**
-          if-no-files-found: warn
           retention-days: 7
+
+  # ملاحظة: هذه المهمة تبني الأصول فقط ولا تنشر إصداراً.
+  # النشر على GitHub Releases يتم يدوياً وفق docs\RELEASE_PROCESS.md لأن ترتيب
+  # النشر (release أولاً ثم صف Supabase) لا يجوز أتمتته جزئياً.
+  # التوقيع الرقمي (signtool) مطلوب قبل النشر — راجع docs\RELEASE_PROCESS.md.
+  package:
+    name: Package installer
+    runs-on: windows-latest
+    needs: build-and-test
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Configure DevExpress package source (licensed feed)
+        if: ${{ env.DEVEXPRESS_FEED != '' }}
+        shell: pwsh
+        run: |
+          nuget sources Add -Name DevExpress -Source "$env:DEVEXPRESS_FEED" -ConfigFile NuGet.config
+
+      - name: Restore NuGet packages
+        run: nuget restore Sestamk.sln -NonInteractive
+
+      - name: Install Inno Setup
+        run: choco install innosetup --yes --no-progress
+
+      - name: Build solution + installer
+        shell: pwsh
+        run: ./Build.ps1 -Configuration Release -SkipTests -Installer
+
+      - name: Compute package hashes
+        shell: pwsh
+        run: |
+          $pkg = "WindowsApp1\bin\Release"
+          Compress-Archive -Path "$pkg\*" -DestinationPath "package.zip" -Force
+          $hash = (Get-FileHash package.zip -Algorithm SHA256).Hash.ToLower()
+          Write-Host "package.zip sha256 = $hash"
+          Write-Host "package.zip size   = $((Get-Item package.zip).Length)"
+          Write-Host "ضع هاتين القيمتين في manifest.json قبل رفع الإصدار."
+
+      - name: Upload release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sestamk-Installer
+          path: |
+            OutputSetup/Sestamk_Setup_v2026.exe
+            package.zip
+          retention-days: 14
