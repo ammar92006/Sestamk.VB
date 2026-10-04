@@ -180,7 +180,7 @@ Public Class frmConfirmMessage
                             cmdShift.Parameters.AddWithValue("@ShiftID", activeShiftID)
                             cmdShift.ExecuteNonQuery()
                         End Using
-                        ShiftSession.CurrentShift.TotalSales += pay
+                        ' إجماليات الوردية في القاعدة هي المصدر الوحيد (v1.3.0) — لا كاش في الذاكرة
                     End If
 
                     trans.Commit()

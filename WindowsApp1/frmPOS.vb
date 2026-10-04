@@ -1630,6 +1630,8 @@
                     .BranchID = currentBranchID,
                     .StoreID = currentStoreID,
                     .DeliveryFee = DeliveryFee,
+                    .DineInServiceFee = currentDineInFee,
+                    .TaxAmount = TaxAmount,
                     .TotalBeforeDiscount = frmPay.FinalGrandTotal,
                     .DiscountAmount = frmPay.TotalDiscount,
                     .NetTotal = frmPay.NetTotal,
@@ -1658,11 +1660,8 @@
                 btnPay.Enabled = False
                 Try
                     Dim savedInvNum As String = Await _repo.SaveInvoiceAsync(invoice)
-                    ' تحديث الذاكرة الحالية للوردية فوراً
-                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
-                        ShiftSession.CurrentShift.TotalSales += invoice.PaidAmount
-                        ShiftSession.CurrentShift.TotalOrders += 1
-                    End If
+                    ' إجماليات الوردية تُحدَّث في قاعدة البيانات داخل SaveInvoiceAsync —
+                    ' القاعدة هي المصدر الوحيد للحقيقة (v1.3.0) ولا يُبقي كاش في الذاكرة يسبب انزياحاً بين الأجهزة
                     ' إذا كانت الفاتورة صالة، يتم تحرير الطاولة وإرجاع حالتها متاحة (1)
                     If CurrentOrderType = OrderType.DineIn AndAlso SelectedTableID.HasValue Then
                         _repo.UpdateTableStatus(SelectedTableID.Value, 1) ' 1 = متاحة
@@ -2443,6 +2442,8 @@
                     .BranchID = currentBranchID,
                     .StoreID = currentStoreID,
                     .DeliveryFee = DeliveryFee,
+                    .DineInServiceFee = currentDineInFee,
+                    .TaxAmount = TaxAmount,
                     .TotalBeforeDiscount = netToSplit + CurrentReservationDeposit,
                     .DiscountAmount = 0,
                     .NetTotal = netToSplit,
@@ -2472,10 +2473,7 @@
                 Try
                     Dim savedInvNum As String = Await _repo.SaveInvoiceAsync(invoice)
 
-                    If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing Then
-                        ShiftSession.CurrentShift.TotalSales += invoice.PaidAmount
-                        ShiftSession.CurrentShift.TotalOrders += 1
-                    End If
+                    ' إجماليات الوردية تُحدَّث في قاعدة البيانات داخل SaveInvoiceAsync (v1.3.0)
 
                     If CurrentOrderType = OrderType.DineIn AndAlso SelectedTableID.HasValue Then
                         _repo.UpdateTableStatus(SelectedTableID.Value, 1)

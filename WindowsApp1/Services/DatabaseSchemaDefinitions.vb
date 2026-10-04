@@ -974,6 +974,7 @@ Namespace Services
                 t.AddColumn("TableID", "INT", True, Nothing, False, False)
                 t.AddColumn("DriverID", "INT", True, Nothing, False, False)
                 t.AddColumn("DeliveryFee", "DECIMAL(18, 2)", False, "0", False, False)
+                t.AddColumn("DineInServiceFee", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("TotalBeforeDiscount", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("DiscountAmount", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("NetTotal", "DECIMAL(18, 2)", False, "0", False, False)

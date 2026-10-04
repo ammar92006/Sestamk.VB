@@ -192,6 +192,30 @@ Public Class FrmCustomers
 
         Dim confirm = SmartMessageBox.Show("هل أنت تأكد من نقل هذا العميل لسلة المحذوفات؟", "تأكيد الحذف الناعم", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If confirm = DialogResult.Yes Then
+            ' حماية محاسبية (v1.3.0): يُمنع حذف عميل عليه رصيد (مديونية سالبة أو دائن موجب)
+            ' حتى لا يضيع حق مالي — نفس القاعدة المطبقة على الموردين (CurrentBalance = 0)
+            Try
+                Dim balResult = DBModule.ExecuteScalar(
+                    "SELECT ISNULL(CurrentBalance, 0) FROM Customers WHERE CustomerID = @CID",
+                    New Dictionary(Of String, Object) From {{"@CID", _selectedCustomerID}})
+                Dim currentBalance As Decimal = If(balResult IsNot Nothing AndAlso Not Convert.IsDBNull(balResult), Convert.ToDecimal(balResult), 0D)
+                If Math.Abs(currentBalance) > 0.005D Then
+                    Dim balanceText As String = If(currentBalance < 0,
+                        $"مديونية عليه بقيمة {Math.Abs(currentBalance):N2}",
+                        $"له رصيد دائن بقيمة {currentBalance:N2}")
+                    SmartMessageBox.Show(
+                        "⚠️ لا يمكن حذف العميل لأن حسابه غير خالص!" & vbCrLf & vbCrLf &
+                        $"العميل [{dgvCustomers.CurrentRow?.Cells("CustomerName")?.Value}] {balanceText} ج.م." & vbCrLf &
+                        "يجب تصفير الحساب أولاً (تحصيل المديونية أو صرف الرصيد الدائن) ثم إعادة المحاولة.",
+                        "حذف مرفوض — يوجد رصيد", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Return
+                End If
+            Catch exBal As Exception
+                Logger.LogError("FrmCustomers.btnDelete_Click.BalanceCheck", exBal)
+                SmartMessageBox.Show("تعذر التحقق من رصيد العميل — لم يتم الحذف. حاول مرة أخرى.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return
+            End Try
+
             If _repo.SoftDeleteCustomer(_selectedCustomerID) Then
                 SmartMessageBox.Show("تم حذف العميل بنجاح!", "تم الحذف", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 RefreshData()

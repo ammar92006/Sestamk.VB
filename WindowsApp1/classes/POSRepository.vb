@@ -680,10 +680,10 @@ ORDER BY ShiftID DESC;"
         Dim sqlInvoice As String = "
         INSERT INTO SalesInvoices 
         (InvoiceNumber, InvoiceDate, OrderType, ShiftID, UserID, CustomerID, TableID, DriverID,
-        BranchID, StoreID, DeliveryFee, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, IsCredit, TreasuryID, Notes, IsActive, IsDeleted, CreatedAt)
+        BranchID, StoreID, DeliveryFee, DineInServiceFee, Tax, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, IsCredit, TreasuryID, Notes, IsActive, IsDeleted, CreatedAt)
         VALUES 
         (@Num, GETDATE(), @OrderType, @ShiftID, @UserID, @CustomerID, @TableID, @DriverID,
-        @BranchID, @StoreID, @DeliveryFee, @TotalBeforeDiscount, @DiscountAmount, @NetTotal, @PaidAmount, @RemainingAmount, @IsCredit, @TreasuryID, @Notes, 1, 0, GETDATE());
+        @BranchID, @StoreID, @DeliveryFee, @DineInServiceFee, @TaxAmount, @TotalBeforeDiscount, @DiscountAmount, @NetTotal, @PaidAmount, @RemainingAmount, @IsCredit, @TreasuryID, @Notes, 1, 0, GETDATE());
         SELECT SCOPE_IDENTITY();"
 
         Dim sqlDetail As String = "
@@ -723,6 +723,8 @@ ORDER BY ShiftID DESC;"
                     cmdInv.Parameters.AddWithValue("@BranchID", If(inv.BranchID.HasValue, inv.BranchID.Value, DBNull.Value))
                     cmdInv.Parameters.AddWithValue("@StoreID", If(inv.StoreID.HasValue, inv.StoreID.Value, DBNull.Value))
                     cmdInv.Parameters.AddWithValue("@DeliveryFee", inv.DeliveryFee)
+                    cmdInv.Parameters.AddWithValue("@DineInServiceFee", inv.DineInServiceFee)
+                    cmdInv.Parameters.AddWithValue("@TaxAmount", inv.TaxAmount)
                     cmdInv.Parameters.AddWithValue("@TotalBeforeDiscount", inv.TotalBeforeDiscount)
                     cmdInv.Parameters.AddWithValue("@DiscountAmount", inv.DiscountAmount)
                     cmdInv.Parameters.AddWithValue("@NetTotal", inv.NetTotal)

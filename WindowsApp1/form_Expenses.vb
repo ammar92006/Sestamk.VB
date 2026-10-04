@@ -175,9 +175,7 @@ Public Class form_Expenses
                                 Await cmdShift.ExecuteNonQueryAsync()
                             End Using
 
-                            If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso ShiftSession.CurrentShift.ShiftID = currentShiftID.Value Then
-                                ShiftSession.CurrentShift.TotalExpenses += expenseAmount
-                            End If
+                            ' إجماليات الوردية في القاعدة هي المصدر الوحيد (v1.3.0)
                         End If
 
                         ' إذا نجحت العمليات نقوم بالتثبيت النهائي

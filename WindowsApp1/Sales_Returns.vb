@@ -481,11 +481,11 @@ Public Class Sales_Returns
                     Dim sqlInv As String = "
                         INSERT INTO SalesInvoices 
                         (InvoiceNumber, InvoiceDate, OrderType, ShiftID, UserID, CustomerID, BranchID, StoreID, 
-                         DeliveryFee, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, 
+                         DeliveryFee, DineInServiceFee, Tax, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, 
                          IsCredit, TreasuryID, PaymentType, Notes, IsActive, IsDeleted, CreatedAt)
                         VALUES 
                         (@InvNum, GETDATE(), @OrderType, @ShiftID, @UserID, @CustID, 1, @StoreID, 
-                         0, @TotalBefore, @Discount, @NetTotal, @Paid, 0, 
+                         0, 0, 0, @TotalBefore, @Discount, @NetTotal, @Paid, 0, 
                          @IsCredit, @TreasuryID, @PayType, @Notes, 1, 0, GETDATE());
                         SELECT SCOPE_IDENTITY();
                     "
@@ -562,10 +562,7 @@ Public Class Sales_Returns
                             cmdShift.ExecuteNonQuery()
                         End Using
 
-                        ' تحديث كائن الوردية في الرام
-                        If ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing AndAlso ShiftSession.CurrentShift.ShiftID = currentShiftID Then
-                            ShiftSession.CurrentShift.TotalRefunds += netRefund
-                        End If
+                        ' إجماليات الوردية في القاعدة هي المصدر الوحيد (v1.3.0) — تم تحديث TotalRefunds في SQL أعلاه
 
                         ' تسجيل حركة صرف نقدية في الخزينة
                         Await TreasuryService.AddTransactionAsync(

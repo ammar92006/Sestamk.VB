@@ -287,6 +287,14 @@ Namespace Services
                 progress?.Report(New MaintenanceProgress(85, "مزامنة البيانات الأساسية", "مزامنة الحقول التوافقية وزرع الحساب الافتراضي..."))
                 Await SyncAndSeedEssentialDataAsync(report, progress).ConfigureAwait(False)
 
+                ' الخطوة 5: ترحيل الصلاحيات — زرع صفوف سماح للأدوار المُدارة (شرط الأمان الافتراضي v1.3.0)
+                progress?.Report(New MaintenanceProgress(92, "ترحيل الصلاحيات", "زرع صفوف صلاحيات صريحة للشاشات الموجودة..."))
+                Await SeedManagedRolePermissionsAsync(report).ConfigureAwait(False)
+
+                ' الخطوة 6: الإصلاح الذاتي لأرصدة الخزائن (الرصيد = الافتتاحي + مجموع الحركات)
+                progress?.Report(New MaintenanceProgress(96, "فحص أرصدة الخزائن", "مطابقة أرصدة الخزائن مع حركاتها..."))
+                Await RepairTreasuryBalancesAsync(report).ConfigureAwait(False)
+
                 progress?.Report(New MaintenanceProgress(100, "اكتمل الفحص", "تم اكتمال فحص وترقيع قاعدة البيانات بنجاح."))
                 report.Log($"🎉 انتهت عملية الصيانة بنجاح. الجداول المنشأة: {report.TablesCreated.Count}، الأعمدة المضافة: {report.ColumnsAdded.Count}.")
 
@@ -396,6 +404,85 @@ Namespace Services
                     Next
                 Next
             End Using
+        End Function
+
+        ''' <summary>
+        ''' ترحيل الصلاحيات (v1.3.0): الأمان الافتراضي صار "الممنوع ما لم يُمنح".
+        ''' لكي لا تتغير صلاحيات أي عميل بعد الترقية، تُزرع صفوف سماح كاملة (فتح/إضافة/تعديل/حذف)
+        ''' لكل شاشة في AppScreens، لكن **فقط للأدوار المُدارة** — أي دور لديه صف صلاحيات واحد على الأقل.
+        ''' الأدوار بلا صفوف تبقى مقفولة كما كانت، والشاشات الجديدة مستقبلاً تبدأ ممنوعة حتى تُمنح.
+        ''' </summary>
+        Private Async Function SeedManagedRolePermissionsAsync(report As MaintenanceReport) As Task
+            Try
+                Dim seedSql As String = "
+                IF OBJECT_ID('Permissions', 'U') IS NOT NULL AND OBJECT_ID('AppScreens', 'U') IS NOT NULL AND OBJECT_ID('Roles', 'U') IS NOT NULL
+                BEGIN
+                    INSERT INTO Permissions (RoleID, FormName, CanOpen, CanAdd, CanEdit, CanDelete)
+                    SELECT r.RoleID, s.FormName, 1, 1, 1, 1
+                    FROM Roles r
+                    CROSS JOIN AppScreens s
+                    WHERE ISNULL(r.RoleID, 0) <> 1
+                      AND EXISTS (SELECT 1 FROM Permissions p WHERE p.RoleID = r.RoleID)
+                      AND NOT EXISTS (SELECT 1 FROM Permissions p WHERE p.RoleID = r.RoleID AND p.FormName = s.FormName);
+                END"
+                Using conn As New SqlConnection(_connectionString)
+                    Await conn.OpenAsync().ConfigureAwait(False)
+                    Using cmd As New SqlCommand(seedSql, conn)
+                        Dim affected = Await cmd.ExecuteNonQueryAsync().ConfigureAwait(False)
+                        If affected > 0 Then
+                            report.Log($"🔐 ترحيل الصلاحيات: زرع {affected} صف سماح صريح للأدوار المُدارة (سلوك الترقية محفوظ).")
+                        End If
+                    End Using
+                End Using
+            Catch ex As Exception
+                report.Log($"تنبيه أثناء ترحيل الصلاحيات: {ex.Message}")
+            End Try
+        End Function
+
+        ''' <summary>
+        ''' الإصلاح الذاتي لأرصدة الخزائن (v1.3.0): يطابق CurrentBalance مع المعادلة المرجعية
+        ''' (الافتتاحي + مجموع الحركات) ويصحح أي انحراف أكبر من قرش واحد. آمن للتكرار —
+        ''' لا يكتب إلا عند وجود انحراف فعلي. الحركات اليتيمة تُسجل في اللوج ولا تُحذف.
+        ''' </summary>
+        Private Async Function RepairTreasuryBalancesAsync(report As MaintenanceReport) As Task
+            Try
+                Dim repairSql As String = "
+                IF OBJECT_ID('Treasury', 'U') IS NOT NULL AND OBJECT_ID('TreasuryTransactions', 'U') IS NOT NULL
+                BEGIN
+                    UPDATE T
+                    SET T.CurrentBalance = ISNULL(T.OpeningBalance, 0) + ISNULL(x.Net, 0)
+                    FROM Treasury T
+                    OUTER APPLY (SELECT SUM(CASE WHEN TT.IsDeposit = 1 THEN TT.Amount ELSE -TT.Amount END) AS Net
+                                 FROM TreasuryTransactions TT WHERE TT.TreasuryID = T.TreasuryID) x
+                    WHERE ABS(ISNULL(T.CurrentBalance, 0) - (ISNULL(T.OpeningBalance, 0) + ISNULL(x.Net, 0))) > 0.01;
+                END"
+                Using conn As New SqlConnection(_connectionString)
+                    Await conn.OpenAsync().ConfigureAwait(False)
+                    Using cmd As New SqlCommand(repairSql, conn)
+                        Dim affected = Await cmd.ExecuteNonQueryAsync().ConfigureAwait(False)
+                        If affected > 0 Then
+                            report.Log($"🧮 الإصلاح الذاتي: تصحيح رصيد {affected} خزينة كانت منحرفة عن مجموع حركاتها.")
+                        End If
+                    End Using
+
+                    ' تقرير الحركات اليتيمة فقط (لا حذف تلقائي لبيانات مالية)
+                    Dim orphanSql As String = "
+                    IF OBJECT_ID('Treasury', 'U') IS NOT NULL AND OBJECT_ID('TreasuryTransactions', 'U') IS NOT NULL
+                    BEGIN
+                        SELECT COUNT(1) FROM TreasuryTransactions TT
+                        LEFT JOIN Treasury T ON T.TreasuryID = TT.TreasuryID
+                        WHERE T.TreasuryID IS NULL;
+                    END"
+                    Using cmdOrphan As New SqlCommand(orphanSql, conn)
+                        Dim orphans = Convert.ToInt32(Await cmdOrphan.ExecuteScalarAsync().ConfigureAwait(False))
+                        If orphans > 0 Then
+                            report.Log($"⚠️ يوجد {orphans} حركة خزينة يتيمة (TreasuryID غير موجود) — تُراجع يدوياً ولا تُحذف آلياً.")
+                        End If
+                    End Using
+                End Using
+            Catch ex As Exception
+                report.Log($"تنبيه أثناء الإصلاح الذاتي للخزائن: {ex.Message}")
+            End Try
         End Function
 
         ''' <summary>

@@ -12,6 +12,10 @@ Public Class InvoiceModel
     Public Property TableID As Integer?
     Public Property DriverID As Integer?
     Public Property DeliveryFee As Decimal = 0
+    ''' <summary>رسوم خدمة الصالة — تُخزن في عمود DineInServiceFee (v1.3.0: توثيق الرسوم)</summary>
+    Public Property DineInServiceFee As Decimal = 0
+    ''' <summary>مبلغ الضريبة المحسوب للأصناف — يُخزن في عمود Tax (v1.3.0)</summary>
+    Public Property TaxAmount As Decimal = 0
     Public Property TotalBeforeDiscount As Decimal = 0
     Public Property DiscountAmount As Decimal = 0
     Public Property NetTotal As Decimal = 0

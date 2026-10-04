@@ -659,7 +659,27 @@ Public Class Categories
         ' 2. أخذ الـ ID الخاص بالفئة المحددة (تأكد من اسم العمود الحقيقي للـ ID في الـ DataGridView)
         Dim currentID As Integer = Convert.ToInt32(dvg_Categories.SelectedRows(0).Cells("Category_ID").Value)
 
-        ' 3. استعلام الحذف المنطقي الآمن (Soft Delete)
+        ' 3. حماية مرجعية (v1.3.0): يُمنع حذف فئة فيها أصناف نشطة — الأصناف ستبقى تشير لفئة محذوفة
+        Try
+            Dim productsCountObj = DBModule.ExecuteScalar(
+                "SELECT COUNT(1) FROM Products WHERE Category_ID = @CatID AND (IsDeleted = 0 OR IsDeleted IS NULL)",
+                New Dictionary(Of String, Object) From {{"@CatID", currentID}})
+            Dim productsCount As Integer = If(productsCountObj IsNot Nothing, Convert.ToInt32(productsCountObj), 0)
+            If productsCount > 0 Then
+                SmartMessageBox.Show(
+                    "⚠️ لا يمكن حذف الفئة لوجود أصناف تابعة لها!" & vbCrLf & vbCrLf &
+                    $"عدد الأصناف المسجلة في هذه الفئة: {productsCount} صنف." & vbCrLf &
+                    "انقل الأصناف إلى فئة أخرى أو احذفها أولاً ثم أعد المحاولة.",
+                    "حذف مرفوض — الفئة غير فارغة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Return False
+            End If
+        Catch exCount As Exception
+            Logger.LogError("Categories.DeleteCategory.ProductCountCheck", exCount)
+            SmartMessageBox.Show("تعذر التحقق من أصناف الفئة — لم يتم الحذف. حاول مرة أخرى.", "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
+
+        ' 4. استعلام الحذف المنطقي الآمن (Soft Delete)
         Dim query As String = "UPDATE Categories SET IsDeleted = 1 WHERE Category_ID = @Category_ID"
 
         ' 4. استخدام الـ ConnectionString المعزول والديناميكي من الـ DBModule الخاص بك لتفادي خطأ السيرفر

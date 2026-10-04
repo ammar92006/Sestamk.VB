@@ -220,9 +220,12 @@ Public Module Session
 
             Dim resolved As String = ResolveFormAlias(formName)
 
-            ' إذا لم تكن الشاشة مدرجة في شاشات النظام، تعتبر شاشة مساعدة مفتوحة
+            ' الأمان الافتراضي (منذ v1.3.0): أي شاشة غير مدرجة في AppScreens ممنوعة لغير المدير.
+            ' الترحيل في صيانة الإقلاع يزرع صفوف سماح لكل الشاشات الموجودة للأدوار المُدارة (التي لها
+            ' صفوف صلاحيات أصلاً)، فلا تتغير صلاحيات أحد بعد الترقية — والشاشات الجديدة وحدها تبدأ ممنوعة
+            ' حتى يمنحها المدير من شاشة الأدوار والصلاحيات.
             If GuardedScreens.Count > 0 AndAlso Not GuardedScreens.ContainsKey(resolved) Then
-                Return True
+                Return False
             End If
 
             If Permissions Is Nothing OrElse Permissions.Rows.Count = 0 Then Return False
