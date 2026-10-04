@@ -1,0 +1,554 @@
+Imports System
+Imports System.Collections.Generic
+Imports System.Data
+Imports System.Data.SqlClient
+Imports System.IO
+Imports System.Net
+Imports System.Text
+Imports System.Threading.Tasks
+Imports System.Windows.Forms
+Imports Newtonsoft.Json
+Imports Newtonsoft.Json.Linq
+
+Namespace Services.Cloud
+
+    ''' <summary>
+    ''' خادم بوابة المالك والمشرف الذكي المدمج (Sestamk Owner Live Web and Mobile Portal Server).
+    ''' خادم فائق الخفة (Embedded HTTP Micro-Server) يعمل في الخلفية بدون أي تأثير على الأداء:
+    '''   • يخدم صفحة ويب وموبايل عصرية (WebPortal/index.html) متجاوبة مع كافة الهواتف والأجهزة.
+    '''   • يوفر REST APIs لحظية لمتابعة مبيعات اليوم، الخزائن، الورديات، وإشغال طاولات الصالة.
+    '''   • يتيح للمالك مسح QR Code من موبايله في أي وقت لمتابعة الصالة والكاشير وهو على شبكة الواي فاي.
+    ''' </summary>
+    Public NotInheritable Class OwnerPortalServer
+
+        Private Shared _instance As OwnerPortalServer
+        Private Shared ReadOnly _lockObj As New Object()
+
+        Public Shared ReadOnly Property Instance As OwnerPortalServer
+            Get
+                If _instance Is Nothing Then
+                    SyncLock _lockObj
+                        If _instance Is Nothing Then
+                            _instance = New OwnerPortalServer()
+                        End If
+                    End SyncLock
+                End If
+                Return _instance
+            End Get
+        End Property
+
+        Private _listener As HttpListener = Nothing
+        Private _isRunning As Boolean = False
+        Private _port As Integer = 5055
+        Private _bindAllInterfaces As Boolean = False
+
+        Private Sub New()
+        End Sub
+
+        Public ReadOnly Property IsRunning As Boolean
+            Get
+                Return _isRunning
+            End Get
+        End Property
+
+        Public ReadOnly Property Port As Integer
+            Get
+                Return _port
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' بدء تشغيل سيرفر بوابة المالك في الخلفية.
+        ''' </summary>
+        Public Function StartServer(Optional port As Integer = 5055) As Boolean
+            If _isRunning Then Return True
+            _port = port
+
+            Try
+                _listener = New HttpListener()
+
+                ' محاولة الاستماع على كافة بطاقات الشبكة (للوصول من الهاتف والتابلت عبر Wi-Fi)
+                _bindAllInterfaces = False
+                Try
+                    _listener.Prefixes.Add($"http://+:{_port}/")
+                    _listener.Start()
+                    _bindAllInterfaces = True
+                Catch
+                    ' في حال عدم وجود صلاحيات urlacl لويندوز، نتراجع تلقائياً للاستماع المحلي
+                    _listener.Close()
+                    _listener = New HttpListener()
+                    _listener.Prefixes.Add($"http://localhost:{_port}/")
+                    _listener.Prefixes.Add($"http://127.0.0.1:{_port}/")
+                    _listener.Start()
+                End Try
+
+                _isRunning = True
+                Task.Run(AddressOf ListenLoopAsync)
+                Logger.LogInfo($"OwnerPortalServer: Started on port {_port} (BindAll={_bindAllInterfaces})")
+                Return True
+
+            Catch ex As Exception
+                _isRunning = False
+                Logger.LogError("OwnerPortalServer.StartServer", ex)
+                Return False
+            End Try
+        End Function
+
+        ''' <summary>
+        ''' إيقاف السيرفر بأمان.
+        ''' </summary>
+        Public Sub StopServer()
+            If Not _isRunning OrElse _listener Is Nothing Then Return
+            Try
+                _isRunning = False
+                _listener.Stop()
+                _listener.Close()
+                _listener = Nothing
+                Logger.LogInfo("OwnerPortalServer: Stopped.")
+            Catch ex As Exception
+                Logger.LogError("OwnerPortalServer.StopServer", ex)
+            End Try
+        End Sub
+
+        ''' <summary>
+        ''' جلب الآي بي المحلي لجهاز الكاشير على شبكة الواي فاي أو الشبكة المحلية.
+        ''' </summary>
+        Public Shared Function GetLocalIPAddress() As String
+            Try
+                Dim host = Dns.GetHostEntry(Dns.GetHostName())
+                For Each ip In host.AddressList
+                    If ip.AddressFamily = Sockets.AddressFamily.InterNetwork AndAlso Not IPAddress.IsLoopback(ip) Then
+                        Dim ipStr = ip.ToString()
+                        ' استبعاد عناوين الربط التلقائي 169.254.x.x
+                        If Not ipStr.StartsWith("169.254.") Then
+                            Return ipStr
+                        End If
+                    End If
+                Next
+            Catch
+            End Try
+            Return "127.0.0.1"
+        End Function
+
+        ''' <summary>
+        ''' رابط الدخول من الهاتف أو التابلت على شبكة الواي فاي.
+        ''' </summary>
+        Public Function GetMobilePortalUrl() As String
+            Dim ip = GetLocalIPAddress()
+            Return $"http://{ip}:{_port}/"
+        End Function
+
+        ''' <summary>
+        ''' رابط الدخول المحلي من نفس جهاز الكاشير.
+        ''' </summary>
+        Public Function GetLocalPortalUrl() As String
+            Return $"http://localhost:{_port}/"
+        End Function
+
+        Private Async Function ListenLoopAsync() As Task
+            While _isRunning AndAlso _listener IsNot Nothing AndAlso _listener.IsListening
+                Try
+                    Dim ctx = Await _listener.GetContextAsync()
+                    Dim processTask As Task = Task.Run(Sub() ProcessRequest(ctx))
+                Catch ex As HttpListenerException
+                    If Not _isRunning Then Exit While
+                Catch ex As Exception
+                    If Not _isRunning Then Exit While
+                End Try
+            End While
+        End Function
+
+        Private Sub ProcessRequest(ctx As HttpListenerContext)
+            Dim req = ctx.Request
+            Dim resp = ctx.Response
+
+            Try
+                ' تفعيل CORS لتمكين أي جهاز من طلب البيانات بحرية
+                resp.Headers.Add("Access-Control-Allow-Origin", "*")
+                resp.Headers.Add("Access-Control-Allow-Methods", "GET, OPTIONS")
+                resp.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+                If req.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
+                    resp.StatusCode = 200
+                    resp.Close()
+                    Return
+                End If
+
+                Dim path = req.Url.AbsolutePath.ToLowerInvariant().TrimEnd("/"c)
+                If String.IsNullOrEmpty(path) Then path = "/"
+
+                Select Case path
+                    Case "/", "/index.html"
+                        ServeHtmlPortal(resp)
+
+                    Case "/api/summary"
+                        ServeJson(resp, BuildSummaryJson())
+
+                    Case "/api/tables"
+                        ServeJson(resp, BuildTablesJson())
+
+                    Case "/api/recent-orders"
+                        ServeJson(resp, BuildRecentOrdersJson())
+
+                    Case "/api/top-items"
+                        ServeJson(resp, BuildTopItemsJson())
+
+                    Case Else
+                        resp.StatusCode = 404
+                        Dim notFoundBytes = Encoding.UTF8.GetBytes("Not Found")
+                        resp.OutputStream.Write(notFoundBytes, 0, notFoundBytes.Length)
+                        resp.Close()
+                End Select
+
+            Catch ex As Exception
+                Try
+                    resp.StatusCode = 500
+                    Dim errBytes = Encoding.UTF8.GetBytes("Internal Error: " & ex.Message)
+                    resp.OutputStream.Write(errBytes, 0, errBytes.Length)
+                    resp.Close()
+                Catch
+                End Try
+            End Try
+        End Sub
+
+        Private Sub ServeJson(resp As HttpListenerResponse, json As String)
+            Dim bytes = Encoding.UTF8.GetBytes(json)
+            resp.ContentType = "application/json; charset=utf-8"
+            resp.ContentLength64 = bytes.Length
+            resp.StatusCode = 200
+            resp.OutputStream.Write(bytes, 0, bytes.Length)
+            resp.OutputStream.Flush()
+            resp.Close()
+        End Sub
+
+        Private Sub ServeHtmlPortal(resp As HttpListenerResponse)
+            Dim htmlContent As String = ""
+            Dim portalPath = Path.Combine(Application.StartupPath, "WebPortal", "index.html")
+
+            If File.Exists(portalPath) Then
+                Try
+                    htmlContent = File.ReadAllText(portalPath, Encoding.UTF8)
+                Catch
+                End Try
+            End If
+
+            If String.IsNullOrWhiteSpace(htmlContent) Then
+                ' مسار بديل وقت التطوير أو التشغيل من bin
+                Dim devPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "WebPortal", "index.html")
+                If File.Exists(devPath) Then
+                    Try
+                        htmlContent = File.ReadAllText(devPath, Encoding.UTF8)
+                    Catch
+                    End Try
+                End If
+            End If
+
+            If String.IsNullOrWhiteSpace(htmlContent) Then
+                htmlContent = "<!DOCTYPE html><html dir='rtl'><head><meta charset='utf-8'><title>سستمك Live</title></head><body style='font-family:sans-serif;padding:30px;background:#0F172A;color:#fff;'><h2>بوابة سستمك Live تعمل بنجاح</h2><p>جاري تحديث واجهة المالك.</p></body></html>"
+            End If
+
+            Dim bytes = Encoding.UTF8.GetBytes(htmlContent)
+            resp.ContentType = "text/html; charset=utf-8"
+            resp.ContentLength64 = bytes.Length
+            resp.StatusCode = 200
+            resp.OutputStream.Write(bytes, 0, bytes.Length)
+            resp.OutputStream.Flush()
+            resp.Close()
+        End Sub
+
+        ' =========================================================
+        ' بناء ردود JSON للـ APIs
+        ' =========================================================
+
+        Private Function BuildSummaryJson() As String
+            Dim shopName = SettingsManager.GetSetting(SettingsKeys.ShopName)
+            If String.IsNullOrWhiteSpace(shopName) Then shopName = "سستمك POS"
+
+            ' 1. مبيعات اليوم
+            Dim salesNet As Decimal = 0D
+            Dim salesOrders As Integer = 0
+            Dim salesCash As Decimal = 0D
+            Dim salesVisa As Decimal = 0D
+            Dim salesRefunds As Decimal = 0D
+
+            Try
+                Dim sqlSales = "
+                SELECT 
+                    ISNULL(SUM(NetTotal), 0) AS TotalNet,
+                    COUNT(1) AS TotalOrders,
+                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%نقدي%' THEN PaidAmount ELSE 0 END), 0) AS TotalCash,
+                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%فيزا%' OR PaymentType LIKE N'%شبكة%' THEN PaidAmount ELSE 0 END), 0) AS TotalVisa
+                FROM SalesInvoices 
+                WHERE (IsDeleted = 0 OR IsDeleted IS NULL) 
+                  AND CAST(InvoiceDate AS DATE) = CAST(GETDATE() AS DATE);"
+
+                Dim dt = DBModule.ExecuteQuery(sqlSales)
+                If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
+                    salesNet = Convert.ToDecimal(dt.Rows(0)("TotalNet"))
+                    salesOrders = Convert.ToInt32(dt.Rows(0)("TotalOrders"))
+                    salesCash = Convert.ToDecimal(dt.Rows(0)("TotalCash"))
+                    salesVisa = Convert.ToDecimal(dt.Rows(0)("TotalVisa"))
+                End If
+            Catch ex As Exception
+                Logger.LogError("OwnerPortal.BuildSummaryJson.Sales", ex)
+            End Try
+
+            ' 2. مشتريات اليوم
+            Dim purchasesTotal As Decimal = 0D
+            Dim purchasesCount As Integer = 0
+            Try
+                Dim sqlPur = "SELECT ISNULL(SUM(NetTotal), 0) AS Total, COUNT(1) AS Cnt FROM PurchaseHeaders WHERE CAST(PurchaseDate AS DATE) = CAST(GETDATE() AS DATE) AND (IsDeleted = 0 OR IsDeleted IS NULL);"
+                Dim dt = DBModule.ExecuteQuery(sqlPur)
+                If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
+                    purchasesTotal = Convert.ToDecimal(dt.Rows(0)("Total"))
+                    purchasesCount = Convert.ToInt32(dt.Rows(0)("Cnt"))
+                End If
+            Catch
+            End Try
+
+            ' 3. مصروفات اليوم
+            Dim expensesTotal As Decimal = 0D
+            Try
+                Dim sqlExp = "SELECT ISNULL(SUM(Amount), 0) AS Total FROM Expenses WHERE CAST(Expense_Date AS DATE) = CAST(GETDATE() AS DATE);"
+                Dim dt = DBModule.ExecuteQuery(sqlExp)
+                If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
+                    expensesTotal = Convert.ToDecimal(dt.Rows(0)("Total"))
+                End If
+            Catch
+            End Try
+
+            ' 4. نقدية الخزائن الحالية
+            Dim treasuryBalance As Decimal = 0D
+            Try
+                Dim dt = DBModule.ExecuteQuery("SELECT ISNULL(SUM(CurrentBalance), 0) FROM Treasury WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL);")
+                If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
+                    treasuryBalance = Convert.ToDecimal(dt.Rows(0)(0))
+                End If
+            Catch
+            End Try
+
+            ' 5. إشغال الصالة والحسابات المفتوحة
+            Dim totalTables As Integer = 0
+            Dim occupiedTables As Integer = 0
+            Dim freeTables As Integer = 0
+            Dim reservedTables As Integer = 0
+            Dim activeTabTotal As Decimal = 0D
+
+            Try
+                Dim dtTbls = DBModule.ExecuteQuery("SELECT TableStatus, COUNT(1) AS Cnt FROM RestaurantTables WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) GROUP BY TableStatus;")
+                If dtTbls IsNot Nothing Then
+                    For Each r As DataRow In dtTbls.Rows
+                        Dim status = Convert.ToByte(r("TableStatus"))
+                        Dim cnt = Convert.ToInt32(r("Cnt"))
+                        totalTables += cnt
+                        If status = 1 Then freeTables = cnt
+                        If status = 2 Then occupiedTables = cnt
+                        If status = 3 Then reservedTables = cnt
+                    Next
+                End If
+
+                Dim dtPending = DBModule.ExecuteQuery("SELECT ISNULL(SUM(TotalAmount), 0) FROM PendingInvoices WHERE IsActive = 1 AND TableID > 0;")
+                If dtPending IsNot Nothing AndAlso dtPending.Rows.Count > 0 Then
+                    activeTabTotal = Convert.ToDecimal(dtPending.Rows(0)(0))
+                End If
+            Catch
+            End Try
+
+            Dim occupancyRate As Integer = If(totalTables > 0, CInt(Math.Round((occupiedTables * 100.0) / totalTables)), 0)
+
+            ' 6. بيانات الوردية الحالية
+            Dim activeShiftObj As New JObject()
+            Try
+                Dim dtShift = DBModule.ExecuteQuery("
+                SELECT TOP 1 s.ShiftID, s.OpeningDate, s.OpeningCash, s.TotalSales, s.TotalExpenses, u.User_Name 
+                FROM Shifts s 
+                LEFT JOIN Users_TBL u ON s.UserID = u.User_ID 
+                WHERE s.Status = 1 
+                ORDER BY s.ShiftID DESC;")
+
+                If dtShift IsNot Nothing AndAlso dtShift.Rows.Count > 0 Then
+                    Dim r = dtShift.Rows(0)
+                    activeShiftObj("shiftId") = Convert.ToInt32(r("ShiftID"))
+                    activeShiftObj("cashier") = If(IsDBNull(r("User_Name")), "المدير", r("User_Name").ToString())
+                    activeShiftObj("openedAt") = If(IsDBNull(r("OpeningDate")), "--:--", Convert.ToDateTime(r("OpeningDate")).ToString("yyyy-MM-dd HH:mm"))
+                    activeShiftObj("openingCash") = Convert.ToDecimal(r("OpeningCash"))
+                    activeShiftObj("totalSales") = Convert.ToDecimal(r("TotalSales"))
+                    activeShiftObj("totalExpenses") = Convert.ToDecimal(r("TotalExpenses"))
+                Else
+                    activeShiftObj("shiftId") = 0
+                    activeShiftObj("cashier") = "لا توجد وردية نشطة"
+                    activeShiftObj("openedAt") = "--:--"
+                    activeShiftObj("openingCash") = 0
+                    activeShiftObj("totalSales") = 0
+                    activeShiftObj("totalExpenses") = 0
+                End If
+            Catch
+            End Try
+
+            Dim root As New JObject From {
+                {"success", True},
+                {"shopName", shopName},
+                {"generatedAt", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")},
+                {"todaySales", New JObject From {
+                    {"netTotal", salesNet},
+                    {"ordersCount", salesOrders},
+                    {"cashSales", salesCash},
+                    {"visaSales", salesVisa},
+                    {"averageTicket", If(salesOrders > 0, Math.Round(salesNet / salesOrders, 2), 0)}
+                }},
+                {"todayPurchases", New JObject From {
+                    {"total", purchasesTotal},
+                    {"count", purchasesCount}
+                }},
+                {"todayExpenses", New JObject From {
+                    {"total", expensesTotal}
+                }},
+                {"netProfit", (salesNet - purchasesTotal - expensesTotal)},
+                {"treasury", New JObject From {
+                    {"currentBalance", treasuryBalance}
+                }},
+                {"floor", New JObject From {
+                    {"totalTables", totalTables},
+                    {"occupiedTables", occupiedTables},
+                    {"freeTables", freeTables},
+                    {"reservedTables", reservedTables},
+                    {"occupancyRate", occupancyRate},
+                    {"activeTabTotal", activeTabTotal}
+                }},
+                {"activeShift", activeShiftObj}
+            }
+
+            Return root.ToString(Formatting.None)
+        End Function
+
+        Private Function BuildTablesJson() As String
+            Dim arr As New JArray()
+            Try
+                Dim sql = "
+                SELECT 
+                    t.TableID, t.TableNumber, t.TableName, t.SectionID, t.ChairsCount, t.TableStatus,
+                    s.SectionName,
+                    p.PendingDate, p.TotalAmount, p.CustomerName AS OrderCustomer,
+                    r.CustomerName AS ResvCustomer, r.ReservationDateTime, r.DepositAmount
+                FROM RestaurantTables t
+                INNER JOIN RestaurantSections s ON t.SectionID = s.SectionID
+                OUTER APPLY (
+                    SELECT TOP 1 PendingDate, TotalAmount, CustomerName 
+                    FROM PendingInvoices 
+                    WHERE TableID = t.TableID AND IsActive = 1 
+                    ORDER BY PendingID DESC
+                ) p
+                OUTER APPLY (
+                    SELECT TOP 1 CustomerName, ReservationDateTime, DepositAmount 
+                    FROM TableReservations 
+                    WHERE TableID = t.TableID AND Status = 1 
+                    ORDER BY ReservationDateTime ASC
+                ) r
+                WHERE t.IsActive = 1 AND (t.IsDeleted = 0 OR t.IsDeleted IS NULL)
+                ORDER BY t.TableNumber;"
+
+                Dim dt = DBModule.ExecuteQuery(sql)
+                If dt IsNot Nothing Then
+                    For Each row As DataRow In dt.Rows
+                        Dim item As New JObject()
+                        item("id") = Convert.ToInt32(row("TableID"))
+                        item("number") = row("TableNumber").ToString()
+                        item("name") = If(IsDBNull(row("TableName")), "", row("TableName").ToString())
+                        item("section") = row("SectionName").ToString()
+                        item("chairs") = Convert.ToInt32(row("ChairsCount"))
+                        item("status") = Convert.ToInt32(row("TableStatus"))
+
+                        Dim elapsed = 0
+                        If Not IsDBNull(row("PendingDate")) Then
+                            Dim dtSeated = Convert.ToDateTime(row("PendingDate"))
+                            elapsed = Math.Max(0, CInt((DateTime.Now - dtSeated).TotalMinutes))
+                        End If
+                        item("elapsedMinutes") = elapsed
+
+                        item("totalAmount") = If(IsDBNull(row("TotalAmount")), 0D, Convert.ToDecimal(row("TotalAmount")))
+                        item("customerName") = If(Not IsDBNull(row("OrderCustomer")), row("OrderCustomer").ToString(),
+                                               If(Not IsDBNull(row("ResvCustomer")), row("ResvCustomer").ToString(), ""))
+
+                        arr.Add(item)
+                    Next
+                End If
+            Catch ex As Exception
+                Logger.LogError("OwnerPortal.BuildTablesJson", ex)
+            End Try
+
+            Return arr.ToString(Formatting.None)
+        End Function
+
+        Private Function BuildRecentOrdersJson() As String
+            Dim arr As New JArray()
+            Try
+                Dim sql = "
+                SELECT TOP 15 
+                    ISNULL(i.InvoiceNumber, CAST(i.InvoiceID AS VARCHAR)) AS InvoiceNumber,
+                    CONVERT(VARCHAR(5), i.InvoiceDate, 108) AS InvoiceTime,
+                    ISNULL(c.CustomerName, N'عميل نقدي') AS CustomerName,
+                    CASE i.OrderType WHEN 1 THEN N'تيك أواي' WHEN 2 THEN N'صالة' WHEN 3 THEN N'دليفري' ELSE N'مبيعات' END AS OrderTypeName,
+                    i.NetTotal,
+                    i.PaymentType
+                FROM SalesInvoices i
+                LEFT JOIN Customers c ON i.CustomerID = c.CustomerID
+                WHERE (i.IsDeleted = 0 OR i.IsDeleted IS NULL)
+                  AND CAST(i.InvoiceDate AS DATE) = CAST(GETDATE() AS DATE)
+                ORDER BY i.InvoiceID DESC;"
+
+                Dim dt = DBModule.ExecuteQuery(sql)
+                If dt IsNot Nothing Then
+                    For Each r As DataRow In dt.Rows
+                        Dim it As New JObject()
+                        it("invoiceNumber") = r("InvoiceNumber").ToString()
+                        it("time") = r("InvoiceTime").ToString()
+                        it("customerName") = r("CustomerName").ToString()
+                        it("orderType") = r("OrderTypeName").ToString()
+                        it("netTotal") = Convert.ToDecimal(r("NetTotal"))
+                        it("paymentType") = r("PaymentType").ToString()
+                        arr.Add(it)
+                    Next
+                End If
+            Catch ex As Exception
+                Logger.LogError("OwnerPortal.BuildRecentOrdersJson", ex)
+            End Try
+
+            Return arr.ToString(Formatting.None)
+        End Function
+
+        Private Function BuildTopItemsJson() As String
+            Dim arr As New JArray()
+            Try
+                Dim sql = "
+                SELECT TOP 10 
+                    d.ProductName,
+                    SUM(d.Quantity) AS TotalQty,
+                    SUM(d.TotalPrice) AS TotalSales
+                FROM SalesInvoiceDetails d
+                INNER JOIN SalesInvoices i ON d.InvoiceID = i.InvoiceID
+                WHERE (i.IsDeleted = 0 OR i.IsDeleted IS NULL)
+                  AND CAST(i.InvoiceDate AS DATE) = CAST(GETDATE() AS DATE)
+                  AND d.Quantity > 0
+                GROUP BY d.ProductName
+                ORDER BY TotalQty DESC;"
+
+                Dim dt = DBModule.ExecuteQuery(sql)
+                If dt IsNot Nothing Then
+                    For Each r As DataRow In dt.Rows
+                        Dim it As New JObject()
+                        it("name") = r("ProductName").ToString()
+                        it("quantity") = Convert.ToInt32(r("TotalQty"))
+                        it("total") = Convert.ToDecimal(r("TotalSales"))
+                        arr.Add(it)
+                    Next
+                End If
+            Catch ex As Exception
+                Logger.LogError("OwnerPortal.BuildTopItemsJson", ex)
+            End Try
+
+            Return arr.ToString(Formatting.None)
+        End Function
+
+    End Class
+
+End Namespace

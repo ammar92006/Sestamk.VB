@@ -1,4 +1,4 @@
-﻿Imports System.Runtime.InteropServices
+Imports System.Runtime.InteropServices
 Imports System.Threading.Tasks
 Imports WindowsApp1.FrmTreasuryTransaction
 
@@ -231,11 +231,19 @@ Public Class MainForm
         ' بدء فحص التحديثات التلقائية في الخلفية بدون أي تأثير على الأداء نهائياً (كل 3 دقائق مع تأخير إقلاع 30 ثانية)
         WindowsApp1.Services.Updates.BackgroundUpdateService.StartMonitoring(3)
 
+        ' بدء تشغيل خادم بوابة المالك والمشرف الذكية على الموبايل والتابلت (منفذ 5055)
+        Try
+            WindowsApp1.Services.Cloud.OwnerPortalServer.Instance.StartServer(5055)
+        Catch __logEx As Exception
+            Logger.LogError("MainForm.OwnerPortalServer", __logEx)
+        End Try
+
         ' إعداد التلميح لأزرار الهيدر
         Try
             Dim tip As New ToolTip()
             tip.SetToolTip(btnLogout, "تسجيل الخروج من النظام وإغلاق كافة الشاشات المفتوحة (Ctrl+Q)")
             tip.SetToolTip(btnSupport, "فتح صفحة الدعم الفني على موقع سستمك الرسمي (https://sestamk.site.je/contact)")
+            tip.SetToolTip(btnOwnerPortal, "بوابة المالك والمشرف الحيّة على الموبايل والتابلت عبر الشبكة المحلية أو الواي فاي (QR Code)")
             tip.SetToolTip(txtGlobalSearch, "البحث السريع في كافة شاشات ووظائف النظام (Ctrl+K)")
             tip.SetToolTip(btnNotifications, "عرض الإشعارات والتنبيهات")
             tip.SetToolTip(pnlUserInfo, "معلومات الحساب الشخصي")
@@ -705,6 +713,17 @@ Public Class MainForm
                 btnSupport.HoverState.BorderColor = pal.Info
             End If
 
+            If btnOwnerPortal IsNot Nothing Then
+                btnOwnerPortal.BorderRadius = 8
+                btnOwnerPortal.BorderThickness = 1
+                btnOwnerPortal.FillColor = pal.SuccessSubtleBackground
+                btnOwnerPortal.ForeColor = pal.SuccessSubtleForeground
+                btnOwnerPortal.BorderColor = pal.SuccessSubtleBorder
+                btnOwnerPortal.HoverState.FillColor = pal.Success
+                btnOwnerPortal.HoverState.ForeColor = Color.White
+                btnOwnerPortal.HoverState.BorderColor = pal.Success
+            End If
+
             ' شريط الحالة السفلي
             statusStripMain.BackColor = If(isDark, pal.SurfaceHeader, pal.SurfaceSecondary)
             Dim statusFore As Color = If(isDark, pal.TextOnDark, pal.TextSecondary)
@@ -750,6 +769,12 @@ Public Class MainForm
 
     Private Sub btnSupport_Click(sender As Object, e As EventArgs) Handles btnSupport.Click
         WebLinks.OpenContact()
+    End Sub
+
+    Private Sub btnOwnerPortal_Click(sender As Object, e As EventArgs) Handles btnOwnerPortal.Click
+        Using frmQR As New FrmOwnerPortalQR()
+            frmQR.ShowDialog(Me)
+        End Using
     End Sub
 
     Private Sub btnNotifications_Click(sender As Object, e As EventArgs) Handles btnNotifications.Click

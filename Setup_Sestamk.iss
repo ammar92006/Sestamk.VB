@@ -101,6 +101,9 @@ Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{app}\redist"; Flags: ign
 ; سابقاً كان يُشحن SestamkDB_SQL2014_Full.sql الذي يحوي نسخة كاملة من قاعدة بيانات المطوّر.
 Source: "WindowsApp1\Resources\DatabaseSchema.sql"; DestDir: "{app}\db"; Flags: ignoreversion
 
+; 4.1 ملفات بوابة المالك والمشرف الحيّة على الموبايل والتابلت (WebPortal)
+Source: "WindowsApp1\WebPortal\*"; DestDir: "{app}\WebPortal"; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+
 ; 5. حزمة .NET Framework 4.8 إن توفرت في مجلد redist
 Source: "Installer\redist\ndp48-x86-x64-allos-enu.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall skipifsourcedoesntexist
 

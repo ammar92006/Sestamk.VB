@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>بوابة المالك والمشرف — سستمك Live</title>
+  <meta name="theme-color" content="#0F172A">
+  <style>
+    :root {
+      --bg: #0B0F19;
+      --card-bg: #141B2D;
+      --card-border: #1F293D;
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --primary: #3B82F6;
+      --primary-hover: #2563EB;
+      --success: #10B981;
+      --success-bg: rgba(16, 185, 129, 0.12);
+      --danger: #EF4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --warning: #F59E0B;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+    }
+    .light-theme {
+      --bg: #F1F5F9;
+      --card-bg: #FFFFFF;
+      --card-border: #E2E8F0;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --success: #059669;
+      --success-bg: #ECFDF5;
+      --danger: #DC2626;
+      --danger-bg: #FEF2F2;
+      --warning: #D97706;
+      --warning-bg: #FFFBEB;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 75px;
+      transition: background-color 0.25s, color 0.25s;
+    }
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #3B82F6, #10B981);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid var(--success);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+    .grid-kpi {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .kpi-title {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+    .kpi-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .kpi-accent-green { border-top: 3px solid var(--success); }
+    .kpi-accent-blue { border-top: 3px solid var(--primary); }
+    .kpi-accent-amber { border-top: 3px solid var(--warning); }
+    .kpi-accent-red { border-top: 3px solid var(--danger); }
+
+    .nav-tabs {
+      display: flex;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 16px;
+      overflow-x: auto;
+      gap: 4px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tables-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .table-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 125px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .table-card:active {
+      transform: scale(0.98);
+    }
+    .table-card.free {
+      border-color: var(--success);
+      background: rgba(16, 185, 129, 0.04);
+    }
+    .table-card.occupied {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.05);
+    }
+    .table-card.reserved {
+      border-color: var(--warning);
+      background: rgba(245, 158, 11, 0.05);
+    }
+    .table-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .table-name {
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .table-chairs {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .table-status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .free .table-status-badge { background: var(--success-bg); color: var(--success); }
+    .occupied .table-status-badge { background: var(--danger-bg); color: var(--danger); }
+    .reserved .table-status-badge { background: var(--warning-bg); color: var(--warning); }
+    .table-amount {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--warning);
+      margin-bottom: 4px;
+    }
+    .table-timer {
+      font-size: 11px;
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .list-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .list-item {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .list-item:last-child {
+      border-bottom: none;
+    }
+    .list-main {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .list-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .list-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .list-val {
+      text-align: left;
+    }
+    .list-price {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      z-index: 40;
+    }
+    .btn-action {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .error-banner {
+      display: none;
+      background: #7F1D1D;
+      color: #FEE2E2;
+      padding: 8px 14px;
+      font-size: 12px;
+      text-align: center;
+      position: sticky;
+      top: 61px;
+      z-index: 45;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">S</div>
+      <div>
+        <div class="brand-title" id="lblShopName">سستمك POS</div>
+        <div class="brand-sub">بوابة المالك والمشرف الحيّة</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        <span>مباشر</span>
+      </div>
+      <button id="btnThemeToggle" style="background:transparent; border:1px solid var(--card-border); color:var(--text-main); border-radius:8px; padding:6px 10px; cursor:pointer;">🌓</button>
+    </div>
+  </header>
+
+  <div id="errorBanner" class="error-banner">
+    ⚠️ تعذر الاتصال بسيرفر الكاشير المحلي. جاري إعادة المحاولة تلقائياً...
+  </div>
+
+  <main class="container">
+
+    <!-- KPI Metrics -->
+    <div class="grid-kpi">
+      <div class="kpi-card kpi-accent-green">
+        <div class="kpi-title">
+          <span>مبيعات اليوم</span>
+          <span>💰</span>
+        </div>
+        <div class="kpi-value" id="kpiSales">0.00 ج.م</div>
+        <div class="kpi-sub" id="kpiOrdersCount">0 فاتورة مسجلة</div>
+      </div>
+
+      <div class="kpi-card kpi-accent-blue">
+        <div class="kpi-title">
+          <span>نقدية الخزينة</span>
+          <span>💵</span>
+        </div>
+        <div class="kpi-value" id="kpiTreasury">0.00 ج.م</div>
+        <div class="kpi-sub" id="kpiShiftName">الوردية الحالية</div>
+      </div>
+
+      <div class="kpi-card kpi-accent-amber">
+        <div class="kpi-title">
+          <span>إشغال الصالة</span>
+          <span>🍽️</span>
+        </div>
+        <div class="kpi-value" id="kpiOccupancy">0%</div>
+        <div class="kpi-sub" id="kpiOpenTabs">0.00 ج.م حسابات مفتوحة</div>
+      </div>
+
+      <div class="kpi-card kpi-accent-red">
+        <div class="kpi-title">
+          <span>المصروفات والتوريد</span>
+          <span>📉</span>
+        </div>
+        <div class="kpi-value" id="kpiExpenses">0.00 ج.م</div>
+        <div class="kpi-sub" id="kpiPurchases">مشتريات: 0.00 ج.م</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tabTables', this)">🍽️ خريطة الصالة (<span id="badgeTablesCount">0</span>)</button>
+      <button class="tab-btn" onclick="switchTab('tabOrders', this)">🧾 آخر الطلبات</button>
+      <button class="tab-btn" onclick="switchTab('tabTop', this)">🏆 الأكثر طلباً</button>
+      <button class="tab-btn" onclick="switchTab('tabShift', this)">⏱️ الوردية والخزنة</button>
+    </div>
+
+    <!-- Tab 1: Live Tables Floor Plan -->
+    <section id="tabTables" class="tab-content active">
+      <div class="section-header">
+        <div class="section-title">
+          <span>طاولات الصالة اللحظية</span>
+          <span style="font-size: 12px; font-weight: normal; color: var(--text-muted);" id="lblTablesSummary"></span>
+        </div>
+      </div>
+      <div class="tables-grid" id="tablesContainer">
+        <!-- Tables rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tab 2: Recent Orders -->
+    <section id="tabOrders" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">آخر 15 فاتورة مبيعات مسجلة اليوم</div>
+      </div>
+      <div class="list-card" id="ordersContainer">
+        <!-- Orders rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tab 3: Top Selling Items -->
+    <section id="tabTop" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">الأصناف الأكثر طلباً ومبيعاً اليوم</div>
+      </div>
+      <div class="list-card" id="topItemsContainer">
+        <!-- Items rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- Tab 4: Shift & Treasury Details -->
+    <section id="tabShift" class="tab-content">
+      <div class="section-header">
+        <div class="section-title">بيانات الوردية النشطة والسيولة النقدية</div>
+      </div>
+      <div class="list-card" id="shiftDetailsContainer">
+        <div class="list-item">
+          <div class="list-main">
+            <span class="list-title">حالة الوردية</span>
+            <span class="list-sub" id="shiftStatusSub">نشطة وتعمل</span>
+          </div>
+          <span class="list-price" id="shiftStatusBadge" style="color:var(--success)">مفتوحة ✓</span>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <span class="list-title">الكاشير / المستخدم المسؤول</span>
+            <span class="list-sub" id="shiftCashierName">المدير العام</span>
+          </div>
+          <span class="list-sub" id="shiftStartTime">--:--</span>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <span class="list-title">الرصيد الافتتاحي للدرج (نقدية البداية)</span>
+            <span class="list-sub">عهدة الكاشير</span>
+          </div>
+          <span class="list-price" id="shiftOpeningCash">0.00 ج.م</span>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <span class="list-title">مبيعات الوردية النقدية (الكاش)</span>
+            <span class="list-sub">المتحصل نقداً بالدرج</span>
+          </div>
+          <span class="list-price" id="shiftTotalSales">0.00 ج.م</span>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <span class="list-title">إجمالي مصروفات الوردية</span>
+            <span class="list-sub">النثريات المسحوبة من الدرج</span>
+          </div>
+          <span class="list-price" id="shiftTotalExpenses" style="color:var(--danger)">0.00 ج.م</span>
+        </div>
+        <div class="list-item">
+          <div class="list-main">
+            <span class="list-title">النقدية المتوقعة في الدرج حالياً</span>
+            <span class="list-sub">الافتتاحي + المبيعات - المصروفات</span>
+          </div>
+          <span class="list-price" id="shiftExpectedCash" style="color:var(--warning); font-size:16px;">0.00 ج.م</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="bottom-bar">
+    <div>آخر تحديث: <span id="lblLastUpdate">--:--:--</span></div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn-action" onclick="fetchLiveData()">🔄 تحديث فوري</button>
+    </div>
+  </div>
+
+  <script>
+    let activeTabId = 'tabTables';
+    function switchTab(tabId, btn) {
+      activeTabId = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    // Theme toggle
+    document.getElementById('btnThemeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      localStorage.setItem('sestamk_theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
+    });
+    if (localStorage.getItem('sestamk_theme') === 'light') {
+      document.body.classList.add('light-theme');
+    }
+
+    async function fetchLiveData() {
+      try {
+        const res = await fetch('/api/summary');
+        if (!res.ok) throw new Error('Network error');
+        const data = await res.json();
+        
+        document.getElementById('errorBanner').style.display = 'none';
+        renderSummary(data);
+
+        // Fetch remaining data
+        fetchTables();
+        fetchOrders();
+        fetchTopItems();
+
+        document.getElementById('lblLastUpdate').textContent = new Date().toLocaleTimeString('ar-EG');
+      } catch (err) {
+        document.getElementById('errorBanner').style.display = 'block';
+      }
+    }
+
+    function renderSummary(d) {
+      if (d.shopName) document.getElementById('lblShopName').textContent = d.shopName;
+      if (d.todaySales) {
+        document.getElementById('kpiSales').textContent = Number(d.todaySales.netTotal || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م';
+        document.getElementById('kpiOrdersCount').textContent = (d.todaySales.ordersCount || 0) + ' فاتورة مسجلة';
+      }
+      if (d.treasury) {
+        document.getElementById('kpiTreasury').textContent = Number(d.treasury.currentBalance || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م';
+      }
+      if (d.floor) {
+        document.getElementById('kpiOccupancy').textContent = (d.floor.occupancyRate || 0) + '%';
+        document.getElementById('kpiOpenTabs').textContent = Number(d.floor.activeTabTotal || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م حسابات مفتوحة';
+      }
+      if (d.todayExpenses) {
+        document.getElementById('kpiExpenses').textContent = Number(d.todayExpenses.total || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م';
+      }
+      if (d.todayPurchases) {
+        document.getElementById('kpiPurchases').textContent = 'مشتريات: ' + Number(d.todayPurchases.total || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م';
+      }
+
+      // Shift details
+      if (d.activeShift) {
+        document.getElementById('kpiShiftName').textContent = 'كاشير: ' + (d.activeShift.cashier || 'المدير');
+        document.getElementById('shiftCashierName').textContent = d.activeShift.cashier || 'المدير';
+        document.getElementById('shiftStartTime').textContent = d.activeShift.openedAt || '--:--';
+        document.getElementById('shiftOpeningCash').textContent = Number(d.activeShift.openingCash || 0).toFixed(2) + ' ج.م';
+        document.getElementById('shiftTotalSales').textContent = Number(d.activeShift.totalSales || 0).toFixed(2) + ' ج.م';
+        document.getElementById('shiftTotalExpenses').textContent = Number(d.activeShift.totalExpenses || 0).toFixed(2) + ' ج.م';
+        const expected = Number(d.activeShift.openingCash || 0) + Number(d.activeShift.totalSales || 0) - Number(d.activeShift.totalExpenses || 0);
+        document.getElementById('shiftExpectedCash').textContent = expected.toFixed(2) + ' ج.م';
+      }
+    }
+
+    async function fetchTables() {
+      try {
+        const res = await fetch('/api/tables');
+        if (!res.ok) return;
+        const tables = await res.json();
+        const container = document.getElementById('tablesContainer');
+        container.innerHTML = '';
+
+        document.getElementById('badgeTablesCount').textContent = tables.length;
+        let free = 0, occupied = 0, reserved = 0;
+
+        tables.forEach(t => {
+          if (t.status === 1) free++;
+          else if (t.status === 2) occupied++;
+          else if (t.status === 3) reserved++;
+
+          const card = document.createElement('div');
+          const statusClass = t.status === 1 ? 'free' : (t.status === 2 ? 'occupied' : 'reserved');
+          const statusLabel = t.status === 1 ? '🟢 مـتـاحـة' : (t.status === 2 ? '🔴 مـشـغـولـة' : '🟡 مـحـجـوزة');
+
+          card.className = 'table-card ' + statusClass;
+          card.innerHTML = `
+            <div>
+              <div class="table-top">
+                <span class="table-name">🍽️ ${t.name || ('طاولة ' + t.number)}</span>
+                <span class="table-chairs">🪑 ${t.chairs || 4}</span>
+              </div>
+              <div class="table-status-badge">${statusLabel}</div>
+            </div>
+            <div>
+              ${t.status === 2 ? `
+                <div class="table-amount">💰 ${Number(t.totalAmount || 0).toFixed(2)} ج.م</div>
+                <div class="table-timer">⏱️ جالس منذ ${t.elapsedMinutes || 0} دقيقة</div>
+              ` : (t.status === 3 ? `
+                <div style="font-size:12px; font-weight:700; color:var(--warning); margin-bottom:2px;">👤 ${t.customerName || 'عميل حجز'}</div>
+                <div style="font-size:11px; color:var(--text-muted);">🕒 موعد الحجز</div>
+              ` : `
+                <div style="font-size:12px; color:var(--success); font-weight:600;">جاهزة للاستقبال ✓</div>
+              `)}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+
+        document.getElementById('lblTablesSummary').textContent = `(🟢 ${free} متاحة • 🔴 ${occupied} مشغولة • 🟡 ${reserved} محجوزة)`;
+      } catch (err) {}
+    }
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch('/api/recent-orders');
+        if (!res.ok) return;
+        const orders = await res.json();
+        const container = document.getElementById('ordersContainer');
+        container.innerHTML = '';
+
+        if (!orders.length) {
+          container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted)">لا توجد فواتير مسجلة اليوم حتى الآن.</div>';
+          return;
+        }
+
+        orders.forEach(o => {
+          const item = document.createElement('div');
+          item.className = 'list-item';
+          item.innerHTML = `
+            <div class="list-main">
+              <span class="list-title">فاتورة #${o.invoiceNumber} (${o.orderType})</span>
+              <span class="list-sub">${o.time} • ${o.customerName || 'عميل نقدي'} • ${o.paymentType}</span>
+            </div>
+            <div class="list-val">
+              <span class="list-price">${Number(o.netTotal || 0).toFixed(2)} ج.م</span>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      } catch (err) {}
+    }
+
+    async function fetchTopItems() {
+      try {
+        const res = await fetch('/api/top-items');
+        if (!res.ok) return;
+        const items = await res.json();
+        const container = document.getElementById('topItemsContainer');
+        container.innerHTML = '';
+
+        if (!items.length) {
+          container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-muted)">لا توجد مبيعات أصناف اليوم حتى الآن.</div>';
+          return;
+        }
+
+        items.forEach((it, idx) => {
+          const item = document.createElement('div');
+          item.className = 'list-item';
+          item.innerHTML = `
+            <div class="list-main">
+              <span class="list-title">#${idx + 1} ${it.name}</span>
+              <span class="list-sub">الكمية المباعة: ${it.quantity} وحدة</span>
+            </div>
+            <div class="list-val">
+              <span class="list-price">${Number(it.total || 0).toFixed(2)} ج.م</span>
+            </div>
+          `;
+          container.appendChild(item);
+        });
+      } catch (err) {}
+    }
+
+    // Initial load
+    fetchLiveData();
+    // Live polling every 5 seconds
+    setInterval(fetchLiveData, 5000);
+  </script>
+</body>
+</html>

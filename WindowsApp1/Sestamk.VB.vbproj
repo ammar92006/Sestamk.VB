@@ -596,6 +596,12 @@
     <Compile Include="forms\FrmSelectTable.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="forms\FrmOwnerPortalQR.Designer.vb">
+      <DependentUpon>FrmOwnerPortalQR.vb</DependentUpon>
+    </Compile>
+    <Compile Include="forms\FrmOwnerPortalQR.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="forms\FrmKitchenDisplay.Designer.vb">
       <DependentUpon>FrmKitchenDisplay.vb</DependentUpon>
     </Compile>
@@ -873,6 +879,7 @@
     <Compile Include="Services\Cloud\SyncPushHandler.vb" />
     <Compile Include="Services\Cloud\SyncPullHandler.vb" />
     <Compile Include="Services\Cloud\CloudSyncService.vb" />
+    <Compile Include="Services\Cloud\OwnerPortalServer.vb" />
     <Compile Include="moduls\Data\SyncModels.vb" />
     <Compile Include="Session.vb" />
     <Compile Include="SettingsKeys.vb" />
@@ -1599,6 +1606,9 @@
     <None Include="Resources\setting.png" />
     <None Include="Resources\loge.png" />
     <Content Include="loge.ico" />
+    <Content Include="WebPortal\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\shopping-cart %281%29.png" />
     <None Include="Resources\purchaser.png" />
     <None Include="Resources\clear %282%29.png" />

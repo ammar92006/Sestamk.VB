@@ -31,6 +31,7 @@ Partial Class MainForm
         Me.picLogo = New Guna.UI2.WinForms.Guna2PictureBox()
         Me.btnLogout = New Guna.UI2.WinForms.Guna2Button()
         Me.btnSupport = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnOwnerPortal = New Guna.UI2.WinForms.Guna2Button()
         Me.lblStatusUserRole = New System.Windows.Forms.Label()
         Me.btn_min = New Guna.UI2.WinForms.Guna2Button()
         Me.btn_max = New Guna.UI2.WinForms.Guna2Button()
@@ -87,6 +88,7 @@ Partial Class MainForm
         Me.panelHeader.Controls.Add(Me.picLogo)
         Me.panelHeader.Controls.Add(Me.btnLogout)
         Me.panelHeader.Controls.Add(Me.btnSupport)
+        Me.panelHeader.Controls.Add(Me.btnOwnerPortal)
         Me.panelHeader.Controls.Add(Me.lblStatusUserRole)
         Me.panelHeader.Controls.Add(Me.btn_min)
         Me.panelHeader.Controls.Add(Me.btn_max)
@@ -309,6 +311,30 @@ Partial Class MainForm
         Me.btnSupport.Size = New System.Drawing.Size(132, 65)
         Me.btnSupport.TabIndex = 9
         Me.btnSupport.Text = "  دعم فني"
+        '
+        'btnOwnerPortal
+        '
+        Me.btnOwnerPortal.BackColor = System.Drawing.Color.Transparent
+        Me.btnOwnerPortal.BorderColor = System.Drawing.Color.FromArgb(CType(CType(5, Byte), Integer), CType(CType(150, Byte), Integer), CType(CType(105, Byte), Integer))
+        Me.btnOwnerPortal.BorderRadius = 10
+        Me.btnOwnerPortal.BorderThickness = 1
+        Me.btnOwnerPortal.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnOwnerPortal.Dock = System.Windows.Forms.DockStyle.Left
+        Me.btnOwnerPortal.FillColor = System.Drawing.Color.FromArgb(CType(CType(6, Byte), Integer), CType(CType(44, Byte), Integer), CType(CType(34, Byte), Integer))
+        Me.btnOwnerPortal.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.btnOwnerPortal.ForeColor = System.Drawing.Color.FromArgb(CType(CType(167, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(208, Byte), Integer))
+        Me.btnOwnerPortal.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
+        Me.btnOwnerPortal.HoverState.ForeColor = System.Drawing.Color.White
+        Me.btnOwnerPortal.Image = Global.WindowsApp1.My.Resources.Resources.nav_dashboard_3d
+        Me.btnOwnerPortal.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
+        Me.btnOwnerPortal.ImageSize = New System.Drawing.Size(20, 20)
+        Me.btnOwnerPortal.Location = New System.Drawing.Point(494, 10)
+        Me.btnOwnerPortal.Margin = New System.Windows.Forms.Padding(6, 2, 6, 2)
+        Me.btnOwnerPortal.Name = "btnOwnerPortal"
+        Me.btnOwnerPortal.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.btnOwnerPortal.Size = New System.Drawing.Size(142, 65)
+        Me.btnOwnerPortal.TabIndex = 10
+        Me.btnOwnerPortal.Text = "  بوابة المالك"
         '
         'lblStatusUserRole
         '
@@ -813,6 +839,7 @@ Partial Class MainForm
     Friend WithEvents lblHeaderBranch As System.Windows.Forms.Label
     Friend WithEvents lblStatusUserRole As System.Windows.Forms.Label
     Friend WithEvents btnSupport As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnOwnerPortal As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnLogout As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2Button

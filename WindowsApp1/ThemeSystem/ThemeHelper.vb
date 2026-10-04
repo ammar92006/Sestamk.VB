@@ -1,4 +1,4 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.Windows.Forms
 Imports Guna.UI2.WinForms
 
@@ -56,12 +56,16 @@ Public NotInheritable Class ThemeHelper
 
         Try
             ' ── Protective Guards for Business & Dynamic Controls ──
-            ' Guard 1: Do not overwrite child buttons of dynamic category/product containers in frmPOS
+            ' Guard 1: Do not overwrite child buttons of dynamic category/product containers in frmPOS or table cards in FrmSelectTable
             If ctrl.Parent IsNot Nothing Then
                 Dim pName As String = ctrl.Parent.Name.ToLower()
-                If pName = "flpcategories" OrElse pName = "flpproducts" Then
+                If pName = "flpcategories" OrElse pName = "flpproducts" OrElse pName = "flptables" Then
                     Return
                 End If
+            End If
+
+            If TypeOf ctrl.Tag Is RestaurantTableModel Then
+                Return
             End If
 
             Dim cNameLower As String = ctrl.Name.ToLower()
