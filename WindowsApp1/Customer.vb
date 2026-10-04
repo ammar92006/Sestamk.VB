@@ -1,11 +1,7 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports ClosedXML.Excel
 Imports System.IO
 Imports Guna.UI2.WinForms
-Imports OpenQA.Selenium
-Imports OpenQA.Selenium.Chrome
-Imports OpenQA.Selenium.Support.UI
-Imports SeleniumExtras.WaitHelpers
 Imports System.Threading.Tasks
 Imports System.Net.Http
 Imports System.Text
@@ -14,8 +10,6 @@ Public Class Customer
     Dim x, y As Integer
     Dim newpoint As New Point
     Private importedData As DataTable
-    Public Driver As IWebDriver = Nothing
-    Private SessionPath As String = "C:\WhatsAppSession"
     Public Enum BalanceSource
         Balance
         Debit

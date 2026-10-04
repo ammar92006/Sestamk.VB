@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -164,12 +164,6 @@
     <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.1.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus, Version=8.2.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.8.2.1\lib\net462\EPPlus.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus.Interfaces, Version=8.1.0.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.Interfaces.8.1.0\lib\net462\EPPlus.Interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="ExcelDataReader, Version=3.8.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.8.0\lib\net462\ExcelDataReader.dll</HintPath>
     </Reference>
@@ -181,9 +175,6 @@
     </Reference>
     <Reference Include="Google.Protobuf, Version=3.32.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.32.0\lib\net45\Google.Protobuf.dll</HintPath>
-    </Reference>
-    <Reference Include="Guna.Charts.WinForms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
-      <HintPath>..\packages\Guna.Charts.WinForms.1.1.0\lib\net48\Guna.Charts.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="Guna.UI2, Version=2.0.4.8, Culture=neutral, PublicKeyToken=8b9d14aa5142e261, processorArchitecture=MSIL">
       <HintPath>..\packages\Guna.UI2.WinForms.2.0.4.8\lib\net48\Guna.UI2.dll</HintPath>
@@ -206,13 +197,6 @@
     <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.3.0.1\lib\netstandard2.0\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1001\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="MySql.Data, Version=9.5.0.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <HintPath>..\packages\MySql.Data.9.5.0\lib\net48\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -220,18 +204,12 @@
     <Reference Include="RBush, Version=4.0.0.0, Culture=neutral, PublicKeyToken=c77e27b81f4d0187, processorArchitecture=MSIL">
       <HintPath>..\packages\RBush.Signed.4.0.0\lib\net47\RBush.dll</HintPath>
     </Reference>
-    <Reference Include="Selenium.WebDriverBackedSelenium, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Selenium.WebDriverBackedSelenium.4.1.0\lib\net48\Selenium.WebDriverBackedSelenium.dll</HintPath>
-    </Reference>
-    <Reference Include="SeleniumExtras.WaitHelpers, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetSeleniumExtras.WaitHelpers.3.11.0\lib\net45\SeleniumExtras.WaitHelpers.dll</HintPath>
-    </Reference>
     <Reference Include="SixLabors.Fonts, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d998eea7b14cab13, processorArchitecture=MSIL">
       <HintPath>..\packages\SixLabors.Fonts.1.0.0\lib\netstandard2.0\SixLabors.Fonts.dll</HintPath>
     </Reference>
-    <Reference Include="System">
-      <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.dll</HintPath>
-    </Reference>
+    <!-- مسار مفاتيح الإطار مثبَّت هنا سابقاً على C:\Program Files (x86)\... —
+         أُزيل ليصبح البناء قابلاً للتكرار على أي جهاز (MSBuild يحل مراجع الإطار بنفسه). -->
+    <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
     </Reference>
@@ -463,7 +441,6 @@
     </Compile>
     <Compile Include="classes\ColorHelper.vb" />
     <Compile Include="classes\FormDragHelper.vb" />
-    <Compile Include="classes\Main_Classes.vb" />
     <Compile Include="classes\POSRepository.vb" />
     <Compile Include="classes\QRCodeHelper.vb" />
     <Compile Include="classes\RestaurantPrintManager.vb" />
@@ -827,10 +804,8 @@
     <Compile Include="moduls\FormHelper.vb" />
     <Compile Include="moduls\InvoiceModel.vb" />
     <Compile Include="moduls\Main.vb" />
-    <Compile Include="moduls\ModuleRecipeDeduction.vb" />
     <Compile Include="moduls\ScannerModule.vb" />
     <Compile Include="moduls\ServerManager.vb" />
-    <Compile Include="moduls\Settingsall.vb" />
     <Compile Include="moduls\ShiftModel.vb" />
     <Compile Include="moduls\temp_manager.vb" />
     <Compile Include="moduls\TreasuryTransactionModel.vb" />
@@ -848,7 +823,6 @@
     <Compile Include="ProductUnits.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RawPrinterESC.vb" />
     <Compile Include="RawPrinterHelper.vb" />
     <Compile Include="Reports.Designer.vb">
       <DependentUpon>Reports.vb</DependentUpon>
@@ -1111,12 +1085,6 @@
     <Compile Include="Staff.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Stock.Designer.vb">
-      <DependentUpon>Stock.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Stock.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="StockManager.vb" />
     <Compile Include="The_Scale.Designer.vb">
       <DependentUpon>The_Scale.vb</DependentUpon>
@@ -1363,9 +1331,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Staff.resx">
       <DependentUpon>Staff.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Stock.resx">
-      <DependentUpon>Stock.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="The_Scale.resx">
       <DependentUpon>The_Scale.vb</DependentUpon>
@@ -1759,21 +1724,12 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <ItemGroup>
     <Analyzer Include="..\packages\DevExpress.Data.25.1.7\analyzers\dotnet\DevExpress.Generator.dll" />
-    <Analyzer Include="C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.8-pre-25338\analyzers\dotnet\DevExpress.Generator.dll" Condition="Exists('C:\Program Files\DevExpress 25.1\Components\Offline Packages\devexpress.data\25.1.8-pre-25338\analyzers\dotnet\DevExpress.Generator.dll')" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\Data\" />
     <Folder Include="Files\" />
   </ItemGroup>
-  <Import Project="..\packages\Selenium.WebDriver.ChromeDriver.143.0.7499.19200\build\Selenium.WebDriver.ChromeDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.ChromeDriver.143.0.7499.19200\build\Selenium.WebDriver.ChromeDriver.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Selenium.WebDriver.ChromeDriver.143.0.7499.19200\build\Selenium.WebDriver.ChromeDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.ChromeDriver.143.0.7499.19200\build\Selenium.WebDriver.ChromeDriver.targets'))" />
-    <Error Condition="!Exists('..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
-    <Error Condition="!Exists('..\packages\Selenium.WebDriver.4.39.0\build\Selenium.WebDriver.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Selenium.WebDriver.4.39.0\build\Selenium.WebDriver.targets'))" />
-  </Target>
+  <!-- أُزيلت أهداف/استيرادات Selenium.WebDriver و ChromeDriver لأن الحزمة غير مستخدمة في
+       أي كود (كانت تشحن chromedriver.exe بحجم ~17 ميجابايت دون أي استخدام فعلي). -->
   <Import Project="..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
-  <Import Project="..\packages\Selenium.WebDriver.4.39.0\build\Selenium.WebDriver.targets" Condition="Exists('..\packages\Selenium.WebDriver.4.39.0\build\Selenium.WebDriver.targets')" />
 </Project>

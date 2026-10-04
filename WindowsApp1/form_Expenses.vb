@@ -1,7 +1,6 @@
 Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Drawing.Printing
-Imports Microsoft.Office.Interop.Excel
 Imports Org.BouncyCastle.Asn1.Cmp
 
 Public Class form_Expenses
