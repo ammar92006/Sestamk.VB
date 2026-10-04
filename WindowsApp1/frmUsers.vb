@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Drawing.Imaging
 
@@ -189,9 +189,13 @@ Public Class frmUsers
             txtUserCode.Text = If(IsDBNull(row.Cells("User_Code").Value), "", row.Cells("User_Code").Value.ToString())
             txtFullName.Text = If(IsDBNull(row.Cells("User_Name").Value), "", row.Cells("User_Name").Value.ToString())
             txtUsername.Text = If(IsDBNull(row.Cells("User_username").Value), "", row.Cells("User_username").Value.ToString())
-            txtPassword.Text = If(IsDBNull(row.Cells("User_password").Value), "", row.Cells("User_password").Value.ToString())
             txtBarcode.Text = If(IsDBNull(row.Cells("UserBarcode").Value), "", row.Cells("UserBarcode").Value.ToString())
             txtNotes.Text = If(IsDBNull(row.Cells("User_Note").Value), "", row.Cells("User_Note").Value.ToString())
+
+            ' أمان: كلمات المرور لا تُجلب إلى الواجهة إطلاقاً (ولا تُعرض حتى مجزأة).
+            ' عند التعديل يكون الحقل فارغاً، وتركه فارغاً يعني الإبقاء على كلمة المرور الحالية كما هي.
+            txtPassword.Clear()
+            txtPassword.PlaceholderText = "اتركها فارغة للإبقاء على الحالية"
 
             ' إعادة تعيين إخفاء كلمة المرور كنقاط عند كل تحديد
             txtPassword.UseSystemPasswordChar = True
@@ -214,7 +218,7 @@ Public Class frmUsers
     End Sub
 
     Private Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAdd.Click
-        If Not ValidateInputs() Then Exit Sub
+        If Not ValidateInputs(requirePassword:=True) Then Exit Sub
 
         EnsureDatabaseColumns()
 
@@ -239,7 +243,8 @@ Public Class frmUsers
                 cmd.Parameters.AddWithValue("@Code", If(String.IsNullOrWhiteSpace(txtUserCode.Text), GetNextCode("Users_TBL", "User_Code").ToString(), txtUserCode.Text.Trim()))
                 cmd.Parameters.AddWithValue("@Name", txtFullName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Username", txtUsername.Text.Trim())
-                cmd.Parameters.AddWithValue("@Password", txtPassword.Text.Trim())
+                ' أمان: كلمة المرور تُخزَّن مجزأة PBKDF2 فقط — لا نص صريح في أي مسار
+                cmd.Parameters.AddWithValue("@Password", PasswordHasher.Hash(txtPassword.Text.Trim()))
                 cmd.Parameters.AddWithValue("@RoleID", cmbRole.SelectedValue)
                 cmd.Parameters.AddWithValue("@EmpID", If(cmbEmployee.SelectedValue Is Nothing, DBNull.Value, cmbEmployee.SelectedValue))
                 cmd.Parameters.AddWithValue("@Barcode", If(String.IsNullOrWhiteSpace(txtBarcode.Text), DBNull.Value, txtBarcode.Text.Trim()))
@@ -268,7 +273,7 @@ Public Class frmUsers
 
     Private Sub btnEdit_Click(sender As Object, e As EventArgs) Handles btnEdit.Click
         If dgvUsers.SelectedRows.Count = 0 Then Exit Sub
-        If Not ValidateInputs() Then Exit Sub
+        If Not ValidateInputs(requirePassword:=False) Then Exit Sub
 
         EnsureDatabaseColumns()
 
@@ -289,8 +294,13 @@ Public Class frmUsers
                 End If
             End Using
 
+            ' أمان: لا تُكتب كلمة المرور إلا إذا أدخل المستخدم كلمة جديدة.
+            ' ترك الحقل فارغاً = الإبقاء على التجزئة الحالية دون أي مساس بها.
+            Dim changePassword As Boolean = Not String.IsNullOrWhiteSpace(txtPassword.Text)
+
             Dim query As String = "UPDATE Users_TBL SET User_Code = @Code, User_Name = @Name, User_username = @Username, " &
-                                  "User_password = @Password, RoleID = @RoleID, EmployeeID = @EmpID, UserBarcode = @Barcode, " &
+                                  If(changePassword, "User_password = @Password, ", "") &
+                                  "RoleID = @RoleID, EmployeeID = @EmpID, UserBarcode = @Barcode, " &
                                   "UserPhotobase64 = @Photo, IsActive = @IsActive, User_Note = @Note WHERE User_ID = @ID"
 
             Using cmd As New SqlCommand(query, conn)
@@ -298,7 +308,9 @@ Public Class frmUsers
                 cmd.Parameters.AddWithValue("@Code", txtUserCode.Text.Trim())
                 cmd.Parameters.AddWithValue("@Name", txtFullName.Text.Trim())
                 cmd.Parameters.AddWithValue("@Username", txtUsername.Text.Trim())
-                cmd.Parameters.AddWithValue("@Password", txtPassword.Text.Trim())
+                If changePassword Then
+                    cmd.Parameters.AddWithValue("@Password", PasswordHasher.Hash(txtPassword.Text.Trim()))
+                End If
                 cmd.Parameters.AddWithValue("@RoleID", cmbRole.SelectedValue)
                 cmd.Parameters.AddWithValue("@EmpID", If(cmbEmployee.SelectedValue Is Nothing, DBNull.Value, cmbEmployee.SelectedValue))
                 cmd.Parameters.AddWithValue("@Barcode", If(String.IsNullOrWhiteSpace(txtBarcode.Text), DBNull.Value, txtBarcode.Text.Trim()))
@@ -440,13 +452,20 @@ Public Class frmUsers
         End Try
     End Function
 
-    Private Function ValidateInputs() As Boolean
+    Private Function ValidateInputs(Optional requirePassword As Boolean = True) As Boolean
         If String.IsNullOrWhiteSpace(txtUserCode.Text) Then
             txtUserCode.Text = GetNextCode("Users_TBL", "User_Code").ToString()
         End If
 
-        If String.IsNullOrWhiteSpace(txtFullName.Text) OrElse String.IsNullOrWhiteSpace(txtUsername.Text) OrElse String.IsNullOrWhiteSpace(txtPassword.Text) Then
-            SmartMessageBox.Show("يرجى ملء الحقول الإلزامية: (الاسم، اسم الدخول، كلمة المرور)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        If String.IsNullOrWhiteSpace(txtFullName.Text) OrElse String.IsNullOrWhiteSpace(txtUsername.Text) Then
+            SmartMessageBox.Show("يرجى ملء الحقول الإلزامية: (الاسم، اسم الدخول)!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return False
+        End If
+
+        ' كلمة المرور إلزامية عند الإضافة فقط — عند التعديل تُترك فارغة للإبقاء على الحالية
+        If requirePassword AndAlso String.IsNullOrWhiteSpace(txtPassword.Text) Then
+            SmartMessageBox.Show("يرجى إدخال كلمة المرور!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            txtPassword.Focus()
             Return False
         End If
 
@@ -468,6 +487,7 @@ Public Class frmUsers
         txtFullName.Clear()
         txtUsername.Clear()
         txtPassword.Clear()
+        txtPassword.PlaceholderText = "كلمة المرور (إلزامية)"
         txtPassword.UseSystemPasswordChar = True
         btnTogglePassword.Checked = False
         txtBarcode.Clear()

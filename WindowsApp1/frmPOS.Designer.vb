@@ -124,6 +124,8 @@ Partial Class frmPOS
         Me.colNotes = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colProductID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colTaxPercent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colSizeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.colAddonIDs = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.panelHeader.SuspendLayout()
         Me.Guna2Panel2.SuspendLayout()
         Me.Guna2Panel1.SuspendLayout()
@@ -586,7 +588,7 @@ Partial Class frmPOS
         Me.dgvInvoice.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvInvoice.ColumnHeadersHeight = 38
         Me.dgvInvoice.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID, Me.colTaxPercent})
+        Me.dgvInvoice.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.colIndex, Me.colProductName, Me.colSize, Me.colAddons, Me.colUnitPrice, Me.colQuantity, Me.colTotalPrice, Me.colNotes, Me.colProductID, Me.colTaxPercent, Me.colSizeID, Me.colAddonIDs})
         DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle11.BackColor = System.Drawing.Color.White
         DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 9.5!)
@@ -1290,6 +1292,20 @@ Partial Class frmPOS
         Me.colTaxPercent.ReadOnly = True
         Me.colTaxPercent.Visible = False
         '
+        'colSizeID
+        '
+        Me.colSizeID.HeaderText = "SizeID"
+        Me.colSizeID.Name = "colSizeID"
+        Me.colSizeID.ReadOnly = True
+        Me.colSizeID.Visible = False
+        '
+        'colAddonIDs
+        '
+        Me.colAddonIDs.HeaderText = "AddonIDs"
+        Me.colAddonIDs.Name = "colAddonIDs"
+        Me.colAddonIDs.ReadOnly = True
+        Me.colAddonIDs.Visible = False
+        '
         'frmPOS
         '
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None
@@ -1422,4 +1438,6 @@ Partial Class frmPOS
     Friend WithEvents colNotes As DataGridViewTextBoxColumn
     Friend WithEvents colProductID As DataGridViewTextBoxColumn
     Friend WithEvents colTaxPercent As DataGridViewTextBoxColumn
+    Friend WithEvents colSizeID As DataGridViewTextBoxColumn
+    Friend WithEvents colAddonIDs As DataGridViewTextBoxColumn
 End Class

@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Drawing
@@ -16,10 +16,90 @@ Public Class Sales_Returns
     Private _isUpdatingGridInternally As Boolean = False
     Private _lastSavedReturnNumber As String = ""
 
+    ''' <summary>كميات سبق إرجاعها للفاتورة المحمّلة حالياً (مفتاح = صنف|حجم|إضافات).</summary>
+    Private _alreadyReturnedCache As Dictionary(Of String, Decimal) = Nothing
+    Private _alreadyReturnedCacheKey As String = ""
+
     Public Sub New()
         InitializeComponent()
         _repo = New POSRepository(DBModule.ConnectionString)
     End Sub
+
+    ''' <summary>مفتاح مطابقة سطر الفاتورة عند حساب كميات المرتجعات السابقة.</summary>
+    Private Shared Function ReturnLineKey(productID As Integer, sizeName As String, addonsText As String) As String
+        Return productID.ToString() & "|" & If(sizeName, "").Trim() & "|" & If(addonsText, "").Trim()
+    End Function
+
+    ''' <summary>
+    ''' حساب كميات ما سبق إرجاعه لهذه الفاتورة، مطابقةً بسطر (صنف + حجم + إضافات).
+    ''' الربط الأساسي عبر SalesInvoices.OriginalInvoiceID (v1.4.0)، ومع المرتجعات الأقدم
+    ''' (التي لا تحمل العمود) يُستخدم نص الملاحظة المكتوب بنفس الصيغة.
+    ''' </summary>
+    Private Function LoadAlreadyReturned(inv As InvoiceModel) As Dictionary(Of String, Decimal)
+        If inv Is Nothing OrElse inv.InvoiceID <= 0 Then Return New Dictionary(Of String, Decimal)(StringComparer.OrdinalIgnoreCase)
+        Try
+            Using conn As New SqlConnection(DBModule.ConnectionString)
+                conn.Open()
+                Return QueryAlreadyReturned(conn, Nothing, inv)
+            End Using
+        Catch ex As Exception
+            Logger.LogError("Sales_Returns.LoadAlreadyReturned", ex)
+        End Try
+        Return New Dictionary(Of String, Decimal)(StringComparer.OrdinalIgnoreCase)
+    End Function
+
+    ''' <summary>
+    ''' تنفيذ استعلام كميات المرتجعات السابقة على اتصال/معاملة محددة.
+    ''' الربط الأساسي عبر SalesInvoices.OriginalInvoiceID (v1.4.0)، ومع المرتجعات الأقدم
+    ''' (التي لا تحمل العمود) يُستخدم نص الملاحظة المكتوب بنفس الصيغة.
+    ''' </summary>
+    Private Function QueryAlreadyReturned(conn As SqlConnection, trans As SqlTransaction, inv As InvoiceModel) As Dictionary(Of String, Decimal)
+        Dim result As New Dictionary(Of String, Decimal)(StringComparer.OrdinalIgnoreCase)
+
+        Const sql As String = "
+            SELECT d.ProductID,
+                   ISNULL(d.SizeName, '')   AS SizeName,
+                   ISNULL(d.AddonsText, '') AS AddonsText,
+                   SUM(ABS(ISNULL(d.Quantity, 0))) AS ReturnedQty
+            FROM SalesInvoiceDetails d
+            INNER JOIN SalesInvoices i ON i.InvoiceID = d.InvoiceID
+            WHERE ISNULL(i.IsDeleted, 0) = 0
+              AND (i.OriginalInvoiceID = @OrigID
+                   OR (i.OriginalInvoiceID IS NULL AND i.Notes LIKE @NotesPattern))
+            GROUP BY d.ProductID, ISNULL(d.SizeName, ''), ISNULL(d.AddonsText, '');"
+
+        Using cmd As New SqlCommand(sql, conn, trans)
+            cmd.Parameters.AddWithValue("@OrigID", inv.InvoiceID)
+            cmd.Parameters.AddWithValue("@NotesPattern", "%مرتجع مبيعات للفاتورة #" & inv.InvoiceNumber & " |%")
+            Using rdr = cmd.ExecuteReader()
+                While rdr.Read()
+                    Dim key As String = ReturnLineKey(Convert.ToInt32(rdr("ProductID")),
+                                                      rdr("SizeName").ToString(),
+                                                      rdr("AddonsText").ToString())
+                    Dim qty As Decimal = Convert.ToDecimal(rdr("ReturnedQty"))
+                    If result.ContainsKey(key) Then result(key) += qty Else result(key) = qty
+                End While
+            End Using
+        End Using
+
+        Return result
+    End Function
+
+    ''' <summary>الكمية التي سبق إرجاعها لسطر معيّن من الفاتورة المحمّلة.</summary>
+    Private Function GetAlreadyReturnedQuantity(inv As InvoiceModel, det As InvoiceDetailModel) As Decimal
+        If inv Is Nothing OrElse det Is Nothing Then Return 0D
+
+        Dim cacheKey As String = inv.InvoiceID.ToString()
+        If _alreadyReturnedCache Is Nothing OrElse Not String.Equals(_alreadyReturnedCacheKey, cacheKey, StringComparison.Ordinal) Then
+            _alreadyReturnedCache = LoadAlreadyReturned(inv)
+            _alreadyReturnedCacheKey = cacheKey
+        End If
+
+        Dim lineKey As String = ReturnLineKey(det.ProductID, det.SizeName, det.AddonsText)
+        Dim qty As Decimal = 0D
+        If _alreadyReturnedCache.TryGetValue(lineKey, qty) Then Return qty
+        Return 0D
+    End Function
 
     Private Async Sub Sales_Returns_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Try
@@ -86,6 +166,9 @@ Public Class Sales_Returns
     ' =========================================================
     Private Sub ClearForm()
         _currentLoadedInvoice = Nothing
+        ' إبطال ذاكرة المرتجعات السابقة حتى تُحسب من جديد للفاتورة التالية
+        _alreadyReturnedCache = Nothing
+        _alreadyReturnedCacheKey = ""
         _currentCustomerID = Nothing
         _currentCustomerName = "عميل نقدي عام"
         _currentCustomerBalance = 0
@@ -176,19 +259,32 @@ Public Class Sales_Returns
             Dim rowIndex As Integer = dgvReturnItems.Rows.Add()
             Dim row As DataGridViewRow = dgvReturnItems.Rows(rowIndex)
 
-            row.Cells("colSelect").Value = True
+            ' الكمية القابلة للإرجاع = الكمية المبيعة − ما تم إرجاعه فعلاً في مرتجعات سابقة.
+            ' (كان يمكن إرجاع نفس الفاتورة بالكامل مراراً واسترداد المبلغ أكثر من مرة)
+            Dim alreadyReturned As Decimal = GetAlreadyReturnedQuantity(inv, det)
+            Dim returnable As Decimal = Math.Max(0D, det.Quantity - alreadyReturned)
+
+            row.Cells("colSelect").Value = returnable > 0D
             row.Cells("colProductID").Value = det.ProductID
-            row.Cells("colSizeID").Value = 0
-            row.Cells("colAddonID").Value = 0
+            ' معرّفات الحجم والإضافات الأصلية (لإرجاع وصفات المخزون بدقة)
+            row.Cells("colSizeID").Value = If(det.SizeID.HasValue AndAlso det.SizeID.Value > 0, det.SizeID.Value.ToString(), "0")
+            row.Cells("colAddonID").Value = If(det.AddonIDs Is Nothing OrElse det.AddonIDs.Count = 0, "0", String.Join(",", det.AddonIDs))
             row.Cells("colProductName").Value = det.ProductName
             row.Cells("colSizeName").Value = det.SizeName
             row.Cells("colAddonsText").Value = det.AddonsText
             row.Cells("colUnitPrice").Value = det.UnitPrice
-            row.Cells("colOriginalQty").Value = det.Quantity
-            row.Cells("colReturnQty").Value = det.Quantity
-            row.Cells("colTotalPrice").Value = det.Quantity * det.UnitPrice
-            row.Cells("colRestoreStock").Value = True
-            row.Cells("colItemNotes").Value = ""
+            row.Cells("colOriginalQty").Value = returnable
+            row.Cells("colReturnQty").Value = returnable
+            row.Cells("colTotalPrice").Value = returnable * det.UnitPrice
+            row.Cells("colRestoreStock").Value = returnable > 0D
+
+            If alreadyReturned > 0D Then
+                row.Cells("colItemNotes").Value = If(returnable > 0D,
+                    $"مُرتجع سابقاً: {alreadyReturned:N0} من {det.Quantity:N0}",
+                    "تم إرجاع هذا الصنف بالكامل مسبقاً")
+            Else
+                row.Cells("colItemNotes").Value = ""
+            End If
         Next
 
         _isUpdatingGridInternally = False
@@ -404,6 +500,24 @@ Public Class Sales_Returns
             Exit Sub
         End If
 
+        ' 1.ب حماية مالية: لا يجوز أن تتجاوز الكمية المرتجعة الكمية المتبقية القابلة للإرجاع
+        '     (الكمية المبيعة ناقص ما سبق إرجاعه) — يمنع استرداد نفس الكمية مرتين.
+        For Each row As DataGridViewRow In selectedRows
+            Dim requestedQty As Decimal = 0
+            Decimal.TryParse(row.Cells("colReturnQty").Value?.ToString(), requestedQty)
+            Dim allowedQty As Decimal = 0
+            Decimal.TryParse(row.Cells("colOriginalQty").Value?.ToString(), allowedQty)
+
+            If requestedQty > allowedQty Then
+                Dim itemName As String = row.Cells("colProductName").Value?.ToString()
+                SmartMessageBox.Show(
+                    $"الكمية المرتجعة للصنف ""{itemName}"" ({requestedQty:N0}) أكبر من الكمية القابلة للإرجاع ({allowedQty:N0})." & vbCrLf &
+                    "الكمية القابلة للإرجاع = الكمية المبيعة ناقص ما تم إرجاعه في مرتجعات سابقة.",
+                    "كمية غير صحيحة", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Exit Sub
+            End If
+        Next
+
         Dim totalBeforeDisc As Decimal = 0
         Decimal.TryParse(lblTotalReturnBeforeDisc.Text.Replace("ج.م", "").Trim(), totalBeforeDisc)
 
@@ -460,6 +574,64 @@ Public Class Sales_Returns
         End Try
     End Sub
 
+    ''' <summary>
+    ''' حجز قفل تطبيقي حصري على الفاتورة الأصلية داخل المعاملة الحالية.
+    ''' sp_getapplock يضمن ألا يُنشأ مرتجعان متزامنان لنفس الفاتورة في نفس اللحظة.
+    ''' </summary>
+    Private Sub AcquireReturnLock(conn As SqlConnection, trans As SqlTransaction, originalInvoiceID As Integer)
+        Using cmd As New SqlCommand("sp_getapplock", conn, trans)
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Parameters.AddWithValue("@Resource", "Sestamk:SalesReturn:" & originalInvoiceID.ToString())
+            cmd.Parameters.AddWithValue("@LockMode", "Exclusive")
+            cmd.Parameters.AddWithValue("@LockOwner", "Transaction")
+            cmd.Parameters.AddWithValue("@LockTimeout", 5000)
+            Dim resultParam As New SqlParameter("@Result", SqlDbType.Int) With {.Direction = ParameterDirection.Output}
+            cmd.Parameters.Add(resultParam)
+            cmd.ExecuteNonQuery()
+
+            If resultParam.Value IsNot Nothing AndAlso Not IsDBNull(resultParam.Value) AndAlso Convert.ToInt32(resultParam.Value) < 0 Then
+                Throw New Exception("هناك عملية مرتجع أخرى قيد التنفيذ لنفس الفاتورة. يرجى المحاولة بعد لحظات.")
+            End If
+        End Using
+    End Sub
+
+    ''' <summary>
+    ''' إعادة حساب الكميات القابلة للإرجاع على قاعدة البيانات داخل المعاملة الحالية،
+    ''' ورفض أي كمية تتجاوز (المبيعة − ما سبق إرجاعه). هذه هي الحماية النهائية قبل الكتابة.
+    ''' </summary>
+    Private Sub ValidateReturnableQuantities(conn As SqlConnection, trans As SqlTransaction, selectedRows As List(Of DataGridViewRow))
+        If _currentLoadedInvoice Is Nothing Then Exit Sub
+
+        Dim alreadyReturned As Dictionary(Of String, Decimal) = QueryAlreadyReturned(conn, trans, _currentLoadedInvoice)
+
+        For Each row As DataGridViewRow In selectedRows
+            Dim productID As Integer = Convert.ToInt32(row.Cells("colProductID").Value)
+            Dim sizeName As String = row.Cells("colSizeName").Value?.ToString()
+            Dim addonsText As String = row.Cells("colAddonsText").Value?.ToString()
+            Dim lineKey As String = ReturnLineKey(productID, sizeName, addonsText)
+
+            Dim soldQty As Decimal = 0D
+            For Each det As InvoiceDetailModel In _currentLoadedInvoice.Details
+                If String.Equals(ReturnLineKey(det.ProductID, det.SizeName, det.AddonsText), lineKey, StringComparison.OrdinalIgnoreCase) Then
+                    soldQty += det.Quantity
+                End If
+            Next
+
+            Dim alreadyQty As Decimal = 0D
+            alreadyReturned.TryGetValue(lineKey, alreadyQty)
+
+            Dim requestedQty As Decimal = Convert.ToDecimal(row.Cells("colReturnQty").Value)
+            Dim remaining As Decimal = soldQty - alreadyQty
+
+            If requestedQty > remaining Then
+                Dim itemName As String = row.Cells("colProductName").Value?.ToString()
+                Throw New Exception(
+                    $"الكمية المرتجعة للصنف ""{itemName}"" ({requestedQty:N0}) تتجاوز الكمية القابلة للإرجاع ({Math.Max(0D, remaining):N0}). " &
+                    "ربما تم تسجيل مرتجع آخر لنفس الفاتورة أثناء العمل على هذه الشاشة.")
+            End If
+        Next
+    End Sub
+
     Private Async Function SaveReturnTransactionAsync(selectedRows As List(Of DataGridViewRow), totalBeforeDisc As Decimal, discountVal As Decimal, netRefund As Decimal, refundMethod As String, treasuryID As Integer, reason As String, notes As String) As Task(Of String)
         Dim returnNumber As String = $"RET-{DateTime.Now:yyyyMMdd}-{DateTime.Now:HHmmss}"
 
@@ -468,6 +640,14 @@ Public Class Sales_Returns
 
             Using trans As SqlTransaction = conn.BeginTransaction()
                 Try
+                    ' حماية من التزامن: قفل تطبيقي على الفاتورة الأصلية داخل المعاملة، ثم إعادة
+                    ' التحقق من الكميات القابلة للإرجاع من القاعدة — يمنع أن يُنشئ كاشيران
+                    ' مرتجعين متزامنين لنفس الفاتورة فيتجاوز الإجمالي الكمية المبيعة.
+                    If _currentLoadedInvoice IsNot Nothing AndAlso _currentLoadedInvoice.InvoiceID > 0 Then
+                        AcquireReturnLock(conn, trans, _currentLoadedInvoice.InvoiceID)
+                        ValidateReturnableQuantities(conn, trans, selectedRows)
+                    End If
+
                     Dim currentShiftID As Integer = If(ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, 1)
                     Dim currentUserID As Integer = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1)
                     Dim currentStoreID As Integer = 1
@@ -478,15 +658,16 @@ Public Class Sales_Returns
                     If Not String.IsNullOrEmpty(notes) Then finalNotes &= " | " & notes
 
                     ' 1. تسجيل فاتورة المرتجع في SalesInvoices بقيم سالبة للتكامل مع التقارير
+                    '    مع ربطها بالفاتورة الأصلية (OriginalInvoiceID) — أساس منع الإرجاع المتكرر
                     Dim sqlInv As String = "
                         INSERT INTO SalesInvoices 
                         (InvoiceNumber, InvoiceDate, OrderType, ShiftID, UserID, CustomerID, BranchID, StoreID, 
                          DeliveryFee, DineInServiceFee, Tax, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, 
-                         IsCredit, TreasuryID, PaymentType, Notes, IsActive, IsDeleted, CreatedAt)
+                         IsCredit, TreasuryID, PaymentType, Notes, IsActive, IsDeleted, CreatedAt, OriginalInvoiceID)
                         VALUES 
                         (@InvNum, GETDATE(), @OrderType, @ShiftID, @UserID, @CustID, 1, @StoreID, 
                          0, 0, 0, @TotalBefore, @Discount, @NetTotal, @Paid, 0, 
-                         @IsCredit, @TreasuryID, @PayType, @Notes, 1, 0, GETDATE());
+                         @IsCredit, @TreasuryID, @PayType, @Notes, 1, 0, GETDATE(), @OriginalInvoiceID);
                         SELECT SCOPE_IDENTITY();
                     "
 
@@ -504,6 +685,9 @@ Public Class Sales_Returns
                         cmdInv.Parameters.AddWithValue("@Paid", If(refundMethod <> "إضافة إلى حساب العميل", -netRefund, 0))
                         cmdInv.Parameters.AddWithValue("@IsCredit", (refundMethod = "إضافة إلى حساب العميل"))
                         cmdInv.Parameters.AddWithValue("@TreasuryID", If(refundMethod = "نقدي من الدرج / الخزينة", treasuryID, CType(DBNull.Value, Object)))
+                        cmdInv.Parameters.AddWithValue("@OriginalInvoiceID",
+                            If(_currentLoadedInvoice IsNot Nothing AndAlso _currentLoadedInvoice.InvoiceID > 0,
+                               CObj(_currentLoadedInvoice.InvoiceID), CObj(DBNull.Value)))
                         cmdInv.Parameters.AddWithValue("@PayType", "مرتجع - " & refundMethod)
                         cmdInv.Parameters.AddWithValue("@Notes", finalNotes)
 
@@ -523,11 +707,28 @@ Public Class Sales_Returns
                         Dim shouldRestoreStock As Boolean = Convert.ToBoolean(row.Cells("colRestoreStock").Value)
                         Dim itemNote As String = row.Cells("colItemNotes").Value?.ToString()
 
+                        ' معرّفات الحجم والإضافات الأصلية لإرجاع وصفات المخزون الصحيحة
+                        Dim returnSizeID As Integer? = Nothing
+                        Dim rawSizeID As String = row.Cells("colSizeID").Value?.ToString()
+                        Dim parsedSize As Integer
+                        If Integer.TryParse(rawSizeID, parsedSize) AndAlso parsedSize > 0 Then returnSizeID = parsedSize
+
+                        Dim returnAddonIDs As New List(Of Integer)
+                        Dim rawAddonIDs As String = row.Cells("colAddonID").Value?.ToString()
+                        If Not String.IsNullOrWhiteSpace(rawAddonIDs) Then
+                            For Each addonPart In rawAddonIDs.Split(","c)
+                                Dim parsedAddon As Integer
+                                If Integer.TryParse(addonPart.Trim(), parsedAddon) AndAlso parsedAddon > 0 Then
+                                    returnAddonIDs.Add(parsedAddon)
+                                End If
+                            Next
+                        End If
+
                         Dim sqlDet As String = "
                             INSERT INTO SalesInvoiceDetails 
-                            (InvoiceID, ProductID, ProductName, SizeName, AddonsText, UnitPrice, Quantity, TotalPrice, Notes)
+                            (InvoiceID, ProductID, ProductName, SizeName, AddonsText, UnitPrice, Quantity, TotalPrice, Notes, SizeID, AddonIDs)
                             VALUES 
-                            (@InvID, @ProductID, @ProductName, @SizeName, @AddonsText, @UnitPrice, @Quantity, @TotalPrice, @Notes);
+                            (@InvID, @ProductID, @ProductName, @SizeName, @AddonsText, @UnitPrice, @Quantity, @TotalPrice, @Notes, @SizeID, @AddonIDs);
                         "
                         Using cmdDet As New SqlCommand(sqlDet, conn, trans)
                             cmdDet.Parameters.AddWithValue("@InvID", newInvoiceID)
@@ -539,16 +740,18 @@ Public Class Sales_Returns
                             cmdDet.Parameters.AddWithValue("@Quantity", -rQty)
                             cmdDet.Parameters.AddWithValue("@TotalPrice", -rTotal)
                             cmdDet.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(itemNote), "مرتجع", itemNote))
+                            cmdDet.Parameters.AddWithValue("@SizeID", If(returnSizeID.HasValue AndAlso returnSizeID.Value > 0, CObj(returnSizeID.Value), CObj(DBNull.Value)))
+                            cmdDet.Parameters.AddWithValue("@AddonIDs", If(returnAddonIDs.Count = 0, CObj(DBNull.Value), String.Join(",", returnAddonIDs)))
                             cmdDet.ExecuteNonQuery()
                         End Using
 
-                        ' إعادة خامات ومخزون الصنف إن تم تحديد ذلك وميزة الخامات مفعلة
+                        ' إعادة خامات ومخزون الصنف إن تم تحديد ذلك وميزة الخامات مفعلة.
+                        ' مهم: الخطأ لم يعد يُبتلع — كان الفشل يترك فاتورة مرتجع محفوظة بدون إرجاع
+                        ' مخزون بصمت. الآن يُلغي الفشل معاملة المرتجع بالكامل (نفس سياسة البيع).
                         If shouldRestoreStock AndAlso SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True) Then
-                            Try
-                                InventoryDeductionManager.RestoreItemRecipe(conn, trans, currentStoreID, pID, Nothing, Nothing, rQty, returnNumber)
-                            Catch exStock As Exception
-                                Debug.WriteLine("Stock restore error: " & exStock.Message)
-                            End Try
+                            InventoryDeductionManager.RestoreInvoiceLineRecipes(conn, trans, currentStoreID,
+                                                                               pID, returnSizeID, returnAddonIDs,
+                                                                               rQty, returnNumber)
                         End If
                     Next
 
@@ -581,12 +784,20 @@ Public Class Sales_Returns
 
                     ' 4. في حالة إضافة المرتجع لحساب العميل (تنزيل من مديونيته)
                     If refundMethod = "إضافة إلى حساب العميل" AndAlso _currentCustomerID.HasValue AndAlso netRefund > 0 Then
-                        Dim newBalance As Decimal = _currentCustomerBalance + netRefund
+                        ' قراءة الرصيد مع قفل الصف داخل المعاملة، ثم تحديث نسبي (يمنع Lost Update)
+                        Dim lockedBalance As Decimal = 0D
+                        Using cmdLockBal As New SqlCommand("SELECT ISNULL(CurrentBalance, 0) FROM Customers WITH (UPDLOCK, HOLDLOCK) WHERE CustomerID = @CID;", conn, trans)
+                            cmdLockBal.Parameters.AddWithValue("@CID", _currentCustomerID.Value)
+                            Dim objBal = cmdLockBal.ExecuteScalar()
+                            If objBal IsNot Nothing AndAlso Not IsDBNull(objBal) Then lockedBalance = Convert.ToDecimal(objBal)
+                        End Using
 
-                        ' تحديث رصيد العميل
-                        Dim sqlCust As String = "UPDATE Customers SET CurrentBalance = @NewBal, LastTransactionDate = GETDATE(), updated_at = SYSUTCDATETIME() WHERE CustomerID = @CID;"
+                        Dim newBalance As Decimal = lockedBalance + netRefund
+
+                        ' تحديث نسبي لرصيد العميل (تنزيل من المديونية بالقيمة الموجبة)
+                        Dim sqlCust As String = "UPDATE Customers SET CurrentBalance = ISNULL(CurrentBalance, 0) + @Credit, LastTransactionDate = GETDATE(), updated_at = SYSUTCDATETIME() WHERE CustomerID = @CID;"
                         Using cmdCust As New SqlCommand(sqlCust, conn, trans)
-                            cmdCust.Parameters.AddWithValue("@NewBal", newBalance)
+                            cmdCust.Parameters.AddWithValue("@Credit", netRefund)
                             cmdCust.Parameters.AddWithValue("@CID", _currentCustomerID.Value)
                             cmdCust.ExecuteNonQuery()
                         End Using

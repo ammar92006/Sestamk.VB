@@ -1,4 +1,4 @@
-﻿Imports System.Collections.Concurrent
+Imports System.Collections.Concurrent
 Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Net.Http
@@ -627,7 +627,15 @@ Namespace Services.Sync
                         cmd.Parameters.AddWithValue("@code", nextCode)
                         cmd.Parameters.AddWithValue("@name", If(String.IsNullOrWhiteSpace(fullName), username, fullName))
                         cmd.Parameters.AddWithValue("@uname", username)
-                        cmd.Parameters.AddWithValue("@pwd", SanitizeIncomingPassword(If(String.IsNullOrWhiteSpace(password), "123456", password)))
+                        ' أمان: لا كلمة مرور افتراضية معروفة. إن لم تُرسل السحابة كلمة مرور،
+                        ' تُزرع تجزئة عشوائية غير قابلة للاستخدام فيتعذّر الدخول بهذا الحساب
+                        ' حتى يُضبط له كلمة مرور حقيقية من شاشة المستخدمين.
+                        Dim incomingPwd As String = password
+                        If String.IsNullOrWhiteSpace(incomingPwd) Then
+                            incomingPwd = Guid.NewGuid().ToString("N") & Guid.NewGuid().ToString("N") & Guid.NewGuid().ToString("N")
+                            Logger.LogWarning("UserSyncService.InsertLocalUser", $"المستخدم '{username}' وصل من السحابة بلا كلمة مرور — أُنشئ بتجزئة عشوائية غير قابلة للدخول حتى تُضبط كلمة مرور.")
+                        End If
+                        cmd.Parameters.AddWithValue("@pwd", SanitizeIncomingPassword(incomingPwd))
                         cmd.Parameters.AddWithValue("@roleName", roleName)
                         If roleId > 0 Then
                             cmd.Parameters.AddWithValue("@roleId", roleId)

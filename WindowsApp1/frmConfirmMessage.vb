@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Windows.Forms
 
@@ -109,6 +109,18 @@ Public Class frmConfirmMessage
                     Dim currentUserID As Integer = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1)
                     Dim currentUserName As String = If(Not String.IsNullOrEmpty(Session.CurrentUserfullName), Session.CurrentUserfullName, "المستخدم")
 
+                    ' 0. قراءة الرصيد الحالي مع قفل الصف داخل المعاملة، وإعادة حساب الرصيد بعده.
+                    '    كان الرصيد يُكتب كقيمة مطلقة محسوبة من لقطة قديمة في الواجهة، فأي عملية
+                    '    متزامنة على نفس العميل كانت تُلغي الأخرى (Lost Update).
+                    Dim lockedBalance As Decimal = oldB
+                    Using cmdLockBal As New SqlCommand("SELECT ISNULL(CurrentBalance, 0) FROM Customers WITH (UPDLOCK, HOLDLOCK) WHERE CustomerID = @CID;", cn, trans)
+                        cmdLockBal.Parameters.AddWithValue("@CID", custID)
+                        Dim objBal = Await cmdLockBal.ExecuteScalarAsync()
+                        If objBal IsNot Nothing AndAlso Not IsDBNull(objBal) Then lockedBalance = Convert.ToDecimal(objBal)
+                    End Using
+                    oldB = lockedBalance
+                    newB = lockedBalance + pay
+
                     ' 1. تسجيل السجل في CustomerTransactions لظهوره في كشف الحساب
                     Dim receiptRefNo As String = $"REC-{DateTime.Now:yyyyMMdd}-{DateTime.Now:HHmmss}"
                     Dim currentShiftID As Object = If(ShiftSession.HasActiveShift AndAlso ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, CType(DBNull.Value, Object))
@@ -147,10 +159,10 @@ Public Class frmConfirmMessage
                         cmdLog.ExecuteNonQuery()
                     End Using
 
-                    ' 3. تحديث الرصيد في جدول Customers بالـ CustomerID
-                    Dim sqlUpdateCustomer As String = "UPDATE Customers SET CurrentBalance = @CurrentBalance, LastTransactionDate = GETDATE(), updated_at = SYSUTCDATETIME() WHERE CustomerID = @CustomerID;"
+                    ' 3. تحديث الرصيد في جدول Customers بالـ CustomerID (تحديث نسبي آمن)
+                    Dim sqlUpdateCustomer As String = "UPDATE Customers SET CurrentBalance = ISNULL(CurrentBalance, 0) + @Credit, LastTransactionDate = GETDATE(), updated_at = SYSUTCDATETIME() WHERE CustomerID = @CustomerID;"
                     Using cmdCust As New SqlCommand(sqlUpdateCustomer, cn, trans)
-                        cmdCust.Parameters.AddWithValue("@CurrentBalance", newB)
+                        cmdCust.Parameters.AddWithValue("@Credit", pay)
                         cmdCust.Parameters.AddWithValue("@CustomerID", custID)
                         cmdCust.ExecuteNonQuery()
                     End Using

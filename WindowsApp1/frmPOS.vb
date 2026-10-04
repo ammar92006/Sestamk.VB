@@ -1,4 +1,4 @@
-﻿Public Class frmPOS
+Public Class frmPOS
     Private _repo As New POSRepository(DBModule.ConnectionString)
 
     Public Enum OrderType
@@ -1068,8 +1068,16 @@
 
         ' 1.ب الضريبة: تُحسب لكل سطر من نسبة صنفه عند تفعيل إعداد EnableTax
         ' (كانت ثابتة على صفر — حقل الضريبة ظهر دائماً 0.00 رغم تخزين TaxPercent للأصناف)
+        ' v1.4.0: يمكن — عند تفعيل UseGlobalTaxPercent فقط — تطبيق النسبة العامة من الإعدادات
+        ' على الأصناف التي لا تملك نسبة خاصة. معطّل افتراضياً حتى لا تتغيّر أسعار قائمة.
         TaxAmount = 0
         If SettingsManager.GetBoolSetting(SettingsKeys.EnableTax, True) Then
+            Dim useGlobalTax As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.UseGlobalTaxPercent, False)
+            Dim globalTaxPercent As Decimal = 0D
+            If useGlobalTax Then
+                Decimal.TryParse(SettingsManager.GetSettingOrDefault(SettingsKeys.TaxPercent, "0"), globalTaxPercent)
+            End If
+
             For Each row As DataGridViewRow In dgvInvoice.Rows
                 If row.IsNewRow OrElse row.Cells("colTotalPrice").Value Is Nothing Then Continue For
                 Dim rowTotal As Decimal = 0
@@ -1078,8 +1086,11 @@
                 If row.Cells("colTaxPercent").Value IsNot Nothing AndAlso Not IsDBNull(row.Cells("colTaxPercent").Value) Then
                     Decimal.TryParse(row.Cells("colTaxPercent").Value.ToString(), rowTaxPercent)
                 End If
+                ' النسبة العامة تُستخدم فقط كبديل للأصناف التي لا تملك نسبة خاصة
+                If rowTaxPercent <= 0D AndAlso useGlobalTax Then rowTaxPercent = globalTaxPercent
+
                 If rowTotal > 0 AndAlso rowTaxPercent > 0 Then
-                    TaxAmount += Math.Round(rowTotal * rowTaxPercent / 100D, 2)
+                    TaxAmount += Math.Round(rowTotal * rowTaxPercent / 100D, 2, MidpointRounding.AwayFromZero)
                 End If
             Next
         End If
@@ -1134,6 +1145,14 @@
         Next
         Dim addonsText As String = If(addonsList.Count > 0, String.Join(", ", addonsList), "-")
 
+        ' معرّفات الحجم والإضافات — تُحفظ مع الفاتورة لخصم/إرجاع وصفات المخزون بدقة
+        Dim selectedSizeID As Integer = If(item.SelectedSize IsNot Nothing, item.SelectedSize.SizeID, 0)
+        Dim addonIDsList As New List(Of Integer)
+        For Each addon In item.SelectedAddons
+            If addon.AddonID > 0 Then addonIDsList.Add(addon.AddonID)
+        Next
+        Dim addonIDsCsv As String = If(addonIDsList.Count > 0, String.Join(",", addonIDsList), "0")
+
         Dim baseSizePrice As Decimal = If(item.SelectedSize IsNot Nothing, item.SelectedSize.SalePrice, 0)
         Dim addonsTotalPrice As Decimal = 0
         For Each addon In item.SelectedAddons
@@ -1151,12 +1170,43 @@
             item.TotalPrice,
             item.Notes,
             item.Product_ID,
-            item.TaxPercent
+            item.TaxPercent,
+            selectedSizeID,
+            addonIDsCsv
         )
 
         ' تحديث الحسابات الشاملة فور إضافة صنف
         CalculatePOSGrandTotal()
     End Sub
+
+    ''' <summary>
+    ''' قراءة معرّف الحجم المختار من سطر شبكة الفاتورة (لخصم/إرجاع وصفة الحجم).
+    ''' </summary>
+    Private Function ReadRowSizeID(row As DataGridViewRow) As Integer?
+        If row Is Nothing OrElse row.DataGridView Is Nothing Then Return Nothing
+        If Not row.DataGridView.Columns.Contains("colSizeID") Then Return Nothing
+        If row.Cells("colSizeID").Value Is Nothing Then Return Nothing
+        Dim parsed As Integer
+        If Integer.TryParse(row.Cells("colSizeID").Value.ToString(), parsed) AndAlso parsed > 0 Then Return parsed
+        Return Nothing
+    End Function
+
+    ''' <summary>
+    ''' قراءة معرّفات الإضافات المختارة من سطر شبكة الفاتورة (لخصم/إرجاع وصفة كل إضافة).
+    ''' </summary>
+    Private Function ReadRowAddonIDs(row As DataGridViewRow) As List(Of Integer)
+        Dim result As New List(Of Integer)
+        If row Is Nothing OrElse row.DataGridView Is Nothing Then Return result
+        If Not row.DataGridView.Columns.Contains("colAddonIDs") Then Return result
+        If row.Cells("colAddonIDs").Value Is Nothing Then Return result
+        Dim raw As String = row.Cells("colAddonIDs").Value.ToString()
+        If String.IsNullOrWhiteSpace(raw) Then Return result
+        For Each part In raw.Split(","c)
+            Dim parsed As Integer
+            If Integer.TryParse(part.Trim(), parsed) AndAlso parsed > 0 Then result.Add(parsed)
+        Next
+        Return result
+    End Function
 
     ' =========================================================
     ' زر تعليق الفاتورة المحدث مع دعم الـ JSON وقفل الطاولة
@@ -1196,6 +1246,8 @@
                     .ProductName = row.Cells("colProductName").Value.ToString(),
                     .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
                     .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .SizeID = ReadRowSizeID(row),
+                    .AddonIDs = ReadRowAddonIDs(row),
                     .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                     .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                     .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
@@ -1649,6 +1701,8 @@
                             .ProductName = row.Cells("colProductName").Value.ToString(),
                             .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
                             .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .SizeID = ReadRowSizeID(row),
+                    .AddonIDs = ReadRowAddonIDs(row),
                             .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                             .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                             .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
@@ -1879,6 +1933,8 @@
                     .ProductName = If(row.Cells("colProductName").Value IsNot Nothing, row.Cells("colProductName").Value.ToString(), ""),
                     .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
                     .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .SizeID = ReadRowSizeID(row),
+                    .AddonIDs = ReadRowAddonIDs(row),
                     .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                     .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                     .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
@@ -2292,6 +2348,8 @@
                     .ProductName = row.Cells("colProductName").Value.ToString(),
                     .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
                     .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .SizeID = ReadRowSizeID(row),
+                    .AddonIDs = ReadRowAddonIDs(row),
                     .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                     .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                     .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),
@@ -2461,6 +2519,8 @@
                             .ProductName = row.Cells("colProductName").Value.ToString(),
                             .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
                             .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .SizeID = ReadRowSizeID(row),
+                    .AddonIDs = ReadRowAddonIDs(row),
                             .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
                             .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
                             .TotalPrice = Convert.ToDecimal(row.Cells("colTotalPrice").Value),

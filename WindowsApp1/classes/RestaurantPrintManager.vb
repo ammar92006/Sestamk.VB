@@ -1,4 +1,4 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Windows.Forms
@@ -463,7 +463,8 @@ Public Class RestaurantPrintManager
                     End Using
                 Else
                     Dim qrSize As Integer = If(isSmallPaper, 85, 105)
-                    Dim tlvData = QRCodeHelper.BuildZatcaTlvBase64(shopName, shopTax, inv.InvoiceDate, inv.NetTotal, 0)
+                    ' الضريبة الفعلية للفاتورة (كانت تُمرَّر صفراً دائماً فيُشفَّر وعاء ضريبي خاطئ)
+                    Dim tlvData = QRCodeHelper.BuildZatcaTlvBase64(shopName, shopTax, inv.InvoiceDate, inv.NetTotal, inv.TaxAmount)
                     Using qrBmp = QRCodeHelper.GenerateQRCode(tlvData, qrSize, qrSize)
                         If qrBmp IsNot Nothing Then
                             Dim qrX As Integer = (pageWidth - qrSize) \ 2
@@ -710,7 +711,8 @@ Public Class RestaurantPrintManager
                         End If
                     End Using
                 Else
-                    Dim tlvData = QRCodeHelper.BuildZatcaTlvBase64(shopName, shopTax, inv.InvoiceDate, inv.NetTotal, 0)
+                    ' الضريبة الفعلية للفاتورة (كانت تُمرَّر صفراً دائماً فيُشفَّر وعاء ضريبي خاطئ)
+                    Dim tlvData = QRCodeHelper.BuildZatcaTlvBase64(shopName, shopTax, inv.InvoiceDate, inv.NetTotal, inv.TaxAmount)
                     Using qrBmp = QRCodeHelper.GenerateQRCode(tlvData, 105, 105)
                         If qrBmp IsNot Nothing Then
                             yPos += 8

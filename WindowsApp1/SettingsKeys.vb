@@ -75,6 +75,11 @@ Public Module SettingsKeys
     Public Const SalesDeductIngredients As String = "Sales_DeductIngredients"
     Public Const EnableTax As String = "EnableTax"
     Public Const TaxPercent As String = "TaxPercent"
+    ''' <summary>
+    ''' عند تفعيله تُطبَّق النسبة العامة (TaxPercent) على الأصناف التي لا تملك نسبة ضريبة خاصة.
+    ''' معطّل افتراضياً حتى لا تتغيّر أسعار أي منشأة قائمة دون قرار صريح منها.
+    ''' </summary>
+    Public Const UseGlobalTaxPercent As String = "UseGlobalTaxPercent"
     Public Const EnableDiscount As String = "EnableDiscount"
     Public Const DefaultDiscountPercent As String = "DefaultDiscountPercent"
     Public Const PaymentCash As String = "Payment_Cash"

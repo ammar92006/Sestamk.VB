@@ -1271,6 +1271,9 @@ BEGIN
         [Notes] NVARCHAR(250) NULL,
         [CostPrice] DECIMAL(18, 2) NOT NULL DEFAULT 0,
         [Discount] DECIMAL(18, 2) NOT NULL DEFAULT 0,
+        -- v1.4.0: معرّفات الحجم والإضافات لخصم/إرجاع وصفات المخزون بدقة
+        [SizeID] INT NULL,
+        [AddonIDs] NVARCHAR(200) NULL,
         CONSTRAINT [PK_SalesInvoiceDetails] PRIMARY KEY ([DetailID])
     );
 END
@@ -1309,6 +1312,8 @@ BEGIN
         [Discount] DECIMAL(18, 2) NOT NULL DEFAULT 0,
         [Tax] DECIMAL(18, 2) NOT NULL DEFAULT 0,
         [PaymentType] NVARCHAR(50) NOT NULL DEFAULT N'نقدي',
+        -- v1.4.0: ربط فاتورة المرتجع بالفاتورة الأصلية لمنع الإرجاع المتكرر لنفس الفاتورة
+        [OriginalInvoiceID] INT NULL,
         CONSTRAINT [PK_SalesInvoices] PRIMARY KEY ([InvoiceID])
     );
 END
@@ -1803,18 +1808,22 @@ END
 GO
 
 -- 2. Default Admin in Users_TBL
+-- أمان: لا تُزرع أي كلمة مرور افتراضية معروفة. الصف يُنشأ بكلمة مرور فارغة
+-- (غير قابلة لتسجيل الدخول: شاشة الدخول ترفض كلمة المرور الفارغة)، وعلى المدير
+-- ضبط كلمة مرور حقيقية من شاشة المستخدمين، أو استخدام حساب المدير الذي يُنشئه معالج أول تشغيل.
 IF OBJECT_ID('[dbo].[Users_TBL]', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Users_TBL])
 BEGIN
     INSERT INTO [dbo].[Users_TBL] (User_Code, User_Name, User_username, User_password, RoleID, IsActive, IsDeleted, CreatedAt)
-    VALUES (N'ADM-001', N'المدير العام', N'admin', N'123', 1, 1, 0, GETDATE());
+    VALUES (N'ADM-001', N'المدير العام', N'admin', N'', 1, 1, 0, GETDATE());
 END
 GO
 
 -- 3. Default Legacy User in Users (Compatibility)
+-- أمان: نفس القاعدة — لا كلمة مرور افتراضية معروفة.
 IF OBJECT_ID('[dbo].[Users]', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM [dbo].[Users])
 BEGIN
     INSERT INTO [dbo].[Users] (Username, Password, FullName, RoleID, UserRole, IsActive, IsDeleted, CreatedAt)
-    VALUES (N'admin', N'123', N'المدير العام', 1, N'Admin', 1, 0, GETDATE());
+    VALUES (N'admin', N'', N'المدير العام', 1, N'Admin', 1, 0, GETDATE());
 END
 GO
 

@@ -295,6 +295,10 @@ Namespace Services
                 progress?.Report(New MaintenanceProgress(96, "فحص أرصدة الخزائن", "مطابقة أرصدة الخزائن مع حركاتها..."))
                 Await RepairTreasuryBalancesAsync(report).ConfigureAwait(False)
 
+                ' الخطوة 7: تشخيص انحراف أرصدة العملاء عن دفتر حركاتهم (تقرير فقط)
+                progress?.Report(New MaintenanceProgress(98, "فحص أرصدة العملاء", "مطابقة أرصدة العملاء مع كشف حركاتهم..."))
+                Await DiagnoseCustomerBalancesAsync(report).ConfigureAwait(False)
+
                 progress?.Report(New MaintenanceProgress(100, "اكتمل الفحص", "تم اكتمال فحص وترقيع قاعدة البيانات بنجاح."))
                 report.Log($"🎉 انتهت عملية الصيانة بنجاح. الجداول المنشأة: {report.TablesCreated.Count}، الأعمدة المضافة: {report.ColumnsAdded.Count}.")
 
@@ -486,6 +490,53 @@ Namespace Services
         End Function
 
         ''' <summary>
+        ''' تشخيص انحراف أرصدة العملاء عن دفتر حركاتهم (CustomerTransactions).
+        ''' المعادلة المرجعية: الرصيد = Σ(Credit − Debit). يُبلّغ فقط ولا يعدّل تلقائياً،
+        ''' لأن جدول العملاء لا يحمل رصيداً افتتاحياً صريحاً (بخلاف الخزائن)، فأي تصحيح
+        ''' آلي قد يمحو أرصدة قديمة مشروعة. التصحيح يتم بمراجعة بشرية عبر حركة تسوية.
+        ''' </summary>
+        Private Async Function DiagnoseCustomerBalancesAsync(report As MaintenanceReport) As Task
+            Try
+                Dim diagSql As String = "
+                IF OBJECT_ID('Customers', 'U') IS NOT NULL AND OBJECT_ID('CustomerTransactions', 'U') IS NOT NULL
+                BEGIN
+                    SELECT c.CustomerID, c.CustomerName, ISNULL(c.CurrentBalance, 0) AS StoredBalance,
+                           ISNULL(x.LedgerBalance, 0) AS LedgerBalance
+                    FROM Customers c
+                    OUTER APPLY (SELECT SUM(ISNULL(TT.Credit, 0) - ISNULL(TT.Debit, 0)) AS LedgerBalance
+                                 FROM CustomerTransactions TT WHERE TT.CustomerID = c.CustomerID) x
+                    WHERE ISNULL(c.IsDeleted, 0) = 0
+                      AND ABS(ISNULL(c.CurrentBalance, 0) - ISNULL(x.LedgerBalance, 0)) > 0.01;
+                END"
+
+                Dim diverging As New List(Of String)
+                Using conn As New SqlConnection(_connectionString)
+                    Await conn.OpenAsync().ConfigureAwait(False)
+                    Using cmd As New SqlCommand(diagSql, conn)
+                        Using rdr = Await cmd.ExecuteReaderAsync().ConfigureAwait(False)
+                            While Await rdr.ReadAsync().ConfigureAwait(False)
+                                If diverging.Count < 10 Then
+                                    diverging.Add($"{rdr("CustomerName")} (مخزّن: {Convert.ToDecimal(rdr("StoredBalance")):N2} / دفتر: {Convert.ToDecimal(rdr("LedgerBalance")):N2})")
+                                End If
+                            End While
+                        End Using
+                    End Using
+                End Using
+
+                If diverging.Count = 0 Then
+                    report.Log("✅ أرصدة العملاء مطابقة لدفاتر حركاتهم.")
+                Else
+                    report.Log($"⚠️ يوجد {diverging.Count}+ عميل رصيده لا يطابق مجموع حركاته — يُراجع يدوياً ويُسوّى بحركة تسوية موثّقة (لا تصحيح آلي):")
+                    For Each line In diverging
+                        report.Log("   • " & line)
+                    Next
+                End If
+            Catch ex As Exception
+                report.Log($"تنبيه أثناء تشخيص أرصدة العملاء: {ex.Message}")
+            End Try
+        End Function
+
+        ''' <summary>
         ''' مزامنة الحقول التوافقية وزرع البيانات الأولية وحساب المدير الافتراضي
         ''' </summary>
         Private Async Function SyncAndSeedEssentialDataAsync(report As MaintenanceReport, progress As IProgress(Of MaintenanceProgress)) As Task
@@ -509,7 +560,10 @@ Namespace Services
                     report.Log($"تنبيه أثناء تهيئة الأدوار: {ex.Message}")
                 End Try
 
-                ' 2. زرع المستخدم الافتراضي في Users_TBL إن كان فارغاً (كلمة المرور تُخزن كتجزئة PBKDF2 وليس نصاً صريحاً)
+                ' 2. زرع المستخدم الافتراضي في Users_TBL إن كان فارغاً
+                ' أمان: لا توجد كلمة مرور افتراضية معروفة (كانت "123" سابقاً).
+                ' تُزرع تجزئة عشوائية غير قابلة للاستخدام، فيتعذّر الدخول بهذا الحساب
+                ' حتى يضبط المدير كلمة مرور حقيقية من شاشة المستخدمين.
                 Try
                     Dim seedUserTblSql As String = "
                     IF OBJECT_ID('Users_TBL', 'U') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM Users_TBL)
@@ -518,8 +572,9 @@ Namespace Services
                         VALUES ('1', N'المدير العام', 'admin', @SeedPasswordHash, 1, 1, 0);
                     END"
                     Using cmd As New SqlCommand(seedUserTblSql, conn)
-                        ' كلمة المرور الافتراضية "123" — تُخزن مجزأة PBKDF2
-                        cmd.Parameters.AddWithValue("@SeedPasswordHash", PasswordHasher.Hash("123"))
+                        ' كلمة مرور عشوائية غير معروفة لأي طرف — الحساب غير قابل للدخول حتى تُضبط كلمة مرور حقيقية
+                        Dim unusableSecret As String = Guid.NewGuid().ToString("N") & Guid.NewGuid().ToString("N") & Guid.NewGuid().ToString("N")
+                        cmd.Parameters.AddWithValue("@SeedPasswordHash", PasswordHasher.Hash(unusableSecret))
                         Await cmd.ExecuteNonQueryAsync().ConfigureAwait(False)
                     End Using
                 Catch ex As Exception

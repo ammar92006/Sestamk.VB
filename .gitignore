@@ -43,3 +43,29 @@ WindowsApp1/CSharp_MainForm/
 *.pfx
 *.pfx.password
 
+# Editor/AI leftovers and manual backups (suffixes that *.bak does not cover)
+*.pre_*_bak
+*.pre_*
+*_bak
+*.orig
+*.rej
+
+# SECURITY / PRIVACY: database dumps. Never commit a database export — it contains
+# real customer, employee, invoice and treasury data. Schema-only scripts live in
+# WindowsApp1/Resources/DatabaseSchema.sql and are the only DB scripts that may ship.
+*.sql.bak
+SestamkDB_*.sql
+*_Full.sql
+data_export*.sql
+
+# Secrets and local environment
+db_config.ini
+*.secrets.json
+appsettings.local.json
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.snk
+

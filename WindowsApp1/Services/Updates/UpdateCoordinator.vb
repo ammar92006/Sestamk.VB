@@ -1,4 +1,4 @@
-﻿Imports Newtonsoft.Json.Linq
+Imports Newtonsoft.Json.Linq
 Imports System.Diagnostics
 Imports System.IO
 Imports System.Net.Http
@@ -147,20 +147,22 @@ Public NotInheritable Class UpdateCoordinator
                 Return "أداة تطبيق التحديث (update.exe) غير موجودة ضمن ملفات البرنامج."
             End If
 
-            ' تشغيل الأداة عبر مشغل خارجي في ProgramData لتجنب قفل أي ملف داخل مجلد البرنامج
-            Dim launchTarget As String = updater
-            Dim launchArgs As String = "--pending " & ChrW(34) & pendingPath & ChrW(34)
-            Try
-                Dim runnerDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "updates", "runner")
-                Directory.CreateDirectory(runnerDir)
-                Dim externalRunner = Path.Combine(runnerDir, "update_runner.exe")
-                File.Copy(updater, externalRunner, True)
-                launchTarget = externalRunner
-                launchArgs = "--shadow-runner --pending " & ChrW(34) & pendingPath & ChrW(34)
-            Catch __logEx As Exception
-                ' في حال تعذر النسخ يتم التشغيل المباشر من مسار الأداة الأصلي
-                Logger.LogError("UpdateCoordinator.vb:160", __logEx)
-            End Try
+            ' ══════════════════════════════════════════════════════════════════════════
+            ' أمان: لا تُنسخ أداة التحديث إلى أي مجلد قابل للكتابة من المستخدمين ثم تُشغَّل
+            ' بصلاحيات مسؤول (كان ذلك يتيح لأي مستخدم محلي استبدالها قبل تنفيذها مرفوعة).
+            ' الأولوية لمشغّل محمي يُثبّته المثبّت في %ProgramData%\Sestamk\runner
+            ' (صلاحية الكتابة عليه للمسؤولين فقط)، وإلا تُشغَّل الأداة من مجلد التثبيت
+            ' المحمي نفسه — وكلاهما غير قابل للكتابة من المستخدم العادي.
+            ' ══════════════════════════════════════════════════════════════════════════
+            Dim protectedRunner As String = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "Sestamk", "runner", "update_runner.exe")
+
+            Dim launchTarget As String = If(File.Exists(protectedRunner), protectedRunner, updater)
+
+            ' مجلد الهدف الصريح = مجلد التثبيت (يُتحقق منه داخل الأداة نفسها بوجود Sestamk.exe)
+            Dim launchArgs As String = "--pending " & ChrW(34) & pendingPath & ChrW(34) &
+                                       " --target " & ChrW(34) & Application.StartupPath & ChrW(34)
 
             Dim psi As New ProcessStartInfo(launchTarget, launchArgs) With {
                 .UseShellExecute = True,

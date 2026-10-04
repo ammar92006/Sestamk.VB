@@ -57,13 +57,25 @@ Name: "{app}\photos_user"; Permissions: users-modify
 Name: "{app}\photos_purchases"; Permissions: users-modify
 Name: "{app}\Barcodes"; Permissions: users-modify
 Name: "{app}\tools"
-Name: "{commonappdata}\Sestamk"; Permissions: users-modify
+; أمان: مجلدات البيانات فقط قابلة للتعديل من المستخدمين.
+; {commonappdata}\Sestamk الجذري ومجلد runner يُتركان محميين (صلاحية المسؤولين فقط)
+; لأن runner يحمل الأداة التي تُنفَّذ بصلاحيات مسؤول عند التحديث.
+Name: "{commonappdata}\Sestamk"
+Name: "{commonappdata}\Sestamk\updates"; Permissions: users-modify
+Name: "{commonappdata}\Sestamk\runner"
 Name: "{commonappdata}\Sestamk\logs"; Permissions: users-modify
 Name: "{commonappdata}\Sestamk\Backups"; Permissions: users-modify
 
+[InstallDelete]
+; أمان: إزالة المشغّل القديم الذي كان يوضع في مجلد قابل للكتابة من أي مستخدم محلي
+; ويُشغَّل بصلاحيات مسؤول (ثغرة تصعيد صلاحيات) — استُبدل بمشغّل في مجلد محمي.
+Type: filesandordirs; Name: "{commonappdata}\Sestamk\updates\runner"
+
 [Files]
 ; 1. الملفات الأساسية للبرنامج (exe + جميع المكتبات المشغلة) — بدون صلاحيات تعديل (أمان: منع استبدال الملفات التنفيذية)
-Source: "{#SourceBin}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pdb,*.xml,*.vshost.*,*.manifest,*.application,Backups\*,logs\*,app.publish\*"
+; أمان: تُستثنى إعدادات قاعدة البيانات المحلية (تحتوي مسار وكلمة مرور جهاز المطوّر) وملف manifest.json
+; (وصف إصدار قديم لا يجب أن يُشحن داخل مجلد البرنامج) وملفات النسخ الاحتياطية.
+Source: "{#SourceBin}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs; Excludes: "*.pdb,*.xml,*.vshost.*,*.manifest,*.application,Backups\*,logs\*,app.publish\*,db_config.ini,manifest.json,*.bak,*.old_*"
 
 ; 1.1 أداة التحديث المباشر التلقائي (update.exe و Sestamk.VB.Updater.exe) في مجلد البرنامج الرئيسي ومجلد tools
 Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: "update.exe"; Flags: ignoreversion
@@ -71,15 +83,21 @@ Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}"; DestName: 
 Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "update.exe"; Flags: ignoreversion
 Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{app}\tools"; DestName: "Sestamk.VB.Updater.exe"; Flags: ignoreversion
 
+; 1.2 مشغّل التحديث المحمي (أمان): يُثبَّت في مجلد لا يملك المستخدمون صلاحية الكتابة عليه،
+; ثم يُشغَّل من هناك بصلاحيات مسؤول. البديل القديم كان نسخ الأداة إلى مجلد قابل للكتابة
+; من أي مستخدم ثم تنفيذها مرفوعة — وهو ما أُغلق.
+Source: "WindowsApp1\tools\Sestamk.VB.Updater.exe"; DestDir: "{commonappdata}\Sestamk\runner"; DestName: "update_runner.exe"; Flags: ignoreversion skipifsourcedoesntexist
+
 ; 2. حزمة محرك LocalDB للتثبيت المؤقت
 Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{tmp}"; Flags: deleteafterinstall skipifsourcedoesntexist
 
 ; 3. حزمة محرك LocalDB داخل مجلد البرنامج كاحتياط دائم للنظام
 Source: "WindowsApp1\redist\SqlLocalDB.msi"; DestDir: "{app}\redist"; Flags: ignoreversion skipifsourcedoesntexist
 
-; 4. سكريبتات هيكل وقاعدة البيانات الأولية
+; 4. سكريبت هيكل قاعدة البيانات الأولية (هيكل + بيانات أساسية فقط)
+; أمان/خصوصية: لا يُشحن أبداً أي ملف يحتوي بيانات إنتاج حقيقية (عملاء/فواتير/موظفين).
+; سابقاً كان يُشحن SestamkDB_SQL2014_Full.sql الذي يحوي نسخة كاملة من قاعدة بيانات المطوّر.
 Source: "WindowsApp1\Resources\DatabaseSchema.sql"; DestDir: "{app}\db"; Flags: ignoreversion
-Source: "SestamkDB_SQL2014_Full.sql"; DestDir: "{app}\db"; Flags: ignoreversion skipifsourcedoesntexist
 
 ; 5. حزمة .NET Framework 4.8 إن توفرت في مجلد redist
 Source: "Installer\redist\ndp48-x86-x64-allos-enu.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall skipifsourcedoesntexist

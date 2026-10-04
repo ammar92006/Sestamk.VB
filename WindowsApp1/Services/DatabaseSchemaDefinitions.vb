@@ -960,6 +960,10 @@ Namespace Services
                 t.AddColumn("Notes", "NVARCHAR(250)", True, Nothing, False, False)
                 t.AddColumn("CostPrice", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("Discount", "DECIMAL(18, 2)", False, "0", False, False)
+                ' v1.4.0: تُحفظ معرّفات الحجم والإضافات لتُخصم وتُرجَع وصفات المخزون بدقة
+                ' (كانت تُهمل فتُخصم الوصفة الأساسية فقط، ويستحيل إرجاع وصفة الحجم/الإضافة)
+                t.AddColumn("SizeID", "INT", True, Nothing, False, False)
+                t.AddColumn("AddonIDs", "NVARCHAR(200)", True, Nothing, False, False)
                 list.Add(t)
 
                 ' 55. SalesInvoices (فواتير المبيعات الحديثة)
@@ -992,6 +996,9 @@ Namespace Services
                 t.AddColumn("Discount", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("Tax", "DECIMAL(18, 2)", False, "0", False, False)
                 t.AddColumn("PaymentType", "NVARCHAR(50)", False, "N'نقدي'", False, False)
+                ' v1.4.0: ربط فاتورة المرتجع بالفاتورة الأصلية — يمنع إرجاع نفس الفاتورة أكثر من مرة
+                ' (سابقاً كان الربط الوحيد هو نص في Notes، فكان الاسترداد المتكرر ممكناً)
+                t.AddColumn("OriginalInvoiceID", "INT", True, Nothing, False, False)
                 list.Add(t)
 
                 ' 56. Settings (إعدادات النظام العامة)

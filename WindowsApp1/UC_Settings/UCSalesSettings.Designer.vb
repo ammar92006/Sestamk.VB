@@ -37,6 +37,8 @@ Namespace UC_Settings
             Me.tglEnableTax = New Guna.UI2.WinForms.Guna2ToggleSwitch()
             Me.lblTaxPercent = New System.Windows.Forms.Label()
             Me.txtTaxPercent = New Guna.UI2.WinForms.Guna2TextBox()
+            Me.lblUseGlobalTax = New System.Windows.Forms.Label()
+            Me.tglUseGlobalTax = New Guna.UI2.WinForms.Guna2ToggleSwitch()
             Me.lblEnableDiscount = New System.Windows.Forms.Label()
             Me.tglEnableDiscount = New Guna.UI2.WinForms.Guna2ToggleSwitch()
             Me.lblDiscountPercent = New System.Windows.Forms.Label()
@@ -278,6 +280,8 @@ Namespace UC_Settings
             Me.cardTaxDiscount.Controls.Add(Me.tglEnableTax)
             Me.cardTaxDiscount.Controls.Add(Me.lblTaxPercent)
             Me.cardTaxDiscount.Controls.Add(Me.txtTaxPercent)
+            Me.cardTaxDiscount.Controls.Add(Me.lblUseGlobalTax)
+            Me.cardTaxDiscount.Controls.Add(Me.tglUseGlobalTax)
             Me.cardTaxDiscount.Controls.Add(Me.lblEnableDiscount)
             Me.cardTaxDiscount.Controls.Add(Me.tglEnableDiscount)
             Me.cardTaxDiscount.Controls.Add(Me.lblDiscountPercent)
@@ -358,6 +362,33 @@ Namespace UC_Settings
             Me.txtTaxPercent.TabIndex = 4
             Me.txtTaxPercent.Text = "14"
             Me.txtTaxPercent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+            '
+            'lblUseGlobalTax
+            '
+            Me.lblUseGlobalTax.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.lblUseGlobalTax.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+            Me.lblUseGlobalTax.ForeColor = System.Drawing.Color.FromArgb(CType(CType(209, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(219, Byte), Integer))
+            Me.lblUseGlobalTax.Location = New System.Drawing.Point(250, 60)
+            Me.lblUseGlobalTax.Name = "lblUseGlobalTax"
+            Me.lblUseGlobalTax.Size = New System.Drawing.Size(250, 30)
+            Me.lblUseGlobalTax.TabIndex = 5
+            Me.lblUseGlobalTax.Text = "تطبيق النسبة العامة على الأصناف بلا نسبة:"
+            Me.lblUseGlobalTax.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+            '
+            'tglUseGlobalTax
+            '
+            Me.tglUseGlobalTax.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Me.tglUseGlobalTax.Checked = False
+            Me.tglUseGlobalTax.CheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglUseGlobalTax.CheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(252, Byte), Integer))
+            Me.tglUseGlobalTax.CheckedState.InnerBorderColor = System.Drawing.Color.White
+            Me.tglUseGlobalTax.CheckedState.InnerColor = System.Drawing.Color.White
+            Me.tglUseGlobalTax.Location = New System.Drawing.Point(180, 62)
+            Me.tglUseGlobalTax.Name = "tglUseGlobalTax"
+            Me.tglUseGlobalTax.Size = New System.Drawing.Size(65, 26)
+            Me.tglUseGlobalTax.TabIndex = 6
+            Me.tglUseGlobalTax.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(75, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(99, Byte), Integer))
+            Me.tglUseGlobalTax.UncheckedState.FillColor = System.Drawing.Color.FromArgb(CType(CType(55, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(81, Byte), Integer))
             '
             'lblEnableDiscount
             '
@@ -888,6 +919,8 @@ Namespace UC_Settings
         Friend WithEvents tglEnableTax As Guna.UI2.WinForms.Guna2ToggleSwitch
         Friend WithEvents lblTaxPercent As System.Windows.Forms.Label
         Friend WithEvents txtTaxPercent As Guna.UI2.WinForms.Guna2TextBox
+        Friend WithEvents lblUseGlobalTax As System.Windows.Forms.Label
+        Friend WithEvents tglUseGlobalTax As Guna.UI2.WinForms.Guna2ToggleSwitch
         Friend WithEvents lblEnableDiscount As System.Windows.Forms.Label
         Friend WithEvents tglEnableDiscount As Guna.UI2.WinForms.Guna2ToggleSwitch
         Friend WithEvents lblDiscountPercent As System.Windows.Forms.Label

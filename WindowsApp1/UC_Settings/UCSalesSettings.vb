@@ -113,6 +113,7 @@ Namespace UC_Settings
                 ' الضرائب والخصومات
                 tglEnableTax.Checked = SettingsManager.GetBoolSetting(SettingsKeys.EnableTax, True)
                 txtTaxPercent.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.TaxPercent, "14")
+                tglUseGlobalTax.Checked = SettingsManager.GetBoolSetting(SettingsKeys.UseGlobalTaxPercent, False)
 
                 tglEnableDiscount.Checked = SettingsManager.GetBoolSetting(SettingsKeys.EnableDiscount, True)
                 txtDiscountPercent.Text = SettingsManager.GetSettingOrDefault(SettingsKeys.DefaultDiscountPercent, "0")
@@ -181,6 +182,7 @@ Namespace UC_Settings
                 ' حفظ الضرائب والخصم
                 SettingsManager.SaveSetting(SettingsKeys.EnableTax, tglEnableTax.Checked.ToString().ToLower())
                 SettingsManager.SaveSetting(SettingsKeys.TaxPercent, txtTaxPercent.Text.Trim())
+                SettingsManager.SaveSetting(SettingsKeys.UseGlobalTaxPercent, tglUseGlobalTax.Checked.ToString().ToLower())
 
                 SettingsManager.SaveSetting(SettingsKeys.EnableDiscount, tglEnableDiscount.Checked.ToString().ToLower())
                 SettingsManager.SaveSetting(SettingsKeys.DefaultDiscountPercent, txtDiscountPercent.Text.Trim())
@@ -234,6 +236,7 @@ Namespace UC_Settings
                 tglDelivery.Checked = True
                 tglEnableTax.Checked = True
                 txtTaxPercent.Text = "14"
+                tglUseGlobalTax.Checked = False
                 tglEnableDiscount.Checked = True
                 txtDiscountPercent.Text = "0"
                 txtDineInServiceFee.Text = "0"

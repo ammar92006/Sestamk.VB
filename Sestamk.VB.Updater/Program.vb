@@ -5,7 +5,9 @@ Imports System.Drawing
 Imports System.Drawing.Drawing2D
 Imports System.IO
 Imports System.IO.Compression
+Imports System.Net.Http
 Imports System.Runtime.InteropServices
+Imports System.Security.Cryptography
 Imports System.Text.RegularExpressions
 Imports System.Threading
 Imports System.Threading.Tasks
@@ -49,40 +51,44 @@ Module Program
         Dim mainExe = ExtractJsonField(jsonContent, "main_exe")
         Dim newVersion = ExtractJsonField(jsonContent, "version")
 
-        If String.IsNullOrWhiteSpace(targetPath) OrElse Not Directory.Exists(targetPath) Then
-            targetPath = AppDomain.CurrentDomain.BaseDirectory
-        End If
-
-        ' ─── 1. ميزة Shadow Execution (منع قفل ملف update.exe ذاتياً) ───
-        ' إذا كانت الأداة تعمل من داخل مجلد البرنامج، نقوم بنسخها إلى مجلد خارجي وتشغيلها منه
-        ' لتتحرر أداة update.exe الأصلية تماماً وتتمكن الحزمة من استبدالها دون أي خطأ قفل
-        Dim currentExe = Process.GetCurrentProcess().MainModule.FileName
-        Dim isInsideTarget = currentExe.StartsWith(targetPath.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase)
-
-        If Not isShadowRunner AndAlso isInsideTarget Then
+        ' ══════════════════════════════════════════════════════════════════════════════
+        ' أمان (إغلاق ثغرة تصعيد الصلاحيات): هذه الأداة تُشغَّل بصلاحيات مسؤول وتكتب داخل
+        ' مجلد التثبيت، بينما ملف pending-update.json يقع في مجلد يمكن لأي مستخدم محلي
+        ' كتابته. لذلك:
+        '   • مجلد الهدف يُشتق من موضع الأداة نفسها (مجلد تثبيت محمي)، أو يُمرَّر صراحةً
+        '     ويُقبل فقط إذا كان مجلد تثبيت حقيقي يحتوي Sestamk.exe — فيتعذّر توجيه
+        '     الكتابة إلى أي مجلد آخر على النظام.
+        '   • البرنامج الأساسي المستهدف يُشتق من مجلد الهدف نفسه، فلا يمكن استخدام
+        '     الأداة لإنهاء عملية أخرى (كان target_path/main_exe من الملف يسمحان بذلك).
+        '   • لا تُنسخ الأداة ولا تُنفَّذ من أي مجلد قابل للكتابة من المستخدمين؛
+        '     استُبدلت النسخة الظلية في ProgramData بمشغّل محمي يُثبّته المثبّت.
+        ' ══════════════════════════════════════════════════════════════════════════════
+        Dim explicitTarget As String = ReadArg(args, "--target")
+        If Not String.IsNullOrWhiteSpace(explicitTarget) Then
+            Dim candidate As String = String.Empty
             Try
-                Dim runnerDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "updates", "runner")
-                Directory.CreateDirectory(runnerDir)
-                Dim runnerExe = Path.Combine(runnerDir, "update_runner.exe")
-                File.Copy(currentExe, runnerExe, True)
-
-                Dim psi As New ProcessStartInfo(runnerExe)
-                psi.Arguments = "--shadow-runner --pending """ & pendingPath & """"
-                psi.UseShellExecute = True
-                psi.Verb = "runas"
-                Try
-                    Process.Start(psi)
-                Catch
-                    psi.Verb = ""
-                    Process.Start(psi)
-                End Try
-                Return ' إنهاء العملية الحالية فوراً لتحرير ملف update.exe في مجلد البرنامج
-            Catch ex As Exception
-                ' في حال تعذر تشغيل النسخة الخارجية يستمر العمل بالنسخة الحالية مع استخدام تقنية Rename Trick
+                candidate = Path.GetFullPath(explicitTarget).TrimEnd(Path.DirectorySeparatorChar)
+            Catch
+                candidate = String.Empty
             End Try
+            If String.IsNullOrWhiteSpace(candidate) OrElse Not File.Exists(Path.Combine(candidate, "Sestamk.exe")) Then
+                MessageBox.Show("مجلد التثبيت المستهدف غير صالح أو غير موثوق — تم إلغاء التحديث.",
+                                "تحديث مرفوض", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return
+            End If
+            targetPath = candidate
+        Else
+            targetPath = ResolveInstallTarget(AppDomain.CurrentDomain.BaseDirectory)
         End If
 
-        ' ─── 2. تشغيل واجهة التحديث العصرية ───
+        ' البرنامج الأساسي يُشتق دائماً من مجلد الهدف الموثوق — لا يُقرأ من الملف
+        mainExe = Path.Combine(targetPath, "Sestamk.exe")
+
+        ' ─── تشغيل واجهة التحديث العصرية ───
+        ' ملاحظة أمنية: أُزيلت آلية "النسخة الظلية" القديمة التي كانت تنسخ الأداة إلى
+        ' %ProgramData%\Sestamk\updates\runner (مجلد قابل للكتابة من أي مستخدم) ثم تُشغّلها
+        ' بصلاحيات مسؤول — وهو ما كان يتيح لأي مستخدم محلي استبدال الملف التنفيذي قبل
+        ' تنفيذه مرفوعاً. استبدال الملفات المقفولة يتولاه "Rename Trick" داخل الواجهة.
         Dim updaterForm As New FrmModernUpdater(pendingPath, packagePath, targetPath, mainExe, newVersion)
         Application.Run(updaterForm)
     End Sub
@@ -94,6 +100,80 @@ Module Program
             Return match.Groups(1).Value.Replace("\\", "\")
         End If
         Return String.Empty
+    End Function
+
+    ''' <summary>قراءة قيمة معامل سطر أوامر بالشكل --name "value".</summary>
+    Public Function ReadArg(args As String(), name As String) As String
+        If args Is Nothing Then Return String.Empty
+        For i As Integer = 0 To args.Length - 2
+            If args(i).Equals(name, StringComparison.OrdinalIgnoreCase) Then
+                Return args(i + 1).Trim(""""c)
+            End If
+        Next
+        Return String.Empty
+    End Function
+
+    ''' <summary>
+    ''' تحديد مجلد التثبيت انطلاقاً من موضع الأداة نفسها — وليس من ملف JSON قابل للكتابة
+    ''' من أي مستخدم محلي. يفحص المجلد ثم المجلد الأعلى بحثاً عن Sestamk.exe
+    ''' (لأن الأداة تُوضع أحياناً في مجلد فرعي مثل tools).
+    ''' </summary>
+    Public Function ResolveInstallTarget(startDir As String) As String
+        Dim dir As String = Path.GetFullPath(startDir).TrimEnd(Path.DirectorySeparatorChar)
+        Try
+            If File.Exists(Path.Combine(dir, "Sestamk.exe")) Then Return dir
+            Dim parent = Directory.GetParent(dir)
+            If parent IsNot Nothing AndAlso File.Exists(Path.Combine(parent.FullName, "Sestamk.exe")) Then
+                Return parent.FullName.TrimEnd(Path.DirectorySeparatorChar)
+            End If
+        Catch
+        End Try
+        Return dir
+    End Function
+
+    ''' <summary>
+    ''' مصدر الحقيقة الموثوق لوصف الإصدار (HTTPS ثابت) — لا يُقرأ من أي ملف محلي.
+    ''' </summary>
+    Public Const TrustedManifestUrl As String = "https://github.com/ammar92006/Sestamk.VB/releases/latest/download/manifest.json"
+
+    ''' <summary>
+    ''' التحقق الإلزامي من بصمة حزمة التحديث مقابل مانيفست الإصدار الرسمي على HTTPS.
+    ''' السبب: العملية تعمل بصلاحيات مسؤول وتكتب داخل مجلد التثبيت، وملف
+    ''' pending-update.json قابل للكتابة من أي مستخدم محلي — فلا يجوز الاعتماد على أي
+    ''' بصمة قادمة منه. تُرجع نصاً فارغاً عند النجاح، أو سبب الرفض.
+    ''' </summary>
+    Public Function VerifyPackageFromTrustedSource(packagePath As String) As String
+        Try
+            If String.IsNullOrWhiteSpace(packagePath) OrElse Not File.Exists(packagePath) Then
+                Return "حزمة التحديث غير موجودة."
+            End If
+
+            Dim manifestJson As String
+            Using client As New HttpClient()
+                client.Timeout = TimeSpan.FromSeconds(30)
+                manifestJson = client.GetStringAsync(TrustedManifestUrl).GetAwaiter().GetResult()
+            End Using
+
+            Dim expected As String = ExtractJsonField(manifestJson, "sha256")
+            If String.IsNullOrWhiteSpace(expected) OrElse expected.Trim().Length <> 64 Then
+                Return "تعذّر قراءة البصمة الرسمية (SHA-256) من مانيفست الإصدار المنشور — تم رفض التحديث."
+            End If
+
+            Dim actual As String
+            Using sha As SHA256 = SHA256.Create()
+                Using fs As New FileStream(packagePath, FileMode.Open, FileAccess.Read, FileShare.Read)
+                    actual = BitConverter.ToString(sha.ComputeHash(fs)).Replace("-", String.Empty)
+                End Using
+            End Using
+
+            If Not String.Equals(actual, expected.Trim(), StringComparison.OrdinalIgnoreCase) Then
+                Return "بصمة حزمة التحديث لا تطابق البصمة الرسمية المنشورة — تم رفض التحديث لأسباب أمنية."
+            End If
+
+            Return String.Empty
+        Catch ex As Exception
+            Return "تعذّر التحقق من سلامة حزمة التحديث من المصدر الرسمي (" & ex.Message & ") — تم رفض التحديث."
+        End Try
     End Function
 
 End Module
@@ -264,6 +344,25 @@ Public Class FrmModernUpdater
 
     Private Async Sub StartUpdateAsync(sender As Object, e As EventArgs)
         Try
+            ' 0) أمان: التحقق الإلزامي من بصمة الحزمة مقابل المانيفست الرسمي على HTTPS
+            '    قبل إغلاق البرنامج أو كتابة أي ملف — إغلاق صامت لأي حزمة غير موثوقة.
+            lblStatus.Text = "جاري التحقق من سلامة حزمة التحديث..."
+            lblDetail.Text = "مطابقة البصمة الرقمية (SHA-256) مع المصدر الرسمي..."
+            pgbBar.Value = 3
+            lblPercentage.Text = "3%"
+
+            Dim rejection As String = Await Task.Run(Function() VerifyPackageFromTrustedSource(_packagePath))
+            If Not String.IsNullOrEmpty(rejection) Then
+                pgbBar.Value = 0
+                lblPercentage.Text = "0%"
+                lblStatus.Text = "⛔ تم رفض التحديث لأسباب أمنية"
+                lblDetail.Text = rejection
+                MessageBox.Show(rejection & vbCrLf & vbCrLf & "لم يتم تعديل أي ملف في البرنامج.",
+                                "تحديث مرفوض", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Application.Exit()
+                Return
+            End If
+
             ' 1) إغلاق البرنامج الأساسي وفك القفل عن الملفات
             lblStatus.Text = "جاري إغلاق نظام سستمك وفك قفل الملفات..."
             lblDetail.Text = "انتظار تحرير العمليات في الذاكرة..."

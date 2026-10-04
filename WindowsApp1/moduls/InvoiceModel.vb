@@ -44,6 +44,17 @@ Public Class InvoiceDetailModel
     Public Property TotalPrice As Decimal
     Public Property Notes As String
 
+    ''' <summary>
+    ''' معرّف الحجم المختار — يُستخدم لخصم/إرجاع وصفة الحجم من المخزن.
+    ''' اختياري: يُملأ من شاشة البيع، ويبقى Nothing للسطور القديمة/المستوردة.
+    ''' </summary>
+    Public Property SizeID As Integer?
+
+    ''' <summary>
+    ''' معرّفات الإضافات المختارة — تُستخدم لخصم/إرجاع وصفة كل إضافة من المخزن.
+    ''' </summary>
+    Public Property AddonIDs As New List(Of Integer)
+
     ''' <summary>نسبة ضريبة السطر (%) — تُحفظ مع الفواتير المعلقة (JSON) ويتم تجاهلها عند التخزين في SalesInvoiceDetails</summary>
     Public Property TaxPercent As Decimal
 End Class

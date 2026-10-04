@@ -11,6 +11,22 @@ Public Class POSRepository
         _ConnectionString = connectionString
     End Sub
 
+    ''' <summary>
+    ''' تحويل نص معرّفات الإضافات المحفوظ ("3,7,12") إلى قائمة أرقام صحيحة.
+    ''' يُستخدم لخصم/إرجاع وصفات الإضافات من المخزن.
+    ''' </summary>
+    Private Shared Function ParseAddonIds(text As String) As List(Of Integer)
+        Dim result As New List(Of Integer)
+        If String.IsNullOrWhiteSpace(text) Then Return result
+        For Each part In text.Split(","c)
+            Dim value As Integer
+            If Integer.TryParse(part.Trim(), value) AndAlso value > 0 Then
+                result.Add(value)
+            End If
+        Next
+        Return result
+    End Function
+
     ' 1. جلب أحجام المنتج مع تفاصيل الحجم
     Public Function GetProductSizes(productID As Integer) As List(Of ProductSizeModel)
         Dim list As New List(Of ProductSizeModel)
@@ -688,9 +704,9 @@ ORDER BY ShiftID DESC;"
 
         Dim sqlDetail As String = "
         INSERT INTO SalesInvoiceDetails 
-        (InvoiceID, ProductID, ProductName, SizeName, AddonsText, UnitPrice, Quantity, TotalPrice, Notes)
+        (InvoiceID, ProductID, ProductName, SizeName, AddonsText, UnitPrice, Quantity, TotalPrice, Notes, SizeID, AddonIDs)
         VALUES 
-        (@InvoiceID, @ProductID, @ProductName, @SizeName, @AddonsText, @UnitPrice, @Quantity, @TotalPrice, @Notes);"
+        (@InvoiceID, @ProductID, @ProductName, @SizeName, @AddonsText, @UnitPrice, @Quantity, @TotalPrice, @Notes, @SizeID, @AddonIDs);"
 
         Using con As New SqlConnection(_ConnectionString)
             Await con.OpenAsync()
@@ -750,16 +766,22 @@ ORDER BY ShiftID DESC;"
                         cmdDet.Parameters.AddWithValue("@Quantity", dt.Quantity)
                         cmdDet.Parameters.AddWithValue("@TotalPrice", dt.TotalPrice)
                         cmdDet.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(dt.Notes), DBNull.Value, dt.Notes))
+                        ' تُحفظ معرّفات الحجم والإضافات لأغراض خصم/إرجاع مخزون الوصفات بدقة
+                        cmdDet.Parameters.AddWithValue("@SizeID", If(dt.SizeID.HasValue AndAlso dt.SizeID.Value > 0, CObj(dt.SizeID.Value), DBNull.Value))
+                        cmdDet.Parameters.AddWithValue("@AddonIDs", If(dt.AddonIDs Is Nothing OrElse dt.AddonIDs.Count = 0, CObj(DBNull.Value), String.Join(",", dt.AddonIDs)))
 
                         Await cmdDet.ExecuteNonQueryAsync()
                     End Using
 
                     ' خصم المخزون حسب الريسيبي إن كان هناك مخزن محدد وميزة خصم الخامات مفعلة
                     ' أمان محاسبي: فشل الخصم يلغي الفاتورة بالكامل (Rollback) — لا يُسمح ببيع بدون خصم مخزون صامت
+                    ' (يُخصم أيضاً وصفة الحجم المختار ووصفة كل إضافة — كانت تُهمل سابقاً)
                     If inv.StoreID.HasValue AndAlso inv.StoreID.Value > 0 Then
                         Dim shouldDeduct As Boolean = SettingsManager.GetBoolSetting(SettingsKeys.SalesDeductIngredients, True)
                         If shouldDeduct Then
-                            InventoryDeductionManager.DeductItemRecipe(con, trans, inv.StoreID.Value, dt.ProductID, Nothing, Nothing, dt.Quantity, generatedNumber)
+                            InventoryDeductionManager.DeductInvoiceLineRecipes(con, trans, inv.StoreID.Value,
+                                                                              dt.ProductID, dt.SizeID, dt.AddonIDs,
+                                                                              dt.Quantity, generatedNumber)
                         End If
                     End If
                 Next
@@ -768,9 +790,11 @@ ORDER BY ShiftID DESC;"
                 ' ج) تسجيل حركة العميل وتحديث رصيده (مرة واحدة بصورة متسقة)
                 ' =========================================================================
                 If inv.CustomerID.HasValue Then
-                    ' 1. جلب الرصيد السابق للعميل
+                    ' 1. جلب الرصيد السابق للعميل مع قفل الصف داخل المعاملة.
+                    '    بدون القفل كان جهازان يقرآن نفس الرصيد ثم يكتبان قيمة مطلقة فيضيع
+                    '    أثر أحدهما (Lost Update). صف الموردين كان محمياً بهذه الطريقة أصلاً.
                     Dim prevBalance As Decimal = 0
-                    Dim sqlGetBal As String = "SELECT ISNULL(CurrentBalance, 0) FROM Customers WHERE CustomerID = @CID;"
+                    Dim sqlGetBal As String = "SELECT ISNULL(CurrentBalance, 0) FROM Customers WITH (UPDLOCK, HOLDLOCK) WHERE CustomerID = @CID;"
                     Using cmdBal As New SqlCommand(sqlGetBal, con, trans)
                         cmdBal.Parameters.AddWithValue("@CID", inv.CustomerID.Value)
                         Dim balObj = Await cmdBal.ExecuteScalarAsync()
@@ -803,10 +827,11 @@ ORDER BY ShiftID DESC;"
                         Await cmdTrans.ExecuteNonQueryAsync()
                     End Using
 
-                    ' 4. تحديث الرصيد النهائي في جدول العملاء
-                    Dim sqlUpdateBal As String = "UPDATE Customers SET CurrentBalance = @NewBal, LastTransactionDate = GETDATE() WHERE CustomerID = @CID;"
+                    ' 4. تحديث الرصيد النهائي: تحديث نسبي على الرصيد الحالي (وليس كتابة قيمة مطلقة)
+                    '    فلا يمكن لأي كتابة متزامنة أن تمحو أثر هذه العملية.
+                    Dim sqlUpdateBal As String = "UPDATE Customers SET CurrentBalance = ISNULL(CurrentBalance, 0) - @Delta, LastTransactionDate = GETDATE() WHERE CustomerID = @CID;"
                     Using cmdUp As New SqlCommand(sqlUpdateBal, con, trans)
-                        cmdUp.Parameters.AddWithValue("@NewBal", newBalance)
+                        cmdUp.Parameters.AddWithValue("@Delta", inv.RemainingAmount)
                         cmdUp.Parameters.AddWithValue("@CID", inv.CustomerID.Value)
                         Await cmdUp.ExecuteNonQueryAsync()
                     End Using
@@ -1276,7 +1301,8 @@ ORDER BY ShiftID DESC;"
         Dim sqlDet As String = "
         SELECT 
             d.InvoiceDetailID, d.InvoiceID, d.ProductID, d.ProductName, d.SizeName,
-            d.AddonsText, d.UnitPrice, d.Quantity, d.TotalPrice, d.Notes
+            d.AddonsText, d.UnitPrice, d.Quantity, d.TotalPrice, d.Notes,
+            d.SizeID, d.AddonIDs
         FROM SalesInvoiceDetails d
         WHERE d.InvoiceID = @InvID;"
 
@@ -1325,7 +1351,9 @@ ORDER BY ShiftID DESC;"
                                 .UnitPrice = Convert.ToDecimal(rdrDet("UnitPrice")),
                                 .Quantity = Convert.ToInt32(rdrDet("Quantity")),
                                 .TotalPrice = Convert.ToDecimal(rdrDet("TotalPrice")),
-                                .Notes = If(IsDBNull(rdrDet("Notes")), "", rdrDet("Notes").ToString())
+                                .Notes = If(IsDBNull(rdrDet("Notes")), "", rdrDet("Notes").ToString()),
+                                .SizeID = If(IsDBNull(rdrDet("SizeID")), CType(Nothing, Integer?), Convert.ToInt32(rdrDet("SizeID"))),
+                                .AddonIDs = ParseAddonIds(If(IsDBNull(rdrDet("AddonIDs")), "", rdrDet("AddonIDs").ToString()))
                             })
                         End While
                     End Using

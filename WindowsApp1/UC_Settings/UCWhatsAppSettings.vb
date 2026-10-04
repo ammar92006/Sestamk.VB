@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Drawing
 Imports System.IO
 Imports System.Threading.Tasks
@@ -45,9 +45,8 @@ Namespace UC_Settings
                 End If
 
                 txtApiSecret.Text = SettingsManager.GetSetting(SettingsKeys.WhatsAppApiSecret)
-                If String.IsNullOrWhiteSpace(txtApiSecret.Text) Then
-                    txtApiSecret.Text = "40ddff3e42dce8ecae15405ba523f572e526c673e0b40051a8d67aee1bdab190"
-                End If
+                ' أمان: لا يوجد سر افتراضي مضمّن في الكود. كان هناك سر ثابت سابقاً ظهر في
+                ' المستودع — يجب على كل تثبيت إدخال السر الخاص بسيرفر الواتساب الخاص به.
 
                 tglAutoSend.Checked = SettingsManager.GetBoolSetting(SettingsKeys.WhatsAppAutoSendInvoice, False)
 
@@ -253,7 +252,8 @@ Namespace UC_Settings
                 rdoModeCloud.Checked = True
                 rdoModeLocal.Checked = False
                 txtServerUrl.Text = "http://127.0.0.1:3000"
-                txtApiSecret.Text = "40ddff3e42dce8ecae15405ba523f572e526c673e0b40051a8d67aee1bdab190"
+                ' أمان: لا يُعاد أي سر افتراضي — يُترك فارغاً ليُدخله المستخدم
+                txtApiSecret.Text = ""
                 tglAutoSend.Checked = False
                 rdoFormatText.Checked = True
                 txtWelcomeTemplate.Text = "أهلاً بك في {ShopName}، يسعدنا دائماً خدمتكم وتقديم أفضل تجربة لكم!"
