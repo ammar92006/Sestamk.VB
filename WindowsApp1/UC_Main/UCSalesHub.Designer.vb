@@ -140,7 +140,7 @@ Namespace UC_Main
             Me.btnfrmPOS.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnfrmPOS.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnfrmPOS.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnfrmPOS.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
+            Me.btnfrmPOS.Image = Global.WindowsApp1.My.Resources.Resources.nav_sales_restaurant_3d
             Me.btnfrmPOS.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnfrmPOS.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnfrmPOS.Location = New System.Drawing.Point(661, 14)
@@ -306,7 +306,7 @@ Namespace UC_Main
             'picHeaderSales
             '
             Me.picHeaderSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderSales.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
+            Me.picHeaderSales.Image = Global.WindowsApp1.My.Resources.Resources.nav_sales_restaurant_3d
             Me.picHeaderSales.ImageRotate = 0!
             Me.picHeaderSales.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderSales.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

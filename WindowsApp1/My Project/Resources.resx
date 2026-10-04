@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -669,5 +669,51 @@
   </data>
   <data name="finance" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\finance.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <!-- 3D Modern Navigation & Header Icons (Fluent 3D Design) -->
+  <data name="nav_dashboard_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_dashboard_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_sales_restaurant_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_sales_restaurant_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_menu_system_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_menu_system_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_inventory_stock_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_inventory_stock_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_purchases_cart_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_purchases_cart_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_customers_clients_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_customers_clients_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_suppliers_truck_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_suppliers_truck_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_treasury_money_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_treasury_money_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_expenses_receipt_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_expenses_receipt_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_employees_staff_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_employees_staff_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_users_security_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_users_security_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nav_settings_gear_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nav_settings_gear_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="sestamk_logo_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\sestamk_logo_256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_bell_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_bell_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="icon_door_logout_3d" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\icon_door_logout_3d.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

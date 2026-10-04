@@ -1,4 +1,4 @@
-﻿Imports System.Drawing
+Imports System.Drawing
 Imports System.Linq
 Imports System.Net.Http
 Imports System.Threading.Tasks
@@ -256,18 +256,31 @@ Public Class FormUpdateNotifier
         pnlProgress.Visible = True
         prgUpdate.Value = 0
 
-        Dim progress = New Progress(Of Integer)(
-            Sub(value)
-                Dim safeVal = Math.Max(0, Math.Min(100, value))
+        ' نظام تقدم ذكي يعرض النسبة المئوية والحجم المحمل وسرعة النقل والوقت المتبقي لحظياً
+        Dim progress = New Progress(Of VbDownloadProgressInfo)(
+            Sub(info)
+                Dim safeVal = Math.Max(0, Math.Min(100, info.Percentage))
                 prgUpdate.Value = safeVal
-                lblProgressStatus.Text = "جارٍ تنزيل ملفات التحديث... " & safeVal & "%"
+                Dim sb As New System.Text.StringBuilder()
+                sb.Append($"جارٍ التنزيل: {safeVal}%")
+                If Not String.IsNullOrWhiteSpace(info.ProgressDetailFormatted) Then
+                    sb.Append($" ({info.ProgressDetailFormatted})")
+                End If
+                If Not String.IsNullOrWhiteSpace(info.SpeedFormatted) Then
+                    sb.Append($" • {info.SpeedFormatted}")
+                End If
+                If Not String.IsNullOrWhiteSpace(info.TimeRemainingFormatted) Then
+                    sb.Append($" • {info.TimeRemainingFormatted}")
+                End If
+                lblProgressStatus.Text = sb.ToString()
             End Sub)
 
-        lblProgressStatus.Text = "جارٍ الاتصال بسيرفر التحديثات وتنزيل الحزمة..."
+        lblProgressStatus.Text = "جارٍ الاتصال بسيرفر التحديثات وتهيئة التحميل..."
         Dim errorMessage = Await UpdateCoordinator.DownloadAndLaunchAsync(_manifest, progress)
         If String.IsNullOrWhiteSpace(errorMessage) Then
-            lblProgressStatus.Text = "تم التنزيل بنجاح! جارٍ تطبيق التحديث وإعادة التشغيل..."
-            Await Task.Delay(1000)
+            prgUpdate.Value = 100
+            lblProgressStatus.Text = "✅ تم التنزيل بنجاح والتحقق من البصمة الرقمية! جارٍ تشغيل التحديث..."
+            Await Task.Delay(1200)
             Application.Exit()
         Else
             SmartMessageBox.Show(errorMessage, "فشل التحديث", MessageBoxButtons.OK, MessageBoxIcon.Warning)

@@ -130,7 +130,7 @@ Namespace UC_Main
             Me.btnfrmPurchases.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnfrmPurchases.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnfrmPurchases.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnfrmPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
+            Me.btnfrmPurchases.Image = Global.WindowsApp1.My.Resources.Resources.nav_purchases_cart_3d
             Me.btnfrmPurchases.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnfrmPurchases.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnfrmPurchases.Location = New System.Drawing.Point(661, 14)
@@ -171,7 +171,7 @@ Namespace UC_Main
             'picHeaderPurchases
             '
             Me.picHeaderPurchases.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
+            Me.picHeaderPurchases.Image = Global.WindowsApp1.My.Resources.Resources.nav_purchases_cart_3d
             Me.picHeaderPurchases.ImageRotate = 0!
             Me.picHeaderPurchases.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderPurchases.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

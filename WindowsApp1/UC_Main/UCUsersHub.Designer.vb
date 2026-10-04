@@ -155,7 +155,7 @@ Namespace UC_Main
             Me.btnfrmRolesAndPermissions.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnfrmRolesAndPermissions.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnfrmRolesAndPermissions.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnfrmRolesAndPermissions.Image = Global.WindowsApp1.My.Resources.Resources.lock
+            Me.btnfrmRolesAndPermissions.Image = Global.WindowsApp1.My.Resources.Resources.nav_users_security_3d
             Me.btnfrmRolesAndPermissions.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnfrmRolesAndPermissions.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnfrmRolesAndPermissions.Location = New System.Drawing.Point(356, 14)
@@ -171,7 +171,7 @@ Namespace UC_Main
             'picHeaderUsers
             '
             Me.picHeaderUsers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderUsers.Image = Global.WindowsApp1.My.Resources.Resources.user2
+            Me.picHeaderUsers.Image = Global.WindowsApp1.My.Resources.Resources.nav_users_security_3d
             Me.picHeaderUsers.ImageRotate = 0!
             Me.picHeaderUsers.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderUsers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

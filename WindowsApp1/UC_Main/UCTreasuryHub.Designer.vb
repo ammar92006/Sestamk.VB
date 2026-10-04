@@ -136,7 +136,7 @@ Namespace UC_Main
             Me.btnfrmTreasury.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnfrmTreasury.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnfrmTreasury.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnfrmTreasury.Image = Global.WindowsApp1.My.Resources.Resources.treasury
+            Me.btnfrmTreasury.Image = Global.WindowsApp1.My.Resources.Resources.nav_treasury_money_3d
             Me.btnfrmTreasury.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnfrmTreasury.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnfrmTreasury.Location = New System.Drawing.Point(661, 14)
@@ -252,7 +252,7 @@ Namespace UC_Main
             'picHeaderTreasury
             '
             Me.picHeaderTreasury.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderTreasury.Image = Global.WindowsApp1.My.Resources.Resources.finance
+            Me.picHeaderTreasury.Image = Global.WindowsApp1.My.Resources.Resources.nav_treasury_money_3d
             Me.picHeaderTreasury.ImageRotate = 0!
             Me.picHeaderTreasury.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderTreasury.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

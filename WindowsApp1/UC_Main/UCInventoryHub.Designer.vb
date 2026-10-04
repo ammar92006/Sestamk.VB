@@ -252,7 +252,7 @@ Namespace UC_Main
             'picHeaderInventory
             '
             Me.picHeaderInventory.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderInventory.Image = Global.WindowsApp1.My.Resources.Resources.stock
+            Me.picHeaderInventory.Image = Global.WindowsApp1.My.Resources.Resources.nav_inventory_stock_3d
             Me.picHeaderInventory.ImageRotate = 0!
             Me.picHeaderInventory.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderInventory.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

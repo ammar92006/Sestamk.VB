@@ -136,7 +136,7 @@ Namespace UC_Main
             Me.btnfrmEmployees.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnfrmEmployees.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnfrmEmployees.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnfrmEmployees.Image = Global.WindowsApp1.My.Resources.Resources.staff
+            Me.btnfrmEmployees.Image = Global.WindowsApp1.My.Resources.Resources.nav_employees_staff_3d
             Me.btnfrmEmployees.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnfrmEmployees.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnfrmEmployees.Location = New System.Drawing.Point(661, 14)
@@ -252,7 +252,7 @@ Namespace UC_Main
             'picHeaderEmployees
             '
             Me.picHeaderEmployees.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderEmployees.Image = Global.WindowsApp1.My.Resources.Resources.staff
+            Me.picHeaderEmployees.Image = Global.WindowsApp1.My.Resources.Resources.nav_employees_staff_3d
             Me.picHeaderEmployees.ImageRotate = 0!
             Me.picHeaderEmployees.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderEmployees.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

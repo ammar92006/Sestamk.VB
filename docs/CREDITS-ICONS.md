@@ -1,24 +1,28 @@
-# Icon Attribution (Flaticon)
+# توثيق وتراخيص أيقونات النظام (Icon Attributions)
 
-أيقونات القائمة الجانبية في الشاشة الرئيسية (MainForm) مصدرها [Flaticon](https://www.flaticon.com/)
-بتصريح الاستخدام المجاني — Free license with attribution. تم توحيد لونها (#D1D5DB) وتصغيرها إلى 64px.
+## 1. أيقونات القائمة الجانبية ثلاثية الأبعاد (MainForm 3D Navigation Icons)
+أيقونات القائمة الجانبية الحديثة عالية الدقة ثلاثية الأبعاد مصدرها مشروع **[Microsoft Fluent Emoji](https://github.com/microsoft/fluentui-emoji)**
+بموجب ترخيص مفتوح المصدر بالكامل (**MIT License**):
 
-| أيقونة التطبيق | القسم | الرابط |
+| أيقونة التطبيق | القسم المستهدف | اسم الأصل في المشروع |
 |---|---|---|
-| `market_analysis.png` | لوحة التحكم | https://www.flaticon.com/free-icon/15229993 |
-| `cart__1_.png` | المبيعات والصالة | https://www.flaticon.com/free-icon/10643651 |
-| `category.png` | بيانات المنيو والنظام | https://www.flaticon.com/free-icon/10189523 |
-| `stock.png` | المخازن والريسيبي | https://www.flaticon.com/free-icon/17660326 |
-| `shopping.png` | المشتريات والتوريدات | https://www.flaticon.com/free-icon/14236621 |
-| `client.png` | العملاء والحسابات | https://www.flaticon.com/free-icon/15415670 |
-| `supplier.png` | الموردين والشركات | https://www.flaticon.com/free-icon/12080879 |
-| `treasury.png` | الخزينة والسيولة | https://www.flaticon.com/free-icon/12199585 |
-| `discount.png` | المصروفات اليومية | https://www.flaticon.com/free-icon/15415587 |
-| `staff.png` | الموظفين والرواتب | https://www.flaticon.com/free-icon/15955197 |
-| `lock.png` | المستخدمين والأمان | https://www.flaticon.com/free-icon/3371279 |
-| `settings__3_.png` | الإعدادات والنسخ | https://www.flaticon.com/free-icon/12644607 |
+| `nav_dashboard_3d.png` | لوحة التحكم | `Bar chart 3D` |
+| `nav_sales_restaurant_3d.png` | المبيعات والصالة والمطعم | `Fork and knife with plate 3D` |
+| `nav_menu_system_3d.png` | المنيو والأصناف والوجبات | `Open book 3D` |
+| `nav_inventory_stock_3d.png` | المخازن وخامات الريسيبي | `Package 3D` |
+| `nav_purchases_cart_3d.png` | المشتريات وفواتير التوريد | `Shopping cart 3D` |
+| `nav_customers_clients_3d.png` | العملاء والحسابات والولاء | `Busts in silhouette 3D` |
+| `nav_suppliers_truck_3d.png` | الموردين وحركات الشركات | `Delivery truck 3D` |
+| `nav_treasury_money_3d.png` | الخزينة والسيولة النقدية | `Money bag 3D` |
+| `nav_expenses_receipt_3d.png` | المصروفات اليومية والنثرية | `Receipt 3D` |
+| `nav_employees_staff_3d.png` | الموظفين والرواتب والورديات | `Identification card 3D` |
+| `nav_users_security_3d.png` | المستخدمين والصلاحيات والأمان | `Locked with key 3D` |
+| `nav_settings_gear_3d.png` | الإعدادات والنسخ الاحتياطي | `Gear 3D` |
+| `icon_bell_3d.png` | مركز الإشعارات والتنبيهات | `Bell 3D` |
+| `icon_door_logout_3d.png` | تسجيل الخروج | `Door 3D` |
 
+---
+
+## 2. أيقونات سابقة وتكميلية (Flaticon)
+أيقونات القوائم الفرعية وشاشات التفرع مصدرها [Flaticon](https://www.flaticon.com/) بتصريح الاستخدام المجاني مع الإسناد (Free License with Attribution).
 Design credit: [Flaticon](https://www.flaticon.com/) — a project by [Freepik](https://www.freepik.com/).
-
-> ملاحظة: إن رغبت في إزالة شرط الإسناد تجارياً، يمكن الاشتراك في Flaticon Premium
-> وتحديث هذا الملف وفق الترخيص الجديد.

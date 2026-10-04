@@ -343,6 +343,7 @@ Public Class FrmModernUpdater
     End Sub
 
     Private Async Sub StartUpdateAsync(sender As Object, e As EventArgs)
+        Dim tempOldFiles As New List(Of String)()
         Try
             ' 0) أمان: التحقق الإلزامي من بصمة الحزمة مقابل المانيفست الرسمي على HTTPS
             '    قبل إغلاق البرنامج أو كتابة أي ملف — إغلاق صامت لأي حزمة غير موثوقة.
@@ -381,8 +382,6 @@ Public Class FrmModernUpdater
             lblStatus.Text = "جاري فك ضغط واستبدال ملفات النظام الحديثة..."
             pgbBar.Value = 5
             lblPercentage.Text = "5%"
-
-            Dim tempOldFiles As New List(Of String)()
 
             Await Task.Run(Sub()
                                Using archive As ZipArchive = ZipFile.OpenRead(_packagePath)
@@ -498,7 +497,22 @@ Public Class FrmModernUpdater
             Application.Exit()
 
         Catch ex As Exception
-            MessageBox.Show("حدث خطأ غير متوقع أثناء تثبيت التحديث:" & vbCrLf & ex.Message, "خطأ في التحديث", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            ' أمان واستقرار: استعادة الملفات الأصلية فوراً في حال حدوث أي خطأ غير متوقع أثناء الفك
+            Try
+                For Each oldF In tempOldFiles
+                    If File.Exists(oldF) Then
+                        Dim markerIdx = oldF.IndexOf(".old_")
+                        If markerIdx > 0 Then
+                            Dim originalDest = oldF.Substring(0, markerIdx)
+                            If File.Exists(originalDest) Then File.Delete(originalDest)
+                            File.Move(oldF, originalDest)
+                        End If
+                    End If
+                Next
+            Catch
+            End Try
+
+            MessageBox.Show("حدث خطأ غير متوقع أثناء تثبيت التحديث:" & vbCrLf & ex.Message & vbCrLf & vbCrLf & "✓ تمت استعادة الملفات السابقة بنجاح لحماية استقرار النظام.", "خطأ في التحديث", MessageBoxButtons.OK, MessageBoxIcon.Error)
             RestartMainApp()
             Application.Exit()
         End Try

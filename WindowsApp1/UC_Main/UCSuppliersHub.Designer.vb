@@ -132,7 +132,7 @@ Namespace UC_Main
             Me.ToolStripButton3.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.ToolStripButton3.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.ToolStripButton3.HoverState.ForeColor = System.Drawing.Color.White
-            Me.ToolStripButton3.Image = Global.WindowsApp1.My.Resources.Resources.supplier
+            Me.ToolStripButton3.Image = Global.WindowsApp1.My.Resources.Resources.nav_suppliers_truck_3d
             Me.ToolStripButton3.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.ToolStripButton3.ImageSize = New System.Drawing.Size(32, 32)
             Me.ToolStripButton3.Location = New System.Drawing.Point(661, 14)
@@ -198,7 +198,7 @@ Namespace UC_Main
             'picHeaderSuppliers
             '
             Me.picHeaderSuppliers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.supplier
+            Me.picHeaderSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.nav_suppliers_truck_3d
             Me.picHeaderSuppliers.ImageRotate = 0!
             Me.picHeaderSuppliers.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderSuppliers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

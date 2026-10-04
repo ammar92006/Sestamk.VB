@@ -134,7 +134,7 @@ Namespace UC_Main
             Me.btnFrmCustomers.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnFrmCustomers.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnFrmCustomers.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnFrmCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+            Me.btnFrmCustomers.Image = Global.WindowsApp1.My.Resources.Resources.nav_customers_clients_3d
             Me.btnFrmCustomers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnFrmCustomers.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnFrmCustomers.Location = New System.Drawing.Point(661, 14)
@@ -225,7 +225,7 @@ Namespace UC_Main
             'picHeaderCustomers
             '
             Me.picHeaderCustomers.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+            Me.picHeaderCustomers.Image = Global.WindowsApp1.My.Resources.Resources.nav_customers_clients_3d
             Me.picHeaderCustomers.ImageRotate = 0!
             Me.picHeaderCustomers.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderCustomers.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

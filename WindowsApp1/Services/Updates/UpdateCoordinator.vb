@@ -21,6 +21,19 @@ Public Class VbUpdateManifest
     Public Property InstallerSize As Long
 End Class
 
+''' <summary>
+''' تفاصيل تقدم تنزيل حزمة التحديث (النسبة، السرعة، الحجم المحمل، الوقت المتبقي)
+''' </summary>
+Public Class VbDownloadProgressInfo
+    Public Property Percentage As Integer = 0
+    Public Property BytesReceived As Long = 0
+    Public Property TotalBytes As Long = 0
+    Public Property SpeedBytesPerSec As Double = 0
+    Public Property SpeedFormatted As String = ""
+    Public Property ProgressDetailFormatted As String = ""
+    Public Property TimeRemainingFormatted As String = ""
+End Class
+
 Public NotInheritable Class UpdateCoordinator
     Private Sub New()
     End Sub
@@ -93,8 +106,25 @@ Public NotInheritable Class UpdateCoordinator
         End Try
     End Function
 
+    ''' <summary>
+    ''' تنزيل حزمة التحديث وإطلاق أداة التثبيت مع تقدم بسيط بالنسبة المئوية (توافق رجعي).
+    ''' </summary>
     Public Shared Async Function DownloadAndLaunchAsync(manifest As VbUpdateManifest, progress As IProgress(Of Integer)) As Task(Of String)
-        If manifest Is Nothing OrElse Not Uri.IsWellFormedUriString(manifest.PackageUrl, UriKind.Absolute) OrElse Not manifest.PackageUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase) Then Return "رابط حزمة التحديث غير صالح أو غير متوفر."
+        Dim richProgress As IProgress(Of VbDownloadProgressInfo) = Nothing
+        If progress IsNot Nothing Then
+            richProgress = New Progress(Of VbDownloadProgressInfo)(Sub(p) progress.Report(p.Percentage))
+        End If
+        Return Await DownloadAndLaunchAsync(manifest, richProgress)
+    End Function
+
+    ''' <summary>
+    ''' تنزيل حزمة التحديث وإطلاق أداة التثبيت مع إرسال تفاصيل التقدم والسرعة والوقت المتبقي لحظياً،
+    ''' ودعم إعادة المحاولة التلقائية عند انقطاع الاتصال المؤقت (3 محاولات مع Backoff).
+    ''' </summary>
+    Public Shared Async Function DownloadAndLaunchAsync(manifest As VbUpdateManifest, progress As IProgress(Of VbDownloadProgressInfo)) As Task(Of String)
+        If manifest Is Nothing OrElse Not Uri.IsWellFormedUriString(manifest.PackageUrl, UriKind.Absolute) OrElse Not manifest.PackageUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase) Then
+            Return "رابط حزمة التحديث غير صالح أو غير متوفر."
+        End If
 
         ' أمان: التحقق من البصمة الرقمية SHA-256 إلزامي — الحزم بدون بصمة تُرفض ولا تُثبّت
         Dim hasSha = Not String.IsNullOrWhiteSpace(manifest.PackageSha256) AndAlso manifest.PackageSha256.Length = 64
@@ -106,33 +136,124 @@ Public NotInheritable Class UpdateCoordinator
         Dim updateDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "Sestamk", "updates", manifest.Version)
         Directory.CreateDirectory(updateDir)
         Dim packagePath = Path.Combine(updateDir, "package.zip")
-        Try
-            Using client As New HttpClient(), response = Await client.GetAsync(manifest.PackageUrl, HttpCompletionOption.ResponseHeadersRead)
-                response.EnsureSuccessStatusCode()
-                Using source = Await response.Content.ReadAsStreamAsync(), target = New FileStream(packagePath, FileMode.Create, FileAccess.Write, FileShare.None), hash = SHA256.Create()
-                    Dim buffer(8191) As Byte
-                    Dim total As Long = 0
-                    Do
-                        Dim read = Await source.ReadAsync(buffer, 0, buffer.Length)
-                        If read = 0 Then Exit Do
-                        Await target.WriteAsync(buffer, 0, read)
-                        If hasSha Then hash.TransformBlock(buffer, 0, read, Nothing, 0)
-                        total += read
-                        If manifest.PackageSize > 0 Then progress.Report(CInt(Math.Min(99, total * 100 / manifest.PackageSize)))
-                    Loop
 
-                    If hasSha Then
-                        hash.TransformFinalBlock(New Byte() {}, 0, 0)
-                        Dim actual = BitConverter.ToString(hash.Hash).Replace("-", String.Empty).ToLowerInvariant()
-                        If Not String.Equals(actual, manifest.PackageSha256, StringComparison.OrdinalIgnoreCase) Then
-                            File.Delete(packagePath)
-                            Return "فشل التحقق من سلامة حزمة التحديث (عدم تطابق البصمة الرقمية)."
+        Dim maxRetries As Integer = 3
+        Dim attempt As Integer = 0
+        Dim lastError As Exception = Nothing
+        Dim retryDelayMs As Integer = 0
+
+        While attempt < maxRetries
+            If retryDelayMs > 0 Then
+                Await Task.Delay(retryDelayMs)
+                retryDelayMs = 0
+            End If
+
+            attempt += 1
+            Try
+                If File.Exists(packagePath) Then
+                    Try
+                        File.Delete(packagePath)
+                    Catch
+                    End Try
+                End If
+
+                Using client As New HttpClient()
+                    client.Timeout = TimeSpan.FromMinutes(10)
+                    client.DefaultRequestHeaders.Add("User-Agent", "Sestamk-VB-Client")
+
+                    Using response = Await client.GetAsync(manifest.PackageUrl, HttpCompletionOption.ResponseHeadersRead)
+                        response.EnsureSuccessStatusCode()
+
+                        ' استخراج الحجم الفعلي للحزمة إن لم يكن محدداً مسبقاً
+                        If manifest.PackageSize <= 0 AndAlso response.Content.Headers.ContentLength.HasValue Then
+                            manifest.PackageSize = response.Content.Headers.ContentLength.Value
                         End If
-                    End If
-                End Using
-            End Using
 
-            Dim pending = New JObject From {{"version", manifest.Version}, {"package_path", packagePath}, {"target_path", Application.StartupPath}, {"main_exe", Application.ExecutablePath}}
+                        Dim totalBytesExpected As Long = manifest.PackageSize
+
+                        Using source = Await response.Content.ReadAsStreamAsync(),
+                              target = New FileStream(packagePath, FileMode.Create, FileAccess.Write, FileShare.None),
+                              hash = SHA256.Create()
+
+                            Dim buffer(32767) As Byte ' 32 KB buffer لأداء وسرعة تنزيل أعلى
+                            Dim totalRead As Long = 0
+                            Dim sw = Stopwatch.StartNew()
+                            Dim lastReportTime As Long = 0
+                            Dim lastReportBytes As Long = 0
+
+                            Do
+                                Dim bytesRead = Await source.ReadAsync(buffer, 0, buffer.Length)
+                                If bytesRead = 0 Then Exit Do
+
+                                Await target.WriteAsync(buffer, 0, bytesRead)
+                                If hasSha Then hash.TransformBlock(buffer, 0, bytesRead, Nothing, 0)
+                                totalRead += bytesRead
+
+                                Dim nowMs = sw.ElapsedMilliseconds
+                                If progress IsNot Nothing AndAlso (nowMs - lastReportTime >= 150 OrElse (totalBytesExpected > 0 AndAlso totalRead >= totalBytesExpected)) Then
+                                    Dim pct As Integer = 0
+                                    If totalBytesExpected > 0 Then
+                                        pct = CInt(Math.Min(99, Math.Max(0, (totalRead * 100L) / totalBytesExpected)))
+                                    End If
+
+                                    Dim deltaBytes = totalRead - lastReportBytes
+                                    Dim deltaSec = Math.Max(0.05, (nowMs - lastReportTime) / 1000.0)
+                                    Dim speedBytesSec As Double = deltaBytes / deltaSec
+
+                                    Dim info As New VbDownloadProgressInfo With {
+                                        .Percentage = pct,
+                                        .BytesReceived = totalRead,
+                                        .TotalBytes = totalBytesExpected,
+                                        .SpeedBytesPerSec = speedBytesSec,
+                                        .SpeedFormatted = FormatSpeed(speedBytesSec),
+                                        .ProgressDetailFormatted = FormatProgressDetail(totalRead, totalBytesExpected),
+                                        .TimeRemainingFormatted = FormatRemainingTime(totalRead, totalBytesExpected, speedBytesSec)
+                                    }
+
+                                    progress.Report(info)
+                                    lastReportTime = nowMs
+                                    lastReportBytes = totalRead
+                                End If
+                            Loop
+
+                            ' التحقق النهائي من البصمة الرقمية SHA-256
+                            If hasSha Then
+                                hash.TransformFinalBlock(New Byte() {}, 0, 0)
+                                Dim actual = BitConverter.ToString(hash.Hash).Replace("-", String.Empty).ToLowerInvariant()
+                                If Not String.Equals(actual, manifest.PackageSha256, StringComparison.OrdinalIgnoreCase) Then
+                                    target.Close()
+                                    File.Delete(packagePath)
+                                    Return "فشل التحقق من سلامة حزمة التحديث (عدم تطابق البصمة الرقمية SHA-256)."
+                                End If
+                            End If
+                        End Using
+                    End Using
+                End Using
+
+                ' التنزيل والتحقق تما بنجاح
+                Exit While
+
+            Catch ex As Exception
+                lastError = ex
+                If attempt < maxRetries Then
+                    ' انتظار تصاعدي قبل إعادة المحاولة (1s, 2s...) يُنفَّذ خارج كتلة Catch
+                    retryDelayMs = 1000 * attempt
+                End If
+            End Try
+        End While
+
+        If Not File.Exists(packagePath) Then
+            Return "تعذر تنزيل حزمة التحديث بعد " & maxRetries & " محاولات: " & If(lastError IsNot Nothing, lastError.Message, "انقطع الاتصال بالسيرفر.")
+        End If
+
+        ' إعداد معلومات التحديث المعلق للأداة التنفيذية
+        Try
+            Dim pending = New JObject From {
+                {"version", manifest.Version},
+                {"package_path", packagePath},
+                {"target_path", Application.StartupPath},
+                {"main_exe", Application.ExecutablePath}
+            }
             Dim pendingPath = Path.Combine(updateDir, "pending-update.json")
             File.WriteAllText(pendingPath, pending.ToString())
 
@@ -148,19 +269,14 @@ Public NotInheritable Class UpdateCoordinator
             End If
 
             ' ══════════════════════════════════════════════════════════════════════════
-            ' أمان: لا تُنسخ أداة التحديث إلى أي مجلد قابل للكتابة من المستخدمين ثم تُشغَّل
-            ' بصلاحيات مسؤول (كان ذلك يتيح لأي مستخدم محلي استبدالها قبل تنفيذها مرفوعة).
-            ' الأولوية لمشغّل محمي يُثبّته المثبّت في %ProgramData%\Sestamk\runner
-            ' (صلاحية الكتابة عليه للمسؤولين فقط)، وإلا تُشغَّل الأداة من مجلد التثبيت
-            ' المحمي نفسه — وكلاهما غير قابل للكتابة من المستخدم العادي.
+            ' أمان: الأولوية لمشغّل محمي في %ProgramData%\Sestamk\runner (صلاحية المسؤولين فقط)،
+            ' وإلا تشغيل الأداة من مجلد التثبيت المحمي نفسه مع تمرير --target الموثوق.
             ' ══════════════════════════════════════════════════════════════════════════
             Dim protectedRunner As String = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "Sestamk", "runner", "update_runner.exe")
 
             Dim launchTarget As String = If(File.Exists(protectedRunner), protectedRunner, updater)
-
-            ' مجلد الهدف الصريح = مجلد التثبيت (يُتحقق منه داخل الأداة نفسها بوجود Sestamk.exe)
             Dim launchArgs As String = "--pending " & ChrW(34) & pendingPath & ChrW(34) &
                                        " --target " & ChrW(34) & Application.StartupPath & ChrW(34)
 
@@ -174,11 +290,51 @@ Public NotInheritable Class UpdateCoordinator
                 psi.Verb = ""
                 Process.Start(psi)
             End Try
-            progress.Report(100)
+
+            If progress IsNot Nothing Then
+                progress.Report(New VbDownloadProgressInfo With {
+                    .Percentage = 100,
+                    .BytesReceived = manifest.PackageSize,
+                    .TotalBytes = manifest.PackageSize,
+                    .SpeedFormatted = "",
+                    .ProgressDetailFormatted = "اكتمل التنزيل بنجاح",
+                    .TimeRemainingFormatted = "جاهز للتطبيق"
+                })
+            End If
+
             Return Nothing
         Catch ex As Exception
-            Return "تعذر تنزيل التحديث: " & ex.Message
+            Return "حدث خطأ أثناء تشغيل أداة التحديث: " & ex.Message
         End Try
+    End Function
+
+    Private Shared Function FormatSpeed(bytesPerSec As Double) As String
+        If bytesPerSec <= 0 Then Return "0 ك.ب/ث"
+        If bytesPerSec >= 1024.0 * 1024.0 Then
+            Return (bytesPerSec / (1024.0 * 1024.0)).ToString("0.0") & " م.ب/ث"
+        Else
+            Return (bytesPerSec / 1024.0).ToString("0") & " ك.ب/ث"
+        End If
+    End Function
+
+    Private Shared Function FormatProgressDetail(received As Long, total As Long) As String
+        Dim rMb = (received / (1024.0 * 1024.0)).ToString("0.0")
+        If total > 0 Then
+            Dim tMb = (total / (1024.0 * 1024.0)).ToString("0.0")
+            Return $"{rMb} من {tMb} ميجابايت"
+        Else
+            Return $"{rMb} ميجابايت"
+        End If
+    End Function
+
+    Private Shared Function FormatRemainingTime(received As Long, total As Long, speed As Double) As String
+        If total <= 0 OrElse speed <= 1024 OrElse received >= total Then Return ""
+        Dim remainingBytes = total - received
+        Dim seconds = remainingBytes / speed
+        If seconds <= 1 Then Return "أقل من ثانية"
+        If seconds < 60 Then Return $"متبقي حوالي {CInt(seconds)} ثانية"
+        Dim mins = CInt(Math.Ceiling(seconds / 60.0))
+        Return $"متبقي حوالي {mins} دقيقة"
     End Function
 
     Public Shared Function ParseManifest(json As JObject) As VbUpdateManifest

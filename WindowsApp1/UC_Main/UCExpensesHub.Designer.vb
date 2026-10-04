@@ -130,7 +130,7 @@ Namespace UC_Main
             Me.btnform_Expenses.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnform_Expenses.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnform_Expenses.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnform_Expenses.Image = Global.WindowsApp1.My.Resources.Resources.money
+            Me.btnform_Expenses.Image = Global.WindowsApp1.My.Resources.Resources.nav_expenses_receipt_3d
             Me.btnform_Expenses.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnform_Expenses.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnform_Expenses.Location = New System.Drawing.Point(661, 14)
@@ -171,7 +171,7 @@ Namespace UC_Main
             'picHeaderExpenses
             '
             Me.picHeaderExpenses.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderExpenses.Image = Global.WindowsApp1.My.Resources.Resources.discount
+            Me.picHeaderExpenses.Image = Global.WindowsApp1.My.Resources.Resources.nav_expenses_receipt_3d
             Me.picHeaderExpenses.ImageRotate = 0!
             Me.picHeaderExpenses.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderExpenses.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

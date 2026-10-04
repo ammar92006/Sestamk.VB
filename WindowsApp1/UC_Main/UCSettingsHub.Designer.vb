@@ -138,7 +138,7 @@ Namespace UC_Main
             Me.btnSettings.HoverState.BorderColor = System.Drawing.Color.FromArgb(CType(CType(59, Byte), Integer), CType(CType(130, Byte), Integer), CType(CType(246, Byte), Integer))
             Me.btnSettings.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnSettings.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnSettings.Image = Global.WindowsApp1.My.Resources.Resources.setting
+            Me.btnSettings.Image = Global.WindowsApp1.My.Resources.Resources.nav_settings_gear_3d
             Me.btnSettings.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnSettings.ImageSize = New System.Drawing.Size(32, 32)
             Me.btnSettings.Location = New System.Drawing.Point(661, 14)
@@ -279,7 +279,7 @@ Namespace UC_Main
             'picHeaderSettings
             '
             Me.picHeaderSettings.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-            Me.picHeaderSettings.Image = Global.WindowsApp1.My.Resources.Resources.settings__3_
+            Me.picHeaderSettings.Image = Global.WindowsApp1.My.Resources.Resources.nav_settings_gear_3d
             Me.picHeaderSettings.ImageRotate = 0!
             Me.picHeaderSettings.Location = New System.Drawing.Point(898, 9)
             Me.picHeaderSettings.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)

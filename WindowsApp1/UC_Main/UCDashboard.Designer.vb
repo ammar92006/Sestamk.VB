@@ -611,7 +611,7 @@ Namespace UC_Main
             'picCardSales
             '
             Me.picCardSales.Dock = System.Windows.Forms.DockStyle.Left
-            Me.picCardSales.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
+            Me.picCardSales.Image = Global.WindowsApp1.My.Resources.Resources.nav_sales_restaurant_3d
             Me.picCardSales.ImageRotate = 0!
             Me.picCardSales.Location = New System.Drawing.Point(10, 10)
             Me.picCardSales.Name = "picCardSales"
@@ -679,7 +679,7 @@ Namespace UC_Main
             'picCardPurchases
             '
             Me.picCardPurchases.Dock = System.Windows.Forms.DockStyle.Left
-            Me.picCardPurchases.Image = Global.WindowsApp1.My.Resources.Resources.shopping
+            Me.picCardPurchases.Image = Global.WindowsApp1.My.Resources.Resources.nav_purchases_cart_3d
             Me.picCardPurchases.ImageRotate = 0!
             Me.picCardPurchases.Location = New System.Drawing.Point(10, 10)
             Me.picCardPurchases.Name = "picCardPurchases"
@@ -747,7 +747,7 @@ Namespace UC_Main
             'picCardProfit
             '
             Me.picCardProfit.Dock = System.Windows.Forms.DockStyle.Left
-            Me.picCardProfit.Image = Global.WindowsApp1.My.Resources.Resources.financial
+            Me.picCardProfit.Image = Global.WindowsApp1.My.Resources.Resources.nav_treasury_money_3d
             Me.picCardProfit.ImageRotate = 0!
             Me.picCardProfit.Location = New System.Drawing.Point(10, 10)
             Me.picCardProfit.Name = "picCardProfit"
@@ -883,7 +883,7 @@ Namespace UC_Main
             'picCardCustomers
             '
             Me.picCardCustomers.Dock = System.Windows.Forms.DockStyle.Left
-            Me.picCardCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+            Me.picCardCustomers.Image = Global.WindowsApp1.My.Resources.Resources.nav_customers_clients_3d
             Me.picCardCustomers.ImageRotate = 0!
             Me.picCardCustomers.Location = New System.Drawing.Point(10, 10)
             Me.picCardCustomers.Name = "picCardCustomers"
@@ -951,7 +951,7 @@ Namespace UC_Main
             'picCardSuppliers
             '
             Me.picCardSuppliers.Dock = System.Windows.Forms.DockStyle.Left
-            Me.picCardSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.supplier
+            Me.picCardSuppliers.Image = Global.WindowsApp1.My.Resources.Resources.nav_suppliers_truck_3d
             Me.picCardSuppliers.ImageRotate = 0!
             Me.picCardSuppliers.Location = New System.Drawing.Point(10, 10)
             Me.picCardSuppliers.Name = "picCardSuppliers"
@@ -1001,7 +1001,7 @@ Namespace UC_Main
             Me.btnQuickPOS.ForeColor = System.Drawing.Color.White
             Me.btnQuickPOS.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnQuickPOS.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnQuickPOS.Image = Global.WindowsApp1.My.Resources.Resources.cart__1_
+            Me.btnQuickPOS.Image = Global.WindowsApp1.My.Resources.Resources.nav_sales_restaurant_3d
             Me.btnQuickPOS.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnQuickPOS.ImageSize = New System.Drawing.Size(24, 24)
             Me.btnQuickPOS.Location = New System.Drawing.Point(860, 5)
@@ -1047,7 +1047,7 @@ Namespace UC_Main
             Me.btnQuickCustomers.ForeColor = System.Drawing.Color.White
             Me.btnQuickCustomers.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
             Me.btnQuickCustomers.HoverState.ForeColor = System.Drawing.Color.White
-            Me.btnQuickCustomers.Image = Global.WindowsApp1.My.Resources.Resources.client
+            Me.btnQuickCustomers.Image = Global.WindowsApp1.My.Resources.Resources.nav_customers_clients_3d
             Me.btnQuickCustomers.ImageAlign = System.Windows.Forms.HorizontalAlignment.Left
             Me.btnQuickCustomers.ImageSize = New System.Drawing.Size(24, 24)
             Me.btnQuickCustomers.Location = New System.Drawing.Point(290, 5)
