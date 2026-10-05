@@ -1209,6 +1209,76 @@ Public Class frmPOS
     End Function
 
     ' =========================================================
+    ' طباعة شيك حساب الطاولة الاسترشادي قبل السداد (Guest Check [F6])
+    ' =========================================================
+    Private Function BuildCurrentInvoiceModel() As InvoiceModel
+        Dim inv As New InvoiceModel With {
+            .InvoiceNumber = "شيك طاولة",
+            .InvoiceDate = DateTime.Now,
+            .OrderType = CByte(CurrentOrderType),
+            .ShiftID = If(ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, 1),
+            .UserID = If(Session.CurrentUserID > 0, Session.CurrentUserID, 1),
+            .CustomerID = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerID, CType(Nothing, Integer?)),
+            .TableID = SelectedTableID,
+            .DriverID = SelectedDriverID,
+            .DeliveryFee = If(CurrentOrderType = OrderType.Delivery, DeliveryFee, 0D),
+            .DineInServiceFee = If(CurrentOrderType = OrderType.DineIn, DineInServiceFee, 0D),
+            .TaxAmount = TaxAmount
+        }
+
+        Dim subTotal As Decimal = 0D
+        For Each row As DataGridViewRow In dgvInvoice.Rows
+            If Not row.IsNewRow Then
+                Dim rowPrice As Decimal = 0D
+                Decimal.TryParse(row.Cells("colTotalPrice").Value?.ToString(), rowPrice)
+                subTotal += rowPrice
+
+                inv.Details.Add(New InvoiceDetailModel With {
+                    .ProductID = Convert.ToInt32(row.Cells("colProductID").Value),
+                    .ProductName = row.Cells("colProductName").Value.ToString(),
+                    .SizeName = If(row.Cells("colSize").Value IsNot Nothing, row.Cells("colSize").Value.ToString(), ""),
+                    .AddonsText = If(row.Cells("colAddons").Value IsNot Nothing, row.Cells("colAddons").Value.ToString(), ""),
+                    .SizeID = ReadRowSizeID(row),
+                    .AddonIDs = ReadRowAddonIDs(row),
+                    .UnitPrice = Convert.ToDecimal(row.Cells("colUnitPrice").Value),
+                    .Quantity = Convert.ToInt32(row.Cells("colQuantity").Value),
+                    .TotalPrice = rowPrice,
+                    .Notes = If(row.Cells("colNotes").Value IsNot Nothing, row.Cells("colNotes").Value.ToString(), "")
+                })
+            End If
+        Next
+
+        inv.TotalBeforeDiscount = subTotal + inv.DeliveryFee + inv.DineInServiceFee + inv.TaxAmount - CurrentReservationDeposit
+        inv.NetTotal = Math.Max(0D, inv.TotalBeforeDiscount)
+        Return inv
+    End Function
+
+    Private Sub btnPrintCheck_Click(sender As Object, e As EventArgs) Handles btnPrintCheck.Click
+        PrintCurrentGuestCheck()
+    End Sub
+
+    Public Sub PrintCurrentGuestCheck()
+        If dgvInvoice.Rows.Count = 0 Then
+            SmartMessageBox.Show("لا توجد أصناف في الفاتورة الحالية لطباعة شيك الحساب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Try
+            Dim inv = BuildCurrentInvoiceModel()
+            Dim tableName As String = If(SelectedTableName, "")
+            Dim cashierName As String = If(Not String.IsNullOrWhiteSpace(Session.CurrentUserfullName), Session.CurrentUserfullName, "الكاشير")
+            RestaurantPrintManager.PrintGuestCheck(inv, tableName, cashierName)
+            Try
+                Notify.Toast("تمت طباعة شيك حساب الطاولة بنجاح 🖨️", Notify.ToastType.Success)
+            Catch
+            End Try
+        Catch ex As Exception
+            Logger.LogError("frmPOS.PrintCurrentGuestCheck", ex)
+            SmartMessageBox.Show("خطأ أثناء طباعة شيك الحساب: " & ex.Message, "خطأ طباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ' =========================================================
     ' زر تعليق الفاتورة المحدث مع دعم الـ JSON وقفل الطاولة
     ' =========================================================
     Private Sub btnHoldInvoice_Click(sender As Object, e As EventArgs) Handles btnHoldInvoice.Click
@@ -2414,6 +2484,9 @@ Public Class frmPOS
             Case Keys.F5
                 e.Handled = True
                 btnHoldInvoice.PerformClick()
+            Case Keys.F6
+                e.Handled = True
+                btnPrintCheck.PerformClick()
             Case Keys.F7
                 e.Handled = True
                 btnPendingInvoices.PerformClick()

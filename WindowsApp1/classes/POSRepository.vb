@@ -1000,6 +1000,32 @@ ORDER BY ShiftID DESC;"
         End Using
     End Function
 
+    ''' <summary>
+    ''' تحديث أصناف وإجمالي الفاتورة المعلقة (يُستخدم عند إضافة الويتر أو الكاشير لأصناف جديدة على نفس الطاولة)
+    ''' </summary>
+    Public Function UpdatePendingInvoice(inv As PendingInvoiceModel) As Boolean
+        If inv Is Nothing OrElse inv.PendingID <= 0 Then Return False
+        Dim sql As String = "
+        UPDATE PendingInvoices SET 
+            InvoiceJSON = @JSON,
+            TotalAmount = @Total,
+            Notes = @Notes,
+            CustomerName = @CustName
+        WHERE PendingID = @ID;"
+
+        Using con As New SqlConnection(_ConnectionString)
+            Using cmd As New SqlCommand(sql, con)
+                cmd.Parameters.AddWithValue("@JSON", inv.InvoiceJSON)
+                cmd.Parameters.AddWithValue("@Total", inv.TotalAmount)
+                cmd.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(inv.Notes), CObj(DBNull.Value), inv.Notes))
+                cmd.Parameters.AddWithValue("@CustName", If(String.IsNullOrEmpty(inv.CustomerName), CObj(DBNull.Value), inv.CustomerName))
+                cmd.Parameters.AddWithValue("@ID", inv.PendingID)
+                con.Open()
+                Return cmd.ExecuteNonQuery() > 0
+            End Using
+        End Using
+    End Function
+
 
     ' 1. دالة جلب رقم الفاتورة التالي
     Public Function GetNextInvoiceNumber() As String

@@ -47,15 +47,26 @@ Public Class RestaurantPrintManager
     End Sub
 
     ' ═════════════════════════════════════════════════════════════════
-    ' 1. طباعة فاتورة العميل (Guest Receipt)
+    ' 1. طباعة فاتورة العميل (Guest Receipt) وشيك الحساب (Guest Check)
     ' ═════════════════════════════════════════════════════════════════
+    ''' <summary>
+    ''' طباعة شيك حساب استرشادي لطاولة الصالة قبل السداد (Guest Check / Bill Pre-Print).
+    ''' </summary>
+    Public Shared Sub PrintGuestCheck(inv As InvoiceModel,
+                                      Optional tableName As String = "",
+                                      Optional waiterName As String = "",
+                                      Optional customPrinterName As String = "")
+        PrintCustomerReceipt(inv, customerName:="", tableName:=tableName, driverName:=waiterName, isReprint:=False, customPrinterName:=customPrinterName, forcePreview:=False, isGuestCheck:=True)
+    End Sub
+
     Public Shared Sub PrintCustomerReceipt(inv As InvoiceModel,
                                            Optional customerName As String = "",
                                            Optional tableName As String = "",
                                            Optional driverName As String = "",
                                            Optional isReprint As Boolean = False,
                                            Optional customPrinterName As String = "",
-                                           Optional forcePreview As Boolean = False)
+                                           Optional forcePreview As Boolean = False,
+                                           Optional isGuestCheck As Boolean = False)
         Try
             Dim prn = If(String.IsNullOrWhiteSpace(customPrinterName), GetDefaultThermalPrinter(), customPrinterName)
             If String.IsNullOrWhiteSpace(prn) Then
@@ -94,9 +105,13 @@ Public Class RestaurantPrintManager
             Dim autoPrint = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterAutoPrint, SettingsKeys.PrintReceiptOnPayment, True)
             Dim openDrawerSetting = SettingsManager.GetBoolSettingDual(SettingsKeys.PrinterOpenCashDrawer, SettingsKeys.OpenDrawerOnPayment, True)
 
-            ' فحص الطباعة التلقائية (إذا كانت معطلة والطباعة غير يدوية أو غير تجريبية نتخطى)
-            If Not isReprint AndAlso Not forcePreview AndAlso Not autoPrint Then
+            ' فحص الطباعة التلقائية (إذا كانت معطلة والطباعة غير يدوية أو غير شيك أو غير تجريبية نتخطى)
+            If Not isReprint AndAlso Not isGuestCheck AndAlso Not forcePreview AndAlso Not autoPrint Then
                 Return
+            End If
+
+            If isGuestCheck Then
+                footerText = "شيك حساب استرشادي قبل الدفع — ليس إيصال سداد نهائي"
             End If
 
             Dim paperSizeVal = SettingsManager.GetSettingOrDefault(SettingsKeys.PrinterPaperSize, "80mm")
@@ -130,9 +145,9 @@ Public Class RestaurantPrintManager
                                          End If
 
                                          If receiptStyle.Equals("Grid", StringComparison.OrdinalIgnoreCase) Then
-                                             RenderCustomerReceiptGrid(g, pageWidth, inv, customerName, tableName, driverName, isReprint, shopName, shopPhone, shopPhone2, shopAddress, shopTax, footerText, logoPath, printLogo, showTax, showDiscount, showCashier, baseFontSize, printBarcode, barcodeType)
+                                             RenderCustomerReceiptGrid(g, pageWidth, inv, customerName, tableName, driverName, isReprint, shopName, shopPhone, shopPhone2, shopAddress, shopTax, footerText, logoPath, printLogo, showTax, showDiscount, showCashier, baseFontSize, printBarcode, barcodeType, isGuestCheck)
                                          Else
-                                             RenderCustomerReceiptClassic(g, pageWidth, inv, customerName, tableName, driverName, isReprint, shopName, shopPhone, shopPhone2, shopAddress, shopTax, footerText, logoPath, printLogo, showTax, showDiscount, showCashier, baseFontSize, printBarcode, barcodeType)
+                                             RenderCustomerReceiptClassic(g, pageWidth, inv, customerName, tableName, driverName, isReprint, shopName, shopPhone, shopPhone2, shopAddress, shopTax, footerText, logoPath, printLogo, showTax, showDiscount, showCashier, baseFontSize, printBarcode, barcodeType, isGuestCheck)
                                          End If
 
                                          e.HasMorePages = False
@@ -141,7 +156,7 @@ Public Class RestaurantPrintManager
             If usePreview OrElse forcePreview Then
                 Using dlg As New PrintPreviewDialog()
                     dlg.Document = pd
-                    dlg.Text = "معاينة فاتورة المبيعات"
+                    dlg.Text = If(isGuestCheck, "معاينة شيك حساب الطاولة", "معاينة فاتورة المبيعات")
                     dlg.WindowState = FormWindowState.Normal
                     dlg.Width = 480
                     dlg.Height = 750
@@ -152,7 +167,7 @@ Public Class RestaurantPrintManager
                 End Using
             Else
                 pd.Print()
-                If openDrawerSetting Then
+                If openDrawerSetting AndAlso Not isReprint AndAlso Not isGuestCheck Then
                     OpenCashDrawer(prn)
                 End If
             End If
@@ -185,7 +200,8 @@ Public Class RestaurantPrintManager
                                                 showCashier As Boolean,
                                                 baseFontSize As Single,
                                                 Optional printBarcode As Boolean = True,
-                                                Optional barcodeType As String = "2D")
+                                                Optional barcodeType As String = "2D",
+                                                Optional isGuestCheck As Boolean = False)
 
         g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
         g.TextRenderingHint = Drawing.Text.TextRenderingHint.ClearTypeGridFit
@@ -254,7 +270,7 @@ Public Class RestaurantPrintManager
             yPos += 4
 
             ' شريط عنوان الفاتورة داخل إطار مظلل أنيق
-            Dim badgeText As String = If(isReprint, "فاتورة مبيعات (نسخة معاد طباعتها)", "فاتورة مبيعات")
+            Dim badgeText As String = If(isGuestCheck, "🧾 شيك حساب طاولة (غير نهائي)", If(isReprint, "فاتورة مبيعات (نسخة معاد طباعتها)", "فاتورة مبيعات"))
             Dim badgeRect As New Rectangle(6, yPos, pageWidth - 12, 24)
             g.FillRectangle(headerBrush, badgeRect)
             g.DrawRectangle(borderPen, badgeRect)
@@ -515,7 +531,8 @@ Public Class RestaurantPrintManager
                                                    showCashier As Boolean,
                                                    baseFontSize As Single,
                                                    Optional printBarcode As Boolean = True,
-                                                   Optional barcodeType As String = "2D")
+                                                   Optional barcodeType As String = "2D",
+                                                 Optional isGuestCheck As Boolean = False)
 
         Dim yPos As Integer = 5
 
@@ -564,7 +581,7 @@ Public Class RestaurantPrintManager
 
             ' شريط نوع الفاتورة
             yPos += 4
-            Dim badgeText As String = If(isReprint, "فاتورة مبيعات (نسخة معاد طباعتها)", "فاتورة مبيعات")
+            Dim badgeText As String = If(isGuestCheck, "🧾 شيك حساب طاولة (غير نهائي)", If(isReprint, "فاتورة مبيعات (نسخة معاد طباعتها)", "فاتورة مبيعات"))
             g.DrawString(badgeText, fontBold, Brushes.Black, New RectangleF(0, yPos, pageWidth, 20), sfCenter)
             yPos += 20
 

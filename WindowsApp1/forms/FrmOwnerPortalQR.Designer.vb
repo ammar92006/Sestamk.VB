@@ -23,6 +23,10 @@ Partial Class FrmOwnerPortalQR
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.btnCloseHeader = New Guna.UI2.WinForms.Guna2Button()
         Me.pnlContainer = New Guna.UI2.WinForms.Guna2Panel()
+        Me.pnlNavTabs = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnTabOwner = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnTabWaiter = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnTabKDS = New Guna.UI2.WinForms.Guna2Button()
         Me.lblInstructions = New System.Windows.Forms.Label()
         Me.picQRCode = New Guna.UI2.WinForms.Guna2PictureBox()
         Me.lblStatusBadge = New System.Windows.Forms.Label()
@@ -32,6 +36,7 @@ Partial Class FrmOwnerPortalQR
         Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
         Me.panelHeader.SuspendLayout()
         Me.pnlContainer.SuspendLayout()
+        Me.pnlNavTabs.SuspendLayout()
         CType(Me.picQRCode, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -51,7 +56,7 @@ Partial Class FrmOwnerPortalQR
         Me.panelHeader.Location = New System.Drawing.Point(0, 0)
         Me.panelHeader.Name = "panelHeader"
         Me.panelHeader.Padding = New System.Windows.Forms.Padding(16, 12, 16, 12)
-        Me.panelHeader.Size = New System.Drawing.Size(460, 60)
+        Me.panelHeader.Size = New System.Drawing.Size(480, 60)
         Me.panelHeader.TabIndex = 0
         '
         'lblTitle
@@ -62,9 +67,9 @@ Partial Class FrmOwnerPortalQR
         Me.lblTitle.ForeColor = System.Drawing.Color.White
         Me.lblTitle.Location = New System.Drawing.Point(120, 16)
         Me.lblTitle.Name = "lblTitle"
-        Me.lblTitle.Size = New System.Drawing.Size(260, 25)
+        Me.lblTitle.Size = New System.Drawing.Size(280, 25)
         Me.lblTitle.TabIndex = 0
-        Me.lblTitle.Text = "📱 بوابة المالك والمشرف (Live)"
+        Me.lblTitle.Text = "📱 بوابات سستمك الذكية (Live)"
         Me.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'btnCloseHeader
@@ -91,24 +96,84 @@ Partial Class FrmOwnerPortalQR
         Me.pnlContainer.Controls.Add(Me.lblStatusBadge)
         Me.pnlContainer.Controls.Add(Me.picQRCode)
         Me.pnlContainer.Controls.Add(Me.lblInstructions)
+        Me.pnlContainer.Controls.Add(Me.pnlNavTabs)
         Me.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlContainer.Location = New System.Drawing.Point(0, 60)
         Me.pnlContainer.Name = "pnlContainer"
-        Me.pnlContainer.Padding = New System.Windows.Forms.Padding(20)
-        Me.pnlContainer.Size = New System.Drawing.Size(460, 520)
+        Me.pnlContainer.Padding = New System.Windows.Forms.Padding(18)
+        Me.pnlContainer.Size = New System.Drawing.Size(480, 580)
         Me.pnlContainer.TabIndex = 1
+        '
+        'pnlNavTabs
+        '
+        Me.pnlNavTabs.BackColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
+        Me.pnlNavTabs.BorderColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(85, Byte), Integer))
+        Me.pnlNavTabs.BorderRadius = 10
+        Me.pnlNavTabs.BorderThickness = 1
+        Me.pnlNavTabs.Controls.Add(Me.btnTabKDS)
+        Me.pnlNavTabs.Controls.Add(Me.btnTabWaiter)
+        Me.pnlNavTabs.Controls.Add(Me.btnTabOwner)
+        Me.pnlNavTabs.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlNavTabs.Location = New System.Drawing.Point(18, 18)
+        Me.pnlNavTabs.Name = "pnlNavTabs"
+        Me.pnlNavTabs.Padding = New System.Windows.Forms.Padding(4)
+        Me.pnlNavTabs.Size = New System.Drawing.Size(444, 46)
+        Me.pnlNavTabs.TabIndex = 0
+        '
+        'btnTabOwner
+        '
+        Me.btnTabOwner.BorderRadius = 8
+        Me.btnTabOwner.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnTabOwner.Dock = System.Windows.Forms.DockStyle.Right
+        Me.btnTabOwner.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(99, Byte), Integer), CType(CType(235, Byte), Integer))
+        Me.btnTabOwner.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.btnTabOwner.ForeColor = System.Drawing.Color.White
+        Me.btnTabOwner.Location = New System.Drawing.Point(298, 4)
+        Me.btnTabOwner.Name = "btnTabOwner"
+        Me.btnTabOwner.Size = New System.Drawing.Size(142, 38)
+        Me.btnTabOwner.TabIndex = 0
+        Me.btnTabOwner.Text = "📱 بوابة المالك"
+        '
+        'btnTabWaiter
+        '
+        Me.btnTabWaiter.BorderRadius = 8
+        Me.btnTabWaiter.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnTabWaiter.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.btnTabWaiter.FillColor = System.Drawing.Color.Transparent
+        Me.btnTabWaiter.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.btnTabWaiter.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+        Me.btnTabWaiter.Location = New System.Drawing.Point(146, 4)
+        Me.btnTabWaiter.Name = "btnTabWaiter"
+        Me.btnTabWaiter.Size = New System.Drawing.Size(152, 38)
+        Me.btnTabWaiter.TabIndex = 1
+        Me.btnTabWaiter.Text = "🍽️ تابلت الويتر"
+        '
+        'btnTabKDS
+        '
+        Me.btnTabKDS.BorderRadius = 8
+        Me.btnTabKDS.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnTabKDS.Dock = System.Windows.Forms.DockStyle.Left
+        Me.btnTabKDS.FillColor = System.Drawing.Color.Transparent
+        Me.btnTabKDS.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
+        Me.btnTabKDS.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+        Me.btnTabKDS.Location = New System.Drawing.Point(4, 4)
+        Me.btnTabKDS.Name = "btnTabKDS"
+        Me.btnTabKDS.Size = New System.Drawing.Size(142, 38)
+        Me.btnTabKDS.TabIndex = 2
+        Me.btnTabKDS.Text = "🧑‍🍳 شاشة المطبخ"
         '
         'lblInstructions
         '
         Me.lblInstructions.Dock = System.Windows.Forms.DockStyle.Top
-        Me.lblInstructions.Font = New System.Drawing.Font("Segoe UI", 9.5!)
+        Me.lblInstructions.Font = New System.Drawing.Font("Segoe UI", 9.25!)
         Me.lblInstructions.ForeColor = System.Drawing.Color.FromArgb(CType(CType(203, Byte), Integer), CType(CType(213, Byte), Integer), CType(CType(225, Byte), Integer))
-        Me.lblInstructions.Location = New System.Drawing.Point(20, 20)
+        Me.lblInstructions.Location = New System.Drawing.Point(18, 64)
         Me.lblInstructions.Name = "lblInstructions"
-        Me.lblInstructions.Size = New System.Drawing.Size(420, 42)
-        Me.lblInstructions.TabIndex = 0
-        Me.lblInstructions.Text = "امسح الرمز بكاميرا هاتفك (أيفون أو أندرويد) وأنت متصل بنفس شبكة الواي فاي لمتابعة م" &
-    "بيعات اليوم وإشغال الصالة والدرج لحظة بلحظة:"
+        Me.lblInstructions.Padding = New System.Windows.Forms.Padding(0, 10, 0, 0)
+        Me.lblInstructions.Size = New System.Drawing.Size(444, 48)
+        Me.lblInstructions.TabIndex = 1
+        Me.lblInstructions.Text = "امسح الرمز بكاميرا هاتفك وأنت متصل بنفس شبكة الواي فاي لمتابعة مبيعات اليوم وإشغال" &
+    " الصالة لحظة بلحظة:"
         Me.lblInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'picQRCode
@@ -116,22 +181,22 @@ Partial Class FrmOwnerPortalQR
         Me.picQRCode.BorderRadius = 12
         Me.picQRCode.FillColor = System.Drawing.Color.White
         Me.picQRCode.ImageRotate = 0!
-        Me.picQRCode.Location = New System.Drawing.Point(110, 75)
+        Me.picQRCode.Location = New System.Drawing.Point(125, 120)
         Me.picQRCode.Name = "picQRCode"
-        Me.picQRCode.Size = New System.Drawing.Size(240, 240)
+        Me.picQRCode.Size = New System.Drawing.Size(230, 230)
         Me.picQRCode.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.picQRCode.TabIndex = 1
+        Me.picQRCode.TabIndex = 2
         Me.picQRCode.TabStop = False
         '
         'lblStatusBadge
         '
         Me.lblStatusBadge.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Bold)
         Me.lblStatusBadge.ForeColor = System.Drawing.Color.FromArgb(CType(CType(52, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(153, Byte), Integer))
-        Me.lblStatusBadge.Location = New System.Drawing.Point(20, 325)
+        Me.lblStatusBadge.Location = New System.Drawing.Point(18, 360)
         Me.lblStatusBadge.Name = "lblStatusBadge"
-        Me.lblStatusBadge.Size = New System.Drawing.Size(420, 22)
-        Me.lblStatusBadge.TabIndex = 2
-        Me.lblStatusBadge.Text = "🟢 البوابة تعمل ونشطة على شبكة المطعم"
+        Me.lblStatusBadge.Size = New System.Drawing.Size(444, 22)
+        Me.lblStatusBadge.TabIndex = 3
+        Me.lblStatusBadge.Text = "🟢 السيرفر يعمل ونشط على شبكة المطعم المحلية (Port 5055)"
         Me.lblStatusBadge.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtPortalUrl
@@ -143,11 +208,11 @@ Partial Class FrmOwnerPortalQR
         Me.txtPortalUrl.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(41, Byte), Integer), CType(CType(59, Byte), Integer))
         Me.txtPortalUrl.Font = New System.Drawing.Font("Consolas", 10.0!, System.Drawing.FontStyle.Bold)
         Me.txtPortalUrl.ForeColor = System.Drawing.Color.FromArgb(CType(CType(56, Byte), Integer), CType(CType(189, Byte), Integer), CType(CType(248, Byte), Integer))
-        Me.txtPortalUrl.Location = New System.Drawing.Point(50, 355)
+        Me.txtPortalUrl.Location = New System.Drawing.Point(50, 390)
         Me.txtPortalUrl.Name = "txtPortalUrl"
         Me.txtPortalUrl.ReadOnly = True
-        Me.txtPortalUrl.Size = New System.Drawing.Size(360, 38)
-        Me.txtPortalUrl.TabIndex = 3
+        Me.txtPortalUrl.Size = New System.Drawing.Size(380, 38)
+        Me.txtPortalUrl.TabIndex = 4
         Me.txtPortalUrl.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'btnCopyUrl
@@ -158,10 +223,10 @@ Partial Class FrmOwnerPortalQR
         Me.btnCopyUrl.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
         Me.btnCopyUrl.ForeColor = System.Drawing.Color.White
         Me.btnCopyUrl.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(85, Byte), Integer), CType(CType(105, Byte), Integer))
-        Me.btnCopyUrl.Location = New System.Drawing.Point(50, 405)
+        Me.btnCopyUrl.Location = New System.Drawing.Point(50, 440)
         Me.btnCopyUrl.Name = "btnCopyUrl"
-        Me.btnCopyUrl.Size = New System.Drawing.Size(175, 42)
-        Me.btnCopyUrl.TabIndex = 4
+        Me.btnCopyUrl.Size = New System.Drawing.Size(185, 42)
+        Me.btnCopyUrl.TabIndex = 5
         Me.btnCopyUrl.Text = "📋 نسخ الرابط"
         '
         'btnOpenBrowser
@@ -172,10 +237,10 @@ Partial Class FrmOwnerPortalQR
         Me.btnOpenBrowser.Font = New System.Drawing.Font("Segoe UI", 9.5!, System.Drawing.FontStyle.Bold)
         Me.btnOpenBrowser.ForeColor = System.Drawing.Color.White
         Me.btnOpenBrowser.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(29, Byte), Integer), CType(CType(78, Byte), Integer), CType(CType(216, Byte), Integer))
-        Me.btnOpenBrowser.Location = New System.Drawing.Point(235, 405)
+        Me.btnOpenBrowser.Location = New System.Drawing.Point(245, 440)
         Me.btnOpenBrowser.Name = "btnOpenBrowser"
-        Me.btnOpenBrowser.Size = New System.Drawing.Size(175, 42)
-        Me.btnOpenBrowser.TabIndex = 5
+        Me.btnOpenBrowser.Size = New System.Drawing.Size(185, 42)
+        Me.btnOpenBrowser.TabIndex = 6
         Me.btnOpenBrowser.Text = "🌐 فتح في المتصفح"
         '
         'btnClose
@@ -186,10 +251,10 @@ Partial Class FrmOwnerPortalQR
         Me.btnClose.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular)
         Me.btnClose.ForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
         Me.btnClose.HoverState.ForeColor = System.Drawing.Color.White
-        Me.btnClose.Location = New System.Drawing.Point(160, 460)
+        Me.btnClose.Location = New System.Drawing.Point(170, 500)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(140, 32)
-        Me.btnClose.TabIndex = 6
+        Me.btnClose.TabIndex = 7
         Me.btnClose.Text = "إغلاق النافذة"
         '
         'FrmOwnerPortalQR
@@ -197,7 +262,7 @@ Partial Class FrmOwnerPortalQR
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(15, Byte), Integer), CType(CType(23, Byte), Integer), CType(CType(42, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(460, 580)
+        Me.ClientSize = New System.Drawing.Size(480, 640)
         Me.Controls.Add(Me.pnlContainer)
         Me.Controls.Add(Me.panelHeader)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
@@ -208,6 +273,7 @@ Partial Class FrmOwnerPortalQR
         Me.panelHeader.ResumeLayout(False)
         Me.panelHeader.PerformLayout()
         Me.pnlContainer.ResumeLayout(False)
+        Me.pnlNavTabs.ResumeLayout(False)
         CType(Me.picQRCode, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -218,6 +284,10 @@ Partial Class FrmOwnerPortalQR
     Friend WithEvents lblTitle As Label
     Friend WithEvents btnCloseHeader As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents pnlContainer As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents pnlNavTabs As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents btnTabOwner As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnTabWaiter As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnTabKDS As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblInstructions As Label
     Friend WithEvents picQRCode As Guna.UI2.WinForms.Guna2PictureBox
     Friend WithEvents lblStatusBadge As Label

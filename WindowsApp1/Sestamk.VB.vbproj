@@ -1609,6 +1609,12 @@
     <Content Include="WebPortal\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="WebPortal\waiter.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="WebPortal\kds.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\shopping-cart %281%29.png" />
     <None Include="Resources\purchaser.png" />
     <None Include="Resources\clear %282%29.png" />

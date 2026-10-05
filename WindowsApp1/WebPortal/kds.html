@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>شاشة المطبخ الذكية — سستمك KDS Live</title>
+  <meta name="theme-color" content="#020617">
+  <style>
+    :root {
+      --bg: #020617;
+      --card-bg: #0F172A;
+      --card-border: #1E293B;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --green: #10B981;
+      --green-bg: #064E3B;
+      --amber: #F59E0B;
+      --amber-bg: #78350F;
+      --red: #EF4444;
+      --red-bg: #7F1D1D;
+      --blue: #3B82F6;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #0B0F19;
+      border-bottom: 2px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .kds-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stats-bar {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+    .stat-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .clock-badge {
+      font-family: monospace;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    /* Main Grid */
+    .kds-container {
+      flex: 1;
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      align-content: start;
+    }
+
+    .order-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      transition: transform 0.15s, border-color 0.2s;
+    }
+    .order-card.normal { border-color: var(--green); }
+    .order-card.warning { border-color: var(--amber); }
+    .order-card.overdue {
+      border-color: var(--red);
+      animation: alertPulse 2s infinite;
+    }
+    @keyframes alertPulse {
+      0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .card-head {
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+    .normal .card-head { background: var(--green-bg); }
+    .warning .card-head { background: var(--amber-bg); }
+    .overdue .card-head { background: var(--red-bg); }
+
+    .order-meta-title {
+      font-size: 16px;
+      font-weight: 800;
+    }
+    .order-meta-sub {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    .timer-pill {
+      background: rgba(0,0,0,0.3);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .card-body {
+      padding: 12px 14px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .kds-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .kds-item-row:hover {
+      background: rgba(255,255,255,0.07);
+    }
+    .kds-item-row.done {
+      opacity: 0.35;
+      text-decoration: line-through;
+    }
+    .item-qty {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--blue);
+      min-width: 32px;
+    }
+    .item-info {
+      flex: 1;
+    }
+    .item-name {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .item-notes {
+      font-size: 12px;
+      color: var(--amber);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .card-notes {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px dashed var(--amber);
+      color: var(--amber);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .card-footer {
+      padding: 10px 14px;
+      background: #0B0F19;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      gap: 8px;
+    }
+    .btn-bump {
+      flex: 1;
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-bump:active {
+      opacity: 0.8;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      padding: 80px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 14px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <div class="kds-title">
+        <span>🧑‍🍳 شاشة المطبخ (KDS)</span>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-badge">
+          <span>طلبات نشطة:</span>
+          <span id="lblActiveCount" style="color:var(--blue)">0</span>
+        </div>
+        <div class="stat-badge">
+          <span>متأخرة (>18د):</span>
+          <span id="lblOverdueCount" style="color:var(--red)">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:16px;">
+      <button onclick="toggleAudio()" id="btnAudioToggle" style="background:var(--card-bg); border:1px solid var(--card-border); color:var(--text); padding:6px 14px; border-radius:10px; cursor:pointer; font-weight:700; font-size:13px;">
+        🔔 الصوت: مفعّل
+      </button>
+      <button onclick="toggleFullscreen()" style="background:var(--card-bg); border:1px solid var(--card-border); color:var(--text); padding:6px 12px; border-radius:10px; cursor:pointer;">
+        🗖 ملء الشاشة
+      </button>
+      <div class="clock-badge" id="lblClock">--:--:--</div>
+    </div>
+  </header>
+
+  <main class="kds-container" id="ordersGrid">
+    <!-- Order cards rendered dynamically -->
+  </main>
+
+  <!-- Audio Chime -->
+  <audio id="orderAudio" preload="auto">
+    <source src="data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU..." type="audio/wav">
+  </audio>
+
+  <script>
+    let activeOrders = [];
+    let audioEnabled = true;
+    let knownOrderIds = new Set();
+    let audioContext = null;
+
+    function playBeep() {
+      if (!audioEnabled) return;
+      try {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioContext.currentTime); // A5
+        osc.frequency.setValueAtTime(1174.66, audioContext.currentTime + 0.15); // D6
+        gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+        osc.start();
+        osc.stop(audioContext.currentTime + 0.4);
+      } catch (e) {}
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('btnAudioToggle').textContent = audioEnabled ? "🔔 الصوت: مفعّل" : "🔕 الصوت: صامت";
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(()=>{});
+      } else {
+        document.exitFullscreen().catch(()=>{});
+      }
+    }
+
+    function updateClock() {
+      document.getElementById('lblClock').textContent = new Date().toLocaleTimeString('ar-EG');
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch('/api/kds/orders');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        let hasNew = false;
+        data.forEach(o => {
+          if (!knownOrderIds.has(o.orderId)) {
+            hasNew = true;
+            knownOrderIds.add(o.orderId);
+          }
+        });
+
+        if (hasNew && knownOrderIds.size > data.length) {
+          playBeep();
+        }
+
+        activeOrders = data;
+        renderOrders();
+      } catch (e) {
+        console.error("KDS fetch error", e);
+      }
+    }
+
+    function renderOrders() {
+      const grid = document.getElementById('ordersGrid');
+      grid.innerHTML = '';
+
+      let overdueCount = 0;
+      document.getElementById('lblActiveCount').textContent = activeOrders.length;
+
+      if (!activeOrders.length) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">✨</div>
+            <h2 style="font-size:24px; font-weight:800; margin-bottom:8px;">كل الطلبات منجزة!</h2>
+            <p>لا توجد طلبات معلقة في المطبخ حالياً. في انتظار وصول طلبات جديدة...</p>
+          </div>
+        `;
+        document.getElementById('lblOverdueCount').textContent = 0;
+        return;
+      }
+
+      activeOrders.forEach(o => {
+        const elapsedSec = o.elapsedSeconds || 0;
+        const elapsedMin = Math.floor(elapsedSec / 60);
+
+        let agingClass = 'normal';
+        if (elapsedMin >= 18) {
+          agingClass = 'overdue';
+          overdueCount++;
+        } else if (elapsedMin >= 10) {
+          agingClass = 'warning';
+        }
+
+        const card = document.createElement('div');
+        card.className = `order-card ${agingClass}`;
+
+        const itemsHtml = (o.items || []).map(it => `
+          <div class="kds-item-row ${it.isCompleted ? 'done' : ''}" onclick="toggleItemDone(${o.orderId}, ${it.detailId}, ${!it.isCompleted})">
+            <span class="item-qty">${it.quantity}×</span>
+            <div class="item-info">
+              <div class="item-name">${it.productName} ${it.sizeName ? `(${it.sizeName})` : ''}</div>
+              ${it.addonsText ? `<div style="font-size:11px; color:#38BDF8;">+ ${it.addonsText}</div>` : ''}
+              ${it.notes ? `<div class="item-notes">📝 ${it.notes}</div>` : ''}
+            </div>
+            <span>${it.isCompleted ? '✓' : '○'}</span>
+          </div>
+        `).join('');
+
+        card.innerHTML = `
+          <div class="card-head">
+            <div>
+              <div class="order-meta-title">طلب #${o.orderNumber} (${o.orderTypeDisplay || 'صالة'})</div>
+              <div class="order-meta-sub">${o.serverName ? `الويتر: ${o.serverName}` : ''} ${o.tableName ? `• ${o.tableName}` : ''}</div>
+            </div>
+            <div class="timer-pill">${o.elapsedFormatted || (elapsedMin + ' د')}</div>
+          </div>
+          <div class="card-body">
+            ${o.notes ? `<div class="card-notes">⚠️ ${o.notes}</div>` : ''}
+            ${itemsHtml}
+          </div>
+          <div class="card-footer">
+            <button class="btn-bump" onclick="bumpOrder(${o.orderId})">
+              <span>✅ إنجاز الطلب كامل (BUMP)</span>
+            </button>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      document.getElementById('lblOverdueCount').textContent = overdueCount;
+    }
+
+    async function toggleItemDone(orderId, detailId, isDone) {
+      try {
+        await fetch('/api/kds/bump', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: orderId, detailId: detailId, isCompleted: isDone, action: 'item' })
+        });
+        fetchOrders();
+      } catch (e) {}
+    }
+
+    async function bumpOrder(orderId) {
+      try {
+        await fetch('/api/kds/bump', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ orderId: orderId, action: 'bump' })
+        });
+        knownOrderIds.delete(orderId);
+        fetchOrders();
+      } catch (e) {}
+    }
+
+    // Live update loop every 3 seconds
+    fetchOrders();
+    setInterval(fetchOrders, 3000);
+  </script>
+</body>
+</html>

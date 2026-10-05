@@ -131,11 +131,27 @@ Namespace Services.Cloud
         End Function
 
         ''' <summary>
-        ''' رابط الدخول من الهاتف أو التابلت على شبكة الواي فاي.
+        ''' رابط الدخول من الهاتف أو التابلت على شبكة الواي فاي (بوابة المالك).
         ''' </summary>
         Public Function GetMobilePortalUrl() As String
             Dim ip = GetLocalIPAddress()
             Return $"http://{ip}:{_port}/"
+        End Function
+
+        ''' <summary>
+        ''' رابط تطبيق الويتر الذكي للهاتف والتابلت (Waiter Mobile POS).
+        ''' </summary>
+        Public Function GetWaiterPortalUrl() As String
+            Dim ip = GetLocalIPAddress()
+            Return $"http://{ip}:{_port}/waiter"
+        End Function
+
+        ''' <summary>
+        ''' رابط شاشة المطبخ الذكية (Smart TV and Kitchen Display).
+        ''' </summary>
+        Public Function GetKdsPortalUrl() As String
+            Dim ip = GetLocalIPAddress()
+            Return $"http://{ip}:{_port}/kds"
         End Function
 
         ''' <summary>
@@ -179,7 +195,13 @@ Namespace Services.Cloud
 
                 Select Case path
                     Case "/", "/index.html"
-                        ServeHtmlPortal(resp)
+                        ServeHtmlFile(resp, "index.html")
+
+                    Case "/waiter", "/waiter.html"
+                        ServeHtmlFile(resp, "waiter.html")
+
+                    Case "/kds", "/kds.html"
+                        ServeHtmlFile(resp, "kds.html")
 
                     Case "/api/summary"
                         ServeJson(resp, BuildSummaryJson())
@@ -192,6 +214,18 @@ Namespace Services.Cloud
 
                     Case "/api/top-items"
                         ServeJson(resp, BuildTopItemsJson())
+
+                    Case "/api/menu"
+                        ServeJson(resp, BuildMenuJson())
+
+                    Case "/api/order/waiter"
+                        ServeJson(resp, HandleWaiterOrderPost(req))
+
+                    Case "/api/kds/orders"
+                        ServeJson(resp, BuildKdsOrdersJson())
+
+                    Case "/api/kds/bump"
+                        ServeJson(resp, HandleKdsBumpPost(req))
 
                     Case Else
                         resp.StatusCode = 404
@@ -221,9 +255,9 @@ Namespace Services.Cloud
             resp.Close()
         End Sub
 
-        Private Sub ServeHtmlPortal(resp As HttpListenerResponse)
+        Private Sub ServeHtmlFile(resp As HttpListenerResponse, fileName As String)
             Dim htmlContent As String = ""
-            Dim portalPath = Path.Combine(Application.StartupPath, "WebPortal", "index.html")
+            Dim portalPath = Path.Combine(Application.StartupPath, "WebPortal", fileName)
 
             If File.Exists(portalPath) Then
                 Try
@@ -234,7 +268,7 @@ Namespace Services.Cloud
 
             If String.IsNullOrWhiteSpace(htmlContent) Then
                 ' مسار بديل وقت التطوير أو التشغيل من bin
-                Dim devPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "WebPortal", "index.html")
+                Dim devPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "WebPortal", fileName)
                 If File.Exists(devPath) Then
                     Try
                         htmlContent = File.ReadAllText(devPath, Encoding.UTF8)
@@ -244,7 +278,7 @@ Namespace Services.Cloud
             End If
 
             If String.IsNullOrWhiteSpace(htmlContent) Then
-                htmlContent = "<!DOCTYPE html><html dir='rtl'><head><meta charset='utf-8'><title>سستمك Live</title></head><body style='font-family:sans-serif;padding:30px;background:#0F172A;color:#fff;'><h2>بوابة سستمك Live تعمل بنجاح</h2><p>جاري تحديث واجهة المالك.</p></body></html>"
+                htmlContent = "<!DOCTYPE html><html dir='rtl'><head><meta charset='utf-8'><title>سستمك</title></head><body style='font-family:sans-serif;padding:30px;background:#0F172A;color:#fff;'><h2>سستمك Live</h2><p>الملف غير متوفر: " & fileName & "</p></body></html>"
             End If
 
             Dim bytes = Encoding.UTF8.GetBytes(htmlContent)
@@ -547,6 +581,302 @@ Namespace Services.Cloud
             End Try
 
             Return arr.ToString(Formatting.None)
+        End Function
+
+        ' =========================================================
+        ' واجهات الويتر وشاشة المطبخ (Waiter & KDS Endpoints)
+        ' =========================================================
+
+        ''' <summary>
+        ''' جلب قائمة المنيو الكاملة بالأقسام والأصناف والأسعار والأحجام لتطبيق الويتر المحمول
+        ''' </summary>
+        Private Function BuildMenuJson() As String
+            Dim root As New JObject()
+            Dim categoriesArr As New JArray()
+            Try
+                Dim dtCats = DBModule.ExecuteQuery("SELECT Category_ID, Category_Name FROM Categories WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY Category_ID;")
+                Dim dtProds = DBModule.ExecuteQuery("SELECT Product_ID, Category_ID, ProductName, ISNULL(ProductNameAr, ProductName) AS NameAr, SalePrice, ISNULL(Image, '') AS ProdImg, ISNULL(PreparationTime, '00:10:00') AS PrepTime FROM Products WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY Product_ID;")
+                Dim dtSizes = DBModule.ExecuteQuery("SELECT ps.ProductSizeID, ps.ProductID, ps.SizeID, s.SizeNameAr, ps.SalePrice FROM ProductSizes ps INNER JOIN Sizes s ON ps.SizeID = s.SizeID WHERE ps.IsActive = 1 AND ps.IsDeleted = 0;")
+
+                If dtCats IsNot Nothing Then
+                    For Each cRow As DataRow In dtCats.Rows
+                        Dim catId = Convert.ToInt32(cRow("Category_ID"))
+                        Dim catObj As New JObject From {
+                            {"id", catId},
+                            {"name", cRow("Category_Name").ToString()},
+                            {"items", New JArray()}
+                        }
+
+                        Dim catItems = DirectCast(catObj("items"), JArray)
+                        If dtProds IsNot Nothing Then
+                            For Each pRow As DataRow In dtProds.Select("Category_ID = " & catId)
+                                Dim pId = Convert.ToInt32(pRow("Product_ID"))
+                                Dim pObj As New JObject From {
+                                    {"id", pId},
+                                    {"name", pRow("ProductName").ToString()},
+                                    {"nameAr", pRow("NameAr").ToString()},
+                                    {"price", Convert.ToDecimal(pRow("SalePrice"))},
+                                    {"prepTime", pRow("PrepTime").ToString()},
+                                    {"sizes", New JArray()}
+                                }
+
+                                Dim sizesArr = DirectCast(pObj("sizes"), JArray)
+                                If dtSizes IsNot Nothing Then
+                                    For Each sRow As DataRow In dtSizes.Select("ProductID = " & pId)
+                                        sizesArr.Add(New JObject From {
+                                            {"sizeId", Convert.ToInt32(sRow("SizeID"))},
+                                            {"sizeName", sRow("SizeNameAr").ToString()},
+                                            {"price", Convert.ToDecimal(sRow("SalePrice"))}
+                                        })
+                                    Next
+                                End If
+
+                                catItems.Add(pObj)
+                            Next
+                        End If
+
+                        categoriesArr.Add(catObj)
+                    Next
+                End If
+
+                root("success") = True
+                root("categories") = categoriesArr
+            Catch ex As Exception
+                root("success") = False
+                root("error") = ex.Message
+            End Try
+            Return root.ToString(Formatting.None)
+        End Function
+
+        ''' <summary>
+        ''' استقبال طلب جديد من تطبيق الويتر على الموبايل وحفظه على الطاولة وإرساله للمطبخ
+        ''' </summary>
+        Private Function HandleWaiterOrderPost(req As HttpListenerRequest) As String
+            Dim resObj As New JObject()
+            Try
+                Dim bodyStr As String = ""
+                Using reader As New StreamReader(req.InputStream, Encoding.UTF8)
+                    bodyStr = reader.ReadToEnd()
+                End Using
+
+                If String.IsNullOrWhiteSpace(bodyStr) Then
+                    resObj("success") = False
+                    resObj("error") = "بيانات الطلب فارغة."
+                    Return resObj.ToString()
+                End If
+
+                Dim payload = JObject.Parse(bodyStr)
+                Dim tableId As Integer = Convert.ToInt32(payload("tableId"))
+                Dim tableName As String = If(payload("tableName")?.ToString(), "طاولة " & tableId)
+                Dim waiterName As String = If(payload("waiterName")?.ToString(), "الويتر")
+                Dim orderNotes As String = If(payload("notes")?.ToString(), "")
+
+                Dim itemsToken = payload("items")
+                If itemsToken Is Nothing OrElse Not itemsToken.HasValues Then
+                    resObj("success") = False
+                    resObj("error") = "يجب اختيار صنف واحد على الأقل."
+                    Return resObj.ToString()
+                End If
+
+                Dim newItemsList As New List(Of InvoiceDetailModel)()
+                Dim kitchenItems As New List(Of KitchenOrderItemModel)()
+                Dim itemsTotal As Decimal = 0D
+
+                For Each it In itemsToken
+                    Dim pId = Convert.ToInt32(it("productId"))
+                    Dim pName = it("productName").ToString()
+                    Dim sName = If(it("sizeName")?.ToString(), "")
+                    Dim sId As Integer? = If(it("sizeId") IsNot Nothing AndAlso Convert.ToInt32(it("sizeId")) > 0, Convert.ToInt32(it("sizeId")), CType(Nothing, Integer?))
+                    Dim uPrice = Convert.ToDecimal(it("unitPrice"))
+                    Dim qty = Math.Max(1, Convert.ToInt32(it("quantity")))
+                    Dim lineTotal = uPrice * qty
+                    Dim itmNotes = If(it("notes")?.ToString(), "")
+
+                    itemsTotal += lineTotal
+
+                    newItemsList.Add(New InvoiceDetailModel With {
+                        .ProductID = pId,
+                        .ProductName = pName,
+                        .SizeName = sName,
+                        .SizeID = sId,
+                        .UnitPrice = uPrice,
+                        .Quantity = qty,
+                        .TotalPrice = lineTotal,
+                        .Notes = itmNotes
+                    })
+
+                    kitchenItems.Add(New KitchenOrderItemModel With {
+                        .ProductID = pId,
+                        .ProductName = pName,
+                        .SizeName = sName,
+                        .Quantity = qty,
+                        .Notes = itmNotes,
+                        .StationName = "المطبخ"
+                    })
+                Next
+
+                Dim repo As New POSRepository(DBModule.ConnectionString)
+                Dim existingPending = repo.GetPendingInvoiceByTableID(tableId)
+
+                If existingPending IsNot Nothing Then
+                    Dim mergedList As New List(Of InvoiceDetailModel)()
+                    Try
+                        Dim oldItems = JsonConvert.DeserializeObject(Of List(Of InvoiceDetailModel))(existingPending.InvoiceJSON)
+                        If oldItems IsNot Nothing Then mergedList.AddRange(oldItems)
+                    Catch
+                    End Try
+                    mergedList.AddRange(newItemsList)
+
+                    Dim newGrandTotal As Decimal = 0D
+                    For Each m In mergedList
+                        newGrandTotal += m.TotalPrice
+                    Next
+
+                    existingPending.InvoiceJSON = JsonConvert.SerializeObject(mergedList)
+                    existingPending.TotalAmount = newGrandTotal
+                    existingPending.Notes = If(String.IsNullOrWhiteSpace(existingPending.Notes), $"طلب من {waiterName}: {orderNotes}", $"{existingPending.Notes} | {waiterName}: {orderNotes}")
+                    repo.UpdatePendingInvoice(existingPending)
+                Else
+                    Dim newPending As New PendingInvoiceModel With {
+                        .ShiftID = If(ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, 1),
+                        .UserID = 1,
+                        .OrderType = 2, ' صالة
+                        .TableID = tableId,
+                        .TableName = tableName,
+                        .CustomerName = "طلب صالة (" & tableName & ")",
+                        .DeliveryFee = 0,
+                        .InvoiceJSON = JsonConvert.SerializeObject(newItemsList),
+                        .TotalAmount = itemsTotal,
+                        .Notes = $"ويتر: {waiterName} {orderNotes}"
+                    }
+                    repo.SavePendingInvoice(newPending)
+                    repo.UpdateTableStatus(tableId, 2)
+                End If
+
+                Dim kOrder As New KitchenOrderModel With {
+                    .OrderType = 2, ' صالة
+                    .TableID = tableId,
+                    .TableName = tableName,
+                    .ServerName = waiterName,
+                    .CustomerName = tableName,
+                    .Notes = orderNotes,
+                    .Status = KitchenOrderStatus.New,
+                    .Items = kitchenItems
+                }
+                Dim kOrderId = repo.CreateKitchenOrderAsync(kOrder).GetAwaiter().GetResult()
+
+                resObj("success") = True
+                resObj("message") = "تم إرسال الطلب للمطبخ وتسجيله على الطاولة بنجاح!"
+                resObj("kitchenOrderId") = kOrderId
+                resObj("tableId") = tableId
+                resObj("totalAdded") = itemsTotal
+            Catch ex As Exception
+                resObj("success") = False
+                resObj("error") = "فشل تسجيل طلب الويتر: " & ex.Message
+            End Try
+            Return resObj.ToString(Formatting.None)
+        End Function
+
+        ''' <summary>
+        ''' جلب كافة طلبات المطبخ النشطة لشاشة المطبخ (KDS)
+        ''' </summary>
+        Private Function BuildKdsOrdersJson() As String
+            Dim arr As New JArray()
+            Try
+                Dim repo As New POSRepository(DBModule.ConnectionString)
+                Dim activeOrders = repo.GetActiveKitchenOrders()
+                If activeOrders IsNot Nothing Then
+                    For Each ko In activeOrders
+                        Dim oObj As New JObject From {
+                            {"orderId", ko.KitchenOrderID},
+                            {"orderNumber", ko.OrderNumber},
+                            {"orderType", ko.OrderType},
+                            {"orderTypeDisplay", ko.OrderTypeDisplay},
+                            {"tableId", If(ko.TableID.HasValue, ko.TableID.Value, 0)},
+                            {"tableName", If(ko.TableName, "")},
+                            {"serverName", If(ko.ServerName, "")},
+                            {"customerName", If(ko.CustomerName, "")},
+                            {"createdAt", ko.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")},
+                            {"elapsedSeconds", ko.ElapsedSeconds},
+                            {"elapsedFormatted", ko.ElapsedFormatted},
+                            {"estimatedPrepMinutes", ko.EstimatedPrepMinutes},
+                            {"status", CInt(ko.Status)},
+                            {"notes", If(ko.Notes, "")},
+                            {"items", New JArray()}
+                        }
+
+                        Dim itemsArr = DirectCast(oObj("items"), JArray)
+                        If ko.Items IsNot Nothing Then
+                            For Each itm In ko.Items
+                                itemsArr.Add(New JObject From {
+                                    {"detailId", itm.DetailID},
+                                    {"productName", itm.ProductName},
+                                    {"sizeName", If(itm.SizeName, "")},
+                                    {"addonsText", If(itm.AddonsText, "")},
+                                    {"quantity", itm.Quantity},
+                                    {"notes", If(itm.Notes, "")},
+                                    {"isCompleted", itm.IsCompleted}
+                                })
+                            Next
+                        End If
+
+                        arr.Add(oObj)
+                    Next
+                End If
+            Catch ex As Exception
+                Logger.LogError("OwnerPortal.BuildKdsOrdersJson", ex)
+            End Try
+            Return arr.ToString(Formatting.None)
+        End Function
+
+        ''' <summary>
+        ''' معالجة إجراءات شاشة المطبخ (إنجاز صنف أو إنجاز الطلب بالكامل Bump)
+        ''' </summary>
+        Private Function HandleKdsBumpPost(req As HttpListenerRequest) As String
+            Dim resObj As New JObject()
+            Try
+                Dim bodyStr As String = ""
+                Using reader As New StreamReader(req.InputStream, Encoding.UTF8)
+                    bodyStr = reader.ReadToEnd()
+                End Using
+
+                Dim payload = JObject.Parse(bodyStr)
+                Dim action = payload("action")?.ToString().ToLowerInvariant()
+                Dim orderId = Convert.ToInt32(payload("orderId"))
+                Dim repo As New POSRepository(DBModule.ConnectionString)
+
+                Select Case action
+                    Case "item"
+                        Dim detailId = Convert.ToInt32(payload("detailId"))
+                        Dim isComp = If(payload("isCompleted") IsNot Nothing, Convert.ToBoolean(payload("isCompleted")), True)
+                        repo.ToggleKitchenItemStatus(detailId, isComp)
+                        resObj("success") = True
+                        resObj("action") = "item"
+
+                    Case "bump"
+                        repo.UpdateKitchenOrderStatus(orderId, KitchenOrderStatus.Bumped)
+                        resObj("success") = True
+                        resObj("action") = "bump"
+
+                    Case "ready"
+                        repo.UpdateKitchenOrderStatus(orderId, KitchenOrderStatus.Ready)
+                        resObj("success") = True
+                        resObj("action") = "ready"
+
+                    Case "recall"
+                        repo.RecallKitchenOrder(orderId)
+                        resObj("success") = True
+                        resObj("action") = "recall"
+
+                    Case Else
+                        resObj("success") = False
+                        resObj("error") = "إجراء غير معروف."
+                End Select
+            Catch ex As Exception
+                resObj("success") = False
+                resObj("error") = ex.Message
+            End Try
+            Return resObj.ToString(Formatting.None)
         End Function
 
     End Class
