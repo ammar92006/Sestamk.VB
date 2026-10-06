@@ -4,6 +4,7 @@ Imports System.Data
 Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Net
+Imports System.Net.Sockets
 Imports System.Text
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
@@ -13,11 +14,11 @@ Imports Newtonsoft.Json.Linq
 Namespace Services.Cloud
 
     ''' <summary>
-    ''' خادم بوابة المالك والمشرف الذكي المدمج (Sestamk Owner Live Web and Mobile Portal Server).
-    ''' خادم فائق الخفة (Embedded HTTP Micro-Server) يعمل في الخلفية بدون أي تأثير على الأداء:
-    '''   • يخدم صفحة ويب وموبايل عصرية (WebPortal/index.html) متجاوبة مع كافة الهواتف والأجهزة.
-    '''   • يوفر REST APIs لحظية لمتابعة مبيعات اليوم، الخزائن، الورديات، وإشغال طاولات الصالة.
-    '''   • يتيح للمالك مسح QR Code من موبايله في أي وقت لمتابعة الصالة والكاشير وهو على شبكة الواي فاي.
+    ''' خادم بوابات سستمك الذكية المدمج (Sestamk Embedded Live Web and Mobile Server).
+    ''' خادم خفيف وعالمي مبني على TcpListener (IPAddress.Any) لقبول كافة الطلبات والاتصالات:
+    '''   • يتجاوز قيود Windows HTTP.sys تماماً (لا يظهر خطأ 400 Invalid Hostname أو مشاكل الصلاحيات).
+    '''   • يخدم بوابة المالك (/) وتطبيق الويتر المحمول (/waiter) وشاشة المطبخ الذكية (/kds).
+    '''   • يدعم الوصول من localhost أو 127.0.0.1 أو الآي بي المحلي 192.168.x.x ومن كافة هواتف وشاشات الواي فاي.
     ''' </summary>
     Public NotInheritable Class OwnerPortalServer
 
@@ -37,10 +38,9 @@ Namespace Services.Cloud
             End Get
         End Property
 
-        Private _listener As HttpListener = Nothing
+        Private _tcpListener As TcpListener = Nothing
         Private _isRunning As Boolean = False
         Private _port As Integer = 5055
-        Private _bindAllInterfaces As Boolean = False
 
         Private Sub New()
         End Sub
@@ -58,33 +58,19 @@ Namespace Services.Cloud
         End Property
 
         ''' <summary>
-        ''' بدء تشغيل سيرفر بوابة المالك في الخلفية.
+        ''' بدء تشغيل خادم البوابات الذكية في الخلفية على المنفذ المحدد.
         ''' </summary>
         Public Function StartServer(Optional port As Integer = 5055) As Boolean
             If _isRunning Then Return True
             _port = port
 
             Try
-                _listener = New HttpListener()
-
-                ' محاولة الاستماع على كافة بطاقات الشبكة (للوصول من الهاتف والتابلت عبر Wi-Fi)
-                _bindAllInterfaces = False
-                Try
-                    _listener.Prefixes.Add($"http://+:{_port}/")
-                    _listener.Start()
-                    _bindAllInterfaces = True
-                Catch
-                    ' في حال عدم وجود صلاحيات urlacl لويندوز، نتراجع تلقائياً للاستماع المحلي
-                    _listener.Close()
-                    _listener = New HttpListener()
-                    _listener.Prefixes.Add($"http://localhost:{_port}/")
-                    _listener.Prefixes.Add($"http://127.0.0.1:{_port}/")
-                    _listener.Start()
-                End Try
-
+                _tcpListener = New TcpListener(IPAddress.Any, _port)
+                _tcpListener.Start()
                 _isRunning = True
+
                 Task.Run(AddressOf ListenLoopAsync)
-                Logger.LogInfo($"OwnerPortalServer: Started on port {_port} (BindAll={_bindAllInterfaces})")
+                Logger.LogInfo($"OwnerPortalServer: Started successfully on 0.0.0.0:{_port} via TcpListener.")
                 Return True
 
             Catch ex As Exception
@@ -98,12 +84,13 @@ Namespace Services.Cloud
         ''' إيقاف السيرفر بأمان.
         ''' </summary>
         Public Sub StopServer()
-            If Not _isRunning OrElse _listener Is Nothing Then Return
+            If Not _isRunning Then Return
             Try
                 _isRunning = False
-                _listener.Stop()
-                _listener.Close()
-                _listener = Nothing
+                If _tcpListener IsNot Nothing Then
+                    _tcpListener.Stop()
+                    _tcpListener = Nothing
+                End If
                 Logger.LogInfo("OwnerPortalServer: Stopped.")
             Catch ex As Exception
                 Logger.LogError("OwnerPortalServer.StopServer", ex)
@@ -119,7 +106,6 @@ Namespace Services.Cloud
                 For Each ip In host.AddressList
                     If ip.AddressFamily = Sockets.AddressFamily.InterNetwork AndAlso Not IPAddress.IsLoopback(ip) Then
                         Dim ipStr = ip.ToString()
-                        ' استبعاد عناوين الربط التلقائي 169.254.x.x
                         If Not ipStr.StartsWith("169.254.") Then
                             Return ipStr
                         End If
@@ -130,43 +116,36 @@ Namespace Services.Cloud
             Return "127.0.0.1"
         End Function
 
-        ''' <summary>
-        ''' رابط الدخول من الهاتف أو التابلت على شبكة الواي فاي (بوابة المالك).
-        ''' </summary>
         Public Function GetMobilePortalUrl() As String
             Dim ip = GetLocalIPAddress()
             Return $"http://{ip}:{_port}/"
         End Function
 
-        ''' <summary>
-        ''' رابط تطبيق الويتر الذكي للهاتف والتابلت (Waiter Mobile POS).
-        ''' </summary>
         Public Function GetWaiterPortalUrl() As String
             Dim ip = GetLocalIPAddress()
             Return $"http://{ip}:{_port}/waiter"
         End Function
 
-        ''' <summary>
-        ''' رابط شاشة المطبخ الذكية (Smart TV and Kitchen Display).
-        ''' </summary>
         Public Function GetKdsPortalUrl() As String
             Dim ip = GetLocalIPAddress()
             Return $"http://{ip}:{_port}/kds"
         End Function
 
-        ''' <summary>
-        ''' رابط الدخول المحلي من نفس جهاز الكاشير.
-        ''' </summary>
         Public Function GetLocalPortalUrl() As String
-            Return $"http://localhost:{_port}/"
+            Return $"http://127.0.0.1:{_port}/"
         End Function
 
+        ' ──────────────────────────────────────────────────────────
+        ' حلقة الاستماع ومعالجة اتصالات العملاء
+        ' ──────────────────────────────────────────────────────────
         Private Async Function ListenLoopAsync() As Task
-            While _isRunning AndAlso _listener IsNot Nothing AndAlso _listener.IsListening
+            While _isRunning AndAlso _tcpListener IsNot Nothing
                 Try
-                    Dim ctx = Await _listener.GetContextAsync()
-                    Dim processTask As Task = Task.Run(Sub() ProcessRequest(ctx))
-                Catch ex As HttpListenerException
+                    Dim client = Await _tcpListener.AcceptTcpClientAsync()
+                    Dim processTask = Task.Run(Sub() ProcessClient(client))
+                Catch ex As ObjectDisposedException
+                    Exit While
+                Catch ex As SocketException
                     If Not _isRunning Then Exit While
                 Catch ex As Exception
                     If Not _isRunning Then Exit While
@@ -174,88 +153,118 @@ Namespace Services.Cloud
             End While
         End Function
 
-        Private Sub ProcessRequest(ctx As HttpListenerContext)
-            Dim req = ctx.Request
-            Dim resp = ctx.Response
-
-            Try
-                ' تفعيل CORS لتمكين أي جهاز من طلب البيانات بحرية
-                resp.Headers.Add("Access-Control-Allow-Origin", "*")
-                resp.Headers.Add("Access-Control-Allow-Methods", "GET, OPTIONS")
-                resp.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-                If req.HttpMethod.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase) Then
-                    resp.StatusCode = 200
-                    resp.Close()
-                    Return
-                End If
-
-                Dim path = req.Url.AbsolutePath.ToLowerInvariant().TrimEnd("/"c)
-                If String.IsNullOrEmpty(path) Then path = "/"
-
-                Select Case path
-                    Case "/", "/index.html"
-                        ServeHtmlFile(resp, "index.html")
-
-                    Case "/waiter", "/waiter.html"
-                        ServeHtmlFile(resp, "waiter.html")
-
-                    Case "/kds", "/kds.html"
-                        ServeHtmlFile(resp, "kds.html")
-
-                    Case "/api/summary"
-                        ServeJson(resp, BuildSummaryJson())
-
-                    Case "/api/tables"
-                        ServeJson(resp, BuildTablesJson())
-
-                    Case "/api/recent-orders"
-                        ServeJson(resp, BuildRecentOrdersJson())
-
-                    Case "/api/top-items"
-                        ServeJson(resp, BuildTopItemsJson())
-
-                    Case "/api/menu"
-                        ServeJson(resp, BuildMenuJson())
-
-                    Case "/api/order/waiter"
-                        ServeJson(resp, HandleWaiterOrderPost(req))
-
-                    Case "/api/kds/orders"
-                        ServeJson(resp, BuildKdsOrdersJson())
-
-                    Case "/api/kds/bump"
-                        ServeJson(resp, HandleKdsBumpPost(req))
-
-                    Case Else
-                        resp.StatusCode = 404
-                        Dim notFoundBytes = Encoding.UTF8.GetBytes("Not Found")
-                        resp.OutputStream.Write(notFoundBytes, 0, notFoundBytes.Length)
-                        resp.Close()
-                End Select
-
-            Catch ex As Exception
+        Private Sub ProcessClient(client As TcpClient)
+            Using client
                 Try
-                    resp.StatusCode = 500
-                    Dim errBytes = Encoding.UTF8.GetBytes("Internal Error: " & ex.Message)
-                    resp.OutputStream.Write(errBytes, 0, errBytes.Length)
-                    resp.Close()
-                Catch
+                    Dim stream = client.GetStream()
+                    stream.ReadTimeout = 5000
+                    stream.WriteTimeout = 5000
+
+                    Dim reader As New StreamReader(stream, Encoding.UTF8)
+                    Dim reqLine = reader.ReadLine()
+                    If String.IsNullOrWhiteSpace(reqLine) Then Return
+
+                    Dim parts = reqLine.Split(" "c)
+                    If parts.Length < 2 Then Return
+                    Dim method = parts(0).ToUpperInvariant()
+                    Dim rawPath = parts(1)
+
+                    ' قراءة الترويسات (Headers)
+                    Dim headers As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+                    Dim contentLength As Integer = 0
+                    Dim line As String = reader.ReadLine()
+
+                    While Not String.IsNullOrEmpty(line)
+                        Dim colonIdx = line.IndexOf(":"c)
+                        If colonIdx > 0 Then
+                            Dim hName = line.Substring(0, colonIdx).Trim()
+                            Dim hVal = line.Substring(colonIdx + 1).Trim()
+                            headers(hName) = hVal
+                            If hName.Equals("Content-Length", StringComparison.OrdinalIgnoreCase) Then
+                                Integer.TryParse(hVal, contentLength)
+                            End If
+                        End If
+                        line = reader.ReadLine()
+                    End While
+
+                    ' قراءة جسم الطلب (Body) في حال كان الطلب POST
+                    Dim bodyStr As String = ""
+                    If contentLength > 0 Then
+                        Dim buffer(contentLength - 1) As Char
+                        Dim totalRead As Integer = 0
+                        While totalRead < contentLength
+                            Dim r = reader.Read(buffer, totalRead, contentLength - totalRead)
+                            If r <= 0 Then Exit While
+                            totalRead += r
+                        End While
+                        bodyStr = New String(buffer, 0, totalRead)
+                    End If
+
+                    ' استخراج المسار النظيف بدون Query String
+                    Dim cleanPath = rawPath
+                    Dim qIdx = cleanPath.IndexOf("?"c)
+                    If qIdx >= 0 Then cleanPath = cleanPath.Substring(0, qIdx)
+                    cleanPath = cleanPath.ToLowerInvariant().TrimEnd("/"c)
+                    If String.IsNullOrEmpty(cleanPath) Then cleanPath = "/"
+
+                    ' التعامل مع طلبات Preflight OPTIONS للـ CORS
+                    If method = "OPTIONS" Then
+                        SendHttpResponse(stream, 200, "OK", "text/plain", Array.Empty(Of Byte)())
+                        Return
+                    End If
+
+                    ' توجيه المسارات
+                    Select Case cleanPath
+                        Case "/", "/index.html"
+                            SendFileResponse(stream, "index.html")
+
+                        Case "/waiter", "/waiter.html"
+                            SendFileResponse(stream, "waiter.html")
+
+                        Case "/kds", "/kds.html"
+                            SendFileResponse(stream, "kds.html")
+
+                        Case "/api/summary"
+                            SendJsonResponse(stream, BuildSummaryJson())
+
+                        Case "/api/tables"
+                            SendJsonResponse(stream, BuildTablesJson())
+
+                        Case "/api/recent-orders"
+                            SendJsonResponse(stream, BuildRecentOrdersJson())
+
+                        Case "/api/top-items"
+                            SendJsonResponse(stream, BuildTopItemsJson())
+
+                        Case "/api/menu"
+                            SendJsonResponse(stream, BuildMenuJson())
+
+                        Case "/api/order/waiter"
+                            SendJsonResponse(stream, HandleWaiterOrderPost(bodyStr))
+
+                        Case "/api/kds/orders"
+                            SendJsonResponse(stream, BuildKdsOrdersJson())
+
+                        Case "/api/kds/bump"
+                            SendJsonResponse(stream, HandleKdsBumpPost(bodyStr))
+
+                        Case Else
+                            Dim notFoundBytes = Encoding.UTF8.GetBytes("404 Not Found")
+                            SendHttpResponse(stream, 404, "Not Found", "text/plain; charset=utf-8", notFoundBytes)
+                    End Select
+
+                Catch ex As Exception
+                    Logger.LogError("OwnerPortalServer.ProcessClient", ex)
                 End Try
-            End Try
+            End Using
         End Sub
 
-        Private Sub ServeJson(resp As HttpListenerResponse, json As String)
+        Private Sub SendJsonResponse(stream As NetworkStream, json As String)
             Dim bytes = Encoding.UTF8.GetBytes(json)
-            resp.ContentType = "application/json; charset=utf-8"
-            resp.ContentLength64 = bytes.Length
-            resp.StatusCode = 200
-            resp.OutputStream.Write(bytes, 0, bytes.Length)
-            resp.OutputStream.Flush()
-            resp.Close()
+            SendHttpResponse(stream, 200, "OK", "application/json; charset=utf-8", bytes)
         End Sub
 
-        Private Sub ServeHtmlFile(resp As HttpListenerResponse, fileName As String)
+        Private Sub SendFileResponse(stream As NetworkStream, fileName As String)
             Dim htmlContent As String = ""
             Dim portalPath = Path.Combine(Application.StartupPath, "WebPortal", fileName)
 
@@ -267,7 +276,6 @@ Namespace Services.Cloud
             End If
 
             If String.IsNullOrWhiteSpace(htmlContent) Then
-                ' مسار بديل وقت التطوير أو التشغيل من bin
                 Dim devPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "WebPortal", fileName)
                 If File.Exists(devPath) Then
                     Try
@@ -278,16 +286,33 @@ Namespace Services.Cloud
             End If
 
             If String.IsNullOrWhiteSpace(htmlContent) Then
-                htmlContent = "<!DOCTYPE html><html dir='rtl'><head><meta charset='utf-8'><title>سستمك</title></head><body style='font-family:sans-serif;padding:30px;background:#0F172A;color:#fff;'><h2>سستمك Live</h2><p>الملف غير متوفر: " & fileName & "</p></body></html>"
+                htmlContent = "<!DOCTYPE html><html dir='rtl'><head><meta charset='utf-8'><title>سستمك</title></head><body style='font-family:sans-serif;padding:30px;background:#0F172A;color:#fff;'><h2>سستمك Live</h2><p>الملف قيد التجهيز: " & fileName & "</p></body></html>"
             End If
 
             Dim bytes = Encoding.UTF8.GetBytes(htmlContent)
-            resp.ContentType = "text/html; charset=utf-8"
-            resp.ContentLength64 = bytes.Length
-            resp.StatusCode = 200
-            resp.OutputStream.Write(bytes, 0, bytes.Length)
-            resp.OutputStream.Flush()
-            resp.Close()
+            SendHttpResponse(stream, 200, "OK", "text/html; charset=utf-8", bytes)
+        End Sub
+
+        Private Sub SendHttpResponse(stream As NetworkStream, statusCode As Integer, statusText As String, contentType As String, body() As Byte)
+            Try
+                Dim sb As New StringBuilder()
+                sb.AppendLine($"HTTP/1.1 {statusCode} {statusText}")
+                sb.AppendLine($"Content-Type: {contentType}")
+                sb.AppendLine($"Content-Length: {body.Length}")
+                sb.AppendLine("Access-Control-Allow-Origin: *")
+                sb.AppendLine("Access-Control-Allow-Methods: GET, POST, OPTIONS")
+                sb.AppendLine("Access-Control-Allow-Headers: Content-Type, Authorization")
+                sb.AppendLine("Connection: close")
+                sb.AppendLine()
+
+                Dim headerBytes = Encoding.ASCII.GetBytes(sb.ToString())
+                stream.Write(headerBytes, 0, headerBytes.Length)
+                If body.Length > 0 Then
+                    stream.Write(body, 0, body.Length)
+                End If
+                stream.Flush()
+            Catch
+            End Try
         End Sub
 
         ' =========================================================
@@ -298,12 +323,10 @@ Namespace Services.Cloud
             Dim shopName = SettingsManager.GetSetting(SettingsKeys.ShopName)
             If String.IsNullOrWhiteSpace(shopName) Then shopName = "سستمك POS"
 
-            ' 1. مبيعات اليوم
             Dim salesNet As Decimal = 0D
             Dim salesOrders As Integer = 0
             Dim salesCash As Decimal = 0D
             Dim salesVisa As Decimal = 0D
-            Dim salesRefunds As Decimal = 0D
 
             Try
                 Dim sqlSales = "
@@ -327,7 +350,6 @@ Namespace Services.Cloud
                 Logger.LogError("OwnerPortal.BuildSummaryJson.Sales", ex)
             End Try
 
-            ' 2. مشتريات اليوم
             Dim purchasesTotal As Decimal = 0D
             Dim purchasesCount As Integer = 0
             Try
@@ -340,7 +362,6 @@ Namespace Services.Cloud
             Catch
             End Try
 
-            ' 3. مصروفات اليوم
             Dim expensesTotal As Decimal = 0D
             Try
                 Dim sqlExp = "SELECT ISNULL(SUM(Amount), 0) AS Total FROM Expenses WHERE CAST(Expense_Date AS DATE) = CAST(GETDATE() AS DATE);"
@@ -351,7 +372,6 @@ Namespace Services.Cloud
             Catch
             End Try
 
-            ' 4. نقدية الخزائن الحالية
             Dim treasuryBalance As Decimal = 0D
             Try
                 Dim dt = DBModule.ExecuteQuery("SELECT ISNULL(SUM(CurrentBalance), 0) FROM Treasury WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL);")
@@ -361,7 +381,6 @@ Namespace Services.Cloud
             Catch
             End Try
 
-            ' 5. إشغال الصالة والحسابات المفتوحة
             Dim totalTables As Integer = 0
             Dim occupiedTables As Integer = 0
             Dim freeTables As Integer = 0
@@ -390,7 +409,6 @@ Namespace Services.Cloud
 
             Dim occupancyRate As Integer = If(totalTables > 0, CInt(Math.Round((occupiedTables * 100.0) / totalTables)), 0)
 
-            ' 6. بيانات الوردية الحالية
             Dim activeShiftObj As New JObject()
             Try
                 Dim dtShift = DBModule.ExecuteQuery("
@@ -583,13 +601,6 @@ Namespace Services.Cloud
             Return arr.ToString(Formatting.None)
         End Function
 
-        ' =========================================================
-        ' واجهات الويتر وشاشة المطبخ (Waiter & KDS Endpoints)
-        ' =========================================================
-
-        ''' <summary>
-        ''' جلب قائمة المنيو الكاملة بالأقسام والأصناف والأسعار والأحجام لتطبيق الويتر المحمول
-        ''' </summary>
         Private Function BuildMenuJson() As String
             Dim root As New JObject()
             Dim categoriesArr As New JArray()
@@ -648,17 +659,9 @@ Namespace Services.Cloud
             Return root.ToString(Formatting.None)
         End Function
 
-        ''' <summary>
-        ''' استقبال طلب جديد من تطبيق الويتر على الموبايل وحفظه على الطاولة وإرساله للمطبخ
-        ''' </summary>
-        Private Function HandleWaiterOrderPost(req As HttpListenerRequest) As String
+        Private Function HandleWaiterOrderPost(bodyStr As String) As String
             Dim resObj As New JObject()
             Try
-                Dim bodyStr As String = ""
-                Using reader As New StreamReader(req.InputStream, Encoding.UTF8)
-                    bodyStr = reader.ReadToEnd()
-                End Using
-
                 If String.IsNullOrWhiteSpace(bodyStr) Then
                     resObj("success") = False
                     resObj("error") = "بيانات الطلب فارغة."
@@ -740,7 +743,7 @@ Namespace Services.Cloud
                     Dim newPending As New PendingInvoiceModel With {
                         .ShiftID = If(ShiftSession.CurrentShift IsNot Nothing, ShiftSession.CurrentShift.ShiftID, 1),
                         .UserID = 1,
-                        .OrderType = 2, ' صالة
+                        .OrderType = 2,
                         .TableID = tableId,
                         .TableName = tableName,
                         .CustomerName = "طلب صالة (" & tableName & ")",
@@ -754,7 +757,7 @@ Namespace Services.Cloud
                 End If
 
                 Dim kOrder As New KitchenOrderModel With {
-                    .OrderType = 2, ' صالة
+                    .OrderType = 2,
                     .TableID = tableId,
                     .TableName = tableName,
                     .ServerName = waiterName,
@@ -777,9 +780,6 @@ Namespace Services.Cloud
             Return resObj.ToString(Formatting.None)
         End Function
 
-        ''' <summary>
-        ''' جلب كافة طلبات المطبخ النشطة لشاشة المطبخ (KDS)
-        ''' </summary>
         Private Function BuildKdsOrdersJson() As String
             Dim arr As New JArray()
             Try
@@ -829,17 +829,9 @@ Namespace Services.Cloud
             Return arr.ToString(Formatting.None)
         End Function
 
-        ''' <summary>
-        ''' معالجة إجراءات شاشة المطبخ (إنجاز صنف أو إنجاز الطلب بالكامل Bump)
-        ''' </summary>
-        Private Function HandleKdsBumpPost(req As HttpListenerRequest) As String
+        Private Function HandleKdsBumpPost(bodyStr As String) As String
             Dim resObj As New JObject()
             Try
-                Dim bodyStr As String = ""
-                Using reader As New StreamReader(req.InputStream, Encoding.UTF8)
-                    bodyStr = reader.ReadToEnd()
-                End Using
-
                 Dim payload = JObject.Parse(bodyStr)
                 Dim action = payload("action")?.ToString().ToLowerInvariant()
                 Dim orderId = Convert.ToInt32(payload("orderId"))
