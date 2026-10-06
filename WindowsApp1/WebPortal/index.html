@@ -361,6 +361,8 @@
       </div>
     </div>
     <div style="display: flex; align-items: center; gap: 8px;">
+      <a href="/waiter" style="color:var(--text-main); text-decoration:none; background:var(--card-border); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700;">🍽️ تابلت الويتر</a>
+      <a href="/kds" style="color:var(--text-main); text-decoration:none; background:var(--card-border); padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700;">🧑‍🍳 شاشة المطبخ</a>
       <div class="live-badge">
         <span class="live-dot"></span>
         <span>مباشر</span>
@@ -516,6 +518,7 @@
   </div>
 
   <script>
+    const API_BASE = window.location.origin.startsWith('http') ? window.location.origin : 'http://' + (window.location.hostname || '127.0.0.1') + ':5055';
     let activeTabId = 'tabTables';
     function switchTab(tabId, btn) {
       activeTabId = tabId;
@@ -536,7 +539,7 @@
 
     async function fetchLiveData() {
       try {
-        const res = await fetch('/api/summary');
+        const res = await fetch(API_BASE + '/api/summary');
         if (!res.ok) throw new Error('Network error');
         const data = await res.json();
         
@@ -558,7 +561,9 @@
       if (d.shopName) document.getElementById('lblShopName').textContent = d.shopName;
       if (d.todaySales) {
         document.getElementById('kpiSales').textContent = Number(d.todaySales.netTotal || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م';
-        document.getElementById('kpiOrdersCount').textContent = (d.todaySales.ordersCount || 0) + ' فاتورة مسجلة';
+        const cashTxt = Number(d.todaySales.cashSales || 0).toLocaleString('ar-EG', {minimumFractionDigits:0}) + 'ج كاش';
+        const visaTxt = Number(d.todaySales.visaSales || 0).toLocaleString('ar-EG', {minimumFractionDigits:0}) + 'ج فيزا';
+        document.getElementById('kpiOrdersCount').textContent = `${d.todaySales.ordersCount || 0} فاتورة (${cashTxt} • ${visaTxt})`;
       }
       if (d.treasury) {
         document.getElementById('kpiTreasury').textContent = Number(d.treasury.currentBalance || 0).toLocaleString('ar-EG', {minimumFractionDigits:2}) + ' ج.م';
@@ -589,7 +594,7 @@
 
     async function fetchTables() {
       try {
-        const res = await fetch('/api/tables');
+        const res = await fetch(API_BASE + '/api/tables');
         if (!res.ok) return;
         const tables = await res.json();
         const container = document.getElementById('tablesContainer');
@@ -637,7 +642,7 @@
 
     async function fetchOrders() {
       try {
-        const res = await fetch('/api/recent-orders');
+        const res = await fetch(API_BASE + '/api/recent-orders');
         if (!res.ok) return;
         const orders = await res.json();
         const container = document.getElementById('ordersContainer');
@@ -667,7 +672,7 @@
 
     async function fetchTopItems() {
       try {
-        const res = await fetch('/api/top-items');
+        const res = await fetch(API_BASE + '/api/top-items');
         if (!res.ok) return;
         const items = await res.json();
         const container = document.getElementById('topItemsContainer');

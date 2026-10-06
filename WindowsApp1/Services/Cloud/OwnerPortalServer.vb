@@ -66,6 +66,7 @@ Namespace Services.Cloud
 
             Try
                 _tcpListener = New TcpListener(IPAddress.Any, _port)
+                _tcpListener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, True)
                 _tcpListener.Start()
                 _isRunning = True
 
@@ -157,47 +158,62 @@ Namespace Services.Cloud
             Using client
                 Try
                     Dim stream = client.GetStream()
-                    stream.ReadTimeout = 5000
-                    stream.WriteTimeout = 5000
+                    stream.ReadTimeout = 8000
+                    stream.WriteTimeout = 8000
 
-                    Dim reader As New StreamReader(stream, Encoding.UTF8)
-                    Dim reqLine = reader.ReadLine()
-                    If String.IsNullOrWhiteSpace(reqLine) Then Return
+                    ' 1. قراءة الترويسات كـ Bytes حتى الوصول إلى \r\n\r\n
+                    Dim delimiter() As Byte = {13, 10, 13, 10}
+                    Dim headerMs As New MemoryStream()
+                    Dim buf(1023) As Byte
+                    Dim headerEnd As Integer = -1
 
-                    Dim parts = reqLine.Split(" "c)
-                    If parts.Length < 2 Then Return
-                    Dim method = parts(0).ToUpperInvariant()
-                    Dim rawPath = parts(1)
-
-                    ' قراءة الترويسات (Headers)
-                    Dim headers As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
-                    Dim contentLength As Integer = 0
-                    Dim line As String = reader.ReadLine()
-
-                    While Not String.IsNullOrEmpty(line)
-                        Dim colonIdx = line.IndexOf(":"c)
-                        If colonIdx > 0 Then
-                            Dim hName = line.Substring(0, colonIdx).Trim()
-                            Dim hVal = line.Substring(colonIdx + 1).Trim()
-                            headers(hName) = hVal
-                            If hName.Equals("Content-Length", StringComparison.OrdinalIgnoreCase) Then
-                                Integer.TryParse(hVal, contentLength)
-                            End If
-                        End If
-                        line = reader.ReadLine()
+                    While headerMs.Length < 32768
+                        Dim r = stream.Read(buf, 0, buf.Length)
+                        If r <= 0 Then Exit While
+                        headerMs.Write(buf, 0, r)
+                        Dim arr = headerMs.ToArray()
+                        headerEnd = FindDelimiterIndex(arr, delimiter)
+                        If headerEnd >= 0 Then Exit While
                     End While
 
-                    ' قراءة جسم الطلب (Body) في حال كان الطلب POST
+                    If headerEnd < 0 Then Return
+
+                    Dim allBytes = headerMs.ToArray()
+                    Dim headerStr = Encoding.ASCII.GetString(allBytes, 0, headerEnd)
+                    Dim lines = headerStr.Split(New String() {vbCrLf}, StringSplitOptions.RemoveEmptyEntries)
+                    If lines.Length = 0 Then Return
+
+                    Dim reqParts = lines(0).Split(" "c)
+                    If reqParts.Length < 2 Then Return
+                    Dim method = reqParts(0).Trim().ToUpperInvariant()
+                    Dim rawPath = reqParts(1).Trim()
+
+                    Dim contentLength As Integer = 0
+                    For Each l In lines
+                        If l.StartsWith("Content-Length:", StringComparison.OrdinalIgnoreCase) Then
+                            Integer.TryParse(l.Substring("Content-Length:".Length).Trim(), contentLength)
+                            Exit For
+                        End If
+                    Next
+
+                    ' 2. قراءة جسم الطلب (Body) بالبايتات الدقيقة لتفادي تعليق النصوص العربية
                     Dim bodyStr As String = ""
-                    If contentLength > 0 Then
-                        Dim buffer(contentLength - 1) As Char
-                        Dim totalRead As Integer = 0
-                        While totalRead < contentLength
-                            Dim r = reader.Read(buffer, totalRead, contentLength - totalRead)
+                    If contentLength > 0 AndAlso contentLength < 5000000 Then
+                        Dim bodyMs As New MemoryStream()
+                        Dim alreadyRead = allBytes.Length - (headerEnd + 4)
+                        If alreadyRead > 0 Then
+                            bodyMs.Write(allBytes, headerEnd + 4, Math.Min(alreadyRead, contentLength))
+                        End If
+
+                        Dim remain = contentLength - CInt(bodyMs.Length)
+                        While remain > 0
+                            Dim r = stream.Read(buf, 0, Math.Min(buf.Length, remain))
                             If r <= 0 Then Exit While
-                            totalRead += r
+                            bodyMs.Write(buf, 0, r)
+                            remain -= r
                         End While
-                        bodyStr = New String(buffer, 0, totalRead)
+
+                        bodyStr = Encoding.UTF8.GetString(bodyMs.ToArray())
                     End If
 
                     ' استخراج المسار النظيف بدون Query String
@@ -258,6 +274,21 @@ Namespace Services.Cloud
                 End Try
             End Using
         End Sub
+
+        Private Function FindDelimiterIndex(src() As Byte, pattern() As Byte) As Integer
+            If src Is Nothing OrElse pattern Is Nothing OrElse src.Length < pattern.Length Then Return -1
+            For i As Integer = 0 To src.Length - pattern.Length
+                Dim ok As Boolean = True
+                For j As Integer = 0 To pattern.Length - 1
+                    If src(i + j) <> pattern(j) Then
+                        ok = False
+                        Exit For
+                    End If
+                Next
+                If ok Then Return i
+            Next
+            Return -1
+        End Function
 
         Private Sub SendJsonResponse(stream As NetworkStream, json As String)
             Dim bytes = Encoding.UTF8.GetBytes(json)
