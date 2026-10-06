@@ -1395,6 +1395,41 @@ Public Class frmPOS
     End Sub
 
     ' =========================================================
+    ' إرسال الفاتورة الحالية عبر واتساب للعميل (WhatsApp [F4])
+    ' =========================================================
+    Private Async Sub btnWhatsAppInvoice_Click(sender As Object, e As EventArgs) Handles btnWhatsAppInvoice.Click
+        Await SendCurrentInvoiceViaWhatsAppAsync()
+    End Sub
+
+    Public Async Function SendCurrentInvoiceViaWhatsAppAsync() As Task
+        If dgvInvoice.Rows.Count = 0 Then
+            SmartMessageBox.Show("لا توجد أصناف في الفاتورة الحالية لإرسالها عبر واتساب!", "تنبيه", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Return
+        End If
+
+        Dim customerPhone As String = ""
+        Dim customerName As String = If(CurrentCustomer IsNot Nothing, CurrentCustomer.CustomerName, If(Not String.IsNullOrWhiteSpace(txtCustomer.Text) AndAlso txtCustomer.Text <> "عميل نقدي", txtCustomer.Text, "عميلنا العزيز"))
+
+        If CurrentCustomer IsNot Nothing Then
+            customerPhone = If(Not String.IsNullOrWhiteSpace(CurrentCustomer.Phone1), CurrentCustomer.Phone1, CurrentCustomer.Phone2)
+        End If
+
+        If String.IsNullOrWhiteSpace(customerPhone) Then
+            customerPhone = InputBox("أدخل رقم هاتف العميل لإرسال الفاتورة عبر واتساب:" & vbCrLf & "(مثلاً: 01012345678 أو 0501234567)", "إرسال الفاتورة عبر واتساب", "")
+            If String.IsNullOrWhiteSpace(customerPhone) Then Return
+        End If
+
+        Try
+            Dim inv = BuildCurrentInvoiceModel()
+            Dim msg = WhatsAppAPI.FormatInvoiceMessage(inv, customerName)
+            Await WhatsAppAPI.SendText(customerPhone, msg)
+        Catch ex As Exception
+            Logger.LogError("frmPOS.SendCurrentInvoiceViaWhatsAppAsync", ex)
+            SmartMessageBox.Show("حدث خطأ أثناء إرسال الفاتورة عبر واتساب: " & ex.Message, "خطأ واتساب", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Function
+
+    ' =========================================================
     ' زر تعليق الفاتورة المحدث مع دعم الـ JSON وقفل الطاولة
     ' =========================================================
     Private Sub btnHoldInvoice_Click(sender As Object, e As EventArgs) Handles btnHoldInvoice.Click
@@ -2616,6 +2651,9 @@ Public Class frmPOS
                     txtSearchProduct.Focus()
                     txtSearchProduct.SelectAll()
                 End If
+            Case Keys.F4
+                e.Handled = True
+                btnWhatsAppInvoice.PerformClick()
             Case Keys.F5
                 e.Handled = True
                 btnHoldInvoice.PerformClick()

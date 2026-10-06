@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 
 Public Class frmShifts
 
@@ -441,6 +441,13 @@ Public Class frmShifts
                         ' طباعة تقرير تقفيل الوردية الحراري (Z-Report) تلقائياً
                         PrintZReportForShift(closedShiftID, actualCash, expectedCash, diff, closeNotes)
 
+                        ' إرسال ملخص الوردية للمالك عبر واتساب إن وُجد رقم هاتف مسجل
+                        Try
+                            SendShiftZReportViaWhatsApp(closedShiftID, actualCash, expectedCash, diff)
+                        Catch __logEx As Exception
+                            Logger.LogError("frmShifts.SendShiftZReportViaWhatsApp", __logEx)
+                        End Try
+
                         txtClosingCash.Clear()
                         txtNotes.Clear()
                         LoadShiftsGridAndActiveStatus()
@@ -843,6 +850,44 @@ Public Class frmShifts
         Catch ex As Exception
             Logger.LogError("PrintZReportForShift", ex)
             SmartMessageBox.Show("حدث خطأ أثناء طباعة تقرير الوردية (Z-Report): " & ex.Message, "خطأ طباعة", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+    End Sub
+
+    ''' <summary>
+    ''' إرسال ملخص الوردية اليومي المقفل مباشرة إلى واتساب المالك
+    ''' </summary>
+    Public Sub SendShiftZReportViaWhatsApp(shiftID As Integer, actualCash As Decimal, expectedCash As Decimal, diff As Decimal)
+        Try
+            Dim ownerPhone = SettingsManager.GetSettingDual("WhatsApp_OwnerPhone", SettingsKeys.ShopPhone, "")
+            If String.IsNullOrWhiteSpace(ownerPhone) Then Return
+
+            Dim dtShift = DBModule.ExecuteQuery("SELECT TOP 1 ShiftNumber, OpeningCash, TotalSales, TotalExpenses, OpenDateTime, CloseDateTime, u.User_Name AS CashierName FROM Shifts s LEFT JOIN Users_TBL u ON s.UserID = u.User_ID WHERE s.ShiftID = " & shiftID)
+            If dtShift Is Nothing OrElse dtShift.Rows.Count = 0 Then Return
+
+            Dim r = dtShift.Rows(0)
+            Dim shiftNumber = r("ShiftNumber").ToString()
+            Dim cashierName = If(IsDBNull(r("CashierName")), "كاشير", r("CashierName").ToString())
+            Dim openDate = Convert.ToDateTime(r("OpenDateTime"))
+            Dim closeDate = If(IsDBNull(r("CloseDateTime")), DateTime.Now, Convert.ToDateTime(r("CloseDateTime")))
+            Dim openingCash = If(IsDBNull(r("OpeningCash")), 0D, Convert.ToDecimal(r("OpeningCash")))
+            Dim totalSales = If(IsDBNull(r("TotalSales")), 0D, Convert.ToDecimal(r("TotalSales")))
+            Dim totalExpenses = If(IsDBNull(r("TotalExpenses")), 0D, Convert.ToDecimal(r("TotalExpenses")))
+
+            Dim cashSales As Decimal = 0D
+            Dim visaSales As Decimal = 0D
+            Dim walletSales As Decimal = 0D
+
+            Dim dtTenders = DBModule.ExecuteQuery("SELECT ISNULL(SUM(CASE WHEN PaymentType LIKE N'%نقدي%' THEN PaidAmount ELSE 0 END), 0) AS CashTotal, ISNULL(SUM(CASE WHEN PaymentType LIKE N'%فيزا%' OR PaymentType LIKE N'%شبكة%' THEN PaidAmount ELSE 0 END), 0) AS VisaTotal, ISNULL(SUM(CASE WHEN PaymentType LIKE N'%محفظة%' OR PaymentType LIKE N'%إنستا%' THEN PaidAmount ELSE 0 END), 0) AS WalletTotal FROM SalesInvoices WHERE ShiftID = " & shiftID & " AND (IsDeleted = 0 OR IsDeleted IS NULL)")
+            If dtTenders IsNot Nothing AndAlso dtTenders.Rows.Count > 0 Then
+                cashSales = Convert.ToDecimal(dtTenders.Rows(0)("CashTotal"))
+                visaSales = Convert.ToDecimal(dtTenders.Rows(0)("VisaTotal"))
+                walletSales = Convert.ToDecimal(dtTenders.Rows(0)("WalletTotal"))
+            End If
+
+            Dim msg = WhatsAppAPI.FormatShiftZReportMessage(shiftNumber, cashierName, openDate, closeDate, openingCash, totalSales, cashSales, visaSales, walletSales, totalExpenses, expectedCash, actualCash, diff)
+            Dim sendTask = WhatsAppAPI.SendText(ownerPhone, msg)
+        Catch ex As Exception
+            Logger.LogError("frmShifts.SendShiftZReportViaWhatsApp", ex)
         End Try
     End Sub
 

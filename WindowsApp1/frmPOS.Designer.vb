@@ -109,6 +109,7 @@ Partial Class frmPOS
         Me.Guna2Panel23 = New Guna.UI2.WinForms.Guna2Panel()
         Me.btnclear = New Guna.UI2.WinForms.Guna2Button()
         Me.btnPay = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnWhatsAppInvoice = New Guna.UI2.WinForms.Guna2Button()
         Me.btnPrintCheck = New Guna.UI2.WinForms.Guna2Button()
         Me.btnHoldInvoice = New Guna.UI2.WinForms.Guna2Button()
         Me.btnPendingInvoices = New Guna.UI2.WinForms.Guna2Button()
@@ -1083,6 +1084,7 @@ Partial Class frmPOS
         '
         Me.Guna2Panel23.Controls.Add(Me.btnclear)
         Me.Guna2Panel23.Controls.Add(Me.btnPay)
+        Me.Guna2Panel23.Controls.Add(Me.btnWhatsAppInvoice)
         Me.Guna2Panel23.Controls.Add(Me.btnPrintCheck)
         Me.Guna2Panel23.Controls.Add(Me.btnHoldInvoice)
         Me.Guna2Panel23.Controls.Add(Me.btnPendingInvoices)
@@ -1121,15 +1123,32 @@ Partial Class frmPOS
         Me.btnPay.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnPay.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnPay.FillColor = System.Drawing.Color.FromArgb(CType(CType(16, Byte), Integer), CType(CType(185, Byte), Integer), CType(CType(129, Byte), Integer))
-        Me.btnPay.Font = New System.Drawing.Font("Segoe UI", 13.0!, System.Drawing.FontStyle.Bold)
+        Me.btnPay.Font = New System.Drawing.Font("Segoe UI", 12.5!, System.Drawing.FontStyle.Bold)
         Me.btnPay.ForeColor = System.Drawing.Color.White
         Me.btnPay.Image = Global.WindowsApp1.My.Resources.Resources.payment
-        Me.btnPay.ImageSize = New System.Drawing.Size(24, 24)
-        Me.btnPay.Location = New System.Drawing.Point(350, 11)
+        Me.btnPay.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btnPay.Location = New System.Drawing.Point(430, 11)
         Me.btnPay.Name = "btnPay"
-        Me.btnPay.Size = New System.Drawing.Size(245, 50)
+        Me.btnPay.Size = New System.Drawing.Size(165, 50)
         Me.btnPay.TabIndex = 7
         Me.btnPay.Text = "دفع [F12]"
+        '
+        'btnWhatsAppInvoice
+        '
+        Me.btnWhatsAppInvoice.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnWhatsAppInvoice.BorderRadius = 10
+        Me.btnWhatsAppInvoice.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.btnWhatsAppInvoice.FillColor = System.Drawing.Color.FromArgb(CType(CType(18, Byte), Integer), CType(CType(140, Byte), Integer), CType(CType(126, Byte), Integer))
+        Me.btnWhatsAppInvoice.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.btnWhatsAppInvoice.ForeColor = System.Drawing.Color.White
+        Me.btnWhatsAppInvoice.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(37, Byte), Integer), CType(CType(211, Byte), Integer), CType(CType(102, Byte), Integer))
+        Me.btnWhatsAppInvoice.Image = Global.WindowsApp1.My.Resources.Resources.whatsapp
+        Me.btnWhatsAppInvoice.ImageSize = New System.Drawing.Size(22, 22)
+        Me.btnWhatsAppInvoice.Location = New System.Drawing.Point(285, 11)
+        Me.btnWhatsAppInvoice.Name = "btnWhatsAppInvoice"
+        Me.btnWhatsAppInvoice.Size = New System.Drawing.Size(140, 50)
+        Me.btnWhatsAppInvoice.TabIndex = 10
+        Me.btnWhatsAppInvoice.Text = "واتساب [F4]"
         '
         'btnPrintCheck
         '
@@ -1137,16 +1156,16 @@ Partial Class frmPOS
         Me.btnPrintCheck.BorderRadius = 10
         Me.btnPrintCheck.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btnPrintCheck.FillColor = System.Drawing.Color.FromArgb(CType(CType(99, Byte), Integer), CType(CType(102, Byte), Integer), CType(CType(241, Byte), Integer))
-        Me.btnPrintCheck.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.btnPrintCheck.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnPrintCheck.ForeColor = System.Drawing.Color.White
         Me.btnPrintCheck.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(79, Byte), Integer), CType(CType(70, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.btnPrintCheck.Image = Global.WindowsApp1.My.Resources.Resources.invoice
         Me.btnPrintCheck.ImageSize = New System.Drawing.Size(22, 22)
-        Me.btnPrintCheck.Location = New System.Drawing.Point(180, 11)
+        Me.btnPrintCheck.Location = New System.Drawing.Point(140, 11)
         Me.btnPrintCheck.Name = "btnPrintCheck"
-        Me.btnPrintCheck.Size = New System.Drawing.Size(165, 50)
+        Me.btnPrintCheck.Size = New System.Drawing.Size(140, 50)
         Me.btnPrintCheck.TabIndex = 9
-        Me.btnPrintCheck.Text = "شيك طاولة [F6]"
+        Me.btnPrintCheck.Text = "شيك [F6]"
         '
         'btnHoldInvoice
         '
@@ -1157,13 +1176,13 @@ Partial Class frmPOS
         Me.btnHoldInvoice.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.btnHoldInvoice.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btnHoldInvoice.FillColor = System.Drawing.Color.FromArgb(CType(CType(245, Byte), Integer), CType(CType(158, Byte), Integer), CType(CType(11, Byte), Integer))
-        Me.btnHoldInvoice.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.btnHoldInvoice.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
         Me.btnHoldInvoice.ForeColor = System.Drawing.Color.White
         Me.btnHoldInvoice.Image = Global.WindowsApp1.My.Resources.Resources.hold
         Me.btnHoldInvoice.ImageSize = New System.Drawing.Size(22, 22)
         Me.btnHoldInvoice.Location = New System.Drawing.Point(5, 11)
         Me.btnHoldInvoice.Name = "btnHoldInvoice"
-        Me.btnHoldInvoice.Size = New System.Drawing.Size(170, 50)
+        Me.btnHoldInvoice.Size = New System.Drawing.Size(130, 50)
         Me.btnHoldInvoice.TabIndex = 8
         Me.btnHoldInvoice.Text = "تعليق [F5]"
         '
@@ -1440,6 +1459,7 @@ Partial Class frmPOS
     Friend WithEvents lblDeliveryFee As Label
     Friend WithEvents Guna2Panel16 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents btnPay As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnWhatsAppInvoice As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnPrintCheck As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2Panel20 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2Panel24 As Guna.UI2.WinForms.Guna2Panel
