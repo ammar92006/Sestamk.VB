@@ -1,4 +1,4 @@
-Imports System.Drawing
+﻿Imports System.Drawing
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Windows.Forms
@@ -1171,7 +1171,11 @@ Public Class RestaurantPrintManager
                                         actualCash As Decimal,
                                         cashDiff As Decimal,
                                         notes As String,
-                                        Optional customPrinterName As String = "")
+                                        Optional customPrinterName As String = "",
+                                        Optional cashSales As Decimal = 0D,
+                                        Optional visaSales As Decimal = 0D,
+                                        Optional walletSales As Decimal = 0D,
+                                        Optional creditSales As Decimal = 0D)
         Try
             Dim prn = If(String.IsNullOrWhiteSpace(customPrinterName), GetDefaultThermalPrinter(), customPrinterName)
             If String.IsNullOrWhiteSpace(prn) Then Return
@@ -1244,13 +1248,39 @@ Public Class RestaurantPrintManager
                                              DrawDashedLine(g, yPos, pageWidth)
                                              yPos += 6
 
+                                              ' تفصيل طرق التحصيل إن وجدت
+                                              If visaSales > 0 OrElse walletSales > 0 OrElse creditSales > 0 Then
+                                                  DrawDashedLine(g, yPos, pageWidth)
+                                                  yPos += 6
+                                                  g.DrawString("── طرق التحصيل ──", fontHeader, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfCenter)
+                                                  yPos += 20
+                                                  Dim actualCashTender = If(cashSales > 0, cashSales, (totalSales - visaSales - walletSales - creditSales))
+                                                  DrawAmountRow(g, "مبيعات نقدي (كاش):", actualCashTender.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
+                                                  yPos += 18
+                                                  If visaSales > 0 Then
+                                                      DrawAmountRow(g, "مبيعات فيزا / شبكة:", visaSales.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
+                                                      yPos += 18
+                                                  End If
+                                                  If walletSales > 0 Then
+                                                      DrawAmountRow(g, "مبيعات محفظة / إنستا:", walletSales.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
+                                                      yPos += 18
+                                                  End If
+                                                  If creditSales > 0 Then
+                                                      DrawAmountRow(g, "مبيعات آجلة:", creditSales.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
+                                                      yPos += 18
+                                                  End If
+                                              End If
+                                              DrawDashedLine(g, yPos, pageWidth)
+                                              yPos += 6
+
                                              ' حركة النقدية بالدرج
                                              g.DrawString("── حركة النقدية بالدرج ──", fontHeader, Brushes.Black, New RectangleF(0, yPos, pageWidth, 18), sfCenter)
                                              yPos += 20
 
                                              DrawAmountRow(g, "عهدة بداية الوردية:", openingCash.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
                                              yPos += 18
-                                             DrawAmountRow(g, "(+) إجمالي المبيعات النقدية:", totalSales.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
+                                              Dim drawerCashCollected = If(cashSales > 0, cashSales, (totalSales - visaSales - walletSales - creditSales))
+                                              DrawAmountRow(g, "(+) المتحصل نقداً بالدرج:", drawerCashCollected.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)
                                              yPos += 18
                                              If totalExpenses > 0 Then
                                                  DrawAmountRow(g, "(-) إجمالي المصروفات:", "-" & totalExpenses.ToString("N2") & " ج", fontRegular, sfRight, sfLeft, yPos, pageWidth)

@@ -807,10 +807,38 @@ Public Class frmShifts
                 End Using
             End Using
 
+            Dim cashSales As Decimal = 0D
+            Dim visaSales As Decimal = 0D
+            Dim walletSales As Decimal = 0D
+            Dim creditSales As Decimal = 0D
+
+            Dim queryTenders As String = "
+                SELECT 
+                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%نقدي%' THEN PaidAmount ELSE 0 END), 0) AS CashTotal,
+                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%فيزا%' OR PaymentType LIKE N'%شبكة%' THEN PaidAmount ELSE 0 END), 0) AS VisaTotal,
+                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%محفظة%' OR PaymentType LIKE N'%إنستا%' THEN PaidAmount ELSE 0 END), 0) AS WalletTotal,
+                    ISNULL(SUM(CASE WHEN IsCredit = 1 THEN RemainingAmount ELSE 0 END), 0) AS CreditTotal
+                FROM SalesInvoices
+                WHERE ShiftID = @ShiftID AND (IsDeleted = 0 OR IsDeleted IS NULL);"
+            Using conn As New SqlConnection(DBModule.ConnectionString)
+                Using cmd As New SqlCommand(queryTenders, conn)
+                    cmd.Parameters.AddWithValue("@ShiftID", shiftID)
+                    conn.Open()
+                    Using rdr = cmd.ExecuteReader()
+                        If rdr.Read() Then
+                            cashSales = Convert.ToDecimal(rdr("CashTotal"))
+                            visaSales = Convert.ToDecimal(rdr("VisaTotal"))
+                            walletSales = Convert.ToDecimal(rdr("WalletTotal"))
+                            creditSales = Convert.ToDecimal(rdr("CreditTotal"))
+                        End If
+                    End Using
+                End Using
+            End Using
+
             RestaurantPrintManager.PrintShiftZReport(shiftNumber, workShiftName, openDate, closeDate, cashierName,
                                                     openingCash, totalSales, totalDineIn, totalTakeaway, totalDelivery,
                                                     deliveryFees, totalExpenses, totalRefunds, expectedCash, actualCash,
-                                                    diff, closeNotes)
+                                                    diff, closeNotes, "", cashSales, visaSales, walletSales, creditSales)
 
         Catch ex As Exception
             Logger.LogError("PrintZReportForShift", ex)

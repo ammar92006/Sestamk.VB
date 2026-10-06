@@ -423,11 +423,26 @@
     }
 
     async function loadMenu() {
+      // 1. استرجاع سريع من الذاكرة المحلية (Offline Cache) فوراً
+      try {
+        const cached = localStorage.getItem('sestamk_waiter_menu');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.length > 0) {
+            menuData = parsed;
+            renderCategoryBar();
+            renderProducts();
+          }
+        }
+      } catch (e) {}
+
+      // 2. تحديث المنيو من السيرفر المحلي
       try {
         const res = await fetch('/api/menu');
         const json = await res.json();
         if (json.success && json.categories) {
           menuData = json.categories;
+          localStorage.setItem('sestamk_waiter_menu', JSON.stringify(menuData));
           renderCategoryBar();
           renderProducts();
         }
