@@ -240,6 +240,12 @@ Namespace Services.Cloud
                         Case "/kds", "/kds.html"
                             SendFileResponse(stream, "kds.html")
 
+                        Case "/manifest.webmanifest", "/manifest.json"
+                            SendFileResponse(stream, "manifest.webmanifest", "application/manifest+json; charset=utf-8")
+
+                        Case "/sw.js"
+                            SendFileResponse(stream, "sw.js", "application/javascript; charset=utf-8")
+
                         Case "/api/summary"
                             SendJsonResponse(stream, BuildSummaryJson())
 
@@ -295,7 +301,7 @@ Namespace Services.Cloud
             SendHttpResponse(stream, 200, "OK", "application/json; charset=utf-8", bytes)
         End Sub
 
-        Private Sub SendFileResponse(stream As NetworkStream, fileName As String)
+        Private Sub SendFileResponse(stream As NetworkStream, fileName As String, Optional contentType As String = "text/html; charset=utf-8")
             Dim htmlContent As String = ""
             Dim portalPath = Path.Combine(Application.StartupPath, "WebPortal", fileName)
 
@@ -321,7 +327,7 @@ Namespace Services.Cloud
             End If
 
             Dim bytes = Encoding.UTF8.GetBytes(htmlContent)
-            SendHttpResponse(stream, 200, "OK", "text/html; charset=utf-8", bytes)
+            SendHttpResponse(stream, 200, "OK", contentType, bytes)
         End Sub
 
         Private Sub SendHttpResponse(stream As NetworkStream, statusCode As Integer, statusText As String, contentType As String, body() As Byte)

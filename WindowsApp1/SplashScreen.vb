@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Threading.Tasks
@@ -117,6 +117,13 @@ Public Class SplashScreen
     ''' </summary>
     Private Async Function InitializeApplicationAsync() As Task
         Try
+            ' ── بدء تشغيل خادم بوابات سستمك الذكية (المالك والمطبخ والويتر) فور إقلاع البرنامج ──
+            Try
+                WindowsApp1.Services.Cloud.OwnerPortalServer.Instance.StartServer(5055)
+            Catch ex As Exception
+                Logger.LogError("SplashScreen.OwnerPortalServer", ex)
+            End Try
+
             ' ── الخطوة 1: فحص إعدادات ومحرك قاعدة البيانات ──
             UpdateStatus("جاري فحص إعدادات ومحرك قاعدة البيانات...", 20)
             Await Task.Delay(250)

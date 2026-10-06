@@ -1,0 +1,26 @@
+{
+  "name": "سستمك — نظام نقاط البيع والمطاعم",
+  "short_name": "سستمك",
+  "description": "منظومة سستمك الذكية للويتر وشاشة المطبخ وإدارة الصالة",
+  "start_url": "/waiter",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#090D16",
+  "theme_color": "#3B82F6",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

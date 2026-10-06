@@ -2305,7 +2305,19 @@ Public Class frmPOS
     End Sub
 
     Private Sub btn_close_Click(sender As Object, e As EventArgs) Handles btn_close.Click
+        If dgvInvoice.Rows.Count > 0 Then
+            Dim res = SmartMessageBox.Show("توجد أصناف غير محفوظة في الفاتورة الحالية!" & vbCrLf & "هل أنت متأكد من الخروج من شاشة نقاط البيع؟", "تأكيد الخروج", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If res <> DialogResult.Yes Then Return
+        End If
         Close()
+    End Sub
+
+    Public Sub TogglePOSFullscreen()
+        If Me.WindowState = FormWindowState.Maximized Then
+            Me.WindowState = FormWindowState.Normal
+        Else
+            Me.WindowState = FormWindowState.Maximized
+        End If
     End Sub
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         lblDateTime.Text = DateTime.Now.ToString("yyyy/MM/dd - hh:mm:ss tt")
