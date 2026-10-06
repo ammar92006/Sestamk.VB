@@ -18,13 +18,13 @@
                   ],
     "package":  {
                     "url":  "https://github.com/ammar92006/Sestamk.VB/releases/download/v1.4.0/package.zip",
-                    "sha256":  "86355f244d06ba92886f61a191237a79c866d82592a72db6c8bd947f9060ec22",
-                    "size":  64629992
+                    "sha256":  "79bcd29c9217953f588ada6c23b21fb06630c24370d7f34883df837038893081",
+                    "size":  64630782
                 },
     "installer":  {
                       "url":  "https://github.com/ammar92006/Sestamk.VB/releases/download/v1.4.0/Sestamk_Setup_v2026.exe",
-                      "size":  106274636
+                      "size":  106276289
                   },
-    "package_sha256":  "86355f244d06ba92886f61a191237a79c866d82592a72db6c8bd947f9060ec22",
-    "package_size":  64629992
+    "package_sha256":  "79bcd29c9217953f588ada6c23b21fb06630c24370d7f34883df837038893081",
+    "package_size":  64630782
 }

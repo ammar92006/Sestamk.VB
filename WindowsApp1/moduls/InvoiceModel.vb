@@ -22,6 +22,7 @@ Public Class InvoiceModel
     Public Property PaidAmount As Decimal = 0
     Public Property RemainingAmount As Decimal = 0
     Public Property IsCredit As Boolean = False
+    Public Property PaymentType As String = "نقدي"
     Public Property TreasuryID As Integer?
     Public Property Notes As String
 

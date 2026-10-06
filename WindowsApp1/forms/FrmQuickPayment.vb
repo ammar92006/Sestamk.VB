@@ -25,6 +25,7 @@ Public Class FrmQuickPayment
     Public Property ChangeAmount As Decimal = 0         ' الباقي المردود للعميل (الصرف)
     Public Property SelectedTreasuryID As Integer = 0   ' الخزنة المختارة
     Public Property IsCreditOrder As Boolean = False    ' هل الدفع آجل؟
+    Public Property SelectedPaymentType As String = "نقدي" ' نقدي / فيزا / محفظة إلكترونية / آجل
 
     Private defaultTreasuryid As Integer = -1
 
@@ -167,6 +168,7 @@ Public Class FrmQuickPayment
         ' د) حساب المدفوع والمتبقي / الباقي وتحديث العرض اللوني بوضوح تام
         If rdoCredit.Checked Then
             ' الدفع آجل بالكامل
+            SelectedPaymentType = "آجل"
             PaidAmount = 0
             RemainingAmount = NetTotal
             ChangeAmount = 0
@@ -181,8 +183,43 @@ Public Class FrmQuickPayment
             lblRemaining.Text = RemainingAmount.ToString("N2")
             lblRemaining.ForeColor = Color.Crimson
 
+        ElseIf rdoVisa.Checked Then
+            ' الدفع بالفيزا / بطاقة بنكية
+            SelectedPaymentType = "فيزا"
+            PaidAmount = NetTotal
+            RemainingAmount = 0
+            ChangeAmount = 0
+            txtPaidInput.Enabled = False
+            txtPaidInput.Text = NetTotal.ToString("N2")
+
+            lblPaid.Text = NetTotal.ToString("N2")
+            lblPaid.ForeColor = ThemeManager.Instance.CurrentPalette.TextPrimary
+
+            Label6.Text = "طريقة الدفع"
+            Label6.ForeColor = Color.DodgerBlue
+            lblRemaining.Text = "0.00 (فيزا ✓)"
+            lblRemaining.ForeColor = Color.DodgerBlue
+
+        ElseIf rdoWallet.Checked Then
+            ' الدفع بمحفظة إلكترونية أو إنستاباي
+            SelectedPaymentType = "محفظة إلكترونية"
+            PaidAmount = NetTotal
+            RemainingAmount = 0
+            ChangeAmount = 0
+            txtPaidInput.Enabled = False
+            txtPaidInput.Text = NetTotal.ToString("N2")
+
+            lblPaid.Text = NetTotal.ToString("N2")
+            lblPaid.ForeColor = ThemeManager.Instance.CurrentPalette.TextPrimary
+
+            Label6.Text = "طريقة الدفع"
+            Label6.ForeColor = Color.MediumSeaGreen
+            lblRemaining.Text = "0.00 (محفظة ✓)"
+            lblRemaining.ForeColor = Color.MediumSeaGreen
+
         Else
             ' الدفع نقدي
+            SelectedPaymentType = "نقدي"
             txtPaidInput.Enabled = True
             Dim inputPaid As Decimal = 0
             Decimal.TryParse(txtPaidInput.Text.Trim(), inputPaid)
@@ -311,7 +348,7 @@ Public Class FrmQuickPayment
     End Sub
 
     Private Sub AddQuickCash(amount As Decimal)
-        If rdoCredit.Checked Then Return
+        If Not rdoCash.Checked Then rdoCash.Checked = True
 
         Dim currentVal As Decimal = 0
         Decimal.TryParse(txtPaidInput.Text, currentVal)
@@ -323,7 +360,7 @@ Public Class FrmQuickPayment
     ' 5. زر المبلغ بالظبط
     ' ==========================================
     Private Sub btnExactAmount_Click(sender As Object, e As EventArgs) Handles btnExactAmount.Click
-        If rdoCredit.Checked Then Return
+        If Not rdoCash.Checked Then rdoCash.Checked = True
 
         txtPaidInput.Text = NetTotal.ToString()
         CalculateAll()
@@ -340,7 +377,7 @@ Public Class FrmQuickPayment
     End Sub
 
     Private Sub NumButton_Click(sender As Object, e As EventArgs)
-        If rdoCredit.Checked Then Return
+        If Not rdoCash.Checked Then rdoCash.Checked = True
 
         Dim btn = CType(sender, Guna2Button)
         Dim digit As String = btn.Text.Trim()
@@ -372,11 +409,27 @@ Public Class FrmQuickPayment
     End Sub
 
     ' ==========================================
-    ' 8. أزرار طريقة الدفع (نقدي / آجل)
+    ' 8. أزرار طريقة الدفع (نقدي / فيزا / محفظة / آجل)
     ' ==========================================
     Private Sub rdoCash_CheckedChanged(sender As Object, e As EventArgs) Handles rdoCash.CheckedChanged
-        IsCreditOrder = Not rdoCash.Checked
-        CalculateAll()
+        If rdoCash.Checked Then
+            IsCreditOrder = False
+            CalculateAll()
+        End If
+    End Sub
+
+    Private Sub rdoVisa_CheckedChanged(sender As Object, e As EventArgs) Handles rdoVisa.CheckedChanged
+        If rdoVisa.Checked Then
+            IsCreditOrder = False
+            CalculateAll()
+        End If
+    End Sub
+
+    Private Sub rdoWallet_CheckedChanged(sender As Object, e As EventArgs) Handles rdoWallet.CheckedChanged
+        If rdoWallet.Checked Then
+            IsCreditOrder = False
+            CalculateAll()
+        End If
     End Sub
 
     Private Sub rdoCredit_CheckedChanged(sender As Object, e As EventArgs) Handles rdoCredit.CheckedChanged

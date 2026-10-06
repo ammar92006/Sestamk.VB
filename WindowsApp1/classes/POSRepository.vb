@@ -696,10 +696,10 @@ ORDER BY ShiftID DESC;"
         Dim sqlInvoice As String = "
         INSERT INTO SalesInvoices 
         (InvoiceNumber, InvoiceDate, OrderType, ShiftID, UserID, CustomerID, TableID, DriverID,
-        BranchID, StoreID, DeliveryFee, DineInServiceFee, Tax, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, IsCredit, TreasuryID, Notes, IsActive, IsDeleted, CreatedAt)
+        BranchID, StoreID, DeliveryFee, DineInServiceFee, Tax, TotalBeforeDiscount, DiscountAmount, NetTotal, PaidAmount, RemainingAmount, IsCredit, TreasuryID, PaymentType, Notes, IsActive, IsDeleted, CreatedAt)
         VALUES 
         (@Num, GETDATE(), @OrderType, @ShiftID, @UserID, @CustomerID, @TableID, @DriverID,
-        @BranchID, @StoreID, @DeliveryFee, @DineInServiceFee, @TaxAmount, @TotalBeforeDiscount, @DiscountAmount, @NetTotal, @PaidAmount, @RemainingAmount, @IsCredit, @TreasuryID, @Notes, 1, 0, GETDATE());
+        @BranchID, @StoreID, @DeliveryFee, @DineInServiceFee, @TaxAmount, @TotalBeforeDiscount, @DiscountAmount, @NetTotal, @PaidAmount, @RemainingAmount, @IsCredit, @TreasuryID, @PaymentType, @Notes, 1, 0, GETDATE());
         SELECT SCOPE_IDENTITY();"
 
         Dim sqlDetail As String = "
@@ -748,6 +748,7 @@ ORDER BY ShiftID DESC;"
                     cmdInv.Parameters.AddWithValue("@RemainingAmount", inv.RemainingAmount)
                     cmdInv.Parameters.AddWithValue("@IsCredit", inv.IsCredit)
                     cmdInv.Parameters.AddWithValue("@TreasuryID", If(inv.TreasuryID.HasValue, inv.TreasuryID.Value, DBNull.Value))
+                    cmdInv.Parameters.AddWithValue("@PaymentType", If(Not String.IsNullOrWhiteSpace(inv.PaymentType), inv.PaymentType, "نقدي"))
                     cmdInv.Parameters.AddWithValue("@Notes", If(String.IsNullOrEmpty(inv.Notes), DBNull.Value, inv.Notes))
 
                     Dim objId = Await cmdInv.ExecuteScalarAsync()

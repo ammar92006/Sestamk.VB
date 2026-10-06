@@ -1760,6 +1760,7 @@ Public Class frmPOS
                     .PaidAmount = frmPay.PaidAmount,
                     .RemainingAmount = frmPay.RemainingAmount,
                     .IsCredit = frmPay.IsCreditOrder,
+                    .PaymentType = frmPay.SelectedPaymentType,
                     .TreasuryID = If(frmPay.SelectedTreasuryID > 0, frmPay.SelectedTreasuryID, CType(Nothing, Integer?)),
                     .Notes = invoiceNotes
                 }

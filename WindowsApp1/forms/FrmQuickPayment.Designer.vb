@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmQuickPayment
     Inherits System.Windows.Forms.Form
 
@@ -53,6 +53,8 @@ Partial Class FrmQuickPayment
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Guna2Panel8 = New Guna.UI2.WinForms.Guna2Panel()
         Me.rdoCredit = New Guna.UI2.WinForms.Guna2Button()
+        Me.rdoWallet = New Guna.UI2.WinForms.Guna2Button()
+        Me.rdoVisa = New Guna.UI2.WinForms.Guna2Button()
         Me.rdoCash = New Guna.UI2.WinForms.Guna2Button()
         Me.lblPreviousBalance = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -509,6 +511,8 @@ Partial Class FrmQuickPayment
         'Guna2Panel8
         '
         Me.Guna2Panel8.Controls.Add(Me.rdoCredit)
+        Me.Guna2Panel8.Controls.Add(Me.rdoWallet)
+        Me.Guna2Panel8.Controls.Add(Me.rdoVisa)
         Me.Guna2Panel8.Controls.Add(Me.rdoCash)
         Me.Guna2Panel8.Location = New System.Drawing.Point(22, 636)
         Me.Guna2Panel8.Name = "Guna2Panel8"
@@ -523,14 +527,48 @@ Partial Class FrmQuickPayment
         Me.rdoCredit.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.rdoCredit.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.rdoCredit.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.rdoCredit.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.rdoCredit.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.rdoCredit.ForeColor = System.Drawing.Color.White
-        Me.rdoCredit.ImageSize = New System.Drawing.Size(64, 64)
+        Me.rdoCredit.ImageSize = New System.Drawing.Size(24, 24)
         Me.rdoCredit.Location = New System.Drawing.Point(3, 7)
         Me.rdoCredit.Name = "rdoCredit"
-        Me.rdoCredit.Size = New System.Drawing.Size(207, 48)
+        Me.rdoCredit.Size = New System.Drawing.Size(100, 48)
         Me.rdoCredit.TabIndex = 7
         Me.rdoCredit.Text = "آجل"
+        '
+        'rdoWallet
+        '
+        Me.rdoWallet.BorderRadius = 8
+        Me.rdoWallet.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
+        Me.rdoWallet.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.rdoWallet.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.rdoWallet.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.rdoWallet.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.rdoWallet.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.rdoWallet.ForeColor = System.Drawing.Color.White
+        Me.rdoWallet.ImageSize = New System.Drawing.Size(24, 24)
+        Me.rdoWallet.Location = New System.Drawing.Point(108, 7)
+        Me.rdoWallet.Name = "rdoWallet"
+        Me.rdoWallet.Size = New System.Drawing.Size(102, 48)
+        Me.rdoWallet.TabIndex = 8
+        Me.rdoWallet.Text = "محفظة"
+        '
+        'rdoVisa
+        '
+        Me.rdoVisa.BorderRadius = 8
+        Me.rdoVisa.ButtonMode = Guna.UI2.WinForms.Enums.ButtonMode.RadioButton
+        Me.rdoVisa.DisabledState.BorderColor = System.Drawing.Color.DarkGray
+        Me.rdoVisa.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
+        Me.rdoVisa.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
+        Me.rdoVisa.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.rdoVisa.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.rdoVisa.ForeColor = System.Drawing.Color.White
+        Me.rdoVisa.ImageSize = New System.Drawing.Size(24, 24)
+        Me.rdoVisa.Location = New System.Drawing.Point(215, 7)
+        Me.rdoVisa.Name = "rdoVisa"
+        Me.rdoVisa.Size = New System.Drawing.Size(102, 48)
+        Me.rdoVisa.TabIndex = 9
+        Me.rdoVisa.Text = "فيزا/شبكة"
         '
         'rdoCash
         '
@@ -540,12 +578,12 @@ Partial Class FrmQuickPayment
         Me.rdoCash.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.rdoCash.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
         Me.rdoCash.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
-        Me.rdoCash.Font = New System.Drawing.Font("Segoe UI", 16.0!, System.Drawing.FontStyle.Bold)
+        Me.rdoCash.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.rdoCash.ForeColor = System.Drawing.Color.White
-        Me.rdoCash.ImageSize = New System.Drawing.Size(64, 64)
-        Me.rdoCash.Location = New System.Drawing.Point(216, 7)
+        Me.rdoCash.ImageSize = New System.Drawing.Size(24, 24)
+        Me.rdoCash.Location = New System.Drawing.Point(322, 7)
         Me.rdoCash.Name = "rdoCash"
-        Me.rdoCash.Size = New System.Drawing.Size(204, 48)
+        Me.rdoCash.Size = New System.Drawing.Size(100, 48)
         Me.rdoCash.TabIndex = 6
         Me.rdoCash.Text = "نقدي"
         '
@@ -904,6 +942,8 @@ Partial Class FrmQuickPayment
     Friend WithEvents lblPreviousBalance As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents rdoCredit As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents rdoWallet As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents rdoVisa As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents rdoCash As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblDefaultDiscount As Label
     Friend WithEvents Label9 As Label
