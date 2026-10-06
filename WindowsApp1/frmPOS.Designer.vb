@@ -67,6 +67,7 @@ Partial Class frmPOS
         Me.Guna2Panel7 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel6 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel5 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.txtSearchProduct = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2Panel3 = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2Panel10 = New Guna.UI2.WinForms.Guna2Panel()
         Me.dgvInvoice = New Guna.UI2.WinForms.Guna2DataGridView()
@@ -538,11 +539,30 @@ Partial Class frmPOS
         'Guna2Panel5
         '
         Me.Guna2Panel5.BackColor = System.Drawing.Color.FromArgb(CType(CType(22, Byte), Integer), CType(CType(25, Byte), Integer), CType(CType(34, Byte), Integer))
+        Me.Guna2Panel5.Controls.Add(Me.txtSearchProduct)
         Me.Guna2Panel5.Dock = System.Windows.Forms.DockStyle.Top
         Me.Guna2Panel5.Location = New System.Drawing.Point(0, 0)
         Me.Guna2Panel5.Name = "Guna2Panel5"
-        Me.Guna2Panel5.Size = New System.Drawing.Size(850, 10)
+        Me.Guna2Panel5.Padding = New System.Windows.Forms.Padding(8, 4, 8, 4)
+        Me.Guna2Panel5.Size = New System.Drawing.Size(850, 48)
         Me.Guna2Panel5.TabIndex = 2
+        '
+        'txtSearchProduct
+        '
+        Me.txtSearchProduct.BorderColor = System.Drawing.Color.FromArgb(CType(CType(60, Byte), Integer), CType(CType(60, Byte), Integer), CType(CType(80, Byte), Integer))
+        Me.txtSearchProduct.BorderRadius = 8
+        Me.txtSearchProduct.Cursor = System.Windows.Forms.Cursors.IBeam
+        Me.txtSearchProduct.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.txtSearchProduct.FillColor = System.Drawing.Color.FromArgb(CType(CType(30, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(48, Byte), Integer))
+        Me.txtSearchProduct.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.txtSearchProduct.ForeColor = System.Drawing.Color.White
+        Me.txtSearchProduct.Location = New System.Drawing.Point(8, 4)
+        Me.txtSearchProduct.Name = "txtSearchProduct"
+        Me.txtSearchProduct.PlaceholderForeColor = System.Drawing.Color.FromArgb(CType(CType(148, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(184, Byte), Integer))
+        Me.txtSearchProduct.PlaceholderText = "🔍 ابحث باسم الصنف أو امسح الباركود مباشرة [F3]..."
+        Me.txtSearchProduct.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.txtSearchProduct.Size = New System.Drawing.Size(834, 40)
+        Me.txtSearchProduct.TabIndex = 0
         '
         'Guna2Panel3
         '
@@ -1384,6 +1404,7 @@ Partial Class frmPOS
     Friend WithEvents Guna2Panel7 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2Panel6 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2Panel5 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents txtSearchProduct As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Guna2Panel9 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label

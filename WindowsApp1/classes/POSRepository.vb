@@ -184,7 +184,7 @@ Public Class POSRepository
 
         Dim sql As String = "
                 SELECT 
-                    p.Product_ID, p.ProductCode, p.ProductNameAr, p.ProductNameEn, p.[Image],
+                    p.Product_ID, p.ProductCode, ISNULL(p.Barcode, '') AS Barcode, p.ProductNameAr, p.ProductNameEn, p.[Image],
                     p.Description, p.DiscountPercent, p.TaxPercent, p.IsActive, p.IsDeleted,
                     p.PreparationTime, p.Notes, p.Category_ID, p.IsDiscountPercent, p.IsTaxPercent,
                     (SELECT COUNT(*) FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0) AS SizesCount,
@@ -204,6 +204,7 @@ Public Class POSRepository
                         Dim prod As New ProductModel With {
                             .Product_ID = Convert.ToInt32(rdr("Product_ID")),
                             .ProductCode = If(IsDBNull(rdr("ProductCode")), Nothing, rdr("ProductCode").ToString()),
+                            .Barcode = If(IsDBNull(rdr("Barcode")), "", rdr("Barcode").ToString()),
                             .ProductNameAr = If(IsDBNull(rdr("ProductNameAr")), Nothing, rdr("ProductNameAr").ToString()),
                             .ProductNameEn = If(IsDBNull(rdr("ProductNameEn")), Nothing, rdr("ProductNameEn").ToString()),
                             .Image = If(IsDBNull(rdr("Image")), Nothing, rdr("Image").ToString()),
@@ -233,6 +234,99 @@ Public Class POSRepository
         End Using
 
         Return list
+    End Function
+
+    ''' <summary>
+    ''' جلب صنف محدد بالباركود الدولي أو كود الصنف الداخلي لإضافته فورياً إلى الفاتورة
+    ''' </summary>
+    Public Function GetProductByBarcode(barcodeOrCode As String) As ProductModel
+        If String.IsNullOrWhiteSpace(barcodeOrCode) Then Return Nothing
+        Dim sql As String = "
+            SELECT TOP 1
+                p.Product_ID, p.ProductCode, ISNULL(p.Barcode, '') AS Barcode, p.ProductNameAr, p.ProductNameEn, p.[Image],
+                p.Description, p.DiscountPercent, p.TaxPercent, p.IsActive, p.IsDeleted,
+                p.PreparationTime, p.Notes, p.Category_ID, p.IsDiscountPercent, p.IsTaxPercent,
+                (SELECT COUNT(*) FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0) AS SizesCount,
+                (SELECT COUNT(*) FROM ProductAddons pa WHERE pa.ProductID = p.Product_ID AND pa.IsActive = 1 AND pa.IsDeleted = 0) AS AddonsCount,
+                ISNULL((SELECT TOP 1 ps.SalePrice FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0 ORDER BY ps.IsDefault DESC, ps.SortOrder, ps.ProductSizeID), ISNULL(p.SalePrice, ISNULL(p.BasePrice, 0))) AS DefaultPrice,
+                ISNULL(p.IsDirect, 1) AS IsDirect
+            FROM Products p
+            WHERE (p.Barcode = @Code OR p.ProductCode = @Code) AND p.IsActive = 1 AND (p.IsDeleted = 0 OR p.IsDeleted IS NULL);"
+
+        Using con As New SqlConnection(_ConnectionString)
+            Using cmd As New SqlCommand(sql, con)
+                cmd.Parameters.AddWithValue("@Code", barcodeOrCode.Trim())
+                con.Open()
+                Using rdr = cmd.ExecuteReader()
+                    If rdr.Read() Then
+                        Return ReadProductModelFromReader(rdr)
+                    End If
+                End Using
+            End Using
+        End Using
+        Return Nothing
+    End Function
+
+    ''' <summary>
+    ''' البحث السريع في كافة أصناف النظام بالاسم أو الكود أو الباركود
+    ''' </summary>
+    Public Function SearchProducts(keyword As String) As List(Of ProductModel)
+        Dim list As New List(Of ProductModel)
+        If String.IsNullOrWhiteSpace(keyword) Then Return list
+        Dim sql As String = "
+            SELECT TOP 40
+                p.Product_ID, p.ProductCode, ISNULL(p.Barcode, '') AS Barcode, p.ProductNameAr, p.ProductNameEn, p.[Image],
+                p.Description, p.DiscountPercent, p.TaxPercent, p.IsActive, p.IsDeleted,
+                p.PreparationTime, p.Notes, p.Category_ID, p.IsDiscountPercent, p.IsTaxPercent,
+                (SELECT COUNT(*) FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0) AS SizesCount,
+                (SELECT COUNT(*) FROM ProductAddons pa WHERE pa.ProductID = p.Product_ID AND pa.IsActive = 1 AND pa.IsDeleted = 0) AS AddonsCount,
+                ISNULL((SELECT TOP 1 ps.SalePrice FROM ProductSizes ps WHERE ps.ProductID = p.Product_ID AND ps.IsActive = 1 AND ps.IsDeleted = 0 ORDER BY ps.IsDefault DESC, ps.SortOrder, ps.ProductSizeID), ISNULL(p.SalePrice, ISNULL(p.BasePrice, 0))) AS DefaultPrice,
+                ISNULL(p.IsDirect, 1) AS IsDirect
+            FROM Products p
+            WHERE (p.ProductNameAr LIKE '%' + @Kw + '%' OR p.ProductNameEn LIKE '%' + @Kw + '%' OR p.Barcode = @Kw OR p.ProductCode = @Kw)
+              AND p.IsActive = 1 AND (p.IsDeleted = 0 OR p.IsDeleted IS NULL)
+            ORDER BY p.ProductNameAr;"
+
+        Using con As New SqlConnection(_ConnectionString)
+            Using cmd As New SqlCommand(sql, con)
+                cmd.Parameters.AddWithValue("@Kw", keyword.Trim())
+                con.Open()
+                Using rdr = cmd.ExecuteReader()
+                    While rdr.Read()
+                        list.Add(ReadProductModelFromReader(rdr))
+                    End While
+                End Using
+            End Using
+        End Using
+        Return list
+    End Function
+
+    Private Function ReadProductModelFromReader(rdr As SqlDataReader) As ProductModel
+        Dim prod As New ProductModel With {
+            .Product_ID = Convert.ToInt32(rdr("Product_ID")),
+            .ProductCode = If(IsDBNull(rdr("ProductCode")), Nothing, rdr("ProductCode").ToString()),
+            .Barcode = If(IsDBNull(rdr("Barcode")), "", rdr("Barcode").ToString()),
+            .ProductNameAr = If(IsDBNull(rdr("ProductNameAr")), Nothing, rdr("ProductNameAr").ToString()),
+            .ProductNameEn = If(IsDBNull(rdr("ProductNameEn")), Nothing, rdr("ProductNameEn").ToString()),
+            .Image = If(IsDBNull(rdr("Image")), Nothing, rdr("Image").ToString()),
+            .Description = If(IsDBNull(rdr("Description")), Nothing, rdr("Description").ToString()),
+            .Notes = If(IsDBNull(rdr("Notes")), Nothing, rdr("Notes").ToString())
+        }
+        If Not IsDBNull(rdr("DiscountPercent")) Then prod.DiscountPercent = Convert.ToDouble(rdr("DiscountPercent"))
+        If Not IsDBNull(rdr("TaxPercent")) Then prod.TaxPercent = Convert.ToDouble(rdr("TaxPercent"))
+        If Not IsDBNull(rdr("IsActive")) Then prod.IsActive = Convert.ToBoolean(rdr("IsActive"))
+        If Not IsDBNull(rdr("IsDeleted")) Then prod.IsDeleted = Convert.ToBoolean(rdr("IsDeleted"))
+        If Not IsDBNull(rdr("Category_ID")) Then prod.Category_ID = Convert.ToInt32(rdr("Category_ID"))
+        If Not IsDBNull(rdr("IsDiscountPercent")) Then prod.IsDiscountPercent = Convert.ToBoolean(rdr("IsDiscountPercent"))
+        If Not IsDBNull(rdr("IsTaxPercent")) Then prod.IsTaxPercent = Convert.ToBoolean(rdr("IsTaxPercent"))
+        If Not IsDBNull(rdr("SizesCount")) Then prod.SizesCount = Convert.ToInt32(rdr("SizesCount"))
+        If Not IsDBNull(rdr("AddonsCount")) Then prod.AddonsCount = Convert.ToInt32(rdr("AddonsCount"))
+        If Not IsDBNull(rdr("DefaultPrice")) Then
+            prod.DefaultPrice = Convert.ToDecimal(rdr("DefaultPrice"))
+            prod.BasePrice = prod.DefaultPrice
+        End If
+        If Not IsDBNull(rdr("IsDirect")) Then prod.IsDirect = Convert.ToBoolean(rdr("IsDirect"))
+        Return prod
     End Function
 
     ' 1. جلب الطيارين النشطين مع بيانات منطقتهم

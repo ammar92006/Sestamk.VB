@@ -3,8 +3,15 @@ Imports System
 Public Class ProductModel
     Public Property Product_ID As Integer
     Public Property ProductCode As String
+    Public Property Barcode As String
     Public Property ProductNameAr As String
     Public Property ProductNameEn As String
+
+    Public ReadOnly Property ProductName As String
+        Get
+            Return If(Not String.IsNullOrEmpty(ProductNameAr), ProductNameAr, If(ProductNameEn, ""))
+        End Get
+    End Property
     Public Property Image As String                  ' مطابق لاسم العمود Image في الصورة
     Public Property Description As String
     Public Property DiscountPercent As Double?

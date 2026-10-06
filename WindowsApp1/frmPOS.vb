@@ -22,6 +22,7 @@ Public Class frmPOS
     Private _currentPendingInvoiceID As Integer? = Nothing
     Private _currentPendingInvoiceNumber As String = ""
     Private _recalledOriginalItems As New List(Of InvoiceDetailModel)()
+    Private _currentCategoryProducts As New List(Of ProductModel)()
 
     ' متغيرات الطباعة وإعادة الطباعة وعمليات الطاولات
     Private _lastSavedInvoice As InvoiceModel = Nothing
@@ -733,87 +734,202 @@ Public Class frmPOS
     End Sub
 
     ' ==========================================
-    ' 2. رسم الأصناف داخل flpProducts بنظام الأزرار الحديثة والبادج الاحترافي
+    ' 2. رسم وتصفية الأصناف داخل flpProducts بنظام الأزرار الحديثة
     ' ==========================================
     Private Sub LoadProducts(categoryID As Integer)
         Try
             If _repo Is Nothing Then
                 _repo = New POSRepository(DBModule.ConnectionString)
             End If
-            Dim products = _repo.GetProductsByCategoryID(categoryID)
-            Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+            _currentCategoryProducts = _repo.GetProductsByCategoryID(categoryID)
+            If _currentCategoryProducts Is Nothing Then _currentCategoryProducts = New List(Of ProductModel)()
 
-            flpProducts.SuspendLayout()
-            Try
-                flpProducts.Controls.Clear()
-
-                ' في حال كان القسم خالياً من الأصناف، إظهار بطاقة توضيحية راقية
-                If products Is Nothing OrElse products.Count = 0 Then
-                    Dim pnlEmpty As New Guna.UI2.WinForms.Guna2Panel With {
-                        .Width = Math.Max(320, flpProducts.ClientSize.Width - 50),
-                        .Height = 220,
-                        .BorderRadius = 14,
-                        .FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White),
-                        .BorderColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240)),
-                        .BorderThickness = 1,
-                        .Margin = New Padding(20, 35, 20, 20)
-                    }
-                    Dim lblEmpty As New Label With {
-                        .Dock = DockStyle.Fill,
-                        .Text = "🍽️ لا توجد أصناف في هذا القسم حالياً" & vbCrLf & vbCrLf & "يرجى اختيار قسم آخر أو الضغط على زر ""عرض الكل""",
-                        .Font = New Font("Segoe UI", 13.0!, FontStyle.Bold),
-                        .ForeColor = If(isDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139)),
-                        .TextAlign = ContentAlignment.MiddleCenter
-                    }
-                    pnlEmpty.Controls.Add(lblEmpty)
-                    flpProducts.Controls.Add(pnlEmpty)
-                    Return
-                End If
-
-                Dim numCols As Integer = 5
-                Dim marginH As Integer = 6 ' 3 يمين + 3 يسار
-                Dim scrollW As Integer = If(flpProducts.VerticalScroll.Visible, 0, SystemInformation.VerticalScrollBarWidth)
-                Dim availW As Integer = flpProducts.ClientSize.Width - flpProducts.Padding.Horizontal - scrollW - 2
-                If availW < 300 Then availW = 820
-                Dim cardW As Integer = Math.Max(95, (availW - (numCols * marginH)) \ numCols)
-
-                For Each prod As ProductModel In products
-                    Dim btn As New Guna.UI2.WinForms.Guna2Button With {
-                        .Width = cardW,
-                        .Height = 110,
-                        .BorderRadius = 12,
-                        .Margin = New Padding(3, 4, 3, 4),
-                        .Cursor = Cursors.Hand,
-                        .Tag = prod,
-                        .Animated = True,
-                        .FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White),
-                        .ForeColor = If(isDark, Color.White, Color.FromArgb(15, 23, 42)),
-                        .CustomBorderThickness = New Padding(0, 4, 0, 0),
-                        .CustomBorderColor = _selectedCategoryColor,
-                        .BorderThickness = 1,
-                        .BorderColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240)),
-                        .Text = ""
-                    }
-
-                    btn.HoverState.FillColor = If(isDark, Color.FromArgb(40, 49, 68), Color.FromArgb(248, 250, 252))
-                    btn.HoverState.CustomBorderColor = Color.White
-                    btn.HoverState.BorderColor = _selectedCategoryColor
-
-                    AddHandler btn.Paint, AddressOf ProductButton_Paint
-                    AddHandler btn.Click, AddressOf ProductButton_Click
-
-                    flpProducts.Controls.Add(btn)
-                Next
-
-                UpdateProductButtonsLayout()
-            Finally
-                flpProducts.ResumeLayout(True)
-            End Try
+            Dim term = If(txtSearchProduct IsNot Nothing, txtSearchProduct.Text.Trim(), "")
+            If Not String.IsNullOrEmpty(term) Then
+                FilterProductsList(term)
+            Else
+                RenderProductsList(_currentCategoryProducts)
+            End If
         Catch ex As Exception
             Logger.LogError("LoadProducts", ex)
             SmartMessageBox.Show("حدث خطأ أثناء تحميل الأصناف: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
+
+    Private Sub RenderProductsList(products As List(Of ProductModel))
+        Dim isDark As Boolean = (ThemeManager.Instance.CurrentTheme = AppTheme.Dark)
+        flpProducts.SuspendLayout()
+        Try
+            flpProducts.Controls.Clear()
+
+            ' في حال كان القسم أو البحث خالياً، إظهار بطاقة توضيحية راقية
+            If products Is Nothing OrElse products.Count = 0 Then
+                Dim pnlEmpty As New Guna.UI2.WinForms.Guna2Panel With {
+                    .Width = Math.Max(320, flpProducts.ClientSize.Width - 50),
+                    .Height = 220,
+                    .BorderRadius = 14,
+                    .FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White),
+                    .BorderColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240)),
+                    .BorderThickness = 1,
+                    .Margin = New Padding(20, 35, 20, 20)
+                }
+                Dim lblEmpty As New Label With {
+                    .Dock = DockStyle.Fill,
+                    .Text = "🍽️ لا توجد أصناف مطابقة للبحث أو في هذا القسم" & vbCrLf & vbCrLf & "يرجى مسح مربع البحث أو اختيار قسم آخر",
+                    .Font = New Font("Segoe UI", 13.0!, FontStyle.Bold),
+                    .ForeColor = If(isDark, Color.FromArgb(148, 163, 184), Color.FromArgb(100, 116, 139)),
+                    .TextAlign = ContentAlignment.MiddleCenter
+                }
+                pnlEmpty.Controls.Add(lblEmpty)
+                flpProducts.Controls.Add(pnlEmpty)
+                Return
+            End If
+
+            Dim numCols As Integer = 5
+            Dim marginH As Integer = 6 ' 3 يمين + 3 يسار
+            Dim scrollW As Integer = If(flpProducts.VerticalScroll.Visible, 0, SystemInformation.VerticalScrollBarWidth)
+            Dim availW As Integer = flpProducts.ClientSize.Width - flpProducts.Padding.Horizontal - scrollW - 2
+            If availW < 300 Then availW = 820
+            Dim cardW As Integer = Math.Max(95, (availW - (numCols * marginH)) \ numCols)
+
+            For Each prod As ProductModel In products
+                Dim btn As New Guna.UI2.WinForms.Guna2Button With {
+                    .Width = cardW,
+                    .Height = 110,
+                    .BorderRadius = 12,
+                    .Margin = New Padding(3, 4, 3, 4),
+                    .Cursor = Cursors.Hand,
+                    .Tag = prod,
+                    .Animated = True,
+                    .FillColor = If(isDark, Color.FromArgb(30, 41, 59), Color.White),
+                    .ForeColor = If(isDark, Color.White, Color.FromArgb(15, 23, 42)),
+                    .CustomBorderThickness = New Padding(0, 4, 0, 0),
+                    .CustomBorderColor = _selectedCategoryColor,
+                    .BorderThickness = 1,
+                    .BorderColor = If(isDark, Color.FromArgb(51, 65, 85), Color.FromArgb(226, 232, 240)),
+                    .Text = ""
+                }
+
+                btn.HoverState.FillColor = If(isDark, Color.FromArgb(40, 49, 68), Color.FromArgb(248, 250, 252))
+                btn.HoverState.CustomBorderColor = Color.White
+                btn.HoverState.BorderColor = _selectedCategoryColor
+
+                AddHandler btn.Paint, AddressOf ProductButton_Paint
+                AddHandler btn.Click, AddressOf ProductButton_Click
+
+                flpProducts.Controls.Add(btn)
+            Next
+
+            UpdateProductButtonsLayout()
+        Finally
+            flpProducts.ResumeLayout(True)
+        End Try
+    End Sub
+
+    Private Sub FilterProductsList(term As String)
+        If String.IsNullOrWhiteSpace(term) Then
+            RenderProductsList(_currentCategoryProducts)
+            Return
+        End If
+
+        Dim filtered = _currentCategoryProducts.Where(Function(p)
+                                                          Dim nameAr = If(p.ProductNameAr, "")
+                                                          Dim nameEn = If(p.ProductName, "")
+                                                          Dim code = If(p.ProductCode, "")
+                                                          Dim bar = If(p.Barcode, "")
+                                                          Return nameAr.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0 OrElse
+                                                                 nameEn.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0 OrElse
+                                                                 code.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0 OrElse
+                                                                 bar.IndexOf(term, StringComparison.OrdinalIgnoreCase) >= 0
+                                                      End Function).ToList()
+
+        ' إذا لم يوجد نتائج في القسم الحالي، نبحث على مستوى كافة أصناف النظام
+        If filtered.Count = 0 Then
+            Dim allMatch = _repo.SearchProducts(term)
+            If allMatch IsNot Nothing AndAlso allMatch.Count > 0 Then
+                filtered = allMatch
+            End If
+        End If
+
+        RenderProductsList(filtered)
+    End Sub
+
+    Private Sub txtSearchProduct_TextChanged(sender As Object, e As EventArgs) Handles txtSearchProduct.TextChanged
+        FilterProductsList(txtSearchProduct.Text.Trim())
+    End Sub
+
+    Private Sub txtSearchProduct_KeyDown(sender As Object, e As KeyEventArgs) Handles txtSearchProduct.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            Dim query = txtSearchProduct.Text.Trim()
+            If Not String.IsNullOrEmpty(query) Then
+                If HandleBarcodeOrQuickAdd(query) Then
+                    txtSearchProduct.Clear()
+                End If
+            End If
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' معالجة مسح الباركود الدولي أو البحث الصريح وإضافة الصنف مباشرة للفاتورة
+    ''' </summary>
+    Private Function HandleBarcodeOrQuickAdd(code As String) As Boolean
+        Try
+            Dim prod = _repo.GetProductByBarcode(code)
+            If prod IsNot Nothing Then
+                If prod.IsDirectItem Then
+                    Dim sizes = _repo.GetProductSizes(prod.Product_ID)
+                    Dim orderItem As New OrderItemModel With {
+                        .Product_ID = prod.Product_ID,
+                        .ProductName = prod.ProductNameAr,
+                        .Quantity = 1,
+                        .TaxPercent = Convert.ToDecimal(If(prod.TaxPercent.HasValue, prod.TaxPercent.Value, 0))
+                    }
+                    If sizes IsNot Nothing AndAlso sizes.Count > 0 Then
+                        Dim defaultSize = sizes.FirstOrDefault(Function(s) s.IsDefault)
+                        If defaultSize Is Nothing Then defaultSize = sizes(0)
+                        orderItem.SelectedSize = defaultSize
+                    Else
+                        orderItem.SelectedSize = New ProductSizeModel With {
+                            .ProductID = prod.Product_ID,
+                            .SalePrice = prod.DefaultPrice,
+                            .SizeInfo = New SizeModel With {.SizeNameAr = "عادي"}
+                        }
+                    End If
+                    AddItemToInvoice(orderItem)
+                    Try
+                        System.Media.SystemSounds.Beep.Play()
+                    Catch
+                    End Try
+                    Return True
+                Else
+                    Using frmOptions As New FrmProductOptions(prod, _repo)
+                        If frmOptions.ShowDialog() = DialogResult.OK Then
+                            For Each selectedItem In frmOptions.ResultOrderItems
+                                AddItemToInvoice(selectedItem)
+                            Next
+                            Return True
+                        End If
+                    End Using
+                End If
+            End If
+
+            If flpProducts.Controls.Count = 1 Then
+                Dim firstBtn = TryCast(flpProducts.Controls(0), Guna.UI2.WinForms.Guna2Button)
+                If firstBtn IsNot Nothing AndAlso firstBtn.Tag IsNot Nothing Then
+                    ProductButton_Click(firstBtn, EventArgs.Empty)
+                    Return True
+                End If
+            End If
+
+            SmartMessageBox.Show($"لم يتم العثور على صنف بالباركود أو الاسم: ({code})", "تنبيه الباركود", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return False
+        Catch ex As Exception
+            Logger.LogError("HandleBarcodeOrQuickAdd", ex)
+            Return False
+        End Try
+    End Function
 
     ''' <summary>
     ''' ضبط أبعاد وهوامش بطاقات الأصناف ديناميكياً لتوزيع 5 أعمدة بالضبط وبشكل جمالي متناسق بدون أي فراغات مهدرة
@@ -2482,6 +2598,12 @@ Public Class frmPOS
     ' =========================================================
     Private Sub frmPOS_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         Select Case e.KeyCode
+            Case Keys.F3
+                e.Handled = True
+                If txtSearchProduct IsNot Nothing Then
+                    txtSearchProduct.Focus()
+                    txtSearchProduct.SelectAll()
+                End If
             Case Keys.F5
                 e.Handled = True
                 btnHoldInvoice.PerformClick()
