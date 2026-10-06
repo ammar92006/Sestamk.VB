@@ -1,4 +1,4 @@
-﻿Imports System.Data.SqlClient
+Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Drawing.Drawing2D
 Imports System.Net.NetworkInformation
@@ -288,6 +288,13 @@ Public Class Login
     ' ──────────────────────────────────────────────────────────
 
     Private Async Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        ' ── بدء تشغيل خادم بوابات سستمك الذكية (المالك والمطبخ والويتر) فور إقلاع البرنامج ──
+        Try
+            WindowsApp1.Services.Cloud.OwnerPortalServer.Instance.StartServer(5055)
+        Catch ex As Exception
+            Logger.LogError("Login_Load.OwnerPortalServer", ex)
+        End Try
+
         ' ── تحميل قائمة المستخدمين وتحديد المستخدم الأخير وكلمة المرور فوراً قبل أي انتظار ──
         Try
             FillUsersComboBox(showPromptOnError:=False)

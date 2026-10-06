@@ -454,7 +454,7 @@ Namespace Services.Sync
                             Using cmdMig As New SqlCommand("UPDATE Users_TBL SET User_password = @h WHERE User_ID = @id", cnMig)
                                 cmdMig.Parameters.AddWithValue("@h", migratedHash)
                                 cmdMig.Parameters.AddWithValue("@id", u.UserId)
-                                cnMig.Open()
+                                If cnMig.State <> ConnectionState.Open Then cnMig.Open()
                                 cmdMig.ExecuteNonQuery()
                             End Using
                         End Using
