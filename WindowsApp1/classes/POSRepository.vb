@@ -1680,15 +1680,6 @@ ORDER BY ShiftID DESC;"
             Using con As New SqlConnection(_ConnectionString)
                 Await con.OpenAsync()
 
-                ' إلغاء أي طلب نشط مسبق لنفس الطاولة تجنباً للتكرار عند تعديل الطلب
-                If order.TableID.HasValue AndAlso order.TableID.Value > 0 Then
-                    Dim cancelOldSql As String = "UPDATE KitchenOrders SET Status = 4 WHERE TableID = @TID AND Status IN (0, 1);"
-                    Using cmdOld As New SqlCommand(cancelOldSql, con)
-                        cmdOld.Parameters.AddWithValue("@TID", order.TableID.Value)
-                        Await cmdOld.ExecuteNonQueryAsync()
-                    End Using
-                End If
-
                 Dim sqlOrder As String = "
                 INSERT INTO KitchenOrders 
                 (OrderNumber, OrderType, TableID, TableName, CustomerName, ServerName, CreatedAt, Status, Notes)

@@ -82,6 +82,10 @@ jobs:
         shell: pwsh
         run: pwsh -NoProfile -File tests\SchemaAndQueryVerification.ps1
 
+      - name: Run ecosystem and POS integration tests
+        shell: pwsh
+        run: pwsh -NoProfile -File tests\EcosystemAndPosIntegration.ps1 -Configuration Release
+
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4

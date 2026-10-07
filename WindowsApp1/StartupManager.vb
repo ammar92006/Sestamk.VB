@@ -1,4 +1,4 @@
-﻿Imports System.IO
+Imports System.IO
 Imports System.Windows.Forms
 Imports Microsoft.Win32
 
@@ -179,13 +179,18 @@ Public Module StartupManager
         End Try
     End Sub
 
-    ''' <summary>هل النشاط مهيّأ مسبقاً؟ (اسم محل محفوظ أو يوجد مستخدمون)</summary>
+    ''' <summary>هل النشاط مهيّأ مسبقاً؟ (اسم محل محفوظ أو كلمة مرور مدير مضبوطة أو يوجد مستخدمون حقيقيون)</summary>
     Private Function IsBusinessAlreadyConfigured() As Boolean
         Try
+            ' 1. إذا كان اسم المحل مسجلاً، فالنشاط مهيّأ مسبقاً
             If Not String.IsNullOrWhiteSpace(SettingsManager.GetSetting(SettingsKeys.ShopName)) Then Return True
 
+            ' 2. إذا تم تعيين كلمة مرور حقيقية للمدير في الإعدادات
+            If Not String.IsNullOrWhiteSpace(SettingsManager.GetSetting(SettingsKeys.AdminPasswordHash)) Then Return True
+
+            ' 3. فحص ما إذا كان يوجد مستخدمون حقيقيون بخلاف حساب البداية التلقائي المؤقت
             Using cn = DBModule.NewConn()
-                Using cmd As New System.Data.SqlClient.SqlCommand("SELECT COUNT(*) FROM Users_TBL", cn)
+                Using cmd As New System.Data.SqlClient.SqlCommand("SELECT COUNT(*) FROM Users_TBL WHERE User_username <> 'admin' OR User_Code <> '1'", cn)
                     cmd.CommandTimeout = 8
                     If Convert.ToInt32(cmd.ExecuteScalar()) > 0 Then Return True
                 End Using

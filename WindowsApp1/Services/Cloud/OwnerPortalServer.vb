@@ -368,10 +368,10 @@ Namespace Services.Cloud
             Try
                 Dim sqlSales = "
                 SELECT 
-                    ISNULL(SUM(NetTotal), 0) AS TotalNet,
-                    COUNT(1) AS TotalOrders,
-                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%نقدي%' THEN PaidAmount ELSE 0 END), 0) AS TotalCash,
-                    ISNULL(SUM(CASE WHEN PaymentType LIKE N'%فيزا%' OR PaymentType LIKE N'%شبكة%' THEN PaidAmount ELSE 0 END), 0) AS TotalVisa
+                    ISNULL(SUM(CASE WHEN OriginalInvoiceID IS NULL THEN NetTotal ELSE -NetTotal END), 0) AS TotalNet,
+                    COUNT(CASE WHEN OriginalInvoiceID IS NULL THEN 1 END) AS TotalOrders,
+                    ISNULL(SUM(CASE WHEN OriginalInvoiceID IS NULL AND PaymentType LIKE N'%نقدي%' THEN PaidAmount WHEN OriginalInvoiceID IS NOT NULL AND PaymentType LIKE N'%نقدي%' THEN -PaidAmount ELSE 0 END), 0) AS TotalCash,
+                    ISNULL(SUM(CASE WHEN OriginalInvoiceID IS NULL AND (PaymentType LIKE N'%فيزا%' OR PaymentType LIKE N'%شبكة%') THEN PaidAmount WHEN OriginalInvoiceID IS NOT NULL AND (PaymentType LIKE N'%فيزا%' OR PaymentType LIKE N'%شبكة%') THEN -PaidAmount ELSE 0 END), 0) AS TotalVisa
                 FROM SalesInvoices 
                 WHERE (IsDeleted = 0 OR IsDeleted IS NULL) 
                   AND CAST(InvoiceDate AS DATE) = CAST(GETDATE() AS DATE);"
@@ -449,7 +449,7 @@ Namespace Services.Cloud
             Dim activeShiftObj As New JObject()
             Try
                 Dim dtShift = DBModule.ExecuteQuery("
-                SELECT TOP 1 s.ShiftID, s.OpeningDate, s.OpeningCash, s.TotalSales, s.TotalExpenses, u.User_Name 
+                SELECT TOP 1 s.ShiftID, s.OpenDateTime, s.OpeningCash, s.TotalSales, s.TotalExpenses, u.User_Name 
                 FROM Shifts s 
                 LEFT JOIN Users_TBL u ON s.UserID = u.User_ID 
                 WHERE s.Status = 1 
@@ -459,7 +459,7 @@ Namespace Services.Cloud
                     Dim r = dtShift.Rows(0)
                     activeShiftObj("shiftId") = Convert.ToInt32(r("ShiftID"))
                     activeShiftObj("cashier") = If(IsDBNull(r("User_Name")), "المدير", r("User_Name").ToString())
-                    activeShiftObj("openedAt") = If(IsDBNull(r("OpeningDate")), "--:--", Convert.ToDateTime(r("OpeningDate")).ToString("yyyy-MM-dd HH:mm"))
+                    activeShiftObj("openedAt") = If(IsDBNull(r("OpenDateTime")), "--:--", Convert.ToDateTime(r("OpenDateTime")).ToString("yyyy-MM-dd HH:mm"))
                     activeShiftObj("openingCash") = Convert.ToDecimal(r("OpeningCash"))
                     activeShiftObj("totalSales") = Convert.ToDecimal(r("TotalSales"))
                     activeShiftObj("totalExpenses") = Convert.ToDecimal(r("TotalExpenses"))
@@ -642,8 +642,8 @@ Namespace Services.Cloud
             Dim root As New JObject()
             Dim categoriesArr As New JArray()
             Try
-                Dim dtCats = DBModule.ExecuteQuery("SELECT Category_ID, Category_Name FROM Categories WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY Category_ID;")
-                Dim dtProds = DBModule.ExecuteQuery("SELECT Product_ID, Category_ID, ProductName, ISNULL(ProductNameAr, ProductName) AS NameAr, SalePrice, ISNULL(Image, '') AS ProdImg, ISNULL(PreparationTime, '00:10:00') AS PrepTime FROM Products WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY Product_ID;")
+                Dim dtCats = DBModule.ExecuteQuery("SELECT Category_ID, ISNULL(NULLIF(Category_NameAr, ''), ISNULL(NULLIF(Category_Name, ''), ISNULL(CategoryName, 'قسم'))) AS Category_Name FROM Categories WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY Category_ID;")
+                Dim dtProds = DBModule.ExecuteQuery("SELECT Product_ID, Category_ID, ISNULL(NULLIF(ProductNameAr, ''), ISNULL(ProductName, 'صنف')) AS ProductName, ISNULL(NULLIF(ProductNameAr, ''), ISNULL(ProductName, 'صنف')) AS NameAr, SalePrice, ISNULL(Image, '') AS ProdImg, ISNULL(PreparationTime, '00:10:00') AS PrepTime FROM Products WHERE IsActive = 1 AND (IsDeleted = 0 OR IsDeleted IS NULL) ORDER BY Product_ID;")
                 Dim dtSizes = DBModule.ExecuteQuery("SELECT ps.ProductSizeID, ps.ProductID, ps.SizeID, s.SizeNameAr, ps.SalePrice FROM ProductSizes ps INNER JOIN Sizes s ON ps.SizeID = s.SizeID WHERE ps.IsActive = 1 AND ps.IsDeleted = 0;")
 
                 If dtCats IsNot Nothing Then

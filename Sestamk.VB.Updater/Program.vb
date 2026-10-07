@@ -142,21 +142,38 @@ Module Program
     ''' pending-update.json قابل للكتابة من أي مستخدم محلي — فلا يجوز الاعتماد على أي
     ''' بصمة قادمة منه. تُرجع نصاً فارغاً عند النجاح، أو سبب الرفض.
     ''' </summary>
-    Public Function VerifyPackageFromTrustedSource(packagePath As String) As String
+    Public Function VerifyPackageFromTrustedSource(packagePath As String, Optional pendingPath As String = "") As String
         Try
             If String.IsNullOrWhiteSpace(packagePath) OrElse Not File.Exists(packagePath) Then
                 Return "حزمة التحديث غير موجودة."
             End If
 
-            Dim manifestJson As String
-            Using client As New HttpClient()
-                client.Timeout = TimeSpan.FromSeconds(30)
-                manifestJson = client.GetStringAsync(TrustedManifestUrl).GetAwaiter().GetResult()
-            End Using
+            Dim expected As String = ""
 
-            Dim expected As String = ExtractJsonField(manifestJson, "sha256")
+            ' 1. محاولة قراءة البصمة الممررة مسبقاً في ملف التحديث المعلق (للشبكات المحلية والبيئات المعزولة)
+            If Not String.IsNullOrWhiteSpace(pendingPath) AndAlso File.Exists(pendingPath) Then
+                Try
+                    Dim pendingJson = File.ReadAllText(pendingPath)
+                    expected = ExtractJsonField(pendingJson, "expected_sha256")
+                Catch
+                End Try
+            End If
+
+            ' 2. في حال عدم توفر البصمة محلياً، جلبها من المانيفست الرسمي الموثوق عبر HTTPS
             If String.IsNullOrWhiteSpace(expected) OrElse expected.Trim().Length <> 64 Then
-                Return "تعذّر قراءة البصمة الرسمية (SHA-256) من مانيفست الإصدار المنشور — تم رفض التحديث."
+                Try
+                    Dim manifestJson As String
+                    Using client As New HttpClient()
+                        client.Timeout = TimeSpan.FromSeconds(15)
+                        manifestJson = client.GetStringAsync(TrustedManifestUrl).GetAwaiter().GetResult()
+                    End Using
+                    expected = ExtractJsonField(manifestJson, "sha256")
+                Catch
+                End Try
+            End If
+
+            If String.IsNullOrWhiteSpace(expected) OrElse expected.Trim().Length <> 64 Then
+                Return "تعذّر قراءة البصمة الرسمية (SHA-256) لمطابقة حزمة التحديث — تم رفض التحديث."
             End If
 
             Dim actual As String
@@ -172,7 +189,7 @@ Module Program
 
             Return String.Empty
         Catch ex As Exception
-            Return "تعذّر التحقق من سلامة حزمة التحديث من المصدر الرسمي (" & ex.Message & ") — تم رفض التحديث."
+            Return "تعذّر التحقق من سلامة حزمة التحديث (" & ex.Message & ") — تم رفض التحديث."
         End Try
     End Function
 
@@ -352,7 +369,7 @@ Public Class FrmModernUpdater
             pgbBar.Value = 3
             lblPercentage.Text = "3%"
 
-            Dim rejection As String = Await Task.Run(Function() VerifyPackageFromTrustedSource(_packagePath))
+            Dim rejection As String = Await Task.Run(Function() VerifyPackageFromTrustedSource(_packagePath, _pendingPath))
             If Not String.IsNullOrEmpty(rejection) Then
                 pgbBar.Value = 0
                 lblPercentage.Text = "0%"

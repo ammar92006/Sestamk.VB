@@ -915,14 +915,6 @@ Public Class frmPOS
                 End If
             End If
 
-            If flpProducts.Controls.Count = 1 Then
-                Dim firstBtn = TryCast(flpProducts.Controls(0), Guna.UI2.WinForms.Guna2Button)
-                If firstBtn IsNot Nothing AndAlso firstBtn.Tag IsNot Nothing Then
-                    ProductButton_Click(firstBtn, EventArgs.Empty)
-                    Return True
-                End If
-            End If
-
             SmartMessageBox.Show($"لم يتم العثور على صنف بالباركود أو الاسم: ({code})", "تنبيه الباركود", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return False
         Catch ex As Exception

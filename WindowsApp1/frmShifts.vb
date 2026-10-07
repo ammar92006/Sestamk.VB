@@ -76,8 +76,19 @@ Public Class frmShifts
                 lblTotalExpenses.Text = Convert.ToDecimal(row("TotalExpenses")).ToString("N2")
                 lblTotalIncomes.Text = Convert.ToDecimal(row("TotalIncomes")).ToString("N2")
 
-                ' معادلة الكاش المفترض وجوده بالدرج = العهدة + مبيعات الكاش + المقبوضات - المصروفات - المرتجعات
-                Dim expected As Decimal = Convert.ToDecimal(row("OpeningCash")) + Convert.ToDecimal(row("TotalSales")) + Convert.ToDecimal(row("TotalIncomes")) - Convert.ToDecimal(row("TotalExpenses")) - Convert.ToDecimal(row("TotalRefunds"))
+                ' حساب مبيعات النقدية (الكاش) الفعلية فقط الداخلة إلى الدرج (استبعاد الفيزا والمحافظ)
+                Dim actualCashSales As Decimal = 0D
+                Try
+                    Dim dtCash = DBModule.ExecuteQuery("SELECT ISNULL(SUM(PaidAmount), 0) FROM SalesInvoices WHERE ShiftID = " & _activeShiftID & " AND PaymentType LIKE N'%نقدي%' AND (IsDeleted = 0 OR IsDeleted IS NULL)")
+                    If dtCash IsNot Nothing AndAlso dtCash.Rows.Count > 0 Then
+                        actualCashSales = Convert.ToDecimal(dtCash.Rows(0)(0))
+                    End If
+                Catch
+                    actualCashSales = Convert.ToDecimal(row("TotalSales"))
+                End Try
+
+                ' معادلة الكاش المفترض وجوده بالدرج = العهدة + مبيعات الكاش الفعلية فقط + المقبوضات - المصروفات - المرتجعات
+                Dim expected As Decimal = Convert.ToDecimal(row("OpeningCash")) + actualCashSales + Convert.ToDecimal(row("TotalIncomes")) - Convert.ToDecimal(row("TotalExpenses")) - Convert.ToDecimal(row("TotalRefunds"))
                 lblExpectedCash.Text = expected.ToString("N2")
 
                 ' تحديد المستخدم الذي بدأ الوردية تلقائياً
@@ -858,7 +869,10 @@ Public Class frmShifts
     ''' </summary>
     Public Sub SendShiftZReportViaWhatsApp(shiftID As Integer, actualCash As Decimal, expectedCash As Decimal, diff As Decimal)
         Try
-            Dim ownerPhone = SettingsManager.GetSettingDual("WhatsApp_OwnerPhone", SettingsKeys.ShopPhone, "")
+            ' إرسال التقرير آلياً بالخلفية فقط إذا كانت الخدمة مفعلة ورقم المالك مسجل خصيصاً (لتجنب فتح المتصفح قسراً للكاشير)
+            If Not WindowsApp1.Services.WhatsAppService.IsEnabled Then Return
+
+            Dim ownerPhone = SettingsManager.GetSetting("WhatsApp_OwnerPhone")
             If String.IsNullOrWhiteSpace(ownerPhone) Then Return
 
             Dim dtShift = DBModule.ExecuteQuery("SELECT TOP 1 ShiftNumber, OpeningCash, TotalSales, TotalExpenses, OpenDateTime, CloseDateTime, u.User_Name AS CashierName FROM Shifts s LEFT JOIN Users_TBL u ON s.UserID = u.User_ID WHERE s.ShiftID = " & shiftID)

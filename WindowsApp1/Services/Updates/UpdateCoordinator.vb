@@ -252,7 +252,8 @@ Public NotInheritable Class UpdateCoordinator
                 {"version", manifest.Version},
                 {"package_path", packagePath},
                 {"target_path", Application.StartupPath},
-                {"main_exe", Application.ExecutablePath}
+                {"main_exe", Application.ExecutablePath},
+                {"expected_sha256", manifest.PackageSha256}
             }
             Dim pendingPath = Path.Combine(updateDir, "pending-update.json")
             File.WriteAllText(pendingPath, pending.ToString())

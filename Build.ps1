@@ -110,7 +110,8 @@ if (-not $SkipTests) {
     $tests = @(
         "TreasuryAndCrypto.Headless.ps1",
         "SupplierAccounting.Integration.ps1",
-        "SchemaAndQueryVerification.ps1"
+        "SchemaAndQueryVerification.ps1",
+        "EcosystemAndPosIntegration.ps1"
     )
     $failures = @()
     foreach ($t in $tests) {
