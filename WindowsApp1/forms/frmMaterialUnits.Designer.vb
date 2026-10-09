@@ -25,7 +25,7 @@ Partial Class frmMaterialUnits
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMaterialUnits))
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btnClose = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.lblMaterialName = New System.Windows.Forms.Label()
         Me.cmbUnit = New Guna.UI2.WinForms.Guna2ComboBox()
@@ -62,13 +62,9 @@ Partial Class frmMaterialUnits
         '
         'btnClose
         '
-        Me.btnClose.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnClose.Appearance.Options.UseFont = True
         Me.btnClose.AutoSize = True
-        Me.btnClose.ImageOptions.SvgImage = CType(resources.GetObject("btnClose.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btnClose.Location = New System.Drawing.Point(15, 17)
         Me.btnClose.Name = "btn_close"
-        Me.btnClose.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btnClose.Size = New System.Drawing.Size(38, 36)
         Me.btnClose.TabIndex = 3
         '
@@ -374,7 +370,7 @@ Partial Class frmMaterialUnits
     End Sub
 
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
-    Friend WithEvents btnClose As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents lblMaterialName As Label
     Friend WithEvents cmbUnit As Guna.UI2.WinForms.Guna2ComboBox

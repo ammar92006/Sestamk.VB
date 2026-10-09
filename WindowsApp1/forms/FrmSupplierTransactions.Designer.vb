@@ -27,24 +27,32 @@ Partial Class FrmSupplierTransactions
         Me.headerTitle.Font = New System.Drawing.Font("Segoe UI", 20.0!, System.Drawing.FontStyle.Bold)
         Me.headerTitle.ForeColor = System.Drawing.Color.White
         Me.headerTitle.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.btn_close.Name = "btn_close"
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Location = New System.Drawing.Point(15, 17)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.btn_max.Name = "btn_max"
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Location = New System.Drawing.Point(59, 17)
         Me.btn_max.Size = New System.Drawing.Size(38, 36)
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btn_max.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.btn_min.Name = "btn_min"
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Location = New System.Drawing.Point(103, 17)
         Me.btn_min.Size = New System.Drawing.Size(38, 36)
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btn_min.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.filters = New System.Windows.Forms.FlowLayoutPanel()
         Me.filters.Name = "filters"
         Me.filters.Dock = System.Windows.Forms.DockStyle.Top
@@ -262,9 +270,9 @@ Partial Class FrmSupplierTransactions
     End Sub
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents headerTitle As System.Windows.Forms.Label
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents filters As System.Windows.Forms.FlowLayoutPanel
     Friend WithEvents payment As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents paymentFields As System.Windows.Forms.FlowLayoutPanel

@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class add_new_product
     Inherits System.Windows.Forms.Form
 
@@ -27,18 +27,18 @@ Partial Class add_new_product
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.pn_title_page = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.LabelDeveloper = New System.Windows.Forms.Label()
         Me.Guna2GroupBox1 = New Guna.UI2.WinForms.Guna2GroupBox()
-        Me.btnNewCode = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnNewCode = New Guna.UI2.WinForms.Guna2Button()
         Me.lblStatus = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.chkState = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.btn_generate_barcode = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_scan_bar = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_AddUnit = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_generate_barcode = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_scan_bar = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_AddUnit = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2HtmlLabel9 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtUnitNotes = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -62,8 +62,8 @@ Partial Class add_new_product
         Me.txtProductNote = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.txtCompanyName = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btn_SaveProduct = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnNew = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_SaveProduct = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnNew = New Guna.UI2.WinForms.Guna2Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Pic_Product = New System.Windows.Forms.PictureBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -75,7 +75,7 @@ Partial Class add_new_product
         Me.txtProductName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtProductCode = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_clean = New Guna.UI2.WinForms.Guna2Button()
         Me.lblLang = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -99,13 +99,13 @@ Partial Class add_new_product
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_close.Location = New System.Drawing.Point(12, 12)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 5
         '
@@ -187,7 +187,6 @@ Partial Class add_new_product
         'btnNewCode
         '
         Me.btnNewCode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNewCode.ImageOptions.SvgImage = CType(resources.GetObject("btnNewCode.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btnNewCode.Location = New System.Drawing.Point(967, 53)
         Me.btnNewCode.Name = "btnNewCode"
         Me.btnNewCode.Size = New System.Drawing.Size(40, 45)
@@ -251,7 +250,6 @@ Partial Class add_new_product
         'btn_generate_barcode
         '
         Me.btn_generate_barcode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_generate_barcode.ImageOptions.SvgImage = CType(resources.GetObject("btn_generate_barcode.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_generate_barcode.Location = New System.Drawing.Point(135, 52)
         Me.btn_generate_barcode.Name = "btn_generate_barcode"
         Me.btn_generate_barcode.Size = New System.Drawing.Size(40, 51)
@@ -260,7 +258,6 @@ Partial Class add_new_product
         'btn_scan_bar
         '
         Me.btn_scan_bar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_scan_bar.ImageOptions.SvgImage = CType(resources.GetObject("btn_scan_bar.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_scan_bar.Location = New System.Drawing.Point(181, 51)
         Me.btn_scan_bar.Name = "btn_scan_bar"
         Me.btn_scan_bar.Size = New System.Drawing.Size(40, 51)
@@ -269,10 +266,6 @@ Partial Class add_new_product
         'btn_AddUnit
         '
         Me.btn_AddUnit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_AddUnit.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_AddUnit.Appearance.Options.UseFont = True
-        Me.btn_AddUnit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_to_cart
-        Me.btn_AddUnit.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btn_AddUnit.Location = New System.Drawing.Point(7, 51)
         Me.btn_AddUnit.Name = "btn_AddUnit"
         Me.btn_AddUnit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -639,10 +632,6 @@ Partial Class add_new_product
         'btn_SaveProduct
         '
         Me.btn_SaveProduct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_SaveProduct.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_SaveProduct.Appearance.Options.UseFont = True
-        Me.btn_SaveProduct.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btn_SaveProduct.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btn_SaveProduct.Location = New System.Drawing.Point(12, 486)
         Me.btn_SaveProduct.Name = "btn_SaveProduct"
         Me.btn_SaveProduct.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -653,10 +642,6 @@ Partial Class add_new_product
         'btnNew
         '
         Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNew.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnNew.Appearance.Options.UseFont = True
-        Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnNew.Location = New System.Drawing.Point(12, 400)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -808,11 +793,7 @@ Partial Class add_new_product
         'btn_clean
         '
         Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_clean.Appearance.Options.UseFont = True
         Me.btn_clean.AutoSize = True
-        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
-        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_clean.Location = New System.Drawing.Point(1391, 2)
         Me.btn_clean.Name = "btn_clean"
         Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -862,14 +843,14 @@ Partial Class add_new_product
     Friend WithEvents Panel2 As Panel
     Friend WithEvents Guna2GroupBox1 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents pn_title_page As Label
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents LabelDeveloper As Label
-    Friend WithEvents btn_clean As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_clean As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txtProductNote As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label7 As Label
     Friend WithEvents txtCompanyName As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btn_SaveProduct As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnNew As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_SaveProduct As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnNew As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Label6 As Label
     Friend WithEvents Pic_Product As PictureBox
     Friend WithEvents Label5 As Label
@@ -890,9 +871,9 @@ Partial Class add_new_product
     Friend WithEvents ColNotes As DataGridViewTextBoxColumn
     Friend WithEvents ColDelete As DataGridViewButtonColumn
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents btn_generate_barcode As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_scan_bar As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_AddUnit As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_generate_barcode As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btn_scan_bar As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btn_AddUnit As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2HtmlLabel9 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtUnitNotes As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label12 As Label
@@ -907,6 +888,6 @@ Partial Class add_new_product
     Friend WithEvents txtUnitName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents lblStatus As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents chkState As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents btnNewCode As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnNewCode As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblLang As Label
 End Class

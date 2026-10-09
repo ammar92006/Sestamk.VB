@@ -2,7 +2,6 @@
 Imports System.IO
 Imports System.IO.Ports
 Imports System.Management
-Imports DevExpress.XtraPrinting.Native.WebClientUIControl
 Imports Newtonsoft.Json
 
 Public Class AppSettings

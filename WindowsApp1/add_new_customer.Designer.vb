@@ -24,11 +24,11 @@ Partial Class add_new_customer
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(add_new_customer))
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.pn_title_page = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
-        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_clean = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2HtmlLabel12 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtUpdatedAt = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblStatus = New Guna.UI2.WinForms.Guna2HtmlLabel()
@@ -48,7 +48,7 @@ Partial Class add_new_customer
         Me.txtCustomerName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel2 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtCustomerCode = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btnNew = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnNew = New Guna.UI2.WinForms.Guna2Button()
         Me.Panel1.SuspendLayout()
         Me.grpCustomerInfo.SuspendLayout()
         CType(Me.nudCreditLimit, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -67,13 +67,13 @@ Partial Class add_new_customer
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_close.Location = New System.Drawing.Point(12, 12)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 5
         '
@@ -138,11 +138,7 @@ Partial Class add_new_customer
         'btn_clean
         '
         Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_clean.Appearance.Options.UseFont = True
         Me.btn_clean.AutoSize = True
-        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
-        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_clean.Location = New System.Drawing.Point(691, 3)
         Me.btn_clean.Name = "btn_clean"
         Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -473,10 +469,6 @@ Partial Class add_new_customer
         'btnNew
         '
         Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNew.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnNew.Appearance.Options.UseFont = True
-        Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnNew.Location = New System.Drawing.Point(300, 608)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -511,9 +503,9 @@ Partial Class add_new_customer
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
     Friend WithEvents pn_title_page As Label
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
-    Friend WithEvents btn_clean As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_clean As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2HtmlLabel12 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtUpdatedAt As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents lblStatus As Guna.UI2.WinForms.Guna2HtmlLabel
@@ -533,5 +525,5 @@ Partial Class add_new_customer
     Friend WithEvents txtCustomerName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Guna2HtmlLabel2 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtCustomerCode As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btnNew As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnNew As Guna.UI2.WinForms.Guna2Button
 End Class

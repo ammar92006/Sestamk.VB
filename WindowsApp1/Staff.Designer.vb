@@ -24,18 +24,18 @@ Partial Class Staff
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Staff))
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.dgv_Staff = New System.Windows.Forms.DataGridView()
-        Me.PanelControl1 = New DevExpress.XtraEditors.PanelControl()
-        Me.btnDelete = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnEdit = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnNew = New DevExpress.XtraEditors.SimpleButton()
+        Me.PanelControl1 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnDelete = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnEdit = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnNew = New Guna.UI2.WinForms.Guna2Button()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.GroupControl12 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl12 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label48 = New System.Windows.Forms.Label()
         Me.chkbackupDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label49 = New System.Windows.Forms.Label()
@@ -44,7 +44,7 @@ Partial Class Staff
         Me.chkbackupAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label51 = New System.Windows.Forms.Label()
         Me.chkbackupOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl11 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl11 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.chkSettingsDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label45 = New System.Windows.Forms.Label()
@@ -53,7 +53,7 @@ Partial Class Staff
         Me.chkSettingsAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label47 = New System.Windows.Forms.Label()
         Me.chkSettingsOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl6 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl6 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label24 = New System.Windows.Forms.Label()
         Me.chkStockDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label25 = New System.Windows.Forms.Label()
@@ -62,7 +62,7 @@ Partial Class Staff
         Me.chkStockAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.chkStockOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl7 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl7 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.chkReportsDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label29 = New System.Windows.Forms.Label()
@@ -71,7 +71,7 @@ Partial Class Staff
         Me.chkReportsAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.chkReportsOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl8 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl8 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.chkPurchasesDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label33 = New System.Windows.Forms.Label()
@@ -80,7 +80,7 @@ Partial Class Staff
         Me.chkPurchasesAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.chkPurchasesOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl9 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl9 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label36 = New System.Windows.Forms.Label()
         Me.chkSuppliersDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label37 = New System.Windows.Forms.Label()
@@ -89,7 +89,7 @@ Partial Class Staff
         Me.chkSuppliersAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label39 = New System.Windows.Forms.Label()
         Me.chkSuppliersOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl10 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl10 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label40 = New System.Windows.Forms.Label()
         Me.chkSalesDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label41 = New System.Windows.Forms.Label()
@@ -98,7 +98,7 @@ Partial Class Staff
         Me.chkSalesAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label43 = New System.Windows.Forms.Label()
         Me.chkSalesOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl5 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl5 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.chkCustomerDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -107,7 +107,7 @@ Partial Class Staff
         Me.chkCustomerAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label23 = New System.Windows.Forms.Label()
         Me.chkCustomerOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.grp_ProductUnits = New DevExpress.XtraEditors.GroupControl()
+        Me.grp_ProductUnits = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.chkProductUnitsDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -116,7 +116,7 @@ Partial Class Staff
         Me.chkProductUnitsAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.chkProductUnitsOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.GroupControl3 = New DevExpress.XtraEditors.GroupControl()
+        Me.GroupControl3 = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.chkProductsDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -125,7 +125,7 @@ Partial Class Staff
         Me.chkProductsAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.chkProductsOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.grp_Categories = New DevExpress.XtraEditors.GroupControl()
+        Me.grp_Categories = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.chkCategoriesDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -134,7 +134,7 @@ Partial Class Staff
         Me.chkCategoriesAdd = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.chkCategoriesOpen = New Guna.UI2.WinForms.Guna2ToggleSwitch()
-        Me.grp_Users = New DevExpress.XtraEditors.GroupControl()
+        Me.grp_Users = New Guna.UI2.WinForms.Guna2GroupBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.chkUsersDelete = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -147,7 +147,7 @@ Partial Class Staff
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_clean = New Guna.UI2.WinForms.Guna2Button()
         Me.cmbSearchField = New Guna.UI2.WinForms.Guna2ComboBox()
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.txtUser_Name = New Guna.UI2.WinForms.Guna2TextBox()
@@ -200,37 +200,39 @@ Partial Class Staff
         '
         'btn_min
         '
-        Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
-        Me.btn_min.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_min.Location = New System.Drawing.Point(103, 17)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Size = New System.Drawing.Size(38, 36)
         Me.btn_min.TabIndex = 5
         '
         'btn_max
         '
-        Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
-        Me.btn_max.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_max.Location = New System.Drawing.Point(59, 17)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Size = New System.Drawing.Size(38, 36)
         Me.btn_max.TabIndex = 4
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_close.Location = New System.Drawing.Point(15, 17)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 3
         '
@@ -272,10 +274,6 @@ Partial Class Staff
         'btnDelete
         '
         Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDelete.Appearance.Options.UseFont = True
-        Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
-        Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnDelete.Location = New System.Drawing.Point(313, 5)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -286,10 +284,6 @@ Partial Class Staff
         'btnEdit
         '
         Me.btnEdit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnEdit.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEdit.Appearance.Options.UseFont = True
-        Me.btnEdit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
-        Me.btnEdit.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnEdit.Location = New System.Drawing.Point(680, 5)
         Me.btnEdit.Name = "btnEdit"
         Me.btnEdit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -300,10 +294,6 @@ Partial Class Staff
         'btnNew
         '
         Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNew.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnNew.Appearance.Options.UseFont = True
-        Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnNew.Location = New System.Drawing.Point(1071, 5)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -360,10 +350,6 @@ Partial Class Staff
         'GroupControl12
         '
         Me.GroupControl12.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl12.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl12.Appearance.Options.UseBackColor = True
-        Me.GroupControl12.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl12.AppearanceCaption.Options.UseFont = True
         Me.GroupControl12.Controls.Add(Me.Label48)
         Me.GroupControl12.Controls.Add(Me.chkbackupDelete)
         Me.GroupControl12.Controls.Add(Me.Label49)
@@ -372,7 +358,6 @@ Partial Class Staff
         Me.GroupControl12.Controls.Add(Me.chkbackupAdd)
         Me.GroupControl12.Controls.Add(Me.Label51)
         Me.GroupControl12.Controls.Add(Me.chkbackupOpen)
-        Me.GroupControl12.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl12.Location = New System.Drawing.Point(29, 204)
         Me.GroupControl12.Name = "GroupControl12"
         Me.GroupControl12.Size = New System.Drawing.Size(163, 147)
@@ -482,10 +467,6 @@ Partial Class Staff
         'GroupControl11
         '
         Me.GroupControl11.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl11.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl11.Appearance.Options.UseBackColor = True
-        Me.GroupControl11.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl11.AppearanceCaption.Options.UseFont = True
         Me.GroupControl11.Controls.Add(Me.Label44)
         Me.GroupControl11.Controls.Add(Me.chkSettingsDelete)
         Me.GroupControl11.Controls.Add(Me.Label45)
@@ -494,7 +475,6 @@ Partial Class Staff
         Me.GroupControl11.Controls.Add(Me.chkSettingsAdd)
         Me.GroupControl11.Controls.Add(Me.Label47)
         Me.GroupControl11.Controls.Add(Me.chkSettingsOpen)
-        Me.GroupControl11.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl11.Location = New System.Drawing.Point(31, 51)
         Me.GroupControl11.Name = "GroupControl11"
         Me.GroupControl11.Size = New System.Drawing.Size(163, 147)
@@ -604,10 +584,6 @@ Partial Class Staff
         'GroupControl6
         '
         Me.GroupControl6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl6.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl6.Appearance.Options.UseBackColor = True
-        Me.GroupControl6.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl6.AppearanceCaption.Options.UseFont = True
         Me.GroupControl6.Controls.Add(Me.Label24)
         Me.GroupControl6.Controls.Add(Me.chkStockDelete)
         Me.GroupControl6.Controls.Add(Me.Label25)
@@ -616,7 +592,6 @@ Partial Class Staff
         Me.GroupControl6.Controls.Add(Me.chkStockAdd)
         Me.GroupControl6.Controls.Add(Me.Label27)
         Me.GroupControl6.Controls.Add(Me.chkStockOpen)
-        Me.GroupControl6.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl6.Location = New System.Drawing.Point(198, 204)
         Me.GroupControl6.Name = "GroupControl6"
         Me.GroupControl6.Size = New System.Drawing.Size(163, 147)
@@ -726,10 +701,6 @@ Partial Class Staff
         'GroupControl7
         '
         Me.GroupControl7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl7.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl7.Appearance.Options.UseBackColor = True
-        Me.GroupControl7.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl7.AppearanceCaption.Options.UseFont = True
         Me.GroupControl7.Controls.Add(Me.Label28)
         Me.GroupControl7.Controls.Add(Me.chkReportsDelete)
         Me.GroupControl7.Controls.Add(Me.Label29)
@@ -738,7 +709,6 @@ Partial Class Staff
         Me.GroupControl7.Controls.Add(Me.chkReportsAdd)
         Me.GroupControl7.Controls.Add(Me.Label31)
         Me.GroupControl7.Controls.Add(Me.chkReportsOpen)
-        Me.GroupControl7.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl7.Location = New System.Drawing.Point(367, 204)
         Me.GroupControl7.Name = "GroupControl7"
         Me.GroupControl7.Size = New System.Drawing.Size(163, 147)
@@ -848,10 +818,6 @@ Partial Class Staff
         'GroupControl8
         '
         Me.GroupControl8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl8.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl8.Appearance.Options.UseBackColor = True
-        Me.GroupControl8.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl8.AppearanceCaption.Options.UseFont = True
         Me.GroupControl8.Controls.Add(Me.Label32)
         Me.GroupControl8.Controls.Add(Me.chkPurchasesDelete)
         Me.GroupControl8.Controls.Add(Me.Label33)
@@ -860,7 +826,6 @@ Partial Class Staff
         Me.GroupControl8.Controls.Add(Me.chkPurchasesAdd)
         Me.GroupControl8.Controls.Add(Me.Label35)
         Me.GroupControl8.Controls.Add(Me.chkPurchasesOpen)
-        Me.GroupControl8.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl8.Location = New System.Drawing.Point(536, 204)
         Me.GroupControl8.Name = "GroupControl8"
         Me.GroupControl8.Size = New System.Drawing.Size(163, 147)
@@ -970,10 +935,6 @@ Partial Class Staff
         'GroupControl9
         '
         Me.GroupControl9.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl9.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl9.Appearance.Options.UseBackColor = True
-        Me.GroupControl9.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl9.AppearanceCaption.Options.UseFont = True
         Me.GroupControl9.Controls.Add(Me.Label36)
         Me.GroupControl9.Controls.Add(Me.chkSuppliersDelete)
         Me.GroupControl9.Controls.Add(Me.Label37)
@@ -982,7 +943,6 @@ Partial Class Staff
         Me.GroupControl9.Controls.Add(Me.chkSuppliersAdd)
         Me.GroupControl9.Controls.Add(Me.Label39)
         Me.GroupControl9.Controls.Add(Me.chkSuppliersOpen)
-        Me.GroupControl9.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl9.Location = New System.Drawing.Point(705, 204)
         Me.GroupControl9.Name = "GroupControl9"
         Me.GroupControl9.Size = New System.Drawing.Size(163, 147)
@@ -1092,10 +1052,6 @@ Partial Class Staff
         'GroupControl10
         '
         Me.GroupControl10.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl10.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl10.Appearance.Options.UseBackColor = True
-        Me.GroupControl10.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl10.AppearanceCaption.Options.UseFont = True
         Me.GroupControl10.Controls.Add(Me.Label40)
         Me.GroupControl10.Controls.Add(Me.chkSalesDelete)
         Me.GroupControl10.Controls.Add(Me.Label41)
@@ -1104,7 +1060,6 @@ Partial Class Staff
         Me.GroupControl10.Controls.Add(Me.chkSalesAdd)
         Me.GroupControl10.Controls.Add(Me.Label43)
         Me.GroupControl10.Controls.Add(Me.chkSalesOpen)
-        Me.GroupControl10.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl10.Location = New System.Drawing.Point(874, 204)
         Me.GroupControl10.Name = "GroupControl10"
         Me.GroupControl10.Size = New System.Drawing.Size(163, 147)
@@ -1214,10 +1169,6 @@ Partial Class Staff
         'GroupControl5
         '
         Me.GroupControl5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl5.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl5.Appearance.Options.UseBackColor = True
-        Me.GroupControl5.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl5.AppearanceCaption.Options.UseFont = True
         Me.GroupControl5.Controls.Add(Me.Label20)
         Me.GroupControl5.Controls.Add(Me.chkCustomerDelete)
         Me.GroupControl5.Controls.Add(Me.Label21)
@@ -1226,7 +1177,6 @@ Partial Class Staff
         Me.GroupControl5.Controls.Add(Me.chkCustomerAdd)
         Me.GroupControl5.Controls.Add(Me.Label23)
         Me.GroupControl5.Controls.Add(Me.chkCustomerOpen)
-        Me.GroupControl5.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl5.Location = New System.Drawing.Point(198, 51)
         Me.GroupControl5.Name = "GroupControl5"
         Me.GroupControl5.Size = New System.Drawing.Size(163, 147)
@@ -1336,10 +1286,6 @@ Partial Class Staff
         'grp_ProductUnits
         '
         Me.grp_ProductUnits.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grp_ProductUnits.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.grp_ProductUnits.Appearance.Options.UseBackColor = True
-        Me.grp_ProductUnits.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.grp_ProductUnits.AppearanceCaption.Options.UseFont = True
         Me.grp_ProductUnits.Controls.Add(Me.Label16)
         Me.grp_ProductUnits.Controls.Add(Me.chkProductUnitsDelete)
         Me.grp_ProductUnits.Controls.Add(Me.Label17)
@@ -1348,7 +1294,6 @@ Partial Class Staff
         Me.grp_ProductUnits.Controls.Add(Me.chkProductUnitsAdd)
         Me.grp_ProductUnits.Controls.Add(Me.Label19)
         Me.grp_ProductUnits.Controls.Add(Me.chkProductUnitsOpen)
-        Me.grp_ProductUnits.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.grp_ProductUnits.Location = New System.Drawing.Point(367, 51)
         Me.grp_ProductUnits.Name = "grp_ProductUnits"
         Me.grp_ProductUnits.Size = New System.Drawing.Size(163, 147)
@@ -1458,10 +1403,6 @@ Partial Class Staff
         'GroupControl3
         '
         Me.GroupControl3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupControl3.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.GroupControl3.Appearance.Options.UseBackColor = True
-        Me.GroupControl3.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupControl3.AppearanceCaption.Options.UseFont = True
         Me.GroupControl3.Controls.Add(Me.Label12)
         Me.GroupControl3.Controls.Add(Me.chkProductsDelete)
         Me.GroupControl3.Controls.Add(Me.Label13)
@@ -1470,7 +1411,6 @@ Partial Class Staff
         Me.GroupControl3.Controls.Add(Me.chkProductsAdd)
         Me.GroupControl3.Controls.Add(Me.Label15)
         Me.GroupControl3.Controls.Add(Me.chkProductsOpen)
-        Me.GroupControl3.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.GroupControl3.Location = New System.Drawing.Point(536, 51)
         Me.GroupControl3.Name = "GroupControl3"
         Me.GroupControl3.Size = New System.Drawing.Size(163, 147)
@@ -1580,10 +1520,6 @@ Partial Class Staff
         'grp_Categories
         '
         Me.grp_Categories.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grp_Categories.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.grp_Categories.Appearance.Options.UseBackColor = True
-        Me.grp_Categories.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.grp_Categories.AppearanceCaption.Options.UseFont = True
         Me.grp_Categories.Controls.Add(Me.Label8)
         Me.grp_Categories.Controls.Add(Me.chkCategoriesDelete)
         Me.grp_Categories.Controls.Add(Me.Label9)
@@ -1592,7 +1528,6 @@ Partial Class Staff
         Me.grp_Categories.Controls.Add(Me.chkCategoriesAdd)
         Me.grp_Categories.Controls.Add(Me.Label11)
         Me.grp_Categories.Controls.Add(Me.chkCategoriesOpen)
-        Me.grp_Categories.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.grp_Categories.Location = New System.Drawing.Point(705, 51)
         Me.grp_Categories.Name = "grp_Categories"
         Me.grp_Categories.Size = New System.Drawing.Size(163, 147)
@@ -1702,10 +1637,6 @@ Partial Class Staff
         'grp_Users
         '
         Me.grp_Users.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.grp_Users.Appearance.BackColor = System.Drawing.Color.Transparent
-        Me.grp_Users.Appearance.Options.UseBackColor = True
-        Me.grp_Users.AppearanceCaption.Font = New System.Drawing.Font("LBC", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.grp_Users.AppearanceCaption.Options.UseFont = True
         Me.grp_Users.Controls.Add(Me.Label7)
         Me.grp_Users.Controls.Add(Me.chkUsersDelete)
         Me.grp_Users.Controls.Add(Me.Label6)
@@ -1714,7 +1645,6 @@ Partial Class Staff
         Me.grp_Users.Controls.Add(Me.chkUsersAdd)
         Me.grp_Users.Controls.Add(Me.Label4)
         Me.grp_Users.Controls.Add(Me.chkUsersOpen)
-        Me.grp_Users.GroupStyle = DevExpress.Utils.GroupStyle.Card
         Me.grp_Users.Location = New System.Drawing.Point(874, 51)
         Me.grp_Users.Name = "grp_Users"
         Me.grp_Users.Size = New System.Drawing.Size(163, 147)
@@ -1879,11 +1809,7 @@ Partial Class Staff
         'btn_clean
         '
         Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_clean.Appearance.Options.UseFont = True
         Me.btn_clean.AutoSize = True
-        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
-        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_clean.Location = New System.Drawing.Point(1225, 2)
         Me.btn_clean.Name = "btn_clean"
         Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2041,27 +1967,27 @@ Partial Class Staff
     End Sub
 
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents dgv_Staff As DataGridView
-    Friend WithEvents PanelControl1 As DevExpress.XtraEditors.PanelControl
-    Friend WithEvents btnDelete As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnEdit As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnNew As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents PanelControl1 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents btnDelete As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnEdit As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnNew As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents txtUser_Note As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents btn_clean As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_clean As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents cmbSearchField As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtUser_Name As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtUser_Code As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents GroupBox1 As GroupBox
-    Friend WithEvents GroupControl12 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl12 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label48 As Label
     Friend WithEvents chkbackupDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label49 As Label
@@ -2070,7 +1996,7 @@ Partial Class Staff
     Friend WithEvents chkbackupAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label51 As Label
     Friend WithEvents chkbackupOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl11 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl11 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label44 As Label
     Friend WithEvents chkSettingsDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label45 As Label
@@ -2079,7 +2005,7 @@ Partial Class Staff
     Friend WithEvents chkSettingsAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label47 As Label
     Friend WithEvents chkSettingsOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl6 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl6 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label24 As Label
     Friend WithEvents chkStockDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label25 As Label
@@ -2088,7 +2014,7 @@ Partial Class Staff
     Friend WithEvents chkStockAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label27 As Label
     Friend WithEvents chkStockOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl7 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl7 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label28 As Label
     Friend WithEvents chkReportsDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label29 As Label
@@ -2097,7 +2023,7 @@ Partial Class Staff
     Friend WithEvents chkReportsAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label31 As Label
     Friend WithEvents chkReportsOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl8 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl8 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label32 As Label
     Friend WithEvents chkPurchasesDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label33 As Label
@@ -2106,7 +2032,7 @@ Partial Class Staff
     Friend WithEvents chkPurchasesAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label35 As Label
     Friend WithEvents chkPurchasesOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl9 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl9 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label36 As Label
     Friend WithEvents chkSuppliersDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label37 As Label
@@ -2115,7 +2041,7 @@ Partial Class Staff
     Friend WithEvents chkSuppliersAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label39 As Label
     Friend WithEvents chkSuppliersOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl10 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl10 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label40 As Label
     Friend WithEvents chkSalesDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label41 As Label
@@ -2124,7 +2050,7 @@ Partial Class Staff
     Friend WithEvents chkSalesAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label43 As Label
     Friend WithEvents chkSalesOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl5 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl5 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label20 As Label
     Friend WithEvents chkCustomerDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label21 As Label
@@ -2133,7 +2059,7 @@ Partial Class Staff
     Friend WithEvents chkCustomerAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label23 As Label
     Friend WithEvents chkCustomerOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents grp_ProductUnits As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents grp_ProductUnits As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label16 As Label
     Friend WithEvents chkProductUnitsDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label17 As Label
@@ -2142,7 +2068,7 @@ Partial Class Staff
     Friend WithEvents chkProductUnitsAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label19 As Label
     Friend WithEvents chkProductUnitsOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents GroupControl3 As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents GroupControl3 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label12 As Label
     Friend WithEvents chkProductsDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label13 As Label
@@ -2151,7 +2077,7 @@ Partial Class Staff
     Friend WithEvents chkProductsAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label15 As Label
     Friend WithEvents chkProductsOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents grp_Categories As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents grp_Categories As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label8 As Label
     Friend WithEvents chkCategoriesDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label9 As Label
@@ -2160,7 +2086,7 @@ Partial Class Staff
     Friend WithEvents chkCategoriesAdd As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label11 As Label
     Friend WithEvents chkCategoriesOpen As Guna.UI2.WinForms.Guna2ToggleSwitch
-    Friend WithEvents grp_Users As DevExpress.XtraEditors.GroupControl
+    Friend WithEvents grp_Users As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label7 As Label
     Friend WithEvents chkUsersDelete As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Label6 As Label

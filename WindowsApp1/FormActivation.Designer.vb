@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormActivation
     Inherits System.Windows.Forms.Form
 
@@ -47,8 +47,8 @@ Partial Class FormActivation
         Me.progressActivation = New Guna.UI2.WinForms.Guna2ProgressBar()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblStatusBadge = New Guna.UI2.WinForms.Guna2Button()
-        Me.btn_min = New Guna.UI2.WinForms.Guna2Button()
-        Me.btn_close = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.lblSubtitle = New System.Windows.Forms.Label()
         Me.lblTitle = New System.Windows.Forms.Label()
         Me.btnHeaderIcon = New Guna.UI2.WinForms.Guna2Button()
@@ -426,33 +426,28 @@ Partial Class FormActivation
         '
         'btn_min
         '
-        Me.btn_min.BorderRadius = 8
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
         Me.btn_min.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btn_min.FillColor = System.Drawing.Color.Transparent
-        Me.btn_min.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btn_min.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(51, Byte), Integer), CType(CType(65, Byte), Integer), CType(CType(85, Byte), Integer))
-        Me.btn_min.HoverState.ForeColor = System.Drawing.Color.White
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Location = New System.Drawing.Point(52, 14)
         Me.btn_min.Name = "btn_min"
         Me.btn_min.Size = New System.Drawing.Size(34, 34)
         Me.btn_min.TabIndex = 4
-        Me.btn_min.Text = "—"
         '
         'btn_close
         '
-        Me.btn_close.BorderRadius = 8
         Me.btn_close.Cursor = System.Windows.Forms.Cursors.Hand
         Me.btn_close.FillColor = System.Drawing.Color.Transparent
-        Me.btn_close.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
-        Me.btn_close.ForeColor = System.Drawing.Color.FromArgb(CType(CType(156, Byte), Integer), CType(CType(163, Byte), Integer), CType(CType(175, Byte), Integer))
-        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(CType(CType(239, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.btn_close.HoverState.ForeColor = System.Drawing.Color.White
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Location = New System.Drawing.Point(14, 14)
         Me.btn_close.Name = "btn_close"
         Me.btn_close.Size = New System.Drawing.Size(34, 34)
         Me.btn_close.TabIndex = 3
-        Me.btn_close.Text = "✕"
         '
         'lblSubtitle
         '
@@ -528,8 +523,8 @@ Partial Class FormActivation
     Friend WithEvents btnHeaderIcon As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblTitle As Label
     Friend WithEvents lblSubtitle As Label
-    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2Button
-    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents lblStatusBadge As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents progressActivation As Guna.UI2.WinForms.Guna2ProgressBar
     Friend WithEvents cardHardwareID As Guna.UI2.WinForms.Guna2Panel

@@ -24,9 +24,9 @@ Partial Class frmPurchases
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmPurchases))
-        Me.btnClose = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
@@ -86,37 +86,35 @@ Partial Class frmPurchases
         '
         'btnClose
         '
-        Me.btnClose.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnClose.Appearance.Options.UseFont = True
         Me.btnClose.AutoSize = True
-        Me.btnClose.ImageOptions.SvgImage = CType(resources.GetObject("btnClose.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btnClose.Location = New System.Drawing.Point(15, 17)
         Me.btnClose.Name = "btn_close"
-        Me.btnClose.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btnClose.Size = New System.Drawing.Size(38, 36)
         Me.btnClose.TabIndex = 3
         '
         'btn_max
         '
-        Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
-        Me.btn_max.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_max.Location = New System.Drawing.Point(59, 17)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Size = New System.Drawing.Size(38, 36)
         Me.btn_max.TabIndex = 4
         '
         'btn_min
         '
-        Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
-        Me.btn_min.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_min.Location = New System.Drawing.Point(103, 17)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Size = New System.Drawing.Size(38, 36)
         Me.btn_min.TabIndex = 5
         '
@@ -1019,9 +1017,9 @@ Partial Class frmPurchases
         Me.ResumeLayout(False)
 
     End Sub
-    Friend WithEvents btnClose As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel

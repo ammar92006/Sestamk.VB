@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class Sales_Returns
     Inherits System.Windows.Forms.Form
 
@@ -22,9 +22,9 @@ Partial Class Sales_Returns
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.pnlTopBar = New Guna.UI2.WinForms.Guna2Panel()
         Me.txtInvoiceSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.btnSearchInvoice = New Guna.UI2.WinForms.Guna2Button()
@@ -108,39 +108,38 @@ Partial Class Sales_Returns
         '
         'btn_min
         '
-        Me.btn_min.Appearance.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btn_min.Appearance.ForeColor = System.Drawing.Color.White
-        Me.btn_min.Appearance.Options.UseFont = True
-        Me.btn_min.Appearance.Options.UseForeColor = True
         Me.btn_min.Location = New System.Drawing.Point(82, 8)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Size = New System.Drawing.Size(32, 32)
         Me.btn_min.TabIndex = 3
         Me.btn_min.Text = "–"
         '
         'btn_max
         '
-        Me.btn_max.Appearance.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btn_max.Appearance.ForeColor = System.Drawing.Color.White
-        Me.btn_max.Appearance.Options.UseFont = True
-        Me.btn_max.Appearance.Options.UseForeColor = True
         Me.btn_max.Location = New System.Drawing.Point(46, 8)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Size = New System.Drawing.Size(32, 32)
         Me.btn_max.TabIndex = 2
         Me.btn_max.Text = "🗖"
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btn_close.Appearance.ForeColor = System.Drawing.Color.White
-        Me.btn_close.Appearance.Options.UseFont = True
-        Me.btn_close.Appearance.Options.UseForeColor = True
         Me.btn_close.Location = New System.Drawing.Point(10, 8)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(32, 32)
         Me.btn_close.TabIndex = 1
         Me.btn_close.Text = "✕"
@@ -706,9 +705,9 @@ Partial Class Sales_Returns
 
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents lblTitle As System.Windows.Forms.Label
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents pnlTopBar As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents txtInvoiceSearch As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents btnSearchInvoice As Guna.UI2.WinForms.Guna2Button

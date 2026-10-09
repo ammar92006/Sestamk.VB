@@ -1,11 +1,9 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Drawing.Printing
 Imports System.IO
 Imports System.Web.UI.WebControls
 Imports System.Windows.Forms.VisualStyles.VisualStyleElement
 Imports ClosedXML.Excel
-Imports DevExpress.Utils.About
-Imports DevExpress.XtraExport.Helpers
 Imports Guna.UI2.WinForms
 Imports ZXing
 Imports System.Drawing

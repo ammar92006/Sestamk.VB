@@ -1,9 +1,8 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 Imports System.Drawing
 Imports System.Drawing.Printing
 Imports System.Globalization
 Imports System.IO.Ports
-Imports DevExpress.XtraTreeList
 Imports ZXing
 Imports ZXing.Common
 

@@ -70,18 +70,7 @@ Write-Step "تحديد MSBuild"
 $msbuild = Find-MSBuild
 Write-Host "MSBuild: $msbuild" -ForegroundColor DarkGray
 
-# ── 2) استعادة حزم NuGet ──────────────────────────────────────────────────────
-# ملاحظة مهمة: حزم DevExpress لا تُستعاد من nuget.org العام. يجب أن تكون موجودة في
-# مجلد packages\ (أو من feed مرخّص). راجع README/DEPENDENCIES لهذا الشرط.
-Write-Step "فحص توفر حزم DevExpress"
-$devExpressDir = Get-ChildItem (Join-Path $root "packages") -Directory -Filter "DevExpress.Win.*" -ErrorAction SilentlyContinue |
-                 Select-Object -First 1
-if (-not $devExpressDir) {
-    Write-Warning "لم يتم العثور على حزم DevExpress في مجلد packages\. البناء سيفشل بمراجع غير محلولة."
-    Write-Warning "شغّل: nuget restore Sestamk.sln   مع إعداد مصدر DevExpress المرخّص (راجع NuGet.config)."
-}
-
-# ── 3) بناء الحل كاملاً ───────────────────────────────────────────────────────
+# ── 2) بناء الحل كاملاً ───────────────────────────────────────────────────────
 Write-Step "بناء Sestamk.sln ($Configuration)"
 & $msbuild $solution -p:Configuration=$Configuration -m -v:m -nologo
 if ($LASTEXITCODE -ne 0) { throw "فشل بناء الحل (MSBuild exit $LASTEXITCODE)." }
@@ -147,6 +136,75 @@ if ($Installer) {
     & $iscc "/DSourceBin=$binDir" (Join-Path $root "Setup_Sestamk.iss")
     if ($LASTEXITCODE -ne 0) { throw "فشل تصريف ملف التثبيت." }
     Write-Host "تم إنتاج المثبّت في: $(Join-Path $root 'OutputSetup')" -ForegroundColor Green
+
+    # ── إنشاء وتحديث حزمة التحديث البرمجية package.zip (فارق الهاش) ──
+    Write-Step "تجهيز حزمة التحديث التلقائي الفارق (package.zip)"
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $outPkg = Join-Path (Join-Path $root 'OutputSetup') 'package.zip'
+    $excludePatterns = @('*.pdb','*.xml','*.vshost.*','*.manifest','*.application','Backups','logs','app.publish','db_config.ini','manifest.json')
+    
+    $prevHashes = @{}
+    if (Test-Path $outPkg) {
+        try {
+            $prevArchive = [System.IO.Compression.ZipFile]::OpenRead($outPkg)
+            $sha = [System.Security.Cryptography.SHA256]::Create()
+            foreach ($entry in $prevArchive.Entries) {
+                if (-not [string]::IsNullOrEmpty($entry.Name)) {
+                    $st = $entry.Open()
+                    $h = [System.BitConverter]::ToString($sha.ComputeHash($st)).Replace('-', '').ToLowerInvariant()
+                    $st.Dispose()
+                    $prevHashes[$entry.FullName.Replace('\', '/')] = $h
+                }
+            }
+            $prevArchive.Dispose()
+            $sha.Dispose()
+        } catch { }
+    }
+
+    $currentFiles = @{}
+    $sha = [System.Security.Cryptography.SHA256]::Create()
+    Get-ChildItem -Path $binDir -Recurse -File | ForEach-Object {
+        $rel = $_.FullName.Substring($binDir.Length).TrimStart('\').Replace('\', '/')
+        $excluded = $false
+        foreach ($pat in $excludePatterns) {
+            if ($_.Name -like $pat -or $rel -like "*$pat*") { $excluded = $true; break }
+        }
+        if (-not $excluded) {
+            $fs = [System.IO.File]::OpenRead($_.FullName)
+            $h = [System.BitConverter]::ToString($sha.ComputeHash($fs)).Replace('-', '').ToLowerInvariant()
+            $fs.Dispose()
+            $currentFiles[$rel] = @{ FullPath = $_.FullName; Hash = $h; Size = $_.Length }
+        }
+    }
+    $sha.Dispose()
+
+    $filesToPack = @()
+    if ($prevHashes.Count -gt 0) {
+        foreach ($rel in $currentFiles.Keys) {
+            if ($prevHashes.ContainsKey($rel) -and $prevHashes[$rel] -eq $currentFiles[$rel].Hash) {
+                continue
+            }
+            $filesToPack += $rel
+        }
+        if ($currentFiles.ContainsKey('Sestamk.exe') -and -not ($filesToPack -contains 'Sestamk.exe')) {
+            $filesToPack += 'Sestamk.exe'
+        }
+    } else {
+        $filesToPack = @($currentFiles.Keys)
+    }
+
+    $tempZip = Join-Path $env:TEMP ("pkg_delta_" + [Guid]::NewGuid().ToString('N') + ".zip")
+    $archive = [System.IO.Compression.ZipFile]::Open($tempZip, [System.IO.Compression.ZipArchiveMode]::Create)
+    foreach ($rel in $filesToPack) {
+        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $currentFiles[$rel].FullPath, $rel, [System.IO.Compression.CompressionLevel]::Optimal) | Out-Null
+    }
+    $archive.Dispose()
+
+    Move-Item -Path $tempZip -Destination $outPkg -Force
+    $finalPkg = Get-Item $outPkg
+    $pkgHash = (Get-FileHash $outPkg -Algorithm SHA256).Hash.ToLower()
+    Write-Host "تم إنتاج حزمة التحديث الفارق ($($filesToPack.Count) ملف): $([math]::Round($finalPkg.Length / 1MB, 2)) MB (SHA256: $pkgHash)" -ForegroundColor Green
 }
 
 Write-Step "اكتمل البناء بنجاح"

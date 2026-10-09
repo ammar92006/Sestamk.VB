@@ -1,8 +1,5 @@
 ﻿Imports System.Data.SqlClient
 Imports ClosedXML.Excel
-Imports DevExpress.Office.Utils
-Imports DevExpress.PivotGrid.Design
-Imports DevExpress.Utils.About
 
 Public Class Categories
     Dim x, y As Integer

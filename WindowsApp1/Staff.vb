@@ -1,5 +1,4 @@
-Imports System.Data.SqlClient
-Imports DevExpress.XtraLayout.Customization
+﻿Imports System.Data.SqlClient
 
 Public Class Staff
     Dim x, y As Integer

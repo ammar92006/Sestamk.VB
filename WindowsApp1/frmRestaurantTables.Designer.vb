@@ -48,15 +48,15 @@ Partial Class frmRestaurantTables
         Me.lstSuggestions = New System.Windows.Forms.ListBox()
         Me.txtSearch = New Guna.UI2.WinForms.Guna2TextBox()
         Me.txtTableNumber = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.Guna2BorderlessForm1 = New Guna.UI2.WinForms.Guna2BorderlessForm(Me.components)
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
-        Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
-        Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
-        Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
+        Me.SimpleButton1 = New Guna.UI2.WinForms.Guna2Button()
+        Me.SimpleButton2 = New Guna.UI2.WinForms.Guna2Button()
+        Me.SimpleButton3 = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2HtmlLabel2 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         CType(Me.dgvTables, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpCustomerInfo.SuspendLayout()
@@ -464,37 +464,39 @@ Partial Class frmRestaurantTables
         '
         'btn_min
         '
-        Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
-        Me.btn_min.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_min.Location = New System.Drawing.Point(103, 17)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Size = New System.Drawing.Size(38, 36)
         Me.btn_min.TabIndex = 5
         '
         'btn_max
         '
-        Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
-        Me.btn_max.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_max.Location = New System.Drawing.Point(59, 17)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Size = New System.Drawing.Size(38, 36)
         Me.btn_max.TabIndex = 4
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_close.Location = New System.Drawing.Point(20, 20)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 3
         '
@@ -534,37 +536,25 @@ Partial Class frmRestaurantTables
         '
         'SimpleButton1
         '
-        Me.SimpleButton1.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SimpleButton1.Appearance.Options.UseFont = True
         Me.SimpleButton1.AutoSize = True
-        Me.SimpleButton1.ImageOptions.SvgImage = CType(resources.GetObject("SimpleButton1.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.SimpleButton1.Location = New System.Drawing.Point(103, 17)
         Me.SimpleButton1.Name = "btn_min"
-        Me.SimpleButton1.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.SimpleButton1.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton1.TabIndex = 5
         '
         'SimpleButton2
         '
-        Me.SimpleButton2.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SimpleButton2.Appearance.Options.UseFont = True
         Me.SimpleButton2.AutoSize = True
-        Me.SimpleButton2.ImageOptions.SvgImage = CType(resources.GetObject("SimpleButton2.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.SimpleButton2.Location = New System.Drawing.Point(59, 17)
         Me.SimpleButton2.Name = "btn_max"
-        Me.SimpleButton2.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.SimpleButton2.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton2.TabIndex = 4
         '
         'SimpleButton3
         '
-        Me.SimpleButton3.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SimpleButton3.Appearance.Options.UseFont = True
         Me.SimpleButton3.AutoSize = True
-        Me.SimpleButton3.ImageOptions.SvgImage = CType(resources.GetObject("SimpleButton3.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.SimpleButton3.Location = New System.Drawing.Point(15, 17)
         Me.SimpleButton3.Name = "btn_close"
-        Me.SimpleButton3.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.SimpleButton3.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton3.TabIndex = 3
         '
@@ -624,14 +614,14 @@ Partial Class frmRestaurantTables
     Friend WithEvents Label5 As Label
     Friend WithEvents btnAddSectionForm As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents cmbSection As Guna.UI2.WinForms.Guna2ComboBox
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents Guna2BorderlessForm1 As Guna.UI2.WinForms.Guna2BorderlessForm
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
-    Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents SimpleButton2 As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents SimpleButton3 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents SimpleButton1 As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents SimpleButton2 As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents SimpleButton3 As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2HtmlLabel2 As Guna.UI2.WinForms.Guna2HtmlLabel
 End Class

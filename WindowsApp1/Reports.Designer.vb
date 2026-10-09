@@ -25,17 +25,17 @@ Partial Class Reports
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Reports))
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btn_update = New DevExpress.XtraEditors.SimpleButton()
-        Me.SimpleButton1 = New DevExpress.XtraEditors.SimpleButton()
-        Me.SimpleButton2 = New DevExpress.XtraEditors.SimpleButton()
-        Me.SimpleButton3 = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_update = New Guna.UI2.WinForms.Guna2Button()
+        Me.SimpleButton1 = New Guna.UI2.WinForms.Guna2Button()
+        Me.SimpleButton2 = New Guna.UI2.WinForms.Guna2Button()
+        Me.SimpleButton3 = New Guna.UI2.WinForms.Guna2Button()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.lbl_user_name = New System.Windows.Forms.Label()
         Me.lblTime = New System.Windows.Forms.Label()
         Me.lblDate = New System.Windows.Forms.Label()
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.lblHeader = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.tpSales = New System.Windows.Forms.TabPage()
         Me.btn_show_pirfit = New Guna.UI2.WinForms.Guna2Button()
@@ -51,7 +51,7 @@ Partial Class Reports
         Me.chkSalesDate = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.dtSalesTo = New System.Windows.Forms.DateTimePicker()
         Me.dtSalesFrom = New System.Windows.Forms.DateTimePicker()
-        Me.btnSearchSales = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSearchSales = New Guna.UI2.WinForms.Guna2Button()
         Me.lblPay = New System.Windows.Forms.Label()
         Me.cboSalesPay = New System.Windows.Forms.ComboBox()
         Me.lblUser = New System.Windows.Forms.Label()
@@ -77,7 +77,7 @@ Partial Class Reports
         Me.cboPurchaseSupplier = New System.Windows.Forms.ComboBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.btnSearchPurchase = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSearchPurchase = New Guna.UI2.WinForms.Guna2Button()
         Me.TabStockMovement = New System.Windows.Forms.TabPage()
         Me.dgvStock = New System.Windows.Forms.DataGridView()
         Me.tabInvoiceDetails = New System.Windows.Forms.TabPage()
@@ -112,8 +112,8 @@ Partial Class Reports
         Me.txtCustomerName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.dgvInvoiceDetails = New System.Windows.Forms.DataGridView()
-        Me.btnSendInvoiceWhatsApp = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnPrint = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSendInvoiceWhatsApp = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnPrint = New Guna.UI2.WinForms.Guna2Button()
         Me.TabSupplier = New System.Windows.Forms.TabPage()
         Me.txtSupplier_Num = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -145,8 +145,8 @@ Partial Class Reports
         Me.txtSupplierName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Label38 = New System.Windows.Forms.Label()
         Me.dgvInvoiceDetailsPurchase = New System.Windows.Forms.DataGridView()
-        Me.btn_sand_supplier = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_purchases_print = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_sand_supplier = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_purchases_print = New Guna.UI2.WinForms.Guna2Button()
         Me.txtSalesSearch = New System.Windows.Forms.TabPage()
         Me.dgv_balance_download = New System.Windows.Forms.DataGridView()
         Me.TabReports = New Guna.UI2.WinForms.Guna2TabControl()
@@ -191,49 +191,33 @@ Partial Class Reports
         '
         'btn_update
         '
-        Me.btn_update.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_update.Appearance.Options.UseFont = True
         Me.btn_update.AutoSize = True
-        Me.btn_update.ImageOptions.Image = CType(resources.GetObject("btn_update.ImageOptions.Image"), System.Drawing.Image)
         Me.btn_update.Location = New System.Drawing.Point(144, 17)
         Me.btn_update.Name = "btn_update"
-        Me.btn_update.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btn_update.Size = New System.Drawing.Size(38, 36)
         Me.btn_update.TabIndex = 13
         '
         'SimpleButton1
         '
-        Me.SimpleButton1.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SimpleButton1.Appearance.Options.UseFont = True
         Me.SimpleButton1.AutoSize = True
-        Me.SimpleButton1.ImageOptions.SvgImage = CType(resources.GetObject("SimpleButton1.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.SimpleButton1.Location = New System.Drawing.Point(100, 17)
         Me.SimpleButton1.Name = "SimpleButton1"
-        Me.SimpleButton1.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.SimpleButton1.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton1.TabIndex = 12
         '
         'SimpleButton2
         '
-        Me.SimpleButton2.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SimpleButton2.Appearance.Options.UseFont = True
         Me.SimpleButton2.AutoSize = True
-        Me.SimpleButton2.ImageOptions.SvgImage = CType(resources.GetObject("SimpleButton2.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.SimpleButton2.Location = New System.Drawing.Point(56, 17)
         Me.SimpleButton2.Name = "SimpleButton2"
-        Me.SimpleButton2.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.SimpleButton2.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton2.TabIndex = 11
         '
         'SimpleButton3
         '
-        Me.SimpleButton3.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.SimpleButton3.Appearance.Options.UseFont = True
         Me.SimpleButton3.AutoSize = True
-        Me.SimpleButton3.ImageOptions.SvgImage = CType(resources.GetObject("SimpleButton3.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.SimpleButton3.Location = New System.Drawing.Point(12, 17)
         Me.SimpleButton3.Name = "SimpleButton3"
-        Me.SimpleButton3.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.SimpleButton3.Size = New System.Drawing.Size(38, 36)
         Me.SimpleButton3.TabIndex = 10
         '
@@ -289,34 +273,39 @@ Partial Class Reports
         '
         'btn_min
         '
-        Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
         Me.btn_min.Location = New System.Drawing.Point(103, 17)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Size = New System.Drawing.Size(10, 20)
         Me.btn_min.TabIndex = 5
         '
         'btn_max
         '
-        Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
         Me.btn_max.Location = New System.Drawing.Point(59, 17)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Size = New System.Drawing.Size(10, 20)
         Me.btn_max.TabIndex = 4
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
         Me.btn_close.Location = New System.Drawing.Point(15, 17)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(10, 20)
         Me.btn_close.TabIndex = 3
         '
@@ -525,10 +514,6 @@ Partial Class Reports
         'btnSearchSales
         '
         Me.btnSearchSales.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSearchSales.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSearchSales.Appearance.Options.UseFont = True
-        Me.btnSearchSales.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSearchSales.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnSearchSales.Location = New System.Drawing.Point(126, 155)
         Me.btnSearchSales.Name = "btnSearchSales"
         Me.btnSearchSales.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -843,10 +828,6 @@ Partial Class Reports
         'btnSearchPurchase
         '
         Me.btnSearchPurchase.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSearchPurchase.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSearchPurchase.Appearance.Options.UseFont = True
-        Me.btnSearchPurchase.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSearchPurchase.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnSearchPurchase.Location = New System.Drawing.Point(165, 153)
         Me.btnSearchPurchase.Name = "btnSearchPurchase"
         Me.btnSearchPurchase.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1414,10 +1395,6 @@ Partial Class Reports
         'btnSendInvoiceWhatsApp
         '
         Me.btnSendInvoiceWhatsApp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSendInvoiceWhatsApp.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSendInvoiceWhatsApp.Appearance.Options.UseFont = True
-        Me.btnSendInvoiceWhatsApp.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnSendInvoiceWhatsApp.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnSendInvoiceWhatsApp.Location = New System.Drawing.Point(8, 123)
         Me.btnSendInvoiceWhatsApp.Name = "btnSendInvoiceWhatsApp"
         Me.btnSendInvoiceWhatsApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1428,10 +1405,6 @@ Partial Class Reports
         'btnPrint
         '
         Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPrint.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnPrint.Appearance.Options.UseFont = True
-        Me.btnPrint.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnPrint.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnPrint.Location = New System.Drawing.Point(8, 250)
         Me.btnPrint.Name = "btnPrint"
         Me.btnPrint.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1964,10 +1937,6 @@ Partial Class Reports
         'btn_sand_supplier
         '
         Me.btn_sand_supplier.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_sand_supplier.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_sand_supplier.Appearance.Options.UseFont = True
-        Me.btn_sand_supplier.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btn_sand_supplier.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btn_sand_supplier.Location = New System.Drawing.Point(4, 128)
         Me.btn_sand_supplier.Name = "SimpleButton4"
         Me.btn_sand_supplier.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1978,10 +1947,6 @@ Partial Class Reports
         'btn_purchases_print
         '
         Me.btn_purchases_print.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_purchases_print.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_purchases_print.Appearance.Options.UseFont = True
-        Me.btn_purchases_print.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btn_purchases_print.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btn_purchases_print.Location = New System.Drawing.Point(4, 255)
         Me.btn_purchases_print.Name = "SimpleButton5"
         Me.btn_purchases_print.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2091,13 +2056,13 @@ Partial Class Reports
     Friend WithEvents lbl_user_name As Label
     Friend WithEvents lblTime As Label
     Friend WithEvents lblDate As Label
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents lblHeader As Guna.UI2.WinForms.Guna2HtmlLabel
-    Friend WithEvents SimpleButton1 As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents SimpleButton2 As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents SimpleButton3 As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents SimpleButton1 As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents SimpleButton2 As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents SimpleButton3 As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents tpSales As TabPage
     Friend WithEvents Guna2HtmlLabel2 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents dgvSales As DataGridView
@@ -2122,7 +2087,7 @@ Partial Class Reports
     Friend WithEvents chkPurchaseDate As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents dtPurchaseTo As DateTimePicker
     Friend WithEvents dtPurchaseFrom As DateTimePicker
-    Friend WithEvents btnSearchPurchase As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnSearchPurchase As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Label1 As Label
     Friend WithEvents cboPurchasePay As ComboBox
     Friend WithEvents Label2 As Label
@@ -2165,15 +2130,15 @@ Partial Class Reports
     Friend WithEvents Label23 As Label
     Friend WithEvents Timer1 As Timer
     Friend WithEvents txtCopies As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btnPrint As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnSendInvoiceWhatsApp As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnPrint As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnSendInvoiceWhatsApp As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txtCustomerPhone As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label25 As Label
     Friend WithEvents Guna2TextBox1 As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label26 As Label
-    Friend WithEvents btn_sand_supplier As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_sand_supplier As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txtCopies2 As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btn_purchases_print As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_purchases_print As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txt_Invoice_type2 As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label27 As Label
     Friend WithEvents txt_Payment_Method2 As Guna.UI2.WinForms.Guna2TextBox
@@ -2201,12 +2166,12 @@ Partial Class Reports
     Friend WithEvents dgvInvoiceDetailsPurchase As DataGridView
     Friend WithEvents cboColumns As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents txt_sum_col As TextBox
-    Friend WithEvents btn_update As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_update As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents txt_Total_Profit As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Label24 As Label
     Friend WithEvents Label39 As Label
     Friend WithEvents txt_Total_Profit_dgv As TextBox
-    Public WithEvents btnSearchSales As DevExpress.XtraEditors.SimpleButton
+    Public WithEvents btnSearchSales As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btn_inv_delete As Button
     Friend WithEvents btn_inv_purchases_del As Button
     Friend WithEvents txtSupplier_Num As Guna.UI2.WinForms.Guna2TextBox
@@ -2217,696 +2182,3 @@ End Class
 
 
 ' Reports.Designer.vb
-' Designer code for Reports form using DevExpress controls
-'Imports System
-'Imports System.Diagnostics
-'Imports System.Drawing
-'Imports System.Windows.Forms
-'Imports DevExpress.XtraEditors
-'Imports DevExpress.XtraGrid
-'Imports DevExpress.XtraGrid.Views.Grid
-'Imports DevExpress.XtraTab
-
-'<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-'Partial Class Reports
-'    Inherits DevExpress.XtraEditors.XtraForm
-
-'    'تنظيف الموارد المستخدمة.
-'    <DebuggerNonUserCode()>
-'    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
-'        Try
-'            If disposing AndAlso components IsNot Nothing Then
-'                components.Dispose()
-'            End If
-'        Finally
-'            MyBase.Dispose(disposing)
-'        End Try
-'    End Sub
-
-'    'مطلوب بواسطة مصمم Windows Forms
-'    Private components As System.ComponentModel.IContainer
-
-'    'ملاحظة: إجراء التالي مطلوب بواسطة مصمم Windows Forms
-'    'يمكن تعديله باستخدام مصمم Windows Forms.  
-'    'لا يجوز تعديله باستخدام محرر التعليمات البرمجية.
-'    <DebuggerStepThrough()>
-'    Private Sub InitializeComponent()
-'        Me.xtraTabControl1 = New DevExpress.XtraTab.XtraTabControl()
-'        Me.tpSales = New DevExpress.XtraTab.XtraTabPage()
-'        Me.gcSales = New DevExpress.XtraGrid.GridControl()
-'        Me.gvSales = New DevExpress.XtraGrid.Views.Grid.GridView()
-'        Me.PanelSalesFilter = New DevExpress.XtraEditors.PanelControl()
-'        Me.btnSalesPrint = New DevExpress.XtraEditors.SimpleButton()
-'        Me.btnSalesExport = New DevExpress.XtraEditors.SimpleButton()
-'        Me.btnSalesSearch = New DevExpress.XtraEditors.SimpleButton()
-'        Me.lkeSalesPay = New DevExpress.XtraEditors.LookUpEdit()
-'        Me.lkeSalesUser = New DevExpress.XtraEditors.LookUpEdit()
-'        Me.lkeSalesCustomer = New DevExpress.XtraEditors.LookUpEdit()
-'        Me.deSalesTo = New DevExpress.XtraEditors.DateEdit()
-'        Me.deSalesFrom = New DevExpress.XtraEditors.DateEdit()
-'        Me.LabelControl5 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl4 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl3 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl2 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl1 = New DevExpress.XtraEditors.LabelControl()
-'        Me.tpPurchases = New DevExpress.XtraTab.XtraTabPage()
-'        Me.gcPurchases = New DevExpress.XtraGrid.GridControl()
-'        Me.gvPurchases = New DevExpress.XtraGrid.Views.Grid.GridView()
-'        Me.PanelPurFilter = New DevExpress.XtraEditors.PanelControl()
-'        Me.btnPurExport = New DevExpress.XtraEditors.SimpleButton()
-'        Me.btnPurSearch = New DevExpress.XtraEditors.SimpleButton()
-'        Me.lkePurSupplier = New DevExpress.XtraEditors.LookUpEdit()
-'        Me.dePurTo = New DevExpress.XtraEditors.DateEdit()
-'        Me.dePurFrom = New DevExpress.XtraEditors.DateEdit()
-'        Me.LabelControl10 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl9 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl8 = New DevExpress.XtraEditors.LabelControl()
-'        Me.tpStock = New DevExpress.XtraTab.XtraTabPage()
-'        Me.gcStock = New DevExpress.XtraGrid.GridControl()
-'        Me.gvStock = New DevExpress.XtraGrid.Views.Grid.GridView()
-'        Me.PanelStockFilter = New DevExpress.XtraEditors.PanelControl()
-'        Me.btnStockSearch = New DevExpress.XtraEditors.SimpleButton()
-'        Me.deStockTo = New DevExpress.XtraEditors.DateEdit()
-'        Me.deStockFrom = New DevExpress.XtraEditors.DateEdit()
-'        Me.LabelControl7 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl6 = New DevExpress.XtraEditors.LabelControl()
-'        Me.tpProfit = New DevExpress.XtraTab.XtraTabPage()
-'        Me.gcProfit = New DevExpress.XtraGrid.GridControl()
-'        Me.gvProfit = New DevExpress.XtraGrid.Views.Grid.GridView()
-'        Me.PanelProfitFilter = New DevExpress.XtraEditors.PanelControl()
-'        Me.btnProfitSearch = New DevExpress.XtraEditors.SimpleButton()
-'        Me.deProfitTo = New DevExpress.XtraEditors.DateEdit()
-'        Me.deProfitFrom = New DevExpress.XtraEditors.DateEdit()
-'        Me.LabelControl12 = New DevExpress.XtraEditors.LabelControl()
-'        Me.LabelControl11 = New DevExpress.XtraEditors.LabelControl()
-'        Me.lkePurUser = New DevExpress.XtraEditors.LookUpEdit()
-'        Me.lkePurPay = New DevExpress.XtraEditors.LookUpEdit()
-
-'        ' تهيئة الأدوات
-'        CType(Me.xtraTabControl1, System.ComponentModel.ISupportInitialize).BeginInit()
-'        Me.xtraTabControl1.SuspendLayout()
-
-'        ' تبويب المبيعات
-'        Me.tpSales.SuspendLayout()
-'        CType(Me.gcSales, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.gvSales, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.PanelSalesFilter, System.ComponentModel.ISupportInitialize).BeginInit()
-'        Me.PanelSalesFilter.SuspendLayout()
-'        CType(Me.lkeSalesPay.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.lkeSalesUser.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.lkeSalesCustomer.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deSalesTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deSalesTo.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deSalesFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deSalesFrom.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-
-'        ' تبويب المشتريات
-'        Me.tpPurchases.SuspendLayout()
-'        CType(Me.gcPurchases, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.gvPurchases, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.PanelPurFilter, System.ComponentModel.ISupportInitialize).BeginInit()
-'        Me.PanelPurFilter.SuspendLayout()
-'        CType(Me.lkePurSupplier.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.dePurTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.dePurTo.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.dePurFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.dePurFrom.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.lkePurUser.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.lkePurPay.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-
-'        ' تبويب المخزون
-'        Me.tpStock.SuspendLayout()
-'        CType(Me.gcStock, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.gvStock, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.PanelStockFilter, System.ComponentModel.ISupportInitialize).BeginInit()
-'        Me.PanelStockFilter.SuspendLayout()
-'        CType(Me.deStockTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deStockTo.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deStockFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deStockFrom.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-
-'        ' تبويب الأرباح
-'        Me.tpProfit.SuspendLayout()
-'        CType(Me.gcProfit, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.gvProfit, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.PanelProfitFilter, System.ComponentModel.ISupportInitialize).BeginInit()
-'        Me.PanelProfitFilter.SuspendLayout()
-'        CType(Me.deProfitTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deProfitTo.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deProfitFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).BeginInit()
-'        CType(Me.deProfitFrom.Properties, System.ComponentModel.ISupportInitialize).BeginInit()
-
-'        Me.SuspendLayout()
-
-'        ' 
-'        ' xtraTabControl1 (التحكم الرئيسي بالتبويبات)
-'        ' 
-'        Me.xtraTabControl1.Dock = System.Windows.Forms.DockStyle.Fill
-'        Me.xtraTabControl1.Location = New System.Drawing.Point(0, 0)
-'        Me.xtraTabControl1.Name = "xtraTabControl1"
-'        Me.xtraTabControl1.SelectedTabPage = Me.tpSales
-'        Me.xtraTabControl1.Size = New System.Drawing.Size(984, 661)
-'        Me.xtraTabControl1.TabIndex = 0
-'        Me.xtraTabControl1.TabPages.AddRange(New DevExpress.XtraTab.XtraTabPage() {Me.tpSales, Me.tpPurchases, Me.tpStock, Me.tpProfit})
-'        Me.xtraTabControl1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-'        '
-'        ' tpSales (المبيعات)
-'        '
-'        Me.tpSales.Controls.Add(Me.gcSales)
-'        Me.tpSales.Controls.Add(Me.PanelSalesFilter)
-'        Me.tpSales.Name = "tpSales"
-'        Me.tpSales.Size = New System.Drawing.Size(982, 636)
-'        Me.tpSales.Text = "تقارير المبيعات"
-'        ' 
-'        ' gcSales (شبكة بيانات المبيعات)
-'        ' 
-'        Me.gcSales.Dock = System.Windows.Forms.DockStyle.Fill
-'        Me.gcSales.Location = New System.Drawing.Point(0, 100)
-'        Me.gcSales.MainView = Me.gvSales
-'        Me.gcSales.Name = "gcSales"
-'        Me.gcSales.Size = New System.Drawing.Size(982, 536)
-'        Me.gcSales.TabIndex = 1
-'        Me.gcSales.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvSales})
-'        ' 
-'        ' gvSales (منظر شبكة المبيعات)
-'        ' 
-'        Me.gvSales.GridControl = Me.gcSales
-'        Me.gvSales.Name = "gvSales"
-'        ' 
-'        ' PanelSalesFilter (لوحة فلاتر المبيعات)
-'        ' 
-'        Me.PanelSalesFilter.Controls.Add(Me.btnSalesPrint)
-'        Me.PanelSalesFilter.Controls.Add(Me.btnSalesExport)
-'        Me.PanelSalesFilter.Controls.Add(Me.btnSalesSearch)
-'        Me.PanelSalesFilter.Controls.Add(Me.lkeSalesPay)
-'        Me.PanelSalesFilter.Controls.Add(Me.lkeSalesUser)
-'        Me.PanelSalesFilter.Controls.Add(Me.lkeSalesCustomer)
-'        Me.PanelSalesFilter.Controls.Add(Me.deSalesTo)
-'        Me.PanelSalesFilter.Controls.Add(Me.deSalesFrom)
-'        Me.PanelSalesFilter.Controls.Add(Me.LabelControl5)
-'        Me.PanelSalesFilter.Controls.Add(Me.LabelControl4)
-'        Me.PanelSalesFilter.Controls.Add(Me.LabelControl3)
-'        Me.PanelSalesFilter.Controls.Add(Me.LabelControl2)
-'        Me.PanelSalesFilter.Controls.Add(Me.LabelControl1)
-'        Me.PanelSalesFilter.Dock = System.Windows.Forms.DockStyle.Top
-'        Me.PanelSalesFilter.Location = New System.Drawing.Point(0, 0)
-'        Me.PanelSalesFilter.Name = "PanelSalesFilter"
-'        Me.PanelSalesFilter.Size = New System.Drawing.Size(982, 100)
-'        Me.PanelSalesFilter.TabIndex = 0
-'        '
-'        ' btnSalesSearch (زر البحث)
-'        '
-'        Me.btnSalesSearch.Location = New System.Drawing.Point(825, 20)
-'        Me.btnSalesSearch.Name = "btnSalesSearch"
-'        Me.btnSalesSearch.Size = New System.Drawing.Size(130, 60)
-'        Me.btnSalesSearch.TabIndex = 8
-'        Me.btnSalesSearch.Text = "بحث"
-'        '
-'        ' btnSalesExport (زر التصدير)
-'        '
-'        Me.btnSalesExport.Location = New System.Drawing.Point(685, 50)
-'        Me.btnSalesExport.Name = "btnSalesExport"
-'        Me.btnSalesExport.Size = New System.Drawing.Size(130, 30)
-'        Me.btnSalesExport.TabIndex = 9
-'        Me.btnSalesExport.Text = "تصدير إلى Excel"
-'        '
-'        ' btnSalesPrint (زر الطباعة)
-'        '
-'        Me.btnSalesPrint.Location = New System.Drawing.Point(685, 20)
-'        Me.btnSalesPrint.Name = "btnSalesPrint"
-'        Me.btnSalesPrint.Size = New System.Drawing.Size(130, 30)
-'        Me.btnSalesPrint.TabIndex = 10
-'        Me.btnSalesPrint.Text = "طباعة / معاينة"
-'        '
-'        ' lkeSalesCustomer (فلتر العميل)
-'        '
-'        Me.lkeSalesCustomer.Location = New System.Drawing.Point(50, 20)
-'        Me.lkeSalesCustomer.Name = "lkeSalesCustomer"
-'        Me.lkeSalesCustomer.Size = New System.Drawing.Size(150, 20)
-'        Me.lkeSalesCustomer.TabIndex = 0
-'        '
-'        ' lkeSalesUser (فلتر المستخدم)
-'        '
-'        Me.lkeSalesUser.Location = New System.Drawing.Point(260, 20)
-'        Me.lkeSalesUser.Name = "lkeSalesUser"
-'        Me.lkeSalesUser.Size = New System.Drawing.Size(150, 20)
-'        Me.lkeSalesUser.TabIndex = 1
-'        '
-'        ' lkeSalesPay (فلتر طريقة الدفع)
-'        '
-'        Me.lkeSalesPay.Location = New System.Drawing.Point(470, 20)
-'        Me.lkeSalesPay.Name = "lkeSalesPay"
-'        Me.lkeSalesPay.Size = New System.Drawing.Size(150, 20)
-'        Me.lkeSalesPay.TabIndex = 2
-'        '
-'        ' deSalesFrom (تاريخ من)
-'        '
-'        Me.deSalesFrom.EditValue = Nothing
-'        Me.deSalesFrom.Location = New System.Drawing.Point(50, 60)
-'        Me.deSalesFrom.Name = "deSalesFrom"
-'        Me.deSalesFrom.Size = New System.Drawing.Size(150, 20)
-'        Me.deSalesFrom.TabIndex = 3
-'        '
-'        ' deSalesTo (تاريخ إلى)
-'        '
-'        Me.deSalesTo.EditValue = Nothing
-'        Me.deSalesTo.Location = New System.Drawing.Point(260, 60)
-'        Me.deSalesTo.Name = "deSalesTo"
-'        Me.deSalesTo.Size = New System.Drawing.Size(150, 20)
-'        Me.deSalesTo.TabIndex = 4
-'        '
-'        ' LabelControl1
-'        '
-'        Me.LabelControl1.Location = New System.Drawing.Point(210, 23)
-'        Me.LabelControl1.Name = "LabelControl1"
-'        Me.LabelControl1.Size = New System.Drawing.Size(30, 13)
-'        Me.LabelControl1.TabIndex = 0
-'        Me.LabelControl1.Text = "العميل:"
-'        '
-'        ' LabelControl2
-'        '
-'        Me.LabelControl2.Location = New System.Drawing.Point(420, 23)
-'        Me.LabelControl2.Name = "LabelControl2"
-'        Me.LabelControl2.Size = New System.Drawing.Size(43, 13)
-'        Me.LabelControl2.TabIndex = 1
-'        Me.LabelControl2.Text = "المستخدم:"
-'        '
-'        ' LabelControl3
-'        '
-'        Me.LabelControl3.Location = New System.Drawing.Point(630, 23)
-'        Me.LabelControl3.Name = "LabelControl3"
-'        Me.LabelControl3.Size = New System.Drawing.Size(53, 13)
-'        Me.LabelControl3.TabIndex = 2
-'        Me.LabelControl3.Text = "طريقة الدفع:"
-'        '
-'        ' LabelControl4
-'        '
-'        Me.LabelControl4.Location = New System.Drawing.Point(210, 63)
-'        Me.LabelControl4.Name = "LabelControl4"
-'        Me.LabelControl4.Size = New System.Drawing.Size(36, 13)
-'        Me.LabelControl4.TabIndex = 3
-'        Me.LabelControl4.Text = "من تاريخ:"
-'        '
-'        ' LabelControl5
-'        '
-'        Me.LabelControl5.Location = New System.Drawing.Point(420, 63)
-'        Me.LabelControl5.Name = "LabelControl5"
-'        Me.LabelControl5.Size = New System.Drawing.Size(39, 13)
-'        Me.LabelControl5.TabIndex = 4
-'        Me.LabelControl5.Text = "إلى تاريخ:"
-'        '
-'        ' tpPurchases (المشتريات)
-'        '
-'        Me.tpPurchases.Controls.Add(Me.gcPurchases)
-'        Me.tpPurchases.Controls.Add(Me.PanelPurFilter)
-'        Me.tpPurchases.Name = "tpPurchases"
-'        Me.tpPurchases.Size = New System.Drawing.Size(982, 636)
-'        Me.tpPurchases.Text = "تقارير المشتريات"
-'        '
-'        ' gcPurchases
-'        '
-'        Me.gcPurchases.Dock = System.Windows.Forms.DockStyle.Fill
-'        Me.gcPurchases.Location = New System.Drawing.Point(0, 100)
-'        Me.gcPurchases.MainView = Me.gvPurchases
-'        Me.gcPurchases.Name = "gcPurchases"
-'        Me.gcPurchases.Size = New System.Drawing.Size(982, 536)
-'        Me.gcPurchases.TabIndex = 1
-'        Me.gcPurchases.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvPurchases})
-'        '
-'        ' gvPurchases
-'        '
-'        Me.gvPurchases.GridControl = Me.gcPurchases
-'        Me.gvPurchases.Name = "gvPurchases"
-'        '
-'        ' PanelPurFilter
-'        '
-'        Me.PanelPurFilter.Controls.Add(Me.lkePurPay)
-'        Me.PanelPurFilter.Controls.Add(Me.lkePurUser)
-'        Me.PanelPurFilter.Controls.Add(Me.btnPurExport)
-'        Me.PanelPurFilter.Controls.Add(Me.btnPurSearch)
-'        Me.PanelPurFilter.Controls.Add(Me.lkePurSupplier)
-'        Me.PanelPurFilter.Controls.Add(Me.dePurTo)
-'        Me.PanelPurFilter.Controls.Add(Me.dePurFrom)
-'        Me.PanelPurFilter.Controls.Add(Me.LabelControl10)
-'        Me.PanelPurFilter.Controls.Add(Me.LabelControl9)
-'        Me.PanelPurFilter.Controls.Add(Me.LabelControl8)
-'        Me.PanelPurFilter.Dock = System.Windows.Forms.DockStyle.Top
-'        Me.PanelPurFilter.Location = New System.Drawing.Point(0, 0)
-'        Me.PanelPurFilter.Name = "PanelPurFilter"
-'        Me.PanelPurFilter.Size = New System.Drawing.Size(982, 100)
-'        Me.PanelPurFilter.TabIndex = 0
-'        '
-'        ' lkePurSupplier (فلتر المورد)
-'        '
-'        Me.lkePurSupplier.Location = New System.Drawing.Point(50, 20)
-'        Me.lkePurSupplier.Name = "lkePurSupplier"
-'        Me.lkePurSupplier.Size = New System.Drawing.Size(150, 20)
-'        Me.lkePurSupplier.TabIndex = 0
-'        '
-'        ' lkePurUser (فلتر مستخدم المشتريات)
-'        '
-'        Me.lkePurUser.Location = New System.Drawing.Point(260, 20)
-'        Me.lkePurUser.Name = "lkePurUser"
-'        Me.lkePurUser.Size = New System.Drawing.Size(150, 20)
-'        Me.lkePurUser.TabIndex = 1
-'        '
-'        ' lkePurPay (فلتر دفع المشتريات)
-'        '
-'        Me.lkePurPay.Location = New System.Drawing.Point(470, 20)
-'        Me.lkePurPay.Name = "lkePurPay"
-'        Me.lkePurPay.Size = New System.Drawing.Size(150, 20)
-'        Me.lkePurPay.TabIndex = 2
-'        '
-'        ' dePurFrom (تاريخ من)
-'        '
-'        Me.dePurFrom.EditValue = Nothing
-'        Me.dePurFrom.Location = New System.Drawing.Point(50, 60)
-'        Me.dePurFrom.Name = "dePurFrom"
-'        Me.dePurFrom.Size = New System.Drawing.Size(150, 20)
-'        Me.dePurFrom.TabIndex = 3
-'        '
-'        ' dePurTo (تاريخ إلى)
-'        '
-'        Me.dePurTo.EditValue = Nothing
-'        Me.dePurTo.Location = New System.Drawing.Point(260, 60)
-'        Me.dePurTo.Name = "dePurTo"
-'        Me.dePurTo.Size = New System.Drawing.Size(150, 20)
-'        Me.dePurTo.TabIndex = 4
-'        '
-'        ' btnPurSearch
-'        '
-'        Me.btnPurSearch.Location = New System.Drawing.Point(825, 20)
-'        Me.btnPurSearch.Name = "btnPurSearch"
-'        Me.btnPurSearch.Size = New System.Drawing.Size(130, 60)
-'        Me.btnPurSearch.TabIndex = 8
-'        Me.btnPurSearch.Text = "بحث"
-'        '
-'        ' btnPurExport
-'        '
-'        Me.btnPurExport.Location = New System.Drawing.Point(685, 50)
-'        Me.btnPurExport.Name = "btnPurExport"
-'        Me.btnPurExport.Size = New System.Drawing.Size(130, 30)
-'        Me.btnPurExport.TabIndex = 9
-'        Me.btnPurExport.Text = "تصدير إلى Excel"
-'        '
-'        ' LabelControl8
-'        '
-'        Me.LabelControl8.Location = New System.Drawing.Point(210, 23)
-'        Me.LabelControl8.Name = "LabelControl8"
-'        Me.LabelControl8.Size = New System.Drawing.Size(30, 13)
-'        Me.LabelControl8.TabIndex = 0
-'        Me.LabelControl8.Text = "المورد:"
-'        '
-'        ' LabelControl9
-'        '
-'        Me.LabelControl9.Location = New System.Drawing.Point(210, 63)
-'        Me.LabelControl9.Name = "LabelControl9"
-'        Me.LabelControl9.Size = New System.Drawing.Size(36, 13)
-'        Me.LabelControl9.TabIndex = 3
-'        Me.LabelControl9.Text = "من تاريخ:"
-'        '
-'        ' LabelControl10
-'        '
-'        Me.LabelControl10.Location = New System.Drawing.Point(420, 63)
-'        Me.LabelControl10.Name = "LabelControl10"
-'        Me.LabelControl10.Size = New System.Drawing.Size(39, 13)
-'        Me.LabelControl10.TabIndex = 4
-'        Me.LabelControl10.Text = "إلى تاريخ:"
-'        '
-'        ' tpStock (المخزون)
-'        '
-'        Me.tpStock.Controls.Add(Me.gcStock)
-'        Me.tpStock.Controls.Add(Me.PanelStockFilter)
-'        Me.tpStock.Name = "tpStock"
-'        Me.tpStock.Size = New System.Drawing.Size(982, 636)
-'        Me.tpStock.Text = "تقرير حركة المخزون"
-'        '
-'        ' gcStock
-'        '
-'        Me.gcStock.Dock = System.Windows.Forms.DockStyle.Fill
-'        Me.gcStock.Location = New System.Drawing.Point(0, 100)
-'        Me.gcStock.MainView = Me.gvStock
-'        Me.gcStock.Name = "gcStock"
-'        Me.gcStock.Size = New System.Drawing.Size(982, 536)
-'        Me.gcStock.TabIndex = 1
-'        Me.gcStock.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvStock})
-'        '
-'        ' gvStock
-'        '
-'        Me.gvStock.GridControl = Me.gcStock
-'        Me.gvStock.Name = "gvStock"
-'        '
-'        ' PanelStockFilter
-'        '
-'        Me.PanelStockFilter.Controls.Add(Me.btnStockSearch)
-'        Me.PanelStockFilter.Controls.Add(Me.deStockTo)
-'        Me.PanelStockFilter.Controls.Add(Me.deStockFrom)
-'        Me.PanelStockFilter.Controls.Add(Me.LabelControl7)
-'        Me.PanelStockFilter.Controls.Add(Me.LabelControl6)
-'        Me.PanelStockFilter.Dock = System.Windows.Forms.DockStyle.Top
-'        Me.PanelStockFilter.Location = New System.Drawing.Point(0, 0)
-'        Me.PanelStockFilter.Name = "PanelStockFilter"
-'        Me.PanelStockFilter.Size = New System.Drawing.Size(982, 100)
-'        Me.PanelStockFilter.TabIndex = 0
-'        '
-'        ' btnStockSearch
-'        '
-'        Me.btnStockSearch.Location = New System.Drawing.Point(825, 20)
-'        Me.btnStockSearch.Name = "btnStockSearch"
-'        Me.btnStockSearch.Size = New System.Drawing.Size(130, 60)
-'        Me.btnStockSearch.TabIndex = 8
-'        Me.btnStockSearch.Text = "بحث"
-'        '
-'        ' deStockFrom
-'        '
-'        Me.deStockFrom.EditValue = Nothing
-'        Me.deStockFrom.Location = New System.Drawing.Point(50, 40)
-'        Me.deStockFrom.Name = "deStockFrom"
-'        Me.deStockFrom.Size = New System.Drawing.Size(150, 20)
-'        Me.deStockFrom.TabIndex = 0
-'        '
-'        ' deStockTo
-'        '
-'        Me.deStockTo.EditValue = Nothing
-'        Me.deStockTo.Location = New System.Drawing.Point(260, 40)
-'        Me.deStockTo.Name = "deStockTo"
-'        Me.deStockTo.Size = New System.Drawing.Size(150, 20)
-'        Me.deStockTo.TabIndex = 1
-'        '
-'        ' LabelControl6
-'        '
-'        Me.LabelControl6.Location = New System.Drawing.Point(210, 43)
-'        Me.LabelControl6.Name = "LabelControl6"
-'        Me.LabelControl6.Size = New System.Drawing.Size(36, 13)
-'        Me.LabelControl6.TabIndex = 0
-'        Me.LabelControl6.Text = "من تاريخ:"
-'        '
-'        ' LabelControl7
-'        '
-'        Me.LabelControl7.Location = New System.Drawing.Point(420, 43)
-'        Me.LabelControl7.Name = "LabelControl7"
-'        Me.LabelControl7.Size = New System.Drawing.Size(39, 13)
-'        Me.LabelControl7.TabIndex = 1
-'        Me.LabelControl7.Text = "إلى تاريخ:"
-'        '
-'        ' tpProfit (الأرباح)
-'        '
-'        Me.tpProfit.Controls.Add(Me.gcProfit)
-'        Me.tpProfit.Controls.Add(Me.PanelProfitFilter)
-'        Me.tpProfit.Name = "tpProfit"
-'        Me.tpProfit.Size = New System.Drawing.Size(982, 636)
-'        Me.tpProfit.Text = "تقرير الأرباح والخسائر"
-'        '
-'        ' gcProfit
-'        '
-'        Me.gcProfit.Dock = System.Windows.Forms.DockStyle.Fill
-'        Me.gcProfit.Location = New System.Drawing.Point(0, 100)
-'        Me.gcProfit.MainView = Me.gvProfit
-'        Me.gcProfit.Name = "gcProfit"
-'        Me.gcProfit.Size = New System.Drawing.Size(982, 536)
-'        Me.gcProfit.TabIndex = 1
-'        Me.gcProfit.ViewCollection.AddRange(New DevExpress.XtraGrid.Views.Base.BaseView() {Me.gvProfit})
-'        '
-'        ' gvProfit
-'        '
-'        Me.gvProfit.GridControl = Me.gcProfit
-'        Me.gvProfit.Name = "gvProfit"
-'        '
-'        ' PanelProfitFilter
-'        '
-'        Me.PanelProfitFilter.Controls.Add(Me.btnProfitSearch)
-'        Me.PanelProfitFilter.Controls.Add(Me.deProfitTo)
-'        Me.PanelProfitFilter.Controls.Add(Me.deProfitFrom)
-'        Me.PanelProfitFilter.Controls.Add(Me.LabelControl12)
-'        Me.PanelProfitFilter.Controls.Add(Me.LabelControl11)
-'        Me.PanelProfitFilter.Dock = System.Windows.Forms.DockStyle.Top
-'        Me.PanelProfitFilter.Location = New System.Drawing.Point(0, 0)
-'        Me.PanelProfitFilter.Name = "PanelProfitFilter"
-'        Me.PanelProfitFilter.Size = New System.Drawing.Size(982, 100)
-'        Me.PanelProfitFilter.TabIndex = 0
-'        '
-'        ' btnProfitSearch
-'        '
-'        Me.btnProfitSearch.Location = New System.Drawing.Point(825, 20)
-'        Me.btnProfitSearch.Name = "btnProfitSearch"
-'        Me.btnProfitSearch.Size = New System.Drawing.Size(130, 60)
-'        Me.btnProfitSearch.TabIndex = 8
-'        Me.btnProfitSearch.Text = "بحث"
-'        '
-'        ' deProfitFrom
-'        '
-'        Me.deProfitFrom.EditValue = Nothing
-'        Me.deProfitFrom.Location = New System.Drawing.Point(50, 40)
-'        Me.deProfitFrom.Name = "deProfitFrom"
-'        Me.deProfitFrom.Size = New System.Drawing.Size(150, 20)
-'        Me.deProfitFrom.TabIndex = 0
-'        '
-'        ' deProfitTo
-'        '
-'        Me.deProfitTo.EditValue = Nothing
-'        Me.deProfitTo.Location = New System.Drawing.Point(260, 40)
-'        Me.deProfitTo.Name = "deProfitTo"
-'        Me.deProfitTo.Size = New System.Drawing.Size(150, 20)
-'        Me.deProfitTo.TabIndex = 1
-'        '
-'        ' LabelControl11
-'        '
-'        Me.LabelControl11.Location = New System.Drawing.Point(210, 43)
-'        Me.LabelControl11.Name = "LabelControl11"
-'        Me.LabelControl11.Size = New System.Drawing.Size(36, 13)
-'        Me.LabelControl11.TabIndex = 0
-'        Me.LabelControl11.Text = "من تاريخ:"
-'        '
-'        ' LabelControl12
-'        '
-'        Me.LabelControl12.Location = New System.Drawing.Point(420, 43)
-'        Me.LabelControl12.Name = "LabelControl12"
-'        Me.LabelControl12.Size = New System.Drawing.Size(39, 13)
-'        Me.LabelControl12.TabIndex = 1
-'        Me.LabelControl12.Text = "إلى تاريخ:"
-'        '
-'        ' Reports (إعدادات الفورم)
-'        '
-'        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-'        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-'        Me.ClientSize = New System.Drawing.Size(984, 661)
-'        Me.Controls.Add(Me.xtraTabControl1)
-'        Me.Name = "Reports"
-'        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-'        Me.Text = "تقارير النظام"
-'        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
-
-'        CType(Me.xtraTabControl1, System.ComponentModel.ISupportInitialize).EndInit()
-'        Me.xtraTabControl1.ResumeLayout(False)
-
-'        CType(Me.gcSales, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.gvSales, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.PanelSalesFilter, System.ComponentModel.ISupportInitialize).EndInit()
-'        Me.PanelSalesFilter.ResumeLayout(False)
-'        Me.PanelSalesFilter.PerformLayout()
-'        CType(Me.lkeSalesPay.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.lkeSalesUser.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.lkeSalesCustomer.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deSalesTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deSalesTo.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deSalesFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deSalesFrom.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-
-'        CType(Me.gcPurchases, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.gvPurchases, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.PanelPurFilter, System.ComponentModel.ISupportInitialize).EndInit()
-'        Me.PanelPurFilter.ResumeLayout(False)
-'        Me.PanelPurFilter.PerformLayout()
-'        CType(Me.lkePurSupplier.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.dePurTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.dePurTo.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.dePurFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.dePurFrom.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.lkePurUser.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.lkePurPay.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-
-'        CType(Me.gcStock, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.gvStock, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.PanelStockFilter, System.ComponentModel.ISupportInitialize).EndInit()
-'        Me.PanelStockFilter.ResumeLayout(False)
-'        Me.PanelStockFilter.PerformLayout()
-'        CType(Me.deStockTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deStockTo.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deStockFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deStockFrom.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-
-'        CType(Me.gcProfit, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.gvProfit, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.PanelProfitFilter, System.ComponentModel.ISupportInitialize).EndInit()
-'        Me.PanelProfitFilter.ResumeLayout(False)
-'        Me.PanelProfitFilter.PerformLayout()
-'        CType(Me.deProfitTo.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deProfitTo.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deProfitFrom.Properties.CalendarTimeProperties, System.ComponentModel.ISupportInitialize).EndInit()
-'        CType(Me.deProfitFrom.Properties, System.ComponentModel.ISupportInitialize).EndInit()
-
-'        Me.ResumeLayout(False)
-
-'    End Sub
-
-'    ' تعريفات الأدوات
-'    Friend WithEvents xtraTabControl1 As DevExpress.XtraTab.XtraTabControl
-'    Friend WithEvents tpSales As DevExpress.XtraTab.XtraTabPage
-'    Friend WithEvents tpPurchases As DevExpress.XtraTab.XtraTabPage
-'    Friend WithEvents tpStock As DevExpress.XtraTab.XtraTabPage
-'    Friend WithEvents tpProfit As DevExpress.XtraTab.XtraTabPage
-
-'    ' أدوات المبيعات
-'    Friend WithEvents PanelSalesFilter As DevExpress.XtraEditors.PanelControl
-'    Friend WithEvents btnSalesSearch As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents btnSalesExport As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents btnSalesPrint As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents lkeSalesPay As DevExpress.XtraEditors.LookUpEdit
-'    Friend WithEvents lkeSalesUser As DevExpress.XtraEditors.LookUpEdit
-'    Friend WithEvents lkeSalesCustomer As DevExpress.XtraEditors.LookUpEdit
-'    Friend WithEvents deSalesTo As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents deSalesFrom As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents LabelControl5 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl4 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl3 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl2 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl1 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents gcSales As DevExpress.XtraGrid.GridControl
-'    Friend WithEvents gvSales As DevExpress.XtraGrid.Views.Grid.GridView
-
-'    ' أدوات المشتريات
-'    Friend WithEvents PanelPurFilter As DevExpress.XtraEditors.PanelControl
-'    Friend WithEvents btnPurExport As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents btnPurSearch As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents lkePurSupplier As DevExpress.XtraEditors.LookUpEdit
-'    Friend WithEvents dePurTo As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents dePurFrom As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents LabelControl10 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl9 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl8 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents gcPurchases As DevExpress.XtraGrid.GridControl
-'    Friend WithEvents gvPurchases As DevExpress.XtraGrid.Views.Grid.GridView
-'    Friend WithEvents lkePurUser As DevExpress.XtraEditors.LookUpEdit
-'    Friend WithEvents lkePurPay As DevExpress.XtraEditors.LookUpEdit
-
-'    ' أدوات المخزون
-'    Friend WithEvents PanelStockFilter As DevExpress.XtraEditors.PanelControl
-'    Friend WithEvents btnStockSearch As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents deStockTo As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents deStockFrom As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents LabelControl7 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl6 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents gcStock As DevExpress.XtraGrid.GridControl
-'    Friend WithEvents gvStock As DevExpress.XtraGrid.Views.Grid.GridView
-
-'    ' أدوات الأرباح
-'    Friend WithEvents PanelProfitFilter As DevExpress.XtraEditors.PanelControl
-'    Friend WithEvents btnProfitSearch As DevExpress.XtraEditors.SimpleButton
-'    Friend WithEvents deProfitTo As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents deProfitFrom As DevExpress.XtraEditors.DateEdit
-'    Friend WithEvents LabelControl12 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents LabelControl11 As DevExpress.XtraEditors.LabelControl
-'    Friend WithEvents gcProfit As DevExpress.XtraGrid.GridControl
-'    Friend WithEvents gvProfit As DevExpress.XtraGrid.Views.Grid.GridView
-
-'End Class

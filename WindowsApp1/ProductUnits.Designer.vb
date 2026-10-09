@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class ProductUnits
     Inherits System.Windows.Forms.Form
 
@@ -23,9 +23,9 @@ Partial Class ProductUnits
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.Guna2Panel1 = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btn_min = New Guna.UI2.WinForms.Guna2Button()
-        Me.btn_max = New Guna.UI2.WinForms.Guna2Button()
-        Me.btn_Close = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Guna2Panel2 = New Guna.UI2.WinForms.Guna2Panel()
         Me.btn_update = New Guna.UI2.WinForms.Guna2Button()
@@ -88,15 +88,11 @@ Partial Class ProductUnits
         '
         'btn_min
         '
-        Me.btn_min.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btn_min.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btn_min.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btn_min.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
         Me.btn_min.FillColor = System.Drawing.Color.Transparent
-        Me.btn_min.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.btn_min.ForeColor = System.Drawing.Color.White
-        Me.btn_min.Image = Global.WindowsApp1.My.Resources.Resources.minimize1
-        Me.btn_min.ImageSize = New System.Drawing.Size(50, 50)
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Location = New System.Drawing.Point(152, 9)
         Me.btn_min.Name = "btn_min"
         Me.btn_min.Size = New System.Drawing.Size(64, 45)
@@ -104,15 +100,11 @@ Partial Class ProductUnits
         '
         'btn_max
         '
-        Me.btn_max.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btn_max.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btn_max.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btn_max.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
         Me.btn_max.FillColor = System.Drawing.Color.Transparent
-        Me.btn_max.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.btn_max.ForeColor = System.Drawing.Color.White
-        Me.btn_max.Image = Global.WindowsApp1.My.Resources.Resources.maximize1
-        Me.btn_max.ImageSize = New System.Drawing.Size(40, 40)
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Location = New System.Drawing.Point(82, 9)
         Me.btn_max.Name = "btn_max"
         Me.btn_max.Size = New System.Drawing.Size(64, 45)
@@ -120,15 +112,10 @@ Partial Class ProductUnits
         '
         'btn_Close
         '
-        Me.btn_Close.DisabledState.BorderColor = System.Drawing.Color.DarkGray
-        Me.btn_Close.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
-        Me.btn_Close.DisabledState.FillColor = System.Drawing.Color.FromArgb(CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(169, Byte), Integer))
-        Me.btn_Close.DisabledState.ForeColor = System.Drawing.Color.FromArgb(CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer), CType(CType(141, Byte), Integer))
         Me.btn_Close.FillColor = System.Drawing.Color.Transparent
-        Me.btn_Close.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.btn_Close.ForeColor = System.Drawing.Color.White
-        Me.btn_Close.Image = Global.WindowsApp1.My.Resources.Resources.close2
-        Me.btn_Close.ImageSize = New System.Drawing.Size(50, 45)
+        Me.btn_Close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_Close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_Close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_Close.Location = New System.Drawing.Point(12, 9)
         Me.btn_Close.Name = "btn_Close"
         Me.btn_Close.Size = New System.Drawing.Size(64, 45)
@@ -874,9 +861,9 @@ Partial Class ProductUnits
     Friend WithEvents Guna2Panel1 As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Label1 As Label
     Friend WithEvents Guna2Panel2 As Guna.UI2.WinForms.Guna2Panel
-    Friend WithEvents btn_Close As Guna.UI2.WinForms.Guna2Button
-    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2Button
-    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents Guna2GroupBox1 As Guna.UI2.WinForms.Guna2GroupBox
     Friend WithEvents Label2 As Label
     Friend WithEvents ProductUnit_ID As Guna.UI2.WinForms.Guna2TextBox

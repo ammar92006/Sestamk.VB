@@ -25,17 +25,17 @@ Partial Class add_new_user
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(add_new_user))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.pn_title_page = New System.Windows.Forms.Label()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
-        Me.btnNew = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_delet_barcode = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_barcode_print = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnNew = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_delet_barcode = New Guna.UI2.WinForms.Guna2Button()
+        Me.btn_barcode_print = New Guna.UI2.WinForms.Guna2Button()
         Me.cmbRoleName = New Guna.UI2.WinForms.Guna2ComboBox()
-        Me.btn_barcode_new = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_barcode_new = New Guna.UI2.WinForms.Guna2Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pic_Barcode = New System.Windows.Forms.PictureBox()
-        Me.btnSelectImage = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSelectImage = New Guna.UI2.WinForms.Guna2Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.pic_user = New System.Windows.Forms.PictureBox()
         Me.Guna2HtmlLabel9 = New Guna.UI2.WinForms.Guna2HtmlLabel()
@@ -46,7 +46,7 @@ Partial Class add_new_user
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_clean = New Guna.UI2.WinForms.Guna2Button()
         Me.lblStatus = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.chkUser_Stats = New Guna.UI2.WinForms.Guna2ToggleSwitch()
         Me.Guna2HtmlLabel8 = New Guna.UI2.WinForms.Guna2HtmlLabel()
@@ -87,13 +87,13 @@ Partial Class add_new_user
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_close.Location = New System.Drawing.Point(15, 17)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 1
         '
@@ -148,10 +148,6 @@ Partial Class add_new_user
         'btnNew
         '
         Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNew.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnNew.Appearance.Options.UseFont = True
-        Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnNew.Location = New System.Drawing.Point(541, 532)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -162,10 +158,6 @@ Partial Class add_new_user
         'btn_delet_barcode
         '
         Me.btn_delet_barcode.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_delet_barcode.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_delet_barcode.Appearance.Options.UseFont = True
-        Me.btn_delet_barcode.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.delete
-        Me.btn_delet_barcode.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_delet_barcode.Location = New System.Drawing.Point(319, 274)
         Me.btn_delet_barcode.Name = "btn_delet_barcode"
         Me.btn_delet_barcode.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -175,10 +167,6 @@ Partial Class add_new_user
         'btn_barcode_print
         '
         Me.btn_barcode_print.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_barcode_print.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_barcode_print.Appearance.Options.UseFont = True
-        Me.btn_barcode_print.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.printing
-        Me.btn_barcode_print.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_barcode_print.Location = New System.Drawing.Point(319, 356)
         Me.btn_barcode_print.Name = "btn_barcode_print"
         Me.btn_barcode_print.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -205,10 +193,6 @@ Partial Class add_new_user
         'btn_barcode_new
         '
         Me.btn_barcode_new.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_barcode_new.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_barcode_new.Appearance.Options.UseFont = True
-        Me.btn_barcode_new.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.shopping
-        Me.btn_barcode_new.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_barcode_new.Location = New System.Drawing.Point(396, 274)
         Me.btn_barcode_new.Name = "btn_barcode_new"
         Me.btn_barcode_new.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -241,10 +225,6 @@ Partial Class add_new_user
         'btnSelectImage
         '
         Me.btnSelectImage.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSelectImage.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSelectImage.Appearance.Options.UseFont = True
-        Me.btnSelectImage.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.new_hire
-        Me.btnSelectImage.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnSelectImage.Location = New System.Drawing.Point(33, 356)
         Me.btnSelectImage.Name = "btnSelectImage"
         Me.btnSelectImage.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -390,11 +370,7 @@ Partial Class add_new_user
         'btn_clean
         '
         Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("LBC", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_clean.Appearance.Options.UseFont = True
         Me.btn_clean.AutoSize = True
-        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
-        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_clean.Location = New System.Drawing.Point(1325, 2)
         Me.btn_clean.Name = "btn_clean"
         Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -535,16 +511,16 @@ Partial Class add_new_user
 
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents pn_title_page As Label
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
-    Friend WithEvents btn_delet_barcode As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_barcode_print As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_delet_barcode As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btn_barcode_print As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents cmbRoleName As Guna.UI2.WinForms.Guna2ComboBox
-    Friend WithEvents btn_barcode_new As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_barcode_new As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Label7 As Label
     Friend WithEvents pic_Barcode As PictureBox
-    Friend WithEvents btnSelectImage As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnSelectImage As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Label6 As Label
     Friend WithEvents pic_user As PictureBox
     Friend WithEvents Guna2HtmlLabel9 As Guna.UI2.WinForms.Guna2HtmlLabel
@@ -555,12 +531,12 @@ Partial Class add_new_user
     Friend WithEvents Label3 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents btn_clean As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_clean As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents lblStatus As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents chkUser_Stats As Guna.UI2.WinForms.Guna2ToggleSwitch
     Friend WithEvents Guna2HtmlLabel8 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtUser_username As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtUser_Name As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents txtUser_Code As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btnNew As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnNew As Guna.UI2.WinForms.Guna2Button
 End Class

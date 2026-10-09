@@ -15,9 +15,9 @@ Partial Class FrmPurchaseDocument
         Dim resources As New System.ComponentModel.ComponentResourceManager(GetType(frmPurchases))
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.headerTitle = New System.Windows.Forms.Label()
-        Me.btnClose = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnMax = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnMin = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnMax = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnMin = New Guna.UI2.WinForms.Guna2Button()
         Me.invoiceSummary = New System.Windows.Forms.Label()
         Me.invoiceGrid = New System.Windows.Forms.DataGridView()
         Me.actions = New System.Windows.Forms.FlowLayoutPanel()
@@ -37,16 +37,10 @@ Partial Class FrmPurchaseDocument
         Me.btnClose.Location = New System.Drawing.Point(15, 17)
         Me.btnClose.Size = New System.Drawing.Size(38, 36)
         Me.btnClose.Name = "btnClose"
-        Me.btnClose.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btnClose.ImageOptions.SvgImage = CType(resources.GetObject("btnClose.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btnMax.Location = New System.Drawing.Point(59, 17)
         Me.btnMax.Size = New System.Drawing.Size(38, 36)
-        Me.btnMax.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btnMax.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btnMin.Location = New System.Drawing.Point(103, 17)
         Me.btnMin.Size = New System.Drawing.Size(38, 36)
-        Me.btnMin.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
-        Me.btnMin.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.panelHeader.Controls.AddRange(New System.Windows.Forms.Control() {Me.headerTitle, Me.btnClose, Me.btnMax, Me.btnMin})
         Me.headerTitle.SendToBack()
         Me.invoiceSummary.Dock = System.Windows.Forms.DockStyle.Top
@@ -93,9 +87,9 @@ Partial Class FrmPurchaseDocument
     End Sub
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents headerTitle As System.Windows.Forms.Label
-    Friend WithEvents btnClose As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnMax As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnMin As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnMax As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnMin As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents invoiceSummary As System.Windows.Forms.Label
     Friend WithEvents invoiceGrid As System.Windows.Forms.DataGridView
     Friend WithEvents actions As System.Windows.Forms.FlowLayoutPanel

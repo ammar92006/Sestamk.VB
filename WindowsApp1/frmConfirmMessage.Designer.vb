@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class frmConfirmMessage
     Inherits System.Windows.Forms.Form
 
@@ -19,7 +19,7 @@ Partial Class frmConfirmMessage
     Private Sub InitializeComponent()
         Me.pnlHeader = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblTitle = New System.Windows.Forms.Label()
-        Me.btnClose = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnClose = New Guna.UI2.WinForms.Guna2Button()
         Me.pnlCard = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblCustomerName = New System.Windows.Forms.Label()
         Me.lblCustomerTitle = New System.Windows.Forms.Label()
@@ -70,13 +70,8 @@ Partial Class frmConfirmMessage
         'btnClose
         '
         Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnClose.Appearance.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.btnClose.Appearance.ForeColor = System.Drawing.Color.White
-        Me.btnClose.Appearance.Options.UseFont = True
-        Me.btnClose.Appearance.Options.UseForeColor = True
         Me.btnClose.Location = New System.Drawing.Point(10, 8)
         Me.btnClose.Name = "btnClose"
-        Me.btnClose.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
         Me.btnClose.Size = New System.Drawing.Size(35, 34)
         Me.btnClose.TabIndex = 1
         Me.btnClose.Text = "✕"
@@ -327,7 +322,7 @@ Partial Class frmConfirmMessage
 
     Friend WithEvents pnlHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents lblTitle As System.Windows.Forms.Label
-    Friend WithEvents btnClose As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnClose As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents pnlCard As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents lblCustomerTitle As System.Windows.Forms.Label
     Friend WithEvents lblCustomerName As System.Windows.Forms.Label

@@ -27,19 +27,19 @@ Partial Class Customer
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.panelHeader = New Guna.UI2.WinForms.Guna2Panel()
-        Me.btn_min = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_max = New DevExpress.XtraEditors.SimpleButton()
-        Me.btn_close = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_min = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_max = New Guna.UI2.WinForms.Guna2ControlBox()
+        Me.btn_close = New Guna.UI2.WinForms.Guna2ControlBox()
         Me.Guna2HtmlLabel1 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.grpCustomerInfo = New Guna.UI2.WinForms.Guna2GroupBox()
-        Me.btnSendWhatsApp = New DevExpress.XtraEditors.SimpleButton()
+        Me.btnSendWhatsApp = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2HtmlLabel14 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtMessage = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel13 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtDebit = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel10 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtCredit = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.btn_clean = New DevExpress.XtraEditors.SimpleButton()
+        Me.btn_clean = New Guna.UI2.WinForms.Guna2Button()
         Me.Guna2HtmlLabel12 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtUpdatedAt = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel11 = New Guna.UI2.WinForms.Guna2HtmlLabel()
@@ -64,12 +64,12 @@ Partial Class Customer
         Me.txtCustomerName = New Guna.UI2.WinForms.Guna2TextBox()
         Me.Guna2HtmlLabel2 = New Guna.UI2.WinForms.Guna2HtmlLabel()
         Me.txtCustomerCode = New Guna.UI2.WinForms.Guna2TextBox()
-        Me.PanelControl1 = New DevExpress.XtraEditors.PanelControl()
-        Me.btnImportExcel = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnExportExcel = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnDelete = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnEdit = New DevExpress.XtraEditors.SimpleButton()
-        Me.btnNew = New DevExpress.XtraEditors.SimpleButton()
+        Me.PanelControl1 = New Guna.UI2.WinForms.Guna2Panel()
+        Me.btnImportExcel = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnExportExcel = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnDelete = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnEdit = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnNew = New Guna.UI2.WinForms.Guna2Button()
         Me.dgvCustomers = New Guna.UI2.WinForms.Guna2DataGridView()
         Me.panelHeader.SuspendLayout()
         Me.grpCustomerInfo.SuspendLayout()
@@ -94,37 +94,39 @@ Partial Class Customer
         '
         'btn_min
         '
-        Me.btn_min.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_min.Appearance.Options.UseFont = True
         Me.btn_min.AutoSize = True
-        Me.btn_min.ImageOptions.SvgImage = CType(resources.GetObject("btn_min.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_min.Location = New System.Drawing.Point(103, 17)
         Me.btn_min.Name = "btn_min"
-        Me.btn_min.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_min.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MinimizeBox
+        Me.btn_min.FillColor = System.Drawing.Color.Transparent
+        Me.btn_min.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_min.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_min.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_min.Size = New System.Drawing.Size(38, 36)
         Me.btn_min.TabIndex = 5
         '
         'btn_max
         '
-        Me.btn_max.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_max.Appearance.Options.UseFont = True
         Me.btn_max.AutoSize = True
-        Me.btn_max.ImageOptions.SvgImage = CType(resources.GetObject("btn_max.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_max.Location = New System.Drawing.Point(59, 17)
         Me.btn_max.Name = "btn_max"
-        Me.btn_max.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_max.ControlBoxType = Guna.UI2.WinForms.Enums.ControlBoxType.MaximizeBox
+        Me.btn_max.FillColor = System.Drawing.Color.Transparent
+        Me.btn_max.HoverState.FillColor = System.Drawing.Color.FromArgb(55, 65, 81)
+        Me.btn_max.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_max.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_max.Size = New System.Drawing.Size(38, 36)
         Me.btn_max.TabIndex = 4
         '
         'btn_close
         '
-        Me.btn_close.Appearance.Font = New System.Drawing.Font("Tahoma", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_close.Appearance.Options.UseFont = True
         Me.btn_close.AutoSize = True
-        Me.btn_close.ImageOptions.SvgImage = CType(resources.GetObject("btn_close.ImageOptions.SvgImage"), DevExpress.Utils.Svg.SvgImage)
         Me.btn_close.Location = New System.Drawing.Point(15, 17)
         Me.btn_close.Name = "btn_close"
-        Me.btn_close.PaintStyle = DevExpress.XtraEditors.Controls.PaintStyles.Light
+        Me.btn_close.FillColor = System.Drawing.Color.Transparent
+        Me.btn_close.HoverState.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btn_close.HoverState.IconColor = System.Drawing.Color.White
+        Me.btn_close.IconColor = System.Drawing.Color.FromArgb(156, 163, 175)
         Me.btn_close.Size = New System.Drawing.Size(38, 36)
         Me.btn_close.TabIndex = 3
         '
@@ -190,10 +192,6 @@ Partial Class Customer
         'btnSendWhatsApp
         '
         Me.btnSendWhatsApp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSendWhatsApp.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnSendWhatsApp.Appearance.Options.UseFont = True
-        Me.btnSendWhatsApp.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.logo__1_
-        Me.btnSendWhatsApp.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnSendWhatsApp.Location = New System.Drawing.Point(20, 283)
         Me.btnSendWhatsApp.Name = "btnSendWhatsApp"
         Me.btnSendWhatsApp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -311,11 +309,7 @@ Partial Class Customer
         'btn_clean
         '
         Me.btn_clean.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btn_clean.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btn_clean.Appearance.Options.UseFont = True
         Me.btn_clean.AutoSize = True
-        Me.btn_clean.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.eraser
-        Me.btn_clean.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btn_clean.Location = New System.Drawing.Point(1375, 3)
         Me.btn_clean.Name = "btn_clean"
         Me.btn_clean.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -745,10 +739,6 @@ Partial Class Customer
         'btnImportExcel
         '
         Me.btnImportExcel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnImportExcel.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnImportExcel.Appearance.Options.UseFont = True
-        Me.btnImportExcel.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.excel__1_
-        Me.btnImportExcel.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnImportExcel.Location = New System.Drawing.Point(5, 2)
         Me.btnImportExcel.Name = "btnImportExcel"
         Me.btnImportExcel.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -759,10 +749,6 @@ Partial Class Customer
         'btnExportExcel
         '
         Me.btnExportExcel.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnExportExcel.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnExportExcel.Appearance.Options.UseFont = True
-        Me.btnExportExcel.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.excel
-        Me.btnExportExcel.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnExportExcel.Location = New System.Drawing.Point(340, 2)
         Me.btnExportExcel.Name = "btnExportExcel"
         Me.btnExportExcel.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -773,10 +759,6 @@ Partial Class Customer
         'btnDelete
         '
         Me.btnDelete.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnDelete.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnDelete.Appearance.Options.UseFont = True
-        Me.btnDelete.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user__1_1
-        Me.btnDelete.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnDelete.Location = New System.Drawing.Point(580, 2)
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -787,10 +769,6 @@ Partial Class Customer
         'btnEdit
         '
         Me.btnEdit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnEdit.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnEdit.Appearance.Options.UseFont = True
-        Me.btnEdit.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.user1
-        Me.btnEdit.ImageOptions.Location = DevExpress.XtraEditors.ImageLocation.MiddleRight
         Me.btnEdit.Location = New System.Drawing.Point(880, 2)
         Me.btnEdit.Name = "btnEdit"
         Me.btnEdit.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -801,10 +779,6 @@ Partial Class Customer
         'btnNew
         '
         Me.btnNew.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnNew.Appearance.Font = New System.Drawing.Font("Microsoft Sans Serif", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnNew.Appearance.Options.UseFont = True
-        Me.btnNew.ImageOptions.Image = Global.WindowsApp1.My.Resources.Resources.add_user__1_
-        Me.btnNew.ImageOptions.ImageToTextAlignment = DevExpress.XtraEditors.ImageAlignToText.RightCenter
         Me.btnNew.Location = New System.Drawing.Point(1220, 2)
         Me.btnNew.Name = "btnNew"
         Me.btnNew.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -895,9 +869,9 @@ Partial Class Customer
     Friend WithEvents panelHeader As Guna.UI2.WinForms.Guna2Panel
     Friend WithEvents Guna2HtmlLabel1 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents grpCustomerInfo As Guna.UI2.WinForms.Guna2GroupBox
-    Friend WithEvents btn_min As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_max As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btn_close As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_min As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_max As Guna.UI2.WinForms.Guna2ControlBox
+    Friend WithEvents btn_close As Guna.UI2.WinForms.Guna2ControlBox
     Friend WithEvents lblStatus As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents Guna2HtmlLabel9 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtNotes As Guna.UI2.WinForms.Guna2TextBox
@@ -915,12 +889,12 @@ Partial Class Customer
     Friend WithEvents txtCustomerName As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Guna2HtmlLabel2 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtCustomerCode As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents PanelControl1 As DevExpress.XtraEditors.PanelControl
-    Friend WithEvents btnDelete As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnEdit As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnNew As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnImportExcel As DevExpress.XtraEditors.SimpleButton
-    Friend WithEvents btnExportExcel As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents PanelControl1 As Guna.UI2.WinForms.Guna2Panel
+    Friend WithEvents btnDelete As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnEdit As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnNew As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnImportExcel As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnExportExcel As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents cmbSearchField As Guna.UI2.WinForms.Guna2ComboBox
     Friend WithEvents lstSuggestions As ListBox
     Friend WithEvents txtSearch As Guna.UI2.WinForms.Guna2TextBox
@@ -929,12 +903,12 @@ Partial Class Customer
     Friend WithEvents txtCreatedAt As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Guna2HtmlLabel12 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtUpdatedAt As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btn_clean As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btn_clean As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2HtmlLabel13 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtDebit As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents Guna2HtmlLabel10 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtCredit As Guna.UI2.WinForms.Guna2TextBox
-    Friend WithEvents btnSendWhatsApp As DevExpress.XtraEditors.SimpleButton
+    Friend WithEvents btnSendWhatsApp As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents Guna2HtmlLabel14 As Guna.UI2.WinForms.Guna2HtmlLabel
     Friend WithEvents txtMessage As Guna.UI2.WinForms.Guna2TextBox
 End Class

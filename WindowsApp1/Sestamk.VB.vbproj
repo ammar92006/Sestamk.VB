@@ -92,72 +92,6 @@
     <Reference Include="ClosedXML.Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1d5f7376574c51ec, processorArchitecture=MSIL">
       <HintPath>..\packages\ClosedXML.Parser.2.0.0\lib\netstandard2.0\ClosedXML.Parser.dll</HintPath>
     </Reference>
-    <Reference Include="DevExpress.Data.Desktop.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Data.Desktop.25.1.7\lib\net462\DevExpress.Data.Desktop.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Data.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Data.25.1.7\lib\net462\DevExpress.Data.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Drawing.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Drawing.25.1.7\lib\net462\DevExpress.Drawing.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Office.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Office.Core.25.1.7\lib\net462\DevExpress.Office.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Pdf.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Pdf.Core.25.1.7\lib\net462\DevExpress.Pdf.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Pdf.v25.1.Drawing, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Pdf.Drawing.25.1.7\lib\net462\DevExpress.Pdf.v25.1.Drawing.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.PivotGrid.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.PivotGrid.Core.25.1.7\lib\net462\DevExpress.PivotGrid.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Printing.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Printing.Core.25.1.7\lib\net462\DevExpress.Printing.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.RichEdit.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.RichEdit.Core.25.1.7\lib\net462\DevExpress.RichEdit.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.RichEdit.v25.1.Export, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.RichEdit.Export.25.1.7\lib\net462\DevExpress.RichEdit.v25.1.Export.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Sparkline.v25.1.Core, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Sparkline.Core.25.1.7\lib\net462\DevExpress.Sparkline.v25.1.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.Utils.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Utils.25.1.7\lib\net462\DevExpress.Utils.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraBars.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.Navigation.25.1.7\lib\net462\DevExpress.XtraBars.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraEditors.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.Navigation.25.1.7\lib\net462\DevExpress.XtraEditors.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraGrid.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.Grid.25.1.7\lib\net462\DevExpress.XtraGrid.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraLayout.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.Navigation.25.1.7\lib\net462\DevExpress.XtraLayout.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraNavBar.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.25.1.7\lib\net462\DevExpress.XtraNavBar.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraPivotGrid.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.PivotGrid.25.1.7\lib\net462\DevExpress.XtraPivotGrid.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraPrinting.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.Printing.25.1.7\lib\net462\DevExpress.XtraPrinting.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraTreeList.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.TreeList.25.1.7\lib\net462\DevExpress.XtraTreeList.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraVerticalGrid.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.VerticalGrid.25.1.7\lib\net462\DevExpress.XtraVerticalGrid.v25.1.dll</HintPath>
-    </Reference>
-    <Reference Include="DevExpress.XtraWizard.v25.1, Version=25.1.7.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DevExpress.Win.25.1.7\lib\net462\DevExpress.XtraWizard.v25.1.dll</HintPath>
-    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=3.1.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.3.1.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
@@ -1744,9 +1678,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
-  <ItemGroup>
-    <Analyzer Include="..\packages\DevExpress.Data.25.1.7\analyzers\dotnet\DevExpress.Generator.dll" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\Data\" />
     <Folder Include="Files\" />

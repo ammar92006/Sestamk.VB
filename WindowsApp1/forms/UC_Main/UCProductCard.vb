@@ -1,6 +1,5 @@
 ﻿Imports System.Drawing
 Imports System.IO
-Imports DevExpress.Entity
 
 Public Class UCProductCard
     Private _Product As ProductModel

@@ -129,12 +129,6 @@ Public NotInheritable Class ThemeHelper
             ElseIf TypeOf ctrl Is Guna2ControlBox Then
                 ApplyGuna2ControlBox(DirectCast(ctrl, Guna2ControlBox), palette)
 
-            ' DevExpress Controls
-            ElseIf TypeOf ctrl Is DevExpress.XtraEditors.SimpleButton Then
-                ApplyDxSimpleButton(DirectCast(ctrl, DevExpress.XtraEditors.SimpleButton), palette)
-            ElseIf TypeOf ctrl Is DevExpress.XtraEditors.PanelControl Then
-                ApplyDxPanelControl(DirectCast(ctrl, DevExpress.XtraEditors.PanelControl), palette)
-
             ' Standard WinForms — DataGridView first
             ElseIf TypeOf ctrl Is DataGridView Then
                 ApplyDataGridViewTheme(DirectCast(ctrl, DataGridView), palette)
@@ -842,67 +836,6 @@ Public NotInheritable Class ThemeHelper
             If p IsNot Nothing Then p.SetValue(obj, value)
         Catch __logEx As Exception
             Logger.LogError("ThemeHelper.vb:836", __logEx)
-        End Try
-    End Sub
-
-    ' ──────────────────────────────────────────────────────────
-    '  DevExpress SimpleButton
-    ' ──────────────────────────────────────────────────────────
-    Private Shared Sub ApplyDxSimpleButton(btn As DevExpress.XtraEditors.SimpleButton, palette As ThemePalette)
-        Try
-            Dim current As Color = btn.Appearance.BackColor
-            Dim targetBack As Color
-            Dim targetFore As Color = Color.White
-            Dim nameLower As String = btn.Name.ToLower()
-            Dim textLower As String = btn.Text.ToLower()
-
-            If nameLower.Contains("close") OrElse nameLower.Contains("delete") OrElse nameLower.Contains("del") OrElse textLower.Contains("حذف") Then
-                targetBack = palette.Danger
-            ElseIf nameLower.Contains("max") OrElse nameLower.Contains("min") Then
-                targetBack = palette.SurfaceHeader
-            ElseIf nameLower.Contains("new") OrElse nameLower.Contains("add") OrElse nameLower.Contains("save") OrElse textLower.Contains("اضافة") OrElse textLower.Contains("إضافة") OrElse textLower.Contains("حفظ") Then
-                targetBack = palette.Success
-            ElseIf nameLower.Contains("edit") OrElse nameLower.Contains("update") OrElse textLower.Contains("تعديل") Then
-                targetBack = palette.Warning
-            ElseIf nameLower.Contains("print") OrElse textLower.Contains("طباعة") Then
-                targetBack = palette.Info
-            ElseIf nameLower.Contains("clean") OrElse nameLower.Contains("clear") OrElse textLower.Contains("مسح") Then
-                targetBack = palette.SurfaceSecondary
-                targetFore = palette.TextPrimary
-            ElseIf IsSemanticDanger(current) Then
-                targetBack = palette.Danger
-            ElseIf IsSemanticSuccess(current) Then
-                targetBack = palette.Success
-            ElseIf IsSemanticWarning(current) Then
-                targetBack = palette.Warning
-            ElseIf IsSemanticInfo(current) Then
-                targetBack = palette.Info
-            ElseIf IsNeutralDark(current) Then
-                targetBack = palette.SurfaceHeader
-            Else
-                targetBack = palette.Primary
-            End If
-
-            btn.Appearance.BackColor = targetBack
-            btn.Appearance.ForeColor = targetFore
-            btn.Appearance.Options.UseBackColor = True
-            btn.Appearance.Options.UseForeColor = True
-        Catch __logEx As Exception
-            Logger.LogError("ThemeHelper.vb:883", __logEx)
-        End Try
-    End Sub
-
-    ' ──────────────────────────────────────────────────────────
-    '  DevExpress PanelControl
-    ' ──────────────────────────────────────────────────────────
-    Private Shared Sub ApplyDxPanelControl(pnl As DevExpress.XtraEditors.PanelControl, palette As ThemePalette)
-        Try
-            pnl.Appearance.BackColor = palette.Surface
-            pnl.Appearance.ForeColor = palette.TextPrimary
-            pnl.Appearance.Options.UseBackColor = True
-            pnl.Appearance.Options.UseForeColor = True
-        Catch __logEx As Exception
-            Logger.LogError("ThemeHelper.vb:897", __logEx)
         End Try
     End Sub
 
