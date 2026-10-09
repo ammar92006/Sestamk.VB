@@ -86,6 +86,10 @@ jobs:
         shell: pwsh
         run: pwsh -NoProfile -File tests\EcosystemAndPosIntegration.ps1 -Configuration Release
 
+      - name: Run system stress and teardown audit
+        shell: pwsh
+        run: pwsh -NoProfile -File tests\SystemStressAndTeardownAudit.ps1 -Configuration Release
+
       - name: Upload build artifacts
         if: success()
         uses: actions/upload-artifact@v4
