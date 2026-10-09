@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class FrmDriverReport
     Inherits System.Windows.Forms.Form
 
@@ -337,7 +337,7 @@ Partial Class FrmDriverReport
         Me.Guna2BorderlessForm1.BorderRadius = 8
         Me.Guna2BorderlessForm1.ContainerControl = Me
         Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = False
         '
         'lblTotalOrdersCount
         '

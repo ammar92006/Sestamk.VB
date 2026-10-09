@@ -295,7 +295,7 @@ Partial Class frmRolesAndPermissions
         Me.Guna2BorderlessForm1.ContainerControl = Me
         Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
         Me.Guna2BorderlessForm1.DragForm = False
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = False
         '
         'frmRolesAndPermissions
         '

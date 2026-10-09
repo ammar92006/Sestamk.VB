@@ -107,7 +107,7 @@ Partial Class FrmSelectDriver
         Me.Guna2BorderlessForm1.BorderRadius = 8
         Me.Guna2BorderlessForm1.ContainerControl = Me
         Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = False
         '
         'FrmSelectDriver
         '

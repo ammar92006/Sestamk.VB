@@ -1,4 +1,4 @@
-Imports System.Data.SqlClient
+﻿Imports System.Data.SqlClient
 
 Module Main
     Public Sub datagridviewsetup(dgv As DataGridView)
@@ -118,20 +118,16 @@ Module Main
         ' لو مش موجودة: نفتح واحدة جديدة
         Dim frm As Form = CType(Activator.CreateInstance(formType), Form)
 
-        ' تطبيق الصلاحيات والسمة على الفورم عند التحميل وعند الظهور
+        ' تطبيق الصلاحيات والثيم مرة واحدة وبكفاءة عالية بدون تكرار
         AddHandler frm.Load, Sub(sender, e)
                                  Session.ApplyFormPermissions(frm, formType.Name)
-                                 ThemeManager.Instance.ApplyTheme(frm)
                              End Sub
-        AddHandler frm.Shown, Sub(sender, e)
-                                  Session.ApplyFormPermissions(frm, formType.Name)
-                                  ThemeManager.Instance.ApplyTheme(frm)
-                              End Sub
 
-        ' لما الفورم تتقفل نرجع الزرار لحالته الطبيعية
-        AddHandler frm.FormClosed, Sub(sender, e)
-                                       If btn IsNot Nothing Then btn.Checked = False
-                                   End Sub
+        If btn IsNot Nothing Then
+            AddHandler frm.FormClosed, Sub(sender, e)
+                                           btn.Checked = False
+                                       End Sub
+        End If
 
         ThemeManager.Instance.ApplyTheme(frm)
         frm.Show()
@@ -160,14 +156,10 @@ Module Main
         ' لو مش موجودة: نفتح واحدة جديدة
         Dim frm As Form = CType(Activator.CreateInstance(formType), Form)
 
+        ' تطبيق الصلاحيات والثيم مرة واحدة وبكفاءة عالية
         AddHandler frm.Load, Sub(sender, e)
                                  Session.ApplyFormPermissions(frm, formType.Name)
-                                 ThemeManager.Instance.ApplyTheme(frm)
                              End Sub
-        AddHandler frm.Shown, Sub(sender, e)
-                                  Session.ApplyFormPermissions(frm, formType.Name)
-                                  ThemeManager.Instance.ApplyTheme(frm)
-                              End Sub
 
         ThemeManager.Instance.ApplyTheme(frm)
         frm.Show()

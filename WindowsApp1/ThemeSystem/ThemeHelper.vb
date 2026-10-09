@@ -28,6 +28,9 @@ Public NotInheritable Class ThemeHelper
 
         frm.SuspendLayout()
         Try
+            ' تفعيل الرسم المزدوج في الذاكرة لتسريع العرض ومنع الوميض والتهنيج
+            FormHelper.EnableDoubleBuffering(frm)
+
             frm.BackColor = palette.Background
             frm.ForeColor = palette.TextPrimary
 

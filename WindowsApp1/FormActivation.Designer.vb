@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FormActivation
     Inherits System.Windows.Forms.Form
 
@@ -67,7 +67,7 @@ Partial Class FormActivation
         Me.Guna2BorderlessForm1.BorderRadius = 18
         Me.Guna2BorderlessForm1.ContainerControl = Me
         Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = False
         '
         'Guna2ShadowForm1
         '

@@ -1,4 +1,4 @@
-﻿Imports System.Collections.Generic
+Imports System.Collections.Generic
 Imports System.ComponentModel
 Imports System.IO
 Imports System.Threading.Tasks
@@ -93,64 +93,6 @@ Public NotInheritable Class ThemeManager
         If _currentMode = ThemeMode.System Then
             StartSystemThemeMonitoring()
         End If
-
-        ' هوك تلقائي شامل يضمن إكساء أي نافذة حوارية (Modal Dialog) أو شاشة جديدة تفتح عبر ShowDialog() أو Show()
-        Try
-            AddHandler Application.Idle, AddressOf OnApplicationIdle
-            AddHandler Application.EnterThreadModal, AddressOf OnEnterThreadModal
-        Catch ex As Exception
-            Logger.LogError("ThemeManager.vb:101", ex)
-        End Try
-    End Sub
-
-    Private Sub OnApplicationIdle(sender As Object, e As EventArgs)
-        ApplyThemeToUnregisteredOpenForms()
-    End Sub
-
-    Private Sub OnEnterThreadModal(sender As Object, e As EventArgs)
-        ApplyThemeToUnregisteredOpenForms()
-    End Sub
-
-    Private Sub ApplyThemeToUnregisteredOpenForms()
-        Try
-            If Application.OpenForms Is Nothing Then Return
-
-            Dim unhooked As List(Of Form) = Nothing
-
-            SyncLock _hookLock
-                For Each frm As Form In Application.OpenForms
-                    If frm IsNot Nothing AndAlso Not frm.IsDisposed AndAlso Not _hookedForms.Contains(frm) Then
-                        If unhooked Is Nothing Then unhooked = New List(Of Form)()
-                        unhooked.Add(frm)
-                        _hookedForms.Add(frm)
-                    End If
-                Next
-            End SyncLock
-
-            If unhooked IsNot Nothing Then
-                For Each frm In unhooked
-                    Dim targetForm As Form = frm
-                    AddHandler targetForm.FormClosed, Sub()
-                                                          SyncLock _hookLock
-                                                              _hookedForms.Remove(targetForm)
-                                                          End SyncLock
-                                                      End Sub
-
-                    ' إعادة التطبيق أيضاً عند اكتمال حدث Shown لضمان تجاوز أي ألوان ثابتة قد تكون في Form_Load
-                    AddHandler targetForm.Shown, Sub()
-                                                     Try
-                                                         ApplyTheme(targetForm)
-                                                     Catch __logEx As Exception
-                                                         Logger.LogError("ThemeManager.vb:143", __logEx)
-                                                     End Try
-                                                 End Sub
-
-                    ApplyTheme(targetForm)
-                Next
-            End If
-        Catch ex As Exception
-            Logger.LogError("ThemeManager.vb:151", ex)
-        End Try
     End Sub
 
     ' ── تغيير وضع المظهر ──────────────────────────────────────
@@ -287,11 +229,22 @@ Public NotInheritable Class ThemeManager
         ApplyToAllOpenForms()
     End Sub
 
-    ' ── تطبيق الثيم على فورم محدد ──────────────────────────────
+    Private ReadOnly _formThemeCache As New System.Runtime.CompilerServices.ConditionalWeakTable(Of Form, Object)()
+
+    ' ── تطبيق الثيم على فورم محدد (مسار وحيد سريع جداً مع كاش يمنع التكرار) ────
     Public Sub ApplyTheme(frm As Form)
         If LicenseManager.UsageMode = LicenseUsageMode.Designtime Then Return
         If frm Is Nothing OrElse frm.IsDisposed Then Return
+
+        ' كاش ذكي فائق السرعة يمنع تكرار تلوين الفورم نفسه بنفس الباليتة أثناء فتحه
+        Dim cachedThemeObj As Object = Nothing
+        If _formThemeCache.TryGetValue(frm, cachedThemeObj) AndAlso TypeOf cachedThemeObj Is AppTheme AndAlso DirectCast(cachedThemeObj, AppTheme) = _currentTheme Then
+            Return ' تخطي فوري في 0.00 مللي ثانية
+        End If
+
         ThemeHelper.ApplyToForm(frm, _currentPalette)
+        _formThemeCache.Remove(frm)
+        _formThemeCache.Add(frm, _currentTheme)
     End Sub
 
     ''' <summary>تطبيق الثيم على عنصر تحكم واحد وكافة أبنائه.</summary>
@@ -416,6 +369,8 @@ Public NotInheritable Class ThemeManager
             For Each frm In openFormsList
                 Try
                     ThemeHelper.ApplyToForm(frm, _currentPalette)
+                    _formThemeCache.Remove(frm)
+                    _formThemeCache.Add(frm, _currentTheme)
                 Catch __logEx As Exception
                     Logger.LogError("ThemeManager.vb:419", __logEx)
                 End Try

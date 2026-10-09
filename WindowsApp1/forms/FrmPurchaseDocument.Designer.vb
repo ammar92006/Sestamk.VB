@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class FrmPurchaseDocument
     Inherits System.Windows.Forms.Form
     Private components As System.ComponentModel.IContainer
@@ -80,7 +80,7 @@ Partial Class FrmPurchaseDocument
         Me.borderless.ContainerControl = Me
         Me.borderless.BorderRadius = 8
         Me.borderless.DockIndicatorTransparencyValue = 0.6R
-        Me.borderless.TransparentWhileDrag = True
+        Me.borderless.TransparentWhileDrag = False
         Me.Controls.AddRange(New System.Windows.Forms.Control() {Me.invoiceGrid, Me.actions, Me.invoiceSummary, Me.panelHeader})
         Me.ClientSize = New System.Drawing.Size(1250, 760)
         Me.MinimumSize = New System.Drawing.Size(1000, 650)

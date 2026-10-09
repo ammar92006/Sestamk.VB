@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class Settings
     Inherits System.Windows.Forms.Form
 
@@ -55,7 +55,7 @@ Partial Class Settings
         Me.guna2BorderlessForm1.BorderRadius = 15
         Me.guna2BorderlessForm1.ContainerControl = Me
         Me.guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.guna2BorderlessForm1.TransparentWhileDrag = True
+        Me.guna2BorderlessForm1.TransparentWhileDrag = False
         '
         'pnlTopBar
         '

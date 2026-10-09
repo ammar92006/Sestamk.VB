@@ -1,4 +1,4 @@
-<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
 Partial Class Backup
     Inherits BaseForm
 
@@ -63,7 +63,7 @@ Partial Class Backup
         Me.Guna2BorderlessForm1.BorderRadius = 15
         Me.Guna2BorderlessForm1.ContainerControl = Me
         Me.Guna2BorderlessForm1.DockIndicatorTransparencyValue = 0.6R
-        Me.Guna2BorderlessForm1.TransparentWhileDrag = True
+        Me.Guna2BorderlessForm1.TransparentWhileDrag = False
         '
         'pnlTopBar
         '

@@ -242,7 +242,7 @@ Partial Class FrmSupplierTransactions
         Me.borderless.ContainerControl = Me
         Me.borderless.BorderRadius = 8
         Me.borderless.DockIndicatorTransparencyValue = 0.6R
-        Me.borderless.TransparentWhileDrag = True
+        Me.borderless.TransparentWhileDrag = False
         Me.panelHeader.Controls.AddRange(New System.Windows.Forms.Control() {Me.headerTitle, Me.btn_close, Me.btn_max, Me.btn_min})
         Me.filters.Controls.AddRange(New System.Windows.Forms.Control() {Me.supplierCaption, Me.supplierBox, Me.fromCaption, Me.fromPicker, Me.toCaption, Me.toPicker, Me.typeCaption, Me.typeBox, Me.btnRefreshStatement, Me.btnPrintStatement, Me.btnExportStatement, Me.balanceLabel})
         Me.paymentFields.Controls.AddRange(New System.Windows.Forms.Control() {Me.treasuryCaption, Me.treasuryBox, Me.methodCaption, Me.methodBox, Me.amountCaption, Me.amountBox, Me.notesCaption, Me.notesBox, Me.btnAddPayment})
