@@ -207,6 +207,18 @@ Public Class MainForm
         ' تعيين الشاشة النشطة الافتراضية
         SetActiveNav(navDashboard, GetDashboardControl())
 
+        ' عرض شارة الفترة التجريبية وتاريخ الانتهاء في الهيدر
+        Try
+            If LicenseCache.IsTrial() Then
+                Dim daysLeft = LicenseCache.GetDaysRemaining()
+                lblProBadge.Visible = True
+                lblProBadge.Size = New Size(170, 42)
+                lblProBadge.Text = $"🟢 تجريبي: باقي {daysLeft} يوم"
+                lblProBadge.FillColor = If(daysLeft <= 3, Color.FromArgb(239, 68, 68), Color.FromArgb(16, 185, 129))
+            End If
+        Catch
+        End Try
+
         ' تطبيق ثيم MainForm المتوافق مع الهوية الأصلية
         ApplyMainFormTheme()
         AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged

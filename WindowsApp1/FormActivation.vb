@@ -1,4 +1,4 @@
-﻿Imports System.Diagnostics
+Imports System.Diagnostics
 Imports System.Drawing
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
@@ -30,14 +30,29 @@ Public Class FormActivation
                 Dim expiresAt As DateTime
                 Dim isExpired = (DateTime.TryParse(expiresAtStr, expiresAt) AndAlso expiresAt.Date < DateTime.Today)
 
+                Dim isTrial = LicenseCache.IsTrial()
+                Dim daysLeft = LicenseCache.GetDaysRemaining()
+
                 If (status = "active" OrElse status = "grace_period") AndAlso Not isExpired Then
-                    UpdateStatusBadge("مفعل (نشط)", isSuccess:=True)
-                    lblStatusMessage.Text = "الترخيص مفعل حالياً حتى تاريخ: " & expiresAt.ToString("yyyy-MM-dd")
-                    lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+                    If isTrial Then
+                        UpdateStatusBadge($"تجريبي ({daysLeft} يوم)", isSuccess:=True)
+                        lblStatusMessage.Text = $"🟢 الترخيص التجريبي مفعل! متبقي {daysLeft} يوماً (ينتهي في {expiresAt:yyyy-MM-dd})"
+                        lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+                    Else
+                        UpdateStatusBadge("مفعل (نشط)", isSuccess:=True)
+                        lblStatusMessage.Text = "الترخيص مفعل حالياً حتى تاريخ: " & expiresAt.ToString("yyyy-MM-dd")
+                        lblStatusMessage.ForeColor = Color.FromArgb(52, 211, 153)
+                    End If
                 ElseIf isExpired Then
-                    UpdateStatusBadge("منتهي الصلاحية", isSuccess:=False, isWarning:=True)
-                    lblStatusMessage.Text = "⚠️ انتهت صلاحية هذا الترخيص في: " & expiresAt.ToString("yyyy-MM-dd") & " - يرجى التجديد"
-                    lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+                    If isTrial Then
+                        UpdateStatusBadge("انتهت التجربة", isSuccess:=False, isWarning:=True)
+                        lblStatusMessage.Text = "⛔ انتهت الفترة التجريبية المجانية (14 يوماً). يرجى التواصل مع فريق المبيعات لتفعيل ترخيصك الدائم واستئناف العمل."
+                        lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+                    Else
+                        UpdateStatusBadge("منتهي الصلاحية", isSuccess:=False, isWarning:=True)
+                        lblStatusMessage.Text = "⚠️ انتهت صلاحية هذا الترخيص في: " & expiresAt.ToString("yyyy-MM-dd") & " - يرجى التجديد"
+                        lblStatusMessage.ForeColor = Color.FromArgb(248, 113, 113)
+                    End If
                 Else
                     UpdateStatusBadge("يلزم التفعيل", isSuccess:=False)
                 End If

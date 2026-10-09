@@ -1,4 +1,4 @@
-﻿Imports Microsoft.Win32
+Imports Microsoft.Win32
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 Imports System.IO
@@ -309,6 +309,34 @@ Public NotInheritable Class LicenseCache
         End If
 
         Return foundObject
+    End Function
+
+    Public Shared Function GetPlanType() As String
+        Dim cache = Load()
+        If cache Is Nothing Then Return "trial"
+        Return Convert.ToString(If(cache("plan"), cache("plan_type"))).ToLowerInvariant()
+    End Function
+
+    Public Shared Function IsTrial() As Boolean
+        Dim plan = GetPlanType()
+        Return plan = "trial" OrElse plan.Contains("trial")
+    End Function
+
+    Public Shared Function GetDaysRemaining() As Integer
+        Dim cache = Load()
+        If cache Is Nothing Then Return 0
+        Dim expStr = Convert.ToString(cache("expires_at"))
+        Dim expDate As DateTime
+        If DateTime.TryParse(expStr, expDate) Then
+            Return Math.Max(0, CInt(Math.Ceiling((expDate.Date - DateTime.Today).TotalDays)))
+        End If
+        Return 0
+    End Function
+
+    Public Shared Function GetCompanyName() As String
+        Dim cache = Load()
+        If cache Is Nothing Then Return ""
+        Return Convert.ToString(If(cache("company_name"), cache("shop_name")))
     End Function
 
     Public Shared Sub Delete(Optional keepSerial As Boolean = True)
