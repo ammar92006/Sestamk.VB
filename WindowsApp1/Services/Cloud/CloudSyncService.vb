@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -58,10 +58,15 @@ Namespace Services.Cloud
                 ' 2. التأكد من وجود تريجرات التتبع
                 Await EnsureTriggersAsync().ConfigureAwait(False)
 
-                ' 3. بدء المؤقت التلقائي إذا كانت المزامنة مفعلة
+                ' 3. ربط وتجهيز قاعدة بيانات المنشأة تلقائياً من الترخيص إن لم تكن مهيأة
+                If Not CloudSyncConfig.IsConfigured() Then
+                    Await CloudSyncConfig.EnsureConfigFromLicenseAsync().ConfigureAwait(False)
+                End If
+
+                ' 4. بدء المؤقت التلقائي إذا كانت المزامنة مفعلة
                 Dim config = CloudSyncConfig.Load()
                 If config IsNot Nothing AndAlso config.IsSyncEnabled Then
-                    StartBackgroundSync()
+                    StartBackgroundSync(config.SyncIntervalSeconds)
                 End If
 
                 _isInitialized = True
@@ -81,14 +86,6 @@ Namespace Services.Cloud
                 Using conn As SqlConnection = DBModule.NewConn()
                     If conn Is Nothing Then Return
                     If conn.State <> ConnectionState.Open Then Await conn.OpenAsync().ConfigureAwait(False)
-
-                    ' فحص سريع وفوري: إذا كان عمود sync_id موجوداً في جدول المنتجات، فالهيكل مهيأ مسبقاً
-                    Using cmdQuick As New SqlCommand("SELECT COL_LENGTH('Products', 'sync_id');", conn)
-                        Dim qRes = Await cmdQuick.ExecuteScalarAsync().ConfigureAwait(False)
-                        If qRes IsNot Nothing AndAlso Not DBNull.Value.Equals(qRes) Then
-                            Return ' تم تجهيز الأعمدة مسبقاً، نتخطى الفحص لتوفير الموارد
-                        End If
-                    End Using
 
                     Dim tables = SyncableTableRegistry.GetSyncableTables()
 
@@ -147,19 +144,27 @@ Namespace Services.Cloud
                     If conn Is Nothing Then Return
                     If conn.State <> ConnectionState.Open Then Await conn.OpenAsync().ConfigureAwait(False)
 
-                    ' فحص سريع وفوري: إذا كان التريجر موجوداً مسبقاً في جدول المنتجات، نتجاوز إعادة الإنشاء
-                    Using cmdQuick As New SqlCommand("SELECT OBJECT_ID('dbo.TR_Products_SyncTrack', 'TR');", conn)
-                        Dim qRes = Await cmdQuick.ExecuteScalarAsync().ConfigureAwait(False)
-                        If qRes IsNot Nothing AndAlso Not DBNull.Value.Equals(qRes) Then
-                            Return ' التريجرات منشأة ومجهزة مسبقاً، نتخطى الفحص لتوفير الموارد
-                        End If
-                    End Using
+                    ' حذف تريجرات الجداول غير المزامنة مثل الصلاحيات لمنع إغراق سجل المزامنة
+                    Try
+                        Using cmdDropPerm As New SqlCommand("IF OBJECT_ID('dbo.[TR_Permissions_SyncTrack]', 'TR') IS NOT NULL DROP TRIGGER [dbo].[TR_Permissions_SyncTrack];", conn)
+                            Await cmdDropPerm.ExecuteNonQueryAsync().ConfigureAwait(False)
+                        End Using
+                    Catch
+                    End Try
 
                     Dim tables = SyncableTableRegistry.GetSyncableTables()
 
                     For Each table In tables
                         Dim tableName = table.TableName
                         Dim triggerName = $"TR_{tableName}_SyncTrack"
+
+                        ' فحص وجود التريجر لهذا الجدول أولاً لتجنب إعادة بنائه دون حاجة
+                        Using cmdCheckTrig As New SqlCommand($"SELECT OBJECT_ID('dbo.[{triggerName}]', 'TR');", conn)
+                            Dim trExists = Await cmdCheckTrig.ExecuteScalarAsync().ConfigureAwait(False)
+                            If trExists IsNot Nothing AndAlso Not DBNull.Value.Equals(trExists) Then
+                                Continue For ' التريجر موجود بالفعل لهذا الجدول
+                            End If
+                        End Using
 
                         Dim triggerSql = $"IF OBJECT_ID('dbo.[{triggerName}]', 'TR') IS NOT NULL DROP TRIGGER [dbo].[{triggerName}];"
                         Using cmdDrop As New SqlCommand(triggerSql, conn)
@@ -300,11 +305,11 @@ Namespace Services.Cloud
         ''' <summary>
         ''' بدء المزامنة الخلفية المجدولة
         ''' </summary>
-        Public Sub StartBackgroundSync()
+        Public Sub StartBackgroundSync(Optional customIntervalSeconds As Integer = 0)
             StopBackgroundSync()
 
             Dim config = CloudSyncConfig.Load()
-            Dim intervalSeconds = If(config IsNot Nothing AndAlso config.SyncIntervalSeconds >= 5, config.SyncIntervalSeconds, 30)
+            Dim intervalSeconds = If(customIntervalSeconds >= 5, customIntervalSeconds, If(config IsNot Nothing AndAlso config.SyncIntervalSeconds >= 5, config.SyncIntervalSeconds, 30))
 
             _syncTimer = New Timer(Async Sub(state)
                                        Try

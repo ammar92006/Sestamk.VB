@@ -1,4 +1,4 @@
-﻿Imports System.IO
+Imports System.IO
 Imports System.Security.Cryptography
 Imports System.Text
 Imports Newtonsoft.Json
@@ -18,6 +18,9 @@ Namespace Services.Cloud
         Public Property SyncIntervalSeconds As Integer = 30
         Public Property IsSyncEnabled As Boolean
         Public Property LastSyncUtc As String
+        Public Property CompanyName As String
+        Public Property LicenseSerial As String
+        Public Property IsAutoManaged As Boolean = True
 
         ''' <summary>
         ''' أخذ نسخة مطابقة من الإعدادات (Clone settings)
@@ -150,6 +153,95 @@ Namespace Services.Cloud
             Save(config)
 
             Return config.DeviceId
+        End Function
+
+        Public Const DefaultPlatformToken As String = "eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2ZHl2cjhaREVmR1JxZkkwUVROYi1nIiwib3JnX2lkIjoxMDAwMjcwNzY0fQ.T7xu9pB8EjGfwxr0_oAQkeqewG1KKaegYKyU2L3VScOUBb2vKLaMXTFvPBkVP0Bx-pLm6cZmsyJ1cxeOgw4GBQ"
+        Public Const DefaultOrgSlug As String = "sestamk"
+
+        ''' <summary>
+        ''' التأكد من إعداد المزامنة وربطها تلقائياً بقاعدة بيانات الشركة السحابية بناءً على الترخيص
+        ''' </summary>
+        Public Shared Async Function EnsureConfigFromLicenseAsync() As Task(Of Boolean)
+            Try
+                Dim lic = LicenseCache.Load()
+                If lic Is Nothing Then Return False
+
+                Dim serial = Convert.ToString(lic("saved_serial"))?.Trim()
+                Dim compName = Convert.ToString(If(lic("company_name"), lic("shop_name")))?.Trim()
+                If String.IsNullOrWhiteSpace(serial) Then Return False
+
+                Dim currentConfig = Load()
+                If currentConfig Is Nothing Then
+                    currentConfig = New CloudSyncSettings()
+                    currentConfig.DeviceId = GetOrCreateDeviceId()
+                End If
+
+                ' إذا كانت الإعدادات مهيأة بالفعل ومطابقة لنفس السيريال، نتأكد فقط من حفظ اسم المنشأة
+                If IsConfigured() AndAlso String.Equals(currentConfig.LicenseSerial, serial, StringComparison.OrdinalIgnoreCase) Then
+                    If String.IsNullOrWhiteSpace(currentConfig.CompanyName) Then
+                        currentConfig.CompanyName = compName
+                        Save(currentConfig)
+                    End If
+                    Return True
+                End If
+
+                ' إذا وُجدت بيانات الرابط والتوكن مباشرة في كاش الترخيص
+                Dim licTursoUrl = Convert.ToString(lic("turso_db_url"))
+                Dim licTursoToken = Convert.ToString(lic("turso_auth_token"))
+
+                If Not String.IsNullOrWhiteSpace(licTursoUrl) AndAlso Not String.IsNullOrWhiteSpace(licTursoToken) Then
+                    currentConfig.TursoUrl = licTursoUrl.Trim()
+                    currentConfig.AuthToken = licTursoToken.Trim()
+                    currentConfig.CompanyName = compName
+                    currentConfig.LicenseSerial = serial
+                    currentConfig.IsSyncEnabled = True
+                    Save(currentConfig)
+                    Return True
+                End If
+
+                ' التجهيز التلقائي لقاعدة بيانات الشركة عبر Platform API
+                Dim cleanSerial = System.Text.RegularExpressions.Regex.Replace(serial.ToLowerInvariant(), "[^a-z0-9]", "-").Trim("-"c)
+                If cleanSerial.Length > 20 Then cleanSerial = cleanSerial.Substring(0, 20).TrimEnd("-"c)
+                Dim dbName = $"comp-{cleanSerial}"
+
+                Using platformClient As New TursoPlatformClient(DefaultPlatformToken, DefaultOrgSlug)
+                    Dim dbInfo = Await platformClient.GetOrCreateDatabaseAsync(dbName).ConfigureAwait(False)
+                    If dbInfo Is Nothing OrElse String.IsNullOrWhiteSpace(dbInfo.HttpUrl) Then
+                        Return False
+                    End If
+
+                    Dim authToken = Await platformClient.CreateAuthTokenAsync(dbName).ConfigureAwait(False)
+                    If String.IsNullOrWhiteSpace(authToken) Then
+                        Return False
+                    End If
+
+                    currentConfig.TursoUrl = dbInfo.HttpUrl
+                    currentConfig.AuthToken = authToken
+                    currentConfig.DatabaseName = dbName
+                    currentConfig.OrganizationSlug = DefaultOrgSlug
+                    currentConfig.PlatformToken = DefaultPlatformToken
+                    currentConfig.CompanyName = compName
+                    currentConfig.LicenseSerial = serial
+                    currentConfig.IsSyncEnabled = True
+                    currentConfig.IsAutoManaged = True
+                    Save(currentConfig)
+
+                    ' تجهيز الهيكل السحابي للجديد
+                    Try
+                        Using tursoClient As New TursoHttpClient(dbInfo.HttpUrl, authToken)
+                            Dim builder As New TursoSchemaBuilder()
+                            Await builder.EnsureRemoteSchemaAsync(tursoClient).ConfigureAwait(False)
+                        End Using
+                    Catch exSchema As Exception
+                        Logger.LogError("CloudSyncConfig.EnsureSchema", exSchema)
+                    End Try
+
+                    Return True
+                End Using
+            Catch ex As Exception
+                Logger.LogError("CloudSyncConfig.EnsureConfigFromLicenseAsync", ex)
+                Return False
+            End Try
         End Function
     End Class
 End Namespace

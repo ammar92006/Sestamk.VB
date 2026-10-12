@@ -35,11 +35,28 @@ Namespace Services.Cloud
             Try
                 ' 1. التحقق المبدئي من واجهة الشبكة (Initial check via NetworkInterface)
                 If NetworkInterface.GetIsNetworkAvailable() Then
-                    ' 2. إرسال طلب HTTP للتأكد من الاتصال الفعلي (Verify actual connection via HTTP HEAD)
-                    Dim request As New HttpRequestMessage(HttpMethod.Head, "https://api.turso.tech")
-                    Using response = Await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(False)
-                        result = response.IsSuccessStatusCode
-                    End Using
+                    ' 2. إرسال طلب HTTP للتأكد من الاتصال الفعلي (Verify actual connection)
+                    Dim firstCheckOk As Boolean = False
+                    Try
+                        Using response = Await _httpClient.GetAsync("https://www.google.com/generate_204").ConfigureAwait(False)
+                            firstCheckOk = response.IsSuccessStatusCode
+                        End Using
+                    Catch
+                        firstCheckOk = False
+                    End Try
+
+                    If firstCheckOk Then
+                        result = True
+                    Else
+                        ' محاولة احتياطية مع خادم آخر خارج Catch
+                        Try
+                            Using response2 = Await _httpClient.GetAsync("https://1.1.1.1").ConfigureAwait(False)
+                                result = response2.IsSuccessStatusCode
+                            End Using
+                        Catch
+                            result = False
+                        End Try
+                    End If
                 End If
             Catch ex As Exception
                 ' حدث خطأ أثناء التحقق، نعتبر الجهاز غير متصل (Error checking network, consider offline)

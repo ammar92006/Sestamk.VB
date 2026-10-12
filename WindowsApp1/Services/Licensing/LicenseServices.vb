@@ -162,6 +162,26 @@ Public NotInheritable Class LicenseCache
             license("last_successful_sync_utc") = DateTime.UtcNow.ToString("O", System.Globalization.CultureInfo.InvariantCulture)
             license("last_successful_sync") = DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)
 
+            ' ربط إعدادات السحابة الخاصة بالشركة تلقائياً من حزمة التفعيل إن وُجدت
+            Try
+                Dim cloudUrl = Convert.ToString(license("turso_db_url"))
+                Dim cloudToken = Convert.ToString(license("turso_auth_token"))
+                Dim cloudDb = Convert.ToString(license("turso_db_name"))
+                If Not String.IsNullOrWhiteSpace(cloudUrl) AndAlso Not String.IsNullOrWhiteSpace(cloudToken) Then
+                    Dim syncConfig = Services.Cloud.CloudSyncConfig.Load()
+                    If syncConfig Is Nothing Then syncConfig = New Services.Cloud.CloudSyncSettings()
+                    syncConfig.TursoUrl = cloudUrl.Trim()
+                    syncConfig.AuthToken = cloudToken.Trim()
+                    syncConfig.DatabaseName = If(cloudDb, "").Trim()
+                    syncConfig.CompanyName = Convert.ToString(If(license("company_name"), license("shop_name")))
+                    syncConfig.LicenseSerial = Convert.ToString(license("saved_serial"))
+                    syncConfig.IsSyncEnabled = True
+                    Services.Cloud.CloudSyncConfig.Save(syncConfig)
+                End If
+            Catch exCloud As Exception
+                Logger.LogError("LicenseCache.SyncCloudConfig", exCloud)
+            End Try
+
             Dim jsonBytes = Encoding.UTF8.GetBytes(license.ToString(Formatting.None))
             Dim encrypted = ProtectedData.Protect(jsonBytes, Nothing, DataProtectionScope.LocalMachine)
 

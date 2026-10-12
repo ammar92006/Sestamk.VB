@@ -44,12 +44,14 @@ Partial Class UCCloudSyncSettings
         
         Me.cardConnection = New Guna.UI2.WinForms.Guna2Panel()
         Me.lblCardTitleConnection = New System.Windows.Forms.Label()
+        Me.lblCompanyInfo = New System.Windows.Forms.Label()
         Me.lblTursoUrlLabel = New System.Windows.Forms.Label()
         Me.txtTursoUrl = New Guna.UI2.WinForms.Guna2TextBox()
         Me.lblAuthTokenLabel = New System.Windows.Forms.Label()
         Me.txtAuthToken = New Guna.UI2.WinForms.Guna2TextBox()
         Me.btnToggleTokenVisibility = New Guna.UI2.WinForms.Guna2Button()
         Me.btnTestConnection = New Guna.UI2.WinForms.Guna2Button()
+        Me.btnSyncFromLicense = New Guna.UI2.WinForms.Guna2Button()
         Me.lblConnectionResult = New System.Windows.Forms.Label()
         
         Me.cardSyncConfig = New Guna.UI2.WinForms.Guna2Panel()
@@ -261,15 +263,15 @@ Partial Class UCCloudSyncSettings
         Me.btnSyncNow.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnSyncNow.DisabledState.FillColor = System.Drawing.Color.FromArgb(169, 169, 169)
         Me.btnSyncNow.DisabledState.ForeColor = System.Drawing.Color.FromArgb(141, 141, 141)
-        Me.btnSyncNow.FillColor = System.Drawing.Color.FromArgb(56, 142, 60)
+        Me.btnSyncNow.FillColor = System.Drawing.Color.FromArgb(16, 185, 129)
         Me.btnSyncNow.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnSyncNow.ForeColor = System.Drawing.Color.White
-        Me.btnSyncNow.Location = New System.Drawing.Point(740, 115)
+        Me.btnSyncNow.HoverState.FillColor = System.Drawing.Color.FromArgb(5, 150, 105)
+        Me.btnSyncNow.Location = New System.Drawing.Point(710, 115)
         Me.btnSyncNow.Name = "btnSyncNow"
-        Me.btnSyncNow.Size = New System.Drawing.Size(180, 42)
+        Me.btnSyncNow.Size = New System.Drawing.Size(210, 44)
         Me.btnSyncNow.TabIndex = 2
-        Me.btnSyncNow.Text = "🔄 مزامنة الآن"
-        
+        Me.btnSyncNow.Text = "🔄 مزامنة السحابة الآن"
         '
         'btnRefreshStatus
         '
@@ -278,14 +280,15 @@ Partial Class UCCloudSyncSettings
         Me.btnRefreshStatus.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnRefreshStatus.DisabledState.FillColor = System.Drawing.Color.FromArgb(169, 169, 169)
         Me.btnRefreshStatus.DisabledState.ForeColor = System.Drawing.Color.FromArgb(141, 141, 141)
-        Me.btnRefreshStatus.FillColor = System.Drawing.Color.FromArgb(66, 66, 90)
+        Me.btnRefreshStatus.FillColor = System.Drawing.Color.FromArgb(51, 65, 85)
         Me.btnRefreshStatus.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnRefreshStatus.ForeColor = System.Drawing.Color.White
-        Me.btnRefreshStatus.Location = New System.Drawing.Point(600, 115)
+        Me.btnRefreshStatus.HoverState.FillColor = System.Drawing.Color.FromArgb(71, 85, 105)
+        Me.btnRefreshStatus.Location = New System.Drawing.Point(555, 115)
         Me.btnRefreshStatus.Name = "btnRefreshStatus"
-        Me.btnRefreshStatus.Size = New System.Drawing.Size(120, 42)
+        Me.btnRefreshStatus.Size = New System.Drawing.Size(145, 44)
         Me.btnRefreshStatus.TabIndex = 3
-        Me.btnRefreshStatus.Text = "تحديث"
+        Me.btnRefreshStatus.Text = "↻ تحديث الحالة"
         
         '
         'cardConnection
@@ -294,6 +297,8 @@ Partial Class UCCloudSyncSettings
         Me.cardConnection.BorderColor = System.Drawing.Color.FromArgb(45, 48, 58)
         Me.cardConnection.BorderRadius = 12
         Me.cardConnection.BorderThickness = 1
+        Me.cardConnection.Controls.Add(Me.lblCompanyInfo)
+        Me.cardConnection.Controls.Add(Me.btnSyncFromLicense)
         Me.cardConnection.Controls.Add(Me.lblConnectionResult)
         Me.cardConnection.Controls.Add(Me.btnTestConnection)
         Me.cardConnection.Controls.Add(Me.btnToggleTokenVisibility)
@@ -308,7 +313,7 @@ Partial Class UCCloudSyncSettings
         Me.cardConnection.Margin = New System.Windows.Forms.Padding(0, 0, 0, 15)
         Me.cardConnection.Name = "cardConnection"
         Me.cardConnection.Padding = New System.Windows.Forms.Padding(20, 15, 20, 15)
-        Me.cardConnection.Size = New System.Drawing.Size(940, 250)
+        Me.cardConnection.Size = New System.Drawing.Size(940, 150)
         Me.cardConnection.TabIndex = 3
         
         '
@@ -317,12 +322,12 @@ Partial Class UCCloudSyncSettings
         Me.lblCardTitleConnection.AutoSize = True
         Me.lblCardTitleConnection.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.lblCardTitleConnection.ForeColor = System.Drawing.Color.White
-        Me.lblCardTitleConnection.Location = New System.Drawing.Point(700, 15)
+        Me.lblCardTitleConnection.Location = New System.Drawing.Point(460, 15)
         Me.lblCardTitleConnection.Name = "lblCardTitleConnection"
         Me.lblCardTitleConnection.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblCardTitleConnection.Size = New System.Drawing.Size(220, 25)
+        Me.lblCardTitleConnection.Size = New System.Drawing.Size(460, 25)
         Me.lblCardTitleConnection.TabIndex = 0
-        Me.lblCardTitleConnection.Text = "إعدادات الاتصال بالسحابة"
+        Me.lblCardTitleConnection.Text = "🏢 قاعدة البيانات السحابية للمنشأة (Online Database)"
         
         '
         'lblTursoUrlLabel
@@ -336,6 +341,7 @@ Partial Class UCCloudSyncSettings
         Me.lblTursoUrlLabel.Size = New System.Drawing.Size(250, 21)
         Me.lblTursoUrlLabel.TabIndex = 1
         Me.lblTursoUrlLabel.Text = "رابط قاعدة البيانات (Database URL):"
+        Me.lblTursoUrlLabel.Visible = False
         
         '
         'txtTursoUrl
@@ -358,6 +364,7 @@ Partial Class UCCloudSyncSettings
         Me.txtTursoUrl.SelectedText = ""
         Me.txtTursoUrl.Size = New System.Drawing.Size(500, 42)
         Me.txtTursoUrl.TabIndex = 2
+        Me.txtTursoUrl.Visible = False
         
         '
         'lblAuthTokenLabel
@@ -394,6 +401,7 @@ Partial Class UCCloudSyncSettings
         Me.txtAuthToken.Size = New System.Drawing.Size(450, 42)
         Me.txtAuthToken.TabIndex = 4
         Me.txtAuthToken.UseSystemPasswordChar = True
+        Me.txtAuthToken.Visible = False
         
         '
         'btnToggleTokenVisibility
@@ -411,6 +419,7 @@ Partial Class UCCloudSyncSettings
         Me.btnToggleTokenVisibility.Size = New System.Drawing.Size(42, 42)
         Me.btnToggleTokenVisibility.TabIndex = 5
         Me.btnToggleTokenVisibility.Text = "👁"
+        Me.btnToggleTokenVisibility.Visible = False
         
         '
         'btnTestConnection
@@ -423,19 +432,43 @@ Partial Class UCCloudSyncSettings
         Me.btnTestConnection.FillColor = System.Drawing.Color.FromArgb(33, 150, 243)
         Me.btnTestConnection.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnTestConnection.ForeColor = System.Drawing.Color.White
-        Me.btnTestConnection.Location = New System.Drawing.Point(740, 185)
+        Me.btnTestConnection.Location = New System.Drawing.Point(20, 50)
         Me.btnTestConnection.Name = "btnTestConnection"
-        Me.btnTestConnection.Size = New System.Drawing.Size(180, 42)
+        Me.btnTestConnection.Size = New System.Drawing.Size(160, 42)
         Me.btnTestConnection.TabIndex = 6
-        Me.btnTestConnection.Text = "🔗 اختبار الاتصال"
-        
+        Me.btnTestConnection.Text = "⚡ فحص الاتصال"
+        '
+        'lblCompanyInfo
+        '
+        Me.lblCompanyInfo.AutoSize = True
+        Me.lblCompanyInfo.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.lblCompanyInfo.ForeColor = System.Drawing.Color.FromArgb(56, 189, 248)
+        Me.lblCompanyInfo.Location = New System.Drawing.Point(360, 48)
+        Me.lblCompanyInfo.Name = "lblCompanyInfo"
+        Me.lblCompanyInfo.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lblCompanyInfo.Size = New System.Drawing.Size(550, 21)
+        Me.lblCompanyInfo.TabIndex = 8
+        Me.lblCompanyInfo.Text = "المنشأة: جاري التحقق من الترخيص..."
+        '
+        'btnSyncFromLicense
+        '
+        Me.btnSyncFromLicense.BorderRadius = 10
+        Me.btnSyncFromLicense.FillColor = System.Drawing.Color.FromArgb(13, 148, 136)
+        Me.btnSyncFromLicense.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.btnSyncFromLicense.ForeColor = System.Drawing.Color.White
+        Me.btnSyncFromLicense.Location = New System.Drawing.Point(190, 50)
+        Me.btnSyncFromLicense.Name = "btnSyncFromLicense"
+        Me.btnSyncFromLicense.Size = New System.Drawing.Size(160, 42)
+        Me.btnSyncFromLicense.TabIndex = 9
+        Me.btnSyncFromLicense.Text = "🔄 ربط بالترخيص"
+        Me.btnSyncFromLicense.Visible = True
         '
         'lblConnectionResult
         '
         Me.lblConnectionResult.AutoSize = True
-        Me.lblConnectionResult.Font = New System.Drawing.Font("Segoe UI", 11.0!)
-        Me.lblConnectionResult.ForeColor = System.Drawing.Color.FromArgb(160, 165, 180)
-        Me.lblConnectionResult.Location = New System.Drawing.Point(400, 195)
+        Me.lblConnectionResult.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
+        Me.lblConnectionResult.ForeColor = System.Drawing.Color.FromArgb(74, 222, 128)
+        Me.lblConnectionResult.Location = New System.Drawing.Point(360, 85)
         Me.lblConnectionResult.Name = "lblConnectionResult"
         Me.lblConnectionResult.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.lblConnectionResult.Size = New System.Drawing.Size(0, 20)
@@ -469,21 +502,21 @@ Partial Class UCCloudSyncSettings
         Me.lblCardTitleConfig.AutoSize = True
         Me.lblCardTitleConfig.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.lblCardTitleConfig.ForeColor = System.Drawing.Color.White
-        Me.lblCardTitleConfig.Location = New System.Drawing.Point(770, 15)
+        Me.lblCardTitleConfig.Location = New System.Drawing.Point(550, 15)
         Me.lblCardTitleConfig.Name = "lblCardTitleConfig"
         Me.lblCardTitleConfig.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblCardTitleConfig.Size = New System.Drawing.Size(150, 25)
+        Me.lblCardTitleConfig.Size = New System.Drawing.Size(370, 25)
         Me.lblCardTitleConfig.TabIndex = 0
-        Me.lblCardTitleConfig.Text = "إعدادات المزامنة"
+        Me.lblCardTitleConfig.Text = "⚙️ خيارات وإعدادات المزامنة التلقائية"
         
         '
         'toggleSyncEnabled
         '
-        Me.toggleSyncEnabled.CheckedState.BorderColor = System.Drawing.Color.FromArgb(94, 148, 255)
-        Me.toggleSyncEnabled.CheckedState.FillColor = System.Drawing.Color.FromArgb(94, 148, 255)
+        Me.toggleSyncEnabled.CheckedState.BorderColor = System.Drawing.Color.FromArgb(16, 185, 129)
+        Me.toggleSyncEnabled.CheckedState.FillColor = System.Drawing.Color.FromArgb(16, 185, 129)
         Me.toggleSyncEnabled.CheckedState.InnerBorderColor = System.Drawing.Color.White
         Me.toggleSyncEnabled.CheckedState.InnerColor = System.Drawing.Color.White
-        Me.toggleSyncEnabled.Location = New System.Drawing.Point(860, 60)
+        Me.toggleSyncEnabled.Location = New System.Drawing.Point(860, 50)
         Me.toggleSyncEnabled.Name = "toggleSyncEnabled"
         Me.toggleSyncEnabled.Size = New System.Drawing.Size(50, 24)
         Me.toggleSyncEnabled.TabIndex = 1
@@ -496,27 +529,27 @@ Partial Class UCCloudSyncSettings
         'lblToggleSyncEnabled
         '
         Me.lblToggleSyncEnabled.AutoSize = True
-        Me.lblToggleSyncEnabled.Font = New System.Drawing.Font("Segoe UI", 12.0!)
+        Me.lblToggleSyncEnabled.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold)
         Me.lblToggleSyncEnabled.ForeColor = System.Drawing.Color.White
-        Me.lblToggleSyncEnabled.Location = New System.Drawing.Point(680, 60)
+        Me.lblToggleSyncEnabled.Location = New System.Drawing.Point(580, 50)
         Me.lblToggleSyncEnabled.Name = "lblToggleSyncEnabled"
         Me.lblToggleSyncEnabled.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblToggleSyncEnabled.Size = New System.Drawing.Size(160, 21)
+        Me.lblToggleSyncEnabled.Size = New System.Drawing.Size(260, 21)
         Me.lblToggleSyncEnabled.TabIndex = 2
-        Me.lblToggleSyncEnabled.Text = "تفعيل المزامنة التلقائية"
+        Me.lblToggleSyncEnabled.Text = "المزامنة التلقائية بالخلفية دون تعطيل الكاشير"
         
         '
         'lblSyncIntervalLabel
         '
         Me.lblSyncIntervalLabel.AutoSize = True
-        Me.lblSyncIntervalLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!)
-        Me.lblSyncIntervalLabel.ForeColor = System.Drawing.Color.FromArgb(160, 165, 180)
-        Me.lblSyncIntervalLabel.Location = New System.Drawing.Point(680, 110)
+        Me.lblSyncIntervalLabel.Font = New System.Drawing.Font("Segoe UI", 11.5!, System.Drawing.FontStyle.Bold)
+        Me.lblSyncIntervalLabel.ForeColor = System.Drawing.Color.FromArgb(203, 213, 225)
+        Me.lblSyncIntervalLabel.Location = New System.Drawing.Point(680, 95)
         Me.lblSyncIntervalLabel.Name = "lblSyncIntervalLabel"
         Me.lblSyncIntervalLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.lblSyncIntervalLabel.Size = New System.Drawing.Size(180, 21)
         Me.lblSyncIntervalLabel.TabIndex = 3
-        Me.lblSyncIntervalLabel.Text = "فاصل المزامنة (بالثانية):"
+        Me.lblSyncIntervalLabel.Text = "الفاصل الزمني للمزامنة:"
         
         '
         'txtSyncInterval
@@ -529,9 +562,9 @@ Partial Class UCCloudSyncSettings
         Me.txtSyncInterval.DisabledState.ForeColor = System.Drawing.Color.FromArgb(138, 138, 138)
         Me.txtSyncInterval.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(138, 138, 138)
         Me.txtSyncInterval.FocusedState.BorderColor = System.Drawing.Color.FromArgb(94, 148, 255)
-        Me.txtSyncInterval.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.txtSyncInterval.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.txtSyncInterval.HoverState.BorderColor = System.Drawing.Color.FromArgb(94, 148, 255)
-        Me.txtSyncInterval.Location = New System.Drawing.Point(550, 102)
+        Me.txtSyncInterval.Location = New System.Drawing.Point(580, 88)
         Me.txtSyncInterval.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.txtSyncInterval.Name = "txtSyncInterval"
         Me.txtSyncInterval.PasswordChar = Global.Microsoft.VisualBasic.ChrW(0)
@@ -560,6 +593,7 @@ Partial Class UCCloudSyncSettings
         Me.cardPlatform.BorderColor = System.Drawing.Color.FromArgb(45, 48, 58)
         Me.cardPlatform.BorderRadius = 12
         Me.cardPlatform.BorderThickness = 1
+        Me.cardPlatform.Visible = False
         Me.cardPlatform.Controls.Add(Me.txtDbName)
         Me.cardPlatform.Controls.Add(Me.lblDbNameLabel)
         Me.cardPlatform.Controls.Add(Me.txtOrgSlug)
@@ -725,7 +759,7 @@ Partial Class UCCloudSyncSettings
         Me.cardSyncLog.Margin = New System.Windows.Forms.Padding(0, 0, 0, 15)
         Me.cardSyncLog.Name = "cardSyncLog"
         Me.cardSyncLog.Padding = New System.Windows.Forms.Padding(20, 50, 20, 20)
-        Me.cardSyncLog.Size = New System.Drawing.Size(940, 250)
+        Me.cardSyncLog.Size = New System.Drawing.Size(940, 360)
         Me.cardSyncLog.TabIndex = 6
         
         '
@@ -734,12 +768,12 @@ Partial Class UCCloudSyncSettings
         Me.lblCardTitleLog.AutoSize = True
         Me.lblCardTitleLog.Font = New System.Drawing.Font("Segoe UI", 14.0!, System.Drawing.FontStyle.Bold)
         Me.lblCardTitleLog.ForeColor = System.Drawing.Color.White
-        Me.lblCardTitleLog.Location = New System.Drawing.Point(800, 15)
+        Me.lblCardTitleLog.Location = New System.Drawing.Point(440, 15)
         Me.lblCardTitleLog.Name = "lblCardTitleLog"
         Me.lblCardTitleLog.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lblCardTitleLog.Size = New System.Drawing.Size(120, 25)
+        Me.lblCardTitleLog.Size = New System.Drawing.Size(480, 25)
         Me.lblCardTitleLog.TabIndex = 0
-        Me.lblCardTitleLog.Text = "سجل المزامنة"
+        Me.lblCardTitleLog.Text = "📋 سجل حركات المزامنة الحية (Live Sync Log)"
         
         '
         'btnClearLog
@@ -749,14 +783,15 @@ Partial Class UCCloudSyncSettings
         Me.btnClearLog.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray
         Me.btnClearLog.DisabledState.FillColor = System.Drawing.Color.FromArgb(169, 169, 169)
         Me.btnClearLog.DisabledState.ForeColor = System.Drawing.Color.FromArgb(141, 141, 141)
-        Me.btnClearLog.FillColor = System.Drawing.Color.FromArgb(66, 66, 90)
-        Me.btnClearLog.Font = New System.Drawing.Font("Segoe UI", 11.0!)
+        Me.btnClearLog.FillColor = System.Drawing.Color.FromArgb(239, 68, 68)
+        Me.btnClearLog.Font = New System.Drawing.Font("Segoe UI", 11.0!, System.Drawing.FontStyle.Bold)
         Me.btnClearLog.ForeColor = System.Drawing.Color.White
-        Me.btnClearLog.Location = New System.Drawing.Point(20, 10)
+        Me.btnClearLog.HoverState.FillColor = System.Drawing.Color.FromArgb(220, 38, 38)
+        Me.btnClearLog.Location = New System.Drawing.Point(20, 12)
         Me.btnClearLog.Name = "btnClearLog"
         Me.btnClearLog.Size = New System.Drawing.Size(140, 38)
         Me.btnClearLog.TabIndex = 1
-        Me.btnClearLog.Text = "مسح السجل"
+        Me.btnClearLog.Text = "🗑️ مسح السجل"
         
         '
         'dgvSyncLog
@@ -764,53 +799,53 @@ Partial Class UCCloudSyncSettings
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(33, 35, 43)
         Me.dgvSyncLog.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvSyncLog.BackgroundColor = System.Drawing.Color.FromArgb(24, 26, 33)
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(45, 48, 58)
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.5!)
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(30, 41, 59)
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         DataGridViewCellStyle2.ForeColor = System.Drawing.Color.White
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(30, 41, 59)
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True
         Me.dgvSyncLog.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvSyncLog.ColumnHeadersHeight = 30
+        Me.dgvSyncLog.ColumnHeadersHeight = 36
         Me.dgvSyncLog.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(24, 26, 33)
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 10.5!)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(235, 235, 240)
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(55, 58, 68)
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(15, 23, 42)
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(226, 232, 240)
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(51, 65, 85)
         DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White
         DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False
         Me.dgvSyncLog.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvSyncLog.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgvSyncLog.GridColor = System.Drawing.Color.FromArgb(45, 48, 58)
+        Me.dgvSyncLog.GridColor = System.Drawing.Color.FromArgb(51, 65, 85)
         Me.dgvSyncLog.Location = New System.Drawing.Point(20, 50)
         Me.dgvSyncLog.Name = "dgvSyncLog"
         Me.dgvSyncLog.ReadOnly = True
         Me.dgvSyncLog.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.dgvSyncLog.RowHeadersVisible = False
-        Me.dgvSyncLog.Size = New System.Drawing.Size(900, 180)
+        Me.dgvSyncLog.Size = New System.Drawing.Size(900, 290)
         Me.dgvSyncLog.TabIndex = 2
-        Me.dgvSyncLog.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.FromArgb(33, 35, 43)
+        Me.dgvSyncLog.ThemeStyle.AlternatingRowsStyle.BackColor = System.Drawing.Color.FromArgb(30, 41, 59)
         Me.dgvSyncLog.ThemeStyle.AlternatingRowsStyle.Font = Nothing
         Me.dgvSyncLog.ThemeStyle.AlternatingRowsStyle.ForeColor = System.Drawing.Color.Empty
         Me.dgvSyncLog.ThemeStyle.AlternatingRowsStyle.SelectionBackColor = System.Drawing.Color.Empty
         Me.dgvSyncLog.ThemeStyle.AlternatingRowsStyle.SelectionForeColor = System.Drawing.Color.Empty
-        Me.dgvSyncLog.ThemeStyle.BackColor = System.Drawing.Color.FromArgb(24, 26, 33)
-        Me.dgvSyncLog.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(45, 48, 58)
-        Me.dgvSyncLog.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(45, 48, 58)
+        Me.dgvSyncLog.ThemeStyle.BackColor = System.Drawing.Color.FromArgb(15, 23, 42)
+        Me.dgvSyncLog.ThemeStyle.GridColor = System.Drawing.Color.FromArgb(51, 65, 85)
+        Me.dgvSyncLog.ThemeStyle.HeaderStyle.BackColor = System.Drawing.Color.FromArgb(30, 41, 59)
         Me.dgvSyncLog.ThemeStyle.HeaderStyle.BorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None
-        Me.dgvSyncLog.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.5!)
+        Me.dgvSyncLog.ThemeStyle.HeaderStyle.Font = New System.Drawing.Font("Segoe UI", 10.5!, System.Drawing.FontStyle.Bold)
         Me.dgvSyncLog.ThemeStyle.HeaderStyle.ForeColor = System.Drawing.Color.White
         Me.dgvSyncLog.ThemeStyle.HeaderStyle.HeaightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-        Me.dgvSyncLog.ThemeStyle.HeaderStyle.Height = 30
+        Me.dgvSyncLog.ThemeStyle.HeaderStyle.Height = 36
         Me.dgvSyncLog.ThemeStyle.ReadOnly = True
-        Me.dgvSyncLog.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.FromArgb(24, 26, 33)
+        Me.dgvSyncLog.ThemeStyle.RowsStyle.BackColor = System.Drawing.Color.FromArgb(15, 23, 42)
         Me.dgvSyncLog.ThemeStyle.RowsStyle.BorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-        Me.dgvSyncLog.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 10.5!)
-        Me.dgvSyncLog.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(235, 235, 240)
-        Me.dgvSyncLog.ThemeStyle.RowsStyle.Height = 22
-        Me.dgvSyncLog.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(55, 58, 68)
+        Me.dgvSyncLog.ThemeStyle.RowsStyle.Font = New System.Drawing.Font("Segoe UI", 10.0!)
+        Me.dgvSyncLog.ThemeStyle.RowsStyle.ForeColor = System.Drawing.Color.FromArgb(226, 232, 240)
+        Me.dgvSyncLog.ThemeStyle.RowsStyle.Height = 32
+        Me.dgvSyncLog.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(51, 65, 85)
         Me.dgvSyncLog.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.White
         
         '
@@ -941,6 +976,8 @@ Partial Class UCCloudSyncSettings
     Friend WithEvents txtAuthToken As Guna.UI2.WinForms.Guna2TextBox
     Friend WithEvents btnToggleTokenVisibility As Guna.UI2.WinForms.Guna2Button
     Friend WithEvents btnTestConnection As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents btnSyncFromLicense As Guna.UI2.WinForms.Guna2Button
+    Friend WithEvents lblCompanyInfo As System.Windows.Forms.Label
     Friend WithEvents lblConnectionResult As System.Windows.Forms.Label
     
     Friend WithEvents cardSyncConfig As Guna.UI2.WinForms.Guna2Panel

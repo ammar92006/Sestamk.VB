@@ -78,10 +78,13 @@ Namespace Services.Cloud
             Dim dbObj = jsonObj("database")
             
             If dbObj IsNot Nothing Then
+                Dim n = If(dbObj("Name")?.ToString(), dbObj("name")?.ToString())
+                Dim id = If(dbObj("DbId")?.ToString(), dbObj("database_id")?.ToString())
+                Dim host = If(dbObj("Hostname")?.ToString(), dbObj("hostname")?.ToString())
                 Return New TursoDbInfo() With {
-                    .Name = dbObj("name")?.ToString(),
-                    .DbId = dbObj("database_id")?.ToString(),
-                    .Hostname = dbObj("hostname")?.ToString()
+                    .Name = n,
+                    .DbId = id,
+                    .Hostname = host
                 }
             End If
             
@@ -128,10 +131,13 @@ Namespace Services.Cloud
             
             If dbs IsNot Nothing AndAlso dbs.Type = JTokenType.Array Then
                 For Each dbObj In dbs
+                    Dim n = If(dbObj("Name")?.ToString(), dbObj("name")?.ToString())
+                    Dim id = If(dbObj("DbId")?.ToString(), dbObj("database_id")?.ToString())
+                    Dim host = If(dbObj("Hostname")?.ToString(), dbObj("hostname")?.ToString())
                     resultList.Add(New TursoDbInfo() With {
-                        .Name = dbObj("name")?.ToString(),
-                        .DbId = dbObj("database_id")?.ToString(),
-                        .Hostname = dbObj("hostname")?.ToString()
+                        .Name = n,
+                        .DbId = id,
+                        .Hostname = host
                     })
                 Next
             End If
@@ -147,6 +153,10 @@ Namespace Services.Cloud
             Dim url = $"{_baseUrl}/organizations/{_organizationSlug}/databases/{dbName}"
             
             Dim response = Await _httpClient.GetAsync(url).ConfigureAwait(False)
+            If response.StatusCode = System.Net.HttpStatusCode.NotFound Then
+                Return Nothing
+            End If
+
             Dim responseString = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
             
             If Not response.IsSuccessStatusCode Then
@@ -157,14 +167,31 @@ Namespace Services.Cloud
             Dim dbObj = jsonObj("database")
             
             If dbObj IsNot Nothing Then
+                Dim n = If(dbObj("Name")?.ToString(), dbObj("name")?.ToString())
+                Dim id = If(dbObj("DbId")?.ToString(), dbObj("database_id")?.ToString())
+                Dim host = If(dbObj("Hostname")?.ToString(), dbObj("hostname")?.ToString())
                 Return New TursoDbInfo() With {
-                    .Name = dbObj("name")?.ToString(),
-                    .DbId = dbObj("database_id")?.ToString(),
-                    .Hostname = dbObj("hostname")?.ToString()
+                    .Name = n,
+                    .DbId = id,
+                    .Hostname = host
                 }
             End If
             
             Return Nothing
+        End Function
+
+        ''' <summary>
+        ''' Gets existing database or creates a new one.
+        ''' الحصول على قاعدة البيانات أو إنشاؤها إن لم تكن موجودة.
+        ''' </summary>
+        Public Async Function GetOrCreateDatabaseAsync(dbName As String, Optional group As String = "default") As Task(Of TursoDbInfo)
+            Try
+                Dim existing = Await GetDatabaseInfoAsync(dbName).ConfigureAwait(False)
+                If existing IsNot Nothing Then Return existing
+            Catch
+            End Try
+
+            Return Await CreateDatabaseAsync(dbName, group).ConfigureAwait(False)
         End Function
 
         ''' <summary>

@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Data.SqlClient
@@ -43,7 +43,8 @@ Namespace Services.Cloud
                         Logger.LogError("SyncPullHandler.vb:42", __logEx)
                     End Try
 
-                    For tableIdx = 0 To tables.Count - 1
+                    Try
+                        For tableIdx = 0 To tables.Count - 1
                         Dim table = tables(tableIdx)
 
                         ' الحصول على تاريخ آخر سحب للجدول
@@ -204,14 +205,17 @@ Namespace Services.Cloud
                             .Message = $"جاري سحب التغييرات: {table.DisplayNameAr} ({pulledForTable} سجل)"
                         })
                     Next
-
-                    ' إعادة تعيين CONTEXT_INFO
-                    Try
-                        Using cmdResetContext As New SqlCommand("SET CONTEXT_INFO 0x0;", conn)
-                            Await cmdResetContext.ExecuteNonQueryAsync().ConfigureAwait(False)
-                        End Using
-                    Catch __logEx As Exception
-                        Logger.LogError("SyncPullHandler.vb:213", __logEx)
+                    Finally
+                        ' إعادة تعيين CONTEXT_INFO دائماً في Finally لضمان عدم تلوث مجمع الاتصالات
+                        Try
+                            If conn IsNot Nothing AndAlso conn.State = ConnectionState.Open Then
+                                Using cmdResetContext As New SqlCommand("SET CONTEXT_INFO 0x0;", conn)
+                                    cmdResetContext.ExecuteNonQuery()
+                                End Using
+                            End If
+                        Catch __logEx As Exception
+                            Logger.LogError("SyncPullHandler: Reset CONTEXT_INFO error", __logEx)
+                        End Try
                     End Try
 
                 End Using

@@ -1,4 +1,4 @@
-﻿Imports System.Collections.Generic
+Imports System.Collections.Generic
 Imports System.Linq
 
 Namespace Services.Cloud
@@ -45,7 +45,7 @@ Namespace Services.Cloud
             _tables.Add(New SyncableTable With {.TableName = "Departments", .DisplayNameAr = "الأقسام", .PrimaryKeyColumn = "DepartmentID", .Priority = 2, .DependsOn = {"Branches"}})
             _tables.Add(New SyncableTable With {.TableName = "Stores", .DisplayNameAr = "المستودعات", .PrimaryKeyColumn = "StoreID", .Priority = 2, .DependsOn = {"Branches"}})
             _tables.Add(New SyncableTable With {.TableName = "Users", .DisplayNameAr = "المستخدمين", .PrimaryKeyColumn = "UserID", .Priority = 2, .DependsOn = {"Roles"}})
-            _tables.Add(New SyncableTable With {.TableName = "Permissions", .DisplayNameAr = "الصلاحيات", .PrimaryKeyColumn = "PermissionID", .Priority = 2, .DependsOn = {"Roles"}})
+            _tables.Add(New SyncableTable With {.TableName = "Users_TBL", .DisplayNameAr = "حسابات المستخدمين", .PrimaryKeyColumn = "User_ID", .Priority = 2, .DependsOn = {"Roles"}})
             _tables.Add(New SyncableTable With {.TableName = "Employees", .DisplayNameAr = "الموظفين", .PrimaryKeyColumn = "EmployeeID", .Priority = 2, .DependsOn = {"Branches", "JobTitles", "SalarySystems"}})
             _tables.Add(New SyncableTable With {.TableName = "Customers", .DisplayNameAr = "العملاء", .PrimaryKeyColumn = "CustomerID", .Priority = 2})
             _tables.Add(New SyncableTable With {.TableName = "Suppliers", .DisplayNameAr = "الموردين", .PrimaryKeyColumn = "SupplierID", .Priority = 2})
@@ -96,8 +96,7 @@ Namespace Services.Cloud
 
             ' تعيين القيم الافتراضية
             For Each tbl In _tables
-                If tbl.Direction = 0 Then tbl.Direction = 1 ' TwoWay
-                ' If ConflictStrategy is 0, it means ServerWins
+                tbl.Direction = SyncDirection.Bidirectional
             Next
 
             Return _tables

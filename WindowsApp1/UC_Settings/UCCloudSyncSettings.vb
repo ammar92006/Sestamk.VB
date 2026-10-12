@@ -1,4 +1,4 @@
-﻿Imports System.Data
+Imports System.Data
 Imports System.Data.SqlClient
 Imports System.Threading.Tasks
 Imports System.Windows.Forms
@@ -13,8 +13,40 @@ Namespace UC_Settings
 
         Public Event CloseRequested As EventHandler Implements ICloseRequest.CloseRequested
 
-        Private Sub UCCloudSyncSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Private Async Sub UCCloudSyncSettings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
             Try
+                ' إخفاء بطاقة تفاصيل المنصة التقنية عن المستخدم العادي
+                cardPlatform.Visible = False
+                txtTursoUrl.ReadOnly = True
+                txtAuthToken.ReadOnly = True
+
+                ' جلب معلومات المنشأة من كاش الترخيص
+                Dim lic = LicenseCache.Load()
+                If lic IsNot Nothing Then
+                    Dim comp = Convert.ToString(If(lic("company_name"), lic("shop_name")))
+                    Dim ser = Convert.ToString(lic("saved_serial"))
+                    lblCompanyInfo.Text = $"المنشأة: {comp} | كود الترخيص: {ser}"
+                Else
+                    lblCompanyInfo.Text = "المنشأة: غير محددة (يرجى تفعيل البرنامج أولاً)"
+                End If
+
+                ' تنظيف أي سجلات قديمة أو معلقة لجدول الصلاحيات تلقائياً لحل مشكلة التغييرات المعلقة الزائفة
+                Using conn = DBModule.NewConn()
+                    If conn IsNot Nothing AndAlso conn.State = ConnectionState.Open Then
+                        Try
+                            Using cmdClean As New SqlCommand("DELETE FROM _SyncLog WHERE TableName = 'Permissions'; IF OBJECT_ID('dbo.[TR_Permissions_SyncTrack]', 'TR') IS NOT NULL DROP TRIGGER [dbo].[TR_Permissions_SyncTrack];", conn)
+                                cmdClean.ExecuteNonQuery()
+                            End Using
+                        Catch
+                        End Try
+                    End If
+                End Using
+
+                ' التأكد من تهيئة الربط تلقائياً من الترخيص
+                If Not Services.Cloud.CloudSyncConfig.IsConfigured() Then
+                    Await Services.Cloud.CloudSyncConfig.EnsureConfigFromLicenseAsync().ConfigureAwait(True)
+                End If
+
                 LoadSettings()
                 ApplyThemeColors()
                 LoadSyncLog()
@@ -56,6 +88,17 @@ Namespace UC_Settings
 
         Private Sub LoadSettings()
             Try
+                ' تحديث بيانات المنشأة المعروضة للمستخدم
+                Dim lic = LicenseCache.Load()
+                Dim compName = If(lic IsNot Nothing, Convert.ToString(If(lic("company_name"), lic("shop_name"))), "")
+                Dim serial = If(lic IsNot Nothing, Convert.ToString(lic("saved_serial")), "")
+
+                If Not String.IsNullOrWhiteSpace(compName) Then
+                    lblCompanyInfo.Text = $"المنشأة: {compName} | كود الترخيص: {serial}"
+                Else
+                    lblCompanyInfo.Text = "المنشأة: جاري التحقق من الترخيص..."
+                End If
+
                 Dim config = Services.Cloud.CloudSyncConfig.Load()
                 If config Is Nothing Then Return
 
@@ -69,16 +112,16 @@ Namespace UC_Settings
                 txtOrgSlug.Text = If(config.OrganizationSlug, "")
                 txtDbName.Text = If(config.DatabaseName, "")
             Catch __logEx As Exception
-                ' تجاهل إذا لم يوجد ملف إعدادات بعد
-                Logger.LogError("UCCloudSyncSettings.vb:71", __logEx)
+                Logger.LogError("UCCloudSyncSettings.LoadSettings", __logEx)
             End Try
         End Sub
 
         Private Sub SaveSettings()
             Try
-                Dim config As New Services.Cloud.CloudSyncSettings()
-                config.TursoUrl = txtTursoUrl.Text.Trim()
-                config.AuthToken = txtAuthToken.Text.Trim()
+                Dim config = Services.Cloud.CloudSyncConfig.Load()
+                If config Is Nothing Then config = New Services.Cloud.CloudSyncSettings()
+
+                ' تحديث تفضيلات المستخدم
                 config.IsSyncEnabled = toggleSyncEnabled.Checked
 
                 Dim interval As Integer
@@ -88,22 +131,47 @@ Namespace UC_Settings
                     config.SyncIntervalSeconds = 30
                 End If
 
-                config.PlatformToken = txtPlatformToken.Text.Trim()
-                config.OrganizationSlug = txtOrgSlug.Text.Trim()
-                config.DatabaseName = txtDbName.Text.Trim()
+                If Not String.IsNullOrWhiteSpace(txtTursoUrl.Text) Then config.TursoUrl = txtTursoUrl.Text.Trim()
+                If Not String.IsNullOrWhiteSpace(txtAuthToken.Text) Then config.AuthToken = txtAuthToken.Text.Trim()
+
                 config.DeviceId = Services.Cloud.CloudSyncConfig.GetOrCreateDeviceId()
 
                 Services.Cloud.CloudSyncConfig.Save(config)
 
                 If config.IsSyncEnabled Then
-                    Services.Cloud.CloudSyncService.Instance.StartBackgroundSync()
+                    Services.Cloud.CloudSyncService.Instance.StartBackgroundSync(config.SyncIntervalSeconds)
                 Else
                     Services.Cloud.CloudSyncService.Instance.StopBackgroundSync()
                 End If
 
-                Notify.Toast("تم حفظ إعدادات المزامنة السحابية بنجاح ✅", Notify.ToastType.Success)
+                Notify.Toast("تم حفظ إعدادات المزامنة بنجاح ✅", Notify.ToastType.Success)
             Catch ex As Exception
                 SmartMessageBox.Show("خطأ أثناء حفظ الإعدادات: " & ex.Message, "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End Try
+        End Sub
+
+        Private Async Sub btnSyncFromLicense_Click(sender As Object, e As EventArgs) Handles btnSyncFromLicense.Click
+            btnSyncFromLicense.Enabled = False
+            lblConnectionResult.Text = "⏳ جاري جلب إعدادات المزامنة والتحقق من قاعدة المنشأة السحابية..."
+            lblConnectionResult.ForeColor = Drawing.Color.FromArgb(100, 181, 246)
+
+            Try
+                Dim ok = Await Services.Cloud.CloudSyncConfig.EnsureConfigFromLicenseAsync().ConfigureAwait(True)
+                If ok Then
+                    LoadSettings()
+                    RefreshSyncStatus()
+                    lblConnectionResult.Text = "✅ تم ربط وتجهيز قاعدة البيانات السحابية لمنشأتك بنجاح!"
+                    lblConnectionResult.ForeColor = Drawing.Color.FromArgb(76, 175, 80)
+                    Notify.Toast("تم تحديث الربط السحابي تلقائياً من الترخيص ✅", Notify.ToastType.Success)
+                Else
+                    lblConnectionResult.Text = "⚠️ يرجى التأكد من تفعيل البرنامج أولاً لجلب الربط."
+                    lblConnectionResult.ForeColor = Drawing.Color.FromArgb(255, 183, 77)
+                End If
+            Catch ex As Exception
+                lblConnectionResult.Text = "❌ " & ex.Message
+                lblConnectionResult.ForeColor = Drawing.Color.FromArgb(244, 67, 54)
+            Finally
+                btnSyncFromLicense.Enabled = True
             End Try
         End Sub
 
@@ -140,12 +208,12 @@ Namespace UC_Settings
                     If conn Is Nothing OrElse conn.State <> ConnectionState.Open Then Return
 
                     Try
-                        Using cmd As New SqlCommand("SELECT COUNT(*) FROM _SyncLog WHERE IsSynced = 0", conn)
+                        Using cmd As New SqlCommand("SELECT COUNT(*) FROM _SyncLog WHERE IsSynced = 0 AND TableName <> 'Permissions'", conn)
                             Dim count = Convert.ToInt32(cmd.ExecuteScalar())
                             lblPendingChanges.Text = count.ToString()
                         End Using
                     Catch
-                        lblPendingChanges.Text = "---"
+                        lblPendingChanges.Text = "0"
                     End Try
 
                     Try
@@ -172,27 +240,25 @@ Namespace UC_Settings
         ' ═══════════════════════════════════════════════════════════
 
         Private Async Sub btnTestConnection_Click(sender As Object, e As EventArgs) Handles btnTestConnection.Click
-            lblConnectionResult.Text = "⏳ جاري اختبار الاتصال..."
+            lblConnectionResult.Text = "⏳ جاري فحص الاتصال بالقاعدة السحابية..."
             lblConnectionResult.ForeColor = Drawing.Color.FromArgb(100, 181, 246)
             btnTestConnection.Enabled = False
 
             Try
-                Dim url = txtTursoUrl.Text.Trim()
-                Dim token = txtAuthToken.Text.Trim()
-
-                If String.IsNullOrWhiteSpace(url) OrElse String.IsNullOrWhiteSpace(token) Then
-                    lblConnectionResult.Text = "⚠️ أدخل الرابط ورمز المصادقة أولاً"
+                Dim config = Services.Cloud.CloudSyncConfig.Load()
+                If config Is Nothing OrElse String.IsNullOrWhiteSpace(config.TursoUrl) OrElse String.IsNullOrWhiteSpace(config.AuthToken) Then
+                    lblConnectionResult.Text = "⚠️ لم يتم تهيئة الربط السحابي بعد. يرجى تفعيل البرنامج أولاً."
                     lblConnectionResult.ForeColor = Drawing.Color.FromArgb(255, 183, 77)
                     Return
                 End If
 
-                Using client As New Services.Cloud.TursoHttpClient(url, token)
+                Using client As New Services.Cloud.TursoHttpClient(config.TursoUrl, config.AuthToken)
                     Dim isOk = Await client.TestConnectionAsync().ConfigureAwait(True)
                     If isOk Then
-                        lblConnectionResult.Text = "✅ الاتصال ناجح!"
+                        lblConnectionResult.Text = "✅ الاتصال بالقاعدة السحابية للمنشأة ناجح ومستقر!"
                         lblConnectionResult.ForeColor = Drawing.Color.FromArgb(76, 175, 80)
                     Else
-                        lblConnectionResult.Text = "❌ فشل الاتصال"
+                        lblConnectionResult.Text = "❌ فشل الاتصال بقاعدة المنشأة السحابية."
                         lblConnectionResult.ForeColor = Drawing.Color.FromArgb(244, 67, 54)
                     End If
                 End Using
@@ -213,9 +279,10 @@ Namespace UC_Settings
                 Using conn = DBModule.NewConn()
                     If conn Is Nothing OrElse conn.State <> ConnectionState.Open Then Return
 
-                    Dim sql = "SELECT TOP 50 LogId, TableName AS N'الجدول', Operation AS N'العملية', " &
-                              "CreatedAt AS N'الوقت', CASE WHEN IsSynced = 1 THEN N'تم' ELSE N'معلق' END AS N'الحالة', " &
-                              "ErrorMessage AS N'الخطأ' FROM _SyncLog ORDER BY CreatedAt DESC"
+                    Dim sql = "SELECT TOP 50 LogId AS [Log ID], TableName AS N'الجدول', " &
+                              "CASE Operation WHEN 'I' THEN N'➕ إضافة' WHEN 'U' THEN N'✏️ تعديل' WHEN 'D' THEN N'❌ حذف' ELSE Operation END AS N'العملية', " &
+                              "CreatedAt AS N'الوقت', CASE WHEN IsSynced = 1 THEN N'✅ تم' ELSE N'⏳ معلق' END AS N'الحالة', " &
+                              "ISNULL(ErrorMessage, N'—') AS N'الخطأ / الملاحظات' FROM _SyncLog WHERE TableName <> 'Permissions' ORDER BY CreatedAt DESC"
                     Using cmd As New SqlCommand(sql, conn)
                         Using da As New SqlDataAdapter(cmd)
                             Dim dt As New DataTable()

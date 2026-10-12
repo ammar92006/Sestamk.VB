@@ -1,4 +1,4 @@
-﻿Imports System
+Imports System
 Imports System.Collections.Generic
 Imports System.Data
 Imports System.Net
@@ -214,8 +214,22 @@ Namespace Services.Cloud
 
             Try
                 Dim response = Await SendRequestAsync(payload).ConfigureAwait(False)
+                If response IsNot Nothing AndAlso response("results") IsNot Nothing Then
+                    Dim results = TryCast(response("results"), JArray)
+                    If results IsNot Nothing Then
+                        For Each res In results
+                            If res IsNot Nothing AndAlso String.Equals(res("type")?.ToString(), "error", StringComparison.OrdinalIgnoreCase) Then
+                                Dim errObj = res("error")
+                                Dim errMsg = If(errObj IsNot Nothing, errObj("message")?.ToString(), "فشل في تنفيذ أحد أوامر المعاملة على خادم Turso")
+                                Logger.LogError("TursoHttpClient.ExecuteTransactionAsync", New Exception(errMsg))
+                                Return False
+                            End If
+                        Next
+                    End If
+                End If
                 Return True
             Catch ex As Exception
+                Logger.LogError("TursoHttpClient.ExecuteTransactionAsync", ex)
                 Return False
             End Try
         End Function
