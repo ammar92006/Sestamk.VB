@@ -51,8 +51,11 @@ Namespace UC_Settings
                 ApplyThemeColors()
                 LoadSyncLog()
                 RefreshSyncStatus()
+                LoadCompanyDevices()
 
                 AddHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
+                AddHandler Services.Cloud.CloudSyncService.Instance.SyncProgress, AddressOf OnSyncProgress
+                AddHandler Services.Cloud.CloudSyncService.Instance.SyncCompleted, AddressOf OnSyncCompleted
             Catch ex As Exception
                 ' تجاهل الأخطاء عند التحميل الأول
                 Logger.LogError("UCCloudSyncSettings.vb:24", ex)
@@ -62,6 +65,8 @@ Namespace UC_Settings
         Private Sub UCCloudSyncSettings_Disposed(sender As Object, e As EventArgs) Handles MyBase.Disposed
             Try
                 RemoveHandler ThemeManager.Instance.ThemeChanged, AddressOf OnThemeChanged
+                RemoveHandler Services.Cloud.CloudSyncService.Instance.SyncProgress, AddressOf OnSyncProgress
+                RemoveHandler Services.Cloud.CloudSyncService.Instance.SyncCompleted, AddressOf OnSyncCompleted
             Catch __logEx As Exception
                 Logger.LogError("UCCloudSyncSettings.vb:33", __logEx)
             End Try
@@ -377,6 +382,82 @@ Namespace UC_Settings
         Private Sub btnToggleTokenVisibility_Click(sender As Object, e As EventArgs) Handles btnToggleTokenVisibility.Click
             txtAuthToken.UseSystemPasswordChar = Not txtAuthToken.UseSystemPasswordChar
             btnToggleTokenVisibility.Text = If(txtAuthToken.UseSystemPasswordChar, "👁", "🔒")
+        End Sub
+
+        ' ═══════════════════════════════════════════════════════════
+        ' أجهزة المنشأة وشريط التقدم اللحظي (Devices & Live Progress)
+        ' ═══════════════════════════════════════════════════════════
+
+        Private Sub OnSyncProgress(sender As Object, e As SyncProgressEventArgs)
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(New Action(Of Object, SyncProgressEventArgs)(AddressOf OnSyncProgress), sender, e)
+                Return
+            End If
+
+            prgSyncProgress.Visible = True
+            lblSyncProgressText.Visible = True
+
+            If e.Operation = "push" Then
+                Dim pct = Math.Min(50, Math.Max(10, CInt((e.CurrentRow / Math.Max(1, e.TotalRows)) * 50)))
+                prgSyncProgress.Value = pct
+                lblSyncProgressText.Text = $"⬆️ {e.Message}"
+            ElseIf e.Operation = "pull" Then
+                Dim basePct = 50
+                Dim tablePct = CInt((e.CurrentTable / Math.Max(1, e.TotalTables)) * 50)
+                prgSyncProgress.Value = Math.Min(100, basePct + tablePct)
+                lblSyncProgressText.Text = $"⬇️ {e.Message}"
+            Else
+                lblSyncProgressText.Text = e.Message
+            End If
+        End Sub
+
+        Private Sub OnSyncCompleted(sender As Object, e As SyncResult)
+            If Me.InvokeRequired Then
+                Me.BeginInvoke(New Action(Of Object, SyncResult)(AddressOf OnSyncCompleted), sender, e)
+                Return
+            End If
+
+            prgSyncProgress.Value = 100
+            lblSyncProgressText.Text = "✅ اكتملت المزامنة بنجاح"
+            Task.Delay(3000).ContinueWith(Sub()
+                                              If Not Me.IsDisposed Then
+                                                  Me.BeginInvoke(Sub()
+                                                                     prgSyncProgress.Visible = False
+                                                                     lblSyncProgressText.Visible = False
+                                                                 End Sub)
+                                              End If
+                                          End Sub)
+            RefreshSyncStatus()
+            LoadSyncLog()
+            LoadCompanyDevices()
+        End Sub
+
+        Private Async Sub LoadCompanyDevices()
+            Try
+                Dim devices = Await Services.Cloud.CloudSyncConfig.GetCompanyDevicesAsync().ConfigureAwait(True)
+                Dim dt As New DataTable()
+                dt.Columns.Add("اسم الجهاز", GetType(String))
+                dt.Columns.Add("نوع الجهاز", GetType(String))
+                dt.Columns.Add("الإصدار", GetType(String))
+                dt.Columns.Add("آخر ظهور / مزامنة", GetType(String))
+                dt.Columns.Add("حركات مرسلة", GetType(String))
+                dt.Columns.Add("حركات مستلمة", GetType(String))
+                dt.Columns.Add("نظام التشغيل", GetType(String))
+
+                For Each dev In devices
+                    Dim nameDisplay = If(dev.IsCurrentDevice, $"{dev.DeviceName} (هذا الجهاز ⭐)", dev.DeviceName)
+                    dt.Rows.Add(nameDisplay, dev.DeviceTypeDisplay, dev.AppVersion, dev.LastSeenDisplay, dev.TotalPushed.ToString("N0"), dev.TotalPulled.ToString("N0"), dev.OsInfo)
+                Next
+
+                dgvDevices.DataSource = dt
+                lblDevicesCount.Text = $"{devices.Count} أجهزة مسجلة بالمنشأة"
+            Catch ex As Exception
+                Logger.LogError("UCCloudSyncSettings.LoadCompanyDevices", ex)
+            End Try
+        End Sub
+
+        Private Sub btnRefreshDevices_Click(sender As Object, e As EventArgs) Handles btnRefreshDevices.Click
+            LoadCompanyDevices()
         End Sub
 
     End Class

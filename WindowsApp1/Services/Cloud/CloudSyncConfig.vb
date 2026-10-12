@@ -243,5 +243,55 @@ Namespace Services.Cloud
                 Return False
             End Try
         End Function
+
+        ''' <summary>
+        ''' استرجاع قائمة جميع أجهزة المنشأة المسجلة في السحابة وتوقيت آخر مزامنة لكل جهاز
+        ''' </summary>
+        Public Shared Async Function GetCompanyDevicesAsync() As Task(Of List(Of CompanyDeviceModel))
+            Dim result As New List(Of CompanyDeviceModel)()
+            Dim config = Load()
+            If config Is Nothing OrElse Not IsConfigured() Then Return result
+
+            Dim currentDevId = GetOrCreateDeviceId()
+
+            Try
+                Using client As New TursoHttpClient(config.TursoUrl, config.AuthToken)
+                    Dim dt = Await client.ExecuteQueryAsync("SELECT [device_id], [device_name], [app_version], [os_info], [last_sync_utc], [total_pushed], [total_pulled] FROM [_SyncDevices] ORDER BY [last_sync_utc] DESC").ConfigureAwait(False)
+
+                    If dt IsNot Nothing AndAlso dt.Rows.Count > 0 Then
+                        For Each row As DataRow In dt.Rows
+                            Dim dId = Convert.ToString(row("device_id"))
+                            Dim dev As New CompanyDeviceModel With {
+                                .DeviceId = dId,
+                                .DeviceName = Convert.ToString(row("device_name")),
+                                .AppVersion = Convert.ToString(row("app_version")),
+                                .OsInfo = Convert.ToString(row("os_info")),
+                                .LastSyncUtc = Convert.ToString(row("last_sync_utc")),
+                                .TotalPushed = If(row.IsNull("total_pushed"), 0, Convert.ToInt64(row("total_pushed"))),
+                                .TotalPulled = If(row.IsNull("total_pulled"), 0, Convert.ToInt64(row("total_pulled"))),
+                                .IsCurrentDevice = String.Equals(dId, currentDevId, StringComparison.OrdinalIgnoreCase)
+                            }
+                            result.Add(dev)
+                        Next
+                    End If
+                End Using
+            Catch ex As Exception
+                Logger.LogError("CloudSyncConfig.GetCompanyDevicesAsync", ex)
+            End Try
+
+            ' إذا لم يتوفر بعد سجلات في السحابة، نضيف الجهاز الحالي افتراضياً
+            If result.Count = 0 Then
+                result.Add(New CompanyDeviceModel With {
+                    .DeviceId = currentDevId,
+                    .DeviceName = Environment.MachineName & " (الكاشير الحالي)",
+                    .AppVersion = Application.ProductVersion,
+                    .OsInfo = Environment.OSVersion.ToString(),
+                    .LastSyncUtc = DateTime.UtcNow.ToString("o"),
+                    .IsCurrentDevice = True
+                })
+            End If
+
+            Return result
+        End Function
     End Class
 End Namespace

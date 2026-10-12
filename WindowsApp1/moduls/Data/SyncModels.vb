@@ -155,3 +155,49 @@ Public Class SyncProgressEventArgs
     Public Property Operation As String
     Public Property Message As String
 End Class
+
+''' <summary>
+''' نموذج جهاز تابع لنفس المنشأة مسجل في السحابة ومراقب لآخر توقيت مزامنة
+''' </summary>
+Public Class CompanyDeviceModel
+    Public Property DeviceId As String = ""
+    Public Property DeviceName As String = ""
+    Public Property AppVersion As String = ""
+    Public Property OsInfo As String = ""
+    Public Property LastSyncUtc As String = ""
+    Public Property TotalPushed As Long = 0
+    Public Property TotalPulled As Long = 0
+    Public Property IsCurrentDevice As Boolean = False
+
+    Public ReadOnly Property DeviceTypeDisplay As String
+        Get
+            If DeviceName.Contains("ويتر") OrElse DeviceName.Contains("Waiter") OrElse DeviceName.Contains("PWA") Then
+                Return "📱 جهاز ويتر متنقل"
+            ElseIf DeviceName.Contains("مطبخ") OrElse DeviceName.Contains("KDS") Then
+                Return "📺 شاشة المطبخ (KDS)"
+            Else
+                Return "🖥️ كاشير رئيسي (POS)"
+            End If
+        End Get
+    End Property
+
+    Public ReadOnly Property LastSeenDisplay As String
+        Get
+            If String.IsNullOrWhiteSpace(LastSyncUtc) Then Return "لم تتم بعد"
+            Dim dt As DateTime
+            If DateTime.TryParse(LastSyncUtc, dt) Then
+                Dim diff = DateTime.UtcNow - dt.ToUniversalTime()
+                If diff.TotalMinutes < 3 Then
+                    Return "🟢 متصل الآن"
+                ElseIf diff.TotalHours < 1 Then
+                    Return $"منذ {CInt(diff.TotalMinutes)} دقيقة"
+                ElseIf diff.TotalDays < 1 Then
+                    Return $"منذ {CInt(diff.TotalHours)} ساعة"
+                Else
+                    Return dt.ToLocalTime().ToString("yyyy/MM/dd hh:mm tt")
+                End If
+            End If
+            Return LastSyncUtc
+        End Get
+    End Property
+End Class

@@ -49,6 +49,23 @@ Namespace Services.Cloud
                     End If
                 Next
                 
+                ' إنشاء جدول أجهزة المنشأة لتتبع المزامنة اللحظية لكل جهاز
+                Try
+                    Dim createDevicesSql = "CREATE TABLE IF NOT EXISTS [_SyncDevices] (" &
+                                           "[device_id] TEXT PRIMARY KEY, " &
+                                           "[device_name] TEXT NOT NULL, " &
+                                           "[app_version] TEXT, " &
+                                           "[os_info] TEXT, " &
+                                           "[last_sync_utc] TEXT NOT NULL, " &
+                                           "[total_pushed] INTEGER DEFAULT 0, " &
+                                           "[total_pulled] INTEGER DEFAULT 0, " &
+                                           "[is_active] INTEGER DEFAULT 1);"
+                    Await client.ExecuteNonQueryAsync(createDevicesSql).ConfigureAwait(False)
+                    Await client.ExecuteNonQueryAsync("CREATE INDEX IF NOT EXISTS IX_SyncDevices_last_sync ON [_SyncDevices] (last_sync_utc);").ConfigureAwait(False)
+                Catch exDev As Exception
+                    Logger.LogError("TursoSchemaBuilder._SyncDevices", exDev)
+                End Try
+
                 If success Then
                     progress?.Report("تم التأكد من الهيكل السحابي بنجاح.")
                 End If
