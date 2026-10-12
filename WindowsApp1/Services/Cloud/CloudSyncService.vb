@@ -58,12 +58,15 @@ Namespace Services.Cloud
                 ' 2. التأكد من وجود تريجرات التتبع
                 Await EnsureTriggersAsync().ConfigureAwait(False)
 
-                ' 3. ربط وتجهيز قاعدة بيانات المنشأة تلقائياً من الترخيص إن لم تكن مهيأة
+                ' 3. التأكد من إدراج وتجهيز كافة البيانات المحلية السابقة للمزامنة السحابية الشاملة
+                Await EnsureInitialSeedAsync().ConfigureAwait(False)
+
+                ' 4. ربط وتجهيز قاعدة بيانات المنشأة تلقائياً من الترخيص إن لم تكن مهيأة
                 If Not CloudSyncConfig.IsConfigured() Then
                     Await CloudSyncConfig.EnsureConfigFromLicenseAsync().ConfigureAwait(False)
                 End If
 
-                ' 4. بدء المؤقت التلقائي إذا كانت المزامنة مفعلة
+                ' 5. بدء المؤقت التلقائي إذا كانت المزامنة مفعلة
                 Dim config = CloudSyncConfig.Load()
                 If config IsNot Nothing AndAlso config.IsSyncEnabled Then
                     StartBackgroundSync(config.SyncIntervalSeconds)
@@ -211,6 +214,55 @@ Namespace Services.Cloud
         End Function
 
         ''' <summary>
+        ''' التأكد من إدراج وتجهيز جميع البيانات المحلية السابقة في سجل المزامنة لرفعها إلى السحابة
+        ''' (تصدير وتعبئة تلقائية للبيانات التي كانت موجودة قبل تفعيل المزامنة أو عند التهيئة)
+        ''' </summary>
+        Public Async Function EnsureInitialSeedAsync() As Task(Of Integer)
+            Dim totalQueued As Integer = 0
+            Try
+                Using conn As SqlConnection = DBModule.NewConn()
+                    If conn Is Nothing Then Return 0
+                    If conn.State <> ConnectionState.Open Then Await conn.OpenAsync().ConfigureAwait(False)
+
+                    Dim tables = SyncableTableRegistry.GetSyncableTables()
+
+                    For Each tbl In tables
+                        Dim tName = tbl.TableName
+
+                        ' أولاً: التأكد من توليد sync_id لأي صف محلي فارغ
+                        Try
+                            Using cmdFix As New SqlCommand($"UPDATE [{tName}] SET [sync_id] = NEWID() WHERE [sync_id] IS NULL;", conn)
+                                Await cmdFix.ExecuteNonQueryAsync().ConfigureAwait(False)
+                            End Using
+                        Catch
+                        End Try
+
+                        ' ثانياً: إدراج أي صف غير مسجل في _SyncLog
+                        Dim seedSql = $"INSERT INTO [dbo].[_SyncLog] ([TableName], [RowSyncId], [Operation], [CreatedAt], [IsSynced], [RetryCount]) " &
+                                      $"SELECT '{tName}', t.[sync_id], 'I', SYSUTCDATETIME(), 0, 0 " &
+                                      $"FROM [{tName}] t " &
+                                      $"WHERE t.[sync_id] IS NOT NULL " &
+                                      $"  AND NOT EXISTS ( " &
+                                      $"      SELECT 1 FROM [dbo].[_SyncLog] s " &
+                                      $"      WHERE s.[TableName] = '{tName}' AND s.[RowSyncId] = t.[sync_id] " &
+                                      $"  );"
+
+                        Try
+                            Using cmdSeed As New SqlCommand(seedSql, conn)
+                                Dim q = Await cmdSeed.ExecuteNonQueryAsync().ConfigureAwait(False)
+                                If q > 0 Then totalQueued += q
+                            End Using
+                        Catch
+                        End Try
+                    Next
+                End Using
+            Catch ex As Exception
+                Logger.LogError("CloudSyncService.EnsureInitialSeedAsync", ex)
+            End Try
+            Return totalQueued
+        End Function
+
+        ''' <summary>
         ''' تشغيل دورة مزامنة كاملة (Push ثم Pull)
         ''' </summary>
         Public Async Function TriggerSyncAsync() As Task(Of SyncResult)
@@ -249,6 +301,9 @@ Namespace Services.Cloud
                         Await schemaBuilder.EnsureRemoteSchemaAsync(client).ConfigureAwait(False)
                         _schemaEnsured = True
                     End If
+
+                    ' التأكد من إدراج وتجهيز أي بيانات محلية سابقة لم يسبق تسجيلها في المزامنة
+                    Await EnsureInitialSeedAsync().ConfigureAwait(False)
 
                     ' 4. رفع التغييرات المحلية إلى السحابة (Push)
                     Dim pushHandler As New SyncPushHandler(client, config.DeviceId)

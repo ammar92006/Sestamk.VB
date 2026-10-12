@@ -62,7 +62,7 @@ Namespace Services.Cloud
                             Dim logId As Long = Convert.ToInt64(row("LogId"))
                             Dim tableName As String = Convert.ToString(row("TableName"))
                             Dim syncId As Guid = DirectCast(row("RowSyncId"), Guid)
-                            Dim operation As String = Convert.ToString(row("Operation")).ToUpper()
+                            Dim operation As String = Convert.ToString(row("Operation")).Trim().ToUpper()
                             Dim createdAt As DateTime = Convert.ToDateTime(row("CreatedAt"))
 
                             If operation = "I" OrElse operation = "U" Then
@@ -104,6 +104,21 @@ Namespace Services.Cloud
                                     rowValues("updated_at") = createdAt.ToString("o")
                                     rowValues("device_id") = _deviceId
                                     rowValues("is_deleted") = 0
+
+                                    ' معالجة عامة للقيم الفارغة للأعمدة الإلزامية في SQLite لمنع فشل المعاملة
+                                    For Each cName In rowValues.Keys.ToList()
+                                        If rowValues(cName) Is Nothing Then
+                                            If cName.EndsWith("Code", StringComparison.OrdinalIgnoreCase) Then
+                                                rowValues(cName) = ""
+                                            ElseIf cName.EndsWith("NameAr", StringComparison.OrdinalIgnoreCase) Then
+                                                rowValues(cName) = "عام"
+                                            ElseIf cName = "IsDeposit" OrElse cName = "IsActive" Then
+                                                rowValues(cName) = 1
+                                            ElseIf cName = "IsDeleted" OrElse cName = "is_deleted" Then
+                                                rowValues(cName) = 0
+                                            End If
+                                        End If
+                                    Next
 
                                     Dim columns = rowValues.Keys.ToList()
                                     Dim placeholders = columns.Select(Function(c) "?").ToList()

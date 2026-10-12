@@ -1,4 +1,4 @@
-﻿Imports System.Text
+Imports System.Text
 Imports System.Linq
 
 Namespace Services.Cloud
@@ -57,9 +57,13 @@ Namespace Services.Cloud
                 def = def.Substring(1, def.Length - 2).Trim()
             End While
             
-            ' معالجة دوال التاريخ
-            If def = "GETDATE()" OrElse def = "SYSDATETIME()" OrElse def = "SYSUTCDATETIME()" Then
-                Return "CURRENT_TIMESTAMP" ' datetime('now') in SQLite
+            ' معالجة دوال التاريخ والتحويل
+            If def = "GETDATE()" OrElse def = "SYSDATETIME()" OrElse def = "SYSUTCDATETIME()" OrElse def.Contains("GETDATE") OrElse def.Contains("SYSDATETIME") OrElse def.Contains("CURRENT_TIMESTAMP") Then
+                If def.Contains("DATE") AndAlso Not def.Contains("DATETIME") AndAlso Not def.Contains("TIME2") Then
+                    Return "CURRENT_DATE"
+                Else
+                    Return "CURRENT_TIMESTAMP"
+                End If
             End If
             
             ' معالجة NEWID() 
